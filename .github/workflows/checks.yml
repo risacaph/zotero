@@ -1,0 +1,46 @@
+name: Checks
+
+# Fast, dependency-light gate that runs on every push/PR without needing
+# submodules, xulrunner, or a full build. It exists to catch the class of
+# problems the original rebrand hit: stray tokens, replacement
+# artifacts, mismatched identity, and hand-edited brand files.
+#
+# The heavy build+test pipeline lives in ci.yml.
+
+on: [push, pull_request]
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  branding:
+    name: Branding & consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No submodules: these checks are intentionally self-contained.
+
+      - name: Brand files match source of truth
+        run: node js-build/generate-branding.mjs --check
+
+      - name: Brand-consistency gate
+        run: node scripts/check-branding.mjs
+
+  lint:
+    name: Lint changed build/scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      # The wider codebase is not fully linted (see CLAUDE.md), so we only lint
+      # the independence tooling we own here to keep the gate green and meaningful.
+      - name: Lint independence tooling
+        run: npx eslint js-build/generate-branding.mjs scripts/check-branding.mjs

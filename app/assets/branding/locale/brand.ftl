@@ -5,4 +5,4 @@
 -vendor-short-name = Trellis
 -app-name = Trellis
 -subscription-name = Trellis Storage
-trademarkInfo = Trellis is a trademark of the Corporation for Digital Scholarship.
+trademarkInfo = Trellis is a trademark of the Trellis project.
