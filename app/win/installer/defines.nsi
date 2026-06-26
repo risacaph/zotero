@@ -8,8 +8,8 @@
 # with the taskbar. ExplicitAppUserModelID registration when the app launches is
 # handled in widget/src/windows/WinTaskbar.cpp.
 
-!define AppVendor             "Zotero"
-!define AppName               "Zotero"
+!define AppVendor             "Trellis"
+!define AppName               "Trellis"
 !define AppVersion            "{{VERSION}}"
 !define AppUserModelID        "${AppVendor}.${AppName}.${AppVersion}"
 !define GREVersion            2.0
@@ -19,9 +19,9 @@
 !define WindowClass           "ZoteroMessageWindow"
 !define AppRegName            "Zotero"
 
-!define BrandShortName        "Zotero"
+!define BrandShortName        "Trellis"
 !define PreReleaseSuffix      ""
-!define BrandFullName         "${BrandFullNameInternal}${PreReleaseSuffix}"
+!define BrandFullName         "Trellis${PreReleaseSuffix}"
 
 !define NO_UNINSTALL_SURVEY
 

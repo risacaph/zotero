@@ -370,7 +370,7 @@ import-where-from = Where do you want to import from?
 import-online-intro-title = Introduction
 
 import-source-file =
-    .label = A file (BibTeX, RIS, Zotero RDF, etc.)
+    .label = A file (BibTeX, RIS, Trellis RDF, etc.)
 
 import-source-folder =
     .label = A folder of PDFs or other files
@@ -420,7 +420,7 @@ file-interface-items-were-relinked = { $numRelinked ->
     *[other] { $numRelinked } items were relinked
     }
 
-import-mendeley-encrypted = The selected Mendeley database cannot be read, likely because it is encrypted. See <a data-l10n-name="mendeley-import-kb">How do I import a Mendeley library into Zotero?</a> for more information.
+import-mendeley-encrypted = The selected Mendeley database cannot be read, likely because it is encrypted. See <a data-l10n-name="mendeley-import-kb">How do I import a Mendeley library into Trellis?</a> for more information.
                             
 file-interface-import-error-translator = An error occurred importing the selected file with “{ $translator }”. Please ensure that the file is valid and try again.
 
@@ -807,7 +807,7 @@ attachment-rename-from-parent =
     .tooltiptext = Rename File to Match Parent Item
 
 account-log-in = Log In
-account-not-logged-in-text = Log in to your Zotero account to sync your data.
+account-not-logged-in-text = Log in to your Trellis account to sync your data.
 account-error-login-session-expired = Your login session has expired. Please try again.
 
 
@@ -1039,7 +1039,7 @@ post-upgrade-done =
 text-action-paste-and-search =
     .label = Paste and Search
     
-mac-word-plugin-install-message = Zotero needs access to Word data to install the Word plugin.
+mac-word-plugin-install-message = Trellis needs access to Word data to install the Word plugin.
 mac-word-plugin-install-folder-message = { -app-name } needs access to Word’s startup folder to install the Word plugin.
 mac-word-plugin-install-action-button =
     .label = Install Word plugin
