@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,11 +27,11 @@
 // Implements nsIFlavorDataProvider for dragging attachment files to OS
 //
 // Not used on Windows in Firefox 3 or higher
-Zotero.FileDragDataProvider = function (itemIDs) {
+Trellis.FileDragDataProvider = function (itemIDs) {
 	this._itemIDs = itemIDs;
 };
 
-Zotero.FileDragDataProvider.prototype = {
+Trellis.FileDragDataProvider.prototype = {
 	QueryInterface : function(iid) {
 		if (iid.equals(Components.interfaces.nsIFlavorDataProvider) ||
 			iid.equals(Components.interfaces.nsISupports)) {
@@ -41,12 +41,12 @@ Zotero.FileDragDataProvider.prototype = {
 	},
 
 	getFlavorData : function(transferable, flavor, data, dataLen) {
-		Zotero.debug("Getting flavor data for " + flavor);
+		Trellis.debug("Getting flavor data for " + flavor);
 		if (flavor == "application/x-moz-file-promise") {
 			// On platforms other than OS X, the only directory we know of here
 			// is the system temp directory, and we pass the nsIFile of the file
 			// copied there in data.value below
-			var useTemp = !Zotero.isMac;
+			var useTemp = !Trellis.isMac;
 
 			// Get the destination directory
 			var dirPrimitive = {};
@@ -54,7 +54,7 @@ Zotero.FileDragDataProvider.prototype = {
 			transferable.getTransferData("application/x-moz-file-promise-dir", dirPrimitive, dataSize);
 			var destDir = dirPrimitive.value.QueryInterface(Components.interfaces.nsIFile);
 
-			var draggedItems = Zotero.Items.get(this._itemIDs);
+			var draggedItems = Trellis.Items.get(this._itemIDs);
 			var items = [];
 
 			// Make sure files exist
@@ -62,7 +62,7 @@ Zotero.FileDragDataProvider.prototype = {
 			for (var i=0; i<draggedItems.length; i++) {
 				// TODO create URL?
 				if (!draggedItems[i].isAttachment() ||
-					draggedItems[i].getAttachmentLinkMode() == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+					draggedItems[i].getAttachmentLinkMode() == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 					continue;
 				}
 
@@ -77,7 +77,7 @@ Zotero.FileDragDataProvider.prototype = {
 			// If using the temp directory, create a directory to store multiple
 			// files, since we can (it seems) only pass one nsIFile in data.value
 			if (useTemp && items.length > 1) {
-				var tmpDirName = 'Zotero Dragged Files';
+				var tmpDirName = 'Trellis Dragged Files';
 				destDir.append(tmpDirName);
 				if (destDir.exists()) {
 					destDir.remove(true);
@@ -92,7 +92,7 @@ Zotero.FileDragDataProvider.prototype = {
 			for (var i=0; i<items.length; i++) {
 				// TODO create URL?
 				if (!items[i].isAttachment() ||
-					items[i].attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+					items[i].attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 					continue;
 				}
 
@@ -100,7 +100,7 @@ Zotero.FileDragDataProvider.prototype = {
 
 				// Determine if we need to copy multiple files for this item
 				// (web page snapshots)
-				if (items[i].attachmentLinkMode != Zotero.Attachments.LINK_MODE_LINKED_FILE) {
+				if (items[i].attachmentLinkMode != Trellis.Attachments.LINK_MODE_LINKED_FILE) {
 					var parentDir = file.parent;
 					var files = parentDir.directoryEntries;
 					var numFiles = 0;
@@ -115,7 +115,7 @@ Zotero.FileDragDataProvider.prototype = {
 
 				// Create folder if multiple files
 				if (numFiles > 1) {
-					var dirName = Zotero.Attachments.getFileBaseNameFromItem(items[i]);
+					var dirName = Trellis.Attachments.getFileBaseNameFromItem(items[i]);
 					try {
 						if (useTemp) {
 							var copiedFile = destDir.clone();
@@ -221,21 +221,21 @@ Zotero.FileDragDataProvider.prototype = {
 				if (useTemp) {
 					for (let name of notFoundNames) {
 						var msg = "Attachment file for dragged item '" + name + "' not found";
-						Zotero.log(msg, 'warning',
-							'chrome://zotero/content/xpcom/itemTreeView.js');
+						Trellis.log(msg, 'warning',
+							'chrome://trellis/content/xpcom/itemTreeView.js');
 					}
 				}
 				else {
-					promptService.alert(null, Zotero.getString('general.warning'),
-						Zotero.getString('dragAndDrop.filesNotFound') + "\n\n"
+					promptService.alert(null, Trellis.getString('general.warning'),
+						Trellis.getString('dragAndDrop.filesNotFound') + "\n\n"
 						+ notFoundNames.join("\n"));
 				}
 			}
 
 			// Display alert if existing files were skipped
 			if (existingItems.length > 0) {
-				promptService.alert(null, Zotero.getString('general.warning'),
-					Zotero.getString('dragAndDrop.existingFiles') + "\n\n"
+				promptService.alert(null, Trellis.getString('general.warning'),
+					Trellis.getString('dragAndDrop.existingFiles') + "\n\n"
 					+ existingFileNames.join("\n"));
 			}
 		}

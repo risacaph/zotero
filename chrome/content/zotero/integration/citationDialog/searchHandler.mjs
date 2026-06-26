@@ -3,27 +3,27 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -71,7 +71,7 @@ export class CitationDialogSearchHandler {
 			let item = this.results[key].find(item => item.id === parseInt(id));
 			if (item) return item;
 		}
-		return Zotero.Items.get(id);
+		return Trellis.Items.get(id);
 	}
 
 	// how many selected items there are without applying the filter
@@ -135,14 +135,14 @@ export class CitationDialogSearchHandler {
 		// sort libraries by the number of cited items in each library;
 		// when counts are equal (or cited items have not been loaded yet),
 		// keep My Library first and sort the rest alphabetically by name
-		let collation = Zotero.getLocaleCollation();
+		let collation = Trellis.getLocaleCollation();
 		libraryItems.sort((a, b) => {
 			let aCount = this.citedItemCountsByLibrary[a.key] || 0;
 			let bCount = this.citedItemCountsByLibrary[b.key] || 0;
 			if (aCount !== bCount) return bCount - aCount;
-			if (a.key === Zotero.Libraries.userLibraryID) return -1;
-			if (b.key === Zotero.Libraries.userLibraryID) return 1;
-			return collation.compareString(1, Zotero.Libraries.get(a.key).name, Zotero.Libraries.get(b.key).name);
+			if (a.key === Trellis.Libraries.userLibraryID) return -1;
+			if (b.key === Trellis.Libraries.userLibraryID) return 1;
+			return collation.compareString(1, Trellis.Libraries.get(a.key).name, Trellis.Libraries.get(b.key).name);
 		});
 		result.push(...libraryItems);
 
@@ -210,7 +210,7 @@ export class CitationDialogSearchHandler {
 			return;
 		}
 		// if "ibid" is typed, return all cited items
-		if (this.searchValue.toLowerCase() === Zotero.getString("integration.ibid").toLowerCase()) {
+		if (this.searchValue.toLowerCase() === Trellis.getString("integration.ibid").toLowerCase()) {
 			this.results.cited = this.citedItems;
 		}
 		else {
@@ -229,8 +229,8 @@ export class CitationDialogSearchHandler {
 	cleanSearchQuery(str) {
 		// if the string looks like an identifier, just return it immediately
 		// without removing any punctuation below
-		let isbn = Zotero.Utilities.cleanISBN(`${str}`);
-		let doi = Zotero.Utilities.cleanDOI(`${str}`);
+		let isbn = Trellis.Utilities.cleanISBN(`${str}`);
+		let doi = Trellis.Utilities.cleanDOI(`${str}`);
 		if (isbn) return isbn;
 		if (doi) return doi;
 
@@ -238,8 +238,8 @@ export class CitationDialogSearchHandler {
 		// This allows one to paste an existing citation like "(Smith et al., 2020)" and
 		// still get appropriate search results.
 		str = str.replace(/[()]/g, '').replace(/[&,.;]/g, '');
-		str = str.replace(" " + Zotero.getString("general.and") + " ", " ");
-		let etAl = Zotero.getString("general.etAl").replace(/\./g, "");
+		str = str.replace(" " + Trellis.getString("general.and") + " ", " ");
+		let etAl = Trellis.getString("general.etAl").replace(/\./g, "");
 		str = str.replace(new RegExp(" " + etAl + "(?:.\\s*|\\s+|$)", "g"), " ");
 		str = str.trim();
 		// Remove trailing colon. If the colon is in the middle of the string, keep it as it might be
@@ -262,7 +262,7 @@ export class CitationDialogSearchHandler {
 		if (item.isAnnotation()) return true;
 		if (item.isFileAttachment() && item.getAnnotations().length) return true;
 		if (item.isRegularItem()) {
-			let attachments = Zotero.Items.get(item.getAttachments());
+			let attachments = Trellis.Items.get(item.getAttachments());
 			return attachments.some(att => att.isFileAttachment() && att.getAnnotations().length);
 		}
 		return false;
@@ -271,7 +271,7 @@ export class CitationDialogSearchHandler {
 	isItemWithNotes(item) {
 		if (item.isNote() && item.getNote().length > 0) return true;
 		if (item.isRegularItem()) {
-			let notes = Zotero.Items.get(item.getNotes());
+			let notes = Trellis.Items.get(item.getNotes());
 			return notes.some(note => note.getNote().length > 0);
 		}
 		return false;
@@ -281,7 +281,7 @@ export class CitationDialogSearchHandler {
 		if (item.isAnnotation()) return [item];
 		if (item.isFileAttachment()) return item.getAnnotations();
 		let attachmentIDs = item.getAttachments();
-		let attachments = Zotero.Items.get(attachmentIDs).filter(item => item.isFileAttachment());
+		let attachments = Trellis.Items.get(attachmentIDs).filter(item => item.isFileAttachment());
 		let annotations = attachments.flatMap(attachment => attachment.getAnnotations());
 		annotations.sort((a, b) => {
 			if (a.parentItemID !== b.parentItemID) return 0;
@@ -306,8 +306,8 @@ export class CitationDialogSearchHandler {
 		
 	// Run the actual search query and find all items matching query across all libraries
 	async _getMatchingLibraryItems() {
-		var s = new Zotero.Search();
-		Zotero.Feeds.getAll().forEach(feed => s.addCondition("libraryID", "isNot", feed.libraryID));
+		var s = new Trellis.Search();
+		Trellis.Feeds.getAll().forEach(feed => s.addCondition("libraryID", "isNot", feed.libraryID));
 		if (this.io.filterLibraryIDs) {
 			this.io.filterLibraryIDs.forEach(id => s.addCondition("libraryID", "is", id));
 		}
@@ -318,8 +318,8 @@ export class CitationDialogSearchHandler {
 		else if (realInputRegex.test(this.searchValue)) {
 			// search for the identifier if it is provided,
 			// otherwise look up by title, creator and year
-			let isDOI = Zotero.Utilities.cleanDOI(this.searchValue);
-			let isISBN = Zotero.Utilities.cleanISBN(this.searchValue);
+			let isDOI = Trellis.Utilities.cleanDOI(this.searchValue);
+			let isISBN = Trellis.Utilities.cleanISBN(this.searchValue);
 			if (isDOI) {
 				s.addCondition("DOI", "contains", this.searchValue);
 			}
@@ -333,8 +333,8 @@ export class CitationDialogSearchHandler {
 		}
 		let searchResultIDs = await s.search();
 		// Search results might be in an unloaded library, so get items asynchronously and load necessary data
-		var items = await Zotero.Items.getAsync(searchResultIDs);
-		await Zotero.Items.loadDataTypes(items);
+		var items = await Trellis.Items.getAsync(searchResultIDs);
+		await Trellis.Items.loadDataTypes(items);
 		return items;
 	}
 
@@ -349,14 +349,14 @@ export class CitationDialogSearchHandler {
 	async _getReaderOpenItems() {
 		if (this.dialogState.isAddingNote()) return [];
 		let tabs = [];
-		let win = Zotero.getMainWindow();
+		let win = Trellis.getMainWindow();
 		// If the main window is open, use it to get open tabs
 		if (win) {
-			tabs = win.Zotero_Tabs.getState();
+			tabs = win.Trellis_Tabs.getState();
 		}
 		// If the main window is closed, try to get tabs from the last saved session
 		else {
-			let mainWindowLastState = Zotero.Session.state.windows.find(w => w.type === 'pane');
+			let mainWindowLastState = Trellis.Session.state.windows.find(w => w.type === 'pane');
 			if (!mainWindowLastState) return [];
 			tabs = mainWindowLastState.tabs;
 		}
@@ -375,9 +375,9 @@ export class CitationDialogSearchHandler {
 		// Fetch top-most items and load necessary data, in case tabs belong to an unloaded library
 		let items = [];
 		for (let itemID of itemIDs) {
-			let item = await Zotero.Items.getAsync(itemID);
+			let item = await Trellis.Items.getAsync(itemID);
 			if (item && item.parentItemID) {
-				item = await Zotero.Items.getAsync(item.parentItemID);
+				item = await Trellis.Items.getAsync(item.parentItemID);
 			}
 			items.push(item);
 		}
@@ -387,7 +387,7 @@ export class CitationDialogSearchHandler {
 			items = this.keepItemsWithAnnotations(items);
 		}
 		else {
-			await Zotero.Items.loadDataTypes(items);
+			await Trellis.Items.loadDataTypes(items);
 			// Exclude non-citeable items (e.g., a standalone attachment open in a tab)
 			items = items.filter(i => i.isRegularItem());
 		}
@@ -397,7 +397,7 @@ export class CitationDialogSearchHandler {
 	}
 
 	_getSelectedLibraryItems() {
-		let selected = Zotero.getActiveZoteroPane()?.getSelectedItems() || [];
+		let selected = Trellis.getActiveTrellisPane()?.getSelectedItems() || [];
 		if (this.dialogState.isAddingNote()) {
 			return selected.filter(i => i.isNote()) || [];
 		}
@@ -410,7 +410,7 @@ export class CitationDialogSearchHandler {
 
 	_filterNonMatchingItems(items) {
 		let matchedItems = new Set();
-		let splits = Zotero.Fulltext.semanticSplitter(this.searchValue);
+		let splits = Trellis.Fulltext.semanticSplitter(this.searchValue);
 
 		let makeSearchString = (item) => {
 			return item.getCreators()
@@ -453,8 +453,8 @@ export class CitationDialogSearchHandler {
 	// Generate sort function for items
 	_createItemsSort() {
 		let searchString = (this.searchValue).toLowerCase();
-		let searchParts = Zotero.SearchConditions.parseSearchString(searchString);
-		var collation = Zotero.getLocaleCollation();
+		let searchParts = Trellis.SearchConditions.parseSearchString(searchString);
+		var collation = Trellis.getLocaleCollation();
 		return ((a, b) => {
 			var firstCreatorA = a.firstCreator, firstCreatorB = b.firstCreator;
 			
@@ -493,7 +493,7 @@ export class CitationDialogSearchHandler {
 
 	// Generate sort function for notes
 	_createNotesSort() {
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		return (a, b) => {
 			return collation.compareString(
 				1, b.getField('dateModified'), a.getField('dateModified')
@@ -518,19 +518,19 @@ export class CitationDialogSearchHandler {
 	async _ensureRelevantItemsAreLoaded(items) {
 		let topLevelItems = items.map(item => item.topLevelItem);
 		// load all data of top-level items and their attachments
-		await Zotero.Items.loadDataTypes(topLevelItems);
+		await Trellis.Items.loadDataTypes(topLevelItems);
 		let regularItems = topLevelItems.filter(item => item.isRegularItem());
 		let attachmentIDs = regularItems.flatMap(item => item.getAttachments());
-		let attachments = await Zotero.Items.getAsync(attachmentIDs);
-		await Zotero.Items.loadDataTypes(attachments);
+		let attachments = await Trellis.Items.getAsync(attachmentIDs);
+		await Trellis.Items.loadDataTypes(attachments);
 
 		// Load annotations.
-		// Zotero.Items.loadDataTypes on parent items will set the
+		// Trellis.Items.loadDataTypes on parent items will set the
 		// _annotations cache on attachments but not load the annotations themselves.
 		// So fetch annotationIDs from the cache and load annotations separately.
 		attachments = attachments.filter(attachment => attachment.isFileAttachment());
 		let annotationIDs = attachments.flatMap(attachment => attachment.getAnnotations(false, true));
-		let annotations = await Zotero.Items.getAsync(annotationIDs);
-		await Zotero.Items.loadDataTypes(annotations);
+		let annotations = await Trellis.Items.getAsync(annotationIDs);
+		await Trellis.Items.loadDataTypes(annotations);
 	}
 }

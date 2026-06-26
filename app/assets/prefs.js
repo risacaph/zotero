@@ -22,9 +22,9 @@ pref("intl.regional_prefs.use_os_locales", false);
 pref("jsloader.shareGlobal", false);
 
 // Needed due to https://bugzilla.mozilla.org/show_bug.cgi?id=1181977
-pref("browser.hiddenWindowChromeURL", "chrome://zotero/content/standalone/hiddenWindow.xhtml");
+pref("browser.hiddenWindowChromeURL", "chrome://trellis/content/standalone/hiddenWindow.xhtml");
 // Use basicViewer for opening new DOM windows from content (for TinyMCE)
-pref("browser.chromeURL", "chrome://zotero/content/standalone/basicViewer.xhtml");
+pref("browser.chromeURL", "chrome://trellis/content/standalone/basicViewer.xhtml");
 // We need these to get the save dialog working with contentAreaUtils.js
 pref("browser.download.useDownloadDir", false);
 pref("browser.download.manager.showWhenStarting", false);
@@ -35,7 +35,7 @@ pref("extensions.shownSelectionUI", true);
 pref("extensions.autoDisableScope", 11);
 
 pref("network.protocol-handler.expose-all", false);
-pref("network.protocol-handler.expose.zotero", true);
+pref("network.protocol-handler.expose.trellis", true);
 pref("network.protocol-handler.expose.http", true);
 pref("network.protocol-handler.expose.https", true);
 
@@ -63,7 +63,7 @@ pref("extensions.getAddons.cache.enabled", false);
 //pref("extensions.getAddons.get.url", "https://services.addons.mozilla.org/%LOCALE%/%APP%/api/%API_VERSION%/search/guid:%IDS%?src=thunderbird&appOS=%OS%&appVersion=%VERSION%&tMain=%TIME_MAIN%&tFirstPaint=%TIME_FIRST_PAINT%&tSessionRestored=%TIME_SESSION_RESTORED%");
 //pref("extensions.getAddons.search.browseURL", "https://addons.mozilla.org/%LOCALE%/%APP%/search?q=%TERMS%");
 //pref("extensions.getAddons.search.url", "https://services.addons.mozilla.org/%LOCALE%/%APP%/api/%API_VERSION%/search/%TERMS%/all/%MAX_RESULTS%/%OS%/%VERSION%?src=thunderbird");
-//pref("extensions.webservice.discoverURL", "https://www.zotero.org/support/plugins");
+//pref("extensions.webservice.discoverURL", "https://www.trellis.org/support/plugins");
 
 // Check Windows certificate store for custom CAs
 pref("security.enterprise_roots.enabled", true);
@@ -87,7 +87,7 @@ pref("extensions.getAddons.link.url", "");
 pref("places.history.enabled", false);
 
 // Probably not used, but prevent an error in the console
-pref("app.support.baseURL", "https://www.zotero.org/support/");
+pref("app.support.baseURL", "https://www.trellis.org/support/");
 
 // Disable Telemetry, Health Report, error reporting, and remote settings
 pref("toolkit.telemetry.unified", false);
@@ -110,11 +110,11 @@ pref("app.update.auto", true);
 
 // URL user can browse to manually if for some reason all update installation
 // attempts fail.
-pref("app.update.url.manual", "https://www.zotero.org/download");
+pref("app.update.url.manual", "https://www.trellis.org/download");
 
 // A default value for the "More information about this update" link
 // supplied in the "An update is available" page of the update wizard.
-pref("app.update.url.details", "https://www.zotero.org/support/changelog");
+pref("app.update.url.details", "https://www.trellis.org/support/changelog");
 
 // Interval: Time between checks for a new version (in seconds)
 //           default=1 day

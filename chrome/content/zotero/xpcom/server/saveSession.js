@@ -3,27 +3,27 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-Zotero.Server.Connector.SessionManager = {
+Trellis.Server.Connector.SessionManager = {
 	_sessions: new Map(),
 
 	get: function (id) {
@@ -32,13 +32,13 @@ Zotero.Server.Connector.SessionManager = {
 
 	create: function (id, action, requestData) {
 		if (typeof id === 'undefined') {
-			id = Zotero.Utilities.randomString();
+			id = Trellis.Utilities.randomString();
 		}
 		if (this._sessions.has(id)) {
 			throw new Error(`Session ID ${id} exists`);
 		}
-		Zotero.debug(`Creating connector save session ${id}`);
-		var session = new Zotero.Server.Connector.SaveSession(id, action, requestData);
+		Trellis.debug(`Creating connector save session ${id}`);
+		var session = new Trellis.Server.Connector.SaveSession(id, action, requestData);
 		this._sessions.set(id, session);
 		this.gc();
 		return session;
@@ -59,7 +59,7 @@ Zotero.Server.Connector.SessionManager = {
 
 
 
-Zotero.Server.Connector.SaveSession = class {
+Trellis.Server.Connector.SaveSession = class {
 	constructor(id, action, requestData) {
 		this.id = id;
 		this.created = new Date();
@@ -73,16 +73,16 @@ Zotero.Server.Connector.SaveSession = class {
 	}
 
 	async saveItems(target) {
-		var { library, collection } = Zotero.Server.Connector.resolveTarget(target);
+		var { library, collection } = Trellis.Server.Connector.resolveTarget(target);
 		var data = this._requestData.data;
 
-		var proxy = data.proxy && new Zotero.Proxy(data.proxy);
+		var proxy = data.proxy && new Trellis.Proxy(data.proxy);
 
-		this.itemSaver = new Zotero.Translate.ItemSaver({
+		this.itemSaver = new Trellis.Translate.ItemSaver({
 			libraryID: library.libraryID,
 			collections: collection ? [collection.id] : undefined,
 			// All attachments come from the Connector
-			attachmentMode: Zotero.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE,
+			attachmentMode: Trellis.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE,
 			forceTagType: 1,
 			referrer: data.uri,
 			proxy
@@ -90,7 +90,7 @@ Zotero.Server.Connector.SaveSession = class {
 		let items = await this.itemSaver.saveItems(data.items, () => 0, () => 0);
 		// If more itemSaver calls are made, it means we are saving attachments explicitly (like
 		// a snapshot) and we don't want to ignore those.
-		this.itemSaver.attachmentMode = Zotero.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD;
+		this.itemSaver.attachmentMode = Trellis.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD;
 		items.forEach((item, index) => {
 			this.addItem(data.items[index].id, item);
 		});
@@ -99,14 +99,14 @@ Zotero.Server.Connector.SaveSession = class {
 	}
 
 	async saveSnapshot(target) {
-		var { library, collection } = Zotero.Server.Connector.resolveTarget(target);
+		var { library, collection } = Trellis.Server.Connector.resolveTarget(target);
 		var libraryID = library.libraryID;
 		var data = this._requestData.data;
 		
 		let title = data.title || data.url;
 		
 		// Create new webpage item
-		let item = new Zotero.Item("webpage");
+		let item = new Trellis.Item("webpage");
 		item.libraryID = libraryID;
 		item.setField("title", title);
 		item.setField("url", data.url);
@@ -147,7 +147,7 @@ Zotero.Server.Connector.SaveSession = class {
 	}
 
 	remove() {
-		delete Zotero.Server.Connector.SessionManager._sessions[this.id];
+		delete Trellis.Server.Connector.SessionManager._sessions[this.id];
 	}
 
 	/**
@@ -160,13 +160,13 @@ Zotero.Server.Connector.SaveSession = class {
 		this._currentNote = note || "";
 		
 		// Select new destination in collections pane
-		var zp = Zotero.getActiveZoteroPane();
+		var zp = Trellis.getActiveTrellisPane();
 		if (zp && zp.collectionsView) {
 			await zp.collectionsView.selectByID(targetID);
 		}
 		// If window is closed, select target collection re-open
 		else {
-			Zotero.Prefs.set('lastViewedFolder', targetID);
+			Trellis.Prefs.set('lastViewedFolder', targetID);
 		}
 		
 		await this._updateItems(this._items);
@@ -185,17 +185,17 @@ Zotero.Server.Connector.SaveSession = class {
 	/**
 	 * Update the passed items with the current target and tags
 	 */
-	_updateItems = Zotero.serial(async function (items) {
+	_updateItems = Trellis.serial(async function (items) {
 		if (Object.values(items).length == 0) {
 			return;
 		}
 		
-		var { library, collection } = Zotero.Server.Connector.resolveTarget(this._currentTargetID);
+		var { library, collection } = Trellis.Server.Connector.resolveTarget(this._currentTargetID);
 		var libraryID = library.libraryID;
 		
 		var tags = this._currentTags.map(tag => tag.trim()).filter(tag => tag);
 		
-		Zotero.debug("Updating items for connector save session " + this.id);
+		Trellis.debug("Updating items for connector save session " + this.id);
 		
 		for (let key in items) {
 			let item = items[key];
@@ -207,8 +207,8 @@ Zotero.Server.Connector.SaveSession = class {
 			}
 			
 			// Skip deleted items
-			if (!Zotero.Items.exists(item.id)) {
-				Zotero.debug(`Item ${item.id} in save session no longer exists`);
+			if (!Trellis.Items.exists(item.id)) {
+				Trellis.debug(`Item ${item.id} in save session no longer exists`);
 				continue;
 			}
 			
@@ -218,7 +218,7 @@ Zotero.Server.Connector.SaveSession = class {
 				// Update cache of user-added note items, since IDs are different in a new library
 				if (this._currentNote) {
 					delete this._userAddedNotes[item.id];
-					let userNote = Zotero.Items.get(newItem.getNotes()).find(note => note.getNote() == this._currentNote);
+					let userNote = Trellis.Items.get(newItem.getNotes()).find(note => note.getNote() == this._currentNote);
 					if (userNote) {
 						this._userAddedNotes[newItem.id] = userNote.id;
 					}
@@ -246,9 +246,9 @@ Zotero.Server.Connector.SaveSession = class {
 		if (this._currentNote) {
 			// If the note item already exists, update it. Otherwise, create a new one.
 			let existingItemNoteID = this._userAddedNotes[item.id];
-			let noteItem = existingItemNoteID && Zotero.Items.get(existingItemNoteID);
+			let noteItem = existingItemNoteID && Trellis.Items.get(existingItemNoteID);
 			if (!noteItem) {
-				noteItem = new Zotero.Item('note');
+				noteItem = new Trellis.Item('note');
 			}
 			noteItem.setNote(this._currentNote);
 			noteItem.parentID = item.id;
@@ -259,7 +259,7 @@ Zotero.Server.Connector.SaveSession = class {
 		}
 		// If the note was typed and then erased, delete it
 		else if (this._userAddedNotes[item.id]) {
-			let noteItem = Zotero.Items.get(this._userAddedNotes[item.id]);
+			let noteItem = Trellis.Items.get(this._userAddedNotes[item.id]);
 			if (noteItem) {
 				await noteItem.eraseTx();
 			}
@@ -271,7 +271,7 @@ Zotero.Server.Connector.SaveSession = class {
 		var targetID = this._currentTargetID;
 		try {
 			let numRecents = 7;
-			let recents = Zotero.Prefs.get('recentSaveTargets') || '[]';
+			let recents = Trellis.Prefs.get('recentSaveTargets') || '[]';
 			recents = JSON.parse(recents);
 			// If there's already a target from this session in the list, update it
 			for (let recent of recents) {
@@ -300,11 +300,11 @@ Zotero.Server.Connector.SaveSession = class {
 				}]);
 			}
 			recents = recents.slice(-1 * numRecents);
-			Zotero.Prefs.set('recentSaveTargets', JSON.stringify(recents));
+			Trellis.Prefs.set('recentSaveTargets', JSON.stringify(recents));
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.Prefs.clear('recentSaveTargets');
+			Trellis.logError(e);
+			Trellis.Prefs.clear('recentSaveTargets');
 		}
 	}
 };

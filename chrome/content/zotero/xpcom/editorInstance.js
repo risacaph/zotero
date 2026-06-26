@@ -5,26 +5,26 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 var { InlineSpellChecker } = ChromeUtils.importESModule("resource://gre/modules/InlineSpellChecker.sys.mjs");
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
 // Note: TinyMCE is automatically doing some meaningless corrections to
 // note-editor produced HTML. Which might result to more
@@ -36,7 +36,7 @@ var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules
 // This only filters images that are being imported from a URL.
 // In all other cases `note-editor` should decide what
 // image types can be imported, and if not then
-// Zotero.Attachments.importEmbeddedImage does.
+// Trellis.Attachments.importEmbeddedImage does.
 // Additionally, the already imported images should never be
 // affected
 const DOWNLOADED_IMAGE_TYPE = [
@@ -46,7 +46,7 @@ const DOWNLOADED_IMAGE_TYPE = [
 
 class EditorInstance {
 	constructor() {
-		this.instanceID = Zotero.Utilities.randomString();
+		this.instanceID = Trellis.Utilities.randomString();
 	}
 
 	get itemID() {
@@ -66,7 +66,7 @@ class EditorInstance {
 	}
 
 	async init(options) {
-		Zotero.Notes.registerEditorInstance(this);
+		Trellis.Notes.registerEditorInstance(this);
 		this.onNavigate = options.onNavigate;
 		// TODO: Consider to use only itemID instead of loaded item
 		this._item = options.item;
@@ -74,7 +74,7 @@ class EditorInstance {
 		this._viewMode = options.viewMode;
 		this._tabID = options.tabID;
 		this._readOnly = options.readOnly || this._isReadOnly();
-		this._filesReadOnly = !Zotero.Libraries.get(this._item.libraryID).filesEditable;
+		this._filesReadOnly = !Trellis.Libraries.get(this._item.libraryID).filesEditable;
 		this._disableUI = options.disableUI;
 		this._onReturn = options.onReturn;
 		this._iframeWindow = options.iframeWindow;
@@ -89,16 +89,16 @@ class EditorInstance {
 			this._rejectInitPromise = reject;
 		});
 		this._prefObserverIDs = [
-			Zotero.Prefs.registerObserver('note.fontSize', this._handleFontChange),
-			Zotero.Prefs.registerObserver('note.tabFontSize', this._handleFontChange),
-			Zotero.Prefs.registerObserver('note.fontFamily', this._handleFontChange),
-			Zotero.Prefs.registerObserver('note.css', this._handleStyleChange),
-			Zotero.Prefs.registerObserver('layout.spellcheckDefault', this._handleSpellCheckChange, true)
+			Trellis.Prefs.registerObserver('note.fontSize', this._handleFontChange),
+			Trellis.Prefs.registerObserver('note.tabFontSize', this._handleFontChange),
+			Trellis.Prefs.registerObserver('note.fontFamily', this._handleFontChange),
+			Trellis.Prefs.registerObserver('note.css', this._handleStyleChange),
+			Trellis.Prefs.registerObserver('layout.spellcheckDefault', this._handleSpellCheckChange, true)
 		];
 		this._spellChecker = null;
 		
 		// Run Cut/Copy/Paste with chrome privileges
-		this._iframeWindow.wrappedJSObject.zoteroExecCommand = function (doc, command, ui, value) {
+		this._iframeWindow.wrappedJSObject.trellisExecCommand = function (doc, command, ui, value) {
 			// Is that safe enough?
 			if (!['cut', 'copy', 'paste'].includes(command)) {
 				return;
@@ -107,15 +107,15 @@ class EditorInstance {
 		};
 
 		// Translate note HTML into Markdown, for setting it as text/plain in clipboard (on text copy/drag)
-		this._iframeWindow.wrappedJSObject.zoteroTranslateToMarkdown = (html) => {
-			let item = new Zotero.Item('note');
+		this._iframeWindow.wrappedJSObject.trellisTranslateToMarkdown = (html) => {
+			let item = new Trellis.Item('note');
 			item.libraryID = this._item.libraryID;
 			item.setNote(html);
 			let text = '';
-			var translation = new Zotero.Translate.Export;
+			var translation = new Trellis.Translate.Export;
 			translation.noWait = true;
 			translation.setItems([item]);
-			translation.setTranslator(Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN);
+			translation.setTranslator(Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN);
 			translation.setHandler("done", (obj, worked) => {
 				if (worked) {
 					text = obj.string.replace(/\r\n/g, '\n');
@@ -125,7 +125,7 @@ class EditorInstance {
 			return text;
 		};
 
-		this._iframeWindow.wrappedJSObject.zoteroCopyImage = async (dataURL) => {
+		this._iframeWindow.wrappedJSObject.trellisCopyImage = async (dataURL) => {
 			let parts = dataURL.split(',');
 			if (!parts[0].includes('base64')) {
 				return;
@@ -151,7 +151,7 @@ class EditorInstance {
 			clipboardService.setData(transferable, null, Components.interfaces.nsIClipboard.kGlobalClipboard);
 		};
 
-		this._iframeWindow.wrappedJSObject.zoteroSaveImageAs = async (dataURL) => {
+		this._iframeWindow.wrappedJSObject.trellisSaveImageAs = async (dataURL) => {
 			let parts = dataURL.split(',');
 			if (!parts[0].includes('base64')) {
 				return;
@@ -163,11 +163,11 @@ class EditorInstance {
 			while (n--) {
 				u8arr[n] = bstr.charCodeAt(n);
 			}
-			let ext = Zotero.MIME.getPrimaryExtension(mime, '');
+			let ext = Trellis.MIME.getPrimaryExtension(mime, '');
 			let fp = new FilePicker();
-			fp.init(this._iframeWindow, Zotero.getString('note-editor-save-image-as'), fp.modeSave);
+			fp.init(this._iframeWindow, Trellis.getString('note-editor-save-image-as'), fp.modeSave);
 			fp.appendFilters(fp.filterImages);
-			fp.defaultString = Zotero.getString('file-type-image').toLowerCase() + '.' + ext;
+			fp.defaultString = Trellis.getString('file-type-image').toLowerCase() + '.' + ext;
 			let rv = await fp.show();
 			if (rv === fp.returnOK || rv === fp.returnReplace) {
 				let outputPath = fp.file;
@@ -177,7 +177,7 @@ class EditorInstance {
 
 		this._iframeWindow.addEventListener('message', this._messageHandler);
 		this._iframeWindow.addEventListener('error', (event) => {
-			Zotero.logError(event.error);
+			Trellis.logError(event.error);
 		});
 		
 		let note = this._item.note;
@@ -186,29 +186,29 @@ class EditorInstance {
 		this._iframeWindow.document.execCommand('enableObjectResizing', false, 'false');
 		this._iframeWindow.document.execCommand('enableInlineTableEditing', false, 'false');
 
-		let style = Zotero.Prefs.get('note.css');
+		let style = Trellis.Prefs.get('note.css');
 		if (style) {
-			Zotero.debug('Using a custom CSS style:');
-			Zotero.debug(style);
+			Trellis.debug('Using a custom CSS style:');
+			Trellis.debug(style);
 		}
 
 		let contentViewMode = this._getContentViewMode();
 
 		// Prepare Fluent data
-		let ftl = ['-app-name = ' + Zotero.appName];
+		let ftl = ['-app-name = ' + Trellis.appName];
 
 		try {
-			ftl.push(Zotero.File.getContentsFromURL(`chrome://zotero/locale/zotero.ftl`));
+			ftl.push(Trellis.File.getContentsFromURL(`chrome://trellis/locale/trellis.ftl`));
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 
 		try {
-			ftl.push(Zotero.File.getContentsFromURL(`chrome://zotero/locale/note-editor.ftl`));
+			ftl.push(Trellis.File.getContentsFromURL(`chrome://trellis/locale/note-editor.ftl`));
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 
 		this._postMessage({
@@ -222,30 +222,30 @@ class EditorInstance {
 			enableReturnButton: !!this._onReturn,
 			isAttachmentNote: this._item.isAttachment(),
 			placeholder: options.placeholder,
-			dir: Zotero.dir,
+			dir: Trellis.dir,
 			font: this._getFont(),
 			contentViewMode,
 			style,
-			smartQuotes: Zotero.Prefs.get('note.smartQuotes'),
+			smartQuotes: Trellis.Prefs.get('note.smartQuotes'),
 			ftl
 		});
 		
 		if (!this._item.isAttachment()) {
-			Zotero.Notes.ensureEmbeddedImagesAreAvailable(this._item);
+			Trellis.Notes.ensureEmbeddedImagesAreAvailable(this._item);
 		}
 	}
 
 	async uninit() {
-		this._prefObserverIDs.forEach(id => Zotero.Prefs.unregisterObserver(id));
+		this._prefObserverIDs.forEach(id => Trellis.Prefs.unregisterObserver(id));
 		if (this._citationDialogWindow) {
 			this._citationDialogWindow.close();
 			this._citationDialogWindow = null;
 		}
 		this._iframeWindow.removeEventListener('message', this._messageHandler);
 		this.saveSync();
-		await Zotero.Notes.unregisterEditorInstance(this);
+		await Trellis.Notes.unregisterEditorInstance(this);
 		if (!this._item.isAttachment() && !this._filesReadOnly) {
-			await Zotero.Notes.deleteUnusedEmbeddedImages(this._item);
+			await Trellis.Notes.deleteUnusedEmbeddedImages(this._item);
 		}
 	}
 
@@ -275,7 +275,7 @@ class EditorInstance {
 
 	async notify(event, type, ids, extraData) {
 		if (type === 'file' && event === 'download') {
-			let items = await Zotero.Items.getAsync(ids);
+			let items = await Trellis.Items.getAsync(ids);
 			for (let item of items) {
 				if (item.isAttachment() && (await item.getFilePathAsync())) {
 					let subscription = this._subscriptions.find(x => x.data.attachmentKey === item.key);
@@ -288,7 +288,7 @@ class EditorInstance {
 
 		if (type === 'item' && ['delete', 'trash'].includes(event) && this._tabID) {
 			if (this._item && (ids.includes(this._item.id) || ids.includes(this._item.parentItemID))) {
-				Zotero.getMainWindow().Zotero_Tabs.close(this._tabID);
+				Trellis.getMainWindow().Trellis_Tabs.close(this._tabID);
 			}
 		}
 
@@ -297,8 +297,8 @@ class EditorInstance {
 		}
 		
 		// Update citations itemData
-		let items = await Zotero.Items.getAsync(ids);
-		let uris = items.map(x => Zotero.URI.getItemURI(x)).filter(x => x);
+		let items = await Trellis.Items.getAsync(ids);
+		let uris = items.map(x => Trellis.URI.getItemURI(x)).filter(x => x);
 		let citationItemsList = this._citationItemsList
 			.filter(ci => ci.uris && uris.some(uri => ci.uris.includes(uri)));
 		await this._updateCitationItems(citationItemsList);
@@ -317,7 +317,7 @@ class EditorInstance {
 	async insertAnnotations(annotations) {
 		await this._ensureNoteCreated();
 		await this.importImages(annotations);
-		let { html } = Zotero.EditorInstanceUtilities.serializeAnnotations(annotations);
+		let { html } = Trellis.EditorInstanceUtilities.serializeAnnotations(annotations);
 		if (html) {
 			this._postMessage({ action: 'insertHTML', pos: null, html });
 		}
@@ -365,12 +365,12 @@ class EditorInstance {
 		else {
 			fontSizePrefKey = `note.fontSize`;
 		}
-		let fontSize = Zotero.Prefs.get(fontSizePrefKey);
+		let fontSize = Trellis.Prefs.get(fontSizePrefKey);
 		// Fix empty old font prefs before a value was enforced
 		if (fontSize < 6) {
 			fontSize = 11;
 		}
-		let fontFamily = Zotero.Prefs.get('note.fontFamily');
+		let fontFamily = Trellis.Prefs.get('note.fontFamily');
 		return { fontSize, fontFamily };
 	}
 
@@ -388,20 +388,20 @@ class EditorInstance {
 	};
 
 	_handleStyleChange = () => {
-		this._postMessage({ action: 'setStyle', style: Zotero.Prefs.get('note.css') });
+		this._postMessage({ action: 'setStyle', style: Trellis.Prefs.get('note.css') });
 	};
 
 	_handleSpellCheckChange = () => {
 		try {
 			let spellChecker = this._getSpellChecker();
-			let value = Zotero.Prefs.get('layout.spellcheckDefault', true);
+			let value = Trellis.Prefs.get('layout.spellcheckDefault', true);
 			if (!value && spellChecker.enabled
 				|| value && !spellChecker.enabled) {
 				spellChecker.toggleEnabled();
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	};
 	
@@ -409,9 +409,9 @@ class EditorInstance {
 		if (!Array.isArray(ids)) {
 			ids = [ids];
 		}
-		let win = Zotero.getMainWindow();
+		let win = Trellis.getMainWindow();
 		if (win) {
-			win.ZoteroPane.selectItems(ids);
+			win.TrellisPane.selectItems(ids);
 			win.focus();
 		}
 	}
@@ -436,26 +436,26 @@ class EditorInstance {
 
 	async _digestItems(ids) {
 		let html = '';
-		let items = await Zotero.Items.getAsync(ids);
+		let items = await Trellis.Items.getAsync(ids);
 		for (let item of items) {
 			if (item.isNote()
-				&& !(await Zotero.Notes.ensureEmbeddedImagesAreAvailable(item))
-				&& !Zotero.Notes.promptToIgnoreMissingImage()) {
+				&& !(await Trellis.Notes.ensureEmbeddedImagesAreAvailable(item))
+				&& !Trellis.Notes.promptToIgnoreMissingImage()) {
 				return null;
 			}
 		}
 		
 		for (let item of items) {
 			if (item.isRegularItem()) {
-				let itemData = Zotero.Utilities.Item.itemToCSLJSON(item);
+				let itemData = Trellis.Utilities.Item.itemToCSLJSON(item);
 				let citation = {
 					citationItems: [{
-						uris: [Zotero.URI.getItemURI(item)],
+						uris: [Trellis.URI.getItemURI(item)],
 						itemData
 					}],
 					properties: {}
 				};
-				let formatted = Zotero.EditorInstanceUtilities.formatCitation(citation);
+				let formatted = Trellis.EditorInstanceUtilities.formatCitation(citation);
 				html += `<p><span class="citation" data-citation="${encodeURIComponent(JSON.stringify(citation))}">${formatted}</span></p>`;
 			}
 			else if (item.isNote()) {
@@ -498,7 +498,7 @@ class EditorInstance {
 							node.setAttribute('data-citation', citation);
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						}
 					}
 					
@@ -516,20 +516,20 @@ class EditorInstance {
 							}
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						}
 					}
 				}
 
 				// Clone all note image attachments and replace keys in the new note
 				if (!this._filesReadOnly) {
-					let attachments = Zotero.Items.get(item.getAttachments());
+					let attachments = Trellis.Items.get(item.getAttachments());
 					for (let attachment of attachments) {
 						if (!(await attachment.fileExists())) {
 							continue;
 						}
-						await Zotero.DB.executeTransaction(async () => {
-							let copiedAttachment = await Zotero.Attachments.copyEmbeddedImage({
+						await Trellis.DB.executeTransaction(async () => {
+							let copiedAttachment = await Trellis.Attachments.copyEmbeddedImage({
 								attachment,
 								note: this._item,
 								saveOptions: {
@@ -571,17 +571,17 @@ class EditorInstance {
 					}
 					let html = '';
 					await this._ensureNoteCreated();
-					if (type === 'zotero/item') {
+					if (type === 'trellis/item') {
 						let ids = data.split(',').map(id => parseInt(id));
 						html = await this._digestItems(ids);
 						if (!html) {
 							return;
 						}
 					}
-					else if (type === 'zotero/annotation') {
+					else if (type === 'trellis/annotation') {
 						let annotations = JSON.parse(data);
 						await this.importImages(annotations);
-						let { html: serializedHTML } = Zotero.EditorInstanceUtilities.serializeAnnotations(annotations);
+						let { html: serializedHTML } = Trellis.EditorInstanceUtilities.serializeAnnotations(annotations);
 						html = serializedHTML;
 					}
 					if (html) {
@@ -595,9 +595,9 @@ class EditorInstance {
 						this.onNavigate(attachmentURI, { position });
 					}
 					else {
-						let zp = Zotero.getActiveZoteroPane();
+						let zp = Trellis.getActiveTrellisPane();
 						if (zp) {
-							let item = await Zotero.URI.getURIItem(attachmentURI);
+							let item = await Trellis.URI.getURIItem(attachmentURI);
 							if (item) {
 								zp.viewPDF(item.id, { position });
 							}
@@ -611,7 +611,7 @@ class EditorInstance {
 						return;
 					}
 					let citationItem = citation.citationItems[0];
-					let item = await Zotero.EditorInstance.getItemFromURIs(citationItem.uris);
+					let item = await Trellis.EditorInstance.getItemFromURIs(citationItem.uris);
 					if (!item) {
 						return;
 					}
@@ -620,7 +620,7 @@ class EditorInstance {
 						let attachments = await item.getBestAttachments();
 						attachments = attachments.filter(x => x.isPDFAttachment());
 						if (attachments.length) {
-							let zp = Zotero.getActiveZoteroPane();
+							let zp = Trellis.getActiveTrellisPane();
 							if (zp) {
 								zp.viewPDF(attachments[0].id, { pageLabel: citationItem.locator });
 							}
@@ -635,7 +635,7 @@ class EditorInstance {
 					let { citation } = message;
 					let items = [];
 					for (let citationItem of citation.citationItems) {
-						let item = await Zotero.EditorInstance.getItemFromURIs(citationItem.uris);
+						let item = await Trellis.EditorInstance.getItemFromURIs(citationItem.uris);
 						if (item) {
 							items.push(item);
 						}
@@ -648,7 +648,7 @@ class EditorInstance {
 				}
 				case 'openURL': {
 					let { url } = message;
-					let zp = Zotero.getActiveZoteroPane();
+					let zp = Trellis.getActiveTrellisPane();
 					if (zp) {
 						zp.loadURI(url);
 					}
@@ -661,7 +661,7 @@ class EditorInstance {
 				case 'openWindow': {
 					// TODO: Can we can avoid creating empty note just to open it in a new window?
 					await this._ensureNoteCreated();
-					let zp = Zotero.getActiveZoteroPane();
+					let zp = Trellis.getActiveTrellisPane();
 					zp.openNoteWindow(this._item.id);
 					return;
 				}
@@ -710,24 +710,24 @@ class EditorInstance {
 					}
 					citation = JSON.parse(JSON.stringify(citation));
 					for (let citationItem of citation.citationItems) {
-						let item = await Zotero.EditorInstance.getItemFromURIs(citationItem.uris);
+						let item = await Trellis.EditorInstance.getItemFromURIs(citationItem.uris);
 						if (item) {
 							citationItem.id = item.id;
 						}
 					}
 					let openedEmpty = !citation.citationItems.length;
 					if (!citation.citationItems.length) {
-						let win = Zotero.getMainWindow();
+						let win = Trellis.getMainWindow();
 						if (win) {
-							let reader = Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID);
+							let reader = Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID);
 							if (reader) {
-								let item = Zotero.Items.get(reader.itemID);
+								let item = Trellis.Items.get(reader.itemID);
 								if (item && item.parentItem) {
 									item = item.parentItem;
 									let citationItem = {};
 									citationItem.id = item.id;
-									citationItem.uris = [Zotero.URI.getItemURI(item)];
-									citationItem.itemData = Zotero.Utilities.Item.itemToCSLJSON(item);
+									citationItem.uris = [Trellis.URI.getItemURI(item)];
+									citationItem.itemData = Trellis.Utilities.Item.itemToCSLJSON(item);
 									citation.citationItems.push(citationItem);
 								}
 							}
@@ -762,15 +762,15 @@ class EditorInstance {
 					return;
 				}
 				case 'toggleContextPane': {
-					let win = Zotero.getMainWindow();
-					win.ZoteroContextPane.togglePane();
+					let win = Trellis.getMainWindow();
+					win.TrellisContextPane.togglePane();
 					return;
 				}
 				case 'focusBack': {
-					// If editor is in a tab, let Zotero_Tabs handle the focus
+					// If editor is in a tab, let Trellis_Tabs handle the focus
 					if (this._tabID) {
-						let win = Zotero.getMainWindow();
-						win.Zotero_Tabs.focusBack();
+						let win = Trellis.getMainWindow();
+						win.Trellis_Tabs.focusBack();
 					}
 					// If the editor is in a standalone window, itemPane, or contextPane,
 					// move focus back from the iframe
@@ -784,8 +784,8 @@ class EditorInstance {
 					return;
 				}
 				case 'focusForward': {
-					let win = Zotero.getMainWindow();
-					win.Zotero_Tabs.focusForward();
+					let win = Trellis.getMainWindow();
+					win.Trellis_Tabs.focusForward();
 					return;
 				}
 				case 'return': {
@@ -800,7 +800,7 @@ class EditorInstance {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			if (message && ['update', 'importImages'].includes(message.action)) {
 				this._postMessage({ action: 'crash' });
 			}
@@ -811,9 +811,9 @@ class EditorInstance {
 	async _updateCitationItems(citationItemsList) {
 		let citationItems = [];
 		for (let { uris } of citationItemsList) {
-			let item = await Zotero.EditorInstance.getItemFromURIs(uris);
+			let item = await Trellis.EditorInstance.getItemFromURIs(uris);
 			if (item) {
-				let itemData = Zotero.Utilities.Item.itemToCSLJSON(item);
+				let itemData = Trellis.Utilities.Item.itemToCSLJSON(item);
 				citationItems.push({ uris, itemData });
 			}
 		}
@@ -829,10 +829,10 @@ class EditorInstance {
 			let n = 0;
 			// For now wait up to 60 seconds, as there is no point to wait for very long sync to finish
 			while (n++ < 60) {
-				let item = Zotero.Items.getByLibraryAndKey(this._item.libraryID, attachmentKey);
+				let item = Trellis.Items.getByLibraryAndKey(this._item.libraryID, attachmentKey);
 				// Attachment item (not the file) might not be synced at the time
-				if (!item && Zotero.Sync.Runner.syncInProgress) {
-					await Zotero.Promise.delay(1000);
+				if (!item && Trellis.Sync.Runner.syncInProgress) {
+					await Trellis.Promise.delay(1000);
 					continue;
 				}
 				// Check if the attachment is actually the child
@@ -842,7 +842,7 @@ class EditorInstance {
 						this._postMessage({ action: 'notifySubscription', id, data: { src } });
 					}
 					else {
-						await Zotero.Notes.ensureEmbeddedImagesAreAvailable(this._item);
+						await Trellis.Notes.ensureEmbeddedImagesAreAvailable(this._item);
 						// this._postMessage({ action: 'notifySubscription', id, data: { src: 'error' } });
 					}
 				}
@@ -860,7 +860,7 @@ class EditorInstance {
 			let res;
 
 			try {
-				res = await Zotero.HTTP.request('GET', src, { responseType: 'blob' });
+				res = await Trellis.HTTP.request('GET', src, { responseType: 'blob' });
 			}
 			catch (e) {
 				return;
@@ -876,7 +876,7 @@ class EditorInstance {
 			return;
 		}
 
-		let attachment = await Zotero.Attachments.importEmbeddedImage({
+		let attachment = await Trellis.Attachments.importEmbeddedImage({
 			blob,
 			parentItemID: this._item.id,
 			saveOptions: {
@@ -956,7 +956,7 @@ class EditorInstance {
 			catch (e) {
 				break;
 			}
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 		}
 		
 		// Separator
@@ -964,19 +964,19 @@ class EditorInstance {
 		this._popup.appendChild(separator);
 		// Check Spelling
 		var menuitem = this._popup.ownerDocument.createXULElement('menuitem');
-		menuitem.setAttribute('label', Zotero.getString('spellCheck.checkSpelling'));
+		menuitem.setAttribute('label', Trellis.getString('spellCheck.checkSpelling'));
 		menuitem.setAttribute('checked', spellChecker.enabled);
 		menuitem.setAttribute('type', 'checkbox');
 		menuitem.addEventListener('command', () => {
 			// Possible values: 0 - off, 1 - only multi-line, 2 - multi and single line input boxes
-			Zotero.Prefs.set('layout.spellcheckDefault', spellChecker.enabled ? 0 : 1, true);
+			Trellis.Prefs.set('layout.spellcheckDefault', spellChecker.enabled ? 0 : 1, true);
 		});
 		this._popup.append(menuitem);
 
 		if (spellChecker.enabled) {
 			// Languages menu
 			var menu = this._popup.ownerDocument.createXULElement('menu');
-			menu.setAttribute('label', Zotero.getString('general.languages'));
+			menu.setAttribute('label', Trellis.getString('general.languages'));
 			this._popup.append(menu);
 			// Languages menu popup
 			var menupopup = this._popup.ownerDocument.createXULElement('menupopup');
@@ -989,7 +989,7 @@ class EditorInstance {
 			for (var menuitem of menupopup.children) {
 				// 'spell-check-dictionary-en-US'
 				let locale = menuitem.id.slice(23);
-				let label = Zotero.Dictionaries.getBestDictionaryName(locale);
+				let label = Trellis.Dictionaries.getBestDictionaryName(locale);
 				if (label && label != locale) {
 					menuitem.setAttribute('label', label);
 				}
@@ -1000,9 +1000,9 @@ class EditorInstance {
 			menupopup.appendChild(separator);
 			// Add Dictionaries
 			var menuitem = this._popup.ownerDocument.createXULElement('menuitem');
-			menuitem.setAttribute('label', Zotero.getString('spellCheck.addRemoveDictionaries'));
+			menuitem.setAttribute('label', Trellis.getString('spellCheck.addRemoveDictionaries'));
 			menuitem.addEventListener('command', () => {
-				Services.ww.openWindow(null, "chrome://zotero/content/dictionaryManager.xhtml",
+				Services.ww.openWindow(null, "chrome://trellis/content/dictionaryManager.xhtml",
 					"dictionary-manager", "chrome,centerscreen", {});
 				
 			});
@@ -1074,28 +1074,28 @@ class EditorInstance {
 		if (html === undefined) return;
 		try {
 			if (this._disableSaving) {
-				Zotero.debug('Saving is disabled');
+				Trellis.debug('Saving is disabled');
 				return;
 			}
 
 			if (this._readOnly) {
-				Zotero.debug('Not saving read-only note');
+				Trellis.debug('Not saving read-only note');
 				return;
 			}
 			if (html === null) {
-				Zotero.debug('Note value not available -- not saving', 2);
+				Trellis.debug('Note value not available -- not saving', 2);
 				return;
 			}
 			// Update note
 			if (this._item) {
-				await Zotero.DB.executeTransaction(async () => {
+				await Trellis.DB.executeTransaction(async () => {
 					let changed = this._item.setNote(html);
 					if (changed && !this._disableSaving) {
 						await this._item.save({
 							skipDateModifiedUpdate,
 							notifierData: {
 								// Use a longer timeout to avoid repeated syncing during typing
-								autoSyncDelay: Zotero.Notes.AUTO_SYNC_DELAY,
+								autoSyncDelay: Trellis.Notes.AUTO_SYNC_DELAY,
 								noteEditorID: this.instanceID,
 								state
 							}
@@ -1105,7 +1105,7 @@ class EditorInstance {
 			}
 			// Create a new note
 			else {
-				var item = new Zotero.Item('note');
+				var item = new Trellis.Item('note');
 				if (this.parentItem) {
 					item.libraryID = this.parentItem.libraryID;
 				}
@@ -1116,7 +1116,7 @@ class EditorInstance {
 				if (!this._disableSaving) {
 					var id = await item.saveTx({
 						notifierData: {
-							autoSyncDelay: Zotero.Notes.AUTO_SYNC_DELAY
+							autoSyncDelay: Trellis.Notes.AUTO_SYNC_DELAY
 						}
 					});
 					if (!this.parentItem && this.collection) {
@@ -1127,8 +1127,8 @@ class EditorInstance {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.crash(true);
+			Trellis.logError(e);
+			Trellis.crash(true);
 			throw e;
 		}
 		
@@ -1139,7 +1139,7 @@ class EditorInstance {
 			spellChecker.toggleEnabled();
 			spellChecker.toggleEnabled();
 		} catch(e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 
@@ -1154,7 +1154,7 @@ class EditorInstance {
 				u8arr[n] = bstr.charCodeAt(n);
 			}
 
-			return new ((Zotero.getMainWindow()).Blob)([u8arr], { type: mime });
+			return new ((Trellis.getMainWindow()).Blob)([u8arr], { type: mime });
 		}
 		return null;
 	}
@@ -1177,7 +1177,7 @@ class EditorInstance {
 	}
 
 	async _openCitationDialog(nodeID, citationData, filterLibraryIDs, openedEmpty) {
-		await Zotero.Styles.init();
+		await Trellis.Styles.init();
 		let that = this;
 		let win;
 		
@@ -1197,12 +1197,12 @@ class EditorInstance {
 		
 			/**
 			 * 1) Provide citation dialog with items created from
-			 * `itemData`, without dealing with `Zotero.Integration.sessions`
+			 * `itemData`, without dealing with `Trellis.Integration.sessions`
 			 *
 			 * 2) Allow to pick already cited item from citation dialog
 			 *
 			 * @param citationItem
-			 * @returns {Zotero.Item|undefined}
+			 * @returns {Trellis.Item|undefined}
 			 */
 			customGetItem(citationItem) {
 				// Using `id` as cited item index from `getItems` below
@@ -1215,9 +1215,9 @@ class EditorInstance {
 				}
 				// Provide an item created from `itemData`
 				else if (!citationItem.id && citationItem.itemData) {
-					let item = new Zotero.Item();
-					Zotero.Utilities.itemFromCSLJSON(item, citationItem.itemData);
-					// Add csl data in the same format as in Zotero.Integration.Citation.loadItemData
+					let item = new Trellis.Item();
+					Trellis.Utilities.itemFromCSLJSON(item, citationItem.itemData);
+					// Add csl data in the same format as in Trellis.Integration.Citation.loadItemData
 					item.cslItemID = citationItem.id;
 					item.cslURIs = citationItem.uris;
 					item.cslItemData = citationItem.itemData;
@@ -1231,7 +1231,7 @@ class EditorInstance {
 			 * @return {Promise} A promise resolved with the previewed citation string
 			 */
 			sort: async function () {
-				// Zotero.debug('CI: sort');
+				// Trellis.debug('CI: sort');
 				// Normally `this.citation.citationItems` should be sorted by
 				// citation preview, but in our editor it doesn't make sense
 				// to do so, because we don't have a real style here and
@@ -1244,7 +1244,7 @@ class EditorInstance {
 			 *     Receives a number from 0 to 100 indicating current status.
 			 */
 			accept: async function (progressCallback) {
-				// Zotero.debug('CI: accept');
+				// Trellis.debug('CI: accept');
 				if (progressCallback) progressCallback(100);
 
 				if (win) {
@@ -1268,9 +1268,9 @@ class EditorInstance {
 					}
 					// New item
 					else if (citationItem.id) {
-						let item = await Zotero.Items.getAsync(parseInt(citationItem.id));
-						citationItem.uris = [Zotero.URI.getItemURI(item)];
-						citationItem.itemData = Zotero.Utilities.Item.itemToCSLJSON(item);
+						let item = await Trellis.Items.getAsync(parseInt(citationItem.id));
+						citationItem.uris = [Trellis.URI.getItemURI(item)];
+						citationItem.itemData = Trellis.Utilities.Item.itemToCSLJSON(item);
 					}
 					// Otherwise it's existing item, so just passing untouched citationItem
 					
@@ -1295,7 +1295,7 @@ class EditorInstance {
 			 * @return {Promise} A promise resolved by the items
 			 */
 			getItems: async function () {
-				// Zotero.debug('CI: getItems');
+				// Trellis.debug('CI: getItems');
 				let note = that._item.note;
 
 				let parser = new DOMParser();
@@ -1309,8 +1309,8 @@ class EditorInstance {
 							citationItems = JSON.parse(decodeURIComponent(citationItems));
 							let items = [];
 							for (let citationItem of citationItems) {
-								let item = new Zotero.Item();
-								Zotero.Utilities.itemFromCSLJSON(item, citationItem.itemData);
+								let item = new Trellis.Item();
+								Trellis.Utilities.itemFromCSLJSON(item, citationItem.itemData);
 								// This is the only way to pass our custom id for already cited
 								// items, without modifying citationDialog.js too much.
 								// Must not contain `/`
@@ -1321,7 +1321,7 @@ class EditorInstance {
 							return items.map(x => x.item);
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						}
 					}
 				}
@@ -1347,25 +1347,25 @@ class EditorInstance {
 			 * Load citation item data
 			 * @param {Boolean} [promptToReselect=true] - will throw a MissingItemException if false
 			 * @returns {Promise{Number}}
-			 * 	- Zotero.Integration.NO_ACTION
-			 * 	- Zotero.Integration.UPDATE
-			 * 	- Zotero.Integration.REMOVE_CODE
-			 * 	- Zotero.Integration.DELETE
+			 * 	- Trellis.Integration.NO_ACTION
+			 * 	- Trellis.Integration.UPDATE
+			 * 	- Trellis.Integration.REMOVE_CODE
+			 * 	- Trellis.Integration.DELETE
 			 */
 			loadItemData() {
-				// Zotero.debug('Citation: loadItemData');
+				// Trellis.debug('Citation: loadItemData');
 			}
 
 			async handleMissingItem(idx) {
-				// Zotero.debug('Citation: handleMissingItem');
+				// Trellis.debug('Citation: handleMissingItem');
 			}
 
 			async prepareForEditing() {
-				// Zotero.debug('Citation: prepareForEditing');
+				// Trellis.debug('Citation: prepareForEditing');
 			}
 
 			toJSON() {
-				// Zotero.debug('Citation: toJSON');
+				// Trellis.debug('Citation: toJSON');
 			}
 
 			/**
@@ -1373,7 +1373,7 @@ class EditorInstance {
 			 * @returns {string}
 			 */
 			serialize() {
-				// Zotero.debug('Citation: serialize');
+				// Trellis.debug('Citation: serialize');
 			}
 		};
 
@@ -1389,11 +1389,11 @@ class EditorInstance {
 
 		var allOptions = 'chrome,centerscreen';
 		// without this, Firefox gets raised with our windows under Compiz
-		if (Zotero.isLinux) allOptions += ',dialog=no';
+		if (Trellis.isLinux) allOptions += ',dialog=no';
 		// if(options) allOptions += ','+options;
 
 		var mode = 'chrome,centerscreen,resizable=true';
-		if (!Zotero.isMac && Zotero.Prefs.get('integration.keepAddCitationDialogRaised')) {
+		if (!Trellis.isMac && Trellis.Prefs.get('integration.keepAddCitationDialogRaised')) {
 			mode += ",popup";
 		}
 		else {
@@ -1402,7 +1402,7 @@ class EditorInstance {
 
 		win = that._citationDialogWindow = Components.classes['@mozilla.org/embedcomp/window-watcher;1']
 		.getService(Components.interfaces.nsIWindowWatcher)
-		.openWindow(null, 'chrome://zotero/content/integration/citationDialog.xhtml', '', mode, {
+		.openWindow(null, 'chrome://trellis/content/integration/citationDialog.xhtml', '', mode, {
 			wrappedJSObject: io
 		});
 	}
@@ -1412,7 +1412,7 @@ class EditorInstance {
 		for (let uri of uris) {
 			// Try getting URI directly
 			try {
-				let item = await Zotero.URI.getURIItem(uri);
+				let item = await Trellis.URI.getURIItem(uri);
 				if (item) {
 					// Ignore items in the trash
 					if (!item.deleted) {
@@ -1424,8 +1424,8 @@ class EditorInstance {
 			}
 
 			// Try merged item mapping
-			var replacer = await Zotero.Relations.getByPredicateAndObject(
-				'item', Zotero.Relations.replacedItemPredicate, uri
+			var replacer = await Trellis.Relations.getByPredicateAndObject(
+				'item', Trellis.Relations.replacedItemPredicate, uri
 			);
 			if (replacer.length && !replacer[0].deleted) {
 				return replacer[0];
@@ -1436,7 +1436,7 @@ class EditorInstance {
 	/**
 	 * Create note from annotations
 	 *
-	 * @param {Zotero.Item[]} annotations
+	 * @param {Trellis.Item[]} annotations
 	 * @param {Object} options
 	 * @param {Integer} options.parentID - Creates standalone note if not provided
 	 * @param {Integer} options.collectionID - Only valid if parentID not provided
@@ -1444,7 +1444,7 @@ class EditorInstance {
 	 *									embedded as "data:image/..." strings instead of via imageAttachmentKey.
 	 * @param {Boolean} options.noComments - If true, annotation comments are skipped
 	 * @param {Boolean} options.noHeader - If true, header is not added to the note
-	 * @returns {Promise<Zotero.Item>}
+	 * @returns {Promise<Trellis.Item>}
 	 */
 	static async createNoteFromAnnotations(annotations, { parentID, collectionID, noSave, noComments, noHeader } = {}) {
 		if (!annotations.length) {
@@ -1453,18 +1453,18 @@ class EditorInstance {
 		
 		for (let annotation of annotations) {
 			if (annotation.annotationType === 'image'
-				&& !(await Zotero.Annotations.hasCacheImage(annotation))) {
+				&& !(await Trellis.Annotations.hasCacheImage(annotation))) {
 				try {
-					await Zotero.PDFWorker.renderAttachmentAnnotations(annotation.parentID);
+					await Trellis.PDFWorker.renderAttachmentAnnotations(annotation.parentID);
 				}
 				catch (e) {
-					Zotero.debug(e);
+					Trellis.debug(e);
 				}
 				break;
 			}
 		}
 
-		let note = new Zotero.Item('note');
+		let note = new Trellis.Item('note');
 		if (!noSave) {
 			note.libraryID = annotations[0].libraryID;
 			if (parentID) {
@@ -1479,8 +1479,8 @@ class EditorInstance {
 		editorInstance._item = note;
 		let jsonAnnotations = [];
 		for (let annotation of annotations) {
-			let attachmentItem = Zotero.Items.get(annotation.parentID);
-			let jsonAnnotation = await Zotero.Annotations.toJSON(annotation);
+			let attachmentItem = Trellis.Items.get(annotation.parentID);
+			let jsonAnnotation = await Trellis.Annotations.toJSON(annotation);
 			if (noComments) {
 				jsonAnnotation.comment = null;
 			}
@@ -1492,10 +1492,10 @@ class EditorInstance {
 		let html = '';
 		if (!noHeader) {
 			let vars = {
-				title: Zotero.getString('reader-annotations'),
+				title: Trellis.getString('reader-annotations'),
 				date: new Date().toLocaleString()
 			};
-			html = Zotero.Utilities.Internal.generateHTMLFromTemplate(Zotero.Prefs.get('annotations.noteTemplates.title'), vars);
+			html = Trellis.Utilities.Internal.generateHTMLFromTemplate(Trellis.Prefs.get('annotations.noteTemplates.title'), vars);
 			// New line is needed for note title parser
 			html += '\n';
 		}
@@ -1548,7 +1548,7 @@ class EditorInstance {
 			if (!group.parentParentID || groups.filter(x => x.parentParentID === group.parentParentID).length > 1) {
 				html += `<h3>${group.parentTitle}</h3>\n`;
 			}
-			let { html: _html, citationItems: _citationItems } = Zotero.EditorInstanceUtilities.serializeAnnotations(group.jsonAnnotations, true);
+			let { html: _html, citationItems: _citationItems } = Trellis.EditorInstanceUtilities.serializeAnnotations(group.jsonAnnotations, true);
 			html += _html + '\n';
 			for (let _citationItem of _citationItems) {
 				if (!citationItems.find(item => item.uris.some(uri => _citationItem.uris.includes(uri)))) {
@@ -1585,7 +1585,7 @@ class EditorInstanceUtilities {
 		let storedCitationItems = [];
 		let html = '';
 		for (let annotation of annotations) {
-			let attachmentItem = Zotero.Items.get(annotation.attachmentItemID);
+			let attachmentItem = Trellis.Items.get(annotation.attachmentItemID);
 			if (!attachmentItem) {
 				continue;
 			}
@@ -1604,7 +1604,7 @@ class EditorInstanceUtilities {
 			let commentHTML = '';
 
 			let storedAnnotation = {
-				attachmentURI: Zotero.URI.getItemURI(attachmentItem),
+				attachmentURI: Trellis.URI.getItemURI(attachmentItem),
 				annotationKey: annotation.id,
 				color: annotation.color,
 				pageLabel: annotation.pageLabel,
@@ -1612,17 +1612,17 @@ class EditorInstanceUtilities {
 			};
 
 			// Citation
-			let parentItem = attachmentItem.parentID && Zotero.Items.get(attachmentItem.parentID);
+			let parentItem = attachmentItem.parentID && Trellis.Items.get(attachmentItem.parentID);
 			if (parentItem) {
-				let uris = [Zotero.URI.getItemURI(parentItem)];
+				let uris = [Trellis.URI.getItemURI(parentItem)];
 				let citationItem = {
 					uris,
 					locator: annotation.pageLabel
 				};
 
-				// Note: integration.js` uses `Zotero.Cite.System.prototype.retrieveItem`,
+				// Note: integration.js` uses `Trellis.Cite.System.prototype.retrieveItem`,
 				// which produces a little bit different CSL JSON
-				let itemData = Zotero.Utilities.Item.itemToCSLJSON(parentItem);
+				let itemData = Trellis.Utilities.Item.itemToCSLJSON(parentItem);
 				if (!skipEmbeddingItemData) {
 					citationItem.itemData = itemData;
 				}
@@ -1640,7 +1640,7 @@ class EditorInstanceUtilities {
 
 				let citationWithData = JSON.parse(JSON.stringify(citation));
 				citationWithData.citationItems[0].itemData = itemData;
-				let formatted = Zotero.EditorInstanceUtilities.formatCitation(citationWithData);
+				let formatted = Trellis.EditorInstanceUtilities.formatCitation(citationWithData);
 				citationHTML = `<span class="citation" data-citation="${encodeURIComponent(JSON.stringify(citation))}">${formatted}</span>`;
 			}
 
@@ -1686,14 +1686,14 @@ class EditorInstanceUtilities {
 				}
 			}
 			else if (annotation.type === 'image') {
-				imageHTML = Zotero.getString('annotation-image-not-available');
+				imageHTML = Trellis.getString('annotation-image-not-available');
 			}
 
 			// Text
 			if (annotation.text) {
 				let text = this._transformTextToHTML(annotation.text.trim());
 				highlightHTML = `<span class="${annotation.type}" data-annotation="${encodeURIComponent(JSON.stringify(storedAnnotation))}">${text}</span>`;
-				quotedHighlightHTML = `<span class="${annotation.type}" data-annotation="${encodeURIComponent(JSON.stringify(storedAnnotation))}">${Zotero.getString('punctuation.openingQMark')}${text}${Zotero.getString('punctuation.closingQMark')}</span>`;
+				quotedHighlightHTML = `<span class="${annotation.type}" data-annotation="${encodeURIComponent(JSON.stringify(storedAnnotation))}">${Trellis.getString('punctuation.openingQMark')}${text}${Trellis.getString('punctuation.closingQMark')}</span>`;
 			}
 
 			// Note
@@ -1703,17 +1703,17 @@ class EditorInstanceUtilities {
 
 			let template;
 			if (['highlight', 'underline'].includes(annotation.type)) {
-				template = Zotero.Prefs.get('annotations.noteTemplates.highlight');
+				template = Trellis.Prefs.get('annotations.noteTemplates.highlight');
 			}
 			else if (['note', 'text'].includes(annotation.type)) {
-				template = Zotero.Prefs.get('annotations.noteTemplates.note');
+				template = Trellis.Prefs.get('annotations.noteTemplates.note');
 			}
 			else {
 				template = '<p>{{image}}<br/>{{citation}} {{comment}}</p>';
 			}
 
-			Zotero.debug('Using note template:');
-			Zotero.debug(template);
+			Trellis.debug('Using note template:');
+			Trellis.debug(template);
 
 			template = template.replace(
 				/(<blockquote>[^<>]*?)({{highlight}})([\s\S]*?<\/blockquote>)/g,
@@ -1730,7 +1730,7 @@ class EditorInstanceUtilities {
 				tags: (attrs) => (annotation.tags && annotation.tags.map(tag => tag.name) || []).join(attrs.join || ' ')
 			};
 
-			let templateHTML = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			let templateHTML = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			// Remove some spaces at the end of paragraph
 			templateHTML = templateHTML.replace(/([\s]*)(<\/p)/g, '$2');
 			// Remove multiple spaces
@@ -1827,10 +1827,10 @@ class EditorInstanceUtilities {
 			else if (authors.length === 2) {
 				let a = authors[0].family || authors[0].literal;
 				let b = authors[1].family || authors[1].literal;
-				str = Zotero.getString('general.andJoiner', [a, b]);
+				str = Trellis.getString('general.andJoiner', [a, b]);
 			}
 			else if (authors.length >= 3) {
-				str = (authors[0].family || authors[0].literal) + ' ' + Zotero.getString('general.etAl');
+				str = (authors[0].family || authors[0].literal) + ' ' + Trellis.getString('general.etAl');
 			}
 		}
 
@@ -1888,5 +1888,5 @@ class EditorInstanceUtilities {
 	}
 }
 
-Zotero.EditorInstance = EditorInstance;
-Zotero.EditorInstanceUtilities = new EditorInstanceUtilities();
+Trellis.EditorInstance = EditorInstance;
+Trellis.EditorInstanceUtilities = new EditorInstanceUtilities();

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-# Copyright (c) 2011  Zotero
+# Copyright (c) 2011  Trellis
 #                     Center for History and New Media
 #                     George Mason University, Fairfax, Virginia, USA
-#                     http://zotero.org
+#                     http://trellis.org
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -230,7 +230,7 @@ if [[ $BUILD_MAC == 0 ]] && [[ $BUILD_WIN == 0 ]] && [[ $BUILD_LINUX == 0 ]]; th
 	usage
 fi
 
-if [[ -z "${ZOTERO_TEST:-}" ]] || [[ $ZOTERO_TEST == "0" ]]; then
+if [[ -z "${TRELLIS_TEST:-}" ]] || [[ $TRELLIS_TEST == "0" ]]; then
 	include_tests=0
 else
 	include_tests=1
@@ -370,7 +370,7 @@ mv chrome/browser-fx chrome/browser
 mv chrome.manifest chrome.manifest-fx
 mv defaults defaults-fx
 
-# Extract Zotero files
+# Extract Trellis files
 if [ -n "$ZIP_FILE" ]; then
 	ZIP_FILE="`abspath $ZIP_FILE`"
 	echo "Building from $ZIP_FILE"
@@ -385,7 +385,7 @@ fi
 
 mv defaults defaults-z
 mv defaults-fx defaults
-prefs_file=defaults/preferences/zotero.js
+prefs_file=defaults/preferences/trellis.js
 
 # Transfer Firefox prefs, omitting some with undesirable overrides from the base prefs
 #
@@ -395,17 +395,17 @@ prefs_file=defaults/preferences/zotero.js
 grep -E -v '(network.captive-portal-service.enabled|extensions.systemAddon.update.url)' defaults/preferences/firefox.js > $prefs_file
 rm defaults/preferences/firefox.js
 
-# Combine app and "extension" Zotero prefs
+# Combine app and "extension" Trellis prefs
 echo "" >> $prefs_file
 echo "#" >> $prefs_file
-echo "# Zotero app prefs" >> $prefs_file
+echo "# Trellis app prefs" >> $prefs_file
 echo "#" >> $prefs_file
 echo "" >> $prefs_file
 cat "$CALLDIR/assets/prefs.js" >> $prefs_file
 echo "" >> $prefs_file
-echo "# Zotero extension prefs" >> $prefs_file
+echo "# Trellis extension prefs" >> $prefs_file
 echo "" >> $prefs_file
-cat defaults-z/preferences/zotero.js >> $prefs_file
+cat defaults-z/preferences/trellis.js >> $prefs_file
 
 rm -rf defaults-z
 
@@ -431,12 +431,12 @@ fi
 echo '{"dictionaries": {"en-US": "dictionaries/en-US.dic"}, "system": []}' > chrome/browser/content/browser/built_in_addons.json
 
 # chrome.manifest
-mv chrome.manifest zotero.manifest
+mv chrome.manifest trellis.manifest
 mv chrome.manifest-fx chrome.manifest
 # TEMP
-#echo "manifest zotero.manifest" >> "$base_dir/chrome.manifest"
-cat zotero.manifest >> chrome.manifest
-rm zotero.manifest
+#echo "manifest trellis.manifest" >> "$base_dir/chrome.manifest"
+cat trellis.manifest >> chrome.manifest
+rm trellis.manifest
 
 # Update channel
 perl -pi -e 's/pref\("app\.update\.channel", "[^"]*"\);/pref\("app\.update\.channel", "'"$UPDATE_CHANNEL"'");/' $prefs_file
@@ -453,10 +453,10 @@ if [ $DEVTOOLS -eq 1 ]; then
 		echo 'pref("devtools.debugger.prompt-connection", false);' >> $prefs_file
 	fi
 	
-	# Use 'zotero' instead of 'zotero-bin' when passing -jsdebugger flag on Linux, since we need
+	# Use 'trellis' instead of 'trellis-bin' when passing -jsdebugger flag on Linux, since we need
 	# that to pass application.ini
 	replace_line 'let command = Services.dirsvc.get\("XREExeF", Ci.nsIFile\).path;' \
-		'let command = Services.dirsvc.get("XREExeF", Ci.nsIFile).path; command = command.replace("zotero-bin", "zotero");' \
+		'let command = Services.dirsvc.get("XREExeF", Ci.nsIFile).path; command = command.replace("trellis-bin", "trellis");' \
 		chrome/devtools/modules/devtools/client/framework/browser-toolbox/Launcher.sys.mjs
 	
 	# Fix source display breaking when switching windows in the Browser Toolbox.
@@ -485,8 +485,8 @@ if [ $DEVTOOLS -eq 1 ]; then
 		chrome/devtools/modules/devtools/client/performance-new/shared/background.sys.mjs
 
 	# Use our profilerViewer.xhtml to display profiles.
-	# We can't use basicViewer because that loads Zotero scripts, and profiling
-	# runs in the Browser Toolbox child process, where a second Zotero instance
+	# We can't use basicViewer because that loads Trellis scripts, and profiling
+	# runs in the Browser Toolbox child process, where a second Trellis instance
 	# would collide with the locked database.
 	replace_line 'const contentBrowser = await new Promise\(resolveOnContentBrowserCreated =>' \
 		'if (typeof win.openWebLinkIn !== "function") {
@@ -497,7 +497,7 @@ if [ $DEVTOOLS -eq 1 ]; then
 			arg.wrappedJSObject = arg;
 			const viewerWin = ww.openWindow(
 				null,
-				"chrome:\/\/zotero\/content\/standalone\/profilerViewer.xhtml",
+				"chrome:\/\/trellis\/content\/standalone\/profilerViewer.xhtml",
 				null,
 				"chrome,dialog=no,resizable,centerscreen,scrollbars",
 				arg
@@ -537,20 +537,20 @@ for locale in `ls chrome/locale/`; do
 	cp "$CALLDIR/assets/branding/locale/brand.ftl" localization/$locale/branding/brand.ftl
 	
 	mkdir -p localization/$locale/toolkit/global
-	cp chrome/locale/$locale/zotero/mozilla/arrowscrollbox.ftl localization/$locale/toolkit/global
-	cp chrome/locale/$locale/zotero/mozilla/textActions.ftl localization/$locale/toolkit/global
-	cp chrome/locale/$locale/zotero/mozilla/wizard.ftl localization/$locale/toolkit/global
+	cp chrome/locale/$locale/trellis/mozilla/arrowscrollbox.ftl localization/$locale/toolkit/global
+	cp chrome/locale/$locale/trellis/mozilla/textActions.ftl localization/$locale/toolkit/global
+	cp chrome/locale/$locale/trellis/mozilla/wizard.ftl localization/$locale/toolkit/global
 	
 	mkdir -p localization/$locale/browser
-	cp chrome/locale/$locale/zotero/mozilla/browserSets.ftl localization/$locale/browser
-	cp chrome/locale/$locale/zotero/mozilla/menubar.ftl localization/$locale/browser
+	cp chrome/locale/$locale/trellis/mozilla/browserSets.ftl localization/$locale/browser
+	cp chrome/locale/$locale/trellis/mozilla/menubar.ftl localization/$locale/browser
 	
 	mkdir -p localization/$locale/devtools/client
-	cp chrome/locale/$locale/zotero/mozilla/toolbox.ftl localization/$locale/devtools/client
+	cp chrome/locale/$locale/trellis/mozilla/toolbox.ftl localization/$locale/devtools/client
 	
-	# TEMP: Until we've created zotero.ftl in all locales
-	touch chrome/locale/$locale/zotero/zotero.ftl
-	cp chrome/locale/$locale/zotero/*.ftl localization/$locale/
+	# TEMP: Until we've created trellis.ftl in all locales
+	touch chrome/locale/$locale/trellis/trellis.ftl
+	cp chrome/locale/$locale/trellis/*.ftl localization/$locale/
 done
 
 # Add to chrome manifest
@@ -584,7 +584,7 @@ fi
 # Add word processor plug-ins
 echo >> chrome.manifest
 if [ $BUILD_MAC == 1 ]; then
-	pluginDir="$CALLDIR/modules/zotero-word-for-mac-integration"
+	pluginDir="$CALLDIR/modules/trellis-word-for-mac-integration"
 	mkdir -p "integration/word-for-mac"
 	cp -RH "$pluginDir/components" \
 		"$pluginDir/resource" \
@@ -594,13 +594,13 @@ if [ $BUILD_MAC == 1 ]; then
 	cat "integration/word-for-mac/resource/version.txt"
 	echo
 	echo >> $prefs_file
-	cat "$CALLDIR/modules/zotero-word-for-mac-integration/defaults/preferences/zoteroMacWordIntegration.js" >> $prefs_file
+	cat "$CALLDIR/modules/trellis-word-for-mac-integration/defaults/preferences/trellisMacWordIntegration.js" >> $prefs_file
 	echo >> $prefs_file
 	
 	echo "manifest	integration/word-for-mac/chrome.manifest" >> chrome.manifest
 	
 elif [ $BUILD_WIN == 1 ]; then
-	pluginDir="$CALLDIR/modules/zotero-word-for-windows-integration"
+	pluginDir="$CALLDIR/modules/trellis-word-for-windows-integration"
 	mkdir -p "integration/word-for-windows"
 	cp -RH "$pluginDir/components" \
 		"$pluginDir/resource" \
@@ -610,13 +610,13 @@ elif [ $BUILD_WIN == 1 ]; then
 	cat "integration/word-for-windows/resource/version.txt"
 	echo
 	echo >> $prefs_file
-	cat "$CALLDIR/modules/zotero-word-for-windows-integration/defaults/preferences/zoteroWinWordIntegration.js" >> $prefs_file
+	cat "$CALLDIR/modules/trellis-word-for-windows-integration/defaults/preferences/trellisWinWordIntegration.js" >> $prefs_file
 	echo >> $prefs_file
 	
 	echo "manifest	integration/word-for-windows/chrome.manifest" >> chrome.manifest
 fi
 # Libreoffice plugin for all platforms
-pluginDir="$CALLDIR/modules/zotero-libreoffice-integration"
+pluginDir="$CALLDIR/modules/trellis-libreoffice-integration"
 mkdir -p "integration/libreoffice"
 cp -RH "$pluginDir/chrome" \
 	"$pluginDir/components" \
@@ -627,7 +627,7 @@ echo -n "LibreOffice plugin version: "
 cat "integration/libreoffice/resource/version.txt"
 echo
 echo >> $prefs_file
-cat "$CALLDIR/modules/zotero-libreoffice-integration/defaults/preferences/zoteroLibreOfficeIntegration.js" >> $prefs_file
+cat "$CALLDIR/modules/trellis-libreoffice-integration/defaults/preferences/trellisLibreOfficeIntegration.js" >> $prefs_file
 echo >> $prefs_file
 
 echo "manifest	integration/libreoffice/chrome.manifest" >> chrome.manifest
@@ -635,7 +635,7 @@ echo "manifest	integration/libreoffice/chrome.manifest" >> chrome.manifest
 # Delete files that shouldn't be distributed
 find chrome -name .DS_Store -exec rm -f {} \;
 
-# Zip browser and Zotero files into omni.ja
+# Zip browser and Trellis files into omni.ja
 if [ $quick_build -eq 1 ]; then
 	# If quick build, don't compress or optimize
 	zip -qrXD omni.ja *
@@ -652,7 +652,7 @@ rm -rf "$omni_dir"
 cp "$CALLDIR/assets/updater.ini" "$base_dir"
 
 # Adjust chrome.manifest
-#perl -pi -e 's^(chrome|resource)/^jar:zotero.jar\!/$1/^g' "$BUILD_DIR/zotero/chrome.manifest"
+#perl -pi -e 's^(chrome|resource)/^jar:trellis.jar\!/$1/^g' "$BUILD_DIR/trellis/chrome.manifest"
 
 # Copy application.ini and modify
 cp "$CALLDIR/assets/application.ini" "$app_dir/application.ini"
@@ -664,10 +664,10 @@ find "$BUILD_DIR" -name .DS_Store -exec rm -f {} \;
 
 # Mac
 if [ $BUILD_MAC == 1 ]; then
-	echo 'Building Zotero.app'
+	echo 'Building Trellis.app'
 		
 	# Set up directory structure
-	APPDIR="$STAGE_DIR/Zotero.app"
+	APPDIR="$STAGE_DIR/Trellis.app"
 	rm -rf "$APPDIR"
 	mkdir "$APPDIR"
 	chmod 755 "$APPDIR"
@@ -687,9 +687,9 @@ if [ $BUILD_MAC == 1 ]; then
 	fi
 	
 	# Use our own launcher
-	check_lfs_file "$CALLDIR/mac/zotero.xz"
-	xz -d --stdout "$CALLDIR/mac/zotero.xz" > "$CONTENTSDIR/MacOS/zotero"
-	chmod 755 "$CONTENTSDIR/MacOS/zotero"
+	check_lfs_file "$CALLDIR/mac/trellis.xz"
+	xz -d --stdout "$CALLDIR/mac/trellis.xz" > "$CONTENTSDIR/MacOS/trellis"
+	chmod 755 "$CONTENTSDIR/MacOS/trellis"
 
 	# TEMP: Custom version of XUL with some backported Mozilla bug fixes
 	if [ -n "$custom_components_hash_mac" ]; then
@@ -705,7 +705,7 @@ if [ $BUILD_MAC == 1 ]; then
 	perl -pi -e "s/\{\{VERSION\}\}/$VERSION/" "$CONTENTSDIR/Info.plist"
 	perl -pi -e "s/\{\{VERSION_NUMERIC\}\}/$VERSION_NUMERIC/" "$CONTENTSDIR/Info.plist"
 	if [ $UPDATE_CHANNEL == "beta" ] || [ $UPDATE_CHANNEL == "dev" ] || [ $UPDATE_CHANNEL == "source" ]; then
-		perl -pi -e "s/org\.zotero\.zotero/org.zotero.zotero-$UPDATE_CHANNEL/" "$CONTENTSDIR/Info.plist"
+		perl -pi -e "s/org\.trellis\.trellis/org.trellis.trellis-$UPDATE_CHANNEL/" "$CONTENTSDIR/Info.plist"
 	fi
 	perl -pi -e "s/\{\{VERSION\}\}/$VERSION/" "$CONTENTSDIR/Info.plist"
 	# Needed for "monkeypatch" Windows builds: 
@@ -713,7 +713,7 @@ if [ $BUILD_MAC == 1 ]; then
 	rm -f "$CONTENTSDIR/Info.plist.bak"
 	
 	echo
-	grep -B 1 org.zotero.zotero "$CONTENTSDIR/Info.plist"
+	grep -B 1 org.trellis.trellis "$CONTENTSDIR/Info.plist"
 	echo
 	grep -A 1 CFBundleShortVersionString "$CONTENTSDIR/Info.plist"
 	echo
@@ -725,8 +725,8 @@ if [ $BUILD_MAC == 1 ]; then
 	
 	# Add word processor plug-ins
 	mkdir "$CONTENTSDIR/Resources/integration"
-	cp -RH "$CALLDIR/modules/zotero-libreoffice-integration/install" "$CONTENTSDIR/Resources/integration/libreoffice"
-	cp -RH "$CALLDIR/modules/zotero-word-for-mac-integration/install" "$CONTENTSDIR/Resources/integration/word-for-mac"
+	cp -RH "$CALLDIR/modules/trellis-libreoffice-integration/install" "$CONTENTSDIR/Resources/integration/libreoffice"
+	cp -RH "$CALLDIR/modules/trellis-word-for-mac-integration/install" "$CONTENTSDIR/Resources/integration/word-for-mac"
 	
 	# Delete extraneous files
 	find "$CONTENTSDIR" -depth -type d -name .git -exec rm -rf {} \;
@@ -736,8 +736,8 @@ if [ $BUILD_MAC == 1 ]; then
 	# the precomplete file
 	if [[ $SIGN == 1 ]] && [[ -n "$SAFARI_APPEX" ]] && [[ -d "$SAFARI_APPEX" ]]; then
 		mkdir "$APPDIR/Contents/PlugIns"
-		cp -R $SAFARI_APPEX "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex"
-		rm -rf "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex/Contents/Resources/safari/test/"
+		cp -R $SAFARI_APPEX "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex"
+		rm -rf "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex/Contents/Resources/safari/test/"
 	fi
 	
 	# Copy over removed-files and make a precomplete file
@@ -777,11 +777,11 @@ if [ $BUILD_MAC == 1 ]; then
 		pushd "$BUILD_DIR"
 		mkdir libreoffice-repack
 		cd libreoffice-repack
-		unzip -q "$APPDIR/Contents/Resources/integration/libreoffice/Zotero_LibreOffice_Integration.oxt" external_jars/jna.jar
+		unzip -q "$APPDIR/Contents/Resources/integration/libreoffice/Trellis_LibreOffice_Integration.oxt" external_jars/jna.jar
 		unzip -q external_jars/jna.jar com/sun/jna/darwin/libjnidispatch.jnilib
 		/usr/bin/codesign --force --options runtime --sign "$DEVELOPER_ID" com/sun/jna/darwin/libjnidispatch.jnilib
 		zip -u external_jars/jna.jar com/sun/jna/darwin/libjnidispatch.jnilib
-		zip -u "$APPDIR/Contents/Resources/integration/libreoffice/Zotero_LibreOffice_Integration.oxt" external_jars/jna.jar
+		zip -u "$APPDIR/Contents/Resources/integration/libreoffice/Trellis_LibreOffice_Integration.oxt" external_jars/jna.jar
 		cd ..
 		rm -rf libreoffice-repack
 		popd
@@ -789,17 +789,17 @@ if [ $BUILD_MAC == 1 ]; then
 		# Sign Safari App Extension
 		#
 		# Even though it's signed by Xcode, we sign it again to make sure it matches the parent app signature
-		if [ -d "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex" ]; then
+		if [ -d "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex" ]; then
 			echo
 			# Extract entitlements, which differ from parent app
 			/usr/bin/codesign -d --entitlements "$BUILD_DIR/safari-entitlements.plist" --xml "$SAFARI_APPEX"
 			
 			# Change appex bundle identifier to have same prefix as parent app
 			bundle_identifier=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APPDIR/Contents/Info.plist")
-			perl -pi -e "s/org\.zotero\.SafariExtensionApp\.SafariExtension/$bundle_identifier.SafariExtension/" "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex/Contents/Info.plist"
+			perl -pi -e "s/org\.trellis\.SafariExtensionApp\.SafariExtension/$bundle_identifier.SafariExtension/" "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex/Contents/Info.plist"
 
-			find "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex/Contents" -name '*.dylib' -exec /usr/bin/codesign --force --options runtime --entitlements "$entitlements_file" --sign "$DEVELOPER_ID" {} \;
-			/usr/bin/codesign --force --options runtime --entitlements "$BUILD_DIR/safari-entitlements.plist" --sign "$DEVELOPER_ID" "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex"
+			find "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex/Contents" -name '*.dylib' -exec /usr/bin/codesign --force --options runtime --entitlements "$entitlements_file" --sign "$DEVELOPER_ID" {} \;
+			/usr/bin/codesign --force --options runtime --entitlements "$BUILD_DIR/safari-entitlements.plist" --sign "$DEVELOPER_ID" "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex"
 		fi
 		
 		# Sign final app package
@@ -811,7 +811,7 @@ if [ $BUILD_MAC == 1 ]; then
 		# Verify Safari App Extension
 		if [[ -n "$SAFARI_APPEX" ]] && [[ -d "$SAFARI_APPEX" ]]; then
 			echo
-			/usr/bin/codesign --verify -vvvv "$APPDIR/Contents/PlugIns/ZoteroSafariExtension.appex"
+			/usr/bin/codesign --verify -vvvv "$APPDIR/Contents/PlugIns/TrellisSafariExtension.appex"
 		fi
 	fi
 	
@@ -819,10 +819,10 @@ if [ $BUILD_MAC == 1 ]; then
 	if [ $PACKAGE == 1 ]; then
 		if [ $MAC_NATIVE == 1 ]; then
 			echo "Creating Mac installer"
-			dmg="$DIST_DIR/Zotero-$VERSION.dmg"
-			"$CALLDIR/mac/pkg-dmg" --source "$STAGE_DIR/Zotero.app" \
+			dmg="$DIST_DIR/Trellis-$VERSION.dmg"
+			"$CALLDIR/mac/pkg-dmg" --source "$STAGE_DIR/Trellis.app" \
 				--target "$dmg" \
-				--sourcefile --volname Zotero --copy "$CALLDIR/mac/DSStore:/.DS_Store" \
+				--sourcefile --volname Trellis --copy "$CALLDIR/mac/DSStore:/.DS_Store" \
 				--symlink /Applications:"/Drag Here to Install" > /dev/null
 			
 			if [ "$UPDATE_CHANNEL" != "test" ]; then
@@ -840,8 +840,8 @@ if [ $BUILD_MAC == 1 ]; then
 			echo
 		else
 			echo 'Not building on Mac; creating Mac distribution as a zip file'
-			rm -f "$DIST_DIR/Zotero_mac.zip"
-			cd "$STAGE_DIR" && zip -rqX "$DIST_DIR/Zotero-${VERSION}_mac.zip" Zotero.app
+			rm -f "$DIST_DIR/Trellis_mac.zip"
+			cd "$STAGE_DIR" && zip -rqX "$DIST_DIR/Trellis-${VERSION}_mac.zip" Trellis.app
 		fi
 	fi
 fi
@@ -850,7 +850,7 @@ fi
 if [ $BUILD_WIN == 1 ]; then
 	echo "Building Windows common"
 	
-	COMMON_APPDIR="$STAGE_DIR/Zotero_common"
+	COMMON_APPDIR="$STAGE_DIR/Trellis_common"
 	mkdir "$COMMON_APPDIR"
 	
 	# Package non-arch-specific components
@@ -873,12 +873,12 @@ if [ $BUILD_WIN == 1 ]; then
 		archs=(win-x64 win-arm64 win32);
 	fi
 	for arch in "${archs[@]}"; do
-		echo "Building Zotero_$arch"
+		echo "Building Trellis_$arch"
 		
 		runtime_path="${WIN_RUNTIME_PATH_PREFIX}$arch"
 		
 		# Set up directory
-		APPDIR="$STAGE_DIR/Zotero_$arch"
+		APPDIR="$STAGE_DIR/Trellis_$arch"
 		mkdir "$APPDIR"
 		
 		# Copy relevant assets from Firefox
@@ -887,10 +887,10 @@ if [ $BUILD_WIN == 1 ]; then
 		# Firefox ARM64 builds for use with the EME DRM plugins
 		cp -R "$runtime_path"/!(application.ini|browser|crashreporter*|default-browser-agent.exe|defaultagent*|defaults|devtools-files|firefox*|i686|maintenanceservice*|minidump-analyzer.exe|pingsender.exe|private_browsing*|precomplete|removed-files|uninstall|update*) "$APPDIR"
 
-		# Copy zotero.exe, which is built directly from Firefox source and then modified by
+		# Copy trellis.exe, which is built directly from Firefox source and then modified by
 		# ResourceHacker to add icons
-		check_lfs_file "$CALLDIR/win/zotero.exe.tar.xz"
-		tar xf "$CALLDIR/win/zotero.exe.tar.xz" --to-stdout zotero_$arch.exe > "$APPDIR/zotero.exe"
+		check_lfs_file "$CALLDIR/win/trellis.exe.tar.xz"
+		tar xf "$CALLDIR/win/trellis.exe.tar.xz" --to-stdout trellis_$arch.exe > "$APPDIR/trellis.exe"
 		
 		# Use our own updater, because Mozilla's requires updates signed by Mozilla
 		check_lfs_file "$CALLDIR/win/updater.exe.tar.xz"
@@ -901,7 +901,7 @@ if [ $BUILD_WIN == 1 ]; then
 			# FileVersion is limited to four integers, so it won't be properly updated for non-release
 			# builds (e.g., we'll show 5.0.97.0 for 5.0.97-beta.37). ProductVersion will be the full
 			# version string.
-			rcedit "`cygpath -w \"$APPDIR/zotero.exe\"`" \
+			rcedit "`cygpath -w \"$APPDIR/trellis.exe\"`" \
 				--set-file-version "$VERSION_NUMERIC" \
 				--set-product-version "$VERSION"
 			rcedit "`cygpath -w \"$APPDIR/updater.exe\"`" \
@@ -936,19 +936,19 @@ if [ $BUILD_WIN == 1 ]; then
 		
 		# Add word processor plug-ins
 		mkdir -p "$APPDIR/integration"
-		cp -RH "$CALLDIR/modules/zotero-libreoffice-integration/install" "$APPDIR/integration/libreoffice"
-		cp -RH "$CALLDIR/modules/zotero-word-for-windows-integration/install" "$APPDIR/integration/word-for-windows"
+		cp -RH "$CALLDIR/modules/trellis-libreoffice-integration/install" "$APPDIR/integration/libreoffice"
+		cp -RH "$CALLDIR/modules/trellis-word-for-windows-integration/install" "$APPDIR/integration/word-for-windows"
 		if [ $arch = 'win32' ]; then
-			rm "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration_x64.dll"
-			rm "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration_ARM64.dll"
+			rm "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration_x64.dll"
+			rm "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration_ARM64.dll"
 		elif [ $arch = 'win-x64' ]; then
-			mv "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration_x64.dll" \
-				"$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration.dll"
-			rm "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration_ARM64.dll"
+			mv "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration_x64.dll" \
+				"$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration.dll"
+			rm "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration_ARM64.dll"
 		elif [ $arch = 'win-arm64' ]; then
-			mv "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration_ARM64.dll" \
-				"$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration.dll"
-			rm "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration_x64.dll"
+			mv "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration_ARM64.dll" \
+				"$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration.dll"
+			rm "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration_x64.dll"
 		fi
 		
 		# Delete extraneous files
@@ -957,14 +957,14 @@ if [ $BUILD_WIN == 1 ]; then
 		find "$APPDIR" \( -name '*.exe' -or -name '*.dll' \) -exec chmod 755 {} \;
 		
 		if [[ $PACKAGE -eq 1 ]] && [[ $SIGN -eq 1 ]]; then
-			"$CALLDIR/win/codesign" "$APPDIR/zotero.exe" "$SIGNATURE_DESC"
+			"$CALLDIR/win/codesign" "$APPDIR/trellis.exe" "$SIGNATURE_DESC"
 			sleep $SIGNTOOL_DELAY
 			"$CALLDIR/win/codesign" "$APPDIR/updater.exe" "$SIGNATURE_DESC Updater"
 			sleep $SIGNTOOL_DELAY
 			# Re-sign modified xul.dll
 			"$CALLDIR/win/codesign" "$APPDIR/xul.dll" "$SIGNATURE_DESC"
 			sleep $SIGNTOOL_DELAY
-			"$CALLDIR/win/codesign" "$APPDIR/integration/word-for-windows/libzoteroWinWordIntegration.dll" "$SIGNATURE_DESC Word Plugin"
+			"$CALLDIR/win/codesign" "$APPDIR/integration/word-for-windows/libtrellisWinWordIntegration.dll" "$SIGNATURE_DESC Word Plugin"
 		fi
 		
 		# Copy over removed-files and make a precomplete file
@@ -997,11 +997,11 @@ if [ $BUILD_WIN == 1 ]; then
 				fi
 				
 				if [ "$arch" = "win32" ]; then
-					INSTALLER_PATH="$DIST_DIR/Zotero-${VERSION}_win32_setup.exe"
+					INSTALLER_PATH="$DIST_DIR/Trellis-${VERSION}_win32_setup.exe"
 				elif [ "$arch" = "win-x64" ]; then
-					INSTALLER_PATH="$DIST_DIR/Zotero-${VERSION}_x64_setup.exe"
+					INSTALLER_PATH="$DIST_DIR/Trellis-${VERSION}_x64_setup.exe"
 				elif [ "$arch" = "win-arm64" ]; then
-					INSTALLER_PATH="$DIST_DIR/Zotero-${VERSION}_arm64_setup.exe"
+					INSTALLER_PATH="$DIST_DIR/Trellis-${VERSION}_arm64_setup.exe"
 				fi
 				
 				# Stage installer
@@ -1044,7 +1044,7 @@ if [ $BUILD_WIN == 1 ]; then
 				echo 'Not building on Windows; only building zip file'
 			fi
 			cd "$STAGE_DIR"
-			zip -rqX "$DIST_DIR/Zotero-${VERSION}_$arch.zip" Zotero_$arch
+			zip -rqX "$DIST_DIR/Trellis-${VERSION}_$arch.zip" Trellis_$arch
 		fi
 	done
 	
@@ -1064,8 +1064,8 @@ if [ $BUILD_LINUX == 1 ]; then
 		runtime_path="${LINUX_RUNTIME_PATH_PREFIX}${arch}"
 		
 		# Set up directory
-		echo 'Building Zotero_linux-'$arch
-		APPDIR="$STAGE_DIR/Zotero_linux-$arch"
+		echo 'Building Trellis_linux-'$arch
+		APPDIR="$STAGE_DIR/Trellis_linux-$arch"
 		rm -rf "$APPDIR"
 		mkdir "$APPDIR"
 		
@@ -1073,11 +1073,11 @@ if [ $BUILD_LINUX == 1 ]; then
 		cp -r "$runtime_path/"!(application.ini|browser|defaults|devtools-files|crashreporter|crashreporter.ini|firefox|pingsender|precomplete|removed-files|run-mozilla.sh|update-settings.ini|updater|updater.ini) "$APPDIR"
 		
 		# Use our own launcher that calls the original Firefox executable with -app
-		mv "$APPDIR"/firefox-bin "$APPDIR"/zotero-bin
-		cp "$CALLDIR/linux/zotero" "$APPDIR"/zotero
+		mv "$APPDIR"/firefox-bin "$APPDIR"/trellis-bin
+		cp "$CALLDIR/linux/trellis" "$APPDIR"/trellis
 		
 		# Copy Ubuntu launcher files
-		cp "$CALLDIR/linux/zotero.desktop" "$APPDIR"
+		cp "$CALLDIR/linux/trellis.desktop" "$APPDIR"
 		cp "$CALLDIR/linux/set_launcher_icon" "$APPDIR"
 		
 		# Use our own updater, because Mozilla's requires updates signed by Mozilla
@@ -1090,7 +1090,7 @@ if [ $BUILD_LINUX == 1 ]; then
 		
 		# Add word processor plug-ins
 		mkdir "$APPDIR/integration"
-		cp -RH "$CALLDIR/modules/zotero-libreoffice-integration/install" "$APPDIR/integration/libreoffice"
+		cp -RH "$CALLDIR/modules/trellis-libreoffice-integration/install" "$APPDIR/integration/libreoffice"
 		
 		# Firefox includes an 'icons' folder with updater.png, but some Linux distro builds omit it
 		mkdir -p "$APPDIR/icons"
@@ -1116,9 +1116,9 @@ if [ $BUILD_LINUX == 1 ]; then
 		
 		if [ $PACKAGE == 1 ]; then
 			# Create tar
-			rm -f "$DIST_DIR/Zotero-${VERSION}_linux-$arch.tar.xz"
+			rm -f "$DIST_DIR/Trellis-${VERSION}_linux-$arch.tar.xz"
 			cd "$STAGE_DIR"
-			tar -cJf "$DIST_DIR/Zotero-${VERSION}_linux-$arch.tar.xz" "Zotero_linux-$arch"
+			tar -cJf "$DIST_DIR/Trellis-${VERSION}_linux-$arch.tar.xz" "Trellis_linux-$arch"
 		fi
 	done
 fi

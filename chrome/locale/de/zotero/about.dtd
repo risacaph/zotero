@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "Version">
-<!ENTITY zotero.whatsNew "Was ist neu?">
-<!ENTITY zotero.createdby "Erstellt von:">
-<!ENTITY zotero.director "Leiter:">
-<!ENTITY zotero.directors "Leiter:">
-<!ENTITY zotero.developers "Entwickler:">
-<!ENTITY zotero.alumni "Ehemalige:">
-<!ENTITY zotero.about.localizations "Lokalisierungen:">
-<!ENTITY zotero.about.additionalSoftware "Software von Drittherstellern:">
-<!ENTITY zotero.thanks "Besonderer Dank gebührt:">
-<!ENTITY zotero.about.close "Schließen">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Außerdem danken wir:">
-<!ENTITY zotero.citationProcessing "Zitat &amp; Literaturverzeichnis in Verarbeitung">
+<!ENTITY trellis.version "Version">
+<!ENTITY trellis.whatsNew "Was ist neu?">
+<!ENTITY trellis.createdby "Erstellt von:">
+<!ENTITY trellis.director "Leiter:">
+<!ENTITY trellis.directors "Leiter:">
+<!ENTITY trellis.developers "Entwickler:">
+<!ENTITY trellis.alumni "Ehemalige:">
+<!ENTITY trellis.about.localizations "Lokalisierungen:">
+<!ENTITY trellis.about.additionalSoftware "Software von Drittherstellern:">
+<!ENTITY trellis.thanks "Besonderer Dank gebührt:">
+<!ENTITY trellis.about.close "Schließen">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Außerdem danken wir:">
+<!ENTITY trellis.citationProcessing "Zitat &amp; Literaturverzeichnis in Verarbeitung">

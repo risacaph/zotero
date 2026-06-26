@@ -5,7 +5,7 @@
 "use strict";
 
 {
-	Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 	const XULElementBaseMixin = MozElements.MozElementMixin(XULElementBase);
 	
 	class UpdateHeader extends XULElementBaseMixin {

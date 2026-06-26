@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "verzió">
-<!ENTITY zotero.whatsNew "Újdonságok">
-<!ENTITY zotero.createdby "Létrehozta:">
-<!ENTITY zotero.director "Igazgató:">
-<!ENTITY zotero.directors "Igazgatók:">
-<!ENTITY zotero.developers "Fejlesztők:">
-<!ENTITY zotero.alumni "Korábbi munkatársak:">
-<!ENTITY zotero.about.localizations "Fordítás:">
-<!ENTITY zotero.about.additionalSoftware "Felhasznált szoftverek:">
-<!ENTITY zotero.thanks "Külön köszönet:">
-<!ENTITY zotero.about.close "Bezárás">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "További hozzájárulók és elismerések">
-<!ENTITY zotero.citationProcessing "Hivatkozás és bibliográfia feldolgozása">
+<!ENTITY trellis.version "verzió">
+<!ENTITY trellis.whatsNew "Újdonságok">
+<!ENTITY trellis.createdby "Létrehozta:">
+<!ENTITY trellis.director "Igazgató:">
+<!ENTITY trellis.directors "Igazgatók:">
+<!ENTITY trellis.developers "Fejlesztők:">
+<!ENTITY trellis.alumni "Korábbi munkatársak:">
+<!ENTITY trellis.about.localizations "Fordítás:">
+<!ENTITY trellis.about.additionalSoftware "Felhasznált szoftverek:">
+<!ENTITY trellis.thanks "Külön köszönet:">
+<!ENTITY trellis.about.close "Bezárás">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "További hozzájárulók és elismerések">
+<!ENTITY trellis.citationProcessing "Hivatkozás és bibliográfia feldolgozása">

@@ -3,58 +3,58 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 {
 	const { ItemPaneContainerBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneContainerBase.mjs",
+		"chrome://trellis/content/elements/itemPaneContainerBase.mjs",
 		{ global: "current" }
 	);
 
 	class ItemDetails extends ItemPaneContainerBase {
 		content = MozXULElement.parseXULToFragment(`
-			<hbox id="zotero-view-item-container" class="zotero-view-item-container" flex="1">
-				<html:div class="zotero-view-item-main">
-					<item-pane-header id="zotero-item-pane-header" />
+			<hbox id="trellis-view-item-container" class="trellis-view-item-container" flex="1">
+				<html:div class="trellis-view-item-main">
+					<item-pane-header id="trellis-item-pane-header" />
 					
-					<html:div id="zotero-view-item" class="zotero-view-item" tabindex="0" data-l10n-id="item-details-pane">
-						<info-box id="zotero-editpane-info-box" data-pane="info"/>
+					<html:div id="trellis-view-item" class="trellis-view-item" tabindex="0" data-l10n-id="item-details-pane">
+						<info-box id="trellis-editpane-info-box" data-pane="info"/>
 						
-						<abstract-box id="zotero-editpane-abstract" class="zotero-editpane-abstract" data-pane="abstract"/>
+						<abstract-box id="trellis-editpane-abstract" class="trellis-editpane-abstract" data-pane="abstract"/>
 
-						<attachments-box id="zotero-editpane-attachments" data-pane="attachments"/>
+						<attachments-box id="trellis-editpane-attachments" data-pane="attachments"/>
 
-						<notes-box id="zotero-editpane-notes" class="zotero-editpane-notes" data-pane="notes"/>
+						<notes-box id="trellis-editpane-notes" class="trellis-editpane-notes" data-pane="notes"/>
 
-						<note-box id="zotero-note-box" data-pane="note-info" hidden="true"/>
+						<note-box id="trellis-note-box" data-pane="note-info" hidden="true"/>
 
-						<attachment-box id="zotero-attachment-box" data-pane="attachment-info" data-use-preview="true" hidden="true"/>
+						<attachment-box id="trellis-attachment-box" data-pane="attachment-info" data-use-preview="true" hidden="true"/>
 						
-						<attachment-annotations-box id="zotero-editpane-attachment-annotations" data-pane="attachment-annotations" hidden="true"/>
+						<attachment-annotations-box id="trellis-editpane-attachment-annotations" data-pane="attachment-annotations" hidden="true"/>
 						
-						<libraries-collections-box id="zotero-editpane-libraries-collections" class="zotero-editpane-libraries-collections" data-pane="libraries-collections"/>
+						<libraries-collections-box id="trellis-editpane-libraries-collections" class="trellis-editpane-libraries-collections" data-pane="libraries-collections"/>
 
-						<tags-box id="zotero-editpane-tags" class="zotero-editpane-tags" data-pane="tags"/>
+						<tags-box id="trellis-editpane-tags" class="trellis-editpane-tags" data-pane="tags"/>
 
-						<related-box id="zotero-editpane-related" class="zotero-editpane-related" data-pane="related"/>
+						<related-box id="trellis-editpane-related" class="trellis-editpane-related" data-pane="related"/>
 					</html:div>
 				</html:div>
 			</hbox>
@@ -77,7 +77,7 @@
 				return;
 			}
 
-			this._extraItems = val.filter(item => item instanceof Zotero.Item && item.isRegularItem());
+			this._extraItems = val.filter(item => item instanceof Trellis.Item && item.isRegularItem());
 		}
 
 		/*
@@ -170,9 +170,9 @@
 		}
 
 		init() {
-			this._container = this.querySelector('#zotero-view-item-container');
-			this._header = this.querySelector('#zotero-item-pane-header');
-			this._paneParent = this.querySelector('#zotero-view-item');
+			this._container = this.querySelector('#trellis-view-item-container');
+			this._header = this.querySelector('#trellis-item-pane-header');
+			this._paneParent = this.querySelector('#trellis-view-item');
 
 			this._container.addEventListener("keydown", this._handleKeydown);
 			this._paneParent.addEventListener('scroll', this._handleContainerScroll);
@@ -185,9 +185,9 @@
 			});
 			this._initIntersectionObserver();
 
-			this._notifierID = Zotero.Notifier.registerObserver(
+			this._notifierID = Trellis.Notifier.registerObserver(
 				this, ['item', 'itempane', 'tab'], 'ItemDetails');
-			this._prefsObserverID = Zotero.Prefs.registerObserver('pinnedPane', this._restorePinnedPane.bind(this));
+			this._prefsObserverID = Trellis.Prefs.registerObserver('pinnedPane', this._restorePinnedPane.bind(this));
 
 			this._disableScrollHandler = false;
 			this._pinnedPaneMinScrollHeight = 0;
@@ -210,8 +210,8 @@
 			this._paneHiddenOb.disconnect();
 			this._intersectionOb.disconnect();
 
-			Zotero.Notifier.unregisterObserver(this._notifierID);
-			Zotero.Prefs.unregisterObserver(this._prefsObserverID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Prefs.unregisterObserver(this._prefsObserverID);
 		}
 
 		async render() {
@@ -226,11 +226,11 @@
 			this._pendingRender = false;
 
 			let item = this.item;
-			Zotero.debug('Viewing item');
+			Trellis.debug('Viewing item');
 			this._isRendering = true;
 			// For tests
 			let resolve;
-			if (Zotero.test) {
+			if (Trellis.test) {
 				this._renderPromise = new Promise(r => resolve = r);
 			}
 
@@ -312,13 +312,13 @@
 			// Re-enable intersection observer
 			this._toggleIntersectionObserver(true);
 
-			if (Zotero.test) {
+			if (Trellis.test) {
 				resolve();
 			}
 		}
 
 		renderCustomSections() {
-			let { options: targetPanes, updateID } = Zotero.ItemPaneManager.customSectionData;
+			let { options: targetPanes, updateID } = Trellis.ItemPaneManager.customSectionData;
 			if (this._lastUpdateCustomSection == updateID) return;
 			this._lastUpdateCustomSection = updateID;
 
@@ -566,10 +566,10 @@
 				event.preventDefault();
 				event.stopPropagation();
 			};
-			let isLibraryTab = Zotero_Tabs.selectedIndex == 0;
+			let isLibraryTab = Trellis_Tabs.selectedIndex == 0;
 
 			// Tab from the scrollable area focuses the pinned pane if it exists
-			if (event.target.classList.contains("zotero-view-item") && event.key == "Tab" && !event.shiftKey && this.pinnedPane) {
+			if (event.target.classList.contains("trellis-view-item") && event.key == "Tab" && !event.shiftKey && this.pinnedPane) {
 				let pane = this.getPane(this.pinnedPane);
 				pane.firstChild._head.focus();
 				stopEvent();
@@ -578,10 +578,10 @@
 			// On Escape/Enter on editable-text, return focus to the item tree or reader
 			if (event.key == "Escape" || (event.key == "Enter" && event.target.classList.contains('input'))) {
 				if (isLibraryTab) {
-					document.querySelector('#zotero-items-tree .virtualized-table').focus();
+					document.querySelector('#trellis-items-tree .virtualized-table').focus();
 				}
 				else {
-					let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+					let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 					if (reader) {
 						reader.focus();
 					}
@@ -649,7 +649,7 @@
 		};
 
 		_handleTabSelect(tabIDs) {
-			if (!this.tabID || typeof Zotero_Tabs === 'undefined') {
+			if (!this.tabID || typeof Trellis_Tabs === 'undefined') {
 				return;
 			}
 			let isTabSelected = tabIDs.includes(this.tabID);
@@ -665,10 +665,10 @@
 			}
 			let pinnedPane = this.pinnedPane;
 			if (pinnedPane) {
-				Zotero.Prefs.set('pinnedPane', pinnedPane);
+				Trellis.Prefs.set('pinnedPane', pinnedPane);
 			}
 			else {
-				Zotero.Prefs.clear('pinnedPane');
+				Trellis.Prefs.clear('pinnedPane');
 			}
 		}
 
@@ -676,7 +676,7 @@
 			if (this.tabType !== 'library') {
 				return;
 			}
-			let pinnedPane = Zotero.Prefs.get('pinnedPane') || '';
+			let pinnedPane = Trellis.Prefs.get('pinnedPane') || '';
 			if (this.pinnedPane !== pinnedPane) {
 				this.pinnedPane = pinnedPane;
 			}

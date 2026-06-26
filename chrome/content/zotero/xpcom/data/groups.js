@@ -3,30 +3,30 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Groups = new function () {
-	Zotero.defineProperty(this, 'addGroupURL', {
-		value: ZOTERO_CONFIG.WWW_BASE_URL + 'groups/new/'
+Trellis.Groups = new function () {
+	Trellis.defineProperty(this, 'addGroupURL', {
+		value: TRELLIS_CONFIG.WWW_BASE_URL + 'groups/new/'
 	});
 	
 	this._cache = null;
@@ -39,8 +39,8 @@ Zotero.Groups = new function () {
 	}
 	
 	this.register = function (group) {
-		if (!this._cache) throw new Error("Zotero.Groups cache is not initialized");
-		Zotero.debug("Registering group " + group.id + " (" + group.libraryID + ")", 5);
+		if (!this._cache) throw new Error("Trellis.Groups cache is not initialized");
+		Trellis.debug("Registering group " + group.id + " (" + group.libraryID + ")", 5);
 		this._addToCache(this._cache, group);
 	}
 	
@@ -50,37 +50,37 @@ Zotero.Groups = new function () {
 	}
 	
 	this.unregister = function (groupID) {
-		if (!this._cache) throw new Error("Zotero.Groups cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Groups cache is not initialized");
 		let libraryID = this._cache.libraryIDByGroupID[groupID];
-		Zotero.debug("Unregistering group " + groupID + " (" + libraryID + ")", 5);
+		Trellis.debug("Unregistering group " + groupID + " (" + libraryID + ")", 5);
 		delete this._cache.groupIDByLibraryID[libraryID];
 		delete this._cache.libraryIDByGroupID[groupID];
 	}
 	
 	this.init = function () {
-		// Cache initialized in Zotero.Libraries
+		// Cache initialized in Trellis.Libraries
 	}
 	
 	/**
 	 * @param {Integer} id - Group id
-	 * @return {Zotero.Group}
+	 * @return {Trellis.Group}
 	 */
 	this.get = function (id) {
-		return Zotero.Libraries.get(this.getLibraryIDFromGroupID(id));
+		return Trellis.Libraries.get(this.getLibraryIDFromGroupID(id));
 	}
 	
 	
 	/**
 	 * Get all groups, sorted by name
 	 *
-	 * @return {Zotero.Group[]}
+	 * @return {Trellis.Group[]}
 	 */
 	this.getAll = function () {
-		if (!this._cache) throw new Error("Zotero.Groups cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Groups cache is not initialized");
 		
 		var groups = Object.keys(this._cache.groupIDByLibraryID)
-			.map(id => Zotero.Libraries.get(id));
-		var collation = Zotero.getLocaleCollation();
+			.map(id => Trellis.Libraries.get(id));
+		var collation = Trellis.getLocaleCollation();
 		groups.sort(function (a, b) {
 			return collation.compareString(1, a.name, b.name);
 		});
@@ -89,19 +89,19 @@ Zotero.Groups = new function () {
 	
 	
 	this.getByLibraryID = function (libraryID) {
-		return Zotero.Libraries.get(libraryID);
+		return Trellis.Libraries.get(libraryID);
 	}
 	
 	
 	this.exists = function (groupID) {
-		if (!this._cache) throw new Error("Zotero.Groups cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Groups cache is not initialized");
 		
 		return !!this._cache.libraryIDByGroupID[groupID];
 	}
 	
 	
 	this.getGroupIDFromLibraryID = function (libraryID) {
-		if (!this._cache) throw new Error("Zotero.Groups cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Groups cache is not initialized");
 		
 		var groupID = this._cache.groupIDByLibraryID[libraryID];
 		if (!groupID) {
@@ -112,7 +112,7 @@ Zotero.Groups = new function () {
 	
 	
 	this.getLibraryIDFromGroupID = function (groupID) {
-		if (!this._cache) throw new Error("Zotero.Groups cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Groups cache is not initialized");
 		
 		return this._cache.libraryIDByGroupID[groupID] || false;
 	}

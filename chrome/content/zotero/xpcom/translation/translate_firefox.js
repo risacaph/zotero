@@ -3,25 +3,25 @@
     
     Copyright © 2012 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
     Portions of this file are derived from Special Powers code,
     Copyright (C) 2010 Mozilla Corporation. All Rights Reserved.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -34,14 +34,14 @@ const BOMs = {
 	"UTF-32LE":"\xFF\xFE\x00\x00"
 }
 
-Zotero.Translate.DOMWrapper = new function () {
+Trellis.Translate.DOMWrapper = new function () {
 	var Cu = Components.utils;
 	
 	/*
 	 * BEGIN SPECIAL POWERS WRAPPING CODE
 	 * https://dxr.mozilla.org/mozilla-central/source/testing/specialpowers/content/specialpowersAPI.js
 	 *
-	 * Includes modifications by Zotero to support overrides
+	 * Includes modifications by Trellis to support overrides
 	 */
 	function isWrappable(x) {
 		if (typeof x === "object")
@@ -363,9 +363,9 @@ Zotero.Translate.DOMWrapper = new function () {
  * @param {Translate} translate
  * @param {String|window} sandboxLocation
  */
-Zotero.Translate.SandboxManager = function (sandboxLocation) {
+Trellis.Translate.SandboxManager = function (sandboxLocation) {
 	this.sandbox = {
-		Zotero: {},
+		Trellis: {},
 		// As of Fx60, XPathResult is no longer available as nsIDOMXPathResult in XPCOM, so just
 		// shim its constants, which are all we need
 		XPathResult: {
@@ -389,7 +389,7 @@ Zotero.Translate.SandboxManager = function (sandboxLocation) {
 	};
 };
 
-Zotero.Translate.SandboxManager.prototype = {
+Trellis.Translate.SandboxManager.prototype = {
 	/**
 	 * Evaluates code in the sandbox
 	 * @param {String} code Code to evaluate
@@ -424,12 +424,12 @@ Zotero.Translate.SandboxManager.prototype = {
 	/**
 	 * Imports an object into the sandbox
 	 *
-	 * @param {Object} object Object to be imported (under Zotero)
+	 * @param {Object} object Object to be imported (under Trellis)
 	 * @param {Boolean} passTranslateAsFirstArgument Whether the translate instance should be passed
 	 *     as the first argument to the function.
 	 */
 	importObject: function (object, passAsFirstArgument, attachTo) {
-		if(!attachTo) attachTo = this.sandbox.Zotero;
+		if(!attachTo) attachTo = this.sandbox.Trellis;
 		
 		for(var key in (object.__exposedProps__ ? object.__exposedProps__ : object)) {
 			if(Function.prototype[key]) continue;
@@ -459,14 +459,14 @@ Zotero.Translate.SandboxManager.prototype = {
 /**
  * This variable holds a reference to all open nsIInputStreams and nsIOutputStreams in the global  
  * scope at all times. Otherwise, our streams might get garbage collected when we allow other code
- * to run during Zotero.wait().
+ * to run during Trellis.wait().
  */
-Zotero.Translate.IO.maintainedInstances = [];
+Trellis.Translate.IO.maintainedInstances = [];
 
 /******* (Native) Read support *******/
 
-Zotero.Translate.IO.Read = function (file, sandboxManager) {
-	Zotero.Translate.IO.maintainedInstances.push(this);
+Trellis.Translate.IO.Read = function (file, sandboxManager) {
+	Trellis.Translate.IO.maintainedInstances.push(this);
 	
 	this.file = file;
 	this._sandboxManager = sandboxManager;
@@ -492,7 +492,7 @@ Zotero.Translate.IO.Read = function (file, sandboxManager) {
 	}
 	
 	if(this._charset) {
-		Zotero.debug("Translate: Found BOM. Setting character encoding to " + this._charset);
+		Trellis.debug("Translate: Found BOM. Setting character encoding to " + this._charset);
 		// BOM found; store its length and go back to the beginning of the file
 		this._bomLength = BOMs[this._charset].length;
 	} else {
@@ -529,17 +529,17 @@ Zotero.Translate.IO.Read = function (file, sandboxManager) {
 						                         .getService(Components.interfaces.nsIScriptableUnicodeConverter);
 						charconv.charset = m[1];
 					} catch(e) {
-						Zotero.debug("Translate: Ignoring unknown XML encoding "+m[1]);
+						Trellis.debug("Translate: Ignoring unknown XML encoding "+m[1]);
 					}
 				}
 				
 				if(this._charset) {
-					Zotero.debug("Translate: Found XML parse instruction. Setting character encoding to " + this._charset);
+					Trellis.debug("Translate: Found XML parse instruction. Setting character encoding to " + this._charset);
 				} else {
 					// if we know for certain document is XML, we also know for certain that the
 					// default charset for XML is UTF-8
 					this._charset = "UTF-8";
-					Zotero.debug("Translate: XML parse instruction not found. Defaulting to UTF-8 for XML files");
+					Trellis.debug("Translate: XML parse instruction not found. Defaulting to UTF-8 for XML files");
 				}
 			}
 		}
@@ -553,9 +553,9 @@ Zotero.Translate.IO.Read = function (file, sandboxManager) {
 			// No XML parse instruction or BOM.
 			
 			// Check whether the user has specified a charset preference
-			var charsetPref = Zotero.Prefs.get("import.charset");
+			var charsetPref = Trellis.Prefs.get("import.charset");
 			if(charsetPref == "auto") {
-				Zotero.debug("Translate: Checking whether file is UTF-8");
+				Trellis.debug("Translate: Checking whether file is UTF-8");
 				// For auto-detect, we are basically going to check if the file could be valid
 				// UTF-8, and if this is true, we will treat it as UTF-8. Prior likelihood of
 				// UTF-8 is very high, so this should be a reasonable strategy.
@@ -622,10 +622,10 @@ Zotero.Translate.IO.Read = function (file, sandboxManager) {
 		}
 	}
 	
-	Zotero.debug("Translate: Detected file charset as "+this._charset);
+	Trellis.debug("Translate: Detected file charset as "+this._charset);
 }
 
-Zotero.Translate.IO.Read.prototype = {
+Trellis.Translate.IO.Read.prototype = {
 	"__exposedProps__":{
 		"getXML":"r",
 		"RDF":"r",
@@ -672,15 +672,15 @@ Zotero.Translate.IO.Read.prototype = {
 	},
 	
 	"_initRDF":function () {
-		Zotero.debug("Translate: Initializing RDF data store");
-		this._dataStore = new Zotero.RDF.AJAW.IndexedFormula();
-		var parser = new Zotero.RDF.AJAW.RDFParser(this._dataStore);
+		Trellis.debug("Translate: Initializing RDF data store");
+		this._dataStore = new Trellis.RDF.AJAW.IndexedFormula();
+		var parser = new Trellis.RDF.AJAW.RDFParser(this._dataStore);
 		try {
-			var nodes = Zotero.Translate.IO.parseDOMXML(this._rawStream, this._charset, this.file.fileSize);
-			let baseURI = Zotero.File.pathToFileURI(this.file);
+			var nodes = Trellis.Translate.IO.parseDOMXML(this._rawStream, this._charset, this.file.fileSize);
+			let baseURI = Trellis.File.pathToFileURI(this.file);
 			parser.parse(nodes, baseURI);
 			
-			this.RDF = new Zotero.Translate.IO._RDFSandbox(this._dataStore);
+			this.RDF = new Trellis.Translate.IO._RDFSandbox(this._dataStore);
 		} catch(e) {
 			this.close();
 			throw new Error("Translate: No RDF found");
@@ -696,7 +696,7 @@ Zotero.Translate.IO.Read.prototype = {
 		this._seekToStart(this._allowCharsetOverride ? charset : this._charset);
 		
 		if(!this._allowCharsetOverride) {
-			Zotero.debug("Translate: setCharacterSet: translate charset override ignored due to BOM or XML parse instruction. Using " + this._charset);
+			Trellis.debug("Translate: setCharacterSet: translate charset override ignored due to BOM or XML parse instruction. Using " + this._charset);
 		}
 	},
 	
@@ -723,7 +723,7 @@ Zotero.Translate.IO.Read.prototype = {
 	"getXML":function () {
 		if(this.bytesRead !== 0) this._seekToStart(this._charset);
 		try {
-			var xml = Zotero.Translate.IO.parseDOMXML(this._rawStream, this._charset, this.file.fileSize);
+			var xml = Trellis.Translate.IO.parseDOMXML(this._rawStream, this._charset, this.file.fileSize);
 		} catch(e) {
 			this._xmlInvalid = true;
 			throw e;
@@ -732,22 +732,22 @@ Zotero.Translate.IO.Read.prototype = {
 	},
 	
 	init: function (newMode) {
-		if(Zotero.Translate.IO.maintainedInstances.indexOf(this) === -1) {
-			Zotero.Translate.IO.maintainedInstances.push(this);
+		if(Trellis.Translate.IO.maintainedInstances.indexOf(this) === -1) {
+			Trellis.Translate.IO.maintainedInstances.push(this);
 		}
 		this._seekToStart(this._charset);
 		
 		this._mode = newMode;
 		if(newMode === "xml/e4x") {
 			throw new Error("E4X is not supported");
-		} else if(Zotero.Translate.IO.rdfDataModes.indexOf(this._mode) !== -1 && !this.RDF) {
+		} else if(Trellis.Translate.IO.rdfDataModes.indexOf(this._mode) !== -1 && !this.RDF) {
 			this._initRDF();
 		}
 	},
 	
 	"close":function () {
-		var myIndex = Zotero.Translate.IO.maintainedInstances.indexOf(this);
-		if(myIndex !== -1) Zotero.Translate.IO.maintainedInstances.splice(myIndex, 1);
+		var myIndex = Trellis.Translate.IO.maintainedInstances.indexOf(this);
+		if(myIndex !== -1) Trellis.Translate.IO.maintainedInstances.splice(myIndex, 1);
 		
 		if(this._rawStream) {
 			this._rawStream.close();
@@ -755,22 +755,22 @@ Zotero.Translate.IO.Read.prototype = {
 		}
 	}
 }
-Zotero.Translate.IO.Read.prototype.__defineGetter__("contentLength",
+Trellis.Translate.IO.Read.prototype.__defineGetter__("contentLength",
 function () {
 	return this.file.fileSize;
 });
 
 /******* Write support *******/
 
-Zotero.Translate.IO.Write = function (file) {
-	Zotero.Translate.IO.maintainedInstances.push(this);
+Trellis.Translate.IO.Write = function (file) {
+	Trellis.Translate.IO.maintainedInstances.push(this);
 	this._rawStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
 		.createInstance(Components.interfaces.nsIFileOutputStream);
 	this._rawStream.init(file, 0x02 | 0x08 | 0x20, 0o664, 0); // write, create, truncate
 	this._writtenToStream = false;
 }
 
-Zotero.Translate.IO.Write.prototype = {
+Trellis.Translate.IO.Write.prototype = {
 	"__exposedProps__":{
 		"RDF":"r",
 		"write":"r",
@@ -778,9 +778,9 @@ Zotero.Translate.IO.Write.prototype = {
 	},
 	
 	"_initRDF":function () {
-		Zotero.debug("Translate: Initializing RDF data store");
-		this._dataStore = new Zotero.RDF.AJAW.IndexedFormula();
-		this.RDF = new Zotero.Translate.IO._RDFSandbox(this._dataStore);
+		Trellis.debug("Translate: Initializing RDF data store");
+		this._dataStore = new Trellis.RDF.AJAW.IndexedFormula();
+		this.RDF = new Trellis.Translate.IO._RDFSandbox(this._dataStore);
 	},
 	
 	"setCharacterSet":function (charset) {
@@ -837,7 +837,7 @@ Zotero.Translate.IO.Write.prototype = {
 	
 	init: function (newMode, charset) {
 		this._mode = newMode;
-		if(Zotero.Translate.IO.rdfDataModes.indexOf(this._mode) !== -1) {
+		if(Trellis.Translate.IO.rdfDataModes.indexOf(this._mode) !== -1) {
 			this._initRDF();
 			if(!this._writtenToString) this.setCharacterSet("UTF-8");
 		} else if(!this._writtenToString) {
@@ -846,12 +846,12 @@ Zotero.Translate.IO.Write.prototype = {
 	},
 	
 	"close":function () {
-		if(Zotero.Translate.IO.rdfDataModes.indexOf(this._mode) !== -1) {
+		if(Trellis.Translate.IO.rdfDataModes.indexOf(this._mode) !== -1) {
 			this.write(this.RDF.serialize());
 		}
 		
-		var myIndex = Zotero.Translate.IO.maintainedInstances.indexOf(this);
-		if(myIndex !== -1) Zotero.Translate.IO.maintainedInstances.splice(myIndex, 1);
+		var myIndex = Trellis.Translate.IO.maintainedInstances.indexOf(this);
+		if(myIndex !== -1) Trellis.Translate.IO.maintainedInstances.splice(myIndex, 1);
 		
 		this._rawStream.close();
 	}

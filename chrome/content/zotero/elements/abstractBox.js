@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,10 +27,10 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
-	ChromeUtils.importESModule("chrome://zotero/content/actors/ActorManager.mjs");
+	ChromeUtils.importESModule("chrome://trellis/content/actors/ActorManager.mjs");
 
 	const SANDBOX_ALL_FLAGS = 0xFFFFF;
 	
@@ -105,19 +105,19 @@
 		}
 
 		init() {
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item', 'tab'], 'abstractBox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item', 'tab'], 'abstractBox');
 
 			this.initCollapsibleSection();
 
 			this._abstractField = this.querySelector('editable-text');
 			this._abstractField.addEventListener('blur', this._handleFieldBlur);
-			this._abstractField.ariaLabel = Zotero.getString('itemFields.abstractNote');
+			this._abstractField.ariaLabel = Trellis.getString('itemFields.abstractNote');
 			this.render();
 		}
 
 		destroy() {
 			this._abstractField?.removeEventListener('blur', this._handleFieldBlur);
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 		}
 
 		notify(action, type, ids) {
@@ -141,7 +141,7 @@
 				await this._item.saveTx({
 					undoAction: 'undo-action-edit-field',
 					undoActionArgs: {
-						field: Zotero.ItemFields.getLocalizedString('abstractNote'),
+						field: Trellis.ItemFields.getLocalizedString('abstractNote'),
 						count: 1
 					}
 				});
@@ -179,7 +179,7 @@
 			let url = this.item.library.url;
 			let html = this.item.getField('abstractNote');
 			this._abstractField.hidden = true;
-			this._section.summary = Zotero.Utilities.cleanTags(html);
+			this._section.summary = Trellis.Utilities.cleanTags(html);
 			
 			let actor = this._feedAbstractBrowser.browsingContext.currentWindowGlobal.getActor('FeedAbstract');
 			await actor.sendQuery('setContent', { url, html });
@@ -200,13 +200,13 @@
 				this._abstractField.value = abstract;
 			}
 			this._abstractField.readOnly = !this.editable;
-			this._abstractField.setAttribute('aria-label', Zotero.ItemFields.getLocalizedString('abstractNote'));
+			this._abstractField.setAttribute('aria-label', Trellis.ItemFields.getLocalizedString('abstractNote'));
 
 			this._renderFieldVersionButton();
 		}
 
 		_renderFieldVersionButton() {
-			let existing = this.querySelector('.zotero-field-version-button');
+			let existing = this.querySelector('.trellis-field-version-button');
 			if (existing) {
 				existing.remove();
 			}
@@ -221,15 +221,15 @@
 			}
 
 			let button = document.createXULElement('toolbarbutton');
-			button.className = 'zotero-field-version-button zotero-clicky-merge';
+			button.className = 'trellis-field-version-button trellis-clicky-merge';
 			document.l10n.setAttributes(button, 'itembox-button-merge', {
-				field: Zotero.ItemFields.getLocalizedString('abstractNote') || ''
+				field: Trellis.ItemFields.getLocalizedString('abstractNote') || ''
 			});
 
 			let popup = button.appendChild(document.createXULElement('menupopup'));
 			for (let v of alternatives) {
 				let menuitem = document.createXULElement('menuitem');
-				let sv = Zotero.Utilities.ellipsize(v, 60);
+				let sv = Trellis.Utilities.ellipsize(v, 60);
 				menuitem.setAttribute('label', sv);
 				if (v != sv) {
 					menuitem.setAttribute('tooltiptext', v);
@@ -256,7 +256,7 @@
 			this.querySelector('.body').appendChild(button);
 		}
 
-		_ensureFeedAbstractBrowserExists = Zotero.Utilities.Internal.serial(async () => {
+		_ensureFeedAbstractBrowserExists = Trellis.Utilities.Internal.serial(async () => {
 			if (!this._feedAbstractBrowser) {
 				// dynamically create a browser element to avoid spawning a process for every tab (#4530)
 				this._feedAbstractBrowser = document.createXULElement("browser");
@@ -305,7 +305,7 @@
 		};
 
 		_handleTabSelect = (tabID) => {
-			if (!this.tabID || typeof Zotero_Tabs === 'undefined') {
+			if (!this.tabID || typeof Trellis_Tabs === 'undefined') {
 				return;
 			}
 			if (tabID !== this.tabID) {

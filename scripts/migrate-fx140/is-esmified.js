@@ -34,8 +34,8 @@ function generateESMURIMap(jsm_map) {
 
 function isESMifiedSlow(resourceURI) {
   if (resourceURI.endsWith('.jsm')) {
-    console.log(resourceURI.includes('/zotero/'))
-    if (resourceURI.includes('/zotero/')) {
+    console.log(resourceURI.includes('/trellis/'))
+    if (resourceURI.includes('/trellis/')) {
       return { result: true, jsms: [resourceURI.replace('.jsm', '.mjs')] };
     } else {
       return { result: true, jsms: [resourceURI.replace('.jsm', '.sys.mjs')] };

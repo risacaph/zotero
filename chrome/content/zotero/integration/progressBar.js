@@ -3,27 +3,27 @@
     
     Copyright © 2018 Center for History and New Media
 				     George Mason University, Fairfax, Virginia, USA
-				     http://zotero.org
+				     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var Zotero_ProgressBar = new function () {
+var Trellis_ProgressBar = new function () {
 	/**
 	 * Pre-initialization, when the dialog has loaded but has not yet appeared
 	 */
@@ -49,7 +49,7 @@ var Zotero_ProgressBar = new function () {
 		window.setTimeout(function() {
 			var targetX = Math.floor(-window.outerWidth/2 + (window.screen.width / 2));
 			var targetY = Math.floor(-window.outerHeight/2 + (window.screen.height / 2));
-			Zotero.debug("Moving window to "+targetX+", "+targetY);
+			Trellis.debug("Moving window to "+targetX+", "+targetY);
 			window.moveTo(targetX, targetY);
 		}, 0);
 	};
@@ -67,5 +67,5 @@ var Zotero_ProgressBar = new function () {
 	}
 }
 
-window.addEventListener("DOMContentLoaded", Zotero_ProgressBar.onDOMContentLoaded, false);
-window.addEventListener("load", Zotero_ProgressBar.onLoad, false);
+window.addEventListener("DOMContentLoaded", Trellis_ProgressBar.onDOMContentLoaded, false);
+window.addEventListener("load", Trellis_ProgressBar.onLoad, false);

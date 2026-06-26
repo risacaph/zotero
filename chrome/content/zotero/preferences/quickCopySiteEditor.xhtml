@@ -4,70 +4,70 @@
     
     Copyright © 2007 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/preferences.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/preferences.css"?>
 
 
 <!DOCTYPE window [
-  <!ENTITY % prefWindow SYSTEM "chrome://zotero/locale/preferences.dtd">
+  <!ENTITY % prefWindow SYSTEM "chrome://trellis/locale/preferences.dtd">
   %prefWindow;
-  <!ENTITY % common SYSTEM "chrome://zotero/locale/zotero.dtd">
+  <!ENTITY % common SYSTEM "chrome://trellis/locale/trellis.dtd">
   %common;
 ]>
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	title=""
-	onload="Zotero_QuickCopySiteEditor.onLoad(); Zotero_Preferences.Export.updateQuickCopyUI(); sizeToContent()">
+	onload="Trellis_QuickCopySiteEditor.onLoad(); Trellis_Preferences.Export.updateQuickCopyUI(); sizeToContent()">
 <dialog 
 	buttons="cancel,accept"
-	id="zotero-quickCopySiteEditor">
+	id="trellis-quickCopySiteEditor">
 	
-	<script src="chrome://zotero/content/include.js"/>
+	<script src="chrome://trellis/content/include.js"/>
 	<script src="preferences.js"/>
 	<script src="preferences_export.js"/>
 	
-	<vbox id="zotero-preferences-quickCopySiteEditor">
-		<label value="&zotero.preferences.quickCopy.siteEditor.domainPath; &zotero.preferences.quickCopy.siteEditor.domainPath.example;" control="zotero-quickCopy-domain"/>
-		<html:input type="text" id="zotero-quickCopy-domain" oninput="Zotero_QuickCopySiteEditor.onDomainInput(event)"/>
+	<vbox id="trellis-preferences-quickCopySiteEditor">
+		<label value="&trellis.preferences.quickCopy.siteEditor.domainPath; &trellis.preferences.quickCopy.siteEditor.domainPath.example;" control="trellis-quickCopy-domain"/>
+		<html:input type="text" id="trellis-quickCopy-domain" oninput="Trellis_QuickCopySiteEditor.onDomainInput(event)"/>
 		
 		<separator class="thin"/>
 		
-		<label value="&zotero.preferences.quickCopy.siteEditor.format;" control="zotero-quickCopy-menu"/>
-		<menulist id="zotero-quickCopy-menu" native="true"/>
+		<label value="&trellis.preferences.quickCopy.siteEditor.format;" control="trellis-quickCopy-menu"/>
+		<menulist id="trellis-quickCopy-menu" native="true"/>
 		
 		<separator class="thin"/>
 		
-		<label id="zotero-quickCopy-locale-menu-label" value="&zotero.preferences.quickCopy.siteEditor.locale;" control="zotero-quickCopy-locale-menu"/>
+		<label id="trellis-quickCopy-locale-menu-label" value="&trellis.preferences.quickCopy.siteEditor.locale;" control="trellis-quickCopy-locale-menu"/>
 		<hbox align="center">
-			<menulist id="zotero-quickCopy-locale-menu" oncommand="Zotero_Preferences.Export._lastSelectedLocale = this.value" native="true"/>
+			<menulist id="trellis-quickCopy-locale-menu" oncommand="Trellis_Preferences.Export._lastSelectedLocale = this.value" native="true"/>
 		</hbox>
 		
 		<separator class="thin"/>
 		
-		<checkbox id="zotero-quickCopy-copyAsHTML" label="&zotero.preferences.quickCopy.copyAsHTML;"
-			oncommand="Zotero_Preferences.Export.buildQuickCopyFormatDropDown(
-				document.getElementById('zotero-quickCopy-menu'),
+		<checkbox id="trellis-quickCopy-copyAsHTML" label="&trellis.preferences.quickCopy.copyAsHTML;"
+			oncommand="Trellis_Preferences.Export.buildQuickCopyFormatDropDown(
+				document.getElementById('trellis-quickCopy-menu'),
 				this.checked ? 'html' : '',
 				null,
 				io.translators
@@ -77,25 +77,25 @@
 	
 	<script>
 	<![CDATA[
-		document.addEventListener('dialogaccept', () => Zotero_QuickCopySiteEditor.onAccept());
+		document.addEventListener('dialogaccept', () => Trellis_QuickCopySiteEditor.onAccept());
 
-		var Zotero_QuickCopySiteEditor = new function () {
-			var menu = document.getElementById('zotero-quickCopy-menu');
+		var Trellis_QuickCopySiteEditor = new function () {
+			var menu = document.getElementById('trellis-quickCopy-menu');
 			
 			this.onLoad = function () {
 				// Hide OK button initially if domain field is empty
-				document.getElementById('zotero-quickCopySiteEditor').getButton('accept').disabled
-					= document.getElementById('zotero-quickCopy-domain').value.trim() === '';
+				document.getElementById('trellis-quickCopySiteEditor').getButton('accept').disabled
+					= document.getElementById('trellis-quickCopy-domain').value.trim() === '';
 			};
 			
 			this.onAccept = function () {
 				var io = window.arguments[0];
-				io.domain = document.getElementById('zotero-quickCopy-domain').value;
+				io.domain = document.getElementById('trellis-quickCopy-domain').value;
 				io.format = menu.value;
 				
 				io.locale = '';
-				if (!document.getElementById('zotero-quickCopy-locale-menu').disabled) {
-					io.locale = document.getElementById('zotero-quickCopy-locale-menu').value;
+				if (!document.getElementById('trellis-quickCopy-locale-menu').disabled) {
+					io.locale = document.getElementById('trellis-quickCopy-locale-menu').value;
 				}
 				
 				io.ok = true;
@@ -103,30 +103,30 @@
 			
 			this.onDomainInput = function (event) {
 				// Hide OK button if domain field is empty
-				document.getElementById('zotero-quickCopySiteEditor').getButton('accept').disabled = event.target.value.trim() === '';
+				document.getElementById('trellis-quickCopySiteEditor').getButton('accept').disabled = event.target.value.trim() === '';
 				
 				// Auto-select Wikipedia Citation Templates
 				if (event.target.value == 'wikipedia.org') {
 					menu.value = 'export=3f50aaac-7acc-4350-acd0-59cb77faf620';
-					Zotero_Preferences.Export.updateQuickCopyUI();
+					Trellis_Preferences.Export.updateQuickCopyUI();
 				}
 			};
 		}
 		
 		var io = window.arguments[0];
 		var contentType = io.asHTML ? 'html' : '';
-		document.getElementById('zotero-quickCopy-domain').value = io.domain ? io.domain : '';
-		Zotero_Preferences.Export.buildQuickCopyFormatDropDown(
-			document.getElementById('zotero-quickCopy-menu'),
+		document.getElementById('trellis-quickCopy-domain').value = io.domain ? io.domain : '';
+		Trellis_Preferences.Export.buildQuickCopyFormatDropDown(
+			document.getElementById('trellis-quickCopy-menu'),
 			contentType,
 			io.format,
 			io.translators
 		);
-		Zotero.Styles.populateLocaleList(
-			document.getElementById('zotero-quickCopy-locale-menu')
+		Trellis.Styles.populateLocaleList(
+			document.getElementById('trellis-quickCopy-locale-menu')
 		);
-		document.getElementById('zotero-quickCopy-copyAsHTML').checked = io.asHTML;
-		Zotero_Preferences.Export._lastSelectedLocale = io.locale;
+		document.getElementById('trellis-quickCopy-copyAsHTML').checked = io.asHTML;
+		Trellis_Preferences.Export._lastSelectedLocale = io.locale;
 	]]>
 	</script>
 </dialog>

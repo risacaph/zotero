@@ -1,10 +1,10 @@
-var Zotero_Read_Aloud_First_Run = new function () {
+var Trellis_Read_Aloud_First_Run = new function () {
 	let io;
 	
 	this.init = function () {
 		io = window.arguments[0];
 		
-		this._dialog = document.getElementById('zotero-read-aloud-first-run');
+		this._dialog = document.getElementById('trellis-read-aloud-first-run');
 		this._iframe = document.getElementById('read-aloud-first-run-iframe');
 
 		let acceptButton = this._dialog.getButton('accept');
@@ -24,12 +24,12 @@ var Zotero_Read_Aloud_First_Run = new function () {
 			lang,
 			readAloudEnabledVoices,
 			ftl,
-			loggedIn: Zotero.Sync.Runner.enabled,
+			loggedIn: Trellis.Sync.Runner.enabled,
 			remoteInterface: getReadAloudRemoteInterface(browserWindow),
 			onOpenLink: (url) => {
 				let win = Services.wm.getMostRecentWindow('navigator:browser');
 				if (win) {
-					win.ZoteroPane.loadURI(url);
+					win.TrellisPane.loadURI(url);
 				}
 			},
 			onOpenVoicesPopup: (tier) => {
@@ -39,17 +39,17 @@ var Zotero_Read_Aloud_First_Run = new function () {
 				// TODO
 			},
 			onLogIn: () => {
-				setTimeout(() => Zotero.Utilities.Internal.openPreferences('zotero-prefpane-account', { action: 'logIn' }));
+				setTimeout(() => Trellis.Utilities.Internal.openPreferences('trellis-prefpane-account', { action: 'logIn' }));
 			},
 			onSetDoneMode: ({ enabled, needsLogIn }) => {
 				let acceptButton = this._dialog.getButton('accept');
 				acceptButton.disabled = !enabled;
 				if (needsLogIn) {
-					acceptButton.label = Zotero.getString('reader-read-aloud-log-in-button');
+					acceptButton.label = Trellis.getString('reader-read-aloud-log-in-button');
 					this._needsLogIn = true;
 				}
 				else {
-					acceptButton.label = Zotero.getString('reader-read-aloud-done-button');
+					acceptButton.label = Trellis.getString('reader-read-aloud-done-button');
 					this._needsLogIn = false;
 				}
 			},
@@ -67,7 +67,7 @@ var Zotero_Read_Aloud_First_Run = new function () {
 	this.accept = function (event) {
 		if (this._needsLogIn) {
 			this.cancel();
-			Zotero.Utilities.Internal.openPreferences('zotero-prefpane-account', { action: 'logIn' });
+			Trellis.Utilities.Internal.openPreferences('trellis-prefpane-account', { action: 'logIn' });
 			return;
 		}
 

@@ -22,7 +22,7 @@
 }
 
 /* Increase size when window is wider */
-#zotero-pane.width-1000 .items-tree-message div.publications p {
+#trellis-pane.width-1000 .items-tree-message div.publications p {
 	font-size: 1.35em;
 }
 
@@ -37,41 +37,41 @@
 /* 
 	Fix to odd fx115 behavior that gives an un-collapsed pane the initial width of min-width + last width
 */
-#zotero-collections-pane[collapsed=true] {
+#trellis-collections-pane[collapsed=true] {
 	min-width: 0px !important;
 	width: 0px !important;
 }
 
-#zotero-pane toolbarseparator {
+#trellis-pane toolbarseparator {
 	height:24px;
 }
 
-.zotero-button-clear-image {
+.trellis-button-clear-image {
   list-style-image: none
 }
 
-#zotero-collections-tree, #zotero-items-tree, #zotero-item-pane > groupbox
+#trellis-collections-tree, #trellis-items-tree, #trellis-item-pane > groupbox
 {
 	margin: 0;
 	padding: 0;
 }
 
-#zotero-lookup-textbox {
+#trellis-lookup-textbox {
 	margin: 4px;
 	padding: 2px;
 	overflow-x: hidden; /* Fixes a glitch that renders an extra row */
 }
 
-#zotero-lookup-panel {
+#trellis-lookup-panel {
 	min-height: 100px;
 	min-width: 500px;
 }
 
-#zotero-lookup-multiline-progress {
+#trellis-lookup-multiline-progress {
 	height: 2em;
 }
 
-#zotero-tb-sync-progress
+#trellis-tb-sync-progress
 {
 	min-width: 50px;
 	width: 50px;
@@ -79,30 +79,30 @@
 	margin-inline-start: 0;
 }
 
-#zotero-tb-sync-progress-tooltip-progress {
+#trellis-tb-sync-progress-tooltip-progress {
 	margin-bottom: 5px;
 }
 
 /* Library names */
-#zotero-tb-sync-progress-tooltip rows > label
+#trellis-tb-sync-progress-tooltip rows > label
 {
 	font-weight: 600;
 	margin-top: 8px;
 }
 
 /* Queue names */
-#zotero-tb-sync-progress-tooltip row:not(.library-name) label:first-child
+#trellis-tb-sync-progress-tooltip row:not(.library-name) label:first-child
 {
 	text-align: right;
 }
 
 
 /* Sync error panel */
-#zotero-sync-error-panel, #zotero-sync-reminder-panel {
+#trellis-sync-error-panel, #trellis-sync-reminder-panel {
 	margin-inline-end: 0;
 }
 
-#zotero-sync-error-panel .error-header, #zotero-sync-reminder-panel .header {
+#trellis-sync-error-panel .error-header, #trellis-sync-reminder-panel .header {
 	font-size: 14px;
 	font-weight: 600;
 	margin-bottom: 1em;
@@ -110,31 +110,31 @@
 	cursor: text
 }
 
-.zotero-sync-error-panel-library-name {
+.trellis-sync-error-panel-library-name {
 	font-size: 12px;
 	font-weight: 600;
 	margin-left: 0;
 	margin-bottom: 1.1em;
 }
 
-#zotero-sync-error-panel description, #zotero-sync-reminder-panel description {
+#trellis-sync-error-panel description, #trellis-sync-reminder-panel description {
 	width: 370px;
 	white-space: pre-wrap;
 }
 
-#zotero-sync-error-panel-buttons {
+#trellis-sync-error-panel-buttons {
 	margin-top: 1em;
 	justify-content: end;
 	gap: 8px;
 }
 
-.zotero-toolbar
+.trellis-toolbar
 {
 	visibility: visible !important;
 	display: inherit !important;
 }
 
-#zotero-tab-cover {
+#trellis-tab-cover {
 	z-index: 2;
 	left: 0;
 	right: 0;
@@ -145,21 +145,21 @@
 	display: flex;
 }
 
-#zotero-tab-cover.hidden {
+#trellis-tab-cover.hidden {
 	display: none;
 }
 
-#zotero-tab-cover label {
+#trellis-tab-cover label {
 	padding-top: 30px;
 	flex-grow: 1;
 	text-align: center;
 }
 
-.zotero-box {
+.trellis-box {
 	margin-inline-start: 5px;
 }
 
-.zotero-box-icon {
+.trellis-box-icon {
 	width: 16px;
 	height: 16px;
 }

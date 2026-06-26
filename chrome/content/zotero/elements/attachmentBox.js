@@ -3,22 +3,22 @@
     
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -29,16 +29,16 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
-	let { canRenameFileFromParent, renameFileFromParent } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+	let { canRenameFileFromParent, renameFileFromParent } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 	class AttachmentBox extends ItemPaneSectionElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<collapsible-section data-l10n-id="section-attachment-info" data-pane="attachment-info">
 				<html:div class="body">
 					<html:div style="display: grid;">
-						<label id="url" is="zotero-text-link" crop="end" tabindex="0"
+						<label id="url" is="trellis-text-link" crop="end" tabindex="0"
 							ondragstart="let dt = event.dataTransfer; dt.setData('text/x-moz-url', this.value); dt.setData('text/uri-list', this.value); dt.setData('text/plain', this.value);"/>
 					</html:div>
 					<html:div class="metadata-table">
@@ -69,7 +69,7 @@
 							<html:div class="meta-label"><html:label id="index-status-label" class="key" data-l10n-id="attachment-info-index"/></html:div>
 							<html:div class="meta-data">
 								<html:span id="index-status"/>
-								<toolbarbutton id="reindex" tabindex="0" oncommand="this.hidden = true; setTimeout(function () { ZoteroPane_Local.reindexItem(); }, 50)"/>
+								<toolbarbutton id="reindex" tabindex="0" oncommand="this.hidden = true; setTimeout(function () { TrellisPane_Local.reindexItem(); }, 50)"/>
 							</html:div>
 						</html:div>
 					</html:div>
@@ -121,7 +121,7 @@
 		}
 
 		set mode(val) {
-			Zotero.debug("Setting mode to '" + val + "'");
+			Trellis.debug("Setting mode to '" + val + "'");
 					
 			this.synchronous = false;
 			this.displayURL = false;
@@ -224,8 +224,8 @@
 		}
 
 		set item(val) {
-			if (!(val instanceof Zotero.Item)) {
-				throw new Error("'item' must be a Zotero.Item");
+			if (!(val instanceof Trellis.Item)) {
+				throw new Error("'item' must be a Trellis.Item");
 			}
 			// Blur editable-text of old attachment. Otherwise, _handleTitleBlur() would fire after
 			// the new item is set but before updateInfo() sets the title field to have the new
@@ -270,10 +270,10 @@
 			noteButton.addEventListener("command", this._handleNoteButtonCommand);
 
 			let copyMenuitem = this._id('url-menuitem-copy');
-			copyMenuitem.label = Zotero.getString('general.copy');
+			copyMenuitem.label = Trellis.getString('general.copy');
 			copyMenuitem.addEventListener('command', this._handleCopyURL);
 
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'attachmentbox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'attachmentbox');
 
 			// Work around the reindex toolbarbutton not wanting to properly receive focus on tab.
 			// Make <image> focusable. On focus of the image, bounce the focus to the toolbarbutton.
@@ -302,7 +302,7 @@
 			this._preview?.remove();
 			delete this._preview;
 
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 
 			this._id('url')?.removeEventListener('contextmenu', this._handleURLContextMenu);
 			this._id("title")?.removeEventListener('blur', this._handleTitleBlur);
@@ -355,7 +355,7 @@
 				return;
 			}
 
-			Zotero.debug('Refreshing attachment box');
+			Trellis.debug('Refreshing attachment box');
 			this._asyncRendering = true;
 
 			// Execute sub-tasks concurrently to avoid race condition between different calls
@@ -378,11 +378,11 @@
 		}
 
 		onViewClick(event) {
-			ZoteroPane_Local.viewAttachment(this.item.id, event, !this.editable);
+			TrellisPane_Local.viewAttachment(this.item.id, event, !this.editable);
 		}
 
 		onShowClick(event) {
-			ZoteroPane_Local.showAttachmentInFilesystem(this.item.id, event.originalTarget, !this.editable);
+			TrellisPane_Local.showAttachmentInFilesystem(this.item.id, event.originalTarget, !this.editable);
 		}
 
 		async updateInfo() {
@@ -400,8 +400,8 @@
 
 			let fileExists = this._item.isFileAttachment() && await this._item.fileExists();
 			let isMerge = ["merge", "mergeedit", "filemerge"].includes(this.mode);
-			let isImportedURL = this.item.attachmentLinkMode == Zotero.Attachments.LINK_MODE_IMPORTED_URL;
-			let isLinkedURL = this.item.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL;
+			let isImportedURL = this.item.attachmentLinkMode == Trellis.Attachments.LINK_MODE_IMPORTED_URL;
+			let isLinkedURL = this.item.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL;
 			
 			// URL
 			if (this.displayURL && (isImportedURL || isLinkedURL)) {
@@ -421,7 +421,7 @@
 			if (this.displayAccessed && (isImportedURL || isLinkedURL)) {
 				let itemAccessDate = this.item.getField('accessDate');
 				if (itemAccessDate) {
-					itemAccessDate = Zotero.Date.sqlToDate(itemAccessDate, true);
+					itemAccessDate = Trellis.Date.sqlToDate(itemAccessDate, true);
 					this._id("accessed").value = itemAccessDate.toLocaleString();
 					accessed.hidden = false;
 				}
@@ -441,7 +441,7 @@
 					fileName = this.item.attachmentFilename;
 				}
 				catch (e) {
-					Zotero.warn("Error getting attachment filename: " + e);
+					Trellis.warn("Error getting attachment filename: " + e);
 				}
 				
 				if (fileName) {
@@ -460,7 +460,7 @@
 
 			// Page count
 			if (this.displayPages && this._item.isPDFAttachment()) {
-				Zotero.Fulltext.getPages(this.item.id)
+				Trellis.Fulltext.getPages(this.item.id)
 				.then(function (pages) {
 					if (!this.item) return;
 					
@@ -482,7 +482,7 @@
 				// Conflict resolution uses a modal window, so promises won't work, but
 				// the sync process passes in the file mod time as dateModified
 				if (this.synchronous) {
-					this._id("dateModified").value = Zotero.Date.sqlToDate(
+					this._id("dateModified").value = Trellis.Date.sqlToDate(
 						this.item.getField('dateModified'), true
 					).toLocaleString();
 					dateModifiedRow.hidden = false;
@@ -504,7 +504,7 @@
 			}
 			
 			// Full-text index information
-			if (this.displayIndexed && fileExists && await Zotero.FullText.canIndex(this.item)) {
+			if (this.displayIndexed && fileExists && await Trellis.FullText.canIndex(this.item)) {
 				this.updateItemIndexedState()
 					.then(function () {
 						if (!this.item) return;
@@ -559,36 +559,36 @@
 				let indexStatus = this._id('index-status');
 				let reindexButton = this._id('reindex');
 				
-				let status = await Zotero.Fulltext.getIndexedState(this.item);
+				let status = await Trellis.Fulltext.getIndexedState(this.item);
 				if (!this.item) return;
 				
 				let str = 'fulltext.indexState.';
 				switch (status) {
-					case Zotero.Fulltext.INDEX_STATE_UNAVAILABLE:
+					case Trellis.Fulltext.INDEX_STATE_UNAVAILABLE:
 						str += 'unavailable';
 						break;
-					case Zotero.Fulltext.INDEX_STATE_UNINDEXED:
+					case Trellis.Fulltext.INDEX_STATE_UNINDEXED:
 						str = 'general.no';
 						break;
-					case Zotero.Fulltext.INDEX_STATE_PARTIAL:
+					case Trellis.Fulltext.INDEX_STATE_PARTIAL:
 						str += 'partial';
 						break;
-					case Zotero.Fulltext.INDEX_STATE_QUEUED:
+					case Trellis.Fulltext.INDEX_STATE_QUEUED:
 						str += 'queued';
 						break;
-					case Zotero.Fulltext.INDEX_STATE_INDEXED:
+					case Trellis.Fulltext.INDEX_STATE_INDEXED:
 						str = 'general.yes';
 						break;
 				}
-				indexStatus.textContent = Zotero.getString(str);
+				indexStatus.textContent = Trellis.getString(str);
 				
-				// Reindex button tooltip (string stored in zotero.properties)
-				str = Zotero.getString('pane.items.menu.reindexItem');
+				// Reindex button tooltip (string stored in trellis.properties)
+				str = Trellis.getString('pane.items.menu.reindexItem');
 				reindexButton.setAttribute('tooltiptext', str);
 				
 				let show = false;
 				if (this.editable) {
-					show = await Zotero.Fulltext.canReindex(this.item);
+					show = await Trellis.Fulltext.canReindex(this.item);
 					if (!this.item) return;
 				}
 				
@@ -634,14 +634,14 @@
 			}
 			if (newExt !== oldExt && oldExt) {
 				// User changed extension. Confirm
-				let index = Zotero.Prompt.confirm({
+				let index = Trellis.Prompt.confirm({
 					window,
-					title: Zotero.getString('general.warning'),
-					text: Zotero.getString('pane.item.attachments.rename.confirmExtChange.text1', [oldExt, newExt])
+					title: Trellis.getString('general.warning'),
+					text: Trellis.getString('pane.item.attachments.rename.confirmExtChange.text1', [oldExt, newExt])
 						+ "\n\n"
-						+ Zotero.getString('pane.item.attachments.rename.confirmExtChange.text2', Zotero.appName),
-					button0: Zotero.getString('pane.item.attachments.rename.confirmExtChange.keep', oldExt),
-					button1: Zotero.getString('pane.item.attachments.rename.confirmExtChange.change', newExt),
+						+ Trellis.getString('pane.item.attachments.rename.confirmExtChange.text2', Trellis.appName),
+					button0: Trellis.getString('pane.item.attachments.rename.confirmExtChange.keep', oldExt),
+					button1: Trellis.getString('pane.item.attachments.rename.confirmExtChange.change', newExt),
 				});
 				if (index == 0) {
 					newFilename = newFilename.replace(/\.\w{1,10}$/, oldExt);
@@ -667,15 +667,15 @@
 			if (renamed == -2) {
 				nsIPS.alert(
 					window,
-					Zotero.getString('general.error'),
-					Zotero.getString('pane.item.attachments.rename.error')
+					Trellis.getString('general.error'),
+					Trellis.getString('pane.item.attachments.rename.error')
 				);
 			}
 			else if (!renamed) {
 				nsIPS.alert(
 					window,
-					Zotero.getString('pane.item.attachments.fileNotFound.title'),
-					Zotero.getString('pane.item.attachments.fileNotFound.text1')
+					Trellis.getString('pane.item.attachments.fileNotFound.title'),
+					Trellis.getString('pane.item.attachments.fileNotFound.text1')
 				);
 			}
 			this._forceRenderAll();
@@ -720,7 +720,7 @@
 			if (!this.item.note || this.mode !== "edit") {
 				return;
 			}
-			let newNote = new Zotero.Item('note');
+			let newNote = new Trellis.Item('note');
 			newNote.libraryID = this.item.libraryID;
 			newNote.parentID = this.item.parentID;
 			newNote.setNote(this.item.note);
@@ -740,7 +740,7 @@
 			
 			let labelWrapper = event.target.closest(".meta-label");
 			if (labelWrapper.nextSibling.contains(document.activeElement)) {
-				ZoteroPane.itemsView.focus();
+				TrellisPane.itemsView.focus();
 			}
 			else if (!labelWrapper.nextSibling.firstChild.readOnly) {
 				labelWrapper.nextSibling.firstChild.focus();
@@ -768,7 +768,7 @@
 			this.item.saveTx({
 				undoAction: 'undo-action-edit-field',
 				undoActionArgs: {
-					field: Zotero.ItemFields.getLocalizedString('title'),
+					field: Trellis.ItemFields.getLocalizedString('title'),
 					count: 1
 				}
 			});
@@ -788,7 +788,7 @@
 		};
 
 		_handleCopyURL = () => {
-			Zotero.Utilities.Internal.copyTextToClipboard(this.item.getField('url'));
+			Trellis.Utilities.Internal.copyTextToClipboard(this.item.getField('url'));
 		};
 
 		_handleReindexButtonFocus = (event) => {

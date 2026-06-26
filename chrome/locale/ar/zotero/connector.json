@@ -183,7 +183,7 @@
     "message": " $1 غير قادر على التواصل مع  $2 تطبيق سطح المكتب. يجب فتح $2 لاستخدام الاستشهاد المستند على الشبكة."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "المستند يحتوي اقتباسات زوتيرو نشطة وستظهر كروابط  zotero.org في النسخة المحملة."
+    "message": "المستند يحتوي اقتباسات زوتيرو نشطة وستظهر كروابط  trellis.org في النسخة المحملة."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
     "message": "لصنع نسخة مناسبة للمشاركة، اختر <b> انشئ نسخة...</b> من قائمة ملف، اختر <b>إلغاء ارتباط الاستشهادات</b> من قائمة زوتيرو في المستند الجديد، ثم حمل النسغير غير المرتبطة. احفظ هذا المستند المرتبط في حالة احتجت لمزيد من التغييرات."
@@ -195,7 +195,7 @@
     "message": "$1 يقوم بتحديث المستند الخاص بك."
   },
   "integration_googleDocs_docxAlert": {
-    "message": " لا تتوفر خاصية التكامل $1 عند تحرير ملفات Microsoft Word .docx مباشرةً في محرّر مستندات Google. اختر ملف → حفظ كمحرر مستندات Google لتمكين هذه الوظيفة. <br/><br/>إذا كنت تريد نقل مستند Word مع $1 الاستشهادات إلى مستندات Google، راجع<a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\"> نقل المستندات بين معالجات Word.</a>"
+    "message": " لا تتوفر خاصية التكامل $1 عند تحرير ملفات Microsoft Word .docx مباشرةً في محرّر مستندات Google. اختر ملف → حفظ كمحرر مستندات Google لتمكين هذه الوظيفة. <br/><br/>إذا كنت تريد نقل مستند Word مع $1 الاستشهادات إلى مستندات Google، راجع<a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\"> نقل المستندات بين معالجات Word.</a>"
   },
   "integration_googleDocs_documentLocked": {
     "message": "يتم تحرير استشهادات المستند من قبل مستخدم $1 آخر. يرجى المحاولة مرة أخرى لاحقاً."
@@ -219,7 +219,7 @@
     "message": "إعادة ربط الاستشهاد"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "لقد أصبحت هذه الاستشهادات <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">غير مرتبطة من $1</a>. ستحتاج إلى إعادة ربطها قبل أن يتم تحديثها أو ظهورها في قائمة المراجع الخاصة بك."
+    "message": "لقد أصبحت هذه الاستشهادات <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">غير مرتبطة من $1</a>. ستحتاج إلى إعادة ربطها قبل أن يتم تحديثها أو ظهورها في قائمة المراجع الخاصة بك."
   },
   "copyUnproxiedLink": {
     "message": "نسخ رابط غير مرفق"

@@ -3,33 +3,33 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
 /*
  * This object contains the various functions for the interface
  */
-var ZoteroPane = new function () {
+var TrellisPane = new function () {
 	var _unserialized = false;
 	this.collectionsView = false;
 	this.itemsView = false;
@@ -69,28 +69,28 @@ var ZoteroPane = new function () {
 		_reloadFunctions = [], _beforeReloadFunctions = [];
 	
 	/**
-	 * Called when the window containing Zotero pane is open
+	 * Called when the window containing Trellis pane is open
 	 */
 	this.init = function () {
-		Zotero.debug("Initializing Zotero pane");
+		Trellis.debug("Initializing Trellis pane");
 		
 		// Set key down handler
-		document.addEventListener('keydown', ZoteroPane_Local.handleKeyDown);
+		document.addEventListener('keydown', TrellisPane_Local.handleKeyDown);
 		// Keydown handling that captures events. E.g. tab navigation
-		document.addEventListener('keydown', ZoteroPane.captureKeyDown, true);
+		document.addEventListener('keydown', TrellisPane.captureKeyDown, true);
 		// focusout, unlike blur, bubbles up to document level
 		// so handleBlur gets triggered when any field, not just the document, looses focus
-		document.addEventListener('focusout', ZoteroPane.handleBlur);
+		document.addEventListener('focusout', TrellisPane.handleBlur);
 		
 		// Init toolbar buttons for all progress queues
-		let progressQueueButtons = document.getElementById('zotero-pq-buttons');
-		let progressQueues = Zotero.ProgressQueues.getAll();
+		let progressQueueButtons = document.getElementById('trellis-pq-buttons');
+		let progressQueues = Trellis.ProgressQueues.getAll();
 		for (let progressQueue of progressQueues) {
 			let button = document.createXULElement('toolbarbutton');
-			button.id = 'zotero-tb-pq-' + progressQueue.getID();
+			button.id = 'trellis-tb-pq-' + progressQueue.getID();
 			button.hidden = progressQueue.getTotal() < 1;
 			button.addEventListener('command', function () {
-				Zotero.ProgressQueues.get(progressQueue.getID()).getDialog().open();
+				Trellis.ProgressQueues.get(progressQueue.getID()).getDialog().open();
 			}, false);
 			
 			progressQueue.addListener('empty', function () {
@@ -108,17 +108,17 @@ var ZoteroPane = new function () {
 
 		// Register a window controller for global undo/redo. Appending (rather
 		// than inserting at 0) ensures text-editing controllers take priority.
-		window.controllers.appendController(Zotero.UndoHistory.getController(document));
+		window.controllers.appendController(Trellis.UndoHistory.getController(document));
 
-		var zp = document.getElementById('zotero-pane');
-		Zotero.UIProperties.registerRoot(zp);
+		var zp = document.getElementById('trellis-pane');
+		Trellis.UIProperties.registerRoot(zp);
 		zp.addEventListener('UIPropertiesChanged', () => {
 			this.collectionsView?.updateFontSize();
 			this.itemsView?.updateFontSize();
 		});
-		Zotero.UIProperties.registerRoot(document.getElementById('zotero-context-pane'));
-		this.itemPane = document.querySelector("#zotero-item-pane");
-		ZoteroPane_Local.updateLayout();
+		Trellis.UIProperties.registerRoot(document.getElementById('trellis-context-pane'));
+		this.itemPane = document.querySelector("#trellis-item-pane");
+		TrellisPane_Local.updateLayout();
 		this.updateWindow();
 		window.addEventListener("resize", () => {
 			this.updateWindow();
@@ -129,37 +129,37 @@ var ZoteroPane = new function () {
 		});
 		window.setTimeout(this.updateLayoutConstraints.bind(this), 0);
 		
-		Zotero.updateQuickSearchBox(document);
+		Trellis.updateQuickSearchBox(document);
 		
-		if (Zotero.isMac) {
-			document.getElementById('zotero-pane-stack').setAttribute('platform', 'mac');
-			Zotero.getOSVersion().then((osVersion) => {
+		if (Trellis.isMac) {
+			document.getElementById('trellis-pane-stack').setAttribute('platform', 'mac');
+			Trellis.getOSVersion().then((osVersion) => {
 				let [_, version] = osVersion.split(' ');
 				if (Services.vc.compare(version, '26.0') >= 0) {
 					document.documentElement.setAttribute('macos-tahoe', 'true');
 				}
 			});
-		} else if(Zotero.isWin) {
-			document.getElementById('zotero-pane-stack').setAttribute('platform', 'win');
+		} else if(Trellis.isWin) {
+			document.getElementById('trellis-pane-stack').setAttribute('platform', 'win');
 		}
 		
 		// Set the sync tooltip label
-		let syncLabel = document.getElementById('zotero-tb-sync-label');
-		syncLabel.value = Zotero.getString('sync.syncWith', ZOTERO_CONFIG.DOMAIN_NAME);
-		let syncButton = document.querySelector("#zotero-tb-sync");
+		let syncLabel = document.getElementById('trellis-tb-sync-label');
+		syncLabel.value = Trellis.getString('sync.syncWith', TRELLIS_CONFIG.DOMAIN_NAME);
+		let syncButton = document.querySelector("#trellis-tb-sync");
 		syncButton.setAttribute("aria-label", syncLabel.value);
 		// Update the aria-description on focus
 		syncButton.addEventListener("focus", function (_) {
-			Zotero.Sync.Runner.registerSyncStatus(this.firstChild);
-			let lastSync = document.querySelector("#zotero-tb-sync-last-sync").value;
+			Trellis.Sync.Runner.registerSyncStatus(this.firstChild);
+			let lastSync = document.querySelector("#trellis-tb-sync-last-sync").value;
 			this.setAttribute("aria-description", lastSync || "");
 		});
 		
-		// register an observer for Zotero reload
+		// register an observer for Trellis reload
 		observerService = Components.classes["@mozilla.org/observer-service;1"]
 					.getService(Components.interfaces.nsIObserverService);
-		observerService.addObserver(_reloadObserver, "zotero-reloaded", false);
-		observerService.addObserver(_reloadObserver, "zotero-before-reload", false);
+		observerService.addObserver(_reloadObserver, "trellis-reloaded", false);
+		observerService.addObserver(_reloadObserver, "trellis-before-reload", false);
 		this.addReloadListener(_loadPane);
 		
 		// continue loading pane
@@ -168,14 +168,14 @@ var ZoteroPane = new function () {
 	};
 
 	function setUpKeyboardNavigation() {
-		let collectionTreeToolbar = document.getElementById("zotero-toolbar-collection-tree");
-		let itemTreeToolbar = document.getElementById("zotero-toolbar-item-tree");
-		let titleBar = document.getElementById("zotero-title-bar");
-		let itemTree = document.getElementById("zotero-items-tree");
-		let collectionsTree = document.getElementById("zotero-collections-tree");
-		let tagSelector = document.getElementById("zotero-tag-selector");
-		let tagContainer = document.getElementById('zotero-tag-selector-container');
-		let collectionsPane = document.getElementById("zotero-collections-pane");
+		let collectionTreeToolbar = document.getElementById("trellis-toolbar-collection-tree");
+		let itemTreeToolbar = document.getElementById("trellis-toolbar-item-tree");
+		let titleBar = document.getElementById("trellis-title-bar");
+		let itemTree = document.getElementById("trellis-items-tree");
+		let collectionsTree = document.getElementById("trellis-collections-tree");
+		let tagSelector = document.getElementById("trellis-tag-selector");
+		let tagContainer = document.getElementById('trellis-tag-selector-container');
+		let collectionsPane = document.getElementById("trellis-collections-pane");
 
 		// function to handle actual focusing based on a given event
 		// and a mapping of event targets + keys to the focus destinations
@@ -201,10 +201,10 @@ var ZoteroPane = new function () {
 			else if (verticalArrowIsTab && key == 'ArrowDown' && !onInput) {
 				key = 'Tab';
 			}
-			if (key == Zotero.arrowPreviousKey) {
+			if (key == Trellis.arrowPreviousKey) {
 				key = 'ArrowPrevious';
 			}
-			else if (key == Zotero.arrowNextKey) {
+			else if (key == Trellis.arrowNextKey) {
 				key = 'ArrowNext';
 			}
 			// Fetch the focusFunction by target id
@@ -254,69 +254,69 @@ var ZoteroPane = new function () {
 		};
 
 		titleBar.addEventListener("keydown", (event) => {
-			let cmdOrCtrlOnly = e => (Zotero.isMac ? (e.metaKey && !e.ctrlKey) : e.ctrlKey) && !e.shiftKey && !e.altKey;
+			let cmdOrCtrlOnly = e => (Trellis.isMac ? (e.metaKey && !e.ctrlKey) : e.ctrlKey) && !e.shiftKey && !e.altKey;
 
 			// Mapping of target ids and possible key presses to desired focus outcomes
 			let actionsMap = {
-				'zotero-tb-tabs-menu': {
+				'trellis-tb-tabs-menu': {
 					ArrowNext: () => null,
 					ArrowPrevious: () => null,
-					Tab: () => document.getElementById('zotero-tb-sync-error'),
+					Tab: () => document.getElementById('trellis-tb-sync-error'),
 					ShiftTab: () => {
-						Zotero_Tabs.moveFocus("current");
+						Trellis_Tabs.moveFocus("current");
 					},
 				},
-				'zotero-tb-sync': {
+				'trellis-tb-sync': {
 					ArrowNext: () => null,
 					ArrowPrevious: () => null,
 					Tab: () => {
-						Zotero_Tabs.focusFirst();
+						Trellis_Tabs.focusFirst();
 						return null;
 					},
-					ShiftTab: () => document.getElementById('zotero-tb-sync-error')
+					ShiftTab: () => document.getElementById('trellis-tb-sync-error')
 				},
-				'zotero-tb-sync-error': {
+				'trellis-tb-sync-error': {
 					ArrowNext: () => null,
 					ArrowPrevious: () => null,
-					Tab: () => document.getElementById('zotero-tb-sync'),
-					ShiftTab: () => document.getElementById('zotero-tb-tabs-menu'),
-					Enter: () => document.getElementById("zotero-tb-sync-error")
+					Tab: () => document.getElementById('trellis-tb-sync'),
+					ShiftTab: () => document.getElementById('trellis-tb-tabs-menu'),
+					Enter: () => document.getElementById("trellis-tb-sync-error")
 						.dispatchEvent(new MouseEvent("click", { target: event.target })),
-					' ': () => document.getElementById("zotero-tb-sync-error")
+					' ': () => document.getElementById("trellis-tb-sync-error")
 						.dispatchEvent(new MouseEvent("click", { target: event.target }))
 				},
 				tab: {
 					// keyboard navigation for tabs. 'tab' is the class, not the id
-					Tab: () => document.getElementById('zotero-tb-tabs-menu'),
-					ShiftTab: Zotero_Tabs.focusWrapAround,
+					Tab: () => document.getElementById('trellis-tb-tabs-menu'),
+					ShiftTab: Trellis_Tabs.focusWrapAround,
 					ArrowNext: (e) => {
 						if (cmdOrCtrlOnly(e)) {
-							Zotero_Tabs.moveFocus("next");
+							Trellis_Tabs.moveFocus("next");
 						}
 						else {
-							Zotero_Tabs.selectNext({ keepTabFocused: true });
+							Trellis_Tabs.selectNext({ keepTabFocused: true });
 						}
 					},
 					ArrowPrevious: (e) => {
 						if (cmdOrCtrlOnly(e)) {
-							Zotero_Tabs.moveFocus("previous");
+							Trellis_Tabs.moveFocus("previous");
 						}
 						else {
-							Zotero_Tabs.selectPrev({ keepTabFocused: true });
+							Trellis_Tabs.selectPrev({ keepTabFocused: true });
 						}
 					},
 					Enter: (e) => {
-						Zotero_Tabs.select(e.target.getAttribute('data-id'), false, { keepTabFocused: false });
+						Trellis_Tabs.select(e.target.getAttribute('data-id'), false, { keepTabFocused: false });
 					},
 					' ': (e) => {
-						Zotero_Tabs.select(e.target.getAttribute('data-id'), false, { keepTabFocused: false });
+						Trellis_Tabs.select(e.target.getAttribute('data-id'), false, { keepTabFocused: false });
 					}
 				}
 			};
 			moveFocus(actionsMap, event, true);
 		});
 
-		let collectionsSearchField = document.getElementById("zotero-collections-search");
+		let collectionsSearchField = document.getElementById("trellis-collections-search");
 		let clearCollectionSearch = () => {
 			// If empty filter - just focus the collectionTree
 			if (collectionsSearchField.value.length == 0) {
@@ -325,36 +325,36 @@ var ZoteroPane = new function () {
 			// Clear the search field and focus collection tree
 			if (collectionsSearchField.value.length) {
 				collectionsSearchField.value = '';
-				ZoteroPane.collectionsView.setFilter("", true);
+				TrellisPane.collectionsView.setFilter("", true);
 			}
-			ZoteroPane.hideCollectionSearch();
+			TrellisPane.hideCollectionSearch();
 			return null;
 		};
 		let focusCollectionTree = () => {
 			// Prevent Enter/Tab pressed before the filtering ran from doing anything
-			if (!ZoteroPane.collectionsView.filterEquals(collectionsSearchField.value)) {
+			if (!TrellisPane.collectionsView.filterEquals(collectionsSearchField.value)) {
 				return null;
 			}
 			// If the current row passes the filter, make sure it is visible and focus collectionTree
-			if (ZoteroPane.collectionsView.focusedRowMatchesFilter()) {
-				ZoteroPane.collectionsView.ensureRowIsVisible(ZoteroPane.collectionsView.selection.focused);
+			if (TrellisPane.collectionsView.focusedRowMatchesFilter()) {
+				TrellisPane.collectionsView.ensureRowIsVisible(TrellisPane.collectionsView.selection.focused);
 				return document.getElementById('collection-tree');
 			}
 			// Otherwise, focus the first row passing the filter
-			ZoteroPane.collectionsView.focusFirstMatchingRow(false);
+			TrellisPane.collectionsView.focusFirstMatchingRow(false);
 			return null;
 		};
 		collectionTreeToolbar.addEventListener("keydown", (event) => {
 			let actionsMap = {
-				'zotero-tb-collection-add': {
+				'trellis-tb-collection-add': {
 					ArrowNext: () => null,
 					ArrowPrevious: () => null,
-					Tab: () => document.getElementById('zotero-tb-collections-search').click(),
-					ShiftTab: () => document.getElementById('zotero-tb-sync')
+					Tab: () => document.getElementById('trellis-tb-collections-search').click(),
+					ShiftTab: () => document.getElementById('trellis-tb-sync')
 				},
-				'zotero-collections-search': {
+				'trellis-collections-search': {
 					Tab: focusCollectionTree,
-					ShiftTab: () => document.getElementById('zotero-tb-collection-add'),
+					ShiftTab: () => document.getElementById('trellis-tb-collection-add'),
 					Enter: focusCollectionTree,
 					Escape: clearCollectionSearch
 				},
@@ -364,60 +364,60 @@ var ZoteroPane = new function () {
 
 		itemTreeToolbar.addEventListener("keydown", (event) => {
 			let actionsMap = {
-				'zotero-tb-add': {
-					ArrowNext: () => document.getElementById("zotero-tb-lookup"),
+				'trellis-tb-add': {
+					ArrowNext: () => document.getElementById("trellis-tb-lookup"),
 					ArrowPrevious: () => null,
-					Tab: () => document.getElementById("zotero-tb-search").focus(),
+					Tab: () => document.getElementById("trellis-tb-search").focus(),
 					ShiftTab: () => {
 						if (collectionsPane.getAttribute("collapsed")) {
-							return document.getElementById('zotero-tb-sync');
+							return document.getElementById('trellis-tb-sync');
 						}
 						if (tagContainer.getAttribute('collapsed') == "true") {
 							return focusCollectionTree();
 						}
-						return document.querySelector("#zotero-tag-selector button");
+						return document.querySelector("#trellis-tag-selector button");
 					}
 				},
-				'zotero-tb-lookup': {
-					ArrowNext: () => document.getElementById("zotero-tb-attachment-add"),
-					ArrowPrevious: () => document.getElementById("zotero-tb-add"),
-					Tab: () => document.getElementById("zotero-tb-search").focus(),
-					ShiftTab: () => document.getElementById('zotero-tb-collections-search').click(),
-					Enter: () => Zotero_Lookup.showPanel(event.target),
-					' ': () => Zotero_Lookup.showPanel(event.target)
+				'trellis-tb-lookup': {
+					ArrowNext: () => document.getElementById("trellis-tb-attachment-add"),
+					ArrowPrevious: () => document.getElementById("trellis-tb-add"),
+					Tab: () => document.getElementById("trellis-tb-search").focus(),
+					ShiftTab: () => document.getElementById('trellis-tb-collections-search').click(),
+					Enter: () => Trellis_Lookup.showPanel(event.target),
+					' ': () => Trellis_Lookup.showPanel(event.target)
 				},
-				'zotero-tb-attachment-add': {
-					ArrowNext: () => document.getElementById("zotero-tb-note-add"),
-					ArrowPrevious: () => document.getElementById("zotero-tb-lookup"),
-					Tab: () => document.getElementById("zotero-tb-search").focus(),
-					ShiftTab: () => document.getElementById('zotero-tb-collections-search').click()
+				'trellis-tb-attachment-add': {
+					ArrowNext: () => document.getElementById("trellis-tb-note-add"),
+					ArrowPrevious: () => document.getElementById("trellis-tb-lookup"),
+					Tab: () => document.getElementById("trellis-tb-search").focus(),
+					ShiftTab: () => document.getElementById('trellis-tb-collections-search').click()
 				},
-				'zotero-tb-note-add': {
+				'trellis-tb-note-add': {
 					ArrowNext: () => null,
-					ArrowPrevious: () => document.getElementById("zotero-tb-attachment-add"),
-					Tab: () => document.getElementById("zotero-tb-search").focus(),
-					ShiftTab: () => document.getElementById('zotero-tb-collections-search').click()
+					ArrowPrevious: () => document.getElementById("trellis-tb-attachment-add"),
+					Tab: () => document.getElementById("trellis-tb-search").focus(),
+					ShiftTab: () => document.getElementById('trellis-tb-collections-search').click()
 				},
-				'zotero-tb-search-dropmarker': {
+				'trellis-tb-search-dropmarker': {
 					ArrowNext: () => null,
 					ArrowPrevious: () => null,
-					Tab: () => document.getElementById("zotero-tb-search-textbox"),
-					ShiftTab: () => document.getElementById('zotero-tb-add')
+					Tab: () => document.getElementById("trellis-tb-search-textbox"),
+					ShiftTab: () => document.getElementById('trellis-tb-add')
 				},
 				'advanced-collapse-button': {
-					ShiftTab: () => document.getElementById('zotero-tb-add')
+					ShiftTab: () => document.getElementById('trellis-tb-add')
 				},
-				'zotero-tb-search-textbox': {
-					Tab: () => document.getElementById("zotero-tb-search-advanced-button"),
-					ShiftTab: () => document.getElementById("zotero-tb-search").focus()
+				'trellis-tb-search-textbox': {
+					Tab: () => document.getElementById("trellis-tb-search-advanced-button"),
+					ShiftTab: () => document.getElementById("trellis-tb-search").focus()
 				},
-				'zotero-tb-search-advanced-button': {
-					Tab: () => document.getElementById("zotero-tb-toggle-item-pane-stacked"),
-					ShiftTab: () => document.getElementById("zotero-tb-search-textbox")
+				'trellis-tb-search-advanced-button': {
+					Tab: () => document.getElementById("trellis-tb-toggle-item-pane-stacked"),
+					ShiftTab: () => document.getElementById("trellis-tb-search-textbox")
 				},
-				'zotero-tb-toggle-item-pane-stacked': {
+				'trellis-tb-toggle-item-pane-stacked': {
 					Tab: () => itemTree.querySelector(".virtualized-table"),
-					ShiftTab: () => document.getElementById("zotero-tb-search-advanced-button")
+					ShiftTab: () => document.getElementById("trellis-tb-search-advanced-button")
 				},
 			};
 			moveFocus(actionsMap, event, true);
@@ -426,16 +426,16 @@ var ZoteroPane = new function () {
 		collectionsTree.addEventListener("keydown", (event) => {
 			let actionsMap = {
 				'collection-tree': {
-					ShiftTab: () => document.getElementById('zotero-tb-collections-search').click(),
+					ShiftTab: () => document.getElementById('trellis-tb-collections-search').click(),
 					Tab: () => {
 						if (tagContainer.getAttribute('collapsed') == "true") {
-							return document.getElementById('zotero-tb-add');
+							return document.getElementById('trellis-tb-add');
 						}
 						// If tag selector is collapsed, go to "New item" button, otherwise focus tag selector
-						if (ZoteroPane.tagSelector.isTagListEmpty()) {
+						if (TrellisPane.tagSelector.isTagListEmpty()) {
 							return tagSelector.querySelector(".search-input");
 						}
-						ZoteroPane.tagSelector.focusTagList();
+						TrellisPane.tagSelector.focusTagList();
 						return null;
 					},
 					Escape: clearCollectionSearch
@@ -447,14 +447,14 @@ var ZoteroPane = new function () {
 		itemTree.addEventListener("keydown", (event) => {
 			let actionsMap = {
 				// The item tree's DOM id has a view-specific suffix, so key on the current view's id
-				[ZoteroPane.itemsView?.id]: {
+				[TrellisPane.itemsView?.id]: {
 					ShiftTab: () => {
-						let advancedSearchDeck = document.getElementById('zotero-advanced-search-pane-deck');
+						let advancedSearchDeck = document.getElementById('trellis-advanced-search-pane-deck');
 						// Advanced Search open - focus the last focusable element of the deck
 						if (advancedSearchDeck?.state === 'open') {
 							Services.focus.moveFocus(
 								window,
-								document.getElementById('zotero-items-pane'),
+								document.getElementById('trellis-items-pane'),
 								Services.focus.MOVEFOCUS_BACKWARD,
 								0
 							);
@@ -462,9 +462,9 @@ var ZoteroPane = new function () {
 						}
 						// Advanced Search collapsed - focus the close button
 						if (advancedSearchDeck?.state === 'collapsed') {
-							return document.querySelector('#zotero-tb-search .advanced-close-button');
+							return document.querySelector('#trellis-tb-search .advanced-close-button');
 						}
-						return document.getElementById('zotero-tb-toggle-item-pane-stacked');
+						return document.getElementById('trellis-tb-toggle-item-pane-stacked');
 					}
 				}
 			};
@@ -476,10 +476,10 @@ var ZoteroPane = new function () {
 				'search-input': {
 					Tab: () => tagSelector.querySelector('.tag-selector-actions'),
 					ShiftTab: () => {
-						if (ZoteroPane.tagSelector.isTagListEmpty()) {
+						if (TrellisPane.tagSelector.isTagListEmpty()) {
 							return document.getElementById("collection-tree");
 						}
-						ZoteroPane.tagSelector.focusTagList();
+						TrellisPane.tagSelector.focusTagList();
 						return null;
 					},
 				},
@@ -488,7 +488,7 @@ var ZoteroPane = new function () {
 					ShiftTab: () => document.getElementById("collection-tree"),
 				},
 				'tag-selector-actions': {
-					Tab: () => document.getElementById('zotero-tb-add'),
+					Tab: () => document.getElementById('trellis-tb-add'),
 					ShiftTab: () => tagSelector.querySelector(".search-input")
 				},
 				'tag-selector-list': {
@@ -513,11 +513,11 @@ var ZoteroPane = new function () {
 		// When a panel popup hides, refocus the previous element
 		// When a menupopup hides, stop hiding the focus-ring
 		document.addEventListener("popuphiding", (e) => {
-			if (ZoteroPane.lastFocusedElement
-					&& !Components.utils.isDeadWrapper(ZoteroPane.lastFocusedElement)
+			if (TrellisPane.lastFocusedElement
+					&& !Components.utils.isDeadWrapper(TrellisPane.lastFocusedElement)
 					&& e.target.tagName == "panel"
 					&& document.activeElement && e.target.contains(document.activeElement)) {
-				ZoteroPane.lastFocusedElement.focus();
+				TrellisPane.lastFocusedElement.focus();
 			}
 			let noFocus = [...document.querySelectorAll(".hidden-focus")];
 			for (let node of noFocus) {
@@ -532,16 +532,16 @@ var ZoteroPane = new function () {
 	 * mode
 	 */
 	async function _loadPane() {
-		if (!Zotero || !Zotero.initialized) return;
+		if (!Trellis || !Trellis.initialized) return;
 		
 		// Set flags for hi-res displays
-		Zotero.hiDPI = window.devicePixelRatio > 1;
-		Zotero.hiDPISuffix = Zotero.hiDPI ? "@2x" : "";
+		Trellis.hiDPI = window.devicePixelRatio > 1;
+		Trellis.hiDPISuffix = Trellis.hiDPI ? "@2x" : "";
 		
 		// Show warning in toolbar for 'dev' channel builds and troubleshooting mode
 		try {
-			let afterElement = 'zotero-tb-tabs-menu';
-			let isDevBuild = Zotero.isDevBuild;
+			let afterElement = 'trellis-tb-tabs-menu';
+			let isDevBuild = Trellis.isDevBuild;
 			let isSafeMode = Services.appinfo.inSafeMode;
 			// Uncomment to test
 			//isDevBuild = true;
@@ -552,14 +552,14 @@ var ZoteroPane = new function () {
 				let msg = '';
 				if (isDevBuild) {
 					label.onclick = function () {
-						Zotero.launchURL('https://www.zotero.org/support/kb/test_builds');
+						Trellis.launchURL('https://www.trellis.org/support/kb/test_builds');
 					};
 					msg = 'TEST BUILD — DO NOT USE';
 				}
 				else if (isSafeMode) {
 					label.classList.add('safe-mode');
 					label.onclick = function () {
-						Zotero.Utilities.Internal.quit(true);
+						Trellis.Utilities.Internal.quit(true);
 					};
 					msg = 'Troubleshooting Mode';
 				}
@@ -568,24 +568,24 @@ var ZoteroPane = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 			
-		Zotero_Tabs.init();
-		ZoteroContextPane.init();
-		await ZoteroPane.initCollectionsTree();
-		await ZoteroPane.initItemsTree();
-		ZoteroPane.initCollectionTreeSearch();
+		Trellis_Tabs.init();
+		TrellisContextPane.init();
+		await TrellisPane.initCollectionsTree();
+		await TrellisPane.initItemsTree();
+		TrellisPane.initCollectionTreeSearch();
 		
 		// Add a default progress window
-		ZoteroPane.progressWindow = new Zotero.ProgressWindow({ window });
+		TrellisPane.progressWindow = new Trellis.ProgressWindow({ window });
 		
-		ZoteroPane.setItemsPaneMessage(Zotero.getString('pane.items.loading'));
+		TrellisPane.setItemsPaneMessage(Trellis.getString('pane.items.loading'));
 		
-		Zotero.Keys.windowInit(document);
+		Trellis.Keys.windowInit(document);
 		
-		if (Zotero.restoreFromServer) {
-			Zotero.restoreFromServer = false;
+		if (Trellis.restoreFromServer) {
+			Trellis.restoreFromServer = false;
 			
 			setTimeout(function () {
 				var ps = Services.prompt;
@@ -593,24 +593,24 @@ var ZoteroPane = new function () {
 									+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL);
 				var index = ps.confirmEx(
 					null,
-					"Zotero Restore",
-					"The local Zotero database has been cleared."
+					"Trellis Restore",
+					"The local Trellis database has been cleared."
 						+ " "
-						+ "Would you like to restore from the Zotero server now?",
+						+ "Would you like to restore from the Trellis server now?",
 					buttonFlags,
 					"Sync Now",
 					null, null, null, {}
 				);
 				
 				if (index == 0) {
-					Zotero.Sync.Server.sync({
+					Trellis.Sync.Server.sync({
 						onSuccess: function () {
-							Zotero.Sync.Runner.updateIcons([]);
+							Trellis.Sync.Runner.updateIcons([]);
 							
 							ps.alert(
 								null,
 								"Restore Completed",
-								"The local Zotero database has been successfully restored."
+								"The local Trellis database has been successfully restored."
 							);
 						},
 						
@@ -622,74 +622,74 @@ var ZoteroPane = new function () {
 									+ msg
 							);
 							
-							Zotero.Sync.Runner.error(msg);
+							Trellis.Sync.Runner.error(msg);
 						}
 					});
 				}
 			}, 1000);
 		}
 		// If the database was initialized or there are no sync credentials and
-		// Zotero hasn't been run before in this profile, display the start page
+		// Trellis hasn't been run before in this profile, display the start page
 		// -- this way the page won't be displayed when they sync their DB to
 		// another profile or if the DB is initialized erroneously (e.g. while
 		// switching data directory locations)
-		else if (Zotero.Prefs.get('firstRun2')) {
-			if (Zotero.Schema.dbInitialized || !Zotero.Sync.Server.enabled) {
+		else if (Trellis.Prefs.get('firstRun2')) {
+			if (Trellis.Schema.dbInitialized || !Trellis.Sync.Server.enabled) {
 				setTimeout(function () {
-					ZoteroPane_Local.loadURI(ZOTERO_CONFIG.START_URL);
+					TrellisPane_Local.loadURI(TRELLIS_CONFIG.START_URL);
 				}, 400);
 			}
-			Zotero.Prefs.set('firstRun2', false);
+			Trellis.Prefs.set('firstRun2', false);
 			try {
-				Zotero.Prefs.clear('firstRun');
+				Trellis.Prefs.clear('firstRun');
 			}
 			catch (e) {}
 		}
 		
-		if (Zotero.openPane) {
-			Zotero.openPane = false;
+		if (Trellis.openPane) {
+			Trellis.openPane = false;
 			setTimeout(function () {
-				ZoteroPane_Local.show();
+				TrellisPane_Local.show();
 			}, 0);
 		}
 		
 		setTimeout(function () {
-			ZoteroPane.setBannerZIndexes();
-			ZoteroPane.showPostUpgradeBanner();
-			ZoteroPane.showRetractionBanner();
-			ZoteroPane.showArchitectureWarning();
-			ZoteroPane.showFileRenamingBanner();
-			ZoteroPane.initSyncReminders(true);
+			TrellisPane.setBannerZIndexes();
+			TrellisPane.showPostUpgradeBanner();
+			TrellisPane.showRetractionBanner();
+			TrellisPane.showArchitectureWarning();
+			TrellisPane.showFileRenamingBanner();
+			TrellisPane.initSyncReminders(true);
 
-			if (Zotero.Prefs.get('reopenAccountPrefsOnRestart')) {
-				Zotero.Prefs.clear('reopenAccountPrefsOnRestart');
-				Zotero.Utilities.Internal.openPreferences('zotero-prefpane-account');
+			if (Trellis.Prefs.get('reopenAccountPrefsOnRestart')) {
+				Trellis.Prefs.clear('reopenAccountPrefsOnRestart');
+				Trellis.Utilities.Internal.openPreferences('trellis-prefpane-account');
 			}
 		});
 		
 		// TEMP: Clean up extra files from Mendeley imports <5.0.51
 		setTimeout(async function () {
-			var needsCleanup = await Zotero.DB.valueQueryAsync(
+			var needsCleanup = await Trellis.DB.valueQueryAsync(
 				"SELECT COUNT(*) FROM settings WHERE setting='mImport' AND key='cleanup'"
 			)
 			if (!needsCleanup) return;
 			
-			var { Zotero_Import_Mendeley } = ChromeUtils.importESModule(
-				"chrome://zotero/content/import/mendeley/mendeleyImport.mjs"
+			var { Trellis_Import_Mendeley } = ChromeUtils.importESModule(
+				"chrome://trellis/content/import/mendeley/mendeleyImport.mjs"
 			);
-			var importer = new Zotero_Import_Mendeley();
+			var importer = new Trellis_Import_Mendeley();
 			importer.deleteNonPrimaryFiles();
 		}, 10000)
 		
 		// Restore pane state
 		try {
-			let state = Zotero.Session.state.windows.find(x => x.type == 'pane');
+			let state = Trellis.Session.state.windows.find(x => x.type == 'pane');
 			if (state) {
-				Zotero_Tabs.restoreState(state.tabs);
+				Trellis_Tabs.restoreState(state.tabs);
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		addFocusHandlers();
 	}
@@ -707,13 +707,13 @@ var ZoteroPane = new function () {
 	
 	var _lastPrimaryTypes;
 	this.updateNewItemTypes = function () {
-		var primaryTypes = Zotero.ItemTypes.getPrimaryTypes();
+		var primaryTypes = Trellis.ItemTypes.getPrimaryTypes();
 		var primaryTypesJoined = primaryTypes.join(',');
 		if (_lastPrimaryTypes == primaryTypesJoined) {
 			return;
 		}
 		
-		var addMenu = document.getElementById('zotero-tb-add').firstElementChild;
+		var addMenu = document.getElementById('trellis-tb-add').firstElementChild;
 		
 		// Remove all nodes so we can regenerate
 		addMenu.replaceChildren();
@@ -723,21 +723,21 @@ var ZoteroPane = new function () {
 			return {
 				id: type.id,
 				name: type.name,
-				localized: Zotero.ItemTypes.getLocalizedString(type.id)
+				localized: Trellis.ItemTypes.getLocalizedString(type.id)
 			};
 		});
 		// Item types not in the MRU list
-		let secondaryItemTypes = Zotero.ItemTypes.getSecondaryTypes().map((type) => {
+		let secondaryItemTypes = Trellis.ItemTypes.getSecondaryTypes().map((type) => {
 			return {
 				id: type.id,
 				name: type.name,
-				localized: Zotero.ItemTypes.getLocalizedString(type.id)
+				localized: Trellis.ItemTypes.getLocalizedString(type.id)
 			};
 		});
 
 		let allItemTypes = [...primaryItemTypes, ...secondaryItemTypes];
 		
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		primaryItemTypes.sort(function (a, b) {
 			return collation.compareString(1, a.localized, b.localized);
 		});
@@ -752,7 +752,7 @@ var ZoteroPane = new function () {
 			menuitem.setAttribute("tooltiptext", "");
 			let type = itemType.id;
 			menuitem.addEventListener("command", function () {
-				ZoteroPane.newItem(type, {}, null, true);
+				TrellisPane.newItem(type, {}, null, true);
 			});
 			addMenu.appendChild(menuitem);
 			// Add a separator between primary and secondary types
@@ -769,7 +769,7 @@ var ZoteroPane = new function () {
 	 */
 	function destroy()
 	{
-		if (!Zotero || !Zotero.initialized || !_loaded) {
+		if (!Trellis || !Trellis.initialized || !_loaded) {
 			return;
 		}
 		
@@ -778,45 +778,45 @@ var ZoteroPane = new function () {
 		if(this.collectionsView) this.collectionsView.unregister();
 		if(this.itemsView) this.itemsView.unregister();
 		if (_syncRemindersObserverID) {
-			Zotero.Notifier.unregisterObserver(_syncRemindersObserverID);
+			Trellis.Notifier.unregisterObserver(_syncRemindersObserverID);
 		}
 		
 		this.uninitContainers();
 		
-		observerService.removeObserver(_reloadObserver, "zotero-reloaded");
+		observerService.removeObserver(_reloadObserver, "trellis-reloaded");
 		
-		ZoteroContextPane.destroy();
-		Zotero_Tabs.destroy();
+		TrellisContextPane.destroy();
+		Trellis_Tabs.destroy();
 
-		if (!Zotero.getZoteroPanes().length) {
-			Zotero.Session.setLastClosedZoteroPaneState(this.getState());
+		if (!Trellis.getTrellisPanes().length) {
+			Trellis.Session.setLastClosedTrellisPaneState(this.getState());
 		}
 
-		Zotero_Tabs.closeAll();
+		Trellis_Tabs.closeAll();
 	}
 	
 	/**
-	 * Called before Zotero pane is to be made visible
-	 * @return {Boolean} True if Zotero pane should be loaded, false otherwise (if an error
+	 * Called before Trellis pane is to be made visible
+	 * @return {Boolean} True if Trellis pane should be loaded, false otherwise (if an error
 	 * 		occurred)
 	 */
 	this.makeVisible = async function () {
-		if (Zotero.locked) {
-			Zotero.showZoteroPaneProgressMeter();
+		if (Trellis.locked) {
+			Trellis.showTrellisPaneProgressMeter();
 		}
 		
-		await Zotero.unlockPromise;
+		await Trellis.unlockPromise;
 		
 		// The items pane is hidden initially to avoid showing column lines
-		Zotero.hideZoteroPaneOverlays();
+		Trellis.hideTrellisPaneOverlays();
 		
 		// If pane not loaded, load it or display an error message
-		if (!ZoteroPane_Local.loaded) {
-			ZoteroPane_Local.init();
+		if (!TrellisPane_Local.loaded) {
+			TrellisPane_Local.init();
 		}
 		
-		// If Zotero could not be initialized, display an error message and return
-		if (!Zotero || Zotero.skipLoading || Zotero.crashed) {
+		// If Trellis could not be initialized, display an error message and return
+		if (!Trellis || Trellis.skipLoading || Trellis.crashed) {
 			this.displayStartupError();
 			return false;
 		}
@@ -828,55 +828,55 @@ var ZoteroPane = new function () {
 		this.initContainers();
 		
 		// Focus the quicksearch on pane open
-		var searchBar = document.getElementById('zotero-tb-search');
+		var searchBar = document.getElementById('trellis-tb-search');
 		setTimeout(function () {
 			searchBar.searchTextbox.select();
 		}, 1);
 		
-		if (Zotero.proxyFailure) {
+		if (Trellis.proxyFailure) {
 			try {
-				Zotero.Sync.Runner.updateIcons(Zotero.proxyFailure);
+				Trellis.Sync.Runner.updateIcons(Trellis.proxyFailure);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		
 		// Auto-sync on pane open or if new account
 		let startupSync = false;
-		if (Zotero.Prefs.get('sync.autoSync') || Zotero.initAutoSync) {
-			await Zotero.proxyAuthComplete;
-			await Zotero.uiReadyPromise;
+		if (Trellis.Prefs.get('sync.autoSync') || Trellis.initAutoSync) {
+			await Trellis.proxyAuthComplete;
+			await Trellis.uiReadyPromise;
 			
-			if (!Zotero.Sync.Runner.enabled) {
-				Zotero.debug('Sync not enabled -- skipping auto-sync', 4);
+			if (!Trellis.Sync.Runner.enabled) {
+				Trellis.debug('Sync not enabled -- skipping auto-sync', 4);
 			}
-			else if (Zotero.Sync.Runner.syncInProgress) {
-				Zotero.debug('Sync already running -- skipping auto-sync', 4);
+			else if (Trellis.Sync.Runner.syncInProgress) {
+				Trellis.debug('Sync already running -- skipping auto-sync', 4);
 			}
-			else if (Zotero.Sync.Server.manualSyncRequired) {
-				Zotero.debug('Manual sync required -- skipping auto-sync', 4);
+			else if (Trellis.Sync.Server.manualSyncRequired) {
+				Trellis.debug('Manual sync required -- skipping auto-sync', 4);
 			}
 			else {
 				startupSync = true;
-				Zotero.Sync.Runner.sync({
+				Trellis.Sync.Runner.sync({
 					background: true
 				})
 				.then(() => {
-					Zotero.initAutoSync = false;
-					Zotero.startupSyncDeferred.resolve();
+					Trellis.initAutoSync = false;
+					Trellis.startupSyncDeferred.resolve();
 				});
 			}
 		}
 		if (!startupSync) {
-			Zotero.startupSyncDeferred.resolve();
+			Trellis.startupSyncDeferred.resolve();
 		}
 		
 		// Set sync icon to spinning if there's an existing sync
 		//
 		// We don't bother setting an existing error state at open
-		if (Zotero.Sync.Runner.syncInProgress) {
-			Zotero.Sync.Runner.updateIcons('animate');
+		if (Trellis.Sync.Runner.syncInProgress) {
+			Trellis.Sync.Runner.updateIcons('animate');
 		}
 
 		return true;
@@ -884,7 +884,7 @@ var ZoteroPane = new function () {
 	
 	
 	function isFullScreen() {
-		return document.getElementById('zotero-pane-stack').getAttribute('fullscreenmode') == 'true';
+		return document.getElementById('trellis-pane-stack').getAttribute('fullscreenmode') == 'true';
 	}
 	
 	/**
@@ -893,16 +893,16 @@ var ZoteroPane = new function () {
 	 * E.g. tab navigation hotkeys should work regardless of which component is focused.
 	 */
 	function captureKeyDown(event) {
-		ZoteroPane.lastKeyPress = (event.shiftKey ? "Shift" : "") + event.key;
-		const cmdOrCtrlOnly = Zotero.isMac
+		TrellisPane.lastKeyPress = (event.shiftKey ? "Shift" : "") + event.key;
+		const cmdOrCtrlOnly = Trellis.isMac
 			? (event.metaKey && !event.shiftKey && !event.ctrlKey && !event.altKey)
 			: (event.ctrlKey && !event.shiftKey && !event.altKey);
 		
 		// Close current tab
 		if (event.key == 'w') {
 			if (cmdOrCtrlOnly) {
-				if (Zotero_Tabs.selectedIndex > 0) {
-					Zotero_Tabs.close();
+				if (Trellis_Tabs.selectedIndex > 0) {
+					Trellis_Tabs.close();
 					event.preventDefault();
 					event.stopPropagation();
 				}
@@ -911,9 +911,9 @@ var ZoteroPane = new function () {
 		}
 
 		// Undo closed tabs
-		if ((Zotero.isMac && event.metaKey || !Zotero.isMac && event.ctrlKey)
+		if ((Trellis.isMac && event.metaKey || !Trellis.isMac && event.ctrlKey)
 				&& event.shiftKey && !event.altKey && event.key.toLowerCase() == 't') {
-			Zotero_Tabs.undoClose();
+			Trellis_Tabs.undoClose();
 			event.preventDefault();
 			event.stopPropagation();
 			return;
@@ -923,13 +923,13 @@ var ZoteroPane = new function () {
 		// TODO: Select across tabs without selecting with Ctrl-Shift, as in Firefox?
 		if (event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
 			if (event.key == 'PageUp') {
-				Zotero_Tabs.selectPrev();
+				Trellis_Tabs.selectPrev();
 				event.preventDefault();
 				event.stopPropagation();
 				return;
 			}
 			else if (event.key == 'PageDown') {
-				Zotero_Tabs.selectNext();
+				Trellis_Tabs.selectNext();
 				event.preventDefault();
 				event.stopPropagation();
 				return;
@@ -939,30 +939,30 @@ var ZoteroPane = new function () {
 		// Tab navigation: Cmd-Shift-[ / ]
 		// Common shortcut on macOS, but typically only supported on that platform to match OS
 		// conventions users expect from other macOS apps.
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			if (event.metaKey && event.shiftKey && !event.altKey && !event.ctrlKey) {
 				if (event.key == '[') {
-					Zotero_Tabs.selectPrev();
+					Trellis_Tabs.selectPrev();
 					event.preventDefault();
 					event.stopPropagation();
 					return;
 				}
 				else if (event.key == ']') {
-					Zotero_Tabs.selectNext();
+					Trellis_Tabs.selectNext();
 					event.preventDefault();
 					event.stopPropagation();
 					return;
 				}
 			}
 			else if (event.metaKey && event.altKey) {
-				if (event.key == Zotero.arrowPreviousKey) {
-					Zotero_Tabs.selectPrev();
+				if (event.key == Trellis.arrowPreviousKey) {
+					Trellis_Tabs.selectPrev();
 					event.preventDefault();
 					event.stopPropagation();
 					return;
 				}
-				else if (event.key == Zotero.arrowNextKey) {
-					Zotero_Tabs.selectNext();
+				else if (event.key == Trellis.arrowNextKey) {
+					Trellis_Tabs.selectNext();
 					event.preventDefault();
 					event.stopPropagation();
 					return;
@@ -973,13 +973,13 @@ var ZoteroPane = new function () {
 		// Tab navigation: Ctrl-Tab / Ctrl-Shift-Tab
 		if (event.ctrlKey && !event.altKey && !event.metaKey && event.key == 'Tab') {
 			if (event.shiftKey) {
-				Zotero_Tabs.selectPrev();
+				Trellis_Tabs.selectPrev();
 				event.preventDefault();
 				event.stopPropagation();
 				return;
 			}
 			else {
-				Zotero_Tabs.selectNext();
+				Trellis_Tabs.selectNext();
 				event.preventDefault();
 				event.stopPropagation();
 				return;
@@ -1002,12 +1002,12 @@ var ZoteroPane = new function () {
 					case '6':
 					case '7':
 					case '8':
-						Zotero_Tabs.jump(parseInt(tabNumber) - 1);
+						Trellis_Tabs.jump(parseInt(tabNumber) - 1);
 						event.preventDefault();
 						event.stopPropagation();
 						return;
 					case '9':
-						Zotero_Tabs.selectLast();
+						Trellis_Tabs.selectLast();
 						event.preventDefault();
 						event.stopPropagation();
 						return;
@@ -1025,11 +1025,11 @@ var ZoteroPane = new function () {
 	 * Escape and close the popup.
 	 */
 	function handleKeyDown(event, from) {
-		if (Zotero_Tabs.selectedIndex > 0) {
+		if (Trellis_Tabs.selectedIndex > 0) {
 			// Escape from outside of the reader will focus reader's scrollable area
 			if (event.key === 'Escape') {
 				if (!document.activeElement.classList.contains('reader')) {
-					let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+					let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 					if (reader) {
 						reader.focus();
 					}
@@ -1041,7 +1041,7 @@ var ZoteroPane = new function () {
 				if (!document.activeElement.classList.contains('reader')) {
 					setTimeout(() => {
 						if (document.activeElement.classList.contains('reader')) {
-							let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+							let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 							if (reader) {
 								reader.focus();
 							}
@@ -1066,27 +1066,27 @@ var ZoteroPane = new function () {
 			return;
 		}
 		try {
-			// Ignore keystrokes outside of Zotero pane
+			// Ignore keystrokes outside of Trellis pane
 			if (!(event.originalTarget.ownerDocument instanceof HTMLDocument)) {
 				return;
 			}
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 		}
 		
-		if (Zotero.locked) {
+		if (Trellis.locked) {
 			event.preventDefault();
 			return;
 		}
 
-		if (from == 'zotero-pane') {
+		if (from == 'trellis-pane') {
 			// Highlight collections containing selected items
 			//
 			// We use Control (17) on Windows and Linux because Alt triggers the menubar;
 			// On Mac, we use Option (18)
 			let enableHighlight = false;
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				enableHighlight = !event.shiftKey && !event.metaKey && event.key == "Alt" && !event.ctrlKey;
 			}
 			else {
@@ -1113,12 +1113,12 @@ var ZoteroPane = new function () {
 			}
 			// If anything but Ctlr/Options was pressed, most likely a different shortcut using Ctlr/Options
 			// is being used (e.g. Ctrl-Shift-A on windows). In that case, stop highlighting
-			else if ((Zotero.isMac && event.altKey) || (!Zotero.isMac && event.ctrlKey)) {
+			else if ((Trellis.isMac && event.altKey) || (!Trellis.isMac && event.ctrlKey)) {
 				if (this.highlightTimer) {
 					this.highlightTimer.cancel();
 					this.highlightTimer = null;
 				}
-				ZoteroPane.collectionsView.setHighlightedRows();
+				TrellisPane.collectionsView.setHighlightedRows();
 			}
 		}
 	}
@@ -1126,8 +1126,8 @@ var ZoteroPane = new function () {
 	this.handleBlur = (event) => {
 		// If one tabs through the item/context pane all the way to the end and
 		// the focus leaves the pane, wrap it around to refocus the selected tab
-		let itemPane = document.getElementById("zotero-item-pane");
-		let contextPane = document.getElementById("zotero-context-pane");
+		let itemPane = document.getElementById("trellis-item-pane");
+		let contextPane = document.getElementById("trellis-context-pane");
 		let loosingFocus = event.target;
 		let receivingFocus = event.relatedTarget;
 		let itemPaneLostFocus = itemPane.contains(loosingFocus) && !itemPane.contains(receivingFocus);
@@ -1140,7 +1140,7 @@ var ZoteroPane = new function () {
 			// event.relatedTarget is null when moving focus in or out of <iframe> or <browser>
 			// so make sure to not refocus tabs when focusing inside of note-editor or reader
 			if (receivingFocus) {
-				Zotero_Tabs.moveFocus("current");
+				Trellis_Tabs.moveFocus("current");
 			}
 			this.lastKeyPress = null;
 		}
@@ -1149,20 +1149,20 @@ var ZoteroPane = new function () {
 		if (!event.target.closest("panel")) {
 			this.lastFocusedElement = event.target;
 			// Special treatment to focus on quick-search dropmarker inside of the shadow DOM
-			if (this.lastFocusedElement.id == "zotero-tb-search-dropmarker") {
-				this.lastFocusedElement = document.getElementById("zotero-tb-search")._searchModePopup.parentElement;
+			if (this.lastFocusedElement.id == "trellis-tb-search-dropmarker") {
+				this.lastFocusedElement = document.getElementById("trellis-tb-search")._searchModePopup.parentElement;
 			}
 		}
 		if (this.highlightTimer) {
 			this.highlightTimer.cancel();
 			this.highlightTimer = null;
 		}
-		ZoteroPane_Local.collectionsView.setHighlightedRows();
+		TrellisPane_Local.collectionsView.setHighlightedRows();
 	}
 
 	this.hideCollectionSearch = function () {
-		let collectionSearchField = document.getElementById("zotero-collections-search");
-		let collectionSearchButton = document.getElementById("zotero-tb-collections-search");
+		let collectionSearchField = document.getElementById("trellis-collections-search");
+		let collectionSearchButton = document.getElementById("trellis-tb-collections-search");
 		if (!collectionSearchField.value.length && collectionSearchField.classList.contains("visible")) {
 			collectionSearchField.classList.remove("visible");
 			collectionSearchField.setAttribute("disabled", true);
@@ -1175,10 +1175,10 @@ var ZoteroPane = new function () {
 	}
 
 	this.initCollectionTreeSearch = function () {
-		let collectionSearchField = document.getElementById("zotero-collections-search");
-		let collectionSearchButton = document.getElementById("zotero-tb-collections-search");
+		let collectionSearchField = document.getElementById("trellis-collections-search");
+		let collectionSearchButton = document.getElementById("trellis-tb-collections-search");
 		collectionSearchField.style.visibility = 'hidden';
-		collectionSearchField.addEventListener("blur", ZoteroPane.hideCollectionSearch);
+		collectionSearchField.addEventListener("blur", TrellisPane.hideCollectionSearch);
 		collectionSearchButton.addEventListener("click", (_) => {
 			if (!collectionSearchField.classList.contains("visible")) {
 				collectionSearchButton.style.display = 'none';
@@ -1205,13 +1205,13 @@ var ZoteroPane = new function () {
 	
 	function handleKeyUp(event) {
 		// When Option/Control is released, clear collection highlighting
-		if ((Zotero.isMac && event.key == "Alt")
-				|| (!Zotero.isMac && event.key == "Control")) {
+		if ((Trellis.isMac && event.key == "Alt")
+				|| (!Trellis.isMac && event.key == "Control")) {
 			if (this.highlightTimer) {
 				this.highlightTimer.cancel();
 				this.highlightTimer = null;
 			}
-			ZoteroPane_Local.collectionsView.setHighlightedRows();
+			TrellisPane_Local.collectionsView.setHighlightedRows();
 			return;
 		}
 	}
@@ -1219,7 +1219,7 @@ var ZoteroPane = new function () {
 	
 	this.handleClose = function (event) {
 		// Don't close the window from the first tab if other tabs are open
-		if (Zotero_Tabs.numTabs > 1) {
+		if (Trellis_Tabs.numTabs > 1) {
 			return;
 		}
 		window.close();
@@ -1236,8 +1236,8 @@ var ZoteroPane = new function () {
 		// If no items or an unreasonable number, don't try
 		if (!objects.length || objects.length > 100) return;
 		
-		var collections = objects.filter(o => o instanceof Zotero.Collection);
-		var items = objects.filter(o => o instanceof Zotero.Item);
+		var collections = objects.filter(o => o instanceof Trellis.Collection);
+		var items = objects.filter(o => o instanceof Trellis.Item);
 		
 		// Get parent collections of collections
 		var toHighlight = [];
@@ -1247,18 +1247,18 @@ var ZoteroPane = new function () {
 			}
 		}
 		// Get collections containing items
-		toHighlight.push(...(await Zotero.Collections.getCollectionsContainingItems(
+		toHighlight.push(...(await Trellis.Collections.getCollectionsContainingItems(
 			items.map(x => x.id),
 			true
 		)));
 		var treeViewIDs = toHighlight.map(id => 'C' + id);
-		var userLibraryID = Zotero.Libraries.userLibraryID;
+		var userLibraryID = Trellis.Libraries.userLibraryID;
 		// If no collections selected and every item is in My Publications, highlight that
 		var allInPublications = !collections.length && items.every((item) => {
 			return item.libraryID == userLibraryID && item.inPublications;
 		});
 		if (allInPublications) {
-			treeViewIDs.push("P" + Zotero.Libraries.userLibraryID);
+			treeViewIDs.push("P" + Trellis.Libraries.userLibraryID);
 		}
 		if (treeViewIDs.length) {
 			await this.collectionsView.setHighlightedRows(treeViewIDs);
@@ -1269,7 +1269,7 @@ var ZoteroPane = new function () {
 	function handleKeyPress(event) {
 		var from = event.originalTarget.id;
 		
-		if (Zotero.locked) {
+		if (Trellis.locked) {
 			event.preventDefault();
 			return;
 		}
@@ -1277,58 +1277,58 @@ var ZoteroPane = new function () {
 		if (this.itemsView && from == this.itemsView.id) {
 			// Focus TinyMCE explicitly on tab key, since the normal focusing doesn't work right
 			if (!event.shiftKey && event.keyCode == event.DOM_VK_TAB) {
-				if (ZoteroPane.itemPane.mode == "note") {
-					document.getElementById('zotero-note-editor').focus();
+				if (TrellisPane.itemPane.mode == "note") {
+					document.getElementById('trellis-note-editor').focus();
 					event.preventDefault();
 					return;
 				}
 			}
-			else if ((event.keyCode == event.DOM_VK_BACK_SPACE && Zotero.isMac) ||
+			else if ((event.keyCode == event.DOM_VK_BACK_SPACE && Trellis.isMac) ||
 					event.keyCode == event.DOM_VK_DELETE) {
 				// If Cmd/Shift delete, use forced mode, which does different
 				// things depending on the context
-				var force = event.metaKey || (!Zotero.isMac && event.shiftKey);
-				ZoteroPane_Local.deleteSelectedItems(force);
+				var force = event.metaKey || (!Trellis.isMac && event.shiftKey);
+				TrellisPane_Local.deleteSelectedItems(force);
 				event.preventDefault();
 				return;
 			}
 		}
 		
-		var command = Zotero.Keys.getCommand(event.key);
+		var command = Trellis.Keys.getCommand(event.key);
 		if (!command) {
 			return;
 		}
 
 		// Ignore modifiers other than Ctrl-Shift/Cmd-Shift
-		if (!((Zotero.isMac ? event.metaKey : event.ctrlKey) && event.shiftKey)) {
+		if (!((Trellis.isMac ? event.metaKey : event.ctrlKey) && event.shiftKey)) {
 			return;
 		}
 		
-		Zotero.debug('Keyboard shortcut: ' + command);
+		Trellis.debug('Keyboard shortcut: ' + command);
 		
 		// Errors don't seem to make it out otherwise
 		try {
 			switch (command) {
 				case 'library':
-					document.getElementById(ZoteroPane.collectionsView.id).focus();
+					document.getElementById(TrellisPane.collectionsView.id).focus();
 					break;
 				case 'quicksearch':
-					document.getElementById('zotero-tb-search-textbox').select();
+					document.getElementById('trellis-tb-search-textbox').select();
 					break;
 				case 'newItem':
 					(async function () {
 						// Default to most recent item type from here or the New Type menu,
 						// or fall back to 'book'
-						var mru = Zotero.Prefs.get('newItemTypeMRU');
+						var mru = Trellis.Prefs.get('newItemTypeMRU');
 						var type = mru ? mru.split(',')[0] : 'book';
-						await ZoteroPane.newItem(Zotero.ItemTypes.getID(type));
-						let itemBox = document.getElementById('zotero-editpane-info-box');
+						await TrellisPane.newItem(Trellis.ItemTypes.getID(type));
+						let itemBox = document.getElementById('trellis-editpane-info-box');
 						// Ensure itemBox is opened
 						itemBox.open = true;
 						var menu = itemBox.itemTypeMenu;
 						// If the new item's type is changed immediately, update the MRU
 						var handleTypeChange = function () {
-							this.addItemTypeToNewItemTypeMRU(Zotero.ItemTypes.getName(menu.getAttribute('value')));
+							this.addItemTypeToNewItemTypeMRU(Trellis.ItemTypes.getName(menu.getAttribute('value')));
 							itemBox.removeHandler('itemtypechange', handleTypeChange);
 						}.bind(this);
 						// Don't update the MRU on subsequent opens of the item type menu
@@ -1348,7 +1348,7 @@ var ZoteroPane = new function () {
 					// If a child item is selected, use its parent as the parent.
 					// Otherwise create a standalone note.
 					var parentKey = false;
-					var items = ZoteroPane_Local.getSelectedItems();
+					var items = TrellisPane_Local.getSelectedItems();
 					if (items.length == 1) {
 						if (items[0].isRegularItem()) {
 							parentKey = items[0].key;
@@ -1358,17 +1358,17 @@ var ZoteroPane = new function () {
 						}
 					}
 					// Use key that's not the modifier as the popup toggle
-					ZoteroPane_Local.newNote(event.altKey, parentKey);
+					TrellisPane_Local.newNote(event.altKey, parentKey);
 					break;
 				case 'sync':
-					Zotero.Sync.Runner.sync();
+					Trellis.Sync.Runner.sync();
 					break;
-				case 'saveToZotero':
+				case 'saveToTrellis':
 					var collectionTreeRow = this.getCollectionTreeRow();
 					if (collectionTreeRow.isFeedsOrFeed()) {
 						this.itemPane.translateSelectedItems();
 					} else {
-						Zotero.debug(command + ' does not do anything in non-feed views')
+						Trellis.debug(command + ' does not do anything in non-feed views')
 					}
 					break;
 				case 'toggleAllRead':
@@ -1389,7 +1389,7 @@ var ZoteroPane = new function () {
 					break;
 				}
 				
-				// Handled by <key>s in standalone.js, pointing to <command>s in zoteroPane.xul,
+				// Handled by <key>s in standalone.js, pointing to <command>s in trellisPane.xul,
 				// which are enabled or disabled by this.updateQuickCopyCommands(), called by
 				// this.itemSelected()
 				case 'copySelectedItemCitationsToClipboard':
@@ -1397,11 +1397,11 @@ var ZoteroPane = new function () {
 					return;
 				
 				default:
-					throw new Error('Command "' + command + '" not found in ZoteroPane_Local.handleKeyPress()');
+					throw new Error('Command "' + command + '" not found in TrellisPane_Local.handleKeyPress()');
 			}
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 			Components.utils.reportError(e);
 		}
 		
@@ -1439,15 +1439,15 @@ var ZoteroPane = new function () {
 			var libraryID = collectionTreeRow.ref.libraryID;
 		}
 		else {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			var collectionTreeRow = null;
 		}
 		
 		let selectedCollectionTreeRows = rows.filter(r => r.isCollection());
 
 		let itemID;
-		await Zotero.DB.executeTransaction(async function () {
-			var item = new Zotero.Item(typeID);
+		await Trellis.DB.executeTransaction(async function () {
+			var item = new Trellis.Item(typeID);
 			item.libraryID = libraryID;
 			for (var i in data) {
 				item.setField(i, data[i]);
@@ -1465,22 +1465,22 @@ var ZoteroPane = new function () {
 		}
 		
 		//set to Info tab
-		document.getElementById('zotero-view-item').selectedIndex = 0;
+		document.getElementById('trellis-view-item').selectedIndex = 0;
 		
 		// Ensure item is visible
 		await this.selectItem(itemID);
 
 		if (manual) {
 			// Update most-recently-used list for New Item menu
-			this.addItemTypeToNewItemTypeMRU(Zotero.ItemTypes.getName(typeID));
-			let itemBox = ZoteroPane.itemPane.querySelector("info-box");
+			this.addItemTypeToNewItemTypeMRU(Trellis.ItemTypes.getName(typeID));
+			let itemBox = TrellisPane.itemPane.querySelector("info-box");
 			// Make sure the item box is opened
 			itemBox.open = true;
 			// Focus the title field
 			itemBox.getTitleField().focus();
 		}
 		
-		return Zotero.Items.getAsync(itemID);
+		return Trellis.Items.getAsync(itemID);
 	};
 	
 	
@@ -1488,7 +1488,7 @@ var ZoteroPane = new function () {
 		if (!itemType) {
 			throw new Error(`Item type not provided`);
 		}
-		var mru = Zotero.Prefs.get('newItemTypeMRU');
+		var mru = Trellis.Prefs.get('newItemTypeMRU');
 		if (mru) {
 			var mru = mru.split(',');
 			var pos = mru.indexOf(itemType);
@@ -1500,7 +1500,7 @@ var ZoteroPane = new function () {
 		else {
 			var mru = [itemType];
 		}
-		Zotero.Prefs.set('newItemTypeMRU', mru.slice(0, 5).join(','));
+		Trellis.Prefs.set('newItemTypeMRU', mru.slice(0, 5).join(','));
 	}
 	
 	
@@ -1516,21 +1516,21 @@ var ZoteroPane = new function () {
 		var collections;
 		var parentCollectionID = null;
 		if (parentKey) {
-			let parent = Zotero.Collections.getIDFromLibraryAndKey(libraryID, parentKey);
-			collections = Zotero.Collections.getByParent(parent);
+			let parent = Trellis.Collections.getIDFromLibraryAndKey(libraryID, parentKey);
+			collections = Trellis.Collections.getByParent(parent);
 			parentCollectionID = parent;
 		}
 		else {
-			collections = Zotero.Collections.getByLibrary(libraryID);
+			collections = Trellis.Collections.getByLibrary(libraryID);
 		}
-		var prefix = Zotero.getString('pane.collections.untitled');
-		var name = Zotero.Utilities.Internal.getNextName(
+		var prefix = Trellis.getString('pane.collections.untitled');
+		var name = Trellis.Utilities.Internal.getNextName(
 			prefix,
 			collections.map(c => c.name).filter(n => n.startsWith(prefix))
 		);
 		
 		var io = { name, libraryID, parentCollectionID };
-		window.openDialog("chrome://zotero/content/newCollectionDialog.xhtml",
+		window.openDialog("chrome://trellis/content/newCollectionDialog.xhtml",
 			"_blank", "chrome,modal,centerscreen,resizable=no", io);
 		var dataOut = io.dataOut;
 		if (!dataOut) {
@@ -1541,7 +1541,7 @@ var ZoteroPane = new function () {
 			dataOut.name = name;
 		}
 		
-		var collection = new Zotero.Collection();
+		var collection = new Trellis.Collection();
 		collection.libraryID = dataOut.libraryID;
 		collection.name = dataOut.name;
 		collection.parentID = dataOut.parentCollectionID;
@@ -1551,17 +1551,17 @@ var ZoteroPane = new function () {
 	this.importFeedsFromOPML = async function (event) {
 		while (true) {
 			let fp = new FilePicker();
-			fp.init(window, Zotero.getString('fileInterface.importOPML'), fp.modeOpen);
-			fp.appendFilter(Zotero.getString('fileInterface.OPMLFeedFilter'), '*.opml; *.xml');
+			fp.init(window, Trellis.getString('fileInterface.importOPML'), fp.modeOpen);
+			fp.appendFilter(Trellis.getString('fileInterface.OPMLFeedFilter'), '*.opml; *.xml');
 			fp.appendFilters(fp.filterAll);
 			if ((await fp.show()) == fp.returnOK) {
-				var contents = await Zotero.File.getContentsAsync(fp.file);
-				var success = await Zotero.Feeds.importFromOPML(contents);
+				var contents = await Trellis.File.getContentsAsync(fp.file);
+				var success = await Trellis.Feeds.importFromOPML(contents);
 				if (success) {
 					return true;
 				}
 				// Try again
-				Zotero.alert(window, Zotero.getString('general.error'), Zotero.getString('fileInterface.unsupportedFormat'));
+				Trellis.alert(window, Trellis.getString('general.error'), Trellis.getString('fileInterface.unsupportedFormat'));
 			} else {
 				return false;
 			}
@@ -1571,10 +1571,10 @@ var ZoteroPane = new function () {
 	
 	this.newFeedFromURL = async function () {
 		let data = {};
-		window.openDialog('chrome://zotero/content/feedSettings.xhtml',
+		window.openDialog('chrome://trellis/content/feedSettings.xhtml',
 			null, 'centerscreen, modal', data);
 		if (!data.cancelled) {
-			let feed = new Zotero.Feed();
+			let feed = new Trellis.Feed();
 			feed.url = data.url;
 			feed.name = data.title;
 			feed.refreshInterval = data.ttl;
@@ -1586,7 +1586,7 @@ var ZoteroPane = new function () {
 	};
 	
 	this.newGroup = function () {
-		this.loadURI(Zotero.Groups.addGroupURL);
+		this.loadURI(Trellis.Groups.addGroupURL);
 	}
 	
 	this.setVirtual = function (libraryID, type, show, select) {
@@ -1595,58 +1595,58 @@ var ZoteroPane = new function () {
 
 	this.initItemsTree = async function () {
 		try {
-			const CollectionViewItemTree = require('zotero/collectionViewItemTree');
-			var itemsTree = document.getElementById('zotero-items-tree');
-			ZoteroPane.itemsView = await CollectionViewItemTree.init(itemsTree, {
+			const CollectionViewItemTree = require('trellis/collectionViewItemTree');
+			var itemsTree = document.getElementById('trellis-items-tree');
+			TrellisPane.itemsView = await CollectionViewItemTree.init(itemsTree, {
 				id: "main",
 				dragAndDrop: true,
 				columnPicker: true,
-				onSelectionChange: selection => ZoteroPane.itemSelected(selection),
-				onContextMenu: (...args) => ZoteroPane.onItemsContextMenuOpen(...args),
-				onActivate: (event, items) => ZoteroPane.onItemTreeActivate(event, items),
-				emptyMessage: Zotero.getString('pane.items.loading')
+				onSelectionChange: selection => TrellisPane.itemSelected(selection),
+				onContextMenu: (...args) => TrellisPane.onItemsContextMenuOpen(...args),
+				onActivate: (event, items) => TrellisPane.onItemTreeActivate(event, items),
+				emptyMessage: Trellis.getString('pane.items.loading')
 			});
-			ZoteroPane.itemsView.onRefresh.addListener(() => ZoteroPane.setTagScope());
+			TrellisPane.itemsView.onRefresh.addListener(() => TrellisPane.setTagScope());
 			// Update itemPane on initial load
-			ZoteroPane.itemsView.onRefresh.addListener(async () => {
-				await ZoteroPane.itemSelected();
+			TrellisPane.itemsView.onRefresh.addListener(async () => {
+				await TrellisPane.itemSelected();
 			}, true);
-			ZoteroPane.itemsView.waitForLoad().then(() => Zotero.uiIsReady());
+			TrellisPane.itemsView.waitForLoad().then(() => Trellis.uiIsReady());
 
-			ItemTreeMenuBar.setItemTreeSortKeys(ZoteroPane.itemsView);
+			ItemTreeMenuBar.setItemTreeSortKeys(TrellisPane.itemsView);
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug(e, 1);
+			Trellis.logError(e);
+			Trellis.debug(e, 1);
 		}
 	}
 
 	this.initCollectionsTree = async function () {
 		try {
-			const CollectionTree = require('zotero/collectionTree');
-			var collectionsTree = document.getElementById('zotero-collections-tree');
-			ZoteroPane.collectionsView = await CollectionTree.init(collectionsTree, {
-				onSelectionChange: prevSelection => ZoteroPane.onCollectionSelected(prevSelection),
-				onContextMenu: (...args) => ZoteroPane.onCollectionsContextMenuOpen(...args),
+			const CollectionTree = require('trellis/collectionTree');
+			var collectionsTree = document.getElementById('trellis-collections-tree');
+			TrellisPane.collectionsView = await CollectionTree.init(collectionsTree, {
+				onSelectionChange: prevSelection => TrellisPane.onCollectionSelected(prevSelection),
+				onContextMenu: (...args) => TrellisPane.onCollectionsContextMenuOpen(...args),
 				dragAndDrop: true,
 				multiSelect: true
 			});
-			collectionsTree.firstChild.addEventListener("focus", ZoteroPane.collectionsView.recordCollectionTreeFocus);
+			collectionsTree.firstChild.addEventListener("focus", TrellisPane.collectionsView.recordCollectionTreeFocus);
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug(e, 1);
+			Trellis.logError(e);
+			Trellis.debug(e, 1);
 		}
 	};
 
 	this.initTagSelector = async function () {
 		try {
-			var container = document.getElementById('zotero-tag-selector-container');
+			var container = document.getElementById('trellis-tag-selector-container');
 			if (!container.hasAttribute('collapsed') || container.getAttribute('collapsed') == 'false') {
-				this.tagSelector = await Zotero.TagSelector.init(
-					document.getElementById('zotero-tag-selector'),
+				this.tagSelector = await Trellis.TagSelector.init(
+					document.getElementById('trellis-tag-selector'),
 					{
-						container: 'zotero-tag-selector-container',
+						container: 'trellis-tag-selector-container',
 						onSelection: this.updateTagFilter.bind(this),
 					}
 				);
@@ -1659,13 +1659,13 @@ var ZoteroPane = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug(e, 1);
+			Trellis.logError(e);
+			Trellis.debug(e, 1);
 		}
 	};
 	
 	
-	this.handleTagSelectorResize = Zotero.Utilities.debounce(async function () {
+	this.handleTagSelectorResize = Trellis.Utilities.debounce(async function () {
 		if (this.tagSelectorShown()) {
 			// Initialize if dragging open after startup
 			if (!this.tagSelector) {
@@ -1684,14 +1684,14 @@ var ZoteroPane = new function () {
 	 */
 	this.updateTagFilter = async function () {
 		if (this.itemsView) {
-			await this.itemsView.setFilter('tags', ZoteroPane_Local.tagSelector.getTagSelection());
+			await this.itemsView.setFilter('tags', TrellisPane_Local.tagSelector.getTagSelection());
 		}
 	};
 	
 	
-	// Keep in sync with ZoteroStandalone.updateViewOption()
+	// Keep in sync with TrellisStandalone.updateViewOption()
 	this.toggleTagSelector = async function () {
-		var container = document.getElementById('zotero-tag-selector-container');
+		var container = document.getElementById('trellis-tag-selector-container');
 		var showing = container.getAttribute('collapsed') == 'true';
 		container.setAttribute('collapsed', !showing);
 		
@@ -1699,12 +1699,12 @@ var ZoteroPane = new function () {
 		// and focus filter textbox
 		if (showing) {
 			await this.setTagScope();
-			ZoteroPane.tagSelector.focusTextbox();
+			TrellisPane.tagSelector.focusTextbox();
 		}
 		// If hiding, clear selection
 		else {
-			ZoteroPane.tagSelector.uninit();
-			ZoteroPane.tagSelector = null;
+			TrellisPane.tagSelector.uninit();
+			TrellisPane.tagSelector = null;
 		}
 	};
 	
@@ -1712,23 +1712,23 @@ var ZoteroPane = new function () {
 	this.tagSelectorShown = function () {
 		var collectionTreeRows = this.getCollectionTreeRows();
 		if (!collectionTreeRows.length) return;
-		var tagSelector = document.getElementById('zotero-tag-selector-container');
+		var tagSelector = document.getElementById('trellis-tag-selector-container');
 		return !tagSelector.hasAttribute('collapsed')
 			|| tagSelector.getAttribute('collapsed') == 'false';
 	};
 
 
 	this.updateTagSelectorViewSettingsMenu = async function () {
-		document.getElementById('show-automatic').setAttribute('checked', ZoteroPane.tagSelector.showAutomatic);
-		document.getElementById('display-all-tags').setAttribute('checked', ZoteroPane.tagSelector.displayAllTags);
-		document.getElementById('num-selected').label = ZoteroPane.tagSelector.label;
-		var libraryID = ZoteroPane.tagSelector.libraryID;
-		var library = Zotero.Libraries.get(libraryID);
+		document.getElementById('show-automatic').setAttribute('checked', TrellisPane.tagSelector.showAutomatic);
+		document.getElementById('display-all-tags').setAttribute('checked', TrellisPane.tagSelector.displayAllTags);
+		document.getElementById('num-selected').label = TrellisPane.tagSelector.label;
+		var libraryID = TrellisPane.tagSelector.libraryID;
+		var library = Trellis.Libraries.get(libraryID);
 		// 'Delete Automatic Tags in This Library' is per-library, so disable it when the
 		// selection spans multiple libraries
-		var enabled = !ZoteroPane.tagSelector.multiLibrary
+		var enabled = !TrellisPane.tagSelector.multiLibrary
 			&& library.editable
-			&& (await Zotero.Tags.getAutomaticInLibrary(libraryID)).length > 0;
+			&& (await Trellis.Tags.getAutomaticInLibrary(libraryID)).length > 0;
 		document.getElementById('delete-automatic-tags').disabled = !enabled;
 	};
 	
@@ -1741,26 +1741,26 @@ var ZoteroPane = new function () {
 	this.setTagScope = async function () {
 		var collectionTreeRows = this.getCollectionTreeRows();
 		if (self.tagSelectorShown()) {
-			if (!ZoteroPane.tagSelector) {
+			if (!TrellisPane.tagSelector) {
 				await this.initTagSelector();
 			}
 			if (collectionTreeRows.every(o => o.editable)) {
-				ZoteroPane_Local.tagSelector.setMode('edit');
+				TrellisPane_Local.tagSelector.setMode('edit');
 			}
 			else {
-				ZoteroPane_Local.tagSelector.setMode('view');
+				TrellisPane_Local.tagSelector.setMode('view');
 			}
-			ZoteroPane_Local.tagSelector.onItemViewChanged({
+			TrellisPane_Local.tagSelector.onItemViewChanged({
 				libraryID: collectionTreeRows[0].ref && collectionTreeRows[0].ref.libraryID,
 				collectionTreeRows
 			});
 		}
 	};
 	
-	this.onCollectionSelected = Zotero.serial(async function () {
+	this.onCollectionSelected = Trellis.serial(async function () {
 		var collectionTreeRows = this.getCollectionTreeRows();
 		if (!collectionTreeRows.length) {
-			Zotero.debug('ZoteroPane.onCollectionSelected: No selected collection found');
+			Trellis.debug('TrellisPane.onCollectionSelected: No selected collection found');
 			return;
 		}
 
@@ -1790,7 +1790,7 @@ var ZoteroPane = new function () {
 			let mixesLibraryAndCollection = collectionTreeRows.some(row => row.isLibrary(true))
 				&& collectionTreeRows.some(row => row.isCollection() || row.isSearch());
 			if (!combinable || mixesVisibilityGroups || mixesLibraryAndCollection) {
-				Zotero.debug("ZoteroPane.onCollectionSelected: Selected rows can't be shown "
+				Trellis.debug("TrellisPane.onCollectionSelected: Selected rows can't be shown "
 					+ "together -- keeping only the focused row");
 				// Drop all but the focused row. Don't await selectByID() here: it awaits
 				// waitForSelect(), whose 'select' event can't fire until this handler
@@ -1802,30 +1802,30 @@ var ZoteroPane = new function () {
 		}
 
 		if (this.itemsView?.collectionTreeRows
-				&& Zotero.Utilities.arrayEquals(
+				&& Trellis.Utilities.arrayEquals(
 					collectionTreeRows.map(r => r.id).sort(),
 					this.itemsView.collectionTreeRows.map(r => r.id).sort()
 				)) {
-			Zotero.debug("ZoteroPane.onCollectionSelected: Collection selection hasn't changed");
+			Trellis.debug("TrellisPane.onCollectionSelected: Collection selection hasn't changed");
 
 			// Update enabled actions, in case editability has changed
 			this._updateEnabledActionsForCollectionTreeRows(collectionTreeRows);
 			return;
 		}
 		
-		let advancedSearchDeck = document.getElementById('zotero-advanced-search-pane-deck');
+		let advancedSearchDeck = document.getElementById('trellis-advanced-search-pane-deck');
 		if (this.itemsView.collectionTreeRow?.isSearch()
 				&& advancedSearchDeck.state === 'open'
 				&& advancedSearchDeck.selectedSearchType === 'saved') {
 			// If the saved search being edited was deleted, close the editor without
 			// prompting to save changes -- there's nothing left to save them to
-			if (!Zotero.Searches.get(advancedSearchDeck.pane.editedSearchID)) {
+			if (!Trellis.Searches.get(advancedSearchDeck.pane.editedSearchID)) {
 				await advancedSearchDeck.pane.cancel();
 			}
 			else {
 				let result = Services.prompt.confirmEx(window,
-					Zotero.getString('saved-search-close-confirmation-title'),
-					Zotero.getString('saved-search-close-confirmation-body'),
+					Trellis.getString('saved-search-close-confirmation-title'),
+					Trellis.getString('saved-search-close-confirmation-body'),
 					Ci.nsIPromptService.BUTTON_POS_0_DEFAULT
 						| Ci.nsIPrompt.BUTTON_TITLE_SAVE * Ci.nsIPrompt.BUTTON_POS_0
 						| Ci.nsIPrompt.BUTTON_TITLE_CANCEL * Ci.nsIPrompt.BUTTON_POS_1
@@ -1864,13 +1864,13 @@ var ZoteroPane = new function () {
 		// Rename tab
 		let tabName = collectionTreeRows.length == 1
 			? collectionTreeRows[0].getName()
-			: Zotero.getString('tab-title-multiple-collections');
-		Zotero_Tabs.rename('zotero-pane', tabName);
+			: Trellis.getString('tab-title-multiple-collections');
+		Trellis_Tabs.rename('trellis-pane', tabName);
 		
 		// Clear quick search and tag selector when switching views
-		document.getElementById('zotero-tb-search').onCollectionSelected();
-		if (ZoteroPane.tagSelector) {
-			ZoteroPane.tagSelector.clearTagSelection();
+		document.getElementById('trellis-tb-search').onCollectionSelected();
+		if (TrellisPane.tagSelector) {
+			TrellisPane.tagSelector.clearTagSelection();
 		}
 		
 		this._refreshAdvancedSearchPane(collectionTreeRows);
@@ -1878,27 +1878,27 @@ var ZoteroPane = new function () {
 		
 		for (let collectionTreeRow of collectionTreeRows) {
 			collectionTreeRow.setSearch('');
-			if (ZoteroPane.tagSelector) {
-				collectionTreeRow.setTags(ZoteroPane.tagSelector.getTagSelection());
+			if (TrellisPane.tagSelector) {
+				collectionTreeRow.setTags(TrellisPane.tagSelector.getTagSelection());
 			}
 
 			// If item data not yet loaded for library, load it now.
 			// Other data types are loaded at startup
 			if (collectionTreeRow.isFeeds()) {
-				var feedsToLoad = Zotero.Feeds.getAll().filter(feed => !feed.getDataLoaded('item'));
+				var feedsToLoad = Trellis.Feeds.getAll().filter(feed => !feed.getDataLoaded('item'));
 				if (feedsToLoad.length) {
-					Zotero.debug("Waiting for items to load for feeds " + feedsToLoad.map(feed => feed.libraryID));
-					ZoteroPane_Local.setItemsPaneMessage(Zotero.getString('pane.items.loading'));
+					Trellis.debug("Waiting for items to load for feeds " + feedsToLoad.map(feed => feed.libraryID));
+					TrellisPane_Local.setItemsPaneMessage(Trellis.getString('pane.items.loading'));
 					for (let feed of feedsToLoad) {
 						await feed.waitForDataLoad('item');
 					}
 				}
 			}
 			else {
-				var library = Zotero.Libraries.get(collectionTreeRow.ref.libraryID);
+				var library = Trellis.Libraries.get(collectionTreeRow.ref.libraryID);
 				if (!library.getDataLoaded('item')) {
-					Zotero.debug("Waiting for items to load for library " + library.libraryID);
-					ZoteroPane_Local.setItemsPaneMessage(Zotero.getString('pane.items.loading'));
+					Trellis.debug("Waiting for items to load for library " + library.libraryID);
+					TrellisPane_Local.setItemsPaneMessage(Trellis.getString('pane.items.loading'));
 					await library.waitForDataLoad('item');
 				}
 			}
@@ -1906,16 +1906,16 @@ var ZoteroPane = new function () {
 		
 		await this.itemsView.changeCollectionTreeRows(collectionTreeRows);
 		
-		Zotero.Prefs.set('lastViewedFolder', collectionTreeRows[0].id);
+		Trellis.Prefs.set('lastViewedFolder', collectionTreeRows[0].id);
 	});
 
 
 	/**
-	 * @param {Zotero.CollectionTreeRow[]} [collectionTreeRows] - During collection selection,
+	 * @param {Trellis.CollectionTreeRow[]} [collectionTreeRows] - During collection selection,
 	 *     the newly selected rows, which aren't in the items view yet
 	 */
 	this._refreshAdvancedSearchPane = function (collectionTreeRows) {
-		let deck = document.getElementById('zotero-advanced-search-pane-deck');
+		let deck = document.getElementById('trellis-advanced-search-pane-deck');
 
 		deck.pane.refresh();
 
@@ -1938,14 +1938,14 @@ var ZoteroPane = new function () {
 	 * @param {'open' | 'collapsed' | 'closed'} state
 	 */
 	this.setAdvancedSearchState = async function (state) {
-		let deck = document.getElementById('zotero-advanced-search-pane-deck');
+		let deck = document.getElementById('trellis-advanced-search-pane-deck');
 		let oldState = deck.state;
 		deck.selectedSearchType = 'temporary';
 		deck.state = state;
 		
 		let advancedSearchPane = deck.pane;
 
-		document.getElementById('zotero-tb-search').updateMode();
+		document.getElementById('trellis-tb-search').updateMode();
 		let refreshPromise;
 		if (state === 'open' && oldState === 'collapsed'
 				|| state === 'collapsed' && oldState === 'open') {
@@ -1963,7 +1963,7 @@ var ZoteroPane = new function () {
 			advancedSearchPane.search = null;
 		}
 		else if (state === 'open') {
-			Zotero_Tabs.select('zotero-pane');
+			Trellis_Tabs.select('trellis-pane');
 			advancedSearchPane.focus();
 		}
 		
@@ -1975,7 +1975,7 @@ var ZoteroPane = new function () {
 	 * @param {'open' | 'collapsed' | 'closed'} state
 	 */
 	this.toggleAdvancedSearchState = async function (state) {
-		let deck = document.getElementById('zotero-advanced-search-pane-deck');
+		let deck = document.getElementById('trellis-advanced-search-pane-deck');
 		if (state === deck.state && deck.selectedSearchType !== 'saved') {
 			// If we're trying to open the pane, and it's already open but not focused,
 			// focus it
@@ -2012,14 +2012,14 @@ var ZoteroPane = new function () {
 	 */
 	this.openAdvancedSearchFromQuickSearch = async function (searchText, mode = 'fields') {
 		// Split into words (keeping quoted phrases intact), as the quick search does
-		let parts = Zotero.SearchConditions.parseSearchString(searchText);
+		let parts = Trellis.SearchConditions.parseSearchString(searchText);
 		if (!parts.length) {
 			await this.toggleAdvancedSearchState('open');
 			return;
 		}
 
-		let deck = document.getElementById('zotero-advanced-search-pane-deck');
-		let search = new Zotero.Search();
+		let deck = document.getElementById('trellis-advanced-search-pane-deck');
+		let search = new Trellis.Search();
 		let libraryID = this.getSelectedLibraryID();
 		if (libraryID) {
 			search.libraryID = libraryID;
@@ -2058,12 +2058,12 @@ var ZoteroPane = new function () {
 		// Clear the quick search text and the row's filter (without its own refresh),
 		// so the field doesn't flash empty and closing Advanced Search returns to an
 		// unfiltered view. The submit() below replaces the results in place.
-		let searchBox = document.getElementById('zotero-tb-search');
+		let searchBox = document.getElementById('trellis-tb-search');
 		searchBox.updateMode();
 		searchBox.value = '';
 		this.itemsView.collectionTreeRow.setSearch('');
 
-		Zotero_Tabs.select('zotero-pane');
+		Trellis_Tabs.select('trellis-pane');
 		// Keep focus in the builder (on the first condition) rather than the results,
 		// so the user can refine the seeded search
 		await deck.pane.submit({ focusResults: false });
@@ -2080,7 +2080,7 @@ var ZoteroPane = new function () {
 			throw new Error('Cannot show saved search editor outside search row');
 		}
 		
-		let deck = document.getElementById('zotero-advanced-search-pane-deck');
+		let deck = document.getElementById('trellis-advanced-search-pane-deck');
 		deck.selectedSearchType = 'saved';
 		deck.state = state;
 		
@@ -2088,7 +2088,7 @@ var ZoteroPane = new function () {
 			deck.pane.search = collectionTreeRow.ref;
 		}
 
-		document.getElementById('zotero-tb-search').updateMode();
+		document.getElementById('trellis-tb-search').updateMode();
 		let refreshPromise = this._refreshAdvancedSearchPane();
 		if (state === 'open') {
 			deck.pane.focus();
@@ -2098,7 +2098,7 @@ var ZoteroPane = new function () {
 
 
 	this.openAdvancedSearchWindow = function () {
-		Zotero.debug(`ZoteroPane.openAdvancedSearchWindow() is deprecated -- use ZoteroPane.toggleAdvancedSearchState() instead`);
+		Trellis.debug(`TrellisPane.openAdvancedSearchWindow() is deprecated -- use TrellisPane.toggleAdvancedSearchState() instead`);
 		this.toggleAdvancedSearchState('open');
 	};
 	
@@ -2109,26 +2109,26 @@ var ZoteroPane = new function () {
 	this._updateEnabledActionsForCollectionTreeRows = function (collectionTreeRows) {
 		const disableIfNoEdit = [
 			"menu_newItem",
-			"cmd_zotero_addByIdentifier",
+			"cmd_trellis_addByIdentifier",
 			"menu_attachmentAdd",
 			"menu_noteAdd",
 			
-			"cmd_zotero_newCollection",
-			"cmd_zotero_import",
-			"cmd_zotero_importFromClipboard",
+			"cmd_trellis_newCollection",
+			"cmd_trellis_import",
+			"cmd_trellis_importFromClipboard",
 			
-			"cmd_zotero_newStandaloneFileAttachment",
-			"cmd_zotero_newStandaloneLinkedFileAttachment",
-			"cmd_zotero_newChildFileAttachment",
-			"cmd_zotero_newChildLinkedFileAttachment",
-			"cmd_zotero_newChildURLAttachment",
-			"cmd_zotero_newStandaloneNote",
-			"cmd_zotero_newChildNote",
+			"cmd_trellis_newStandaloneFileAttachment",
+			"cmd_trellis_newStandaloneLinkedFileAttachment",
+			"cmd_trellis_newChildFileAttachment",
+			"cmd_trellis_newChildLinkedFileAttachment",
+			"cmd_trellis_newChildURLAttachment",
+			"cmd_trellis_newStandaloneNote",
+			"cmd_trellis_newChildNote",
 			
-			"zotero-tb-add",
-			"zotero-tb-lookup",
-			"zotero-tb-attachment-add",
-			"zotero-tb-note-add",
+			"trellis-tb-add",
+			"trellis-tb-lookup",
+			"trellis-tb-attachment-add",
+			"trellis-tb-note-add",
 		];
 		// Disable item/collection creation when selected rows span multiple libraries
 		let multipleLibraries = new Set(
@@ -2142,8 +2142,8 @@ var ZoteroPane = new function () {
 			
 			// If a trash is selected, new collection depends on the
 			// editability of the library
-			if (collectionTreeRows[0].isTrash() && command == 'cmd_zotero_newCollection') {
-				var overrideEditable = Zotero.Libraries.get(collectionTreeRows[0].ref.libraryID).editable;
+			if (collectionTreeRows[0].isTrash() && command == 'cmd_trellis_newCollection') {
+				var overrideEditable = Trellis.Libraries.get(collectionTreeRows[0].ref.libraryID).editable;
 			}
 			else {
 				var overrideEditable = false;
@@ -2152,8 +2152,8 @@ var ZoteroPane = new function () {
 			// Don't allow normal buttons in My Publications, because things need to
 			// be dragged and go through the wizard
 			let forceDisable = collectionTreeRows[0].isPublications()
-				&& command != 'cmd_zotero_newCollection'
-				&& command != 'zotero-tb-note-add';
+				&& command != 'cmd_trellis_newCollection'
+				&& command != 'trellis-tb-note-add';
 			
 			if ((collectionTreeRows.every(o => o.editable) || overrideEditable)
 					&& !forceDisable && !multipleLibraries) {
@@ -2166,7 +2166,7 @@ var ZoteroPane = new function () {
 	
 	
 	this.getCollectionTreeRow = function () {
-		Zotero.debug("ZoteroPane.getCollectionTreeRow() is deprecated -- use ZoteroPane.getCollectionTreeRows()");
+		Trellis.debug("TrellisPane.getCollectionTreeRow() is deprecated -- use TrellisPane.getCollectionTreeRows()");
 		return this.collectionsView && this.collectionsView.selection.count
 			&& this.collectionsView.getRow(this.collectionsView.selection.focused);
 	}
@@ -2194,7 +2194,7 @@ var ZoteroPane = new function () {
 	this.itemSelected = function () {
 		return async function () {
 			if (!this.itemsView || !this.itemsView.selection) {
-				Zotero.debug("Items view not available in itemSelected", 2);
+				Trellis.debug("Items view not available in itemSelected", 2);
 				return false;
 			}
 			let collectionTreeRows = this.getCollectionTreeRows();
@@ -2215,7 +2215,7 @@ var ZoteroPane = new function () {
 			
 			// Tab selection observer in standalone.js makes sure that
 			// updateQuickCopyCommands is called
-			if (Zotero_Tabs.selectedType == 'library') {
+			if (Trellis_Tabs.selectedType == 'library') {
 				this.updateQuickCopyCommands(selectedItems);
 			}
 			
@@ -2224,7 +2224,7 @@ var ZoteroPane = new function () {
 			// such as whenever selectEventsSuppressed is set to false.
 			var ids = selectedItems.map(item => item.treeViewID);
 			ids.sort();
-			if (ids.length && Zotero.Utilities.arrayEquals(_lastSelectedItems, ids)) {
+			if (ids.length && Trellis.Utilities.arrayEquals(_lastSelectedItems, ids)) {
 				return false;
 			}
 			_lastSelectedItems = ids;
@@ -2232,8 +2232,8 @@ var ZoteroPane = new function () {
 			return this.itemPane.render();
 		}.bind(this)()
 		.catch((e) => {
-			Zotero.logError(e);
-			Zotero.crash();
+			Trellis.logError(e);
+			Trellis.crash();
 			throw e;
 		});
 	}
@@ -2251,21 +2251,21 @@ var ZoteroPane = new function () {
 			return;
 		}
 		
-		var items = ZoteroPane.getSelectedItems();
+		var items = TrellisPane.getSelectedItems();
 		var oneItemSelected = items.length == 1 && items[0].isRegularItem();
 		var canEditFiles = this.canEditFiles();
 		var commandsEnabled = [
-			['cmd_zotero_newStandaloneFileAttachment', canEditFiles],
-			['cmd_zotero_newStandaloneLinkedFileAttachment', canEditFiles],
-			['cmd_zotero_newChildFileAttachment', oneItemSelected && canEditFiles],
-			['cmd_zotero_newChildLinkedFileAttachment', oneItemSelected && canEditFiles],
-			['cmd_zotero_newChildURLAttachment', oneItemSelected],
+			['cmd_trellis_newStandaloneFileAttachment', canEditFiles],
+			['cmd_trellis_newStandaloneLinkedFileAttachment', canEditFiles],
+			['cmd_trellis_newChildFileAttachment', oneItemSelected && canEditFiles],
+			['cmd_trellis_newChildLinkedFileAttachment', oneItemSelected && canEditFiles],
+			['cmd_trellis_newChildURLAttachment', oneItemSelected],
 		];
 		for (let command of commandsEnabled) {
 			document.getElementById(command[0]).setAttribute('disabled', !command[1]);
 		}
 
-		Zotero.MenuManager.updateMenuPopup(
+		Trellis.MenuManager.updateMenuPopup(
 			popup,
 			"main/library/addAttachment",
 			{
@@ -2274,7 +2274,7 @@ var ZoteroPane = new function () {
 					items,
 					tabType: "library",
 					tabSubType: undefined,
-					tabID: "zotero-pane",
+					tabID: "trellis-pane",
 				})
 			}
 		);
@@ -2287,12 +2287,12 @@ var ZoteroPane = new function () {
 		if (event.target !== popup) {
 			return;
 		}
-		var items = ZoteroPane_Local.getSelectedItems();
-		var cmd = document.getElementById('cmd_zotero_newChildNote');
+		var items = TrellisPane_Local.getSelectedItems();
+		var cmd = document.getElementById('cmd_trellis_newChildNote');
 		cmd.setAttribute("disabled", !this.canEdit() ||
 			!(items.length == 1 && (items[0].isRegularItem() || !items[0].isTopLevelItem())));
 		
-		Zotero.MenuManager.updateMenuPopup(
+		Trellis.MenuManager.updateMenuPopup(
 			popup,
 			"main/library/addNote",
 			{
@@ -2301,7 +2301,7 @@ var ZoteroPane = new function () {
 					items,
 					tabType: "library",
 					tabSubType: undefined,
-					tabID: "zotero-pane",
+					tabID: "trellis-pane",
 				})
 			}
 		);
@@ -2321,8 +2321,8 @@ var ZoteroPane = new function () {
 			}
 		}
 		else {
-			let format = Zotero.QuickCopy.getFormatFromURL(Zotero.QuickCopy.lastActiveURL);
-			format = Zotero.QuickCopy.unserializeSetting(format);
+			let format = Trellis.QuickCopy.getFormatFromURL(Trellis.QuickCopy.lastActiveURL);
+			format = Trellis.QuickCopy.unserializeSetting(format);
 			if (format.mode == 'bibliography') {
 				canCopy = selectedItems.some(item => item.isRegularItem() || item.isAnnotation());
 			}
@@ -2331,9 +2331,9 @@ var ZoteroPane = new function () {
 			}
 		}
 		
-		document.getElementById('cmd_zotero_copyCitation').setAttribute('disabled', !canCopy);
-		document.getElementById('cmd_zotero_copyBibliography').setAttribute('disabled', !canCopy);
-		document.getElementById('cmd_zotero_copyAnnotation').setAttribute('disabled', !canCopy);
+		document.getElementById('cmd_trellis_copyCitation').setAttribute('disabled', !canCopy);
+		document.getElementById('cmd_trellis_copyBibliography').setAttribute('disabled', !canCopy);
+		document.getElementById('cmd_trellis_copyAnnotation').setAttribute('disabled', !canCopy);
 	};
 	
 	
@@ -2352,13 +2352,13 @@ var ZoteroPane = new function () {
 			itemIDs.push(items[i].id);
 		}
 		
-		await Zotero.FullText.indexItems(itemIDs, { complete: true });
-		await document.getElementById('zotero-attachment-box').updateItemIndexedState();
+		await Trellis.FullText.indexItems(itemIDs, { complete: true });
+		await document.getElementById('trellis-attachment-box').updateItemIndexedState();
 	};
 	
 	
 	/**
-	 * @return {Promise<Zotero.Item>} - The new Zotero.Item
+	 * @return {Promise<Trellis.Item>} - The new Trellis.Item
 	 */
 	this.duplicateSelectedItem = async function () {
 		var self = this;
@@ -2369,14 +2369,14 @@ var ZoteroPane = new function () {
 		
 		var item = self.getSelectedItems()[0];
 		if (item.isNote()
-			&& !((await Zotero.Notes.ensureEmbeddedImagesAreAvailable(item)))
-			&& !Zotero.Notes.promptToIgnoreMissingImage()) {
+			&& !((await Trellis.Notes.ensureEmbeddedImagesAreAvailable(item)))
+			&& !Trellis.Notes.promptToIgnoreMissingImage()) {
 			return;
 		}
 		
 		var newItem;
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			newItem = item.clone();
 			// If in collections, add new item to all selected collections
 			// that the original item belongs to
@@ -2389,12 +2389,12 @@ var ZoteroPane = new function () {
 				}
 			}
 			await newItem.save();
-			if (item.isNote() && Zotero.Libraries.get(newItem.libraryID).filesEditable) {
-				await Zotero.Notes.copyEmbeddedImages(item, newItem);
+			if (item.isNote() && Trellis.Libraries.get(newItem.libraryID).filesEditable) {
+				await Trellis.Notes.copyEmbeddedImages(item, newItem);
 			}
 			for (let relItemKey of item.relatedItems) {
 				try {
-					let relItem = await Zotero.Items.getByLibraryAndKeyAsync(item.libraryID, relItemKey);
+					let relItem = await Trellis.Items.getByLibraryAndKeyAsync(item.libraryID, relItemKey);
 					if (relItem.addRelatedItem(newItem)) {
 						await relItem.save({
 							skipDateModifiedUpdate: true
@@ -2402,7 +2402,7 @@ var ZoteroPane = new function () {
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		});
@@ -2419,8 +2419,8 @@ var ZoteroPane = new function () {
 			throw new Error('duplicateAndConvertSelectedItem requires a single book or bookSection to be selected');
 		}
 
-		let authorCreatorType = Zotero.CreatorTypes.getID('author');
-		let bookAuthorCreatorType = Zotero.CreatorTypes.getID('bookAuthor');
+		let authorCreatorType = Trellis.CreatorTypes.getID('author');
+		let bookAuthorCreatorType = Trellis.CreatorTypes.getID('bookAuthor');
 		
 		let original = this.getSelectedItems()[0];
 		let duplicate = await this.duplicateSelectedItem();
@@ -2429,7 +2429,7 @@ var ZoteroPane = new function () {
 		// TODO: Move this logic to duplicateSelectedItem() with a `targetItemType` flag to avoid
 		// extra saves?
 		if (duplicate.itemType == 'book') {
-			duplicate.setType(Zotero.ItemTypes.getID('bookSection'));
+			duplicate.setType(Trellis.ItemTypes.getID('bookSection'));
 			for (let i = 0; i < duplicate.numCreators(); i++) {
 				let creator = duplicate.getCreator(i);
 				if (creator.creatorTypeID == authorCreatorType) {
@@ -2439,7 +2439,7 @@ var ZoteroPane = new function () {
 			}
 			// Remove related-item relations to other book sections of this book
 			for (let relItemKey of [...duplicate.relatedItems]) {
-				let relItem = await Zotero.Items.getByLibraryAndKeyAsync(
+				let relItem = await Trellis.Items.getByLibraryAndKeyAsync(
 					duplicate.libraryID, relItemKey
 				);
 				if (relItem.itemType == 'bookSection'
@@ -2452,7 +2452,7 @@ var ZoteroPane = new function () {
 		}
 		else {
 			duplicate.setField('title', false); // So bookTitle becomes title
-			duplicate.setType(Zotero.ItemTypes.getID('book'));
+			duplicate.setType(Trellis.ItemTypes.getID('book'));
 			// Get creators from the original item because setType() will have changed the types
 			let creators = original.getCreators()
 				// Remove authors of the individual book section
@@ -2474,7 +2474,7 @@ var ZoteroPane = new function () {
 		await original.saveTx({ skipDateModifiedUpdate: true });
 		await duplicate.saveTx();
 		
-		ZoteroPane.itemPane.querySelector("info-box").getTitleField().focus();
+		TrellisPane.itemPane.querySelector("info-box").getTitleField().focus();
 		return duplicate;
 	};
 	
@@ -2512,7 +2512,7 @@ var ZoteroPane = new function () {
 
 	
 	this.deleteSelectedItem = function () {
-		Zotero.debug("ZoteroPane_Local.deleteSelectedItem() is deprecated -- use ZoteroPane_Local.deleteSelectedItems()");
+		Trellis.debug("TrellisPane_Local.deleteSelectedItem() is deprecated -- use TrellisPane_Local.deleteSelectedItems()");
 		this.deleteSelectedItems();
 	}
 	
@@ -2535,20 +2535,20 @@ var ZoteroPane = new function () {
 		}
 		
 		var toTrash = {
-			title: Zotero.getString('pane.items.trash.title'),
-			text: Zotero.getString(
+			title: Trellis.getString('pane.items.trash.title'),
+			text: Trellis.getString(
 				'pane.items.trash' + (this.itemsView.selection.count > 1 ? '.multiple' : '')
 			)
 		};
 		var toDelete = {
-			title: Zotero.getString('pane.items.delete.title'),
-			text: Zotero.getString(
+			title: Trellis.getString('pane.items.delete.title'),
+			text: Trellis.getString(
 				'pane.items.delete' + (this.itemsView.selection.count > 1 ? '.multiple' : '')
 			)
 		};
 		var toRemove = {
-			title: Zotero.getString('pane.items.remove.title'),
-			text: Zotero.getString(
+			title: Trellis.getString('pane.items.remove.title'),
+			text: Trellis.getString(
 				'pane.items.remove' + (this.itemsView.selection.count > 1 ? '.multiple' : '')
 			)
 		};
@@ -2563,8 +2563,8 @@ var ZoteroPane = new function () {
 		}
 		else if (collectionTreeRows[0].isPublications()) {
 			let toRemoveFromPublications = {
-				title: Zotero.getString('pane.items.removeFromPublications.title'),
-				text: Zotero.getString(
+				title: Trellis.getString('pane.items.removeFromPublications.title'),
+				text: Trellis.getString(
 					'pane.items.removeFromPublications' + (this.itemsView.selection.count > 1 ? '.multiple' : '')
 				)
 			};
@@ -2594,7 +2594,7 @@ var ZoteroPane = new function () {
 				// If unmodified, recursiveCollections is true, and items are in
 				// descendant collections (even if also in the selected collection),
 				// prompt to remove from all
-				if (Zotero.Prefs.get('recursiveCollections')) {
+				if (Trellis.Prefs.get('recursiveCollections')) {
 					// Removal recurses into the descendants of every selected collection
 					// (see CollectionViewItemTree), so check all of them when deciding
 					// whether to show the recursive-removal prompt
@@ -2606,8 +2606,8 @@ var ZoteroPane = new function () {
 							.some(item => item.inCollection(id)));
 					if (inSubcollection) {
 						var prompt = {
-							title: Zotero.getString('pane.items.removeRecursive.title'),
-							text: Zotero.getString(
+							title: Trellis.getString('pane.items.removeRecursive.title'),
+							text: Trellis.getString(
 								'pane.items.removeRecursive' + (this.itemsView.selection.count > 1 ? '.multiple' : '')
 							)
 						};
@@ -2654,8 +2654,8 @@ var ZoteroPane = new function () {
 		let saveOptions = {
 			skipDateModifiedUpdate: true
 		};
-		await Zotero.DB.executeTransaction(async () => {
-			Zotero.UndoHistory.stageAction('undo-action-add-related');
+		await Trellis.DB.executeTransaction(async () => {
+			Trellis.UndoHistory.stageAction('undo-action-add-related');
 			for (let index1 = 0; index1 < selectedItems.length; index1++) {
 				for (let index2 = index1 + 1; index2 < selectedItems.length; index2++) {
 					let item1 = selectedItems[index1];
@@ -2743,8 +2743,8 @@ var ZoteroPane = new function () {
 			}
 		}
 		else if (collectionTreeRows[0].isFeed()) {
-			title = Zotero.getString('pane.feed.deleteWithItems.title');
-			message = Zotero.getString('pane.feed.deleteWithItems');
+			title = Trellis.getString('pane.feed.deleteWithItems.title');
+			message = Trellis.getString('pane.feed.deleteWithItems');
 		}
 		else if (collectionTreeRows[0].isSearch()) {
 			[title, message] = await document.l10n.formatValues([
@@ -2792,18 +2792,18 @@ var ZoteroPane = new function () {
 
 		let isSelected = object => selectedObjects.includes(object);
 
-		await Zotero.DB.executeTransaction(async () => {
+		await Trellis.DB.executeTransaction(async () => {
 			let undoAction;
-			if (selectedObjects.every(o => o instanceof Zotero.Item)) {
+			if (selectedObjects.every(o => o instanceof Trellis.Item)) {
 				undoAction = 'undo-action-restore-items';
 			}
-			else if (selectedObjects.every(o => o instanceof Zotero.Collection)) {
+			else if (selectedObjects.every(o => o instanceof Trellis.Collection)) {
 				undoAction = 'undo-action-restore-collection';
 			}
 			else {
 				undoAction = 'undo-action-restore-objects';
 			}
-			Zotero.UndoHistory.stageAction(undoAction, { count: selectedObjects.length });
+			Trellis.UndoHistory.stageAction(undoAction, { count: selectedObjects.length });
 
 			for (let row = 0; row < this.itemsView.rowCount; row++) {
 				// Only look at top-level items
@@ -2814,7 +2814,7 @@ var ZoteroPane = new function () {
 				let parent = this.itemsView.getRow(row).ref;
 				let childIDs = [];
 				let subcollections = [];
-				if (parent instanceof Zotero.Collection) {
+				if (parent instanceof Trellis.Collection) {
 					// If the restored item is a collection, restore its subcollections too
 					if (isSelected(parent)) {
 						subcollections = parent.getDescendents(false, 'collection', true).map(col => col.id);
@@ -2828,7 +2828,7 @@ var ZoteroPane = new function () {
 						childIDs.push(...parent.getAttachments(true));
 					}
 				}
-				let childItems = Zotero.Items.get(childIDs);
+				let childItems = Trellis.Items.get(childIDs);
 				if (isSelected(parent)) {
 					if (parent.deleted) {
 						parent.deleted = false;
@@ -2836,7 +2836,7 @@ var ZoteroPane = new function () {
 					}
 
 					let noneSelected = !childItems.some(isSelected);
-					let allChildren = childItems.concat(Zotero.Collections.get(subcollections));
+					let allChildren = childItems.concat(Trellis.Collections.get(subcollections));
 					for (let child of allChildren) {
 						if ((noneSelected || isSelected(child)) && child.deleted) {
 							child.deleted = false;
@@ -2866,31 +2866,31 @@ var ZoteroPane = new function () {
 		var result = Services.prompt.confirm(
 			null,
 			"",
-			Zotero.getString('pane.collections.emptyTrash') + "\n\n"
-				+ Zotero.getString('general.actionCannotBeUndone')
+			Trellis.getString('pane.collections.emptyTrash') + "\n\n"
+				+ Trellis.getString('general.actionCannotBeUndone')
 		);
 		if (result) {
-			Zotero.showZoteroPaneProgressMeter(null, true);
+			Trellis.showTrellisPaneProgressMeter(null, true);
 			try {
-				let deletedSearches = await Zotero.Searches.getDeleted(libraryID, true);
-				await Zotero.Searches.erase(deletedSearches);
-				let deletedCollections = await Zotero.Collections.getDeleted(libraryID, true);
-				await Zotero.Collections.erase(deletedCollections);
-				let deleted = await Zotero.Items.emptyTrash(
+				let deletedSearches = await Trellis.Searches.getDeleted(libraryID, true);
+				await Trellis.Searches.erase(deletedSearches);
+				let deletedCollections = await Trellis.Collections.getDeleted(libraryID, true);
+				await Trellis.Collections.erase(deletedCollections);
+				let deleted = await Trellis.Items.emptyTrash(
 					libraryID,
 					{
 						onProgress: (progress, progressMax) => {
 							var percentage = Math.round((progress / progressMax) * 100);
-							Zotero.updateZoteroPaneProgressMeter(percentage);
+							Trellis.updateTrellisPaneProgressMeter(percentage);
 						}
 					}
 				);
 			}
 			finally {
-				Zotero.hideZoteroPaneOverlays();
+				Trellis.hideTrellisPaneOverlays();
 			}
-			await Zotero.purgeDataObjects();
-			Zotero.UndoHistory.clear();
+			await Trellis.purgeDataObjects();
+			Trellis.UndoHistory.clear();
 		}
 	};
 	
@@ -2939,7 +2939,7 @@ var ZoteroPane = new function () {
 		if (target.libraryID !== selected.libraryID) {
 			throw new Error("Moving collections is only possible within the same library.");
 		}
-		if (target instanceof Zotero.Library) {
+		if (target instanceof Trellis.Library) {
 			selected.parentID = null;
 		}
 		else {
@@ -2956,23 +2956,23 @@ var ZoteroPane = new function () {
 		if (!selected) return;
 
 		let targetTreeRowID = `L${target.libraryID}`;
-		if (target instanceof Zotero.Collection) {
+		if (target instanceof Trellis.Collection) {
 			targetTreeRowID = `C${target.id}`;
 			// Make sure the row is actually visible
-			await ZoteroPane.collectionsView.expandToCollection(target.id);
+			await TrellisPane.collectionsView.expandToCollection(target.id);
 		}
-		let targetTreeRowIndex = ZoteroPane.collectionsView.getRowIndexByID(targetTreeRowID);
-		let targetTreeRow = ZoteroPane.collectionsView.getRow(targetTreeRowIndex);
+		let targetTreeRowIndex = TrellisPane.collectionsView.getRowIndexByID(targetTreeRowID);
+		let targetTreeRow = TrellisPane.collectionsView.getRow(targetTreeRowIndex);
 		let copyOptions = {
-			tags: Zotero.Prefs.get('groups.copyTags'),
-			childNotes: Zotero.Prefs.get('groups.copyChildNotes'),
-			childLinks: Zotero.Prefs.get('groups.copyChildLinks'),
-			childFileAttachments: Zotero.Prefs.get('groups.copyChildFileAttachments'),
-			annotations: Zotero.Prefs.get('groups.copyAnnotations'),
+			tags: Trellis.Prefs.get('groups.copyTags'),
+			childNotes: Trellis.Prefs.get('groups.copyChildNotes'),
+			childLinks: Trellis.Prefs.get('groups.copyChildLinks'),
+			childFileAttachments: Trellis.Prefs.get('groups.copyChildFileAttachments'),
+			annotations: Trellis.Prefs.get('groups.copyAnnotations'),
 		};
-		ZoteroPane.collectionsView.executeCollectionCopy({
+		TrellisPane.collectionsView.executeCollectionCopy({
 			collection: selected,
-			targetCollectionID: target instanceof Zotero.Collection ? target.id : null,
+			targetCollectionID: target instanceof Trellis.Collection ? target.id : null,
 			targetLibraryID: target.libraryID,
 			targetTreeRow,
 			copyOptions
@@ -2980,17 +2980,17 @@ var ZoteroPane = new function () {
 	};
 
 	this.toggleSelectedItemsRead = async function () {
-		await Zotero.FeedItems.toggleReadByID(this.getSelectedItems(true));
+		await Trellis.FeedItems.toggleReadByID(this.getSelectedItems(true));
 	};
 
 	this.markFeedRead = async function () {
 		var rows = this.getCollectionTreeRows();
 		if (!rows.length) return;
 
-		let feeds = rows.some(row => row.isFeeds()) ? Zotero.Feeds.getAll() : rows.map(row => row.ref);
+		let feeds = rows.some(row => row.isFeeds()) ? Trellis.Feeds.getAll() : rows.map(row => row.ref);
 		for (let feed of feeds) {
-			let feedItemIDs = await Zotero.FeedItems.getAll(feed.libraryID, true, false, true);
-			await Zotero.FeedItems.toggleReadByID(feedItemIDs, true);
+			let feedItemIDs = await Trellis.FeedItems.getAll(feed.libraryID, true, false, true);
+			await Trellis.FeedItems.toggleReadByID(feedItemIDs, true);
 		}
 	};
 
@@ -3009,7 +3009,7 @@ var ZoteroPane = new function () {
 			cleanupUnreadAfter: feed.cleanupUnreadAfter
 		};
 		
-		window.openDialog('chrome://zotero/content/feedSettings.xhtml',
+		window.openDialog('chrome://trellis/content/feedSettings.xhtml',
 			null, 'centerscreen, modal', data);
 		if (data.cancelled) return;
 		
@@ -3018,7 +3018,7 @@ var ZoteroPane = new function () {
 		feed.cleanupReadAfter = data.cleanupReadAfter;
 		feed.cleanupUnreadAfter = data.cleanupUnreadAfter;
 		await feed.saveTx();
-		Zotero_Tabs.rename("zotero-pane", feed.name);
+		Trellis_Tabs.rename("trellis-pane", feed.name);
 	};
 	
 	this.refreshFeed = function () {
@@ -3036,22 +3036,22 @@ var ZoteroPane = new function () {
 		let itemIDs = this.getSelectedItems(true);
 		// Get selected item IDs in the item tree order
 		itemIDs = this.getSortedItems(true).filter(id => itemIDs.includes(id));
-		items = Zotero.Items.get(itemIDs);
+		items = Trellis.Items.get(itemIDs);
 		
 		if (!items.length) {
 			return;
 		}
 		
-		var format = Zotero.QuickCopy.getFormatFromURL(Zotero.QuickCopy.lastActiveURL);
+		var format = Trellis.QuickCopy.getFormatFromURL(Trellis.QuickCopy.lastActiveURL);
 		if (items.every(item => item.isNote() || item.isAttachment())) {
-			format = Zotero.QuickCopy.getNoteFormat();
+			format = Trellis.QuickCopy.getNoteFormat();
 		}
 		// To copy annotations, wrap them in a temp note
 		if (items.every(item => item.isAnnotation())) {
-			format = Zotero.QuickCopy.getNoteFormat();
-			items = [Zotero.QuickCopy.annotationsToNote(items)];
+			format = Trellis.QuickCopy.getNoteFormat();
+			items = [Trellis.QuickCopy.annotationsToNote(items)];
 		}
-		format = Zotero.QuickCopy.unserializeSetting(format);
+		format = Trellis.QuickCopy.unserializeSetting(format);
 		
 		// In bibliography mode, remove notes and attachments
 		if (format.mode == 'bibliography') {
@@ -3068,15 +3068,15 @@ var ZoteroPane = new function () {
 		// This isn't currently shown, because the commands are disabled when not relevant, so this
 		// function isn't called
 		if (!items.length) {
-			Services.prompt.alert(null, "", Zotero.getString("fileInterface.noReferencesError"));
+			Services.prompt.alert(null, "", Trellis.getString("fileInterface.noReferencesError"));
 			return;
 		}
 		
 		// determine locale preference
-		var locale = format.locale ? format.locale : Zotero.Prefs.get('export.quickCopy.locale');
+		var locale = format.locale ? format.locale : Trellis.Prefs.get('export.quickCopy.locale');
 		
 		if (format.mode == 'bibliography') {
-			Zotero_File_Interface.copyItemsToClipboard(
+			Trellis_File_Interface.copyItemsToClipboard(
 				items, format.id, locale, format.contentType == 'html', asCitations
 			);
 		}
@@ -3086,14 +3086,14 @@ var ZoteroPane = new function () {
 				return;
 			}
 			else {
-				Zotero_File_Interface.exportItemsToClipboard(items, format);
+				Trellis_File_Interface.exportItemsToClipboard(items, format);
 			}
 		}
 	}
 	
 	
 	this.clearQuicksearch = async function (skipSearchRun) {
-		var search = document.getElementById('zotero-tb-search');
+		var search = document.getElementById('trellis-tb-search');
 		if (search.searchTextbox.value !== '') {
 			search.searchTextbox.value = '';
 			if (!skipSearchRun) {
@@ -3125,7 +3125,7 @@ var ZoteroPane = new function () {
 
 
 	this.handleCollectionSearchInput = function () {
-		let collectionsSearchField = document.getElementById("zotero-collections-search");
+		let collectionsSearchField = document.getElementById("trellis-collections-search");
 		this.collectionsView.setFilter(collectionsSearchField.value);
 		// Make sure that the filter ends up being hidden if the value is cleared
 		// after the blur event fires. This happens on windows on cross icon click.
@@ -3138,7 +3138,7 @@ var ZoteroPane = new function () {
 	
 	this.handleSearchInput = function (textbox, event) {
 		if (textbox.searchTextbox.value.indexOf('"') != -1) {
-			this.setItemsPaneMessage(Zotero.getString('advancedSearchMode'));
+			this.setItemsPaneMessage(Trellis.getString('advancedSearchMode'));
 		}
 	}
 	
@@ -3150,12 +3150,12 @@ var ZoteroPane = new function () {
 		if (!this.itemsView) {
 			return;
 		}
-		var search = document.getElementById('zotero-tb-search');
+		var search = document.getElementById('trellis-tb-search');
 		var searchVal = search.searchTextbox.value;
 		if (!runAdvanced && searchVal.indexOf('"') != -1) {
 			return;
 		}
-		var spinner = document.getElementById('zotero-tb-search-spinner');
+		var spinner = document.getElementById('trellis-tb-search-spinner');
 		spinner.setAttribute("status", "animate");
 		spinner.style.visibility = 'visible';
 		await this.itemsView.setFilter('search', searchVal);
@@ -3168,15 +3168,15 @@ var ZoteroPane = new function () {
 	
 	
 	this.sync = function () {
-		if (Zotero.Sync.Runner.syncInProgress) {
-			Zotero.Sync.Runner.stop();
+		if (Trellis.Sync.Runner.syncInProgress) {
+			Trellis.Sync.Runner.stop();
 		}
 		else {
 			this.hideSyncReminder();
 
-			Zotero.Sync.Server.canAutoResetClient = true;
-			Zotero.Sync.Server.manualSyncRequired = false;
-			Zotero.Sync.Runner.sync();
+			Trellis.Sync.Server.canAutoResetClient = true;
+			Trellis.Sync.Server.manualSyncRequired = false;
+			Trellis.Sync.Runner.sync();
 		}
 	};
 
@@ -3184,18 +3184,18 @@ var ZoteroPane = new function () {
 	var _syncRemindersObserverID = null;
 	this.initSyncReminders = function (startup) {
 		if (startup) {
-			Zotero.Notifier.registerObserver(
+			Trellis.Notifier.registerObserver(
 				{
 					notify: (event) => {
 						// When the API Key is deleted we need to add an observer
 						if (event === 'delete') {
-							Zotero.Prefs.set('sync.reminder.setUp.enabled', true);
-							Zotero.Prefs.set('sync.reminder.setUp.lastDisplayed', Math.round(Date.now() / 1000));
-							ZoteroPane.initSyncReminders(false);
+							Trellis.Prefs.set('sync.reminder.setUp.enabled', true);
+							Trellis.Prefs.set('sync.reminder.setUp.lastDisplayed', Math.round(Date.now() / 1000));
+							TrellisPane.initSyncReminders(false);
 						}
 						// When API Key is added we can remove the observer
 						else if (event === 'add') {
-							ZoteroPane.initSyncReminders(false);
+							TrellisPane.initSyncReminders(false);
 						}
 					}
 				},
@@ -3203,19 +3203,19 @@ var ZoteroPane = new function () {
 		}
 
 		// If both reminders are disabled, we don't need an observer
-		if (!Zotero.Prefs.get('sync.reminder.setUp.enabled')
-				&& !Zotero.Prefs.get('sync.reminder.autoSync.enabled')) {
+		if (!Trellis.Prefs.get('sync.reminder.setUp.enabled')
+				&& !Trellis.Prefs.get('sync.reminder.autoSync.enabled')) {
 			if (_syncRemindersObserverID) {
-				Zotero.Notifier.unregisterObserver(_syncRemindersObserverID);
+				Trellis.Notifier.unregisterObserver(_syncRemindersObserverID);
 				_syncRemindersObserverID = null;
 			}
 			return;
 		}
 
 		// If we are syncing and auto-syncing then no need for observer
-		if (Zotero.Sync.Runner.enabled && Zotero.Prefs.get('sync.autoSync')) {
+		if (Trellis.Sync.Runner.enabled && Trellis.Prefs.get('sync.autoSync')) {
 			if (_syncRemindersObserverID) {
-				Zotero.Notifier.unregisterObserver(_syncRemindersObserverID);
+				Trellis.Notifier.unregisterObserver(_syncRemindersObserverID);
 				_syncRemindersObserverID = null;
 			}
 			return;
@@ -3227,7 +3227,7 @@ var ZoteroPane = new function () {
 		}
 
 		const eventTypes = ['add', 'modify', 'delete'];
-		_syncRemindersObserverID = Zotero.Notifier.registerObserver(
+		_syncRemindersObserverID = Trellis.Notifier.registerObserver(
 			{
 				notify: (event) => {
 					if (!eventTypes.includes(event)) {
@@ -3249,18 +3249,18 @@ var ZoteroPane = new function () {
 		// Reasons not to show reminder:
 		// - User turned reminder off
 		// - Sync is enabled
-		if (!Zotero.Prefs.get('sync.reminder.setUp.enabled')
-				|| Zotero.Sync.Runner.enabled) {
+		if (!Trellis.Prefs.get('sync.reminder.setUp.enabled')
+				|| Trellis.Sync.Runner.enabled) {
 			return;
 		}
 
 		// Check lastDisplayed was 7+ days ago
-		let lastDisplayed = Zotero.Prefs.get('sync.reminder.setUp.lastDisplayed');
+		let lastDisplayed = Trellis.Prefs.get('sync.reminder.setUp.lastDisplayed');
 		if (lastDisplayed > Math.round(Date.now() / 1000) - sevenDays) {
 			return;
 		}
 
-		this.showSyncReminder('setUp', { learnMoreURL: ZOTERO_CONFIG.SYNC_INFO_URL });
+		this.showSyncReminder('setUp', { learnMoreURL: TRELLIS_CONFIG.SYNC_INFO_URL });
 	};
 
 
@@ -3272,10 +3272,10 @@ var ZoteroPane = new function () {
 		// - Sync is not enabled
 		// - Auto-Sync is enabled
 		// - Last sync for all libraries was within 7 days
-		if (!Zotero.Prefs.get('sync.reminder.autoSync.enabled')
-				|| !Zotero.Sync.Runner.enabled
-				|| Zotero.Prefs.get('sync.autoSync')
-				|| Zotero.Libraries.getAll()
+		if (!Trellis.Prefs.get('sync.reminder.autoSync.enabled')
+				|| !Trellis.Sync.Runner.enabled
+				|| Trellis.Prefs.get('sync.autoSync')
+				|| Trellis.Libraries.getAll()
 					.every(library => !library.syncable
 						|| (library.lastSync
 							&& library.lastSync.getTime() > Date.now() - 1000 * sevenDays))) {
@@ -3283,7 +3283,7 @@ var ZoteroPane = new function () {
 		}
 
 		// Check lastDisplayed was 7+ days ago
-		let lastDisplayed = Zotero.Prefs.get('sync.reminder.autoSync.lastDisplayed');
+		let lastDisplayed = Trellis.Prefs.get('sync.reminder.autoSync.lastDisplayed');
 		if (lastDisplayed > Math.round(Date.now() / 1000) - sevenDays) {
 			return;
 		}
@@ -3308,16 +3308,16 @@ var ZoteroPane = new function () {
 		panel.setAttribute('data-reminder-type', reminderType);
 
 		let message = document.getElementById('sync-reminder-message');
-		message.textContent = Zotero.getString(`sync.reminder.${reminderType}.message`, Zotero.appName);
+		message.textContent = Trellis.getString(`sync.reminder.${reminderType}.message`, Trellis.appName);
 
 		let actionLink = document.getElementById('sync-reminder-action');
 		switch (reminderType) {
 			case 'autoSync':
-				var actionStr = Zotero.getString('general.enable');
+				var actionStr = Trellis.getString('general.enable');
 				break;
 			
 			default:
-				var actionStr = Zotero.getString(`sync.reminder.${reminderType}.action`);
+				var actionStr = Trellis.getString(`sync.reminder.${reminderType}.action`);
 				break;
 		}
 		actionLink.textContent = actionStr;
@@ -3326,30 +3326,30 @@ var ZoteroPane = new function () {
 
 			switch (reminderType) {
 				case 'setUp':
-					Zotero.Utilities.Internal.openPreferences('zotero-prefpane-account');
+					Trellis.Utilities.Internal.openPreferences('trellis-prefpane-account');
 					break;
 				case 'autoSync':
-					Zotero.Prefs.set(`sync.autoSync`, true);
+					Trellis.Prefs.set(`sync.autoSync`, true);
 					break;
 			}
 		};
 
 		let learnMoreLink = document.getElementById('sync-reminder-learn-more');
-		learnMoreLink.textContent = Zotero.getString('general.learnMore');
+		learnMoreLink.textContent = Trellis.getString('general.learnMore');
 		learnMoreLink.hidden = !options.learnMoreURL;
-		learnMoreLink.onclick = () => Zotero.launchURL(options.learnMoreURL);
+		learnMoreLink.onclick = () => Trellis.launchURL(options.learnMoreURL);
 		
 		let dontShowAgainLink = document.getElementById('sync-reminder-disable');
-		dontShowAgainLink.textContent = Zotero.getString('general.dontAskAgain');
+		dontShowAgainLink.textContent = Trellis.getString('general.dontAskAgain');
 		dontShowAgainLink.onclick = () => {
 			this.hideSyncReminder();
-			Zotero.Prefs.set(`sync.reminder.${reminderType}.enabled`, false);
+			Trellis.Prefs.set(`sync.reminder.${reminderType}.enabled`, false);
 			// Check if we no longer need to observe item modifications
-			ZoteroPane.initSyncReminders(false);
+			TrellisPane.initSyncReminders(false);
 		};
 
 		let remindMeLink = document.getElementById('sync-reminder-remind');
-		remindMeLink.textContent = Zotero.getString('general.remindMeLater');
+		remindMeLink.textContent = Trellis.getString('general.remindMeLater');
 		remindMeLink.onclick = () => this.hideSyncReminder();
 
 		let closeButton = document.getElementById('sync-reminder-close');
@@ -3370,7 +3370,7 @@ var ZoteroPane = new function () {
 		panel.removeAttribute('data-reminder-type');
 
 		if (['setUp', 'autoSync'].includes(reminderType)) {
-			Zotero.Prefs.set(`sync.reminder.${reminderType}.lastDisplayed`, Math.round(Date.now() / 1000));
+			Trellis.Prefs.set(`sync.reminder.${reminderType}.lastDisplayed`, Math.round(Date.now() / 1000));
 		}
 	};
 
@@ -3385,7 +3385,7 @@ var ZoteroPane = new function () {
 	
 	this.selectItems = async function (itemIDs, options = {}) {
 		if (typeof options == "boolean") {
-			Zotero.warn("ZoteroPane.selectItems() now takes an 'options' object -- update your code");
+			Trellis.warn("TrellisPane.selectItems() now takes an 'options' object -- update your code");
 			options = { inLibraryRoot: options };
 		}
 		let { inLibraryRoot, noTabSwitch, noWindowRestore } = options;
@@ -3393,7 +3393,7 @@ var ZoteroPane = new function () {
 			return false;
 		}
 		
-		var items = await Zotero.Items.getAsync(itemIDs);
+		var items = await Trellis.Items.getAsync(itemIDs);
 		if (!items.length) {
 			return false;
 		}
@@ -3411,11 +3411,11 @@ var ZoteroPane = new function () {
 		
 		// Focus the items pane
 		if (found) {
-			document.getElementById(ZoteroPane.itemsView.id).focus();
+			document.getElementById(TrellisPane.itemsView.id).focus();
 		}
 		
 		if (!noTabSwitch) {
-			Zotero_Tabs.select('zotero-pane', false, { focusElementID: ZoteroPane.itemsView.id });
+			Trellis_Tabs.select('trellis-pane', false, { focusElementID: TrellisPane.itemsView.id });
 		}
 		return true;
 	};
@@ -3439,7 +3439,7 @@ var ZoteroPane = new function () {
 	
 	
 	this.getSelectedCollection = function (asID) {
-		Zotero.debug("ZoteroPane.getSelectedCollection() is deprecated -- use getSelectedCollections()");
+		Trellis.debug("TrellisPane.getSelectedCollection() is deprecated -- use getSelectedCollections()");
 		return this.getSelectedCollections(asID)[0];
 	}
 	
@@ -3471,16 +3471,16 @@ var ZoteroPane = new function () {
 	 * If asIDs is true, return an array of itemIDs instead
 	 */
 	this.getSelectedItems = function (asIDs) {
-		switch (Zotero_Tabs.selectedType) {
+		switch (Trellis_Tabs.selectedType) {
 			case 'library':
 				if (!this.itemsView) {
 					return [];
 				}
 				return this.itemsView.getSelectedItems(asIDs);
 			case 'reader': {
-				let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+				let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 				if (reader) {
-					let item = Zotero.Items.get(reader.itemID);
+					let item = Trellis.Items.get(reader.itemID);
 					if (item.parentItem) {
 						item = item.parentItem;
 					}
@@ -3489,9 +3489,9 @@ var ZoteroPane = new function () {
 				return [];
 			}
 			case 'note': {
-				let tab = Zotero_Tabs.getTabInfo(Zotero_Tabs.selectedID);
+				let tab = Trellis_Tabs.getTabInfo(Trellis_Tabs.selectedID);
 				if (tab) {
-					let item = Zotero.Items.get(tab.data.itemID);
+					let item = Trellis.Items.get(tab.data.itemID);
 					return asIDs ? [item.id] : [item];
 				}
 				return [];
@@ -3503,12 +3503,12 @@ var ZoteroPane = new function () {
 	
 
 	/*
-	 * Returns an array of Zotero.Item objects of visible items in current sort order
+	 * Returns an array of Trellis.Item objects of visible items in current sort order
 	 *
 	 * If asIDs is true, return an array of itemIDs instead
 	 */
 	this.getSortedItems = function (asIDs) {
-		switch (Zotero_Tabs.selectedType) {
+		switch (Trellis_Tabs.selectedType) {
 			case 'library':
 				if (!this.itemsView) {
 					return [];
@@ -3525,7 +3525,7 @@ var ZoteroPane = new function () {
 	 * Returns all items in the selected collection tree rows, ignoring quicksearch,
 	 * tag, and advanced search filters
 	 *
-	 * @return {Promise<Zotero.Item[]>}
+	 * @return {Promise<Trellis.Item[]>}
 	 */
 	this.getUnfilteredItems = async function () {
 		var itemSet = new Set();
@@ -3565,14 +3565,14 @@ var ZoteroPane = new function () {
 	 * Show context menu once it's ready
 	 */
 	this.onCollectionsContextMenuOpen = async function (event, x, y) {
-		await ZoteroPane.buildCollectionContextMenu();
+		await TrellisPane.buildCollectionContextMenu();
 		x = x || event.screenX;
 		y = y || event.screenY;
-		// TEMP: Quick fix for https://forums.zotero.org/discussion/105103/
-		if (Zotero.isWin) {
+		// TEMP: Quick fix for https://forums.trellis.org/discussion/105103/
+		if (Trellis.isWin) {
 			x += 10;
 		}
-		openPopup(document.getElementById('zotero-collectionmenu'), x, y);
+		openPopup(document.getElementById('trellis-collectionmenu'), x, y);
 	};
 	
 	
@@ -3585,14 +3585,14 @@ var ZoteroPane = new function () {
 		if (event.target?.closest?.('.library-header-row')) {
 			return;
 		}
-		await ZoteroPane.buildItemContextMenu();
+		await TrellisPane.buildItemContextMenu();
 		x = x || event.screenX;
 		y = y || event.screenY;
-		// TEMP: Quick fix for https://forums.zotero.org/discussion/105103/
-		if (Zotero.isWin) {
+		// TEMP: Quick fix for https://forums.trellis.org/discussion/105103/
+		if (Trellis.isWin) {
 			x += 10;
 		}
-		openPopup(document.getElementById('zotero-itemmenu'), x, y);
+		openPopup(document.getElementById('trellis-itemmenu'), x, y);
 	};
 	
 	
@@ -3607,15 +3607,15 @@ var ZoteroPane = new function () {
 	
 	// menuitem configuration
 	//
-	// This has to be kept in sync with zotero-collectionmenu in zoteroPane.xhtml. We could do this
-	// entirely in JS, but various localized strings are only in zotero.dtd, and they're used in
+	// This has to be kept in sync with trellis-collectionmenu in trellisPane.xhtml. We could do this
+	// entirely in JS, but various localized strings are only in trellis.dtd, and they're used in
 	// standalone.xul as well, so for now they have to remain as XML entities.
 	var _collectionContextMenuOptions = [
 		{
 			id: "sync",
-			label: Zotero.getString('sync.sync'),
+			label: Trellis.getString('sync.sync'),
 			oncommand: () => {
-				Zotero.Sync.Runner.sync({
+				Trellis.Sync.Runner.sync({
 					libraries: [this.getSelectedLibraryID()],
 				});
 			}
@@ -3625,7 +3625,7 @@ var ZoteroPane = new function () {
 		},
 		{
 			id: "newCollection",
-			command: "cmd_zotero_newCollection"
+			command: "cmd_trellis_newCollection"
 		},
 		{
 			id: "newSubcollection",
@@ -3708,19 +3708,19 @@ var ZoteroPane = new function () {
 		},
 		{
 			id: "exportCollection",
-			oncommand: () => Zotero_File_Interface.exportCollection()
+			oncommand: () => Trellis_File_Interface.exportCollection()
 		},
 		{
 			id: "createBibCollection",
-			oncommand: () => Zotero_File_Interface.bibliographyFromCollection()
+			oncommand: () => Trellis_File_Interface.bibliographyFromCollection()
 		},
 		{
 			id: "exportFile",
-			oncommand: () => Zotero_File_Interface.exportFile()
+			oncommand: () => Trellis_File_Interface.exportFile()
 		},
 		{
 			id: "loadReport",
-			oncommand: () => Zotero_Report_Interface.loadCollectionReport()
+			oncommand: () => Trellis_Report_Interface.loadCollectionReport()
 		},
 		{
 			id: "emptyTrash",
@@ -3728,18 +3728,18 @@ var ZoteroPane = new function () {
 		},
 		{
 			id: "removeLibrary",
-			label: Zotero.getString('pane.collections.menu.remove.library'),
+			label: Trellis.getString('pane.collections.menu.remove.library'),
 			oncommand: () => {
-				let library = Zotero.Libraries.get(this.getSelectedLibraryID());
+				let library = Trellis.Libraries.get(this.getSelectedLibraryID());
 				let ps = Services.prompt;
 				let buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING)
 					+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL);
 				let index = ps.confirmEx(
 					null,
-					Zotero.getString('pane.collections.removeLibrary'),
-					Zotero.getString('pane.collections.removeLibrary.text', library.name),
+					Trellis.getString('pane.collections.removeLibrary'),
+					Trellis.getString('pane.collections.removeLibrary.text', library.name),
 					buttonFlags,
-					Zotero.getString('general.remove'),
+					Trellis.getString('general.remove'),
 					null,
 					null, null, {}
 				);
@@ -3771,7 +3771,7 @@ var ZoteroPane = new function () {
 		}
 		
 		// Set attributes on the menu from the configuration object
-		var menu = document.getElementById('zotero-collectionmenu');
+		var menu = document.getElementById('trellis-collectionmenu');
 		var m = {};
 		for (let i = 0; i < options.length; i++) {
 			let option = options[i];
@@ -3864,8 +3864,8 @@ var ZoteroPane = new function () {
 			}
 			
 			// Adjust labels
-			m.refreshFeed.setAttribute('label', Zotero.getString('pane.collections.menu.refresh.feed'));
-			m.markReadFeed.setAttribute('label', Zotero.getString('pane.collections.menu.markAsRead.feed'));
+			m.refreshFeed.setAttribute('label', Trellis.getString('pane.collections.menu.refresh.feed'));
+			m.markReadFeed.setAttribute('label', Trellis.getString('pane.collections.menu.markAsRead.feed'));
 			document.l10n.setAttributes(m.deleteCollectionAndItems, 'collections-menu-unsubscribe');
 		}
 		else if (collectionTreeRows.some(row => row.isFeeds())) {
@@ -3881,8 +3881,8 @@ var ZoteroPane = new function () {
 			}
 
 			// Adjust labels
-			m.refreshFeed.setAttribute('label', Zotero.getString('pane.collections.menu.refresh.allFeeds'));
-			m.markReadFeed.setAttribute('label', Zotero.getString('pane.collections.menu.markAsRead.allFeeds'));
+			m.refreshFeed.setAttribute('label', Trellis.getString('pane.collections.menu.refresh.allFeeds'));
+			m.markReadFeed.setAttribute('label', Trellis.getString('pane.collections.menu.markAsRead.allFeeds'));
 		}
 		else if (collectionTreeRows[0].isSearch()) {
 			show = [
@@ -3903,8 +3903,8 @@ var ZoteroPane = new function () {
 			// Adjust labels
 			document.l10n.setAttributes(m.editSelectedCollection, 'collections-menu-edit-search');
 			document.l10n.setAttributes(m.duplicate, 'collections-menu-duplicate-search');
-			m.duplicate.classList.add('zotero-menuitem-duplicate-saved-search');
-			m.duplicate.classList.remove('zotero-menuitem-duplicate-collection');
+			m.duplicate.classList.add('trellis-menuitem-duplicate-saved-search');
+			m.duplicate.classList.remove('trellis-menuitem-duplicate-collection');
 			document.l10n.setAttributes(m.deleteCollection, 'collections-menu-delete-search', { count: collectionTreeRows.length });
 			document.l10n.setAttributes(m.exportCollection, 'collections-menu-export');
 			document.l10n.setAttributes(m.createBibCollection, 'collections-menu-create-bibliography');
@@ -3922,19 +3922,19 @@ var ZoteroPane = new function () {
 				|| collectionTreeRows[0].isRetracted()) {
 			show = ['deleteCollection'];
 			
-			m.deleteCollection.setAttribute('label', Zotero.getString('general.hide'));
+			m.deleteCollection.setAttribute('label', Trellis.getString('general.hide'));
 			useHideOrDelete = "hide";
 		}
 		else if (collectionTreeRows[0].isHeader()) {
 		}
 		else if (collectionTreeRows[0].isPublications()) {
 			show = ['exportFile', 'deleteCollection'];
-			m.deleteCollection.setAttribute('label', Zotero.getString('general.hide'));
+			m.deleteCollection.setAttribute('label', Trellis.getString('general.hide'));
 			useHideOrDelete = "hide";
 		}
 		// Library
 		else {
-			let library = Zotero.Libraries.get(libraryID);
+			let library = Trellis.Libraries.get(libraryID);
 			show = [];
 			if (!library.archived) {
 				show.push(
@@ -3944,19 +3944,19 @@ var ZoteroPane = new function () {
 				);
 			}
 				// Only show "Show Duplicates", "Show Unfiled Items", and "Show Retracted" if rows are hidden
-			let duplicates = Zotero.Prefs.getVirtualCollectionStateForLibrary(
+			let duplicates = Trellis.Prefs.getVirtualCollectionStateForLibrary(
 				libraryID, 'duplicates'
 			);
-			let unfiled = Zotero.Prefs.getVirtualCollectionStateForLibrary(
+			let unfiled = Trellis.Prefs.getVirtualCollectionStateForLibrary(
 				libraryID, 'unfiled'
 			);
-			let recentlyRead = Zotero.Prefs.getVirtualCollectionStateForLibrary(
+			let recentlyRead = Trellis.Prefs.getVirtualCollectionStateForLibrary(
 				libraryID, 'recentlyRead'
 			);
-			let retracted = Zotero.Prefs.getVirtualCollectionStateForLibrary(
+			let retracted = Trellis.Prefs.getVirtualCollectionStateForLibrary(
 				libraryID, 'retracted'
 			);
-			let publications = Zotero.Prefs.getVirtualCollectionStateForLibrary(
+			let publications = Trellis.Prefs.getVirtualCollectionStateForLibrary(
 				libraryID, 'publications'
 			);
 			if (!duplicates || !unfiled || !recentlyRead || !retracted || !publications) {
@@ -3991,12 +3991,12 @@ var ZoteroPane = new function () {
 		}
 
 		if (useHideOrDelete === 'delete') {
-			m.deleteCollection.classList.add('zotero-menuitem-delete-collection');
-			m.deleteCollection.classList.remove('zotero-menuitem-hide-collection');
+			m.deleteCollection.classList.add('trellis-menuitem-delete-collection');
+			m.deleteCollection.classList.remove('trellis-menuitem-hide-collection');
 		}
 		else {
-			m.deleteCollection.classList.add('zotero-menuitem-hide-collection');
-			m.deleteCollection.classList.remove('zotero-menuitem-delete-collection');
+			m.deleteCollection.classList.add('trellis-menuitem-hide-collection');
+			m.deleteCollection.classList.remove('trellis-menuitem-delete-collection');
 		}
 		
 		// Disable some actions if user doesn't have write access
@@ -4037,7 +4037,7 @@ var ZoteroPane = new function () {
 			m[id].setAttribute('disabled', true);
 		}
 
-		Zotero.MenuManager.updateMenuPopup(
+		Trellis.MenuManager.updateMenuPopup(
 			menu,
 			"main/library/collection",
 			{
@@ -4048,7 +4048,7 @@ var ZoteroPane = new function () {
 					collectionTreeRows,
 					tabType: "library",
 					tabSubType: undefined,
-					tabID: "zotero-pane",
+					tabID: "trellis-pane",
 				})
 			}
 		);
@@ -4092,10 +4092,10 @@ var ZoteroPane = new function () {
 			m[options[i]] = i;
 		}
 		
-		var menu = document.getElementById('zotero-itemmenu');
+		var menu = document.getElementById('trellis-itemmenu');
 		
 		// remove old locate menu items
-		while(menu.firstChild && menu.firstChild.getAttribute("zotero-locate")) {
+		while(menu.firstChild && menu.firstChild.getAttribute("trellis-locate")) {
 			menu.removeChild(menu.firstChild);
 		}
 		
@@ -4111,10 +4111,10 @@ var ZoteroPane = new function () {
 		if (isTrash) {
 			show.add(m.deleteFromLibrary);
 			show.add(m.restoreToLibrary);
-			if (!ZoteroPane_Local.canDeleteSelectedItems()) {
+			if (!TrellisPane_Local.canDeleteSelectedItems()) {
 				disable.add(m.deleteFromLibrary);
 			}
-			if (!ZoteroPane_Local.canRestoreSelectedItems()) {
+			if (!TrellisPane_Local.canRestoreSelectedItems()) {
 				disable.add(m.restoreToLibrary);
 			}
 		}
@@ -4164,15 +4164,15 @@ var ZoteroPane = new function () {
 						}
 					}
 					
-					if (canIndex && !((await Zotero.Fulltext.canReindex(item)))) {
+					if (canIndex && !((await Trellis.Fulltext.canReindex(item)))) {
 						canIndex = false;
 					}
 					
-					if (canRecognize && !Zotero.RecognizeDocument.canRecognize(item)) {
+					if (canRecognize && !Trellis.RecognizeDocument.canRecognize(item)) {
 						canRecognize = false;
 					}
 					
-					if (canUnrecognize && !Zotero.RecognizeDocument.canUnrecognize(item)) {
+					if (canUnrecognize && !Trellis.RecognizeDocument.canUnrecognize(item)) {
 						canUnrecognize = false;
 					}
 					
@@ -4207,9 +4207,9 @@ var ZoteroPane = new function () {
 				if (canMarkRead) {
 					show.add(m.toggleRead);
 					if (markUnread) {
-						menu.childNodes[m.toggleRead].setAttribute('label', Zotero.getString('pane.item.markAsUnread'));
+						menu.childNodes[m.toggleRead].setAttribute('label', Trellis.getString('pane.item.markAsUnread'));
 					} else {
-						menu.childNodes[m.toggleRead].setAttribute('label', Zotero.getString('pane.item.markAsRead'));
+						menu.childNodes[m.toggleRead].setAttribute('label', Trellis.getString('pane.item.markAsRead'));
 					}
 				}
 				
@@ -4224,18 +4224,18 @@ var ZoteroPane = new function () {
 						show.add(m.createNoteFromAnnotations);
 						let key;
 						// If all from a single item, show "Add Note from Annotations"
-						if (Zotero.Items.getTopLevel(items).length == 1) {
+						if (Trellis.Items.getTopLevel(items).length == 1) {
 							key = 'addNoteFromAnnotations';
-							menuitem.setAttribute('oncommand', 'ZoteroPane.addNoteFromAnnotationsFromSelected()');
+							menuitem.setAttribute('oncommand', 'TrellisPane.addNoteFromAnnotationsFromSelected()');
 						}
 						// Otherwise show "Create Note from Annotations"
 						else {
 							key = 'createNoteFromAnnotations';
-							menuitem.setAttribute('oncommand', 'ZoteroPane.createStandaloneNoteFromAnnotationsFromSelected()');
+							menuitem.setAttribute('oncommand', 'TrellisPane.createStandaloneNoteFromAnnotationsFromSelected()');
 						}
 						menuitem.setAttribute(
 							'label',
-							Zotero.getString('pane.items.menu.' + key)
+							Trellis.getString('pane.items.menu.' + key)
 						);
 						show.add(m.sep3);
 					}
@@ -4298,7 +4298,7 @@ var ZoteroPane = new function () {
 						show.add(m.addAttachments);
 						show.add(m.sep2);
 						
-						let attachmentsWithAnnotations = Zotero.Items.get(item.getAttachments())
+						let attachmentsWithAnnotations = Trellis.Items.get(item.getAttachments())
 							.filter(item => isAttachmentWithExtractableAnnotations(item));
 						if (attachmentsWithAnnotations.length) {
 							show.add(m.createNoteFromAnnotations);
@@ -4315,17 +4315,17 @@ var ZoteroPane = new function () {
 						// Show "Create" on standalone attachments
 						if (item.isAttachment() && item.isTopLevelItem()) {
 							str = 'pane.items.menu.createNoteFromAnnotations';
-							menuitem.setAttribute('oncommand', 'ZoteroPane.createStandaloneNoteFromAnnotationsFromSelected()');
+							menuitem.setAttribute('oncommand', 'TrellisPane.createStandaloneNoteFromAnnotationsFromSelected()');
 						}
 						// And "Add" otherwise
 						else {
 							str = 'pane.items.menu.addNoteFromAnnotations';
-							menuitem.setAttribute('oncommand', 'ZoteroPane.addNoteFromAnnotationsFromSelected()');
+							menuitem.setAttribute('oncommand', 'TrellisPane.addNoteFromAnnotationsFromSelected()');
 						}
-						menuitem.setAttribute('label', Zotero.getString(str));
+						menuitem.setAttribute('label', Trellis.getString(str));
 					}
 					
-					if (Zotero.Attachments.canFindFileForItem(item)) {
+					if (Trellis.Attachments.canFindFileForItem(item)) {
 						show.add(m.findFile);
 						show.add(m.sep3);
 						if (!collectionTreeRows[0].filesEditable) {
@@ -4333,7 +4333,7 @@ var ZoteroPane = new function () {
 						}
 					}
 					
-					if (Zotero.RecognizeDocument.canUnrecognize(item)) {
+					if (Trellis.RecognizeDocument.canUnrecognize(item)) {
 						show.add(m.sep5);
 						show.add(m.unrecognize);
 					}
@@ -4341,7 +4341,7 @@ var ZoteroPane = new function () {
 					if (item.isAttachment()) {
 						var showSep5 = false;
 						
-						if (Zotero.RecognizeDocument.canRecognize(item)) {
+						if (Trellis.RecognizeDocument.canRecognize(item)) {
 							show.add(m.recognizePDF);
 							showSep5 = true;
 						}
@@ -4353,7 +4353,7 @@ var ZoteroPane = new function () {
 						}
 						
 						// If not linked URL, show reindex line
-						if (await Zotero.Fulltext.canReindex(item)) {
+						if (await Trellis.Fulltext.canReindex(item)) {
 							show.add(m.reindexItem);
 							showSep5 = true;
 						}
@@ -4368,23 +4368,23 @@ var ZoteroPane = new function () {
 					else if (item.isFeedItem) {
 						show.add(m.toggleRead);
 						if (item.isRead) {
-							menu.childNodes[m.toggleRead].setAttribute('label', Zotero.getString('pane.item.markAsUnread'));
+							menu.childNodes[m.toggleRead].setAttribute('label', Trellis.getString('pane.item.markAsUnread'));
 						} else {
-							menu.childNodes[m.toggleRead].setAttribute('label', Zotero.getString('pane.item.markAsRead'));
+							menu.childNodes[m.toggleRead].setAttribute('label', Trellis.getString('pane.item.markAsRead'));
 						}
 					}
 					else if (!collectionTreeRows[0].isPublications()) {
 						if (item.itemType == 'book' || item.itemType == 'bookSection') {
 							let toBookMenuItem = menu.childNodes[m.duplicateAndConvert];
-							toBookMenuItem.setAttribute('label', Zotero.getString('pane.items.menu.duplicateAndConvert.'
+							toBookMenuItem.setAttribute('label', Trellis.getString('pane.items.menu.duplicateAndConvert.'
 								+ (item.itemType == 'book' ? 'toBookSection' : 'toBook')));
 							if (item.itemType === 'book') {
-								toBookMenuItem.classList.add('zotero-menuitem-convert-to-book-section');
-								toBookMenuItem.classList.remove('zotero-menuitem-convert-to-book');
+								toBookMenuItem.classList.add('trellis-menuitem-convert-to-book-section');
+								toBookMenuItem.classList.remove('trellis-menuitem-convert-to-book');
 							}
 							else {
-								toBookMenuItem.classList.add('zotero-menuitem-convert-to-book');
-								toBookMenuItem.classList.remove('zotero-menuitem-convert-to-book-section');
+								toBookMenuItem.classList.add('trellis-menuitem-convert-to-book');
+								toBookMenuItem.classList.remove('trellis-menuitem-convert-to-book-section');
 							}
 							show.add(m.duplicateAndConvert);
 						}
@@ -4394,7 +4394,7 @@ var ZoteroPane = new function () {
 				}
 				
 				// Update attachment submenu
-				var popup = document.getElementById('zotero-add-attachment-popup');
+				var popup = document.getElementById('trellis-add-attachment-popup');
 				popup.addEventListener('popupshowing', (event) => {
 					this.updateAddAttachmentMenu(event, popup);
 				});
@@ -4484,20 +4484,20 @@ var ZoteroPane = new function () {
 		// Add to collection
 		if (!collectionTreeRows[0].isFeedsOrFeed()
 			&& collectionTreeRows[0].editable
-			&& Zotero.Items.keepTopLevel(items).every(item => item.isTopLevelItem())
+			&& Trellis.Items.keepTopLevel(items).every(item => item.isTopLevelItem())
 		) {
-			menu.childNodes[m.addToCollection].setAttribute('label', Zotero.getString('pane.items.menu.addToCollection'));
+			menu.childNodes[m.addToCollection].setAttribute('label', Trellis.getString('pane.items.menu.addToCollection'));
 			show.add(m.addToCollection);
 		}
 		
 		// Remove from collection / Recently Read
 		menu.childNodes[m.removeItems].removeAttribute('data-l10n-id');
 		if (collectionTreeRows[0].isCollection() && items.every(item => item.isTopLevelItem())) {
-			menu.childNodes[m.removeItems].setAttribute('label', Zotero.getString('pane.items.menu.remove' + multiple));
+			menu.childNodes[m.removeItems].setAttribute('label', Trellis.getString('pane.items.menu.remove' + multiple));
 			show.add(m.removeItems);
 		}
 		else if (collectionTreeRows[0].isPublications()) {
-			menu.childNodes[m.removeItems].setAttribute('label', Zotero.getString('pane.items.menu.removeFromPublications' + multiple));
+			menu.childNodes[m.removeItems].setAttribute('label', Trellis.getString('pane.items.menu.removeFromPublications' + multiple));
 			show.add(m.removeItems);
 		}
 		else if (collectionTreeRows[0].isRecentlyRead()) {
@@ -4516,13 +4516,13 @@ var ZoteroPane = new function () {
 		
 		// Show in library
 		if (collectionTreeRows[0].isFeeds()) {
-			menu.childNodes[m.showInLibrary].setAttribute('label', Zotero.getString('pane.items.menu.showInFeed'));
+			menu.childNodes[m.showInLibrary].setAttribute('label', Trellis.getString('pane.items.menu.showInFeed'));
 		}
 		else {
-			menu.childNodes[m.showInLibrary].setAttribute('label', Zotero.getString('general.showInLibrary'));
+			menu.childNodes[m.showInLibrary].setAttribute('label', Trellis.getString('general.showInLibrary'));
 		}
 		// For collections and search, only keep restore/delete options
-		if (items.some(item => item instanceof Zotero.Collection || item instanceof Zotero.Search)) {
+		if (items.some(item => item instanceof Trellis.Collection || item instanceof Trellis.Search)) {
 			for (let option of options) {
 				if (!['restoreToLibrary', 'deleteFromLibrary'].includes(option)) {
 					show.delete(m[option]);
@@ -4549,15 +4549,15 @@ var ZoteroPane = new function () {
 		}
 
 		// Set labels, plural if necessary
-		menu.childNodes[m.findFile].setAttribute('label', Zotero.getString('pane.items.menu.findAvailableFile'));
-		menu.childNodes[m.moveToTrash].setAttribute('label', Zotero.getString('pane.items.menu.moveToTrash' + multiple));
-		menu.childNodes[m.deleteFromLibrary].setAttribute('label', Zotero.getString('pane.items.menu.delete'));
-		menu.childNodes[m.exportItems].setAttribute('label', Zotero.getString(`pane.items.menu.export${noteExport ? 'Note' : ''}` + multiple));
-		menu.childNodes[m.createBib].setAttribute('label', Zotero.getString('pane.items.menu.createBib' + multiple));
-		menu.childNodes[m.loadReport].setAttribute('label', Zotero.getString('pane.items.menu.generateReport' + multiple));
-		menu.childNodes[m.createParent].setAttribute('label', Zotero.getString('pane.items.menu.createParent' + multiple));
-		menu.childNodes[m.recognizePDF].setAttribute('label', Zotero.getString('pane.items.menu.recognizeDocument'));
-		menu.childNodes[m.reindexItem].setAttribute('label', Zotero.getString('pane.items.menu.reindexItem' + multiple));
+		menu.childNodes[m.findFile].setAttribute('label', Trellis.getString('pane.items.menu.findAvailableFile'));
+		menu.childNodes[m.moveToTrash].setAttribute('label', Trellis.getString('pane.items.menu.moveToTrash' + multiple));
+		menu.childNodes[m.deleteFromLibrary].setAttribute('label', Trellis.getString('pane.items.menu.delete'));
+		menu.childNodes[m.exportItems].setAttribute('label', Trellis.getString(`pane.items.menu.export${noteExport ? 'Note' : ''}` + multiple));
+		menu.childNodes[m.createBib].setAttribute('label', Trellis.getString('pane.items.menu.createBib' + multiple));
+		menu.childNodes[m.loadReport].setAttribute('label', Trellis.getString('pane.items.menu.generateReport' + multiple));
+		menu.childNodes[m.createParent].setAttribute('label', Trellis.getString('pane.items.menu.createParent' + multiple));
+		menu.childNodes[m.recognizePDF].setAttribute('label', Trellis.getString('pane.items.menu.recognizeDocument'));
+		menu.childNodes[m.reindexItem].setAttribute('label', Trellis.getString('pane.items.menu.reindexItem' + multiple));
 		
 		// Hide and enable all actions by default (so if they're shown they're enabled)
 		for (let i in m) {
@@ -4578,9 +4578,9 @@ var ZoteroPane = new function () {
 		if (annotationsSelected) return;
 
 		// add locate menu options
-		await Zotero_LocateMenu.buildContextMenu(menu, true);
+		await Trellis_LocateMenu.buildContextMenu(menu, true);
 
-		Zotero.MenuManager.updateMenuPopup(
+		Trellis.MenuManager.updateMenuPopup(
 			menu,
 			"main/library/item",
 			{
@@ -4592,7 +4592,7 @@ var ZoteroPane = new function () {
 					items,
 					tabType: "library",
 					tabSubType: undefined,
-					tabID: "zotero-pane",
+					tabID: "trellis-pane",
 				})
 			}
 		);
@@ -4609,7 +4609,7 @@ var ZoteroPane = new function () {
 		let selected = this.getSelectedCollections();
 
 		// Add current library at the top to be able to move collections into it
-		let library = Zotero.Libraries.get(ZoteroPane.getSelectedLibraryID());
+		let library = Trellis.Libraries.get(TrellisPane.getSelectedLibraryID());
 		let libraryMenuItem = document.createXULElement("menuitem");
 		libraryMenuItem.setAttribute("label", library.name);
 		libraryMenuItem.setAttribute("image", library.treeViewImage);
@@ -4627,9 +4627,9 @@ var ZoteroPane = new function () {
 		popup.appendChild(document.createXULElement("menuseparator"));
 		
 		// Build menus for each top-level collection of this library
-		let collections = Zotero.Collections.getByLibrary(this.getSelectedLibraryID());
+		let collections = Trellis.Collections.getByLibrary(this.getSelectedLibraryID());
 		for (let col of collections) {
-			let menuItem = Zotero.Utilities.Internal.createMenuForTarget(
+			let menuItem = Trellis.Utilities.Internal.createMenuForTarget(
 				col,
 				popup,
 				null,
@@ -4656,12 +4656,12 @@ var ZoteroPane = new function () {
 
 	this.buildCopyCollectionMenu = function (event) {
 		if (event.target !== event.currentTarget) return;
-		let popup = document.getElementById("zotero-copy-collection-popup");
+		let popup = document.getElementById("trellis-copy-collection-popup");
 		popup.replaceChildren();
 		let selected = this.getSelectedCollection();
 
 		// Fetch all libraries
-		let topLevelEntries = Zotero.Libraries.getAll().filter(lib => !(lib instanceof Zotero.Feed));
+		let topLevelEntries = Trellis.Libraries.getAll().filter(lib => !(lib instanceof Trellis.Feed));
 
 		// Check which libraries have collections linked to the selected collection
 		// and disable their menuitems. Same logic as in CollectionTree.canDropCheckAsync.
@@ -4674,7 +4674,7 @@ var ZoteroPane = new function () {
 				linkedCollectionsExist[library.libraryID] = linkedCollection;
 				// Also check which library has collections linked to a subcollection of the selected collection
 				for (let descendent of selected.getDescendents(false, 'collection')) {
-					let subcollection = Zotero.Collections.get(descendent.id);
+					let subcollection = Trellis.Collections.get(descendent.id);
 					let linkedSubcollection = await subcollection.getLinkedCollection(library.libraryID, true);
 					if (linkedSubcollection) {
 						linkedCollectionsExist[library.libraryID] = linkedSubcollection;
@@ -4709,12 +4709,12 @@ var ZoteroPane = new function () {
 			popup.appendChild(document.createXULElement("menuseparator"));
 
 			// Top-level collections used to construct the menus
-			topLevelEntries = Zotero.Collections.getByLibrary(topLevelEntries[0].id);
+			topLevelEntries = Trellis.Collections.getByLibrary(topLevelEntries[0].id);
 		}
 		
 		// Build menus for all libraries (or collections)
 		for (let obj of topLevelEntries) {
-			let menuItem = Zotero.Utilities.Internal.createMenuForTarget(
+			let menuItem = Trellis.Utilities.Internal.createMenuForTarget(
 				obj,
 				popup,
 				null,
@@ -4728,7 +4728,7 @@ var ZoteroPane = new function () {
 				(target) => {
 					// can't copy collection into itself or into non-editable groups
 					return selected == target
-						|| (target instanceof Zotero.Group && !target.editable);
+						|| (target instanceof Trellis.Group && !target.editable);
 				}
 			);
 			popup.append(menuItem);
@@ -4739,12 +4739,12 @@ var ZoteroPane = new function () {
 		if (event.target !== event.currentTarget) return;
 		let popup = event.target;
 
-		items = Zotero.Items.keepTopLevel(items);
+		items = Trellis.Items.keepTopLevel(items);
 		
 		let newCollectionMenuitem = document.createXULElement('menuitem');
 		document.l10n.setAttributes(newCollectionMenuitem, 'menu-new-collection');
 		newCollectionMenuitem.classList.add('menuitem-iconic');
-		newCollectionMenuitem.classList.add('zotero-menuitem-new-collection');
+		newCollectionMenuitem.classList.add('trellis-menuitem-new-collection');
 		newCollectionMenuitem.addEventListener('command', () => this.addItemsToCollection(items, null, true));
 		let separator = document.createXULElement('menuseparator');
 		popup.replaceChildren(newCollectionMenuitem, separator);
@@ -4759,9 +4759,9 @@ var ZoteroPane = new function () {
 			throw new Error('All items must be the same library');
 		}
 		
-		let collections = Zotero.Collections.getByLibrary(libraryID);
+		let collections = Trellis.Collections.getByLibrary(libraryID);
 		for (let col of collections) {
-			let menuItem = Zotero.Utilities.Internal.createMenuForTarget(
+			let menuItem = Trellis.Utilities.Internal.createMenuForTarget(
 				col,
 				popup,
 				null,
@@ -4781,7 +4781,7 @@ var ZoteroPane = new function () {
 
 
 	this.addItemsToCollection = async function (items, collection, createNew = false) {
-		items = Zotero.Items.keepTopLevel(items);
+		items = Trellis.Items.keepTopLevel(items);
 
 		if (createNew) {
 			if (collection) {
@@ -4793,12 +4793,12 @@ var ZoteroPane = new function () {
 			if (!id) {
 				return;
 			}
-			collection = Zotero.Collections.get(id);
+			collection = Trellis.Collections.get(id);
 		}
 
 		let ids = items.map(item => item.id);
-		await Zotero.DB.executeTransaction(async () => {
-			Zotero.UndoHistory.stageAction(
+		await Trellis.DB.executeTransaction(async () => {
+			Trellis.UndoHistory.stageAction(
 				'undo-action-add-to-collection',
 				{ count: ids.length }
 			);
@@ -4813,21 +4813,21 @@ var ZoteroPane = new function () {
 
 	
 	this.onItemTreeActivate = function (event, items) {
-		var viewOnDoubleClick = Zotero.Prefs.get('viewOnDoubleClick');
+		var viewOnDoubleClick = Trellis.Prefs.get('viewOnDoubleClick');
 		// Mouse event
 		if (event.button && items.length == 1 && viewOnDoubleClick) {
-			ZoteroPane.viewItems([items[0]], event);
+			TrellisPane.viewItems([items[0]], event);
 		}
 		// Keyboard event
 		else if (items.length < 20) {
-			ZoteroPane_Local.viewItems(items, event);
+			TrellisPane_Local.viewItems(items, event);
 		}
 	};
 	
 	
 	function attachmentsWithExtractableAnnotations(item) {
 		if (!item.isRegularItem()) return [];
-		return Zotero.Items.get(item.getAttachments())
+		return Trellis.Items.get(item.getAttachments())
 			.filter(item => isAttachmentWithExtractableAnnotations(item));
 	}
 	
@@ -4842,9 +4842,9 @@ var ZoteroPane = new function () {
 	
 	
 	this.openPreferences = function (paneID) {
-		Zotero.warn("ZoteroPane.openPreferences() is deprecated"
-			+ " -- use Zotero.Utilities.Internal.openPreferences() instead");
-		Zotero.Utilities.Internal.openPreferences(paneID);
+		Trellis.warn("TrellisPane.openPreferences() is deprecated"
+			+ " -- use Trellis.Utilities.Internal.openPreferences() instead");
+		Trellis.Utilities.Internal.openPreferences(paneID);
 	}
 	
 	
@@ -4866,14 +4866,14 @@ var ZoteroPane = new function () {
 			}
 			
 			if (uri.match(/^(chrome|resource):/)) {
-				Zotero.openInViewer(uri);
+				Trellis.openInViewer(uri);
 				continue;
 			}
 			
-			// Handle no-content zotero: URLs (e.g., zotero://select) without opening viewer
-			if (uri.startsWith('zotero:')) {
+			// Handle no-content trellis: URLs (e.g., trellis://select) without opening viewer
+			if (uri.startsWith('trellis:')) {
 				let nsIURI = Services.io.newURI(uri, null, null);
-				let handler = Services.io.getProtocolHandler("zotero").wrappedJSObject;
+				let handler = Services.io.getProtocolHandler("trellis").wrappedJSObject;
 				let extension = handler.getExtension(nsIURI);
 				if (extension.noContent) {
 					extension.doAction(nsIURI);
@@ -4882,10 +4882,10 @@ var ZoteroPane = new function () {
 			}
 			
 			try {
-				Zotero.launchURL(uri);
+				Trellis.launchURL(uri);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	}
@@ -4895,7 +4895,7 @@ var ZoteroPane = new function () {
 	// but it is not as robust as XUL. Unfortunately we cannot use the original XUL
 	// version since it causes terrible layout issues when mixing XUL and HTML
 	// Keeping this function here since setting this message is technically
-	// the responsibility of the ZoteroPane and should be independent upon itemsView,
+	// the responsibility of the TrellisPane and should be independent upon itemsView,
 	// which hopefully we will fix once electronero arrives
 	function setItemsPaneMessage(content, lock) {
 		if (this._itemsPaneMessageLocked) {
@@ -4955,10 +4955,10 @@ var ZoteroPane = new function () {
 		if (text) {
 			text = '<blockquote'
 					+ (citeURI ? ' cite="' + citeURI + '"' : '')
-					+ '>' + Zotero.Utilities.text2html(text) + "</blockquote>";
+					+ '>' + Trellis.Utilities.text2html(text) + "</blockquote>";
 		}
 		
-		var item = new Zotero.Item('note');
+		var item = new Trellis.Item('note');
 		item.libraryID = this.getSelectedLibraryID();
 		item.setNote(text);
 		if (parentKey) {
@@ -4971,13 +4971,13 @@ var ZoteroPane = new function () {
 		}
 		var itemID = await item.saveTx({
 			notifierData: {
-				autoSyncDelay: Zotero.Notes.AUTO_SYNC_DELAY
+				autoSyncDelay: Trellis.Notes.AUTO_SYNC_DELAY
 			}
 		});
 		
 		await this.selectItem(itemID);
 		
-		document.getElementById('zotero-note-editor').focus();
+		document.getElementById('trellis-note-editor').focus();
 		
 		return itemID;
 	};
@@ -5017,7 +5017,7 @@ var ZoteroPane = new function () {
 		}
 		
 		text = '<blockquote' + (uri ? ' cite="' + uri + '"' : '') + '>'
-			+ Zotero.Utilities.text2html(text) + "</blockquote>";
+			+ Trellis.Utilities.text2html(text) + "</blockquote>";
 		
 		var items = this.getSelectedItems();
 		
@@ -5027,7 +5027,7 @@ var ZoteroPane = new function () {
 			items[0].setNote(note + text);
 			await items[0].saveTx();
 			
-			var noteElem = document.getElementById('zotero-note-editor')
+			var noteElem = document.getElementById('trellis-note-editor')
 			noteElem.focus();
 			return true;
 		}
@@ -5045,10 +5045,10 @@ var ZoteroPane = new function () {
 			openInWindow,
 		} = options;
 		if (openInWindow === undefined) {
-			openInWindow = Zotero.Prefs.get('openNoteInNewWindow');
+			openInWindow = Trellis.Prefs.get('openNoteInNewWindow');
 		}
 
-		return Zotero.Notes.open(itemID, undefined, {
+		return Trellis.Notes.open(itemID, undefined, {
 			openInWindow,
 		});
 	};
@@ -5062,9 +5062,9 @@ var ZoteroPane = new function () {
 	};
 	
 	this.findNoteWindow = function (itemID) {
-		var name = 'zotero-note-' + itemID;
+		var name = 'trellis-note-' + itemID;
 		var wm = Services.wm;
-		var e = wm.getEnumerator('zotero:note');
+		var e = wm.getEnumerator('trellis:note');
 		while (e.hasMoreElements()) {
 			var w = e.getNext();
 			if (w.name == name) {
@@ -5081,10 +5081,10 @@ var ZoteroPane = new function () {
 		}
 		
 		var io = {};
-		window.openDialog('chrome://zotero/content/attachLink.xhtml',
-			'zotero-attach-uri-dialog', 'centerscreen, modal', io);
+		window.openDialog('chrome://trellis/content/attachLink.xhtml',
+			'trellis-attach-uri-dialog', 'centerscreen, modal', io);
 		if (!io.out) return;
-		let item = await Zotero.Attachments.linkFromURL({
+		let item = await Trellis.Attachments.linkFromURL({
 			url: io.out.link,
 			parentItemID: itemID,
 			title: io.out.title
@@ -5096,11 +5096,11 @@ var ZoteroPane = new function () {
 	 * @param {Boolean} [link]
 	 * @param {Number} [parentItemID]
 	 * @param {String[]} [files] Used instead of showing a file picker - for tests
-	 * @returns {Promise<Zotero.Item[] | null>}
+	 * @returns {Promise<Trellis.Item[] | null>}
 	 */
 	this.addAttachmentFromDialog = async function (link, parentItemID, files = null) {
 		var libraryID;
-		if (Zotero_Tabs.selectedType === 'library') {
+		if (Trellis_Tabs.selectedType === 'library') {
 			// Shouldn't be reachable with multiple libraries selected (toolbar is disabled),
 			// but just in case
 			let rows = this.getCollectionTreeRows();
@@ -5109,17 +5109,17 @@ var ZoteroPane = new function () {
 			}
 			let collectionTreeRow = rows[0];
 			if (link && collectionTreeRow.isPublications()) {
-				Zotero.alert(
+				Trellis.alert(
 					null,
-					Zotero.getString('general.error'),
-					Zotero.getString('publications.error.linkedFilesCannotBeAdded')
+					Trellis.getString('general.error'),
+					Trellis.getString('publications.error.linkedFilesCannotBeAdded')
 				);
 				return null;
 			}
 			libraryID = collectionTreeRow.ref.libraryID;
 		}
 		else {
-			libraryID = Zotero.Items.get(parentItemID).libraryID;
+			libraryID = Trellis.Items.get(parentItemID).libraryID;
 		}
 		
 		if (!this.canEdit()) {
@@ -5131,14 +5131,14 @@ var ZoteroPane = new function () {
 			this.displayCannotEditLibraryFilesMessage();
 			return null;
 		}
-		if (link && Zotero.Libraries.get(libraryID).isGroup) {
-			Zotero.alert(null, "", "Linked files cannot be added to group libraries.");
+		if (link && Trellis.Libraries.get(libraryID).isGroup) {
+			Trellis.alert(null, "", "Linked files cannot be added to group libraries.");
 			return null;
 		}
 		
 		if (!files) {
 			var fp = new FilePicker();
-			fp.init(window, Zotero.getString('pane.item.attachments.select'), fp.modeOpenMultiple);
+			fp.init(window, Trellis.getString('pane.item.attachments.select'), fp.modeOpenMultiple);
 			fp.appendFilters(fp.filterAll);
 
 			if ((await fp.show()) != fp.returnOK) {
@@ -5148,7 +5148,7 @@ var ZoteroPane = new function () {
 			files = fp.files;
 		}
 		var addedItems = [];
-		var notifierQueue = new Zotero.Notifier.Queue();
+		var notifierQueue = new Trellis.Notifier.Queue();
 		var collections;
 		var fileBaseName;
 
@@ -5157,10 +5157,10 @@ var ZoteroPane = new function () {
 				// If only one item is being added, automatic renaming is enabled, and the parent item
 				// doesn't have any other non-HTML file attachments, rename the file.
 				// This should be kept in sync with itemTreeView::drop().
-				if (files.length == 1 && Zotero.Attachments.shouldAutoRenameFile(link, libraryID)) {
-					let parentItem = Zotero.Items.get(parentItemID);
+				if (files.length == 1 && Trellis.Attachments.shouldAutoRenameFile(link, libraryID)) {
+					let parentItem = Trellis.Items.get(parentItemID);
 					if (!parentItem.numNonHTMLFileAttachments()) {
-						fileBaseName = await Zotero.Attachments.getRenamedFileBaseNameIfAllowedType(
+						fileBaseName = await Trellis.Attachments.getRenamedFileBaseNameIfAllowedType(
 							parentItem, files[0]
 						);
 					}
@@ -5182,8 +5182,8 @@ var ZoteroPane = new function () {
 					// Rename linked file, with unique suffix if necessary
 					try {
 						if (fileBaseName) {
-							let ext = Zotero.File.getExtension(file);
-							let newName = await Zotero.File.rename(
+							let ext = Trellis.File.getExtension(file);
+							let newName = await Trellis.File.rename(
 								file,
 								fileBaseName + (ext ? '.' + ext : ''),
 								{
@@ -5195,10 +5195,10 @@ var ZoteroPane = new function () {
 						}
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 
-					item = await Zotero.Attachments.linkFromFile({
+					item = await Trellis.Attachments.linkFromFile({
 						file,
 						title: delaySetAutoAttachmentTitle ? '' : undefined,
 						parentItemID,
@@ -5211,11 +5211,11 @@ var ZoteroPane = new function () {
 				else {
 					if (file.endsWith(".lnk")) {
 						let win = Services.wm.getMostRecentWindow("navigator:browser");
-						win.ZoteroPane.displayCannotAddShortcutMessage(file);
+						win.TrellisPane.displayCannotAddShortcutMessage(file);
 						continue;
 					}
 
-					item = await Zotero.Attachments.importFromFile({
+					item = await Trellis.Attachments.importFromFile({
 						file,
 						libraryID,
 						fileBaseName,
@@ -5239,7 +5239,7 @@ var ZoteroPane = new function () {
 			}
 		}
 		finally {
-			await Zotero.Notifier.commit(notifierQueue);
+			await Trellis.Notifier.commit(notifierQueue);
 		}
 		
 		// Select added child attachments
@@ -5248,7 +5248,7 @@ var ZoteroPane = new function () {
 		}
 		// Automatically retrieve metadata for top-level PDFs
 		if (!parentItemID) {
-			Zotero.RecognizeDocument.autoRecognizeItems(addedItems);
+			Trellis.RecognizeDocument.autoRecognizeItems(addedItems);
 		}
 		
 		return addedItems;
@@ -5260,7 +5260,7 @@ var ZoteroPane = new function () {
 			this.displayCannotEditLibraryMessage();
 			return;
 		}
-		await Zotero.Attachments.addAvailableFiles(this.getSelectedItems());
+		await Trellis.Attachments.addAvailableFiles(this.getSelectedItems());
 	};
 	
 	
@@ -5268,9 +5268,9 @@ var ZoteroPane = new function () {
 	 * Shows progress dialog for a webpage/snapshot save request
 	 */
 	function _showPageSaveStatus(title) {
-		var progressWin = new Zotero.ProgressWindow();
-		progressWin.changeHeadline(Zotero.getString('ingester.scraping'));
-		var icon = 'chrome://zotero/skin/treeitem-webpage.png';
+		var progressWin = new Trellis.ProgressWindow();
+		progressWin.changeHeadline(Trellis.getString('ingester.scraping'));
+		var icon = 'chrome://trellis/skin/treeitem-webpage.png';
 		progressWin.addLines(title, icon)
 		progressWin.show();
 		progressWin.startCloseTimer();
@@ -5281,13 +5281,13 @@ var ZoteroPane = new function () {
 	 * @param	{String|Integer}	[itemType='webpage']	Item type id or name
 	 * @param	{Boolean}			[saveSnapshot]			Force saving or non-saving of a snapshot,
 	 *														regardless of automaticSnapshots pref
-	 * @return {Promise<Zotero.Item>|false}
+	 * @return {Promise<Trellis.Item>|false}
 	 */
 	this.addItemFromDocument = async function (doc, itemType, saveSnapshot, row) {
 		_showPageSaveStatus(doc.title);
 		
 		// Save snapshot if explicitly enabled or automatically pref is set and not explicitly disabled
-		saveSnapshot = saveSnapshot || (saveSnapshot !== false && Zotero.Prefs.get('automaticSnapshots'));
+		saveSnapshot = saveSnapshot || (saveSnapshot !== false && Trellis.Prefs.get('automaticSnapshots'));
 		
 		// Save web page item by default
 		if (!itemType) {
@@ -5298,21 +5298,21 @@ var ZoteroPane = new function () {
 			url: doc.location.href,
 			accessDate: "CURRENT_TIMESTAMP"
 		}
-		itemType = Zotero.ItemTypes.getID(itemType);
+		itemType = Trellis.ItemTypes.getID(itemType);
 		var item = await this.newItem(itemType, data, row);
-		var filesEditable = Zotero.Libraries.get(item.libraryID).filesEditable;
+		var filesEditable = Trellis.Libraries.get(item.libraryID).filesEditable;
 		
 		if (saveSnapshot) {
 			var link = false;
 			
 			if (link) {
-				await Zotero.Attachments.linkFromDocument({
+				await Trellis.Attachments.linkFromDocument({
 					document: doc,
 					parentItemID: item.id
 				});
 			}
 			else if (filesEditable) {
-				await Zotero.Attachments.importFromDocument({
+				await Trellis.Attachments.importFromDocument({
 					document: doc,
 					parentItemID: item.id
 				});
@@ -5324,27 +5324,27 @@ var ZoteroPane = new function () {
 	
 	
 	/**
-	 * @return {Zotero.Item|false} - The saved item, or false if item can't be saved
+	 * @return {Trellis.Item|false} - The saved item, or false if item can't be saved
 	 */
 	this.addItemFromURL = async function (url, itemType, saveSnapshot, row) {
-		url = Zotero.Utilities.Internal.resolveIntermediateURL(url);
+		url = Trellis.Utilities.Internal.resolveIntermediateURL(url);
 		
-		let [mimeType, hasNativeHandler] = await Zotero.MIME.getMIMETypeFromURL(url);
+		let [mimeType, hasNativeHandler] = await Trellis.MIME.getMIMETypeFromURL(url);
 		
 		// If native type, save using a hidden browser
 		if (hasNativeHandler) {
-			var deferred = Zotero.Promise.defer();
+			var deferred = Trellis.Promise.defer();
 			
 			var processor = function (doc) {
-				return ZoteroPane_Local.addItemFromDocument(doc, itemType, saveSnapshot, row)
+				return TrellisPane_Local.addItemFromDocument(doc, itemType, saveSnapshot, row)
 				.then(function (item) {
 					deferred.resolve(item)
 				});
 			};
 			try {
-				await Zotero.HTTP.processDocuments([url], processor);
+				await Trellis.HTTP.processDocuments([url], processor);
 			} catch (e) {
-				Zotero.debug(e, 1);
+				Trellis.debug(e, 1);
 				deferred.reject(e);
 			}
 			
@@ -5356,18 +5356,18 @@ var ZoteroPane = new function () {
 				itemType = 'webpage';
 			}
 			
-			var item = await ZoteroPane_Local.newItem(itemType, {}, row)
-			var filesEditable = Zotero.Libraries.get(item.libraryID).filesEditable;
+			var item = await TrellisPane_Local.newItem(itemType, {}, row)
+			var filesEditable = Trellis.Libraries.get(item.libraryID).filesEditable;
 			
 			// Save snapshot if explicitly enabled or automatically pref is set and not explicitly disabled
-			if (saveSnapshot || (saveSnapshot !== false && Zotero.Prefs.get('automaticSnapshots'))) {
+			if (saveSnapshot || (saveSnapshot !== false && Trellis.Prefs.get('automaticSnapshots'))) {
 				var link = false;
 				
 				if (link) {
-					//Zotero.Attachments.linkFromURL(doc, item.id);
+					//Trellis.Attachments.linkFromURL(doc, item.id);
 				}
 				else if (filesEditable) {
-					var attachmentItem = await Zotero.Attachments.importFromURL({
+					var attachmentItem = await Trellis.Attachments.importFromURL({
 						url,
 						parentItemID: item.id,
 						contentType: mimeType
@@ -5404,7 +5404,7 @@ var ZoteroPane = new function () {
 					var doi = item.getField('DOI');
 					if (doi) {
 						// Pull out DOI, in case there's a prefix
-						doi = Zotero.Utilities.cleanDOI(doi);
+						doi = Trellis.Utilities.cleanDOI(doi);
 						if (doi) {
 							uri = "https://doi.org/" + encodeURIComponent(doi);
 						}
@@ -5415,7 +5415,7 @@ var ZoteroPane = new function () {
 				if (!uri) {
 					let attachmentID = item.getAttachments()[0];
 					if (attachmentID) {
-						let attachment = await Zotero.Items.getAsync(attachmentID);
+						let attachment = await Trellis.Items.getAsync(attachmentID);
 						if (attachment) uri = attachment.getField('url');
 					}
 				}
@@ -5429,7 +5429,7 @@ var ZoteroPane = new function () {
 					continue;
 				}
 				let openInWindow = event?.shiftKey || options.forceAlternateWindowBehavior;
-				ZoteroPane.openNote(item.id, { openInWindow });
+				TrellisPane.openNote(item.id, { openInWindow });
 			}
 			else if (item.isAttachment()) {
 				await this.viewAttachment(item.id, event, noLocateOnMissing, options);
@@ -5444,7 +5444,7 @@ var ZoteroPane = new function () {
 	};
 	
 	
-	this.viewAttachment = Zotero.serial(async function (itemIDs, event, noLocateOnMissing, extraData) {
+	this.viewAttachment = Trellis.serial(async function (itemIDs, event, noLocateOnMissing, extraData) {
 		// If view isn't editable, don't show Locate button, since the updated
 		// path couldn't be sent back up
 		if (!this.collectionsView.editable) {
@@ -5458,7 +5458,7 @@ var ZoteroPane = new function () {
 			// Fix blank/incorrect EPUB and PDF content types
 			let sniffType = async () => {
 				let path = await item.getFilePathAsync();
-				return Zotero.MIME.sniffForMIMEType(await Zotero.File.getSample(path));
+				return Trellis.MIME.sniffForMIMEType(await Trellis.File.getSample(path));
 			};
 			if (!contentType || contentType === 'application/octet-stream') {
 				let sniffedType = await sniffType();
@@ -5474,12 +5474,12 @@ var ZoteroPane = new function () {
 				await item.saveTx();
 			}
 
-			let openInWindow = Zotero.Prefs.get('openReaderInNewWindow');
+			let openInWindow = Trellis.Prefs.get('openReaderInNewWindow');
 			let useAlternateWindowBehavior = event?.shiftKey || extraData?.forceAlternateWindowBehavior;
 			if (useAlternateWindowBehavior) {
 				openInWindow = !openInWindow;
 			}
-			await Zotero.FileHandlers.open(item, {
+			await Trellis.FileHandlers.open(item, {
 				location: extraData?.location,
 				openInWindow,
 			});
@@ -5487,14 +5487,14 @@ var ZoteroPane = new function () {
 		
 		for (let i = 0; i < itemIDs.length; i++) {
 			let itemID = itemIDs[i];
-			let item = await Zotero.Items.getAsync(itemID);
+			let item = await Trellis.Items.getAsync(itemID);
 			if (!item.isAttachment()) {
 				throw new Error("Item " + itemID + " is not an attachment");
 			}
 			
-			Zotero.debug("Viewing attachment " + item.libraryKey);
+			Trellis.debug("Viewing attachment " + item.libraryKey);
 			
-			if (item.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+			if (item.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 				this.loadURI(item.getField('url'), event);
 				continue;
 			}
@@ -5502,7 +5502,7 @@ var ZoteroPane = new function () {
 			let isLinkedFile = !item.isStoredFileAttachment();
 			let path = item.getFilePath();
 			if (!path) {
-				ZoteroPane_Local.showAttachmentNotFoundDialog(
+				TrellisPane_Local.showAttachmentNotFoundDialog(
 					item,
 					path,
 					{
@@ -5520,7 +5520,7 @@ var ZoteroPane = new function () {
 				pathIsValid = true;
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				fileExists = false;
 				pathIsValid = false;
 			}
@@ -5531,11 +5531,11 @@ var ZoteroPane = new function () {
 			// for the original file to exist and then continue with regular file opening below.
 			//
 			// To trigger eviction for testing, use Cirrus from https://eclecticlight.co/downloads/
-			if (!fileExists && pathIsValid && Zotero.isMac && isLinkedFile) {
+			if (!fileExists && pathIsValid && Trellis.isMac && isLinkedFile) {
 				// Get the path to the .icloud file
-				let iCloudPath = Zotero.File.getEvictedICloudPath(path);
+				let iCloudPath = Trellis.File.getEvictedICloudPath(path);
 				if (await IOUtils.exists(iCloudPath)) {
-					Zotero.debug("Triggering download of iCloud file");
+					Trellis.debug("Triggering download of iCloud file");
 					await launchFile(iCloudPath, item);
 					let time = new Date();
 					let maxTime = 5000;
@@ -5543,30 +5543,30 @@ var ZoteroPane = new function () {
 					while (true) {
 						// If too much time has elapsed, just reveal the file in Finder instead
 						if (new Date() - time > maxTime) {
-							Zotero.debug(`File not available after ${maxTime} -- revealing instead`);
+							Trellis.debug(`File not available after ${maxTime} -- revealing instead`);
 							try {
-								Zotero.File.reveal(iCloudPath);
+								Trellis.File.reveal(iCloudPath);
 								revealed = true;
 							}
 							catch (e) {
-								Zotero.logError(e);
+								Trellis.logError(e);
 								// In case the main file became available
 								try {
-									Zotero.File.reveal(path);
+									Trellis.File.reveal(path);
 									revealed = true;
 								}
 								catch (e) {
-									Zotero.logError(e);
+									Trellis.logError(e);
 								}
 							}
 							break;
 						}
 						
 						// Wait a bit for the download and check again
-						await Zotero.Promise.delay(250);
-						Zotero.debug("Checking for downloaded file");
+						await Trellis.Promise.delay(250);
+						Trellis.debug("Checking for downloaded file");
 						if (await IOUtils.exists(path)) {
-							Zotero.debug("File is ready");
+							Trellis.debug("File is ready");
 							fileExists = true;
 							break;
 						}
@@ -5578,7 +5578,7 @@ var ZoteroPane = new function () {
 				}
 			}
 			
-			let fileSyncingEnabled = Zotero.Sync.Storage.Local.getEnabledForLibrary(item.libraryID);
+			let fileSyncingEnabled = Trellis.Sync.Storage.Local.getEnabledForLibrary(item.libraryID);
 			let redownload = false;
 			
 			// TEMP: If file is queued for download, download first. Starting in 5.0.85, files
@@ -5589,16 +5589,16 @@ var ZoteroPane = new function () {
 					&& !isLinkedFile
 					&& fileSyncingEnabled
 					&& ([
-							Zotero.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD,
-							Zotero.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD
+							Trellis.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD,
+							Trellis.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD
 					].includes(item.attachmentSyncState))) {
-				Zotero.debug("File exists but is queued for download -- re-downloading");
+				Trellis.debug("File exists but is queued for download -- re-downloading");
 				redownload = true;
 			}
 			
 			if (fileExists && !redownload) {
-				Zotero.debug("Opening " + path);
-				Zotero.Notifier.trigger('open', 'file', item.id);
+				Trellis.debug("Opening " + path);
+				Trellis.Notifier.trigger('open', 'file', item.id);
 				await launchFile(path, item);
 				continue;
 			}
@@ -5617,20 +5617,20 @@ var ZoteroPane = new function () {
 			}
 			
 			try {
-				let results = await Zotero.Sync.Runner.downloadFile(item);
+				let results = await Trellis.Sync.Runner.downloadFile(item);
 				if (!results || !results.localChanges) {
-					Zotero.debug("Download failed -- opening existing file");
+					Trellis.debug("Download failed -- opening existing file");
 				}
 			}
 			catch (e) {
 				// TODO: show error somewhere else
-				Zotero.logError(e);
-				Zotero.Sync.Runner.alert(e);
+				Trellis.logError(e);
+				Trellis.Sync.Runner.alert(e);
 				return;
 			}
 			
 			if (!(await item.getFilePathAsync())) {
-				ZoteroPane_Local.showAttachmentNotFoundDialog(
+				TrellisPane_Local.showAttachmentNotFoundDialog(
 					item,
 					path,
 					{
@@ -5641,10 +5641,10 @@ var ZoteroPane = new function () {
 				return;
 			}
 			
-			Zotero.Notifier.trigger('redraw', 'item', []);
+			Trellis.Notifier.trigger('redraw', 'item', []);
 			
-			Zotero.debug("Opening " + path);
-			Zotero.Notifier.trigger('open', 'file', item.id);
+			Trellis.debug("Opening " + path);
+			Trellis.Notifier.trigger('open', 'file', item.id);
 			await launchFile(path, item);
 		}
 	});
@@ -5667,7 +5667,7 @@ var ZoteroPane = new function () {
 		let libraryID = this.getSelectedLibraryID();
 		let shouldConvertToStandaloneAttachment = false;
 		let extraButtons = [];
-		// Keep in sync with Zotero.RecognizeDocument.canRecognize()
+		// Keep in sync with Trellis.RecognizeDocument.canRecognize()
 		let canBeMovedOutOfParent = !selectedItems.some(item => item.isWebAttachment() && !item.isPDFAttachment() && !item.isEPUBAttachment());
 		// Add a button to the dialog to make items standalone, if applicable
 		if (canBeMovedOutOfParent) {
@@ -5702,19 +5702,19 @@ var ZoteroPane = new function () {
 			extraButtons: extraButtons
 		};
 		// The new parent needs to be selected in the dialog
-		window.openDialog('chrome://zotero/content/selectItemsDialog.xhtml', '',
+		window.openDialog('chrome://trellis/content/selectItemsDialog.xhtml', '',
 			'chrome,dialog=no,modal,centerscreen,resizable=yes', io);
 
 		// If "Convert to Standalone Attachment" is selected, make all attachments top-level items
 		if (shouldConvertToStandaloneAttachment) {
-			await Zotero.DB.executeTransaction(async () => {
-				Zotero.UndoHistory.stageAction(
+			await Trellis.DB.executeTransaction(async () => {
+				Trellis.UndoHistory.stageAction(
 					'undo-action-convert-to-standalone',
 					{ count: selectedItems.length }
 				);
 
 				for (let item of selectedItems) {
-					let parent = Zotero.Items.get(item.parentID);
+					let parent = Trellis.Items.get(item.parentID);
 					if (parent) {
 						// Place attachment into the same collections as the old parent item
 						for (let collectionID of parent.getCollections()) {
@@ -5730,12 +5730,12 @@ var ZoteroPane = new function () {
 		}
 		if (!io.dataOut?.length) return;
 
-		let newParentItem = Zotero.Items.get(io.dataOut);
+		let newParentItem = Trellis.Items.get(io.dataOut);
 		
 		if (!newParentItem.length) return;
 
-		await Zotero.DB.executeTransaction(async () => {
-			Zotero.UndoHistory.stageAction(
+		await Trellis.DB.executeTransaction(async () => {
+			Trellis.UndoHistory.stageAction(
 				'undo-action-change-parent-item',
 				{ count: selectedItems.length }
 			);
@@ -5750,8 +5750,8 @@ var ZoteroPane = new function () {
 	 * @deprecated
 	 */
 	this.launchFile = function (file) {
-		Zotero.debug("ZoteroPane.launchFile() is deprecated -- use Zotero.launchFile()", 2);
-		Zotero.launchFile(file);
+		Trellis.debug("TrellisPane.launchFile() is deprecated -- use Trellis.launchFile()", 2);
+		Trellis.launchFile(file);
 	}
 	
 	
@@ -5759,26 +5759,26 @@ var ZoteroPane = new function () {
 	 * @deprecated
 	 */
 	this.launchURL = function (url) {
-		Zotero.debug("ZoteroPane.launchURL() is deprecated -- use Zotero.launchURL()", 2);
-		return Zotero.launchURL(url);
+		Trellis.debug("TrellisPane.launchURL() is deprecated -- use Trellis.launchURL()", 2);
+		return Trellis.launchURL(url);
 	}
 	
 	
 	this.showInLibrary = function () {
-		switch (Zotero_Tabs.selectedType) {
+		switch (Trellis_Tabs.selectedType) {
 			case 'reader': {
-				let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+				let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 				if (reader) {
-					let item = Zotero.Items.get(reader.itemID);
+					let item = Trellis.Items.get(reader.itemID);
 					let itemID = item.parentID || item.id;
-					return ZoteroPane.selectItems([itemID]);
+					return TrellisPane.selectItems([itemID]);
 				}
 				return;
 			}
 			case 'note': {
-				let tab = Zotero_Tabs.getTabInfo(Zotero_Tabs.selectedID);
+				let tab = Trellis_Tabs.getTabInfo(Trellis_Tabs.selectedID);
 				if (tab.data.itemID) {
-					return ZoteroPane.selectItems([tab.data.itemID]);
+					return TrellisPane.selectItems([tab.data.itemID]);
 				}
 				return;
 			}
@@ -5822,8 +5822,8 @@ var ZoteroPane = new function () {
 	
 	
 	this.showAttachmentInFilesystem = async function (itemID, noLocateOnMissing) {
-		var attachment = await Zotero.Items.getAsync(itemID)
-		if (attachment.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) return;
+		var attachment = await Trellis.Items.getAsync(itemID)
+		if (attachment.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) return;
 		
 		var path = attachment.getFilePath();
 		
@@ -5834,14 +5834,14 @@ var ZoteroPane = new function () {
 			pathIsValid = true;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			fileExists = false;
 			pathIsValid = false;
 		}
 		
 		// If file doesn't exist but an evicted iCloud Drive file does, reveal that instead
-		if (!fileExists && pathIsValid && Zotero.isMac && !attachment.isStoredFileAttachment()) {
-			let iCloudPath = Zotero.File.getEvictedICloudPath(path);
+		if (!fileExists && pathIsValid && Trellis.isMac && !attachment.isStoredFileAttachment()) {
+			let iCloudPath = Trellis.File.getEvictedICloudPath(path);
 			if (await IOUtils.exists(iCloudPath)) {
 				path = iCloudPath;
 				fileExists = true;
@@ -5861,17 +5861,17 @@ var ZoteroPane = new function () {
 			return;
 		}
 		
-		let file = Zotero.File.pathToFile(path);
+		let file = Trellis.File.pathToFile(path);
 		try {
-			Zotero.debug("Revealing " + file.path);
+			Trellis.debug("Revealing " + file.path);
 			file.reveal();
 		}
 		catch (e) {
 			// On platforms that don't support nsIFile.reveal() (e.g. Linux),
 			// launch the parent directory
-			Zotero.launchFile(file.parent);
+			Trellis.launchFile(file.parent);
 		}
-		Zotero.Notifier.trigger('open', 'file', attachment.id);
+		Trellis.Notifier.trigger('open', 'file', attachment.id);
 	};
 	
 	
@@ -5890,7 +5890,7 @@ var ZoteroPane = new function () {
 			// Files
 			if (!io.hasFiles && item.numAttachments()) {
 				let attachmentIDs = item.getAttachments();
-				io.hasFiles = Zotero.Items.get(attachmentIDs).some(
+				io.hasFiles = Trellis.Items.get(attachmentIDs).some(
 					attachment => attachment.isStoredFileAttachment()
 				);
 			}
@@ -5907,7 +5907,7 @@ var ZoteroPane = new function () {
 			}
 		}
 		io.hasRights = allItemsHaveRights ? 'all' : (noItemsHaveRights ? 'none' : 'some');
-		window.openDialog('chrome://zotero/content/publicationsDialog.xhtml', '', 'chrome,modal,centerscreen', io);
+		window.openDialog('chrome://trellis/content/publicationsDialog.xhtml', '', 'chrome,modal,centerscreen', io);
 		return io.keepRights !== undefined ? io : false;
 	};
 	
@@ -5919,7 +5919,7 @@ var ZoteroPane = new function () {
 	 * @return {Boolean} TRUE if user can edit, FALSE if not
 	 */
 	this.canEdit = function (row) {
-		switch (Zotero_Tabs.selectedType) {
+		switch (Trellis_Tabs.selectedType) {
 			case 'library':
 			{
 				// Currently selected row
@@ -5930,8 +5930,8 @@ var ZoteroPane = new function () {
 			}
 			default:
 			{
-				let tabInfo = Zotero_Tabs.getTabInfo();
-				let item = Zotero.Items.get(tabInfo.data?.itemID);
+				let tabInfo = Trellis_Tabs.getTabInfo();
+				let item = Trellis.Items.get(tabInfo.data?.itemID);
 				if (item) {
 					return item.isEditable();
 				}
@@ -5948,12 +5948,12 @@ var ZoteroPane = new function () {
 	 * @return {Boolean} TRUE if user can edit, FALSE if not
 	 */
 	this.canEditLibrary = function (row) {
-		switch (Zotero_Tabs.selectedType) {
+		switch (Trellis_Tabs.selectedType) {
 			case 'library': // Currently selected row
 				if (row === undefined) {
 					row = this.collectionsView.selection.focused;
 				}
-				return Zotero.Libraries.get(this.collectionsView.getRow(row).ref.libraryID).editable;
+				return Trellis.Libraries.get(this.collectionsView.getRow(row).ref.libraryID).editable;
 			default:
 				// All non-library tabs: canEditLibrary() == canEdit()
 				return this.canEdit(row);
@@ -5969,7 +5969,7 @@ var ZoteroPane = new function () {
 	 * @return	{Boolean}		TRUE if user can edit, FALSE if not
 	 */
 	this.canEditFiles = function (row) {
-		switch (Zotero_Tabs.selectedType) {
+		switch (Trellis_Tabs.selectedType) {
 			case 'library':
 				// Currently selected row
 				if (row === undefined) {
@@ -5977,11 +5977,11 @@ var ZoteroPane = new function () {
 				}
 				return this.collectionsView.getRow(row).filesEditable;
 			case 'reader': {
-				let itemID = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)?.itemID;
+				let itemID = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)?.itemID;
 				if (!itemID) {
 					throw new Error('Reader tab has no itemID');
 				}
-				return Zotero.Items.get(itemID).library.filesEditable;
+				return Trellis.Items.get(itemID).library.filesEditable;
 			}
 			default:
 				return false;
@@ -5990,26 +5990,26 @@ var ZoteroPane = new function () {
 	
 	
 	this.displayCannotEditLibraryMessage = function () {
-		Services.prompt.alert(null, "", Zotero.getString('save.error.cannotMakeChangesToCollection'));
+		Services.prompt.alert(null, "", Trellis.getString('save.error.cannotMakeChangesToCollection'));
 	}
 	
 	
 	this.displayCannotEditLibraryFilesMessage = function () {
-		Services.prompt.alert(null, "", Zotero.getString('save.error.cannotAddFilesToCollection'));
+		Services.prompt.alert(null, "", Trellis.getString('save.error.cannotAddFilesToCollection'));
 	}
 	
 	
 	this.displayCannotAddToMyPublicationsMessage = function () {
-		Services.prompt.alert(null, "", Zotero.getString('save.error.cannotAddToMyPublications'));
+		Services.prompt.alert(null, "", Trellis.getString('save.error.cannotAddToMyPublications'));
 	}
 	
 	
 	// TODO: Figure out a functioning way to get the original path and just copy the real file
 	this.displayCannotAddShortcutMessage = function (path) {
-		Zotero.alert(
+		Trellis.alert(
 			null,
-			Zotero.getString("general.error"),
-			Zotero.getString("file.error.cannotAddShortcut") + (path ? "\n\n" + path : "")
+			Trellis.getString("general.error"),
+			Trellis.getString("file.error.cannotAddShortcut") + (path ? "\n\n" + path : "")
 		);
 	}
 	
@@ -6021,23 +6021,23 @@ var ZoteroPane = new function () {
 			return;
 		}
 
-		var title = Zotero.getString('pane.item.attachments.fileNotFound.title');
-		var text = Zotero.getString(
+		var title = Trellis.getString('pane.item.attachments.fileNotFound.title');
+		var text = Trellis.getString(
 				'pane.item.attachments.fileNotFound.text1' + (path ? '.path' : '')
 			)
 			+ (path ? "\n\n" + path : '')
 			+ "\n\n"
-			+ Zotero.getString(
+			+ Trellis.getString(
 				'pane.item.attachments.fileNotFound.text2.'
 					+ (options.linkedFile
 						? 'linked'
 						: 'stored' + (notOnServer ? '.notOnServer' : '')
 					),
-				[ZOTERO_CONFIG.CLIENT_NAME, ZOTERO_CONFIG.DOMAIN_NAME]
+				[TRELLIS_CONFIG.CLIENT_NAME, TRELLIS_CONFIG.DOMAIN_NAME]
 			);
 		var supportURL = linkedFile
-			? 'https://www.zotero.org/support/kb/missing_linked_file'
-			: 'https://www.zotero.org/support/kb/files_not_syncing';
+			? 'https://www.trellis.org/support/kb/missing_linked_file'
+			: 'https://www.trellis.org/support/kb/files_not_syncing';
 		
 		var ps = Services.prompt;
 		
@@ -6050,7 +6050,7 @@ var ZoteroPane = new function () {
 				text,
 				buttonFlags,
 				null,
-				Zotero.getString('general.moreInformation'),
+				Trellis.getString('general.moreInformation'),
 				null, null, {}
 			);
 			if (index == 1) {
@@ -6066,9 +6066,9 @@ var ZoteroPane = new function () {
 			title,
 			text,
 			buttonFlags,
-			Zotero.getString('general.locate'),
+			Trellis.getString('general.locate'),
 			null,
-			Zotero.getString('general.moreInformation')
+			Trellis.getString('general.moreInformation')
 			, null, {}
 		);
 		
@@ -6085,7 +6085,7 @@ var ZoteroPane = new function () {
 	 * Prompt the user to relink one or all of the attachment files found in
 	 * the LABD.
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {String} path Path to the file matching `item`
 	 * @param {Number} numOthers If zero, "Relink All" option is not offered
 	 * @return {'one' | 'all' | 'manual' | 'cancel'}
@@ -6093,11 +6093,11 @@ var ZoteroPane = new function () {
 	this.showLinkedFileFoundAutomaticallyDialog = function (item, path, numOthers) {
 		let ps = Services.prompt;
 
-		let title = Zotero.getString('pane.item.attachments.autoRelink.title');
-		let text = Zotero.getString('pane.item.attachments.autoRelink.text1') + '\n\n'
-			+ Zotero.getString('pane.item.attachments.autoRelink.text2', item.getFilePath()) + '\n\n'
-			+ Zotero.getString('pane.item.attachments.autoRelink.text3', path) + '\n\n'
-			+ Zotero.getString('pane.item.attachments.autoRelink.text4', Zotero.appName);
+		let title = Trellis.getString('pane.item.attachments.autoRelink.title');
+		let text = Trellis.getString('pane.item.attachments.autoRelink.text1') + '\n\n'
+			+ Trellis.getString('pane.item.attachments.autoRelink.text2', item.getFilePath()) + '\n\n'
+			+ Trellis.getString('pane.item.attachments.autoRelink.text3', path) + '\n\n'
+			+ Trellis.getString('pane.item.attachments.autoRelink.text4', Trellis.appName);
 		let buttonFlags = ps.BUTTON_POS_0 * ps.BUTTON_TITLE_IS_STRING
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL
 			+ ps.BUTTON_POS_2 * ps.BUTTON_TITLE_IS_STRING;
@@ -6105,9 +6105,9 @@ var ZoteroPane = new function () {
 			title,
 			text,
 			buttonFlags,
-			Zotero.getString('pane.item.attachments.autoRelink.relink'),
+			Trellis.getString('pane.item.attachments.autoRelink.relink'),
 			null,
-			Zotero.getString('pane.item.attachments.autoRelink.locateManually'),
+			Trellis.getString('pane.item.attachments.autoRelink.locateManually'),
 			null, {}
 		);
 		
@@ -6125,15 +6125,15 @@ var ZoteroPane = new function () {
 			return 'one';
 		}
 
-		title = Zotero.getString('pane.item.attachments.autoRelinkOthers.title');
-		text = Zotero.getString('pane.item.attachments.autoRelinkOthers.text', numOthers, numOthers);
+		title = Trellis.getString('pane.item.attachments.autoRelinkOthers.title');
+		text = Trellis.getString('pane.item.attachments.autoRelinkOthers.text', numOthers, numOthers);
 		buttonFlags = ps.BUTTON_POS_0 * ps.BUTTON_TITLE_IS_STRING
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 		index = ps.confirmEx(null,
 			title,
 			text,
 			buttonFlags,
-			Zotero.getString(
+			Trellis.getString(
 				numOthers == 1
 					? 'pane.item.attachments.autoRelink.relink'
 					: 'pane.item.attachments.autoRelink.relinkAll'
@@ -6146,15 +6146,15 @@ var ZoteroPane = new function () {
 	
 	
 	this.recognizeSelected = function () {
-		Zotero.RecognizeDocument.recognizeItems(ZoteroPane.getSelectedItems());
-		Zotero.ProgressQueues.get('recognize').getDialog().open();
+		Trellis.RecognizeDocument.recognizeItems(TrellisPane.getSelectedItems());
+		Trellis.ProgressQueues.get('recognize').getDialog().open();
 	};
 	
 	
 	this.unrecognizeSelected = async function () {
-		var items = ZoteroPane.getSelectedItems();
+		var items = TrellisPane.getSelectedItems();
 		for (let item of items) {
-			await Zotero.RecognizeDocument.unrecognize(item);
+			await Trellis.RecognizeDocument.unrecognize(item);
 		}
 	};
 	
@@ -6185,14 +6185,14 @@ var ZoteroPane = new function () {
 			}
 
 			let io = { dataIn: { item }, dataOut: null };
-			window.openDialog('chrome://zotero/content/createParentDialog.xhtml', '', 'chrome,modal,centerscreen', io);
+			window.openDialog('chrome://trellis/content/createParentDialog.xhtml', '', 'chrome,modal,centerscreen', io);
 			if (!io.dataOut) {
 				return false;
 			}
 
 			// If we made a parent, attach the child
 			if (io.dataOut.parent) {
-				await Zotero.DB.executeTransaction(async function () {
+				await Trellis.DB.executeTransaction(async function () {
 					item.parentID = io.dataOut.parent.id;
 					await item.save();
 				});
@@ -6204,14 +6204,14 @@ var ZoteroPane = new function () {
 		}
 
 		for (let item of items) {
-			if (Zotero.Attachments.shouldAutoRenameAttachment(item)) {
+			if (Trellis.Attachments.shouldAutoRenameAttachment(item)) {
 				let path = item.getFilePath();
 				if (!path) {
-					Zotero.debug('No path for attachment ' + item.key);
+					Trellis.debug('No path for attachment ' + item.key);
 					continue;
 				}
-				let fileBaseName = Zotero.Attachments.getFileBaseNameFromItem(item.parentItem, { attachmentTitle: item.getField('title') });
-				let ext = Zotero.Attachments.getCorrectFileExtension(item);
+				let fileBaseName = Trellis.Attachments.getFileBaseNameFromItem(item.parentItem, { attachmentTitle: item.getField('title') });
+				let ext = Trellis.Attachments.getCorrectFileExtension(item);
 				let newName = fileBaseName + (ext ? '.' + ext : '');
 				let result = await item.renameAttachmentFile(newName, { overwrite: false, unique: true });
 				if (result !== true) {
@@ -6230,13 +6230,13 @@ var ZoteroPane = new function () {
 			return;
 		}
 		if (attachment.isPDFAttachment()) {
-			await Zotero.PDFWorker.import(attachment.id, true);
+			await Trellis.PDFWorker.import(attachment.id, true);
 		}
 		var annotations = attachment.getAnnotations().filter(x => x.annotationType != 'ink');
 		if (!annotations.length) {
 			return;
 		}
-		var note = await Zotero.EditorInstance.createNoteFromAnnotations(
+		var note = await Trellis.EditorInstance.createNoteFromAnnotations(
 			annotations,
 			{
 				parentID: attachment.parentID
@@ -6261,7 +6261,7 @@ var ZoteroPane = new function () {
 			return;
 		}
 		var items = this.getSelectedItems();
-		var topLevelItems = [...new Set(Zotero.Items.getTopLevel(items))];
+		var topLevelItems = [...new Set(Trellis.Items.getTopLevel(items))];
 		if (topLevelItems.length > 1) {
 			throw new Error("Can't create child attachment from different top-level items");
 		}
@@ -6281,7 +6281,7 @@ var ZoteroPane = new function () {
 			if (item.isRegularItem()) {
 				// Find all child items with extractable annotations
 				attachments.push(
-					...Zotero.Items.get(item.getAttachments())
+					...Trellis.Items.get(item.getAttachments())
 						.filter(item => isAttachmentWithExtractableAnnotations(item))
 				);
 			}
@@ -6297,22 +6297,22 @@ var ZoteroPane = new function () {
 		}
 		
 		if (!attachments.length && !annotations.length) {
-			Zotero.debug("No attachments found", 2);
+			Trellis.debug("No attachments found", 2);
 			return;
 		}
 		
 		for (let attachment of attachments) {
 			if (attachment.isPDFAttachment()) {
 				try {
-					await Zotero.PDFWorker.import(attachment.id, true);
+					await Trellis.PDFWorker.import(attachment.id, true);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			annotations.push(...attachment.getAnnotations().filter(x => x.annotationType != 'ink'));
 		}
-		var note = await Zotero.EditorInstance.createNoteFromAnnotations(
+		var note = await Trellis.EditorInstance.createNoteFromAnnotations(
 			annotations,
 			{
 				parentID: topLevelItem.id
@@ -6340,7 +6340,7 @@ var ZoteroPane = new function () {
 			if (item.isRegularItem()) {
 				// Find all child attachments with extractable annotations
 				attachments.push(
-					...Zotero.Items.get(item.getAttachments())
+					...Trellis.Items.get(item.getAttachments())
 						.filter(item => isAttachmentWithExtractableAnnotations(item))
 				);
 			}
@@ -6389,7 +6389,7 @@ var ZoteroPane = new function () {
 			if (item.isRegularItem()) {
 				// Find all child attachments with extractable annotations
 				attachments.push(
-					...Zotero.Items.get(item.getAttachments())
+					...Trellis.Items.get(item.getAttachments())
 						.filter(item => isAttachmentWithExtractableAnnotations(item))
 				);
 			}
@@ -6405,10 +6405,10 @@ var ZoteroPane = new function () {
 			for (let attachment of attachments) {
 				if (attachment.isPDFAttachment()) {
 					try {
-						await Zotero.PDFWorker.import(attachment.id, true);
+						await Trellis.PDFWorker.import(attachment.id, true);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 				annotations.push(...attachment.getAnnotations().filter(x => x.annotationType != 'ink'));
@@ -6416,11 +6416,11 @@ var ZoteroPane = new function () {
 		}
 		
 		if (!annotations.length) {
-			Zotero.debug("No annotations found", 2);
+			Trellis.debug("No annotations found", 2);
 			return;
 		}
 		
-		var note = await Zotero.EditorInstance.createNoteFromAnnotations(
+		var note = await Trellis.EditorInstance.createNoteFromAnnotations(
 			annotations,
 			{
 				collectionID: this.getSelectedCollection(true)
@@ -6431,13 +6431,13 @@ var ZoteroPane = new function () {
 	
 	
 	this.createEmptyParent = async function (item) {
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			// TODO: remove once there are no top-level web attachments
 			if (item.isWebAttachment()) {
-				var parent = new Zotero.Item('webpage');
+				var parent = new Trellis.Item('webpage');
 			}
 			else {
-				var parent = new Zotero.Item('document');
+				var parent = new Trellis.Item('document');
 			}
 			parent.libraryID = item.libraryID;
 			
@@ -6461,7 +6461,7 @@ var ZoteroPane = new function () {
 	
 	
 	this.exportPDF = async function (itemID) {
-		let item = await Zotero.Items.getAsync(itemID);
+		let item = await Trellis.Items.getAsync(itemID);
 		if (!item || !item.isPDFAttachment()) {
 			throw new Error('Item ' + itemID + ' is not a PDF attachment');
 		}
@@ -6476,21 +6476,21 @@ var ZoteroPane = new function () {
 		var rv = await fp.show();
 		if (rv === fp.returnOK || rv === fp.returnReplace) {
 			let outputFile = fp.file;
-			await Zotero.PDFWorker.export(item.id, outputFile, true);
+			await Trellis.PDFWorker.export(item.id, outputFile, true);
 		}
 	};
 	
 	
 	// TEMP: Quick implementation
 	this.exportSelectedFiles = async function () {
-		var items = ZoteroPane.getSelectedItems()
+		var items = TrellisPane.getSelectedItems()
 			.reduce((arr, item) => {
 				if (item.isPDFAttachment()) {
 					return arr.concat([item]);
 				}
 				if (item.isRegularItem()) {
 					return arr.concat(item.getAttachments()
-						.map(x => Zotero.Items.get(x))
+						.map(x => Trellis.Items.get(x))
 						.filter(x => x.isPDFAttachment()));
 				}
 				return arr;
@@ -6514,12 +6514,12 @@ var ZoteroPane = new function () {
 			for (let item of items) {
 				let outputFile = PathUtils.join(folder, item.attachmentFilename);
 				if (await IOUtils.exists(outputFile)) {
-					let newNSIFile = Zotero.File.pathToFile(outputFile);
+					let newNSIFile = Trellis.File.pathToFile(outputFile);
 					newNSIFile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0o644);
 					outputFile = newNSIFile.path;
 					newNSIFile.remove(null);
 				}
-				await Zotero.PDFWorker.export(item.id, outputFile, true);
+				await Trellis.PDFWorker.export(item.id, outputFile, true);
 			}
 		}
 	};
@@ -6536,7 +6536,7 @@ var ZoteroPane = new function () {
 			// Add all child link attachments of regular items
 			if (item.isRegularItem()) {
 				for (let id of item.getAttachments()) {
-					let attachment = await Zotero.Items.getAsync(id);
+					let attachment = await Trellis.Items.getAsync(id);
 					if (attachment.isLinkedFileAttachment()) {
 						attachments.add(attachment);
 					}
@@ -6554,13 +6554,13 @@ var ZoteroPane = new function () {
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 		var deleteOriginal = {};
 		var index = ps.confirmEx(null,
-			Zotero.getString('attachment.convertToStored.title', [num], num),
-			Zotero.getString('attachment.convertToStored.text', [num], num),
+			Trellis.getString('attachment.convertToStored.title', [num], num),
+			Trellis.getString('attachment.convertToStored.text', [num], num),
 			buttonFlags,
-			Zotero.getString('general.continue'),
+			Trellis.getString('general.continue'),
 			null,
 			null,
-			Zotero.getString('attachment.convertToStored.deleteOriginal', [num], num),
+			Trellis.getString('attachment.convertToStored.deleteOriginal', [num], num),
 			deleteOriginal
 		);
 		if (index != 0) {
@@ -6568,7 +6568,7 @@ var ZoteroPane = new function () {
 		}
 		for (let item of attachments) {
 			try {
-				let converted = await Zotero.Attachments.convertLinkedFileToStoredFile(
+				let converted = await Trellis.Attachments.convertLinkedFileToStoredFile(
 					item,
 					{
 						move: deleteOriginal.value
@@ -6580,7 +6580,7 @@ var ZoteroPane = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				continue;
 			}
 		}
@@ -6612,37 +6612,37 @@ var ZoteroPane = new function () {
 	 * to /Users/user/Documents/Dissertation/Files, and prompt to relink them
 	 * all if so.
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @return {Promise<Boolean>} True if relinked successfully or canceled
 	 */
 	this.checkForLinkedFilesToRelink = async function (item) {
-		const PATH_SEP = Zotero.isWin ? '\\' : '/';
+		const PATH_SEP = Trellis.isWin ? '\\' : '/';
 		
 		// Split on any separator, join with the platform separator for PathUtils
 		let split = path => path.split(/[/\\]/);
 		let join = (base, ...segments) => [base.replace(/\//g, PATH_SEP), ...segments].join(PATH_SEP);
 		
-		Zotero.debug('Attempting to relink automatically');
+		Trellis.debug('Attempting to relink automatically');
 		
-		let basePath = Zotero.Prefs.get('baseAttachmentPath');
+		let basePath = Trellis.Prefs.get('baseAttachmentPath');
 		if (!basePath) {
-			Zotero.debug('No LABD');
+			Trellis.debug('No LABD');
 			return false;
 		}
-		basePath = Zotero.File.normalizeToUnix(basePath);
-		Zotero.debug('LABD path: ' + basePath);
+		basePath = Trellis.File.normalizeToUnix(basePath);
+		Trellis.debug('LABD path: ' + basePath);
 
 		let syncedPath = item.getFilePath();
 		if (!syncedPath) {
-			Zotero.debug('No synced path');
+			Trellis.debug('No synced path');
 			return false;
 		}
-		syncedPath = Zotero.File.normalizeToUnix(syncedPath);
-		Zotero.debug('Synced path: ' + syncedPath);
+		syncedPath = Trellis.File.normalizeToUnix(syncedPath);
+		Trellis.debug('Synced path: ' + syncedPath);
 
-		if (Zotero.File.directoryContains(basePath, syncedPath)) {
+		if (Trellis.File.directoryContains(basePath, syncedPath)) {
 			// Already in the LABD - nothing to do
-			Zotero.debug('Synced path is already within LABD');
+			Trellis.debug('Synced path is already within LABD');
 			return false;
 		}
 
@@ -6663,22 +6663,22 @@ var ZoteroPane = new function () {
 
 			try {
 				if (!(await IOUtils.exists(correctedPath))) {
-					Zotero.debug('Does not exist: ' + correctedPath);
+					Trellis.debug('Does not exist: ' + correctedPath);
 					continue;
 				}
 			}
 			catch (e) {
 				// IOUtils.exists() throws if the path is invalid - suppress that
 				if (e.message.includes('Could not parse path')) {
-					Zotero.debug('Invalid path: ' + correctedPath);
+					Trellis.debug('Invalid path: ' + correctedPath);
 					continue;
 				}
 				// Otherwise this could be a meaningful filesystem error, so re-throw
 				throw e;
 			}
-			Zotero.debug('Exists! ' + correctedPath);
+			Trellis.debug('Exists! ' + correctedPath);
 
-			let otherUnlinked = await Zotero.Items.findMissingLinkedFiles(
+			let otherUnlinked = await Trellis.Items.findMissingLinkedFiles(
 				item.libraryID,
 				unNormalizedDirname
 			);
@@ -6714,7 +6714,7 @@ var ZoteroPane = new function () {
 			}
 		}
 		
-		Zotero.debug('No segments left to drop; match not found in LABD');
+		Trellis.debug('No segments left to drop; match not found in LABD');
 		return false;
 	};
 	
@@ -6725,22 +6725,22 @@ var ZoteroPane = new function () {
 			return;
 		}
 		
-		var item = Zotero.Items.get(itemID);
+		var item = Trellis.Items.get(itemID);
 		if (!item) {
-			throw new Error('Item ' + itemID + ' not found in ZoteroPane_Local.relinkAttachment()');
+			throw new Error('Item ' + itemID + ' not found in TrellisPane_Local.relinkAttachment()');
 		}
 
 		while (true) {
 			let fp = new FilePicker();
-			fp.init(window, Zotero.getString('pane.item.attachments.select'), fp.modeOpen);
+			fp.init(window, Trellis.getString('pane.item.attachments.select'), fp.modeOpen);
 			
 			var file = item.getFilePath();
 			if (!file) {
-				Zotero.debug("Invalid path", 2);
+				Trellis.debug("Invalid path", 2);
 				break;
 			}
 			
-			var dir = await Zotero.File.getClosestDirectory(file);
+			var dir = await Trellis.File.getClosestDirectory(file);
 			if (dir) {
 				try {
 					fp.displayDirectory = dir;
@@ -6754,7 +6754,7 @@ var ZoteroPane = new function () {
 			fp.appendFilters(fp.filterAll);
 			
 			if ((await fp.show()) == fp.returnOK) {
-				let file = Zotero.File.pathToFile(fp.file);
+				let file = Trellis.File.pathToFile(fp.file);
 				
 				// Disallow hidden files
 				// TODO: Display a message
@@ -6777,34 +6777,34 @@ var ZoteroPane = new function () {
 	};
 	
 	this.normalizeAttachmentTitles = async function () {
-		let result = Zotero.Prompt.confirm({
-			title: Zotero.getString('normalize-attachment-titles-title'),
-			text: Zotero.getString('normalize-attachment-titles-text'),
-			button0: Zotero.getString('general-continue'),
-			button1: Zotero.Prompt.BUTTON_TITLE_CANCEL,
-			button2: Zotero.getString('general.moreInformation'),
+		let result = Trellis.Prompt.confirm({
+			title: Trellis.getString('normalize-attachment-titles-title'),
+			text: Trellis.getString('normalize-attachment-titles-text'),
+			button0: Trellis.getString('general-continue'),
+			button1: Trellis.Prompt.BUTTON_TITLE_CANCEL,
+			button2: Trellis.getString('general.moreInformation'),
 		});
 		if (result == 1) {
 			return;
 		}
 		if (result == 2) {
-			Zotero.launchURL('https://www.zotero.org/support/kb/attachment_title_vs_filename');
+			Trellis.launchURL('https://www.trellis.org/support/kb/attachment_title_vs_filename');
 			return;
 		}
 		let attachments = new Set(this.getSelectedItems().flatMap((item) => {
 			if (item.isRegularItem()) {
-				return Zotero.Items.get(item.getAttachments());
+				return Trellis.Items.get(item.getAttachments());
 			}
 			if (item.isAttachment()) {
 				return [item];
 			}
 			return [];
 		}));
-		await Zotero.DB.executeTransaction(async () => {
-			Zotero.UndoHistory.stageAction('undo-action-normalize-attachment-titles');
+		await Trellis.DB.executeTransaction(async () => {
+			Trellis.UndoHistory.stageAction('undo-action-normalize-attachment-titles');
 			for (let attachment of attachments) {
 				if (attachment.getField('title').replace(/\.[^.]+$/, '') !== attachment.attachmentFilename.replace(/\.[^.]+$/, '')) {
-					Zotero.debug(`Skipping attachment with modified title: ${attachment.getField('title')}`);
+					Trellis.debug(`Skipping attachment with modified title: ${attachment.getField('title')}`);
 					continue;
 				}
 
@@ -6834,8 +6834,8 @@ var ZoteroPane = new function () {
 				return;
 			}
 			var feedItem = items[0];
-			if (!(feedItem instanceof Zotero.FeedItem)) {
-				throw new Zotero.Promise.CancellationError('Not a FeedItem');
+			if (!(feedItem instanceof Trellis.FeedItem)) {
+				throw new Trellis.Promise.CancellationError('Not a FeedItem');
 			}
 			if (feedItem.isRead) {
 				return;
@@ -6851,34 +6851,34 @@ var ZoteroPane = new function () {
 		var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 				   .getService(Components.interfaces.nsIWindowWatcher);
 		var data = {
-			msg: Zotero.getString('errorReport.followingReportWillBeSubmitted'),
-			errorData: Zotero.getErrors(true),
+			msg: Trellis.getString('errorReport.followingReportWillBeSubmitted'),
+			errorData: Trellis.getErrors(true),
 			askForSteps: true
 		};
-		var io = { wrappedJSObject: { Zotero: Zotero, data:  data } };
-		var win = ww.openWindow(null, "chrome://zotero/content/errorReport.xhtml",
-					"zotero-error-report", "chrome,centerscreen,modal", io);
+		var io = { wrappedJSObject: { Trellis: Trellis, data:  data } };
+		var win = ww.openWindow(null, "chrome://trellis/content/errorReport.xhtml",
+					"trellis-error-report", "chrome,centerscreen,modal", io);
 	}
 	
 	this.displayErrorMessage = function (popup) {
-		Zotero.debug("ZoteroPane.displayErrorMessage() is deprecated -- use Zotero.crash() instead");
-		Zotero.crash(popup);
+		Trellis.debug("TrellisPane.displayErrorMessage() is deprecated -- use Trellis.crash() instead");
+		Trellis.crash(popup);
 	}
 	
 	this.displayStartupError = function (asPaneMessage) {
-		if (Zotero) {
-			var errMsg = Zotero.startupError;
-			var errFunc = Zotero.startupErrorHandler;
+		if (Trellis) {
+			var errMsg = Trellis.startupError;
+			var errFunc = Trellis.startupErrorHandler;
 		}
 		
 		var stringBundleService = Services.strings;
-		var src = 'chrome://zotero/locale/zotero.properties';
+		var src = 'chrome://trellis/locale/trellis.properties';
 		var stringBundle = stringBundleService.createBundle(src);
 		
 		var title = stringBundle.GetStringFromName('general.error');
 		if (!errMsg) {
-			var appName = Zotero && Zotero.appName
-				? Zotero.appName
+			var appName = Trellis && Trellis.appName
+				? Trellis.appName
 				: stringBundleService
 					.createBundle('chrome://branding/locale/brand.properties')
 					.GetStringFromName('brandShortName');
@@ -6891,15 +6891,15 @@ var ZoteroPane = new function () {
 		else {
 			// TODO: Add a better error page/window here with reporting
 			// instructions
-			// window.loadURI('chrome://zotero/content/error.xul');
+			// window.loadURI('chrome://trellis/content/error.xul');
 			//if(asPaneMessage) {
-			//	ZoteroPane_Local.setItemsPaneMessage(errMsg, true);
+			//	TrellisPane_Local.setItemsPaneMessage(errMsg, true);
 			//} else {
-			if (Zotero.test) {
+			if (Trellis.test) {
 				// During testing, throw an error so the actual error message is logged
 				throw new Error(`Startup error: ${errMsg}`);
 			}
-			Zotero.alert(null, title, errMsg);
+			Trellis.alert(null, title, errMsg);
 			//}
 		}
 	}
@@ -6923,17 +6923,17 @@ var ZoteroPane = new function () {
 	this.showRetractionBanner = async function (items) {
 		var items;
 		try {
-			items = JSON.parse(Zotero.Prefs.get('retractions.recentItems'));
+			items = JSON.parse(Trellis.Prefs.get('retractions.recentItems'));
 		}
 		catch (e) {
-			Zotero.Prefs.clear('retractions.recentItems');
-			Zotero.logError(e);
+			Trellis.Prefs.clear('retractions.recentItems');
+			Trellis.logError(e);
 			return;
 		}
 		if (!items.length) {
 			return;
 		}
-		items = await Zotero.Items.getAsync(items);
+		items = await Trellis.Items.getAsync(items);
 		if (!items.length) {
 			return;
 		}
@@ -6945,8 +6945,8 @@ var ZoteroPane = new function () {
 		var close = document.getElementById('retracted-items-close');
 		
 		var suffix = items.length > 1 ? 'multiple' : 'single';
-		message.textContent = Zotero.getString('retraction.alert.' + suffix);
-		link.textContent = Zotero.getString('retraction.alert.view.' + suffix);
+		message.textContent = Trellis.getString('retraction.alert.' + suffix);
+		link.textContent = Trellis.getString('retraction.alert.view.' + suffix);
 		link.onclick = async function () {
 			this.hideRetractionBanner();
 			// Select newly detected item if only one
@@ -6968,7 +6968,7 @@ var ZoteroPane = new function () {
 	
 	this.hideRetractionBanner = function () {
 		document.getElementById('retracted-items-container').setAttribute('collapsed', true);
-		Zotero.Prefs.clear('retractions.recentItems');
+		Trellis.Prefs.clear('retractions.recentItems');
 	};
 	
 	
@@ -6978,19 +6978,19 @@ var ZoteroPane = new function () {
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 		let index = ps.confirmEx(
 			null,
-			Zotero.getString('retraction.replacedItem.title'),
-			Zotero.getString('retraction.replacedItem.text1')
+			Trellis.getString('retraction.replacedItem.title'),
+			Trellis.getString('retraction.replacedItem.text1')
 				+ "\n\n"
-				+ Zotero.getString('retraction.replacedItem.text2'),
+				+ Trellis.getString('retraction.replacedItem.text2'),
 			buttonFlags,
-			Zotero.getString('retraction.replacedItem.button'),
+			Trellis.getString('retraction.replacedItem.button'),
 			null,
 			null,
 			null,
 			{}
 		);
 		if (index == 0) {
-			Zotero.Retractions.hideRetraction(item);
+			Trellis.Retractions.hideRetraction(item);
 			this.hideRetractionBanner();
 		}
 	};
@@ -7015,7 +7015,7 @@ var ZoteroPane = new function () {
 				: 'mac-word-plugin-install-message';
 			
 			// TODO: Replace with ftl string
-			dontAskAgain.label = Zotero.getString('general.dontAskAgain');
+			dontAskAgain.label = Trellis.getString('general.dontAskAgain');
 			
 			panel.removeAttribute('collapsed');
 			action.onclick = () => {
@@ -7039,16 +7039,16 @@ var ZoteroPane = new function () {
 
 	this.showArchitectureWarning = async function () {
 		const remindInterval = 60 * 60 * 24 * 30;
-		const lastDisplayed = Zotero.Prefs.get('architecture.warning.lastDisplayed') ?? 0;
+		const lastDisplayed = Trellis.Prefs.get('architecture.warning.lastDisplayed') ?? 0;
 		
 		if (lastDisplayed > Math.round(Date.now() / 1000) - remindInterval) {
 			return;
 		}
 		
 		const isWow64 = (await Services.sysinfo.processInfo).isWow64;
-		const isX64OnArm = Zotero.isWin64EmulatedOnArm() || Zotero.isLinux64EmulatedOnArm();
+		const isX64OnArm = Trellis.isWin64EmulatedOnArm() || Trellis.isLinux64EmulatedOnArm();
 		
-		if ((Zotero.isWin && isWow64) || isX64OnArm) {
+		if ((Trellis.isWin && isWow64) || isX64OnArm) {
 			let panel = document.getElementById('architecture-warning-container');
 			let action = document.getElementById('architecture-warning-action');
 			let close = document.getElementById('architecture-warning-close');
@@ -7066,16 +7066,16 @@ var ZoteroPane = new function () {
 			
 			panel.removeAttribute('collapsed');
 			action.onclick = function () {
-				let url = Zotero.isBetaBuild
-					? 'https://www.zotero.org/support/beta_builds'
-					: 'https://www.zotero.org/download/';
-				Zotero.launchURL(url);
+				let url = Trellis.isBetaBuild
+					? 'https://www.trellis.org/support/beta_builds'
+					: 'https://www.trellis.org/download/';
+				Trellis.launchURL(url);
 			};
 			close.onclick = function () {
 				this.hideArchitectureWarning();
 			}.bind(this);
 			remind.onclick = function () {
-				Zotero.Prefs.set(`architecture.warning.lastDisplayed`, Math.round(Date.now() / 1000));
+				Trellis.Prefs.set(`architecture.warning.lastDisplayed`, Math.round(Date.now() / 1000));
 				this.hideArchitectureWarning();
 			}.bind(this);
 		}
@@ -7088,13 +7088,13 @@ var ZoteroPane = new function () {
 	
 	this.showPostUpgradeBanner = function () {
 		// Don't show for non-release builds or if disabled
-		if (Zotero.isBetaBuild || Zotero.isDevBuild || Zotero.isSourceBuild
-				|| !Zotero.Prefs.get('showPostUpgradeBanner')) {
+		if (Trellis.isBetaBuild || Trellis.isDevBuild || Trellis.isSourceBuild
+				|| !Trellis.Prefs.get('showPostUpgradeBanner')) {
 			return;
 		}
 		// Don't show if we've already shown a banner for this or a higher major version
-		let versionShown = Zotero.Prefs.get('postUpgradeBannerVersionShown') || 0;
-		let majorVersion = parseInt(Zotero.version.split('.')[0]);
+		let versionShown = Trellis.Prefs.get('postUpgradeBannerVersionShown') || 0;
+		let majorVersion = parseInt(Trellis.version.split('.')[0]);
 		if (versionShown >= majorVersion) {
 			return;
 		}
@@ -7103,7 +7103,7 @@ var ZoteroPane = new function () {
 		let div = document.getElementById('post-upgrade-message');
 		document.l10n.setArgs(div, { version: majorVersion });
 		let link = document.getElementById('post-upgrade-new-features-link');
-		link.href = ZOTERO_CONFIG.NEW_FEATURES_URL.replace('{version}', majorVersion);
+		link.href = TRELLIS_CONFIG.NEW_FEATURES_URL.replace('{version}', majorVersion);
 		document.getElementById('post-upgrade-container').removeAttribute('collapsed');
 
 		// Workaround for a Fluent issue (possibly triggered by plugin localizations) where
@@ -7128,29 +7128,29 @@ var ZoteroPane = new function () {
 			}, 1000 * 60 * 60 * 24); // 24 hours
 		}
 		else {
-			let majorVersion = parseInt(Zotero.version.split('.')[0]);
-			Zotero.Prefs.set('postUpgradeBannerVersionShown', majorVersion);
+			let majorVersion = parseInt(Trellis.version.split('.')[0]);
+			Trellis.Prefs.set('postUpgradeBannerVersionShown', majorVersion);
 		}
 	};
 
 	this.showFileRenamingBanner = function () {
-		if (Zotero.Prefs.get('autoRenameFiles.bannerShown')) {
+		if (Trellis.Prefs.get('autoRenameFiles.bannerShown')) {
 			return;
 		}
-		if (Zotero.Prefs.prefHasUserValue('autoRenameFiles.bannerDisplayTime')) {
+		if (Trellis.Prefs.prefHasUserValue('autoRenameFiles.bannerDisplayTime')) {
 			const week = 7 * 24 * 60 * 60 * 1000;
-			if (Date.now() > parseInt(Zotero.Prefs.get('autoRenameFiles.bannerDisplayTime')) + week) {
-				Zotero.Prefs.clear('autoRenameFiles.bannerDisplayTime');
-				Zotero.Prefs.set('autoRenameFiles.bannerShown', true);
+			if (Date.now() > parseInt(Trellis.Prefs.get('autoRenameFiles.bannerDisplayTime')) + week) {
+				Trellis.Prefs.clear('autoRenameFiles.bannerDisplayTime');
+				Trellis.Prefs.set('autoRenameFiles.bannerShown', true);
 				return;
 			}
 		}
 		else {
-			Zotero.Prefs.set('autoRenameFiles.bannerDisplayTime', Date.now().toString());
+			Trellis.Prefs.set('autoRenameFiles.bannerDisplayTime', Date.now().toString());
 		}
 		
 		document.getElementById('file-renaming-documentation-link').onclick = () => {
-			Zotero.launchURL("https://www.zotero.org/support/file_renaming");
+			Trellis.launchURL("https://www.trellis.org/support/file_renaming");
 			// Do this in the next loop to avoid a visual glitch in Fx140.3 where the background
 			// color of the banner remains in part of the item pane header until switching to a
 			// different tab and back
@@ -7168,8 +7168,8 @@ var ZoteroPane = new function () {
 
 	this.hideFileRenamingBanner = function () {
 		document.getElementById('file-renaming-banner-container').setAttribute('collapsed', true);
-		Zotero.Prefs.clear('autoRenameFiles.bannerDisplayTime');
-		Zotero.Prefs.set('autoRenameFiles.bannerShown', true);
+		Trellis.Prefs.clear('autoRenameFiles.bannerDisplayTime');
+		Trellis.Prefs.set('autoRenameFiles.bannerShown', true);
 	};
 
 	
@@ -7177,11 +7177,11 @@ var ZoteroPane = new function () {
 	 * Sets the layout to either a three-vertical-pane layout and a layout where itemsPane is above itemPane
 	 */
 	this.updateLayout = function () {
-		var layoutSwitcher = document.getElementById("zotero-layout-switcher");
-		var itemsSplitter = document.getElementById("zotero-items-splitter");
-		var sidenav = document.getElementById("zotero-view-item-sidenav");
+		var layoutSwitcher = document.getElementById("trellis-layout-switcher");
+		var itemsSplitter = document.getElementById("trellis-items-splitter");
+		var sidenav = document.getElementById("trellis-view-item-sidenav");
 
-		if (Zotero.Prefs.get("layout") === "stacked") { // itemsPane above itemPane
+		if (Trellis.Prefs.get("layout") === "stacked") { // itemsPane above itemPane
 			layoutSwitcher.setAttribute("orient", "vertical");
 			itemsSplitter.setAttribute("orient", "vertical");
 			sidenav.classList.add("stacked");
@@ -7197,51 +7197,51 @@ var ZoteroPane = new function () {
 		}
 
 		this.updateLayoutConstraints();
-		if (ZoteroPane.itemsView) {
+		if (TrellisPane.itemsView) {
 			// Need to immediately rerender the items here without any debouncing
 			// since tree height will have changed
-			ZoteroPane.itemsView.updateHeight();
+			TrellisPane.itemsView.updateHeight();
 		}
-		ZoteroContextPane.update();
-		Zotero_Tabs.updateSidebarLayout();
+		TrellisContextPane.update();
+		Trellis_Tabs.updateSidebarLayout();
 	};
 	
 	
 	this.getState = function () {
 		return {
 			type: 'pane',
-			tabs: Zotero_Tabs.getState()
+			tabs: Trellis_Tabs.getState()
 		};
 	};
 	
 	/**
-	 * Unserializes zotero-persist elements from preferences
+	 * Unserializes trellis-persist elements from preferences
 	 */
 	this.unserializePersist = function () {
 		_unserialized = true;
-		var serializedValues = Zotero.Prefs.get("pane.persist") || "{}";
+		var serializedValues = Trellis.Prefs.get("pane.persist") || "{}";
 		serializedValues = JSON.parse(serializedValues);
 		
 		for (var id in serializedValues) {
 			var el = document.getElementById(id);
 			if (!el) {
-				Zotero.debug(`Trying to restore persist data for #${id} but elem not found`, 5);
+				Trellis.debug(`Trying to restore persist data for #${id} but elem not found`, 5);
 				continue;
 			}
 			
-			let allowedAttributes = (el.getAttribute('zotero-persist') || '').split(/[\s,]+/);
+			let allowedAttributes = (el.getAttribute('trellis-persist') || '').split(/[\s,]+/);
 			
 			var elValues = serializedValues[id];
 			for (var attr in elValues) {
 				// For some reason, the persisted state of the splitter is empty. This will cause
 				// the splitter to behave unexpectedly. We set it to 'collapsed' here.
-				if (["zotero-context-splitter-stacked", "zotero-context-splitter"].includes(el.id)
+				if (["trellis-context-splitter-stacked", "trellis-context-splitter"].includes(el.id)
 						&& attr === 'state' && elValues[attr] === '') {
 					elValues[attr] = 'collapsed';
 				}
 				// Ignore attributes that are no longer persisted for the element
 				if (!allowedAttributes.includes(attr)) {
-					Zotero.debug(`Not restoring '${attr}' for #${id}`);
+					Trellis.debug(`Not restoring '${attr}' for #${id}`);
 					continue;
 				}
 				if (["width", "height"].includes(attr)) {
@@ -7261,23 +7261,23 @@ var ZoteroPane = new function () {
 	};
 
 	/**
-	 * Serializes zotero-persist attributes to preferences
+	 * Serializes trellis-persist attributes to preferences
 	 */
 	this.serializePersist = function () {
 		if (!_unserialized) return;
 		try {
-			var serializedValues = JSON.parse(Zotero.Prefs.get('pane.persist'));
+			var serializedValues = JSON.parse(Trellis.Prefs.get('pane.persist'));
 		}
 		catch (e) {
 			serializedValues = {};
 		}
 		var persistedElements = new Set();
-		for (let el of document.querySelectorAll("[zotero-persist]")) {
+		for (let el of document.querySelectorAll("[trellis-persist]")) {
 			if (!el.getAttribute) continue;
 			var id = el.getAttribute("id");
 			if (!id) continue;
 			var elValues = {};
-			for (let attr of el.getAttribute("zotero-persist").split(/[\s,]+/)) {
+			for (let attr of el.getAttribute("trellis-persist").split(/[\s,]+/)) {
 				if (el.hasAttribute(attr)) {
 					elValues[attr] = el.getAttribute(attr);
 					persistedElements.add(id);
@@ -7291,20 +7291,20 @@ var ZoteroPane = new function () {
 				delete serializedValues[i];
 			}
 		}
-		Zotero.Prefs.set("pane.persist", JSON.stringify(serializedValues));
+		Trellis.Prefs.set("pane.persist", JSON.stringify(serializedValues));
 	}
 	
 	
 	this.updateWindow = function () {
-		var zoteroPane = document.getElementById('zotero-pane');
+		var trellisPane = document.getElementById('trellis-pane');
 		// Must match value in overlay.css
 		var breakpoint = 1000;
 		var className = `width-${breakpoint}`;
 		if (window.innerWidth >= breakpoint) {
-			zoteroPane.classList.add(className);
+			trellisPane.classList.add(className);
 		}
 		else {
-			zoteroPane.classList.remove(className);
+			trellisPane.classList.remove(className);
 		}
 	};
 	
@@ -7314,28 +7314,28 @@ var ZoteroPane = new function () {
 	 * when the window or elements within it are resized.
 	 */
 	this.updateLayoutConstraints = function () {
-		var paneStack = document.getElementById("zotero-pane-stack");
+		var paneStack = document.getElementById("trellis-pane-stack");
 		if (paneStack.hidden) return;
 
-		var titlebar = document.getElementById('zotero-title-bar');
-		var trees = document.getElementById('zotero-trees');
-		var itemsPaneContainer = document.getElementById('zotero-items-pane-container');
-		var collectionsPane = document.getElementById("zotero-collections-pane");
-		var tagSelector = document.getElementById("zotero-tag-selector");
+		var titlebar = document.getElementById('trellis-title-bar');
+		var trees = document.getElementById('trellis-trees');
+		var itemsPaneContainer = document.getElementById('trellis-items-pane-container');
+		var collectionsPane = document.getElementById("trellis-collections-pane");
+		var tagSelector = document.getElementById("trellis-tag-selector");
 		let layoutModeMenus = [
 			document.getElementById("view-menuitem-standard"),
 			document.getElementById("view-menuitem-stacked"),
 		];
 
-		let isStackedMode = Zotero.Prefs.get('layout') === 'stacked';
-		let isTempStackedMode = Zotero.Prefs.get('tempStackedMode');
-		let isItemPaneCollapsed = ZoteroPane.itemPane.collapsed && ZoteroContextPane.collapsed;
+		let isStackedMode = Trellis.Prefs.get('layout') === 'stacked';
+		let isTempStackedMode = Trellis.Prefs.get('tempStackedMode');
+		let isItemPaneCollapsed = TrellisPane.itemPane.collapsed && TrellisContextPane.collapsed;
 
 		// Keep in sycn with abstracts/variables.scss > $min-width-collections-pane
 		const collectionsPaneMinWidth = collectionsPane.hasAttribute("collapsed") ? 0 : 200;
 		// Keep in sycn with abstracts/variables.scss > $min-width-item-pane
 		const itemPaneMinWidth = (isStackedMode || isItemPaneCollapsed) ? 0 : 320;
-		const libraryItemPaneMinWidth = (isStackedMode || ZoteroPane.itemPane.collapsed) ? 0 : 320;
+		const libraryItemPaneMinWidth = (isStackedMode || TrellisPane.itemPane.collapsed) ? 0 : 320;
 		// Keep in sycn with abstracts/variables.scss > $width-sidenav
 		const sideNavMinWidth = isStackedMode ? 0 : 37;
 		// Keep in sycn with abstracts/variables.scss > $min-width-items-pane
@@ -7357,16 +7357,16 @@ var ZoteroPane = new function () {
 			layoutModeMenus.forEach(menu => menu.setAttribute("disabled", "true"));
 			// If the window is too small in standard mode, enter stack mode temporarily
 			if (!isStackedMode && !isTempStackedMode) {
-				Zotero.Prefs.set('tempStackedMode', true);
-				Zotero.Prefs.set('layout', 'stacked');
+				Trellis.Prefs.set('tempStackedMode', true);
+				Trellis.Prefs.set('layout', 'stacked');
 				layoutChanged = true;
 			}
 		}
 		else {
 			layoutModeMenus.forEach(menu => menu.removeAttribute("disabled"));
 			if (isTempStackedMode) {
-				Zotero.Prefs.clear('tempStackedMode');
-				Zotero.Prefs.set('layout', 'standard');
+				Trellis.Prefs.clear('tempStackedMode');
+				Trellis.Prefs.set('layout', 'standard');
 				layoutChanged = true;
 			}
 		}
@@ -7385,8 +7385,8 @@ var ZoteroPane = new function () {
 
 		var collectionsPaneWidth = collectionsPane.getBoundingClientRect().width;
 		tagSelector.style.maxWidth = collectionsPaneWidth + 'px';
-		if (ZoteroPane.itemsView) {
-			ZoteroPane.itemsView.updateHeightDebounced();
+		if (TrellisPane.itemsView) {
+			TrellisPane.itemsView.updateHeightDebounced();
 		}
 
 		this.handleTagSelectorResize();
@@ -7418,14 +7418,14 @@ var ZoteroPane = new function () {
 	 */
 	this.openAboutDialog = function () {
 		let flags = 'chrome,centerscreen';
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			flags += ',dialog=yes';
 		}
-		window.openDialog('chrome://zotero/content/about.xhtml', 'about', flags);
+		window.openDialog('chrome://trellis/content/about.xhtml', 'about', flags);
 	}
 	
 	/**
-	 * Adds or removes a function to be called when Zotero is reloaded by switching into or out of
+	 * Adds or removes a function to be called when Trellis is reloaded by switching into or out of
 	 * the connector
 	 */
 	this.addReloadListener = function (/** @param {Function} **/func) {
@@ -7433,7 +7433,7 @@ var ZoteroPane = new function () {
 	}
 	
 	/**
-	 * Adds or removes a function to be called just before Zotero is reloaded by switching into or
+	 * Adds or removes a function to be called just before Trellis is reloaded by switching into or
 	 * out of the connector
 	 */
 	this.addBeforeReloadListener = function (/** @param {Function} **/func) {
@@ -7441,20 +7441,20 @@ var ZoteroPane = new function () {
 	}
 	
 	/**
-	 * Implements nsIObserver for Zotero reload
+	 * Implements nsIObserver for Trellis reload
 	 */
 	var _reloadObserver = {
 
 		/**
-		 * Called when Zotero is reloaded (i.e., if it is switched into or out of connector mode)
+		 * Called when Trellis is reloaded (i.e., if it is switched into or out of connector mode)
 		 */
 		observe: function (aSubject, aTopic, aData) {
-			if (aTopic == "zotero-reloaded") {
-				Zotero.debug("Reloading Zotero pane");
+			if (aTopic == "trellis-reloaded") {
+				Trellis.debug("Reloading Trellis pane");
 				for (let func of _reloadFunctions) func(aData);
 			}
-			else if (aTopic == "zotero-before-reload") {
-				Zotero.debug("Zotero pane caught before-reload event");
+			else if (aTopic == "trellis-before-reload") {
+				Trellis.debug("Trellis pane caught before-reload event");
 				for (let func of _beforeReloadFunctions) func(aData);
 			}
 		}
@@ -7463,13 +7463,13 @@ var ZoteroPane = new function () {
 	this.buildFieldTransformMenu = function ({ target, onTransform }) {
 		let doc = target.ownerDocument;
 		let values = target.values;
-		let valuesTitleCased = values.map(v => Zotero.Utilities.capitalizeTitle(v, true));
-		let valuesSentenceCased = values.map(v => Zotero.Utilities.sentenceCase(v));
+		let valuesTitleCased = values.map(v => Trellis.Utilities.capitalizeTitle(v, true));
+		let valuesSentenceCased = values.map(v => Trellis.Utilities.sentenceCase(v));
 
 		let menupopup = doc.createXULElement('menupopup');
 
 		let titleCase = doc.createXULElement('menuitem');
-		titleCase.setAttribute('label', Zotero.getString('zotero.item.textTransform.titlecase'));
+		titleCase.setAttribute('label', Trellis.getString('trellis.item.textTransform.titlecase'));
 		titleCase.addEventListener('command', () => {
 			onTransform(valuesTitleCased);
 		});
@@ -7477,21 +7477,21 @@ var ZoteroPane = new function () {
 		menupopup.append(titleCase);
 
 		let sentenceCase = doc.createXULElement('menuitem');
-		sentenceCase.setAttribute('label', Zotero.getString('zotero.item.textTransform.sentencecase'));
+		sentenceCase.setAttribute('label', Trellis.getString('trellis.item.textTransform.sentencecase'));
 		sentenceCase.addEventListener('command', () => {
 			onTransform(valuesSentenceCased);
 		});
 		sentenceCase.disabled = values.every((v, i) => valuesSentenceCased[i] === v);
 		menupopup.append(sentenceCase);
 
-		Zotero.Utilities.Internal.updateEditContextMenu(menupopup, target);
+		Trellis.Utilities.Internal.updateEditContextMenu(menupopup, target);
 	
 		return menupopup;
 	};
 };
 
 /**
- * Keep track of which ZoteroPane was local (since ZoteroPane object might get swapped out for a
- * tab's ZoteroPane)
+ * Keep track of which TrellisPane was local (since TrellisPane object might get swapped out for a
+ * tab's TrellisPane)
  */
-var ZoteroPane_Local = ZoteroPane;
+var TrellisPane_Local = TrellisPane;

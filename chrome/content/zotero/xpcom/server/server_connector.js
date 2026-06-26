@@ -3,32 +3,32 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 const CONNECTOR_API_VERSION = 3;
 
-Zotero.Server.Connector = {
+Trellis.Server.Connector = {
 	_waitingForSelection: {},
 	
 	getSaveTarget: function (allowReadOnly, allowFilesReadOnly=true) {
-		var zp = Zotero.getActiveZoteroPane();
+		var zp = Trellis.getActiveTrellisPane();
 		var library = null;
 		var collection = null;
 		var editable = null;
@@ -40,15 +40,15 @@ Zotero.Server.Connector = {
 				// isn't expressible here yet, and getSelectedCollection() could otherwise return
 				// a collection from a different library than the focused row.
 				let treeRow = zp.collectionsView.selectedTreeRow;
-				library = Zotero.Libraries.get(zp.getSelectedLibraryID());
+				library = Trellis.Libraries.get(zp.getSelectedLibraryID());
 				collection = treeRow && treeRow.isCollection() ? treeRow.ref : null;
 				editable = zp.collectionsView.editable;
 			}
 			// If not editable, switch to My Library if it exists and is editable
 			else {
-				let userLibrary = Zotero.Libraries.userLibrary;
+				let userLibrary = Trellis.Libraries.userLibrary;
 				if (userLibrary && userLibrary.editable) {
-					Zotero.debug("Save target isn't editable -- switching to My Library");
+					Trellis.debug("Save target isn't editable -- switching to My Library");
 					
 					// Don't wait for this, because we don't want to slow down all conenctor
 					// requests by making this function async
@@ -61,15 +61,15 @@ Zotero.Server.Connector = {
 			}
 		}
 		else {
-			let id = Zotero.Prefs.get('lastViewedFolder');
+			let id = Trellis.Prefs.get('lastViewedFolder');
 			if (id) {
 				({ library, collection, editable } = this.resolveTarget(id));
 				if (!editable && !allowReadOnly) {
-					let userLibrary = Zotero.Libraries.userLibrary;
+					let userLibrary = Trellis.Libraries.userLibrary;
 					if (userLibrary && userLibrary.editable) {
-						Zotero.debug("Save target isn't editable -- switching lastViewedFolder to My Library");
+						Trellis.debug("Save target isn't editable -- switching lastViewedFolder to My Library");
 						let treeViewID = userLibrary.treeViewID;
-						Zotero.Prefs.set('lastViewedFolder', treeViewID);
+						Trellis.Prefs.set('lastViewedFolder', treeViewID);
 						({ library, collection, editable } = this.resolveTarget(treeViewID));
 					}
 				}
@@ -79,7 +79,7 @@ Zotero.Server.Connector = {
 		// Default to My Library if present if pane not yet opened
 		// (which should never be the case anymore)
 		if (!library) {
-			let userLibrary = Zotero.Libraries.userLibrary;
+			let userLibrary = Trellis.Libraries.userLibrary;
 			if (userLibrary && userLibrary.editable) {
 				library = userLibrary;
 			}
@@ -98,12 +98,12 @@ Zotero.Server.Connector = {
 		
 		switch (type) {
 		case 'L':
-			library = Zotero.Libraries.get(id);
+			library = Trellis.Libraries.get(id);
 			editable = library.editable;
 			break;
 		
 		case 'C':
-			collection = Zotero.Collections.get(id);
+			collection = Trellis.Collections.get(id);
 			library = collection.library;
 			editable = collection.editable;
 			break;
@@ -121,40 +121,40 @@ Zotero.Server.Connector = {
 	versionWarning: function (req, force=false) {
 		try {
 			if (!force) {
-				if (!Zotero.Prefs.get('showConnectorVersionWarning')) return;
-				if (Zotero.Server.Connector.skipVersionWarning) return;
+				if (!Trellis.Prefs.get('showConnectorVersionWarning')) return;
+				if (Trellis.Server.Connector.skipVersionWarning) return;
 			}
-			if (!req.headers || !req.headers['X-Zotero-Connector-API-Version']) return;
+			if (!req.headers || !req.headers['X-Trellis-Connector-API-Version']) return;
 			
-			const appName = ZOTERO_CONFIG.CLIENT_NAME;
-			const domain = ZOTERO_CONFIG.DOMAIN_NAME;
+			const appName = TRELLIS_CONFIG.CLIENT_NAME;
+			const domain = TRELLIS_CONFIG.DOMAIN_NAME;
 			
-			const apiVersion = req.headers['X-Zotero-Connector-API-Version'];
+			const apiVersion = req.headers['X-Trellis-Connector-API-Version'];
 			// We are up to date
 			if (apiVersion >= CONNECTOR_API_VERSION) return;
 			
-			var message = Zotero.getString("connector-version-warning");
+			var message = Trellis.getString("connector-version-warning");
 			
 			if (!force) {
-				var showNext = Zotero.Prefs.get('nextConnectorVersionWarning');
+				var showNext = Trellis.Prefs.get('nextConnectorVersionWarning');
 				if (showNext && new Date() < new Date(showNext * 1000)) return;
 			}
 			
 			// Don't show again for this browser until restart (unless forced)
-			Zotero.Server.Connector.skipVersionWarning = true;
+			Trellis.Server.Connector.skipVersionWarning = true;
 			setTimeout(function () {
 				if (this.versionWarningShowing) return;
 				
 				var remindLater = {};
 				let options = {
-					title: Zotero.getString('general.updateAvailable'),
+					title: Trellis.getString('general.updateAvailable'),
 					text: message,
-					button0: Zotero.getString('general.upgrade'),
-					button1: Zotero.getString('general.notNow'),
+					button0: Trellis.getString('general.upgrade'),
+					button1: Trellis.getString('general.notNow'),
 				}
 				if (!force) {
 					const SHOW_AGAIN_DAYS = 7;
-					options.checkLabel = Zotero.getString(
+					options.checkLabel = Trellis.getString(
 						'general.dontShowAgainFor',
 						SHOW_AGAIN_DAYS,
 						SHOW_AGAIN_DAYS
@@ -162,7 +162,7 @@ Zotero.Server.Connector = {
 					options.checkbox = remindLater;
 				}
 				this.versionWarningShowing = true;
-				const index = Zotero.Prompt.confirm(options)
+				const index = Trellis.Prompt.confirm(options)
 				this.versionWarningShowing = false;
 				
 				var nextShowDays;
@@ -174,17 +174,17 @@ Zotero.Server.Connector = {
 				else {
 					nextShowDays = 1;
 				}
-				Zotero.Prefs.set('nextConnectorVersionWarning', Math.round(Date.now() / 1000) + 24*60*60 * nextShowDays);
+				Trellis.Prefs.set('nextConnectorVersionWarning', Math.round(Date.now() / 1000) + 24*60*60 * nextShowDays);
 				
 				if (index == 0) {
-					Zotero.launchURL(ZOTERO_CONFIG.CONNECTORS_URL);
+					Trellis.launchURL(TRELLIS_CONFIG.CONNECTORS_URL);
 				}
 			}.bind(this), 0);
 
 			return [400, "application/json", JSON.stringify({ error: "CONNECTOR_VERSION_OUTDATED" })];
 		}
 		catch (e) {
-			Zotero.debug(e, 2);
+			Trellis.debug(e, 2);
 		}
 	}
 };
@@ -195,11 +195,11 @@ Zotero.Server.Connector = {
  * Accepts:
  *		Nothing
  * Returns:
- *		Array of Zotero.Translator objects
+ *		Array of Trellis.Translator objects
  */
-Zotero.Server.Connector.GetTranslators = function () {};
-Zotero.Server.Endpoints["/connector/getTranslators"] = Zotero.Server.Connector.GetTranslators;
-Zotero.Server.Connector.GetTranslators.prototype = {
+Trellis.Server.Connector.GetTranslators = function () {};
+Trellis.Server.Endpoints["/connector/getTranslators"] = Trellis.Server.Connector.GetTranslators;
+Trellis.Server.Connector.GetTranslators.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -213,12 +213,12 @@ Zotero.Server.Connector.GetTranslators.prototype = {
 		// Translator data
 		var me = this;
 		if(data.url) {
-			Zotero.Translators.getWebTranslatorsForLocation(data.url, data.url).then(function (data) {
+			Trellis.Translators.getWebTranslatorsForLocation(data.url, data.url).then(function (data) {
 				sendResponseCallback(200, "application/json",
 						JSON.stringify(me._serializeTranslators(data[0])));
 			});
 		} else {
-			Zotero.Translators.getAll().then(function (translators) {
+			Trellis.Translators.getAll().then(function (translators) {
 				var responseData = me._serializeTranslators(translators);
 				sendResponseCallback(200, "application/json", JSON.stringify(responseData));
 			}).catch(function (e) {
@@ -249,9 +249,9 @@ Zotero.Server.Connector.GetTranslators.prototype = {
  *
  * Returns a list of available translators as an array
  */
-Zotero.Server.Connector.Detect = function () {};
-Zotero.Server.Endpoints["/connector/detect"] = Zotero.Server.Connector.Detect;
-Zotero.Server.Connector.Detect.prototype = {
+Trellis.Server.Connector.Detect = function () {};
+Trellis.Server.Endpoints["/connector/detect"] = Trellis.Server.Connector.Detect;
+Trellis.Server.Connector.Detect.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -263,7 +263,7 @@ Zotero.Server.Connector.Detect.prototype = {
 		try {
 			var translators = await this.getTranslators(requestData);
 		} catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return 500;
 		}
 		
@@ -278,9 +278,9 @@ Zotero.Server.Connector.Detect.prototype = {
 
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(`<html>${data.html}</html>`, 'text/html');
-		doc = Zotero.HTTP.wrapDocument(doc, data.uri);
+		doc = Trellis.HTTP.wrapDocument(doc, data.uri);
 
-		let translate = this._translate = new Zotero.Translate.Web();
+		let translate = this._translate = new Trellis.Translate.Web();
 		translate.setDocument(doc);
 
 		return await translate.getTranslators();
@@ -295,9 +295,9 @@ Zotero.Server.Connector.Detect.prototype = {
  * Returns:
  *		201 response code with item in body.
  */
-Zotero.Server.Connector.SaveItems = function () {};
-Zotero.Server.Endpoints["/connector/saveItems"] = Zotero.Server.Connector.SaveItems;
-Zotero.Server.Connector.SaveItems.prototype = {
+Trellis.Server.Connector.SaveItems = function () {};
+Trellis.Server.Endpoints["/connector/saveItems"] = Trellis.Server.Connector.SaveItems;
+Trellis.Server.Connector.SaveItems.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -307,32 +307,32 @@ Zotero.Server.Connector.SaveItems.prototype = {
 	 * to the database
 	 */
 	init: async function (requestData) {
-		const response = Zotero.Server.Connector.versionWarning(requestData, true);
+		const response = Trellis.Server.Connector.versionWarning(requestData, true);
 		if (response) {
 			return response;
 		}
 		var data = requestData.data;
 		
-		var { library, collection, editable } = Zotero.Server.Connector.getSaveTarget();
+		var { library, collection, editable } = Trellis.Server.Connector.getSaveTarget();
 		var libraryID = library.libraryID;
 		var targetID = collection ? collection.treeViewID : library.treeViewID;
 		
 		try {
-			var session = Zotero.Server.Connector.SessionManager.create(
+			var session = Trellis.Server.Connector.SessionManager.create(
 				data.sessionID,
 				'saveItems',
 				requestData
 			);
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 			return [409, "application/json", JSON.stringify({ error: "SESSION_EXISTS" })];
 		}
 		await session.update(targetID);
 		
 		// Shouldn't happen as long as My Library exists
 		if (!library.editable) {
-			Zotero.logError("Can't add item to read-only library " + library.name);
+			Trellis.logError("Can't add item to read-only library " + library.name);
 			return [500, "application/json", JSON.stringify({ libraryEditable: false })];
 		}
 		
@@ -341,7 +341,7 @@ Zotero.Server.Connector.SaveItems.prototype = {
 			return [201, "application/json"];
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			session.remove();
 			return 500;
 		}
@@ -356,9 +356,9 @@ Zotero.Server.Connector.SaveItems.prototype = {
  * Returns:
  * 		200
  */
-Zotero.Server.Connector.GetRecognizedItem = function () {};
-Zotero.Server.Endpoints["/connector/getRecognizedItem"] = Zotero.Server.Connector.GetRecognizedItem;
-Zotero.Server.Connector.GetRecognizedItem.prototype = {
+Trellis.Server.Connector.GetRecognizedItem = function () {};
+Trellis.Server.Endpoints["/connector/getRecognizedItem"] = Trellis.Server.Connector.GetRecognizedItem;
+Trellis.Server.Connector.GetRecognizedItem.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["*"],
 	permitBookmarklet: true,
@@ -369,9 +369,9 @@ Zotero.Server.Connector.GetRecognizedItem.prototype = {
 			return [400, "application/json", JSON.stringify({ error: "SESSION_ID_NOT_PROVIDED" })];
 		}
 		
-		const session = Zotero.Server.Connector.SessionManager.get(sessionID);
+		const session = Trellis.Server.Connector.SessionManager.get(sessionID);
 		if (!session) {
-			Zotero.debug("Can't find session " + sessionID, 1);
+			Trellis.debug("Can't find session " + sessionID, 1);
 			return [400, "application/json", JSON.stringify({ error: "SESSION_NOT_FOUND" })];
 		}
 		
@@ -404,9 +404,9 @@ Zotero.Server.Connector.GetRecognizedItem.prototype = {
  * 		200 - Non-writable library
  * 		201 - Created
  */
-Zotero.Server.Connector.SaveStandaloneAttachment = function () {};
-Zotero.Server.Endpoints["/connector/saveStandaloneAttachment"] = Zotero.Server.Connector.SaveStandaloneAttachment;
-Zotero.Server.Connector.SaveStandaloneAttachment.prototype = {
+Trellis.Server.Connector.SaveStandaloneAttachment = function () {};
+Trellis.Server.Endpoints["/connector/saveStandaloneAttachment"] = Trellis.Server.Connector.SaveStandaloneAttachment;
+Trellis.Server.Connector.SaveStandaloneAttachment.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["*"],
 	permitBookmarklet: true,
@@ -422,12 +422,12 @@ Zotero.Server.Connector.SaveStandaloneAttachment.prototype = {
 		if (!sessionID) {
 			return [400, "application/json", JSON.stringify({ error: "SESSION_ID_NOT_PROVIDED" })];
 		}
-		var { library, collection } = Zotero.Server.Connector.getSaveTarget(false, false);
+		var { library, collection } = Trellis.Server.Connector.getSaveTarget(false, false);
 		var libraryID = library.libraryID;
 		var targetID = collection ? collection.treeViewID : library.treeViewID;
 
 		try {
-			var session = Zotero.Server.Connector.SessionManager.create(
+			var session = Trellis.Server.Connector.SessionManager.create(
 				sessionID,
 				'saveStandaloneAttachment',
 				requestData
@@ -439,7 +439,7 @@ Zotero.Server.Connector.SaveStandaloneAttachment.prototype = {
 		await session.update(targetID);
 
 		// Save standalone attachment from stream
-		let item = await Zotero.Attachments.importFromNetworkStream({
+		let item = await Trellis.Attachments.importFromNetworkStream({
 			url: metadata.url,
 			libraryID,
 			collections: collection ? [collection.id] : undefined,
@@ -450,10 +450,10 @@ Zotero.Server.Connector.SaveStandaloneAttachment.prototype = {
 		});
 		session.addItem(metadata.url, item);
 		
-		let canRecognize = Zotero.RecognizeDocument.canRecognize(item);
+		let canRecognize = Trellis.RecognizeDocument.canRecognize(item);
 		if (canRecognize) {
 			// Automatically recognize PDF/EPUB
-			session.autoRecognizePromise = Zotero.RecognizeDocument.autoRecognizeItems([item]);
+			session.autoRecognizePromise = Trellis.RecognizeDocument.autoRecognizeItems([item]);
 		}
 		return [201, "application/json", JSON.stringify({ canRecognize })];
 	}
@@ -474,9 +474,9 @@ Zotero.Server.Connector.SaveStandaloneAttachment.prototype = {
  * 		200 - Non-writable library
  * 		201 - Created
  */
-Zotero.Server.Connector.SaveAttachment = function () {};
-Zotero.Server.Endpoints["/connector/saveAttachment"] = Zotero.Server.Connector.SaveAttachment;
-Zotero.Server.Connector.SaveAttachment.prototype = {
+Trellis.Server.Connector.SaveAttachment = function () {};
+Trellis.Server.Endpoints["/connector/saveAttachment"] = Trellis.Server.Connector.SaveAttachment;
+Trellis.Server.Connector.SaveAttachment.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["*"],
 	permitBookmarklet: true,
@@ -493,20 +493,20 @@ Zotero.Server.Connector.SaveAttachment.prototype = {
 			return [400, "application/json", JSON.stringify({ error: "SESSION_ID_NOT_PROVIDED" })];
 		}
 
-		let session = Zotero.Server.Connector.SessionManager.get(sessionID);
+		let session = Trellis.Server.Connector.SessionManager.get(sessionID);
 		if (!session) {
-			Zotero.debug("Can't find session " + sessionID, 1);
+			Trellis.debug("Can't find session " + sessionID, 1);
 			return [400, "application/json", JSON.stringify({ error: "SESSION_NOT_FOUND" })];
 		}
 		
-		let { library } = Zotero.Server.Connector.getSaveTarget();
+		let { library } = Trellis.Server.Connector.getSaveTarget();
 		if (!library.filesEditable) {
 			return [200, 'text/plain', 'Library files are not editable.'];
 		}
 
 		// Save attachment based on provided parent id from stream
 		let parentItem = session.getItemByConnectorKey(metadata.parentItemID);
-		await Zotero.Attachments.importFromNetworkStream({
+		await Trellis.Attachments.importFromNetworkStream({
 			url: metadata.url,
 			parentItemID: parentItem.id,
 			title: metadata.title,
@@ -523,7 +523,7 @@ Zotero.Server.Connector.SaveAttachment.prototype = {
 /**
  * Attaches a singlefile attachment to an item saved with /saveItems or /saveSnapshot
  * If data.snapshotContent is empty, it means the save failed in the Connector
- * And we fallback to saving in Zotero
+ * And we fallback to saving in Trellis
  *
  * Accepts:
  * 		sessionID
@@ -536,9 +536,9 @@ Zotero.Server.Connector.SaveAttachment.prototype = {
  * Returns:
  *		Nothing (200 OK response)
  */
-Zotero.Server.Connector.SaveSingleFile = function () {};
-Zotero.Server.Endpoints["/connector/saveSingleFile"] = Zotero.Server.Connector.SaveSingleFile;
-Zotero.Server.Connector.SaveSingleFile.prototype = {
+Trellis.Server.Connector.SaveSingleFile = function () {};
+Trellis.Server.Endpoints["/connector/saveSingleFile"] = Trellis.Server.Connector.SaveSingleFile;
+Trellis.Server.Connector.SaveSingleFile.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json", "multipart/form-data"],
 	permitBookmarklet: true,
@@ -554,13 +554,13 @@ Zotero.Server.Connector.SaveSingleFile.prototype = {
 			return [400, "application/json", JSON.stringify({ error: "SESSION_ID_NOT_PROVIDED" })];
 		}
 
-		let session = Zotero.Server.Connector.SessionManager.get(data.sessionID);
+		let session = Trellis.Server.Connector.SessionManager.get(data.sessionID);
 		if (!session) {
-			Zotero.debug("Can't find session " + data.sessionID, 1);
+			Trellis.debug("Can't find session " + data.sessionID, 1);
 			return [400, "application/json", JSON.stringify({ error: "SESSION_NOT_FOUND" })];
 		}
 
-		let { library } = Zotero.Server.Connector.getSaveTarget();
+		let { library } = Trellis.Server.Connector.getSaveTarget();
 		if (!library.filesEditable) {
 			return [200, 'text/plain', 'Library files are not editable.'];
 		}
@@ -569,7 +569,7 @@ Zotero.Server.Connector.SaveSingleFile.prototype = {
 		if (session._action === 'saveSnapshot') {
 			const parentItemID = session.getItemByConnectorKey(data.url).id;
 			// Just saves the snapshot straight up
-			await Zotero.Attachments.importFromSnapshotContent({
+			await Trellis.Attachments.importFromSnapshotContent({
 				title: data.title,
 				url: data.url,
 				parentItemID,
@@ -592,7 +592,7 @@ Zotero.Server.Connector.SaveSingleFile.prototype = {
 };
 
 /**
- * Creates a webpage item top-level item in Zotero
+ * Creates a webpage item top-level item in Trellis
  * Called by the Connector when no translators are detected on the page
  *
  * Accepts:
@@ -602,9 +602,9 @@ Zotero.Server.Connector.SaveSingleFile.prototype = {
  * Returns:
  *		Nothing (200 OK response)
  */
-Zotero.Server.Connector.SaveSnapshot = function () {};
-Zotero.Server.Endpoints["/connector/saveSnapshot"] = Zotero.Server.Connector.SaveSnapshot;
-Zotero.Server.Connector.SaveSnapshot.prototype = {
+Trellis.Server.Connector.SaveSnapshot = function () {};
+Trellis.Server.Endpoints["/connector/saveSnapshot"] = Trellis.Server.Connector.SaveSnapshot;
+Trellis.Server.Connector.SaveSnapshot.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -613,32 +613,32 @@ Zotero.Server.Connector.SaveSnapshot.prototype = {
 	 * Save snapshot
 	 */
 	init: async function (requestData) {
-		const response = Zotero.Server.Connector.versionWarning(requestData, true);
+		const response = Trellis.Server.Connector.versionWarning(requestData, true);
 		if (response) {
 			return response;
 		}
 
 		var data = requestData.data;
 		
-		var { library, collection } = Zotero.Server.Connector.getSaveTarget();
+		var { library, collection } = Trellis.Server.Connector.getSaveTarget();
 		var targetID = collection ? collection.treeViewID : library.treeViewID;
 		
 		try {
-			var session = Zotero.Server.Connector.SessionManager.create(
+			var session = Trellis.Server.Connector.SessionManager.create(
 				data.sessionID,
 				'saveSnapshot',
 				requestData
 			);
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 			return [409, "application/json", JSON.stringify({ error: "SESSION_EXISTS" })];
 		}
 		await session.update(collection ? collection.treeViewID : library.treeViewID);
 		
 		// Shouldn't happen as long as My Library exists
 		if (!library.editable) {
-			Zotero.logError("Can't add item to read-only library " + library.name);
+			Trellis.logError("Can't add item to read-only library " + library.name);
 			return [500, "application/json", JSON.stringify({ libraryEditable: false })];
 		}
 		
@@ -646,7 +646,7 @@ Zotero.Server.Connector.SaveSnapshot.prototype = {
 			await session.saveSnapshot(targetID);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return 500;
 		}
 		
@@ -663,21 +663,21 @@ Zotero.Server.Connector.SaveSnapshot.prototype = {
  *		sessionID - A session ID previously passed to /saveItems
  *		itemID - The ID of the item to save alternative attachment for
  */
-Zotero.Server.Connector.HasAttachmentResolvers = function () {};
-Zotero.Server.Endpoints["/connector/hasAttachmentResolvers"] = Zotero.Server.Connector.HasAttachmentResolvers;
-Zotero.Server.Connector.HasAttachmentResolvers.prototype = {
+Trellis.Server.Connector.HasAttachmentResolvers = function () {};
+Trellis.Server.Endpoints["/connector/hasAttachmentResolvers"] = Trellis.Server.Connector.HasAttachmentResolvers;
+Trellis.Server.Connector.HasAttachmentResolvers.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
 	init: async function (requestData) {
 		let data = requestData.data;
-		let session = Zotero.Server.Connector.SessionManager.get(data.sessionID);
+		let session = Trellis.Server.Connector.SessionManager.get(data.sessionID);
 		if (!session) {
-			Zotero.debug("Can't find session " + data.sessionID, 1);
+			Trellis.debug("Can't find session " + data.sessionID, 1);
 			return [400, "application/json", JSON.stringify({ error: "SESSION_NOT_FOUND" })];
 		}
 		let item = session.getItemByConnectorKey(data.itemID);
-		let resolvers = Zotero.Attachments.getFileResolvers(item, ['oa', 'custom'], true);
+		let resolvers = Trellis.Attachments.getFileResolvers(item, ['oa', 'custom'], true);
 		return [200, "application/json", JSON.stringify(resolvers.length > 0)];
 	}
 }
@@ -693,23 +693,23 @@ Zotero.Server.Connector.HasAttachmentResolvers.prototype = {
  * 		201 - Created and attachment title
  * 		500 - Failed to save
  */
-Zotero.Server.Connector.SaveAttachmentFromResolver = function () {};
-Zotero.Server.Endpoints["/connector/saveAttachmentFromResolver"] = Zotero.Server.Connector.SaveAttachmentFromResolver;
-Zotero.Server.Connector.SaveAttachmentFromResolver.prototype = {
+Trellis.Server.Connector.SaveAttachmentFromResolver = function () {};
+Trellis.Server.Endpoints["/connector/saveAttachmentFromResolver"] = Trellis.Server.Connector.SaveAttachmentFromResolver;
+Trellis.Server.Connector.SaveAttachmentFromResolver.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
 	init: async function (requestData) {
 		let data = requestData.data;
-		let session = Zotero.Server.Connector.SessionManager.get(data.sessionID);
+		let session = Trellis.Server.Connector.SessionManager.get(data.sessionID);
 		if (!session) {
-			Zotero.debug("Can't find session " + data.sessionID, 1);
+			Trellis.debug("Can't find session " + data.sessionID, 1);
 			return [400, "application/json", JSON.stringify({ error: "SESSION_NOT_FOUND" })];
 		}
 		let item = session.getItemByConnectorKey(data.itemID);
-		let resolvers = Zotero.Attachments.getFileResolvers(item, ['oa', 'custom'], true);
+		let resolvers = Trellis.Attachments.getFileResolvers(item, ['oa', 'custom'], true);
 
-		let attachment = await Zotero.Attachments.addFileFromURLs(item, resolvers);
+		let attachment = await Trellis.Attachments.addFileFromURLs(item, resolvers);
 
 		if (attachment) {
 			return [201, "text/plain", attachment.getDisplayTitle()];
@@ -733,9 +733,9 @@ Zotero.Server.Connector.SaveAttachmentFromResolver.prototype = {
  *		200 response on successful change
  *		400 on error with 'error' property in JSON
  */
-Zotero.Server.Connector.UpdateSession = function () {};
-Zotero.Server.Endpoints["/connector/updateSession"] = Zotero.Server.Connector.UpdateSession;
-Zotero.Server.Connector.UpdateSession.prototype = {
+Trellis.Server.Connector.UpdateSession = function () {};
+Trellis.Server.Endpoints["/connector/updateSession"] = Trellis.Server.Connector.UpdateSession;
+Trellis.Server.Connector.UpdateSession.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -747,9 +747,9 @@ Zotero.Server.Connector.UpdateSession.prototype = {
 			return [400, "application/json", JSON.stringify({ error: "SESSION_ID_NOT_PROVIDED" })];
 		}
 		
-		var session = Zotero.Server.Connector.SessionManager.get(data.sessionID);
+		var session = Trellis.Server.Connector.SessionManager.get(data.sessionID);
 		if (!session) {
-			Zotero.debug("Can't find session " + data.sessionID, 1);
+			Trellis.debug("Can't find session " + data.sessionID, 1);
 			return [400, "application/json", JSON.stringify({ error: "SESSION_NOT_FOUND" })];
 		}
 		
@@ -764,7 +764,7 @@ Zotero.Server.Connector.UpdateSession.prototype = {
 		var note = data.note;
 		
 		if (type == 'C') {
-			let collection = await Zotero.Collections.getAsync(id);
+			let collection = await Trellis.Collections.getAsync(id);
 			if (!collection) {
 				return [400, "application/json", JSON.stringify({ error: "COLLECTION_NOT_FOUND" })];
 			}
@@ -777,14 +777,14 @@ Zotero.Server.Connector.UpdateSession.prototype = {
 };
 
 
-Zotero.Server.Connector.DelaySync = function () {};
-Zotero.Server.Endpoints["/connector/delaySync"] = Zotero.Server.Connector.DelaySync;
-Zotero.Server.Connector.DelaySync.prototype = {
+Trellis.Server.Connector.DelaySync = function () {};
+Trellis.Server.Endpoints["/connector/delaySync"] = Trellis.Server.Connector.DelaySync;
+Trellis.Server.Connector.DelaySync.prototype = {
 	supportedMethods: ["POST"],
 	permitBookmarklet: true,
 	
 	init: function (requestData) {
-		Zotero.Sync.Runner.delaySync(10000);
+		Trellis.Sync.Runner.delaySync(10000);
 		return 204;
 	}
 };
@@ -796,9 +796,9 @@ Zotero.Server.Connector.DelaySync.prototype = {
  * 	- Object[Item] an array of imported items
  */
  
-Zotero.Server.Connector.Import = function () {};
-Zotero.Server.Endpoints["/connector/import"] = Zotero.Server.Connector.Import;
-Zotero.Server.Connector.Import.prototype = {
+Trellis.Server.Connector.Import = function () {};
+Trellis.Server.Endpoints["/connector/import"] = Trellis.Server.Connector.Import;
+Trellis.Server.Connector.Import.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: '*',
 	permitBookmarklet: false,
@@ -806,29 +806,29 @@ Zotero.Server.Connector.Import.prototype = {
 	init: async function (requestData) {
 		let dataString = requestData.data;
 		if (requestData.data instanceof Ci.nsIInputStream) {
-			dataString = Zotero.Server.networkStreamToString(dataString, requestData.headers['content-length']);
+			dataString = Trellis.Server.networkStreamToString(dataString, requestData.headers['content-length']);
 		}
-		let translate = new Zotero.Translate.Import();
+		let translate = new Trellis.Translate.Import();
 		translate.setString(dataString);
 		let translators = await translate.getTranslators();
 		if (!translators || !translators.length) {
 			return 400;
 		}
 		translate.setTranslator(translators[0]);
-		var { library, collection, editable } = Zotero.Server.Connector.getSaveTarget();
+		var { library, collection, editable } = Trellis.Server.Connector.getSaveTarget();
 		var libraryID = library.libraryID;
 		
 		// Shouldn't happen as long as My Library exists
 		if (!library.editable) {
-			Zotero.logError("Can't import into read-only library " + library.name);
+			Trellis.logError("Can't import into read-only library " + library.name);
 			return [500, "application/json", JSON.stringify({ libraryEditable: false })];
 		}
 		
 		try {
-			var session = Zotero.Server.Connector.SessionManager.create(requestData.searchParams.get('session'));
+			var session = Trellis.Server.Connector.SessionManager.create(requestData.searchParams.get('session'));
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 			return [409, "application/json", JSON.stringify({ error: "SESSION_EXISTS" })];
 		}
 		await session.update(collection ? collection.treeViewID : library.treeViewID);
@@ -857,9 +857,9 @@ Zotero.Server.Connector.Import.prototype = {
  * 	- {name: styleName}
  */
  
-Zotero.Server.Connector.InstallStyle = function () {};
-Zotero.Server.Endpoints["/connector/installStyle"] = Zotero.Server.Connector.InstallStyle;
-Zotero.Server.Connector.InstallStyle.prototype = {
+Trellis.Server.Connector.InstallStyle = function () {};
+Trellis.Server.Endpoints["/connector/installStyle"] = Trellis.Server.Connector.InstallStyle;
+Trellis.Server.Connector.InstallStyle.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: '*',
 	permitBookmarklet: false,
@@ -867,10 +867,10 @@ Zotero.Server.Connector.InstallStyle.prototype = {
 	init: async function (requestData) {
 		let dataString = requestData.data;
 		if (requestData.data instanceof Ci.nsIInputStream) {
-			dataString = Zotero.Server.networkStreamToString(dataString, requestData.headers['content-length']);
+			dataString = Trellis.Server.networkStreamToString(dataString, requestData.headers['content-length']);
 		}
 		try {
-			var { styleTitle } = await Zotero.Styles.install(
+			var { styleTitle } = await Trellis.Styles.install(
 				dataString, requestData.searchParams.get('origin') || null, true
 			);
 		} catch (e) {
@@ -888,9 +888,9 @@ Zotero.Server.Connector.InstallStyle.prototype = {
  * Returns:
  *		code - translator code
  */
-Zotero.Server.Connector.GetTranslatorCode = function () {};
-Zotero.Server.Endpoints["/connector/getTranslatorCode"] = Zotero.Server.Connector.GetTranslatorCode;
-Zotero.Server.Connector.GetTranslatorCode.prototype = {
+Trellis.Server.Connector.GetTranslatorCode = function () {};
+Trellis.Server.Endpoints["/connector/getTranslatorCode"] = Trellis.Server.Connector.GetTranslatorCode;
+Trellis.Server.Connector.GetTranslatorCode.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -901,8 +901,8 @@ Zotero.Server.Connector.GetTranslatorCode.prototype = {
 	 * @param {Function} sendResponseCallback function to send HTTP response
 	 */
 	init: function (postData, sendResponseCallback) {
-		var translator = Zotero.Translators.get(postData.translatorID);
-		Zotero.Translators.getCodeForTranslator(translator).then(function (code) {
+		var translator = Trellis.Translators.get(postData.translatorID);
+		Trellis.Translators.getCodeForTranslator(translator).then(function (code) {
 			sendResponseCallback(200, "application/javascript", code);
 		});
 	}
@@ -920,9 +920,9 @@ Zotero.Server.Connector.GetTranslatorCode.prototype = {
  *      collectionID
  *      collectionName
  */
-Zotero.Server.Connector.GetSelectedCollection = function () {};
-Zotero.Server.Endpoints["/connector/getSelectedCollection"] = Zotero.Server.Connector.GetSelectedCollection;
-Zotero.Server.Connector.GetSelectedCollection.prototype = {
+Trellis.Server.Connector.GetSelectedCollection = function () {};
+Trellis.Server.Endpoints["/connector/getSelectedCollection"] = Trellis.Server.Connector.GetSelectedCollection;
+Trellis.Server.Connector.GetSelectedCollection.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -934,7 +934,7 @@ Zotero.Server.Connector.GetSelectedCollection.prototype = {
 	 */
 	init: async function (postData, sendResponseCallback) {
 		let allowReadOnly = (postData.hasOwnProperty("switchToReadableLibrary")) ? !postData.switchToReadableLibrary : true;
-		var { library, collection, editable } = Zotero.Server.Connector.getSaveTarget(allowReadOnly);
+		var { library, collection, editable } = Trellis.Server.Connector.getSaveTarget(allowReadOnly);
 		var response = {
 			libraryID: library.libraryID,
 			libraryName: library.name,
@@ -955,10 +955,10 @@ Zotero.Server.Connector.GetSelectedCollection.prototype = {
 		var collections = [];
 		let tags = {};
 		var originalLibraryID = library.libraryID;
-		for (let library of Zotero.Libraries.getAll()) {
+		for (let library of Trellis.Libraries.getAll()) {
 			if (!library.editable) continue;
 			
-			tags[library.treeViewID] = await Zotero.Tags.getAll(library.libraryID);
+			tags[library.treeViewID] = await Trellis.Tags.getAll(library.libraryID);
 			// Add recent: true for recent targets
 			
 			collections.push(
@@ -968,11 +968,11 @@ Zotero.Server.Connector.GetSelectedCollection.prototype = {
 					filesEditable: library.filesEditable,
 					level: 0
 				},
-				...Zotero.Collections.getByLibrary(library.libraryID, true).map(c => ({
+				...Trellis.Collections.getByLibrary(library.libraryID, true).map(c => ({
 					id: c.treeViewID,
 					name: c.name,
 					filesEditable: library.filesEditable,
-					level: c.level + 1 || 1 // Added by Zotero.Collections._getByContainer()
+					level: c.level + 1 || 1 // Added by Trellis.Collections._getByContainer()
 				}))
 			);
 		}
@@ -981,7 +981,7 @@ Zotero.Server.Connector.GetSelectedCollection.prototype = {
 		
 		// Mark recent targets
 		try {
-			let recents = Zotero.Prefs.get('recentSaveTargets');
+			let recents = Trellis.Prefs.get('recentSaveTargets');
 			if (recents) {
 				recents = new Set(JSON.parse(recents).map(o => o.id));
 				for (let target of response.targets) {
@@ -992,8 +992,8 @@ Zotero.Server.Connector.GetSelectedCollection.prototype = {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.Prefs.clear('recentSaveTargets');
+			Trellis.logError(e);
+			Trellis.Prefs.clear('recentSaveTargets');
 		}
 		
 		sendResponseCallback(
@@ -1025,10 +1025,10 @@ Zotero.Server.Connector.GetSelectedCollection.prototype = {
  * Returns:
  * 		{Array} hostnames
  */
-Zotero.Server.Connector.GetClientHostnames = {};
-Zotero.Server.Connector.GetClientHostnames = function () {};
-Zotero.Server.Endpoints["/connector/getClientHostnames"] = Zotero.Server.Connector.GetClientHostnames;
-Zotero.Server.Connector.GetClientHostnames.prototype = {
+Trellis.Server.Connector.GetClientHostnames = {};
+Trellis.Server.Connector.GetClientHostnames = function () {};
+Trellis.Server.Endpoints["/connector/getClientHostnames"] = Trellis.Server.Connector.GetClientHostnames;
+Trellis.Server.Connector.GetClientHostnames.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: false,
@@ -1038,7 +1038,7 @@ Zotero.Server.Connector.GetClientHostnames.prototype = {
 	 */
 	init: async function (requestData) {
 		try {
-			var hostnames = await Zotero.Proxies.DNS.getHostnames();
+			var hostnames = await Trellis.Proxies.DNS.getHostnames();
 		} catch(e) {
 			return 500;
 		}
@@ -1054,10 +1054,10 @@ Zotero.Server.Connector.GetClientHostnames.prototype = {
  * Returns:
  * 		{Array} hostnames
  */
-Zotero.Server.Connector.Proxies = {};
-Zotero.Server.Connector.Proxies = function () {};
-Zotero.Server.Endpoints["/connector/proxies"] = Zotero.Server.Connector.Proxies;
-Zotero.Server.Connector.Proxies.prototype = {
+Trellis.Server.Connector.Proxies = {};
+Trellis.Server.Connector.Proxies = function () {};
+Trellis.Server.Endpoints["/connector/proxies"] = Trellis.Server.Connector.Proxies;
+Trellis.Server.Connector.Proxies.prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: false,
@@ -1066,7 +1066,7 @@ Zotero.Server.Connector.Proxies.prototype = {
 	 * Returns a 200 response to say the server is alive
 	 */
 	init: async function () {
-		let proxies = Zotero.Proxies.proxies.map((p) => Object.assign(p.toJSON(), {hosts: p.hosts}));
+		let proxies = Trellis.Proxies.proxies.map((p) => Object.assign(p.toJSON(), {hosts: p.hosts}));
 		return [200, "application/json", JSON.stringify(proxies)];
 	}
 };
@@ -1080,9 +1080,9 @@ Zotero.Server.Connector.Proxies.prototype = {
  * Returns:
  *		Nothing (200 OK response)
  */
-Zotero.Server.Connector.Ping = function () {};
-Zotero.Server.Endpoints["/connector/ping"] = Zotero.Server.Connector.Ping;
-Zotero.Server.Connector.Ping.prototype = {
+Trellis.Server.Connector.Ping = function () {};
+Trellis.Server.Endpoints["/connector/ping"] = Trellis.Server.Connector.Ping;
+Trellis.Server.Connector.Ping.prototype = {
 	supportedMethods: ["GET", "POST"],
 	supportedDataTypes: ["application/json", "text/plain"],
 	permitBookmarklet: true,
@@ -1094,20 +1094,20 @@ Zotero.Server.Connector.Ping.prototype = {
 	init: async function (req) {
 		if (req.method == 'GET') {
 			return [200, "text/html", '<!DOCTYPE html><html>'
-				+ '<body>Zotero is running</body></html>'];
+				+ '<body>Trellis is running</body></html>'];
 		} else {
 			// Store the active URL so it can be used for site-specific Quick Copy
 			if (req.data.activeURL) {
-				//Zotero.debug("Setting active URL to " + req.data.activeURL);
-				Zotero.QuickCopy.lastActiveURL = req.data.activeURL;
+				//Trellis.debug("Setting active URL to " + req.data.activeURL);
+				Trellis.QuickCopy.lastActiveURL = req.data.activeURL;
 			}
-			let translatorsHash = await Zotero.Translators.getTranslatorsHash(false);
-			let sortedTranslatorHash = await Zotero.Translators.getTranslatorsHash(true);
+			let translatorsHash = await Trellis.Translators.getTranslatorsHash(false);
+			let sortedTranslatorHash = await Trellis.Translators.getTranslatorsHash(true);
 			
 			let response = {
 				prefs: {
-					automaticSnapshots: Zotero.Prefs.get('automaticSnapshots'),
-					downloadAssociatedFiles: Zotero.Prefs.get("downloadAssociatedFiles"),
+					automaticSnapshots: Trellis.Prefs.get('automaticSnapshots'),
+					downloadAssociatedFiles: Trellis.Prefs.get("downloadAssociatedFiles"),
 					supportsAttachmentUpload: true,
 					supportsTagsAutocomplete: true,
 					googleDocsAddNoteEnabled: true,
@@ -1118,11 +1118,11 @@ Zotero.Server.Connector.Ping.prototype = {
 					sortedTranslatorHash
 				}
 			};
-			if (Zotero.QuickCopy.hasSiteSettings()) {
+			if (Trellis.QuickCopy.hasSiteSettings()) {
 				response.prefs.reportActiveURL = true;
 			}
 			
-			Zotero.Server.Connector.versionWarning(req);
+			Trellis.Server.Connector.versionWarning(req);
 			
 			return [200, 'application/json', JSON.stringify(response)];
 		}

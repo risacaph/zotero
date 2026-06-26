@@ -3,31 +3,31 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Library = function (params = {}) {
+Trellis.Library = function (params = {}) {
 	let objectType = this._objectType;
-	this._ObjectType = Zotero.Utilities.capitalize(objectType);
-	this._objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
-	this._ObjectTypePlural = Zotero.Utilities.capitalize(this._objectTypePlural);
+	this._ObjectType = Trellis.Utilities.capitalize(objectType);
+	this._objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
+	this._ObjectTypePlural = Trellis.Utilities.capitalize(this._objectTypePlural);
 	
 	this._changed = {};
 	
@@ -40,7 +40,7 @@ Zotero.Library = function (params = {}) {
 	
 	this._lastReadItemInSession = null;
 	
-	Zotero.Utilities.Internal.assignProps(
+	Trellis.Utilities.Internal.assignProps(
 		this,
 		params,
 		[
@@ -69,66 +69,66 @@ Zotero.Library = function (params = {}) {
  * Non-prototype properties
  */
 // DB columns
-Zotero.defineProperty(Zotero.Library, '_dbColumns', {
+Trellis.defineProperty(Trellis.Library, '_dbColumns', {
 	value: Object.freeze([
 		'type', 'editable', 'filesEditable', 'version', 'storageVersion', 'lastSync', 'archived', 'isAdmin'
 	])
 });
 
 // Converts DB column name to (internal) object property
-Zotero.Library._colToProp = function (c) {
-	return "_library" + Zotero.Utilities.capitalize(c);
+Trellis.Library._colToProp = function (c) {
+	return "_library" + Trellis.Utilities.capitalize(c);
 }
 
 // Select all columns in a unique manner, so we can JOIN tables with same column names (e.g. version)
-Zotero.defineProperty(Zotero.Library, '_rowSQLSelect', {
-	value: "L.libraryID, " + Zotero.Library._dbColumns.map(c => "L." + c + " AS " + Zotero.Library._colToProp(c)).join(", ")
+Trellis.defineProperty(Trellis.Library, '_rowSQLSelect', {
+	value: "L.libraryID, " + Trellis.Library._dbColumns.map(c => "L." + c + " AS " + Trellis.Library._colToProp(c)).join(", ")
 		+ ", (SELECT COUNT(*)>0 FROM collections C WHERE C.libraryID=L.libraryID) AS hasCollections"
 		+ ", (SELECT COUNT(*)>0 FROM savedSearches S WHERE S.libraryID=L.libraryID) AS hasSearches"
 });
 
 // The actual select statement for above columns
-Zotero.defineProperty(Zotero.Library, '_rowSQL', {
-	value: "SELECT " + Zotero.Library._rowSQLSelect + " FROM libraries L"
+Trellis.defineProperty(Trellis.Library, '_rowSQL', {
+	value: "SELECT " + Trellis.Library._rowSQLSelect + " FROM libraries L"
 });
 
 /**
  * Prototype properties
  */
-Zotero.defineProperty(Zotero.Library.prototype, '_objectType', {
+Trellis.defineProperty(Trellis.Library.prototype, '_objectType', {
 	value: 'library'
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, '_childObjectTypes', {
+Trellis.defineProperty(Trellis.Library.prototype, '_childObjectTypes', {
 	value: Object.freeze(['item', 'collection', 'search'])
 });
 
 // Valid library types
-Zotero.defineProperty(Zotero.Library.prototype, 'libraryTypes', {
+Trellis.defineProperty(Trellis.Library.prototype, 'libraryTypes', {
 	value: Object.freeze(['user'])
 });
 
 // Immutable libraries
-Zotero.defineProperty(Zotero.Library.prototype, 'fixedLibraries', {
+Trellis.defineProperty(Trellis.Library.prototype, 'fixedLibraries', {
 	value: Object.freeze(['user'])
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'libraryID', {
+Trellis.defineProperty(Trellis.Library.prototype, 'libraryID', {
 	get: function () { return this._libraryID; },
 	set: function (id) { throw new Error("Cannot change library ID"); }
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'id', {
+Trellis.defineProperty(Trellis.Library.prototype, 'id', {
 	get: function () { return this.libraryID; },
 	set: function (val) { return this.libraryID = val; }
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'libraryType', {
+Trellis.defineProperty(Trellis.Library.prototype, 'libraryType', {
 	get: function () { return this._get('_libraryType'); },
 	set: function (v) { return this._set('_libraryType', v); }
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'lastReadItemInSession', {
+Trellis.defineProperty(Trellis.Library.prototype, 'lastReadItemInSession', {
 	get() { return this._lastReadItemInSession; },
 	set(val) { this._lastReadItemInSession = val; }
 });
@@ -139,14 +139,14 @@ Zotero.defineProperty(Zotero.Library.prototype, 'lastReadItemInSession', {
  *
  * @property
  */
-Zotero.defineProperty(Zotero.Library.prototype, 'libraryTypeID', {
+Trellis.defineProperty(Trellis.Library.prototype, 'libraryTypeID', {
 	get: function () {
 		switch (this._libraryType) {
 		case 'user':
-			return Zotero.Users.getCurrentUserID() || 0;
+			return Trellis.Users.getCurrentUserID() || 0;
 		
 		case 'group':
-			return Zotero.Groups.getGroupIDFromLibraryID(this._libraryID);
+			return Trellis.Groups.getGroupIDFromLibraryID(this._libraryID);
 		
 		default:
 			throw new Error(`Tried to get library type id for ${this._libraryType} library`);
@@ -154,32 +154,32 @@ Zotero.defineProperty(Zotero.Library.prototype, 'libraryTypeID', {
 	}
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'isGroup', {
+Trellis.defineProperty(Trellis.Library.prototype, 'isGroup', {
 	get: function () {
 		return this.libraryType == 'group';
 	}
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'libraryVersion', {
+Trellis.defineProperty(Trellis.Library.prototype, 'libraryVersion', {
 	get: function () { return this._get('_libraryVersion'); },
 	set: function (v) { return this._set('_libraryVersion', v); }
 });
 
 
-Zotero.defineProperty(Zotero.Library.prototype, 'syncable', {
+Trellis.defineProperty(Trellis.Library.prototype, 'syncable', {
 	get: function () { return this._libraryType != 'feed'; }
 });
 
 
-Zotero.defineProperty(Zotero.Library.prototype, 'lastSync', {
+Trellis.defineProperty(Trellis.Library.prototype, 'lastSync', {
 	get: function () { return this._get('_libraryLastSync'); }
 });
 
 
-Zotero.defineProperty(Zotero.Library.prototype, 'name', {
+Trellis.defineProperty(Trellis.Library.prototype, 'name', {
 	get: function () {
 		if (this._libraryType == 'user') {
-			return Zotero.getString('pane.collections.library');
+			return Trellis.getString('pane.collections.library');
 		}
 		
 		// This property is provided by the extending objects (Group, Feed) for other library types
@@ -187,23 +187,23 @@ Zotero.defineProperty(Zotero.Library.prototype, 'name', {
 	}
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'treeViewID', {
+Trellis.defineProperty(Trellis.Library.prototype, 'treeViewID', {
 	get: function () {
 		return "L" + this._libraryID;
 	}
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'treeViewImage', {
+Trellis.defineProperty(Trellis.Library.prototype, 'treeViewImage', {
 	get: function () {
-		return "chrome://zotero/skin/16/universal/library.svg";
+		return "chrome://trellis/skin/16/universal/library.svg";
 	}
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'hasTrash', {
+Trellis.defineProperty(Trellis.Library.prototype, 'hasTrash', {
 	value: true
 });
 
-Zotero.defineProperty(Zotero.Library.prototype, 'allowsLinkedFiles', {
+Trellis.defineProperty(Trellis.Library.prototype, 'allowsLinkedFiles', {
 	value: true
 });
 
@@ -211,20 +211,20 @@ Zotero.defineProperty(Zotero.Library.prototype, 'allowsLinkedFiles', {
 (function () {
 	let accessors = ['editable', 'filesEditable', 'storageVersion', 'archived', 'isAdmin'];
 	for (let i=0; i<accessors.length; i++) {
-		let prop = Zotero.Library._colToProp(accessors[i]);
-		Zotero.defineProperty(Zotero.Library.prototype, accessors[i], {
+		let prop = Trellis.Library._colToProp(accessors[i]);
+		Trellis.defineProperty(Trellis.Library.prototype, accessors[i], {
 			get: function () { return this._get(prop); },
 			set: function (v) { return this._set(prop, v); }
 		})
 	}
 })()
 
-Zotero.defineProperty(Zotero.Library.prototype, 'storageDownloadNeeded', {
+Trellis.defineProperty(Trellis.Library.prototype, 'storageDownloadNeeded', {
 	get: function () { return this._storageDownloadNeeded; },
 	set: function (val) { this._storageDownloadNeeded = !!val; },
 })
 
-Zotero.Library.prototype._isValidProp = function (prop) {
+Trellis.Library.prototype._isValidProp = function (prop) {
 	let prefix = '_library';
 	if (prop.indexOf(prefix) !== 0 || prop.length == prefix.length) {
 		return false;
@@ -233,10 +233,10 @@ Zotero.Library.prototype._isValidProp = function (prop) {
 	let col = prop.substr(prefix.length);
 	col = col.charAt(0).toLowerCase() + col.substr(1);
 	
-	return Zotero.Library._dbColumns.indexOf(col) != -1;
+	return Trellis.Library._dbColumns.indexOf(col) != -1;
 }
 
-Zotero.Library.prototype._get = function (prop) {
+Trellis.Library.prototype._get = function (prop) {
 	if (!this._isValidProp(prop)) {
 		throw new Error('Unknown property "' + prop + '"');
 	}
@@ -244,7 +244,7 @@ Zotero.Library.prototype._get = function (prop) {
 	return this[prop];
 }
 
-Zotero.Library.prototype._set = function (prop, val) {
+Trellis.Library.prototype._set = function (prop, val) {
 	if (!this._isValidProp(prop)) {
 		throw new Error('Unknown property "' + prop + '"');
 	}
@@ -293,7 +293,7 @@ Zotero.Library.prototype._set = function (prop, val) {
 				// Caught in syncEngine to trigger a full sync (e.g., after a server-side
 				// account deletion/recreation has reset the remote library version)
 				let e = new Error(prop + ' cannot decrease');
-				e.name = 'ZoteroLibraryVersionDecreaseError';
+				e.name = 'TrellisLibraryVersionDecreaseError';
 				throw e;
 			}
 			
@@ -310,7 +310,7 @@ Zotero.Library.prototype._set = function (prop, val) {
 				// Caught in syncEngine to trigger a full sync (e.g., after a server-side
 				// account deletion/recreation has reset the remote library version)
 				let e = new Error(prop + ' cannot decrease');
-				e.name = 'ZoteroLibraryVersionDecreaseError';
+				e.name = 'TrellisLibraryVersionDecreaseError';
 				throw e;
 			}
 			val = newVal;
@@ -342,16 +342,16 @@ Zotero.Library.prototype._set = function (prop, val) {
 	
 	if (this._changed[prop]) {
 		// Catch attempts to re-set already set fields before saving
-		Zotero.debug('Warning: Attempting to set unsaved ' + this._objectType + ' property "' + prop + '"', 2, true);
+		Trellis.debug('Warning: Attempting to set unsaved ' + this._objectType + ' property "' + prop + '"', 2, true);
 	}
 	
 	this._changed[prop] = true;
 	this[prop] = val;
 }
 
-Zotero.Library.prototype._loadDataFromRow = function (row) {
+Trellis.Library.prototype._loadDataFromRow = function (row) {
 	if (this._libraryID !== undefined && this._libraryID !== row.libraryID) {
-		Zotero.debug("Warning: library ID changed in Zotero.Library._loadDataFromRow", 2, true);
+		Trellis.debug("Warning: library ID changed in Trellis.Library._loadDataFromRow", 2, true);
 	}
 	
 	this._libraryID = row.libraryID;
@@ -371,42 +371,42 @@ Zotero.Library.prototype._loadDataFromRow = function (row) {
 	this._changed = {};
 }
 
-Zotero.Library.prototype._reloadFromDB = async function () {
-	let sql = Zotero.Library._rowSQL + ' WHERE libraryID=?';
-	let row = await Zotero.DB.rowQueryAsync(sql, [this.libraryID]);
+Trellis.Library.prototype._reloadFromDB = async function () {
+	let sql = Trellis.Library._rowSQL + ' WHERE libraryID=?';
+	let row = await Trellis.DB.rowQueryAsync(sql, [this.libraryID]);
 	this._loadDataFromRow(row);
 };
 
 /**
  * Load object data in this library
  */
-Zotero.Library.prototype.loadAllDataTypes = async function () {
-	await Zotero.SyncedSettings.loadAll(this.libraryID);
-	await Zotero.Collections.loadAll(this.libraryID);
-	await Zotero.Searches.loadAll(this.libraryID);
-	await Zotero.Items.loadAll(this.libraryID);
+Trellis.Library.prototype.loadAllDataTypes = async function () {
+	await Trellis.SyncedSettings.loadAll(this.libraryID);
+	await Trellis.Collections.loadAll(this.libraryID);
+	await Trellis.Searches.loadAll(this.libraryID);
+	await Trellis.Items.loadAll(this.libraryID);
 };
 
 //
 // Methods to handle promises that are resolved when object data is loaded for the library
 //
-Zotero.Library.prototype.getDataLoaded = function (objectType) {
+Trellis.Library.prototype.getDataLoaded = function (objectType) {
 	return this._dataLoaded[objectType] || null;
 };
 
-Zotero.Library.prototype.setDataLoading = function (objectType) {
+Trellis.Library.prototype.setDataLoading = function (objectType) {
 	if (this._dataLoadedDeferreds[objectType]) {
 		throw new Error("Items already loading for library " + this.libraryID);
 	}
-	this._dataLoadedDeferreds[objectType] = Zotero.Promise.defer();
+	this._dataLoadedDeferreds[objectType] = Trellis.Promise.defer();
 };
 
-Zotero.Library.prototype.getDataLoadedPromise = function (objectType) {
+Trellis.Library.prototype.getDataLoadedPromise = function (objectType) {
 	return this._dataLoadedDeferreds[objectType]
 		? this._dataLoadedDeferreds[objectType].promise : null;
 };
 
-Zotero.Library.prototype.setDataLoaded = function (objectType) {
+Trellis.Library.prototype.setDataLoaded = function (objectType) {
 	this._dataLoaded[objectType] = true;
 	this._dataLoadedDeferreds[objectType].resolve();
 };
@@ -414,7 +414,7 @@ Zotero.Library.prototype.setDataLoaded = function (objectType) {
 /**
  * Wait for a given data type to load, loading it now if necessary
  */
-Zotero.Library.prototype.waitForDataLoad = async function (objectType) {
+Trellis.Library.prototype.waitForDataLoad = async function (objectType) {
 	if (this.getDataLoaded(objectType)) return;
 	
 	let promise = this.getDataLoadedPromise(objectType);
@@ -424,41 +424,41 @@ Zotero.Library.prototype.waitForDataLoad = async function (objectType) {
 	}
 	// Otherwise load them now
 	else {
-		let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
 		await objectsClass.loadAll(this.libraryID);
 	}
 };
 
-Zotero.Library.prototype.isChildObjectAllowed = function (type) {
+Trellis.Library.prototype.isChildObjectAllowed = function (type) {
 	return this._childObjectTypes.indexOf(type) != -1;
 };
 
-Zotero.Library.prototype.updateLastSyncTime = function () {
+Trellis.Library.prototype.updateLastSyncTime = function () {
 	this._set('_libraryLastSync', new Date());
 };
 
-Zotero.Library.prototype.saveTx = function (options) {
+Trellis.Library.prototype.saveTx = function (options) {
 	options = options || {};
 	options.tx = true;
 	return this.save(options);
 }
 
-Zotero.Library.prototype.save = async function (options) {
+Trellis.Library.prototype.save = async function (options) {
 	options = options || {};
 	var env = {
 		options: options,
 		transactionOptions: options.transactionOptions || {}
 	};
 	
-	if (!env.options.tx && !Zotero.DB.inTransaction()) {
-		Zotero.logError("save() called on Zotero.Library without a wrapping "
+	if (!env.options.tx && !Trellis.DB.inTransaction()) {
+		Trellis.logError("save() called on Trellis.Library without a wrapping "
 			+ "transaction -- use saveTx() instead", 2, true);
 		env.options.tx = true;
 	}
 	
 	var proceed = await this._initSave(env)
 		.catch(async function (e) {
-			if (!env.isNew && Zotero.Libraries.exists(this.libraryID)) {
+			if (!env.isNew && Trellis.Libraries.exists(this.libraryID)) {
 				// Reload from DB and reset this._changed, so this is not a permanent failure
 				await this._reloadFromDB();
 			}
@@ -468,10 +468,10 @@ Zotero.Library.prototype.save = async function (options) {
 	if (!proceed) return false;
 	
 	if (env.isNew) {
-		Zotero.debug('Saving data for new ' + this._objectType + ' to database', 4);
+		Trellis.debug('Saving data for new ' + this._objectType + ' to database', 4);
 	}
 	else {
-		Zotero.debug('Updating database with new ' + this._objectType + ' data', 4);
+		Trellis.debug('Updating database with new ' + this._objectType + ' data', 4);
 	}
 	
 	try {
@@ -482,24 +482,24 @@ Zotero.Library.prototype.save = async function (options) {
 		
 		// Create transaction
 		if (env.options.tx) {
-			return Zotero.DB.executeTransaction(async function () {
+			return Trellis.DB.executeTransaction(async function () {
 				await this._saveData(env);
 				await this._finalizeSave(env);
 			}.bind(this), env.transactionOptions);
 		}
 		// Use existing transaction
 		else {
-			Zotero.DB.requireTransaction();
+			Trellis.DB.requireTransaction();
 			await this._saveData(env);
 			await this._finalizeSave(env);
 		}
 	} catch(e) {
-		Zotero.debug(e, 1);
+		Trellis.debug(e, 1);
 		throw e;
 	}
 };
 
-Zotero.Library.prototype._initSave = async function (env) {
+Trellis.Library.prototype._initSave = async function (env) {
 	if (this._libraryID === undefined) {
 		env.isNew = true;
 		
@@ -515,10 +515,10 @@ Zotero.Library.prototype._initSave = async function (env) {
 			throw new Error("filesEditable must be set before saving");
 		}
 	} else {
-		Zotero.Libraries._ensureExists(this._libraryID);
+		Trellis.Libraries._ensureExists(this._libraryID);
 		
 		if (!Object.keys(this._changed).length) {
-			Zotero.debug(`No data changed in ${this._objectType} ${this.id} -- not saving`, 4);
+			Trellis.debug(`No data changed in ${this._objectType} ${this.id} -- not saving`, 4);
 			return false;
 		}
 	}
@@ -526,13 +526,13 @@ Zotero.Library.prototype._initSave = async function (env) {
 	return true;
 };
 
-Zotero.Library.prototype._saveData = async function (env) {
+Trellis.Library.prototype._saveData = async function (env) {
 	// Collect changed columns
 	let changedCols = [],
 		params = [];
-	for (let i=0; i<Zotero.Library._dbColumns.length; i++) {
-		let col = Zotero.Library._dbColumns[i];
-		let prop = Zotero.Library._colToProp(col);
+	for (let i=0; i<Trellis.Library._dbColumns.length; i++) {
+		let col = Trellis.Library._dbColumns[i];
+		let prop = Trellis.Library._colToProp(col);
 		
 		if (this._changed[prop]) {
 			changedCols.push(col);
@@ -551,94 +551,94 @@ Zotero.Library.prototype._saveData = async function (env) {
 	}
 	
 	if (env.isNew) {
-		let id = Zotero.ID.get('libraries');
+		let id = Trellis.ID.get('libraries');
 		changedCols.unshift('libraryID');
 		params.unshift(id);
 		
 		let sql = "INSERT INTO libraries (" + changedCols.join(", ") + ") "
 			+ "VALUES (" + Array(params.length).fill("?").join(", ") + ")";
-		await Zotero.DB.queryAsync(sql, params);
+		await Trellis.DB.queryAsync(sql, params);
 		
 		this._libraryID = id;
 	} else if (changedCols.length) {
 		params.push(this.libraryID);
 		let sql = "UPDATE libraries SET " + changedCols.map(v => v + "=?").join(", ")
 			+ " WHERE libraryID=?";
-		await Zotero.DB.queryAsync(sql, params);
+		await Trellis.DB.queryAsync(sql, params);
 		
-		// Since these are Zotero.Library properties, the 'modify' for the inheriting object may not
+		// Since these are Trellis.Library properties, the 'modify' for the inheriting object may not
 		// get triggered, so call it here too
 		if (!env.options.skipNotifier && this.libraryType != 'user') {
-			Zotero.Notifier.queue('modify', this.libraryType, this.libraryTypeID);
+			Trellis.Notifier.queue('modify', this.libraryType, this.libraryTypeID);
 		}
 	} else {
-		Zotero.debug("Library data did not change for " + this._objectType + " " + this.id, 5);
+		Trellis.debug("Library data did not change for " + this._objectType + " " + this.id, 5);
 	}
 };
 
-Zotero.Library.prototype._finalizeSave = async function (env) {
+Trellis.Library.prototype._finalizeSave = async function (env) {
 	this._changed = {};
 	
 	if (env.isNew) {
 		// Re-fetch from DB to get auto-filled defaults
 		await this._reloadFromDB();
 		
-		Zotero.Libraries.register(this);
+		Trellis.Libraries.register(this);
 		
 		await this.loadAllDataTypes();
 	}
 };
 
-Zotero.Library.prototype.eraseTx = function (options) {
+Trellis.Library.prototype.eraseTx = function (options) {
 	options = options || {};
 	options.tx = true;
 	return this.erase(options);
 };
 
-Zotero.Library.prototype.erase = async function (options) {
+Trellis.Library.prototype.erase = async function (options) {
 	options = options || {};
 	var env = {
 		options: options,
 		transactionOptions: options.transactionOptions || {}
 	};
 	
-	if (!env.options.tx && !Zotero.DB.inTransaction()) {
-		Zotero.logError("erase() called on Zotero." + this._ObjectType + " without a wrapping "
+	if (!env.options.tx && !Trellis.DB.inTransaction()) {
+		Trellis.logError("erase() called on Trellis." + this._ObjectType + " without a wrapping "
 			+ "transaction -- use eraseTx() instead");
-		Zotero.debug((new Error).stack, 2);
+		Trellis.debug((new Error).stack, 2);
 		env.options.tx = true;
 	}
 	
 	var proceed = await this._initErase(env);
 	if (!proceed) return false;
 	
-	Zotero.debug('Deleting ' + this._objectType + ' ' + this.id);
+	Trellis.debug('Deleting ' + this._objectType + ' ' + this.id);
 	
 	try {
 		env.notifierData = {};
 		
 		if (env.options.tx) {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await this._eraseData(env);
 				await this._finalizeErase(env);
 			}.bind(this), env.transactionOptions);
 		} else {
-			Zotero.DB.requireTransaction();
+			Trellis.DB.requireTransaction();
 			await this._eraseData(env);
 			await this._finalizeErase(env);
 		}
 	} catch(e) {
-		Zotero.debug(e, 1);
+		Trellis.debug(e, 1);
 		throw e;
 	}
 };
 
-Zotero.Library.prototype._initErase = function (env) {
+Trellis.Library.prototype._initErase = function (env) {
 	if (this.libraryID === undefined) {
 		throw new Error("Attempting to erase an unsaved library");
 	}
 	
-	Zotero.Libraries._ensureExists(this.libraryID);
+	Trellis.Libraries._ensureExists(this.libraryID);
 	
 	if (this.fixedLibraries.indexOf(this._libraryType) != -1) {
 		throw new Error("Cannot erase library of type '" + this._libraryType + "'");
@@ -647,22 +647,22 @@ Zotero.Library.prototype._initErase = function (env) {
 	return true;
 };
 
-Zotero.Library.prototype._eraseData = async function (env) {
+Trellis.Library.prototype._eraseData = async function (env) {
 	// Delete attachment files
-	var attachmentKeys = await Zotero.DB.columnQueryAsync(
+	var attachmentKeys = await Trellis.DB.columnQueryAsync(
 		"SELECT key FROM items WHERE libraryID=? AND itemID IN "
 			+ "(SELECT itemID FROM itemAttachments WHERE linkMode IN (?, ?))",
 		[
 			this.libraryID,
-			Zotero.Attachments.LINK_MODE_IMPORTED_FILE,
-			Zotero.Attachments.LINK_MODE_IMPORTED_URL
+			Trellis.Attachments.LINK_MODE_IMPORTED_FILE,
+			Trellis.Attachments.LINK_MODE_IMPORTED_URL
 		]
 	);
 	if (attachmentKeys.length) {
-		Zotero.DB.addCurrentCallback('commit', async function () {
+		Trellis.DB.addCurrentCallback('commit', async function () {
 			for (let key of attachmentKeys) {
 				try {
-					let dir = Zotero.Attachments.getStorageDirectoryByLibraryAndKey(
+					let dir = Trellis.Attachments.getStorageDirectoryByLibraryAndKey(
 						this.libraryID, key
 					).path;
 					await OS.File.removeDir(
@@ -674,57 +674,57 @@ Zotero.Library.prototype._eraseData = async function (env) {
 					);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}.bind(this));
 	}
 	
-	await Zotero.DB.queryAsync("DELETE FROM libraries WHERE libraryID=?", this.libraryID);
+	await Trellis.DB.queryAsync("DELETE FROM libraries WHERE libraryID=?", this.libraryID);
 	// TODO: Emit event so this doesn't have to be here
-	await Zotero.Fulltext.clearLibraryVersion(this.libraryID);
+	await Trellis.Fulltext.clearLibraryVersion(this.libraryID);
 
 	// Discard undo/redo history that references this library
-	if (Zotero.UndoHistory) {
-		Zotero.DB.addCurrentCallback('commit', function () {
-			Zotero.UndoHistory.clearForLibrary(this.libraryID);
+	if (Trellis.UndoHistory) {
+		Trellis.DB.addCurrentCallback('commit', function () {
+			Trellis.UndoHistory.clearForLibrary(this.libraryID);
 		}.bind(this));
 	}
 };
 
-Zotero.Library.prototype._finalizeErase = async function (env) {
-	Zotero.Libraries.unregister(this.libraryID);
+Trellis.Library.prototype._finalizeErase = async function (env) {
+	Trellis.Libraries.unregister(this.libraryID);
 	
 	// Clear cached child objects
 	for (let i=0; i<this._childObjectTypes.length; i++) {
 		let type = this._childObjectTypes[i];
-		Zotero.DataObjectUtilities.getObjectsClassForObjectType(type)
+		Trellis.DataObjectUtilities.getObjectsClassForObjectType(type)
 			.dropDeadObjectsFromCache();
 	}
 	
 	this._disabled = true;
 };
 
-Zotero.Library.prototype.toResponseJSON = function (options = {}) {
-	let uri = Zotero.URI.getLibraryURI(this.libraryID);
+Trellis.Library.prototype.toResponseJSON = function (options = {}) {
+	let uri = Trellis.URI.getLibraryURI(this.libraryID);
 	return {
 		type: this.libraryType,
 		id: this.libraryTypeID,
 		name: this.name,
 		links: {
 			self: {
-				href: Zotero.URI.toAPIURL(uri, options.apiURL),
+				href: Trellis.URI.toAPIURL(uri, options.apiURL),
 				type: 'application/json'
 			},
-			alternate: Zotero.Users.getCurrentUserID() ? {
-				href: Zotero.URI.toWebURL(uri),
+			alternate: Trellis.Users.getCurrentUserID() ? {
+				href: Trellis.URI.toWebURL(uri),
 				type: 'text/html'
 			} : undefined
 		}
 	};
 };
 
-Zotero.Library.prototype.hasCollections = function () {
+Trellis.Library.prototype.hasCollections = function () {
 	if (this._hasCollections === null) {
 		throw new Error("Collection data has not been loaded");
 	}
@@ -732,12 +732,12 @@ Zotero.Library.prototype.hasCollections = function () {
 	return this._hasCollections;
 }
 
-Zotero.Library.prototype.updateCollections = async function () {
+Trellis.Library.prototype.updateCollections = async function () {
 	let sql = 'SELECT COUNT(*)>0 FROM collections WHERE libraryID=?';
-	this._hasCollections = !!((await Zotero.DB.valueQueryAsync(sql, this.libraryID)));
+	this._hasCollections = !!((await Trellis.DB.valueQueryAsync(sql, this.libraryID)));
 };
 
-Zotero.Library.prototype.hasSearches = function () {
+Trellis.Library.prototype.hasSearches = function () {
 	if (this._hasSearches === null) {
 		throw new Error("Saved search data has not been loaded");
 	}
@@ -745,26 +745,26 @@ Zotero.Library.prototype.hasSearches = function () {
 	return this._hasSearches;
 }
 
-Zotero.Library.prototype.updateSearches = async function () {
+Trellis.Library.prototype.updateSearches = async function () {
 	let sql = 'SELECT COUNT(*)>0 FROM savedSearches WHERE libraryID=?';
-	this._hasSearches = !!((await Zotero.DB.valueQueryAsync(sql, this.libraryID)));
+	this._hasSearches = !!((await Trellis.DB.valueQueryAsync(sql, this.libraryID)));
 };
 
-Zotero.Library.prototype.hasItems = async function () {
+Trellis.Library.prototype.hasItems = async function () {
 	if (!this.id) {
 		throw new Error("Library is not saved yet");
 	}
 	let sql = 'SELECT COUNT(*)>0 FROM items WHERE libraryID=?';
 	// Don't count old <=4.0 Quick Start Guide items
-	if (this.libraryID == Zotero.Libraries.userLibraryID) {
+	if (this.libraryID == Trellis.Libraries.userLibraryID) {
 		sql += "AND key NOT IN ('ABCD2345', 'ABCD3456')";
 	}
-	return !!((await Zotero.DB.valueQueryAsync(sql, this.libraryID)));
+	return !!((await Trellis.DB.valueQueryAsync(sql, this.libraryID)));
 };
 
-Zotero.Library.prototype.hasItem = function (item) {
-	if (!(item instanceof Zotero.Item)) {
-		throw new Error("item must be a Zotero.Item");
+Trellis.Library.prototype.hasItem = function (item) {
+	if (!(item instanceof Trellis.Item)) {
+		throw new Error("item must be a Trellis.Item");
 	}
 	return item.libraryID == this.libraryID;
 }

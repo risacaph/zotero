@@ -3,22 +3,22 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	*****************************
 
@@ -48,7 +48,7 @@
 // Simple WYSIWYG editor using contenteditable
 
 (function() {
-var { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
+var { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
 	
 const defaultParagraphSeparatorString = 'defaultParagraphSeparator'
 const formatBlock = 'formatBlock'
@@ -144,10 +144,10 @@ const defaultActions = {
 }
 
 const defaultClasses = {
-	actionbar: 'zotero-simpleEditor-actionbar',
-	button: 'zotero-simpleEditor-button',
-	content: 'zotero-simpleEditor-content',
-	selected: 'zotero-simpleEditor-button-selected'
+	actionbar: 'trellis-simpleEditor-actionbar',
+	button: 'trellis-simpleEditor-button',
+	content: 'trellis-simpleEditor-content',
+	selected: 'trellis-simpleEditor-button-selected'
 }
 
 /**
@@ -530,7 +530,7 @@ var RTFConverter = new function() {
 			var entry = this._htmlRTFmap[i];
 			txt = txt.replace(entry[0], entry[1]);
 		}
-		txt = Zotero.Utilities.unescapeHTML(txt);
+		txt = Trellis.Utilities.unescapeHTML(txt);
 		txt = txt.replace(/[\x7F-\uFFFF]/g, function(aChar) { return "\\uc0\\u"+aChar.charCodeAt(0).toString()+"{}"});
 		return txt.trim();
 	}
@@ -549,7 +549,7 @@ init({
 	element: document.querySelector('#simple-editor'),
 	actions: ['bold', 'italic', 'underline']
 });
-var editorContents = document.querySelector('.zotero-simpleEditor-content');
+var editorContents = document.querySelector('.trellis-simpleEditor-content');
 
 window.editor = {
 	get element() {

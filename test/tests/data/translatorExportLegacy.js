@@ -67,7 +67,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/URG4NG9K",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/URG4NG9K",
 		"url": "http://www.example.com"
 	},
 	"audioRecording": {
@@ -168,7 +168,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/K3JPBCZP",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/K3JPBCZP",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -249,7 +249,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/XHEAETDQ",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/XHEAETDQ",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -323,7 +323,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/P5CEI9PJ",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/P5CEI9PJ",
 		"url": "http://www.example.com",
 		"websiteType": "Type"
 	},
@@ -431,7 +431,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/SQW3USEX",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/SQW3USEX",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -547,7 +547,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/I3R2EZA4",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/I3R2EZA4",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -626,7 +626,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/27FBK7IW",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/27FBK7IW",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -703,7 +703,7 @@
 			"url": "http://www.example.com",
 			"version": "Version number"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/ZVFQ59AJ",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/ZVFQ59AJ",
 		"url": "http://www.example.com",
 		"version": "Version number"
 	},
@@ -809,7 +809,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/4X4JGKAA",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/4X4JGKAA",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -889,7 +889,7 @@
 			"url": "http://www.example.com",
 			"version": "Version number"
 		},
-		"uri": "http://zotero.org/users/local/35kRWXym/items/UAXQE9DR",
+		"uri": "http://trellis.org/users/local/35kRWXym/items/UAXQE9DR",
 		"url": "http://www.example.com",
 		"version": "Version number"
 	},
@@ -989,7 +989,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/8MFTU597",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/8MFTU597",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -1075,7 +1075,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/TRVQD4MU",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/TRVQD4MU",
 		"url": "http://www.example.com"
 	},
 	"email": {
@@ -1142,7 +1142,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/B972FZG7",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/B972FZG7",
 		"url": "http://www.example.com"
 	},
 	"encyclopediaArticle": {
@@ -1241,7 +1241,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/QS8M3X6Q",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/QS8M3X6Q",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -1353,7 +1353,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/CJAAM7US",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/CJAAM7US",
 		"url": "http://www.example.com",
 		"videoRecordingFormat": "Medium"
 	},
@@ -1416,7 +1416,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/4HQTXH7A",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/4HQTXH7A",
 		"url": "http://www.example.com"
 	},
 	"hearing": {
@@ -1487,7 +1487,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/ZFDSUNIK",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/ZFDSUNIK",
 		"url": "http://www.example.com"
 	},
 	"instantMessage": {
@@ -1548,7 +1548,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/XJ3877Z8",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/XJ3877Z8",
 		"url": "http://www.example.com"
 	},
 	"interview": {
@@ -1629,7 +1629,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/KW98WHF4",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/KW98WHF4",
 		"url": "http://www.example.com"
 	},
 	"journalArticle": {
@@ -1739,7 +1739,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/B4GITB3Z",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/B4GITB3Z",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -1819,7 +1819,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/262GGUWT",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/262GGUWT",
 		"url": "http://www.example.com"
 	},
 	"magazineArticle": {
@@ -1906,7 +1906,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/S8SKUS3I",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/S8SKUS3I",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -1988,7 +1988,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/BZPATRCB",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/BZPATRCB",
 		"url": "http://www.example.com"
 	},
 	"map": {
@@ -2072,7 +2072,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/WGRTVIWS",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/WGRTVIWS",
 		"url": "http://www.example.com"
 	},
 	"newspaperArticle": {
@@ -2163,7 +2163,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/4PHE8AXE",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/4PHE8AXE",
 		"url": "http://www.example.com",
 		"volume": "6"
 	},
@@ -2254,7 +2254,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/URAE2N3M",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/URAE2N3M",
 		"url": "http://www.example.com"
 	},
 	"podcast": {
@@ -2364,7 +2364,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/CDUFPIKZ",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/CDUFPIKZ",
 		"url": "http://www.example.com"
 	},
 	"preprint": {
@@ -2458,7 +2458,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/NHq2tGeA/items/46EWSSRQ",
+		"uri": "http://trellis.org/users/local/NHq2tGeA/items/46EWSSRQ",
 		"url": "http://www.example.com"
 	},
 	"presentation": {
@@ -2541,7 +2541,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/HQ38BFRE",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/HQ38BFRE",
 		"url": "http://www.example.com"
 	},
 	"radioBroadcast": {
@@ -2666,7 +2666,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/IANDVIRR",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/IANDVIRR",
 		"url": "http://www.example.com"
 	},
 	"report": {
@@ -2766,7 +2766,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/2MBIEXX8",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/2MBIEXX8",
 		"url": "http://www.example.com"
 	},
 	"standard": {
@@ -2861,7 +2861,7 @@
 			"url": "http://www.example.com",
 			"version": "Version number"
 		},
-		"uri": "http://zotero.org/users/local/35kRWXym/items/GLPNQCZH",
+		"uri": "http://trellis.org/users/local/35kRWXym/items/GLPNQCZH",
 		"url": "http://www.example.com",
 		"version": "Version number"
 	},
@@ -2935,7 +2935,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/ZZWC5DCZ",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/ZZWC5DCZ",
 		"url": "http://www.example.com"
 	},
 	"thesis": {
@@ -3017,7 +3017,7 @@
 			"url": "http://www.example.com"
 		},
 		"university": "Publisher",
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/IZIFIQ9N",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/IZIFIQ9N",
 		"url": "http://www.example.com"
 	},
 	"tvBroadcast": {
@@ -3141,7 +3141,7 @@
 			"title": "Title",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/K88A7XD3",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/K88A7XD3",
 		"url": "http://www.example.com",
 		"videoRecordingFormat": "Medium"
 	},
@@ -3267,7 +3267,7 @@
 			"url": "http://www.example.com",
 			"volume": "6"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/6VRTBPRB",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/6VRTBPRB",
 		"url": "http://www.example.com",
 		"videoRecordingFormat": "Medium",
 		"volume": "6"
@@ -3338,7 +3338,7 @@
 			"type": "Type",
 			"url": "http://www.example.com"
 		},
-		"uri": "http://zotero.org/users/local/GtG6GoZj/items/CTAR75NZ",
+		"uri": "http://trellis.org/users/local/GtG6GoZj/items/CTAR75NZ",
 		"url": "http://www.example.com",
 		"websiteTitle": "Publication title",
 		"websiteType": "Type"

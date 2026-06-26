@@ -3,22 +3,22 @@
 describe("ItemTreeRow", function () {
 	var win;
 	var ItemTreeRow;
-	var ZoteroItemTreeRow;
+	var TrellisItemTreeRow;
 	var FileItemTreeRow;
 	var AnnotationItemTreeRow;
 	var CollectionItemTreeRow;
 	var SearchItemTreeRow;
 
 	before(async function () {
-		win = await loadZoteroPane();
+		win = await loadTrellisPane();
 		({
 			ItemTreeRow,
-			ZoteroItemTreeRow,
+			TrellisItemTreeRow,
 			FileItemTreeRow,
 			AnnotationItemTreeRow,
 			CollectionItemTreeRow,
 			SearchItemTreeRow,
-		} = win.require('zotero/itemTreeRow'));
+		} = win.require('trellis/itemTreeRow'));
 		await selectLibrary(win);
 	});
 
@@ -33,10 +33,10 @@ describe("ItemTreeRow", function () {
 		let collection = await createDataObject('collection');
 		let search = await createDataObject('search');
 
-		assert.instanceOf(ItemTreeRow.create(item, 0, false), ZoteroItemTreeRow);
+		assert.instanceOf(ItemTreeRow.create(item, 0, false), TrellisItemTreeRow);
 		assert.instanceOf(ItemTreeRow.create(attachment, 0, false), FileItemTreeRow);
 		assert.instanceOf(ItemTreeRow.create(annotation, 0, false), AnnotationItemTreeRow);
-		assert.instanceOf(ItemTreeRow.create(annotation, 0, false), ZoteroItemTreeRow);
+		assert.instanceOf(ItemTreeRow.create(annotation, 0, false), TrellisItemTreeRow);
 		assert.instanceOf(ItemTreeRow.create(collection, 0, false), CollectionItemTreeRow);
 		assert.instanceOf(ItemTreeRow.create(search, 0, false), SearchItemTreeRow);
 	});
@@ -115,32 +115,32 @@ describe("ItemTreeRow", function () {
 		let collectionRow = ItemTreeRow.create(collection, 0, false);
 		let searchRow = ItemTreeRow.create(search, 0, false);
 
-		assert.equal(itemRow.getTypeLabel(), Zotero.ItemTypes.getLocalizedString(item.itemTypeID));
-		assert.equal(attachmentRow.getTypeLabel(), Zotero.ItemTypes.getLocalizedString(attachment.itemTypeID));
-		assert.equal(annotationRow.getTypeLabel(), Zotero.ItemTypes.getLocalizedString(annotation.itemTypeID));
-		assert.equal(collectionRow.getTypeLabel(), Zotero.getString('search-conditions-collection'));
-		assert.equal(searchRow.getTypeLabel(), Zotero.getString('search-conditions-savedSearch'));
+		assert.equal(itemRow.getTypeLabel(), Trellis.ItemTypes.getLocalizedString(item.itemTypeID));
+		assert.equal(attachmentRow.getTypeLabel(), Trellis.ItemTypes.getLocalizedString(attachment.itemTypeID));
+		assert.equal(annotationRow.getTypeLabel(), Trellis.ItemTypes.getLocalizedString(annotation.itemTypeID));
+		assert.equal(collectionRow.getTypeLabel(), Trellis.getString('search-conditions-collection'));
+		assert.equal(searchRow.getTypeLabel(), Trellis.getString('search-conditions-savedSearch'));
 	});
 
 	it("should return filename as display title for file attachment when pref is enabled", async function () {
-		let pref = Zotero.Prefs.get('showAttachmentFilenames');
+		let pref = Trellis.Prefs.get('showAttachmentFilenames');
 		let item = await createDataObject('item');
 		let attachment = await importFileAttachment('test.pdf', { parentItemID: item.id });
 		attachment.setField('title', 'Custom Attachment Title');
 		await attachment.saveTx();
 
 		try {
-			Zotero.Prefs.set('showAttachmentFilenames', false);
+			Trellis.Prefs.set('showAttachmentFilenames', false);
 			let withoutPref = ItemTreeRow.create(attachment, 1, false);
 			assert.equal(withoutPref.getDisplayTitle(), attachment.getDisplayTitle());
 
-			Zotero.Prefs.set('showAttachmentFilenames', true);
+			Trellis.Prefs.set('showAttachmentFilenames', true);
 			let withPref = ItemTreeRow.create(attachment, 1, false);
 			assert.notEqual(withPref.getDisplayTitle(), attachment.getDisplayTitle());
 			assert.equal(withPref.getDisplayTitle(), attachment.attachmentFilename);
 		}
 		finally {
-			Zotero.Prefs.set('showAttachmentFilenames', pref);
+			Trellis.Prefs.set('showAttachmentFilenames', pref);
 		}
 	});
 

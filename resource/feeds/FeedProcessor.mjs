@@ -4,10 +4,10 @@
 
 /* eslint-disable quote-props */
 
-const { SAXXMLReader } = ChromeUtils.importESModule("resource://zotero/feeds/SAXXMLReader.mjs");
+const { SAXXMLReader } = ChromeUtils.importESModule("resource://trellis/feeds/SAXXMLReader.mjs");
 
 function LOG(str) {
-	Zotero.debug("Feed Processor: " + str);
+	Trellis.debug("Feed Processor: " + str);
 }
 
 const XMLNS = "http://www.w3.org/XML/1998/namespace";

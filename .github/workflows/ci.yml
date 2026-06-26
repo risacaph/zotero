@@ -51,7 +51,7 @@ jobs:
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm install
         
-      - name: Build Zotero
+      - name: Build Trellis
         run: npm run build
         # Currently necessary for document-worker Webpack: https://stackoverflow.com/a/69746937
         env:
@@ -79,7 +79,7 @@ jobs:
         id: check-deploy
         if: |
           env.ACT != 'true'
-          && github.repository == 'zotero/zotero'
+          && github.repository == 'trellis/trellis'
           && github.event_name == 'push'
         run: |
           branch="${GITHUB_REF#refs/heads/}"
@@ -102,7 +102,7 @@ jobs:
           mkdir build-zip
           cp build.zip build-zip/$GITHUB_SHA.zip
           gem install --no-document dpl -v '>= 2.0'
-          dpl s3 --bucket zotero-download --local_dir build-zip --upload_dir ci/client --acl public_read
+          dpl s3 --bucket trellis-download --local_dir build-zip --upload_dir ci/client --acl public_read
 
       - name: Run tests
         run: xvfb-run test/runtests.sh -f -r 3
@@ -111,13 +111,13 @@ jobs:
         id: utilities-node-cache
         uses: actions/cache@v4
         with:
-          path: chrome/content/zotero/xpcom/utilities/node_modules
-          key: utilities-node-modules-${{ hashFiles('chrome/content/zotero/xpcom/utilities/package-lock.json') }}
+          path: chrome/content/trellis/xpcom/utilities/node_modules
+          key: utilities-node-modules-${{ hashFiles('chrome/content/trellis/xpcom/utilities/package-lock.json') }}
 
       - name: Install utilities Node modules
         if: steps.utilities-node-cache.outputs.cache-hit != 'true'
-        run: npm install --prefix chrome/content/zotero/xpcom/utilities
+        run: npm install --prefix chrome/content/trellis/xpcom/utilities
 
       - name: Run utilities tests
         run: |
-          npm test --prefix chrome/content/zotero/xpcom/utilities -- -j resource/schema/global/schema.json
+          npm test --prefix chrome/content/trellis/xpcom/utilities -- -j resource/schema/global/schema.json

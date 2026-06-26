@@ -5,25 +5,25 @@
                      Vienna, Virginia, USA
                      https://digitalscholar.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var ZoteroContextPane = new function () {
+var TrellisContextPane = new function () {
 	let _loadingMessageContainer;
 	let _contextPane;
 	let _contextPaneInner;
@@ -37,7 +37,7 @@ var ZoteroContextPane = new function () {
 	});
 
 	Object.defineProperty(this, 'sidenav', {
-		get: () => (Zotero_Tabs.selectedType == "library"
+		get: () => (Trellis_Tabs.selectedType == "library"
 			? _librarySidenav
 			: _readerSidenav)
 	});
@@ -70,18 +70,18 @@ var ZoteroContextPane = new function () {
 	};
 
 	this.init = function () {
-		if (!Zotero) {
+		if (!Trellis) {
 			return;
 		}
 
-		_loadingMessageContainer = document.getElementById('zotero-tab-cover');
-		_contextPane = document.getElementById('zotero-context-pane');
+		_loadingMessageContainer = document.getElementById('trellis-tab-cover');
+		_contextPane = document.getElementById('trellis-context-pane');
 		// <context-pane> CE
-		_contextPaneInner = document.getElementById('zotero-context-pane-inner');
-		_contextPaneSplitter = document.getElementById('zotero-context-splitter');
-		_contextPaneSplitterStacked = document.getElementById('zotero-context-splitter-stacked');
-		_librarySidenav = document.querySelector("#zotero-view-item-sidenav");
-		_readerSidenav = document.getElementById('zotero-context-pane-sidenav');
+		_contextPaneInner = document.getElementById('trellis-context-pane-inner');
+		_contextPaneSplitter = document.getElementById('trellis-context-splitter');
+		_contextPaneSplitterStacked = document.getElementById('trellis-context-splitter-stacked');
+		_librarySidenav = document.querySelector("#trellis-view-item-sidenav");
+		_readerSidenav = document.getElementById('trellis-context-pane-sidenav');
 
 		// Never use default status for the reader sidenav
 		_readerSidenav.toggleDefaultStatus(false);
@@ -98,9 +98,9 @@ var ZoteroContextPane = new function () {
 	};
 
 	this.updateAddToNote = () => {
-		let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+		let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 		if (reader) {
-			let editor = ZoteroContextPane.activeEditor;
+			let editor = TrellisContextPane.activeEditor;
 			let libraryReadOnly = editor && editor.item && _isLibraryReadOnly(editor.item.libraryID);
 			let noteReadOnly = editor && editor.item
 				&& (editor.item.deleted || editor.item.parentItem && editor.item.parentItem.deleted);
@@ -119,14 +119,14 @@ var ZoteroContextPane = new function () {
 		if (width && !_contextPane.style.width) {
 			_contextPane.style.width = `${width}px`;
 		}
-		let { tabContentType: tabType } = Zotero_Tabs.parseTabType();
-		let sidebarState = Zotero_Tabs.getSidebarState(tabType);
+		let { tabContentType: tabType } = Trellis_Tabs.parseTabType();
+		let sidebarState = Trellis_Tabs.getSidebarState(tabType);
 		let sidebarWidth = sidebarState?.width;
 		if (!sidebarState?.open) {
 			sidebarWidth = 0;
 		}
 		// Reserve space for sidebar
-		if (Zotero.rtl) {
+		if (Trellis.rtl) {
 			_contextPane.style.left = 0;
 			_contextPane.style.right = stacked ? `${sidebarWidth}px` : 'unset';
 		}
@@ -137,7 +137,7 @@ var ZoteroContextPane = new function () {
 	};
 
 	this.update = () => {
-		if (Zotero_Tabs.selectedType === 'library') {
+		if (Trellis_Tabs.selectedType === 'library') {
 			return;
 		}
 		if (_isStacked()) {
@@ -196,7 +196,7 @@ var ZoteroContextPane = new function () {
 		this.updateLayout();
 		this.updateAddToNote();
 
-		ZoteroPane.updateLayoutConstraints();
+		TrellisPane.updateLayoutConstraints();
 	};
 
 	this.togglePane = () => {
@@ -205,16 +205,16 @@ var ZoteroContextPane = new function () {
 
 	function _getTabContent(tabID) {
 		if (!tabID) {
-			tabID = Zotero_Tabs.selectedID;
+			tabID = Trellis_Tabs.selectedID;
 		}
 		return document.querySelector(`#${tabID}`);
 	}
 
 	function _isStacked() {
-		return Zotero.Prefs.get('layout') == 'stacked';
+		return Trellis.Prefs.get('layout') == 'stacked';
 	}
 
 	function _isLibraryReadOnly(libraryID) {
-		return !Zotero.Libraries.get(libraryID).editable;
+		return !Trellis.Libraries.get(libraryID).editable;
 	}
 };

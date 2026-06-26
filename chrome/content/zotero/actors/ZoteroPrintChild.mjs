@@ -1,11 +1,11 @@
-export class ZoteroPrintChild extends JSWindowActorChild {
+export class TrellisPrintChild extends JSWindowActorChild {
 	actorCreated() {
 		Cu.exportFunction(
 			options => new this.contentWindow.Promise(
-				(resolve, reject) => this._sendZoteroPrint(options).then(resolve, reject)
+				(resolve, reject) => this._sendTrellisPrint(options).then(resolve, reject)
 			),
 			this.contentWindow,
-			{ defineAs: "zoteroPrint" }
+			{ defineAs: "trellisPrint" }
 		);
 	}
 
@@ -17,7 +17,7 @@ export class ZoteroPrintChild extends JSWindowActorChild {
 		}
 	}
 
-	async _sendZoteroPrint(options) {
-		await this.sendQuery("zoteroPrint", options);
+	async _sendTrellisPrint(options) {
+		await this.sendQuery("trellisPrint", options);
 	}
 }

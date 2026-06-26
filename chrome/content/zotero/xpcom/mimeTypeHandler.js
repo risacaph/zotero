@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -43,20 +43,20 @@ const BufferedOutputStream = Components.Constructor(
 	"init"
 );
 
-Zotero.MIMETypeHandler = new function () {
+Trellis.MIMETypeHandler = new function () {
 	var _typeHandlers, _ignoreContentDispositionTypes, _observers;
 
 	/**
 	 * Registers nsIObserver to handle MIME types
 	 */
 	this.init = function () {
-		Zotero.debug("Registering nsIObserver");
+		Trellis.debug("Registering nsIObserver");
 		// register our nsIObserver
 		Components.classes["@mozilla.org/observer-service;1"].
 			getService(Components.interfaces.nsIObserverService).
 			addObserver(_Observer, "http-on-examine-response", false);
 		this.initializeHandlers();
-		Zotero.addShutdownListener(function () {
+		Trellis.addShutdownListener(function () {
 			Components.classes["@mozilla.org/observer-service;1"].
 				getService(Components.interfaces.nsIObserverService).
 				removeObserver(_Observer, "http-on-examine-response", false);
@@ -74,17 +74,17 @@ Zotero.MIMETypeHandler = new function () {
 		// Install styles from the Cite preferences
 		this.addHandlers("application/vnd.citationstyles.style+xml", {
 			onContent: async function (blob, origin) {
-				let win = Services.wm.getMostRecentWindow("zotero:basicViewer");
-				var data = await Zotero.Utilities.Internal.blobToText(blob);
+				let win = Services.wm.getMostRecentWindow("trellis:basicViewer");
+				var data = await Trellis.Utilities.Internal.blobToText(blob);
 				try {
-					await Zotero.Styles.install(data, origin, true);
+					await Trellis.Styles.install(data, origin, true);
 					// Close styles page in basic viewer after installing a style
 					win?.close();
 					return true;
 				}
 				catch (e) {
-					Zotero.logError(e);
-					(new Zotero.Exception.Alert("styles.install.unexpectedError",
+					Trellis.logError(e);
+					(new Trellis.Exception.Alert("styles.install.unexpectedError",
 						origin, "styles.install.title", e)).present();
 				}
 				return false;
@@ -107,7 +107,7 @@ Zotero.MIMETypeHandler = new function () {
 			handlers = {
 				onContent: handlers
 			};
-			Zotero.debug('MIMETypeHandler.addHandler: second parameter function is deprecated. Pass an object', 1)
+			Trellis.debug('MIMETypeHandler.addHandler: second parameter function is deprecated. Pass an object', 1)
 		}
 		if (_typeHandlers[type]) {
 			_typeHandlers[type].push(handlers);
@@ -188,7 +188,7 @@ Zotero.MIMETypeHandler = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			
 			for (let observer of _observers) {
@@ -196,7 +196,7 @@ Zotero.MIMETypeHandler = new function () {
 					observer(channel);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}
@@ -245,7 +245,7 @@ Zotero.MIMETypeHandler = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 	
@@ -265,7 +265,7 @@ Zotero.MIMETypeHandler = new function () {
 			await this.onStartRequest(channel);
 		}
 
-		Zotero.debug("charset is " + channel.contentCharset);
+		Trellis.debug("charset is " + channel.contentCharset);
 		
 		this._stream.close();
 		this._stream = null;
@@ -298,7 +298,7 @@ Zotero.MIMETypeHandler = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		if (!handled) {

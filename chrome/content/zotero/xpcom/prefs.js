@@ -3,26 +3,26 @@
 	
 	Copyright © 2018 Center for History and New Media
 					George Mason University, Fairfax, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
-Zotero.Prefs = new function () {
+Trellis.Prefs = new function () {
 	// Privileged methods
 	this.get = get;
 	this.set = set;
@@ -38,8 +38,8 @@ Zotero.Prefs = new function () {
 		this.register();
 
 		// Unregister observer handling pref changes
-		if (Zotero.addShutdownListener) {
-			Zotero.addShutdownListener(this.unregister.bind(this));
+		if (Trellis.addShutdownListener) {
+			Trellis.addShutdownListener(this.unregister.bind(this));
 		}
 		
 		this._checkUserJS();
@@ -58,7 +58,7 @@ Zotero.Prefs = new function () {
 						// on-demand downloading off to maintain current behavior
 						if (this.get('sync.server.username')) {
 							if (this.get('sync.storage.enabled')
-									&& this.get('sync.storage.protocol') == 'zotero') {
+									&& this.get('sync.storage.protocol') == 'trellis') {
 								this.set('sync.storage.downloadMode.personal', 'on-sync');
 							}
 							if (this.get('sync.storage.groups.enabled')) {
@@ -94,17 +94,17 @@ Zotero.Prefs = new function () {
 						try {
 							o = JSON.parse(o);
 							if (o.mode == 'export'
-									&& o.id == Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+									&& o.id == Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
 								this.clear('export.noteQuickCopy.setting');
 							}
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 							this.clear('export.noteQuickCopy.setting');
 						}
 						break;
 					
-					// Re-enable hardware acceleration in Zotero 7 for all the people who turned it
+					// Re-enable hardware acceleration in Trellis 7 for all the people who turned it
 					// off to fix PDF rendering problems
 					case 7:
 						this.clear('layers.acceleration.disabled', true);
@@ -138,17 +138,17 @@ Zotero.Prefs = new function () {
 						break;
 					
 					case 11:
-						await Zotero.LocateManager.migrateEngines();
+						await Trellis.LocateManager.migrateEngines();
 						break;
 					
 					case 12:
-						Zotero.Prefs.set('firstRunGuidanceShown.z7Banner', false);
+						Trellis.Prefs.set('firstRunGuidanceShown.z7Banner', false);
 						break;
 					
 					// Reset popup pref if changed by plugins
-					// https://github.com/windingwind/zotero-plugin-toolkit/commit/47fc9ddea
+					// https://github.com/windingwind/trellis-plugin-toolkit/commit/47fc9ddea
 					case 13:
-						Zotero.Prefs.clear('ui.popup.disable_autohide', true);
+						Trellis.Prefs.clear('ui.popup.disable_autohide', true);
 						break;
 					
 					// Convert from `reader.customThemes` pref to `readerCustomThemes` synced setting
@@ -158,8 +158,8 @@ Zotero.Prefs = new function () {
 						try {
 							let readerCustomThemes = JSON.parse(this.get('reader.customThemes') ?? '[]');
 							if (readerCustomThemes?.length) {
-								Zotero.initializationPromise.then(() => {
-									Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'readerCustomThemes', readerCustomThemes);
+								Trellis.initializationPromise.then(() => {
+									Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'readerCustomThemes', readerCustomThemes);
 								});
 							}
 						}
@@ -200,8 +200,8 @@ Zotero.Prefs = new function () {
 						let attachmentRenameTemplate = this.get('attachmentRenameTemplate');
 						if (this.prefHasUserValue('attachmentRenameTemplate')) {
 							// If the user has a custom template, reset `autoRenameFiles.done` so that the "Rename Files Now" button appears in preferences
-							Zotero.initializationPromise.then(() => {
-								Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'attachmentRenameTemplate', attachmentRenameTemplate);
+							Trellis.initializationPromise.then(() => {
+								Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'attachmentRenameTemplate', attachmentRenameTemplate);
 								this.set('autoRenameFiles.done', false);
 							});
 						}
@@ -209,7 +209,7 @@ Zotero.Prefs = new function () {
 					}
 					
 					case 19:
-						Zotero.Prefs.clear('firstRunGuidanceShown.z7Banner');
+						Trellis.Prefs.clear('firstRunGuidanceShown.z7Banner');
 						break;
 					
 					case 20:
@@ -247,7 +247,7 @@ Zotero.Prefs = new function () {
 	**/
 	function get(pref, global) {
 		try {
-			pref = global ? pref : ZOTERO_CONFIG.PREF_BRANCH + pref;
+			pref = global ? pref : TRELLIS_CONFIG.PREF_BRANCH + pref;
 			let branch = this.rootBranch;
 			
 			let value;
@@ -275,10 +275,10 @@ Zotero.Prefs = new function () {
 		}
 		catch (e) {
 			// If debug system isn't yet initialized, log proper error
-			if (Zotero.Debug.enabled === undefined) {
+			if (Trellis.Debug.enabled === undefined) {
 				dump(e + "\n\n");
 			}
-			Zotero.logError(e);
+			Trellis.logError(e);
 			throw new Error(`Error getting preference '${pref}'`);
 		}
 	}
@@ -289,7 +289,7 @@ Zotero.Prefs = new function () {
 	**/
 	function set(pref, value, global) {
 		try {
-			pref = global ? pref : ZOTERO_CONFIG.PREF_BRANCH + pref;
+			pref = global ? pref : TRELLIS_CONFIG.PREF_BRANCH + pref;
 			let branch = this.rootBranch;
 			
 			switch (branch.getPrefType(pref)) {
@@ -303,15 +303,15 @@ Zotero.Prefs = new function () {
 				// If not an existing pref, create appropriate type automatically
 				case 0:
 					if (typeof value == 'boolean') {
-						Zotero.debug("Creating boolean pref '" + pref + "'");
+						Trellis.debug("Creating boolean pref '" + pref + "'");
 						return branch.setBoolPref(pref, value);
 					}
 					if (typeof value == 'string') {
-						Zotero.debug("Creating string pref '" + pref + "'");
+						Trellis.debug("Creating string pref '" + pref + "'");
 						return branch.setStringPref(pref, value);
 					}
 					if (parseInt(value) == value) {
-						Zotero.debug("Creating integer pref '" + pref + "'");
+						Trellis.debug("Creating integer pref '" + pref + "'");
 						return branch.setIntPref(pref, value);
 					}
 					throw new Error("Invalid preference value '" + value + "' for pref '" + pref + "'");
@@ -319,23 +319,23 @@ Zotero.Prefs = new function () {
 		}
 		catch (e) {
 			// If debug system isn't yet initialized, log proper error
-			if (Zotero.Debug.enabled === undefined) {
+			if (Trellis.Debug.enabled === undefined) {
 				dump(e + "\n\n");
 			}
-			Zotero.logError(e);
+			Trellis.logError(e);
 			throw new Error(`Error setting preference '${pref}'`);
 		}
 	}
 	
 	
 	this.clear = function (pref, global) {
-		pref = global ? pref : ZOTERO_CONFIG.PREF_BRANCH + pref;
+		pref = global ? pref : TRELLIS_CONFIG.PREF_BRANCH + pref;
 		this.rootBranch.clearUserPref(pref);
 	}
 	
 	
 	this.prefHasUserValue = function (pref, global) {
-		pref = global ? pref : ZOTERO_CONFIG.PREF_BRANCH + pref;
+		pref = global ? pref : TRELLIS_CONFIG.PREF_BRANCH + pref;
 		return this.rootBranch.prefHasUserValue(pref);
 	};
 	
@@ -345,65 +345,65 @@ Zotero.Prefs = new function () {
 	 * @param {String} [branch] - Name of pref branch, ending with a period
 	 */
 	this.resetBranch = function (exclude = [], branch) {
-		var branch = Services.prefs.getBranch(branch || ZOTERO_CONFIG.PREF_BRANCH);
+		var branch = Services.prefs.getBranch(branch || TRELLIS_CONFIG.PREF_BRANCH);
 		var keys = branch.getChildList("", {});
 		for (let key of keys) {
 			if (branch.prefHasUserValue(key)) {
 				if (exclude.includes(key)) {
 					continue;
 				}
-				Zotero.debug("Clearing " + key);
+				Trellis.debug("Clearing " + key);
 				branch.clearUserPref(key);
 			}
 		}
 	};
 	
-	// Handlers for some Zotero preferences
+	// Handlers for some Trellis preferences
 	var _handlers = [
 		[ "automaticScraperUpdates", function (val) {
 			if (val){
-				Zotero.Schema.updateFromRepository(1);
+				Trellis.Schema.updateFromRepository(1);
 			}
 			else {
-				Zotero.Schema.stopRepositoryTimer();
+				Trellis.Schema.stopRepositoryTimer();
 			}
 		}],
 		["fontSize", function () {
-			Zotero.UIProperties.setAll();
+			Trellis.UIProperties.setAll();
 		}],
 		["uiDensity", function () {
-			Zotero.UIProperties.setAll();
+			Trellis.UIProperties.setAll();
 		}],
 		[ "layout", function (val) {
-			Zotero.getActiveZoteroPane().updateLayout();
+			Trellis.getActiveTrellisPane().updateLayout();
 		}],
 		[ "note.fontSize", function (val) {
 			if (val < 6) {
-				Zotero.Prefs.set('note.fontSize', 11);
+				Trellis.Prefs.set('note.fontSize', 11);
 			}
 		}],
 		[ "note.tabFontSize", function (val) {
 			if (val < 6) {
-				Zotero.Prefs.set('note.tabFontSize', 11);
+				Trellis.Prefs.set('note.tabFontSize', 11);
 			}
 		}],
 		[ "sync.autoSync", function (val) {
 			if (val) {
-				Zotero.Sync.EventListeners.AutoSyncListener.register();
-				Zotero.Sync.EventListeners.IdleListener.register();
+				Trellis.Sync.EventListeners.AutoSyncListener.register();
+				Trellis.Sync.EventListeners.IdleListener.register();
 			}
 			else {
-				Zotero.Sync.EventListeners.AutoSyncListener.unregister();
-				Zotero.Sync.EventListeners.IdleListener.unregister();
-				Zotero.Prefs.set('sync.reminder.autoSync.enabled', true);
+				Trellis.Sync.EventListeners.AutoSyncListener.unregister();
+				Trellis.Sync.EventListeners.IdleListener.unregister();
+				Trellis.Prefs.set('sync.reminder.autoSync.enabled', true);
 				// We don't want to immediately display reminder so bump this value
-				Zotero.Prefs.set('sync.reminder.autoSync.lastDisplayed', Math.round(Date.now() / 1000));
+				Trellis.Prefs.set('sync.reminder.autoSync.lastDisplayed', Math.round(Date.now() / 1000));
 			}
 			try {
-				Zotero.getActiveZoteroPane().initSyncReminders(false);
+				Trellis.getActiveTrellisPane().initSyncReminders(false);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}],
 		[ "search.quicksearch-mode", function (val) {
@@ -412,19 +412,19 @@ Zotero.Prefs = new function () {
 			var enumerator = wm.getEnumerator("navigator:browser");
 			while (enumerator.hasMoreElements()) {
 				var win = enumerator.getNext();
-				if (!win.ZoteroPane) continue;
-				Zotero.updateQuickSearchBox(win.ZoteroPane.document);
+				if (!win.TrellisPane) continue;
+				Trellis.updateQuickSearchBox(win.TrellisPane.document);
 			}
 			
-			var enumerator = wm.getEnumerator("zotero:item-selector");
+			var enumerator = wm.getEnumerator("trellis:item-selector");
 			while (enumerator.hasMoreElements()) {
 				var win = enumerator.getNext();
-				if (!win.Zotero) continue;
-				Zotero.updateQuickSearchBox(win.document);
+				if (!win.Trellis) continue;
+				Trellis.updateQuickSearchBox(win.document);
 			}
 		}],
 		[ "cite.useCiteprocRs", function (val) {
-			val && Zotero.CiteprocRs.init();
+			val && Trellis.CiteprocRs.init();
 		}]
 	];
 	
@@ -459,16 +459,16 @@ Zotero.Prefs = new function () {
 		
 		var observersForPref = _observers[data];
 		for (let observer of observersForPref) {
-			if (Zotero.Debug.enabled && Zotero.Utilities.Internal.isObjectLeakingWindow(observer)) {
-				Zotero.warn(`Pref observer for '${data}' belongs to leaked window`);
+			if (Trellis.Debug.enabled && Trellis.Utilities.Internal.isObjectLeakingWindow(observer)) {
+				Trellis.warn(`Pref observer for '${data}' belongs to leaked window`);
 			}
 			
 			try {
 				observer(this.get(data, true));
 			}
 			catch (e) {
-				Zotero.debug("Error while executing preference observer handler for " + data);
-				Zotero.debug(e);
+				Trellis.debug("Error while executing preference observer handler for " + data);
+				Trellis.debug(e);
 			}
 		}
 	}
@@ -477,13 +477,13 @@ Zotero.Prefs = new function () {
 	var _observersBySymbol = {};
 	
 	/**
-	 * @param {String} name - Preference name; if not global, this is on the extensions.zotero branch
+	 * @param {String} name - Preference name; if not global, this is on the extensions.trellis branch
 	 * @param {Function} handler
 	 * @param {Boolean} [global]
 	 * @return {Symbol} - Symbol to pass to unregisterObserver()
 	 */
 	this.registerObserver = function (name, handler, global) {
-		name = global ? name : ZOTERO_CONFIG.PREF_BRANCH + name;
+		name = global ? name : TRELLIS_CONFIG.PREF_BRANCH + name;
 		
 		var symbol = Symbol();
 		_observers[name] = _observers[name] || [];
@@ -498,7 +498,7 @@ Zotero.Prefs = new function () {
 	this.unregisterObserver = function (symbol) {
 		var obs = _observersBySymbol[symbol];
 		if (!obs) {
-			Zotero.debug("No pref observer registered for given symbol");
+			Trellis.debug("No pref observer registered for given symbol");
 			return;
 		}
 		
@@ -508,7 +508,7 @@ Zotero.Prefs = new function () {
 		var handlers = _observers[name];
 		var i = handlers.indexOf(handler);
 		if (i == -1) {
-			Zotero.debug("Handler was not registered for preference " + name, 2);
+			Trellis.debug("Handler was not registered for preference " + name, 2);
 			return;
 		}
 		handlers.splice(i, 1);
@@ -530,14 +530,14 @@ Zotero.Prefs = new function () {
 		
 		var libraries;
 		try {
-			libraries = JSON.parse(Zotero.Prefs.get(prefKey) || '{}');
+			libraries = JSON.parse(Trellis.Prefs.get(prefKey) || '{}');
 			if (typeof libraries != 'object') {
 				throw true;
 			}
 		}
 		// Ignore old/incorrect formats
 		catch (e) {
-			Zotero.Prefs.clear(prefKey);
+			Trellis.Prefs.clear(prefKey);
 			libraries = {};
 		}
 		
@@ -568,10 +568,10 @@ Zotero.Prefs = new function () {
 		// Update current library
 		libraries[libraryID] = !!show;
 		// Remove libraries that don't exist or that are set to true
-		for (let id of Object.keys(libraries).filter(id => libraries[id] || !Zotero.Libraries.exists(id))) {
+		for (let id of Object.keys(libraries).filter(id => libraries[id] || !Trellis.Libraries.exists(id))) {
 			delete libraries[id];
 		}
-		Zotero.Prefs.set(prefKey, JSON.stringify(libraries));
+		Trellis.Prefs.set(prefKey, JSON.stringify(libraries));
 	};
 
 	/**
@@ -614,22 +614,22 @@ Zotero.Prefs = new function () {
 	 * user.js contains user_pref() directives.
 	 */
 	this._checkUserJS = async function () {
-		let userJSPath = PathUtils.join(Zotero.Profile.dir, 'user.js');
+		let userJSPath = PathUtils.join(Trellis.Profile.dir, 'user.js');
 		let userJS;
 		try {
-			userJS = await Zotero.File.getContentsAsync(userJSPath);
+			userJS = await Trellis.File.getContentsAsync(userJSPath);
 		}
 		catch {
 			return;
 		}
 		
-		const DISALLOWED_PREF_RE = /^\s*user_pref\s*\(\s*['"]extensions\.zotero\.fileHandler\..+$/g;
+		const DISALLOWED_PREF_RE = /^\s*user_pref\s*\(\s*['"]extensions\.trellis\.fileHandler\..+$/g;
 		
 		let updatedUserJS = userJS
 			.split('\n')
 			.filter((prefLine) => {
 				if (DISALLOWED_PREF_RE.test(prefLine)) {
-					Zotero.debug('user.js contains disallowed pref: ' + prefLine);
+					Trellis.debug('user.js contains disallowed pref: ' + prefLine);
 					return false;
 				}
 				return true;
@@ -641,11 +641,11 @@ Zotero.Prefs = new function () {
 		}
 		
 		try {
-			await Zotero.File.putContentsAsync(userJSPath, updatedUserJS);
+			await Trellis.File.putContentsAsync(userJSPath, updatedUserJS);
 
-			Zotero.alert(null,
-				Zotero.getString('general-error'),
-				Zotero.getString('userjs-pref-warning')
+			Trellis.alert(null,
+				Trellis.getString('general-error'),
+				Trellis.getString('userjs-pref-warning')
 			);
 			Services.startup.quit(
 				Components.interfaces.nsIAppStartup.eAttemptQuit
@@ -653,7 +653,7 @@ Zotero.Prefs = new function () {
 			);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	};
 };

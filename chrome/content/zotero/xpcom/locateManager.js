@@ -3,27 +3,27 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.LocateManager = new function () {
+Trellis.LocateManager = new function () {
 	const LOCATE_FILE_NAME = "engines.json";
 	const LOCATE_DIR_NAME = "locate";
 	
@@ -39,7 +39,7 @@ Zotero.LocateManager = new function () {
 		
 		try {
 			if (await OS.File.exists(_jsonFile)) {
-				_locateEngines = JSON.parse(await Zotero.File.getContentsAsync(_jsonFile))
+				_locateEngines = JSON.parse(await Trellis.File.getContentsAsync(_jsonFile))
 					.map(engine => new LocateEngine(engine));
 			}
 			else {
@@ -47,7 +47,7 @@ Zotero.LocateManager = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		if (this._needsMigration) {
@@ -65,7 +65,7 @@ Zotero.LocateManager = new function () {
 			throw new Error("LocateManager supports only OpenSearch engines");
 		}
 		
-		Zotero.HTTP.doGet(engineURL, function (xmlhttp) {
+		Trellis.HTTP.doGet(engineURL, function (xmlhttp) {
 			var engine = new LocateEngine();
 			engine.initWithXML(xmlhttp.responseText, iconURL);
 		});
@@ -75,7 +75,7 @@ Zotero.LocateManager = new function () {
 	 * Gets all default search engines (not currently used)
 	 */
 	this.getDefaultEngines = function () {
-		return JSON.parse(Zotero.File.getContentsFromURL(_getDefaultFile()))
+		return JSON.parse(Trellis.File.getContentsFromURL(_getDefaultFile()))
 			.map(engine => new LocateEngine(engine));
 	}
 	
@@ -142,9 +142,9 @@ Zotero.LocateManager = new function () {
 		await OS.File.makeDir(locateDir, { unixMode: 0o755 });
 		
 		// copy default file to new locate dir
-		await Zotero.File.putContentsAsync(
+		await Trellis.File.putContentsAsync(
 			_jsonFile,
-			await Zotero.File.getContentsFromURLAsync(_getDefaultFile())
+			await Trellis.File.getContentsFromURLAsync(_getDefaultFile())
 		);
 		
 		// reread locate engines
@@ -170,7 +170,7 @@ Zotero.LocateManager = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		_serializeLocateEngines();
@@ -180,7 +180,7 @@ Zotero.LocateManager = new function () {
 	 * Writes the engines to disk; called from the nsITimer spawned by _serializeLocateEngines
 	 */
 	this.notify = async function () {
-		await Zotero.File.putContentsAsync(_jsonFile, JSON.stringify(_locateEngines, null, "\t"));
+		await Trellis.File.putContentsAsync(_jsonFile, JSON.stringify(_locateEngines, null, "\t"));
 		_timer = undefined;
 	}
 	
@@ -195,14 +195,14 @@ Zotero.LocateManager = new function () {
 	 * Gets the dir containing the JSON file and engine icons
 	 */
 	function _getLocateDirectory() {
-		return OS.Path.join(Zotero.DataDirectory.dir, LOCATE_DIR_NAME);
+		return OS.Path.join(Trellis.DataDirectory.dir, LOCATE_DIR_NAME);
 	}
 	
 	/**
 	 * Gets the JSON file containing the engine info for the default engines
 	 */
 	function _getDefaultFile() {
-		return "resource://zotero/schema/"+LOCATE_FILE_NAME;
+		return "resource://trellis/schema/"+LOCATE_FILE_NAME;
 	}
 	
 	
@@ -213,7 +213,7 @@ Zotero.LocateManager = new function () {
 		if(_timer) return;
 		_timer = Components.classes["@mozilla.org/timer;1"].
 				createInstance(Components.interfaces.nsITimer);
-		_timer.initWithCallback(Zotero.LocateManager, 0, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+		_timer.initWithCallback(Trellis.LocateManager, 0, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
 	}
 	
 	/**
@@ -230,9 +230,9 @@ Zotero.LocateManager = new function () {
 	 * Supported parameters include
 	 * - all standard OpenURL parameters, identified by any OpenURL namespace
 	 * - "version", "identifier", and "format" identified by the OpenURL ctx namespace
-	 * - "openURL" identified by the Zotero namespace (= the whole openURL)
-	 * - "year" identified by the Zotero namespace
-	 * - any Zotero field identified by the Zotero namespace
+	 * - "openURL" identified by the Trellis namespace (= the whole openURL)
+	 * - "year" identified by the Trellis namespace
+	 * - any Trellis field identified by the Trellis namespace
 	 */
 	function _lookupParam(item, itemOpenURL, engine, nsPrefix, param) {
 		const OPENURL_ITEM_PREFIXES = [
@@ -275,9 +275,9 @@ Zotero.LocateManager = new function () {
 				return false;
 			}
 			return itemOpenURL[OPENURL_CONTEXT_MAPPINGS[param]].map(val => encodeURIComponent(val));
-		} else if(ns === "http://www.zotero.org/namespaces/openSearch#") {
+		} else if(ns === "http://www.trellis.org/namespaces/openSearch#") {
 			if(param === "openURL") {
-				var ctx = Zotero.OpenURL.createContextObject(item, "1.0");
+				var ctx = Trellis.OpenURL.createContextObject(item, "1.0");
 				return (ctx ? [ctx] : false);
 			} else if(param === "year") {
 				return (itemOpenURL["rft.date"] ? [itemOpenURL["rft.date"][0].substr(0, 4)] : false);
@@ -339,14 +339,14 @@ Zotero.LocateManager = new function () {
 			}
 			
 			// get simple attributes
-			this.alias = Zotero.Utilities.xpathText(docEl, 's:ShortName', xns);
-			this.name = Zotero.Utilities.xpathText(docEl, 's:LongName', xns);
+			this.alias = Trellis.Utilities.xpathText(docEl, 's:ShortName', xns);
+			this.name = Trellis.Utilities.xpathText(docEl, 's:LongName', xns);
 			if(!this.name) this.name = this.alias;
-			this.description = Zotero.Utilities.xpathText(docEl, 's:Description', xns);
+			this.description = Trellis.Utilities.xpathText(docEl, 's:Description', xns);
 			
 			// get the URL template
 			this._urlTemplate = undefined;
-			var urlTags = Zotero.Utilities.xpath(docEl, 's:Url[@type="text/html"]', xns),
+			var urlTags = Trellis.Utilities.xpath(docEl, 's:Url[@type="text/html"]', xns),
 				i = 0;
 			while(urlTags[i].hasAttribute("rel") && urlTags[i].getAttribute("rel") != "results") {
 				i++;
@@ -373,13 +373,13 @@ Zotero.LocateManager = new function () {
 			
 			// get params
 			this._urlParams = [];
-			for(var param of Zotero.Utilities.xpath(urlTag, 's:Param', xns)) {
+			for(var param of Trellis.Utilities.xpath(urlTag, 's:Param', xns)) {
 				this._urlParams[param.getAttribute("name")] = param.getAttribute("value");
 			}
 			
 			// find the icon
 			this._iconSourceURI = iconURL;
-			for(var img of Zotero.Utilities.xpath(docEl, 's:Image', xns)) {
+			for(var img of Trellis.Utilities.xpath(docEl, 's:Image', xns)) {
 				if((!img.hasAttribute("width") && !img.hasAttribute("height"))
 						|| (img.getAttribute("width") == "16" && img.getAttribute("height") == "16")) {
 					this._iconSourceURI = img.textContent;
@@ -392,8 +392,8 @@ Zotero.LocateManager = new function () {
 			}
 			
 			// delete any old engine with the same name
-			var engine = Zotero.LocateManager.getEngineByName(this.name);
-			if(engine) Zotero.LocateManager.removeEngine(engine);
+			var engine = Trellis.LocateManager.getEngineByName(this.name);
+			if(engine) Trellis.LocateManager.removeEngine(engine);
 			
 			// add and serialize the new engine
 			_locateEngines.push(this);
@@ -409,7 +409,7 @@ Zotero.LocateManager = new function () {
 				item = item.toJSON();
 			}
 			
-			var itemAsOpenURL = Zotero.OpenURL.createContextObject(item, "1.0", true);
+			var itemAsOpenURL = Trellis.OpenURL.createContextObject(item, "1.0", true);
 			
 			// do substitutions
 			var me = this;
@@ -483,11 +483,11 @@ Zotero.LocateManager = new function () {
 				return;
 			}
 			
-			var tmpPath = OS.Path.join(Zotero.getTempDirectory().path, Zotero.Utilities.randomString());
-			await Zotero.File.download(this._iconSourceURI, tmpPath);
+			var tmpPath = OS.Path.join(Trellis.getTempDirectory().path, Trellis.Utilities.randomString());
+			await Trellis.File.download(this._iconSourceURI, tmpPath);
 			
-			var sample = await Zotero.File.getSample(tmpPath);
-			var contentType = Zotero.MIME.getMIMETypeFromData(sample);
+			var sample = await Trellis.File.getSample(tmpPath);
+			var contentType = Trellis.MIME.getMIMETypeFromData(sample);
 			
 			// ensure there is an extension
 			var extension = iconExtensions[contentType.toLowerCase()];

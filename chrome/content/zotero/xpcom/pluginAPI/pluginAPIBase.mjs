@@ -5,20 +5,20 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -66,7 +66,7 @@
 
 const lazy = {};
 ChromeUtils.defineESModuleGetters(lazy, {
-	Zotero: "chrome://zotero/content/zotero.mjs",
+	Trellis: "chrome://trellis/content/trellis.mjs",
 });
 
 
@@ -284,7 +284,7 @@ class PluginAPIBase {
 						}
 						catch (e) {
 							this._log(`Error in execution of ${fullPath}`, "warn");
-							lazy.Zotero.logError(e);
+							lazy.Trellis.logError(e);
 							return requirement?.fallbackReturn || null;
 						}
 					};
@@ -327,8 +327,8 @@ class PluginAPIBase {
 			return;
 		}
 		this._lastUpdateID = this._generateRandomKey();
-		await lazy.Zotero.DB.executeTransaction(async () => {
-			lazy.Zotero.Notifier.queue(
+		await lazy.Trellis.DB.executeTransaction(async () => {
+			lazy.Trellis.Notifier.queue(
 				this._config.notifyAction,
 				this._config.notifyType,
 				ids,
@@ -364,7 +364,7 @@ class PluginAPIBase {
 			return;
 		}
 
-		lazy.Zotero.Plugins.addObserver({
+		lazy.Trellis.Plugins.addObserver({
 			shutdown: ({ id: pluginID }) => {
 				this._unregisterByPluginID(pluginID);
 			}
@@ -373,7 +373,7 @@ class PluginAPIBase {
 	}
 
 	_log(message, logType = "debug") {
-		lazy.Zotero[logType](`${this._config.apiName}: ${message}`);
+		lazy.Trellis[logType](`${this._config.apiName}: ${message}`);
 	}
 
 	_getOptionPluginID(option) {
@@ -385,7 +385,7 @@ class PluginAPIBase {
 	}
 
 	_generateRandomKey() {
-		return `${lazy.Zotero.Utilities.randomString()}-${new Date().getTime()}`;
+		return `${lazy.Trellis.Utilities.randomString()}-${new Date().getTime()}`;
 	}
 }
 

@@ -168,13 +168,13 @@
     "message": "Activar Guardar na Biblioteca em Linha"
   },
   "reports_report_submitted": {
-    "message": "O seu relatório de erro foi submetido.\n\nID do relatório: $1\n\nPor favor, poste uma mensagem nos Fórums do Zotero com o ID do relatório, uma descrição do problema e quaisquer passos necessários para o reproduzir.\n\nOs relatórios de erro não são revistos a não ser que sejam referenciados nos fóruns."
+    "message": "O seu relatório de erro foi submetido.\n\nID do relatório: $1\n\nPor favor, poste uma mensagem nos Fórums do Trellis com o ID do relatório, uma descrição do problema e quaisquer passos necessários para o reproduzir.\n\nOs relatórios de erro não são revistos a não ser que sejam referenciados nos fóruns."
   },
   "reports_debug_output_submitted": {
     "message": "As suas saídas de depuração foram submetidas.\n\nO ID de Depuração é $1."
   },
   "reports_submission_failed": {
-    "message": "Ocurreu um erro ao submeter o seu relatório.\n\n$1\n\nPor favor, verifique sua ligação à internet. Se o problema persistir, poste uma mensagem nos Fórums do Zotero."
+    "message": "Ocurreu um erro ao submeter o seu relatório.\n\n$1\n\nPor favor, verifique sua ligação à internet. Se o problema persistir, poste uma mensagem nos Fórums do Trellis."
   },
   "integration_error_clientUpgrade": {
     "message": "A citação baseada na Web requer o $1 ou mais recente."
@@ -183,10 +183,10 @@
     "message": "O $1 não foi capaz de comunicar com a aplicação de secretária $2. O $2 tem de estar aberto para usar a citação baseada na Web."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Este documento contém citações ativas do Zotero que irão aparecer como hiperligações zotero.org numa cópia descarregada."
+    "message": "Este documento contém citações ativas do Trellis que irão aparecer como hiperligações trellis.org numa cópia descarregada."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "Para gerar uma versão apropriada para partilha, selecione <b>Criar uma cópia…</b> no menu Ficheiro, selecione, no novo documento, <b>Desligar Citações</b> no menu Zotero e descarregue então a versão desligada. Mantenha este documento ligado para o caso de necessitar de fazer mais alterações."
+    "message": "Para gerar uma versão apropriada para partilha, selecione <b>Criar uma cópia…</b> no menu Ficheiro, selecione, no novo documento, <b>Desligar Citações</b> no menu Trellis e descarregue então a versão desligada. Mantenha este documento ligado para o caso de necessitar de fazer mais alterações."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "Descarregar Versão Ligada de Qualquer Modo"
@@ -195,7 +195,7 @@
     "message": "$1 está a actualizar o seu documento."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "A integração $1 não está disponível quando se edita directamente no Google Docs ficheiros .docx do Microsoft Word. Escolha Ficheiro → Guardar como Google Docs para activar esta funcionalidade.<br/><br/>Se quiser transferir para o Google Docs um documento Word com citações $1, veja <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">Movendo Documentos Entre Processadores de Texto</a>."
+    "message": "A integração $1 não está disponível quando se edita directamente no Google Docs ficheiros .docx do Microsoft Word. Escolha Ficheiro → Guardar como Google Docs para activar esta funcionalidade.<br/><br/>Se quiser transferir para o Google Docs um documento Word com citações $1, veja <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">Movendo Documentos Entre Processadores de Texto</a>."
   },
   "integration_googleDocs_documentLocked": {
     "message": "As citações do documento estão a ser editadas por outro utilizador $1. Por favor, tente novamente mais tarde."
@@ -219,7 +219,7 @@
     "message": "Religar Citação"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Estas citações foram desligadas<a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">de$1</a>. Terá de religá-las antes que elas sejam atualizadas ou apareçam na sua bibliografia."
+    "message": "Estas citações foram desligadas<a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">de$1</a>. Terá de religá-las antes que elas sejam atualizadas ou apareçam na sua bibliografia."
   },
   "copyUnproxiedLink": {
     "message": "Copiar link sem proxy"

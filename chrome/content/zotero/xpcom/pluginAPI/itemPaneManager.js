@@ -5,31 +5,31 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
 
 
 {
-	const PluginAPIBase = ChromeUtils.importESModule("chrome://zotero/content/xpcom/pluginAPI/pluginAPIBase.mjs").PluginAPIBase;
+	const PluginAPIBase = ChromeUtils.importESModule("chrome://trellis/content/xpcom/pluginAPI/pluginAPIBase.mjs").PluginAPIBase;
 
 
 	/**
-	 * @namespace Zotero
+	 * @namespace Trellis
 	 */
 
 
@@ -63,7 +63,7 @@
 
 	/**
 	 * @typedef {Object} SectionUIHookArgs
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {boolean} editable - Whether the section is in edit mode.
 	 * @property {SetSectionL10nArgs} setL10nArgs - Set l10n args for section header.
@@ -77,7 +77,7 @@
 	 * @property {string} paneID - Registered pane id.
 	 * @property {Document} doc - Document of section.
 	 * @property {HTMLDivElement} body - Section body.
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {boolean} editable - Whether the section is in edit mode.
 	 * @property {SetSectionL10nArgs} setL10nArgs - Set l10n args for section header.
@@ -91,7 +91,7 @@
 	 * @property {string} paneID - Registered pane id.
 	 * @property {Document} doc - Document of section.
 	 * @property {HTMLDivElement} body - Section body.
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {boolean} editable - Whether the section is in edit mode.
 	 * @property {SetSectionL10nArgs} setL10nArgs - Set l10n args for section header.
@@ -109,7 +109,7 @@
 	 * @property {string} paneID - Registered pane id.
 	 * @property {Document} doc - Document of section.
 	 * @property {HTMLDivElement} body - Section body.
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {boolean} editable - Whether the section is in edit mode.
 	 * @property {SetSectionL10nArgs} setL10nArgs - Set l10n args for section header.
@@ -320,7 +320,7 @@
 	/**
 	 * @typedef {Object} InfoRowGetDataHookArgs
 	 * @property {string} rowID - Row ID.
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {boolean} editable - Whether the row is in edit mode.
 	 */
@@ -328,7 +328,7 @@
 	/**
 	 * @typedef {Object} InfoRowSetDataHookArgs
 	 * @property {string} rowID - Row ID.
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {string} editable - Whether the row is in edit mode.
 	 * @property {string} value - New value.
@@ -337,7 +337,7 @@
 	/**
 	 * @typedef {Object} InfoRowItemChangeHookArgs
 	 * @property {string} rowID - Row ID.
-	 * @property {Zotero.Item} item - Current item.
+	 * @property {Trellis.Item} item - Current item.
 	 * @property {string} tabType - Current tab type.
 	 * @property {boolean} editable - Whether the row is in edit mode.
 	 * @property {SetInfoRowEnabled} setEnabled - Set row enabled state.
@@ -443,9 +443,9 @@
 	/**
 	 * Manages item pane APIs.
 	 *
-	 * @memberof Zotero
+	 * @memberof Trellis
 	 */
-	Zotero.ItemPaneManager = {
+	Trellis.ItemPaneManager = {
 		_sectionManager: new ItemPaneSectionManagerInternal(),
 
 		_infoRowManager: new ItemPaneInfoRowManagerInternal(),
@@ -500,7 +500,7 @@
 		 *
 		 * @example
 		 * ```javascript
-		 * Zotero.ItemPaneManager.registerSection({
+		 * Trellis.ItemPaneManager.registerSection({
 		 * 	paneID: 'my-plugin-pane',
 		 * 	pluginID: 'my-plugin@my-namespace.com',
 		 * 	header: {
@@ -513,11 +513,11 @@
 		 * 	},
 		 * 	onInit: ({paneID, doc, body}) => {
 		 * 		// Initialize data
-		 * 		Zotero.debug('Section initialized');
+		 * 		Trellis.debug('Section initialized');
 		 * 	},
 		 * 	onDestroy: ({paneID, doc, body}) => {
 		 * 		// Release resource
-		 * 		Zotero.debug('Section destroyed');
+		 * 		Trellis.debug('Section destroyed');
 		 * 	},
 		 * 	onItemChange: ({paneID, doc, body, item, tabType, editable, setEnabled}) => {
 		 * 		// In this example, the section is enabled only for regular items
@@ -537,7 +537,7 @@
 		 * 	},
 		 * 	onToggle: ({paneID, doc, body, item, tabType, editable, setEnabled}) => {
 		 * 		// Handle section toggle
-		 * 		Zotero.debug('Section toggled');
+		 * 		Trellis.debug('Section toggled');
 		 * 	},
 		 * 	sectionButtons: [
 		 * 		// Section button will appear in the header
@@ -602,7 +602,7 @@
 		 *
 		 * @example
 		 * ```javascript
-		 * Zotero.ItemPaneManager.registerInfoRow({
+		 * Trellis.ItemPaneManager.registerInfoRow({
 		 * 	rowID: 'my-plugin-row',
 		 * 	pluginID: 'my-plugin@my-namespace.com',
 		 * 	label: {
@@ -616,7 +616,7 @@
 		 * 		return item.getField('title').toUpperCase();
 		 * 	},
 		 * 	onSetData: ({rowID, item, tabType, editable, value}) => {
-		 * 		Zotero.debug('Info row data changed:', value);
+		 * 		Trellis.debug('Info row data changed:', value);
 		 * 	},
 		 * 	onItemChange: ({rowID, item, tabType, editable, setEnabled, setEditable}) => {
 		 * 		// In this example, the row is enabled only for library tab

@@ -3,27 +3,27 @@
 	
 	Copyright © 2025 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 http://zotero.org
+					 http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-var { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
+var { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
 
 const clamp = (val, min = 0, max = 1.0) => Math.min(Math.max(val, min), max);
 
@@ -33,13 +33,13 @@ export const DEFAULT_AUTO_RENAME_FILE_TYPES = "application/pdf,application/epub+
 const getExtension = filename => filename.match(/\.([^.]+)$/)?.[1] ?? '';
 
 const getNewFileNameData = async (attachmentItem, parentItem) => {
-	const newFileBaseName = Zotero.Attachments.getFileBaseNameFromItem(
+	const newFileBaseName = Trellis.Attachments.getFileBaseNameFromItem(
 		parentItem, { attachmentTitle: attachmentItem.getField('title') }
 	);
 
 	const path = await attachmentItem.getFilePathAsync();
 	const ext = path
-		? Zotero.Attachments.getCorrectFileExtension(attachmentItem)
+		? Trellis.Attachments.getCorrectFileExtension(attachmentItem)
 		: getExtension(attachmentItem.attachmentFilename);
 
 	const newName = newFileBaseName + (ext ? '.' + ext : '');
@@ -66,11 +66,11 @@ export async function renameFilesFromParent({ libraryID = null, pretend = false,
 		reportProgress(progress);
 	};
 	
-	libraryID = libraryID ?? Zotero.Libraries.userLibraryID;
-	let items = await Zotero.Items.getAll(libraryID, false, true);
+	libraryID = libraryID ?? Trellis.Libraries.userLibraryID;
+	let items = await Trellis.Items.getAll(libraryID, false, true);
 	adjustProgressBy(0.01); // move the progress bar slightly while we load required data
 
-	await Zotero.Items.loadDataTypes(items, ['itemData', 'childItems']);
+	await Trellis.Items.loadDataTypes(items, ['itemData', 'childItems']);
 	adjustProgressBy(0.01);
 
 	// use remaining 98% of progress bar for renaming attachments
@@ -89,12 +89,12 @@ export async function renameFilesFromParent({ libraryID = null, pretend = false,
 			continue;
 		}
 
-		if (!Zotero.Attachments.shouldAutoRenameAttachment(attachmentItem)) {
+		if (!Trellis.Attachments.shouldAutoRenameAttachment(attachmentItem)) {
 			continue;
 		}
 
 		const { newName, isFilePresent } = await getNewFileNameData(attachmentItem, parentItem);
-		Zotero.debug(`Renaming attachment ${attachmentItem.id} on parent item ${parentItem.id} to ${newName}`);
+		Trellis.debug(`Renaming attachment ${attachmentItem.id} on parent item ${parentItem.id} to ${newName}`);
 
 		if (newName !== attachmentItem.attachmentFilename) {
 			summary.push({
@@ -117,7 +117,7 @@ export async function renameFilesFromParent({ libraryID = null, pretend = false,
 					count++;
 				}
 				else {
-					Zotero.debug(`Failed to rename attachment ${attachmentItem.id} on parent item ${parentItem.id}`);
+					Trellis.debug(`Failed to rename attachment ${attachmentItem.id} on parent item ${parentItem.id}`);
 				}
 			}
 			else if (attachmentItem.attachmentFilename !== newName && attachmentItem.isStoredFileAttachment()) {
@@ -138,9 +138,9 @@ export async function renameFilesFromParent({ libraryID = null, pretend = false,
 	}
 	const t2 = Date.now();
 	if (!pretend) {
-		Zotero.debug(`Renaming ${count + noFilePresentCount} attachments (${noFilePresentCount} with no file present) took ${((t2 - t1) / 1000).toFixed(2)} seconds (Processed ${items.length} items in library: ${libraryID}`);
-		if (libraryID === Zotero.Libraries.userLibraryID) {
-			Zotero.Prefs.set('autoRenameFiles.done', true);
+		Trellis.debug(`Renaming ${count + noFilePresentCount} attachments (${noFilePresentCount} with no file present) took ${((t2 - t1) / 1000).toFixed(2)} seconds (Processed ${items.length} items in library: ${libraryID}`);
+		if (libraryID === Trellis.Libraries.userLibraryID) {
+			Trellis.Prefs.set('autoRenameFiles.done', true);
 		}
 	}
 	return summary;
@@ -150,19 +150,19 @@ export async function renameFilesFromParent({ libraryID = null, pretend = false,
  * Renames an individual attachment file based on its parent item's metadata.
  *
  * @async
- * @param {Zotero.Item} attachmentItem - The attachment item to be renamed.
+ * @param {Trellis.Item} attachmentItem - The attachment item to be renamed.
  * @throws {Error} If the item is not a valid attachment for renaming.
  * @returns {Promise}
  */
 export async function renameFileFromParent(attachmentItem) {
-	if (!attachmentItem.isAttachment() || attachmentItem.isTopLevelItem() || attachmentItem.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+	if (!attachmentItem.isAttachment() || attachmentItem.isTopLevelItem() || attachmentItem.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 		throw new Error('Item ' + attachmentItem.itemID + ' cannot be renamed based on its parent item');
 	}
 
 	const oldName = attachmentItem.attachmentFilename;
 	const oldBaseName = attachmentItem.attachmentFilename.replace(/\.[^.]+$/, '');
 	const parentItemID = attachmentItem.parentItemID;
-	let parentItem = await Zotero.Items.getAsync(parentItemID);
+	let parentItem = await Trellis.Items.getAsync(parentItemID);
 	const { newName } = await getNewFileNameData(attachmentItem, parentItem);
 
 	const renamed = await attachmentItem.renameAttachmentFile(
@@ -188,7 +188,7 @@ export async function renameFileFromParent(attachmentItem) {
 };
 
 export async function canRenameFileFromParent(attachmentItem) {
-	if (!attachmentItem.isAttachment() || attachmentItem.isTopLevelItem() || attachmentItem.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+	if (!attachmentItem.isAttachment() || attachmentItem.isTopLevelItem() || attachmentItem.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 		return false;
 	}
 
@@ -198,10 +198,10 @@ export async function canRenameFileFromParent(attachmentItem) {
 	}
 
 	const parentItemID = attachmentItem.parentItemID;
-	let parentItem = await Zotero.Items.getAsync(parentItemID);
+	let parentItem = await Trellis.Items.getAsync(parentItemID);
 	const origFilename = PathUtils.filename(path);
-	const ext = Zotero.File.getExtension(path);
-	let newName = Zotero.Attachments.getFileBaseNameFromItem(parentItem, { attachmentTitle: attachmentItem.getField('title') });
+	const ext = Trellis.File.getExtension(path);
+	let newName = Trellis.Attachments.getFileBaseNameFromItem(parentItem, { attachmentTitle: attachmentItem.getField('title') });
 
 	newName = ext.length ? `${newName}.${ext}` : newName;
 	return newName !== origFilename;
@@ -209,9 +209,9 @@ export async function canRenameFileFromParent(attachmentItem) {
 
 
 export function registerAutoRenameFileFromParent() {
-	Zotero.Notifier.registerObserver({
+	Trellis.Notifier.registerObserver({
 		notify: async (event, _type, ids, extraData) => {
-			if (!Zotero.Prefs.get('autoRenameFiles.onMetadataChange')) {
+			if (!Trellis.Prefs.get('autoRenameFiles.onMetadataChange')) {
 				return;
 			}
 			if (event !== 'modify') {
@@ -223,7 +223,7 @@ export function registerAutoRenameFileFromParent() {
 					continue;
 				}
 				
-				const parentItem = await Zotero.Items.getAsync(id);
+				const parentItem = await Trellis.Items.getAsync(id);
 				if (!parentItem.isRegularItem() || parentItem.isFeedItem) {
 					continue;
 				}
@@ -234,7 +234,7 @@ export function registerAutoRenameFileFromParent() {
 					continue;
 				}
 
-				if (!Zotero.Attachments.shouldAutoRenameAttachment(attachmentItem)) {
+				if (!Trellis.Attachments.shouldAutoRenameAttachment(attachmentItem)) {
 					continue;
 				}
 
@@ -251,7 +251,7 @@ export function registerAutoRenameFileFromParent() {
 				}
 
 				let parentItemBefore = parentItem.clone(null, { skipTags: true, includeCollections: false });
-				let validFields = Zotero.ItemFields.getItemTypeFields(parentItem.itemTypeID).map(fieldID => Zotero.ItemFields.getName(fieldID));
+				let validFields = Trellis.ItemFields.getItemTypeFields(parentItem.itemTypeID).map(fieldID => Trellis.ItemFields.getName(fieldID));
 				let previousItemType = null;
 				for (let [key, value] of changes) {
 					if (key === 'itemType') {
@@ -268,11 +268,11 @@ export function registerAutoRenameFileFromParent() {
 				if (previousItemType !== null) {
 					// Revert the type last. The field values above were recorded under the
 					// current type's field names, so they are base-field migrated by `setType()`
-					parentItemBefore.setType(Zotero.ItemTypes.getID(previousItemType));
+					parentItemBefore.setType(Trellis.ItemTypes.getID(previousItemType));
 				}
 
 				await attachmentItem.loadDataType('itemData');
-				let previousMetadataBaseName = Zotero.Attachments.getFileBaseNameFromItem(
+				let previousMetadataBaseName = Trellis.Attachments.getFileBaseNameFromItem(
 					parentItemBefore, { attachmentTitle: attachmentItem.getField('title') }
 				);
 				let currentBaseName = attachmentItem.attachmentFilename?.replace(/\.[^.]+$/, '') ?? '';
@@ -290,7 +290,7 @@ export function registerAutoRenameFileFromParent() {
 					// Filename has most likely been manually changed, so
 					// don’t rename it. Reset `autoRenameFiles.done` so that
 					// "Rename Files" is enabled in the file renaming settings dialog.
-					Zotero.Prefs.set('autoRenameFiles.done', false);
+					Trellis.Prefs.set('autoRenameFiles.done', false);
 				}
 			}
 		}

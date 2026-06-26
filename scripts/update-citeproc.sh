@@ -10,7 +10,7 @@ fi
 echo Downloading tag $tag
 sleep 2
 
-outFile="$ROOT_DIR/chrome/content/zotero/xpcom/citeproc.js"
+outFile="$ROOT_DIR/chrome/content/trellis/xpcom/citeproc.js"
 
 if [ ! -e "$outFile" ]; then
 	>&2 echo "$outFile not found"

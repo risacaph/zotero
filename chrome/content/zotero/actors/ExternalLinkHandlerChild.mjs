@@ -50,13 +50,13 @@ export class ExternalLinkHandlerChild extends JSWindowActorChild {
 			return true;
 		}
 
-		if (hrefURL.origin === 'https://www.zotero.org' && /^\/styles\/[^/?#]+$/.test(hrefURL.pathname)) {
+		if (hrefURL.origin === 'https://www.trellis.org' && /^\/styles\/[^/?#]+$/.test(hrefURL.pathname)) {
 			// Links points directly to CSL in the repo: open internally
 			return true;
 		}
 		
 		// Everything else: open externally
-		// This might include links that Zotero.launchURL() is just going to reject,
+		// This might include links that Trellis.launchURL() is just going to reject,
 		// like chrome:// URLs, but we'll just let it print that error
 		return false;
 	}

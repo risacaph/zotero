@@ -3,30 +3,30 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.URI = new function () {
-	Zotero.defineProperty(this, 'defaultPrefix', {
-		value: 'http://zotero.org/'
+Trellis.URI = new function () {
+	Trellis.defineProperty(this, 'defaultPrefix', {
+		value: 'http://trellis.org/'
 	});
 	
 	// This should match all possible URIs. Match groups are as follows:
@@ -37,7 +37,7 @@ Zotero.URI = new function () {
 	// 5: items|collections|NULL
 	// 6: itemKey|collectionKey|NULL
 	var uriPartsRe = new RegExp(
-		'^' + Zotero.Utilities.quotemeta(this.defaultPrefix)
+		'^' + Trellis.Utilities.quotemeta(this.defaultPrefix)
 		+ '(users|groups)/(local/)?(\\w+)(?:/(publications|feeds/\\w+))?'
 		+ '(?:/(items|collections)/(\\w+))?'
 	);
@@ -45,10 +45,10 @@ Zotero.URI = new function () {
 	/**
 	 * Get a URI with the user's local key, if there is one
 	 *
-	 * @return	{String|False}		e.g., 'http://zotero.org/users/local/v3aG8nQf'
+	 * @return	{String|False}		e.g., 'http://trellis.org/users/local/v3aG8nQf'
 	 */
 	this.getLocalUserURI = function () {
-		return this.defaultPrefix + "users/local/" + Zotero.Users.getLocalUserKey();
+		return this.defaultPrefix + "users/local/" + Trellis.Users.getLocalUserKey();
 	}
 	
 	
@@ -58,7 +58,7 @@ Zotero.URI = new function () {
 	 * @return	{String}
 	 */
 	this.getCurrentUserURI = function () {
-		var userID = Zotero.Users.getCurrentUserID();
+		var userID = Trellis.Users.getCurrentUserID();
 		if (userID) {
 			return this.defaultPrefix + "users/" + userID;
 		}
@@ -68,7 +68,7 @@ Zotero.URI = new function () {
 	
 	
 	this.getCurrentUserLibraryURI = function () {
-		var userID = Zotero.Users.getCurrentUserID();
+		var userID = Trellis.Users.getCurrentUserID();
 		if (!userID) {
 			return false;
 		}
@@ -85,13 +85,13 @@ Zotero.URI = new function () {
 	 * Get path portion of library URI (e.g., users/6 or groups/1)
 	 */
 	this.getLibraryPath = function (libraryID) {
-		var libraryType = Zotero.Libraries.get(libraryID).libraryType;
+		var libraryType = Trellis.Libraries.get(libraryID).libraryType;
 		
 		switch (libraryType) {
 			case 'user':
-				var id = Zotero.Users.getCurrentUserID();
+				var id = Trellis.Users.getCurrentUserID();
 				if (!id) {
-					id = 'local/' + Zotero.Users.getLocalUserKey();
+					id = 'local/' + Trellis.Users.getLocalUserKey();
 				}
 				
 				if (libraryType == 'publications') {
@@ -102,10 +102,10 @@ Zotero.URI = new function () {
 			
 			case 'feed':
 				// Since feeds are not currently synced, generate a local URI
-				return "users/local/" + Zotero.Users.getLocalUserKey() + "/feeds/" + libraryID;
+				return "users/local/" + Trellis.Users.getLocalUserKey() + "/feeds/" + libraryID;
 			
 			case 'group':
-				var id = Zotero.Groups.getGroupIDFromLibraryID(libraryID);
+				var id = Trellis.Groups.getGroupIDFromLibraryID(libraryID);
 				break;
 			
 			default:
@@ -119,24 +119,24 @@ Zotero.URI = new function () {
 	/**
 	 * Get library from path (e.g., users/6 or groups/1)
 	 *
-	 * @return {Zotero.Library|false}
+	 * @return {Trellis.Library|false}
 	 */
 	this.getPathLibrary = function (path) {
 		let matches = path.match(/^\/\/?users\/(\d+)/);
 		if (matches) {
 			let userID = matches[1];
-			let currentUserID = Zotero.Users.getCurrentUserID();
+			let currentUserID = Trellis.Users.getCurrentUserID();
 			if (userID != currentUserID) {
-				Zotero.debug("User ID from streaming server doesn't match current id! "
+				Trellis.debug("User ID from streaming server doesn't match current id! "
 					+ `(${userID} != ${currentUserID})`);
 				return false;
 			}
-			return Zotero.Libraries.userLibrary;
+			return Trellis.Libraries.userLibrary;
 		}
 		matches = path.match(/^\/groups\/(\d+)/);
 		if (matches) {
 			let groupID = matches[1];
-			return Zotero.Groups.get(groupID);
+			return Trellis.Groups.get(groupID);
 		}
 	}
 	
@@ -190,12 +190,12 @@ Zotero.URI = new function () {
 	
 	
 	this.getGroupsURL = function () {
-		return ZOTERO_CONFIG.WWW_BASE_URL + "groups";
+		return TRELLIS_CONFIG.WWW_BASE_URL + "groups";
 	}
 	
 	
 	/**
-	 * @param {Zotero.Group} group
+	 * @param {Trellis.Group} group
 	 * @param {Boolean} webRoot
 	 * @return {String}
 	 */
@@ -208,7 +208,7 @@ Zotero.URI = new function () {
 	}
 
 	/**
-	 * @param {Zotero.Search} search
+	 * @param {Trellis.Search} search
 	 * @param {Boolean} webRoot
 	 * @return {String}
 	 */
@@ -222,19 +222,19 @@ Zotero.URI = new function () {
 	
 	this._getObjectPath = function (obj) {
 		let path = this.getLibraryPath(obj.libraryID);
-		if (obj instanceof Zotero.Library) {
+		if (obj instanceof Trellis.Library) {
 			return path;
 		}
 		
-		if (obj instanceof Zotero.Item) {
+		if (obj instanceof Trellis.Item) {
 			return path + '/items/' + obj.key;
 		}
 		
-		if (obj instanceof Zotero.Collection) {
+		if (obj instanceof Trellis.Collection) {
 			return path + '/collections/' + obj.key;
 		}
 
-		if (obj instanceof Zotero.Search) {
+		if (obj instanceof Trellis.Search) {
 			return path + '/searches/' + obj.key;
 		}
 		
@@ -242,7 +242,7 @@ Zotero.URI = new function () {
 	}
 
 	/**
-	 * @param {Zotero.Item | Zotero.Collection | Zotero.Group | Zotero.Search} obj
+	 * @param {Trellis.Item | Trellis.Collection | Trellis.Group | Trellis.Search} obj
 	 * @return {String}
 	 */
 	this.getObjectURI = function (obj) {
@@ -262,12 +262,12 @@ Zotero.URI = new function () {
 	 * Convert an item URI into an item
 	 *
 	 * @param	{String}				itemURI
-	 * @return {Promise<Zotero.Item|false>}
+	 * @return {Promise<Trellis.Item|false>}
 	 */
 	this.getURIItem = function (itemURI) {
 		var obj = this._getURIObject(itemURI, 'item');
 		if (!obj) return false;
-		return Zotero.Items.getByLibraryAndKeyAsync(obj.libraryID, obj.key);
+		return Trellis.Items.getByLibraryAndKeyAsync(obj.libraryID, obj.key);
 	};
 	
 	
@@ -297,7 +297,7 @@ Zotero.URI = new function () {
 	this.getURIItemID = function (itemURI) {
 		var obj = this._getURIObject(itemURI, 'item');
 		if (!obj) return false;
-		return Zotero.Items.getIDFromLibraryAndKey(obj.libraryID, obj.key);
+		return Trellis.Items.getIDFromLibraryAndKey(obj.libraryID, obj.key);
 	}
 	
 	
@@ -305,13 +305,13 @@ Zotero.URI = new function () {
 	 * Convert a collection URI into a collection
 	 *
 	 * @param	{String}				collectionURI
-	 * @param	{Zotero.Collection|FALSE}
-	 * @return {Promise<Zotero.Collection|false>}
+	 * @param	{Trellis.Collection|FALSE}
+	 * @return {Promise<Trellis.Collection|false>}
 	 */
 	this.getURICollection = function (collectionURI) {
 		var obj = this._getURIObject(collectionURI, 'collection');
 		if (!obj) return false;
-		return Zotero.Collections.getByLibraryAndKeyAsync(obj.libraryID, obj.key);
+		return Trellis.Collections.getByLibraryAndKeyAsync(obj.libraryID, obj.key);
 	};
 	
 	
@@ -331,7 +331,7 @@ Zotero.URI = new function () {
 	this.getURICollectionID = function (collectionURI) {
 		var obj = this._getURIObject(collectionURI, 'collection');
 		if (!obj) return false;
-		return Zotero.Collections.getIDFromLibraryAndKey(obj.libraryID, obj.key);
+		return Trellis.Collections.getIDFromLibraryAndKey(obj.libraryID, obj.key);
 	}
 	
 	
@@ -357,10 +357,10 @@ Zotero.URI = new function () {
 	 */
 	this.toAPIURL = function (uri, apiURL) {
 		if (!apiURL) {
-			apiURL = ZOTERO_CONFIG.API_URL;
+			apiURL = TRELLIS_CONFIG.API_URL;
 		}
 		return uri
-			.replace(ZOTERO_CONFIG.BASE_URI, apiURL)
+			.replace(TRELLIS_CONFIG.BASE_URI, apiURL)
 			// Replace local user key with users/0
 			.replace(/(http:\/\/localhost:\d+\/api\/users)\/local\/\w+/, '$1/0');
 	};
@@ -371,7 +371,7 @@ Zotero.URI = new function () {
 	 * @param {String} uri
 	 */
 	this.toWebURL = function (uri) {
-		return uri.replace(ZOTERO_CONFIG.BASE_URI, ZOTERO_CONFIG.WWW_BASE_URL);
+		return uri.replace(TRELLIS_CONFIG.BASE_URI, TRELLIS_CONFIG.WWW_BASE_URL);
 	};
 	
 	
@@ -411,10 +411,10 @@ Zotero.URI = new function () {
 	
 	
 	/**
-	 * Convert an object URI into a Zotero.Library that the object is in
+	 * Convert an object URI into a Trellis.Library that the object is in
 	 *
 	 * @param {String}	objectURI
-	 * @return {Zotero.Library|FALSE} - An object referenced by the URI
+	 * @return {Trellis.Library|FALSE} - An object referenced by the URI
 	 */
 	this._getURIObjectLibrary = function (objectURI) {
 		let uri = objectURI.replace(/\/+$/, ''); // Drop trailing "/"
@@ -429,18 +429,18 @@ Zotero.URI = new function () {
 			let type = uriParts[4];
 			if (!type) {
 				// Handles local and synced libraries
-				library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+				library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			} else {
 				let feedID = type.split('/')[1];
-				library = Zotero.Libraries.get(feedID);
+				library = Trellis.Libraries.get(feedID);
 			}
 		} else {
 			// Group libraries
-			library = Zotero.Groups.get(uriParts[3]);
+			library = Trellis.Groups.get(uriParts[3]);
 		}
 		
 		if (!library) {
-			Zotero.debug("Could not find a library for URI " + objectURI, 2, true);
+			Trellis.debug("Could not find a library for URI " + objectURI, 2, true);
 			return false;
 		}
 		
@@ -464,7 +464,7 @@ Zotero.URI = new function () {
 			let type = uriParts[4];
 			// Personal library
 			if (!type || type == 'publications') {
-				libraryID = await Zotero.DB.valueQueryAsync(
+				libraryID = await Trellis.DB.valueQueryAsync(
 					"SELECT libraryID FROM libraries WHERE type='user'"
 				);
 			}
@@ -475,13 +475,13 @@ Zotero.URI = new function () {
 		}
 		// Group libraries
 		else {
-			libraryID = await Zotero.DB.valueQueryAsync(
+			libraryID = await Trellis.DB.valueQueryAsync(
 				"SELECT libraryID FROM groups WHERE groupID=?", uriParts[3]
 			);
 		}
 		
 		if (!libraryID) {
-			Zotero.debug("Could not find a library for URI " + objectURI, 2, true);
+			Trellis.debug("Could not find a library for URI " + objectURI, 2, true);
 			return false;
 		}
 		

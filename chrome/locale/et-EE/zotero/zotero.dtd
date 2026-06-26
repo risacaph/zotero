@@ -1,329 +1,329 @@
-<!ENTITY zotero.general.yes "Jah">
-<!ENTITY zotero.general.no "Ei">
-<!ENTITY zotero.general.optional "(Valikuline)">
-<!ENTITY zotero.general.note "Märkus:">
-<!ENTITY zotero.general.selectAll "Valida kõik">
-<!ENTITY zotero.general.deselectAll "Tühistada kõik valikud">
-<!ENTITY zotero.general.edit "Toimetada">
-<!ENTITY zotero.general.delete "Kustutada">
-<!ENTITY zotero.general.moveToTrash "Liiguta Prahi hulka">
-<!ENTITY zotero.general.ok "OK">
-<!ENTITY zotero.general.cancel "Tühistada">
-<!ENTITY zotero.general.refresh "Värskenda">
-<!ENTITY zotero.general.saveAs "Salvestada kui...">
-<!ENTITY zotero.general.options "Valikud">
-<!ENTITY zotero.general.advancedOptions.label "Advanced Options">
-<!ENTITY zotero.general.tools "Tööriistad">
-<!ENTITY zotero.general.more "Veel">
-<!ENTITY zotero.general.moreInformation "Lisainfo">
-<!ENTITY zotero.general.loading "Laadimine...">
-<!ENTITY zotero.general.close "Sulge">
-<!ENTITY zotero.general.minimize "Minimeerida">
-<!ENTITY zotero.general.other "Other…">
-<!ENTITY zotero.general.bigger "Bigger">
-<!ENTITY zotero.general.smaller "Smaller">
-<!ENTITY zotero.general.reset "Lähtestamine">
+<!ENTITY trellis.general.yes "Jah">
+<!ENTITY trellis.general.no "Ei">
+<!ENTITY trellis.general.optional "(Valikuline)">
+<!ENTITY trellis.general.note "Märkus:">
+<!ENTITY trellis.general.selectAll "Valida kõik">
+<!ENTITY trellis.general.deselectAll "Tühistada kõik valikud">
+<!ENTITY trellis.general.edit "Toimetada">
+<!ENTITY trellis.general.delete "Kustutada">
+<!ENTITY trellis.general.moveToTrash "Liiguta Prahi hulka">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Tühistada">
+<!ENTITY trellis.general.refresh "Värskenda">
+<!ENTITY trellis.general.saveAs "Salvestada kui...">
+<!ENTITY trellis.general.options "Valikud">
+<!ENTITY trellis.general.advancedOptions.label "Advanced Options">
+<!ENTITY trellis.general.tools "Tööriistad">
+<!ENTITY trellis.general.more "Veel">
+<!ENTITY trellis.general.moreInformation "Lisainfo">
+<!ENTITY trellis.general.loading "Laadimine...">
+<!ENTITY trellis.general.close "Sulge">
+<!ENTITY trellis.general.minimize "Minimeerida">
+<!ENTITY trellis.general.other "Other…">
+<!ENTITY trellis.general.bigger "Bigger">
+<!ENTITY trellis.general.smaller "Smaller">
+<!ENTITY trellis.general.reset "Lähtestamine">
 
 
-<!ENTITY zotero.errorReport.title "Zotero vearaport">
-<!ENTITY zotero.errorReport.submissionInProgress "Palun oodake kuni veateadet saadetakse.">
-<!ENTITY zotero.errorReport.submitted "Teie veateade on saadetud.">
-<!ENTITY zotero.errorReport.reportID "Veateate ID:">
-<!ENTITY zotero.errorReport.postToForums "Palun postitage teade foorumisse (forums.zotero.org) koos veateate ID-ga ja kirjeldusega, millistel asjaoludel probleem esineb ning mis seda iseloomustab.">
-<!ENTITY zotero.errorReport.notReviewed "Veateadetega, millest ei ole foorumites teada antud, üldjuhul ei tegeleta.">
+<!ENTITY trellis.errorReport.title "Trellis vearaport">
+<!ENTITY trellis.errorReport.submissionInProgress "Palun oodake kuni veateadet saadetakse.">
+<!ENTITY trellis.errorReport.submitted "Teie veateade on saadetud.">
+<!ENTITY trellis.errorReport.reportID "Veateate ID:">
+<!ENTITY trellis.errorReport.postToForums "Palun postitage teade foorumisse (forums.trellis.org) koos veateate ID-ga ja kirjeldusega, millistel asjaoludel probleem esineb ning mis seda iseloomustab.">
+<!ENTITY trellis.errorReport.notReviewed "Veateadetega, millest ei ole foorumites teada antud, üldjuhul ei tegeleta.">
 
-<!ENTITY zotero.upgrade.title "Zotero uuendamishaldur">
-<!ENTITY zotero.upgrade.newVersionInstalled "Paigaldasite uue Zotero versiooni.">
-<!ENTITY zotero.upgrade.upgradeRequired "Et Zotero andmebaas töötaks uue versiooniga on seda tarvis uuendada.">
-<!ENTITY zotero.upgrade.autoBackup "Enne muudatuste tegemist varundatakse olemasolev andmebaas automaatselt.">
-<!ENTITY zotero.upgrade.majorUpgrade "Tegemist on olulise uuendusega.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "Enne jätkamist palun tutvuge kindlasti">
-<!ENTITY zotero.upgrade.majorUpgradeLink "uuenduste">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "kirjeldusega.">
-<!ENTITY zotero.upgrade.upgradeInProgress "Palun oodake kuni uuendusi paigaldatakse. See võib võtta mõned minutid aega.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "Teie Zotero andmebaas on edukalt uuendatud.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "Programmis tehtud uuendused on">
-<!ENTITY zotero.upgrade.changeLogLink "muudatuste">
-<!ENTITY zotero.upgrade.changeLogAfterLink "nimekirjas.">
+<!ENTITY trellis.upgrade.title "Trellis uuendamishaldur">
+<!ENTITY trellis.upgrade.newVersionInstalled "Paigaldasite uue Trellis versiooni.">
+<!ENTITY trellis.upgrade.upgradeRequired "Et Trellis andmebaas töötaks uue versiooniga on seda tarvis uuendada.">
+<!ENTITY trellis.upgrade.autoBackup "Enne muudatuste tegemist varundatakse olemasolev andmebaas automaatselt.">
+<!ENTITY trellis.upgrade.majorUpgrade "Tegemist on olulise uuendusega.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Enne jätkamist palun tutvuge kindlasti">
+<!ENTITY trellis.upgrade.majorUpgradeLink "uuenduste">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "kirjeldusega.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Palun oodake kuni uuendusi paigaldatakse. See võib võtta mõned minutid aega.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Teie Trellis andmebaas on edukalt uuendatud.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Programmis tehtud uuendused on">
+<!ENTITY trellis.upgrade.changeLogLink "muudatuste">
+<!ENTITY trellis.upgrade.changeLogAfterLink "nimekirjas.">
 
-<!ENTITY zotero.tabs.notes.label "Märkused">
-<!ENTITY zotero.tabs.attachments.label "Manused">
+<!ENTITY trellis.tabs.notes.label "Märkused">
+<!ENTITY trellis.tabs.attachments.label "Manused">
 
-<!ENTITY zotero.toolbar.duplicate.label "Näidata duplikaate">
-<!ENTITY zotero.collections.showUnfiledItems "Teemata kirjed">
-<!ENTITY zotero.collections.showRetractedItems "Show Retracted Items">
+<!ENTITY trellis.toolbar.duplicate.label "Näidata duplikaate">
+<!ENTITY trellis.collections.showUnfiledItems "Teemata kirjed">
+<!ENTITY trellis.collections.showRetractedItems "Show Retracted Items">
 
-<!ENTITY zotero.items.itemType "Kirje tüüp">
-<!ENTITY zotero.items.creator_column "Autor">
-<!ENTITY zotero.items.year_column "Aasta">
-<!ENTITY zotero.items.dateModified_column "Muutmise kuupäev">
-<!ENTITY zotero.items.moreColumns.label "Rohkem tulpasid">
-<!ENTITY zotero.items.restoreColumnOrder.label "Taastada tulpade järjekord">
+<!ENTITY trellis.items.itemType "Kirje tüüp">
+<!ENTITY trellis.items.creator_column "Autor">
+<!ENTITY trellis.items.year_column "Aasta">
+<!ENTITY trellis.items.dateModified_column "Muutmise kuupäev">
+<!ENTITY trellis.items.moreColumns.label "Rohkem tulpasid">
+<!ENTITY trellis.items.restoreColumnOrder.label "Taastada tulpade järjekord">
 
-<!ENTITY zotero.items.menu.showInLibrary "Näidata raamatukogus">
-<!ENTITY zotero.items.menu.attach.note "Märkuse lisamine">
-<!ENTITY zotero.items.menu.attach "Manuse lisamine">
-<!ENTITY zotero.items.menu.attach.link.uri "Seonda link URI-ga…">
-<!ENTITY zotero.items.menu.attach.file "Lisada fail kirje manusena">
-<!ENTITY zotero.items.menu.attach.fileLink "Lisada link failile">
+<!ENTITY trellis.items.menu.showInLibrary "Näidata raamatukogus">
+<!ENTITY trellis.items.menu.attach.note "Märkuse lisamine">
+<!ENTITY trellis.items.menu.attach "Manuse lisamine">
+<!ENTITY trellis.items.menu.attach.link.uri "Seonda link URI-ga…">
+<!ENTITY trellis.items.menu.attach.file "Lisada fail kirje manusena">
+<!ENTITY trellis.items.menu.attach.fileLink "Lisada link failile">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "Taasta raamatukokku">
-<!ENTITY zotero.items.menu.duplicateItem "Valitud kirje duplitseerimine">
-<!ENTITY zotero.items.menu.mergeItems "Kirjete liitmine...">
-<!ENTITY zotero.items.menu.unrecognize "Undo Retrieve Metadata">
+<!ENTITY trellis.items.menu.restoreToLibrary "Taasta raamatukokku">
+<!ENTITY trellis.items.menu.duplicateItem "Valitud kirje duplitseerimine">
+<!ENTITY trellis.items.menu.mergeItems "Kirjete liitmine...">
+<!ENTITY trellis.items.menu.unrecognize "Undo Retrieve Metadata">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "Palun valida aluskirje, millele liidetakse teise kirje andmed:">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "Valida väljad, mida säilitada teistest versioonidest:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "Palun valida aluskirje, millele liidetakse teise kirje andmed:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Valida väljad, mida säilitada teistest versioonidest:">
 
-<!ENTITY zotero.toolbar.newItem.label "Uus kirje">
-<!ENTITY zotero.toolbar.moreItemTypes.label "Veel">
-<!ENTITY zotero.toolbar.lookup.label "Identifitseerija abil uue kirje loomine">
-<!ENTITY zotero.toolbar.removeItem.label "Kirje eemaldamine...">
-<!ENTITY zotero.toolbar.newGroup "Uus grupp...">
-<!ENTITY zotero.toolbar.newSubcollection.label "Uus alamteema...">
-<!ENTITY zotero.toolbar.newSavedSearch.label "Uus salvestatud otsing...">
-<!ENTITY zotero.toolbar.emptyTrash.label "Prügikasti tühjendamine">
-<!ENTITY zotero.toolbar.tagSelector.label "Lipikusirvija olek">
-<!ENTITY zotero.toolbar.actions.label "Tegevused">
-<!ENTITY zotero.toolbar.import.label "Import...">
-<!ENTITY zotero.toolbar.importFromClipboard "Lõikepuhvrist importimine">
-<!ENTITY zotero.toolbar.export.label "Raamatukogu eksport...">
-<!ENTITY zotero.toolbar.rtfScan.label "RTF Skänn">
-<!ENTITY zotero.toolbar.preferences.label "Eelistused...">
-<!ENTITY zotero.toolbar.supportAndDocumentation "Abi ja dokumentatsioon">
-<!ENTITY zotero.toolbar.about.label "Zotero kohta">
-<!ENTITY zotero.toolbar.advancedSearch "Täpsem otsing">
-<!ENTITY zotero.toolbar.openURL.label "Otsida">
-<!ENTITY zotero.toolbar.openURL.tooltip "Otsida kohalikus raamatukogus">
+<!ENTITY trellis.toolbar.newItem.label "Uus kirje">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Veel">
+<!ENTITY trellis.toolbar.lookup.label "Identifitseerija abil uue kirje loomine">
+<!ENTITY trellis.toolbar.removeItem.label "Kirje eemaldamine...">
+<!ENTITY trellis.toolbar.newGroup "Uus grupp...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Uus alamteema...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Uus salvestatud otsing...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Prügikasti tühjendamine">
+<!ENTITY trellis.toolbar.tagSelector.label "Lipikusirvija olek">
+<!ENTITY trellis.toolbar.actions.label "Tegevused">
+<!ENTITY trellis.toolbar.import.label "Import...">
+<!ENTITY trellis.toolbar.importFromClipboard "Lõikepuhvrist importimine">
+<!ENTITY trellis.toolbar.export.label "Raamatukogu eksport...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF Skänn">
+<!ENTITY trellis.toolbar.preferences.label "Eelistused...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Abi ja dokumentatsioon">
+<!ENTITY trellis.toolbar.about.label "Trellis kohta">
+<!ENTITY trellis.toolbar.advancedSearch "Täpsem otsing">
+<!ENTITY trellis.toolbar.openURL.label "Otsida">
+<!ENTITY trellis.toolbar.openURL.tooltip "Otsida kohalikus raamatukogus">
 
-<!ENTITY zotero.toolbar.feeds.new "New Feed">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "From URL…">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "From OPML…">
-<!ENTITY zotero.toolbar.feeds.edit "Edit Feed…">
+<!ENTITY trellis.toolbar.feeds.new "New Feed">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "From URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "From OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Edit Feed…">
 
-<!ENTITY zotero.item.add "Lisada">
-<!ENTITY zotero.item.attachment.file.show "Faili näitamine">
-<!ENTITY zotero.item.textTransform "Teksti muutmine">
-<!ENTITY zotero.item.textTransform.titlecase "Suurteks Algustähtedeks">
-<!ENTITY zotero.item.textTransform.sentencecase "Lause tõst">
-<!ENTITY zotero.item.creatorTransform.nameSwap "Swap First/Last">
-<!ENTITY zotero.item.creatorTransform.fixCase "Fix Case">
-<!ENTITY zotero.item.copyAsURL "Kopeerida URL kujul">
-<!ENTITY zotero.item.deletePermanently "Kustuta jäädavalt...">
+<!ENTITY trellis.item.add "Lisada">
+<!ENTITY trellis.item.attachment.file.show "Faili näitamine">
+<!ENTITY trellis.item.textTransform "Teksti muutmine">
+<!ENTITY trellis.item.textTransform.titlecase "Suurteks Algustähtedeks">
+<!ENTITY trellis.item.textTransform.sentencecase "Lause tõst">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Kopeerida URL kujul">
+<!ENTITY trellis.item.deletePermanently "Kustuta jäädavalt...">
 
-<!ENTITY zotero.item.tags.removeAll "Remove All Tags…">
+<!ENTITY trellis.item.tags.removeAll "Remove All Tags…">
 
-<!ENTITY zotero.toolbar.newNote "Uus märkus">
-<!ENTITY zotero.toolbar.note.standalone "Uus sõltumatu märkus">
-<!ENTITY zotero.toolbar.note.child "Lisada alammärkus">
-<!ENTITY zotero.toolbar.lookup "Identifitseerija abil otsida...">
-<!ENTITY zotero.toolbar.attachment.linked "Link failile...">
-<!ENTITY zotero.toolbar.attachment.add "Faili koopia salvestamine...">
-<!ENTITY zotero.toolbar.attachment.weblink "Salvestada link käesolevale leheküljele">
-<!ENTITY zotero.toolbar.attachment.snapshot "Teha käesolevast leheküljest momentülesvõte">
-<!ENTITY zotero.toolbar.context.item "Kirje">
-<!ENTITY zotero.toolbar.context.notes "Märkused">
+<!ENTITY trellis.toolbar.newNote "Uus märkus">
+<!ENTITY trellis.toolbar.note.standalone "Uus sõltumatu märkus">
+<!ENTITY trellis.toolbar.note.child "Lisada alammärkus">
+<!ENTITY trellis.toolbar.lookup "Identifitseerija abil otsida...">
+<!ENTITY trellis.toolbar.attachment.linked "Link failile...">
+<!ENTITY trellis.toolbar.attachment.add "Faili koopia salvestamine...">
+<!ENTITY trellis.toolbar.attachment.weblink "Salvestada link käesolevale leheküljele">
+<!ENTITY trellis.toolbar.attachment.snapshot "Teha käesolevast leheküljest momentülesvõte">
+<!ENTITY trellis.toolbar.context.item "Kirje">
+<!ENTITY trellis.toolbar.context.notes "Märkused">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "Lipikud puuduvad">
-<!ENTITY zotero.tagSelector.loadingTags "Loading tags…">
-<!ENTITY zotero.tagSelector.showAutomatic "Automaatselt näidata">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "Näidata kõiki lipikuid raamatukogus">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "Delete Automatic Tags in This Library…">
-<!ENTITY zotero.tagSelector.clearAll "Ära vali midagi">
-<!ENTITY zotero.tagSelector.assignColor "Värvi valik...">
-<!ENTITY zotero.tagSelector.renameTag "Lipiku ümbernimetamine...">
-<!ENTITY zotero.tagSelector.deleteTag "Lipiku kustutamine...">
-<!ENTITY zotero.tagSelector.splitTag "Split…">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Lipikud puuduvad">
+<!ENTITY trellis.tagSelector.loadingTags "Loading tags…">
+<!ENTITY trellis.tagSelector.showAutomatic "Automaatselt näidata">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Näidata kõiki lipikuid raamatukogus">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Delete Automatic Tags in This Library…">
+<!ENTITY trellis.tagSelector.clearAll "Ära vali midagi">
+<!ENTITY trellis.tagSelector.assignColor "Värvi valik...">
+<!ENTITY trellis.tagSelector.renameTag "Lipiku ümbernimetamine...">
+<!ENTITY trellis.tagSelector.deleteTag "Lipiku kustutamine...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
 
-<!ENTITY zotero.tagColorChooser.title "Lipiku värvi valik ja asukoht">
-<!ENTITY zotero.tagColorChooser.color "Värv:">
-<!ENTITY zotero.tagColorChooser.position "Asukoht:">
-<!ENTITY zotero.tagColorChooser.setColor "Värvi valimine:">
-<!ENTITY zotero.tagColorChooser.removeColor "Värvi eemaldamine">
+<!ENTITY trellis.tagColorChooser.title "Lipiku värvi valik ja asukoht">
+<!ENTITY trellis.tagColorChooser.color "Värv:">
+<!ENTITY trellis.tagColorChooser.position "Asukoht:">
+<!ENTITY trellis.tagColorChooser.setColor "Värvi valimine:">
+<!ENTITY trellis.tagColorChooser.removeColor "Värvi eemaldamine">
 
-<!ENTITY zotero.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
-<!ENTITY zotero.lookup.button.search "Otsing">
+<!ENTITY trellis.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
+<!ENTITY trellis.lookup.button.search "Otsing">
 
-<!ENTITY zotero.createParent.title "Create Parent Item">
-<!ENTITY zotero.createParent.button.manual "Manual Entry">
+<!ENTITY trellis.createParent.title "Create Parent Item">
+<!ENTITY trellis.createParent.button.manual "Manual Entry">
 
-<!ENTITY zotero.selectitems.title "Kirjete valimine">
-<!ENTITY zotero.selectitems.intro.label "Valida millised kirjeid soovite lisada raamatukokku">
-<!ENTITY zotero.selectitems.cancel.label "Tühistada">
-<!ENTITY zotero.selectitems.select.label "OK">
+<!ENTITY trellis.selectitems.title "Kirjete valimine">
+<!ENTITY trellis.selectitems.intro.label "Valida millised kirjeid soovite lisada raamatukokku">
+<!ENTITY trellis.selectitems.cancel.label "Tühistada">
+<!ENTITY trellis.selectitems.select.label "OK">
 
-<!ENTITY zotero.bibliography.title "Bibliograafia loomine">
-<!ENTITY zotero.bibliography.style.label "Viite stiil:">
-<!ENTITY zotero.bibliography.manageStyles "Manage Styles…">
-<!ENTITY zotero.bibliography.locale.label "Keel">
-<!ENTITY zotero.bibliography.outputMode "Väljundi tüüp:">
-<!ENTITY zotero.bibliography.bibliography "Biblograafia">
-<!ENTITY zotero.bibliography.outputMethod "Väljundi meetod:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "Salvestada RTF-ina">
-<!ENTITY zotero.bibliography.saveAsHTML.label "Salvestada HTML-ina">
-<!ENTITY zotero.bibliography.copyToClipboard.label "Lõikepuhvrisse kopeerimine">
-<!ENTITY zotero.bibliography.print.label "Trükkida">
+<!ENTITY trellis.bibliography.title "Bibliograafia loomine">
+<!ENTITY trellis.bibliography.style.label "Viite stiil:">
+<!ENTITY trellis.bibliography.manageStyles "Manage Styles…">
+<!ENTITY trellis.bibliography.locale.label "Keel">
+<!ENTITY trellis.bibliography.outputMode "Väljundi tüüp:">
+<!ENTITY trellis.bibliography.bibliography "Biblograafia">
+<!ENTITY trellis.bibliography.outputMethod "Väljundi meetod:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Salvestada RTF-ina">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Salvestada HTML-ina">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Lõikepuhvrisse kopeerimine">
+<!ENTITY trellis.bibliography.print.label "Trükkida">
 
-<!ENTITY zotero.integration.docPrefs.title "Dokumendi sätted">
-<!ENTITY zotero.integration.addEditCitation.title "Lisa/toimeta viidet">
-<!ENTITY zotero.integration.editBibliography.title "Toimeta bibliograafiat">
+<!ENTITY trellis.integration.docPrefs.title "Dokumendi sätted">
+<!ENTITY trellis.integration.addEditCitation.title "Lisa/toimeta viidet">
+<!ENTITY trellis.integration.editBibliography.title "Toimeta bibliograafiat">
 
-<!ENTITY zotero.progress.title "Progress">
+<!ENTITY trellis.progress.title "Progress">
 
-<!ENTITY zotero.import "Import">
-<!ENTITY zotero.import.whereToImportFrom "Where do you want to import from?">
-<!ENTITY zotero.import.source.file "A file (BibTeX, RIS, Zotero RDF, etc.)">
-<!ENTITY zotero.import.source.folder "A folder of PDFs or other files">
-<!ENTITY zotero.import.onlineImport "online import">
-<!ENTITY zotero.import.importing "Importimine...">
-<!ENTITY zotero.import.database "Database">
-<!ENTITY zotero.import.lastModified "Last Modified">
-<!ENTITY zotero.import.size "Suurus">
-<!ENTITY zotero.import.createCollection "Place imported collections and items into new collection">
-<!ENTITY zotero.import.fileHandling "File Handling">
-<!ENTITY zotero.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+<!ENTITY trellis.import "Import">
+<!ENTITY trellis.import.whereToImportFrom "Where do you want to import from?">
+<!ENTITY trellis.import.source.file "A file (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importimine...">
+<!ENTITY trellis.import.database "Database">
+<!ENTITY trellis.import.lastModified "Last Modified">
+<!ENTITY trellis.import.size "Suurus">
+<!ENTITY trellis.import.createCollection "Place imported collections and items into new collection">
+<!ENTITY trellis.import.fileHandling "File Handling">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
 
-<!ENTITY zotero.exportOptions.title "Eksport...">
-<!ENTITY zotero.exportOptions.format.label "Formaat:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "Tõlkija seaded">
+<!ENTITY trellis.exportOptions.title "Eksport...">
+<!ENTITY trellis.exportOptions.format.label "Formaat:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Tõlkija seaded">
 
-<!ENTITY zotero.charset.label "Märgikodeering">
-<!ENTITY zotero.moreEncodings.label "Rohkem kodeeringud">
+<!ENTITY trellis.charset.label "Märgikodeering">
+<!ENTITY trellis.moreEncodings.label "Rohkem kodeeringud">
 
-<!ENTITY zotero.citation.keepSorted.label "Hoida allikad sorteeritud">
+<!ENTITY trellis.citation.keepSorted.label "Hoida allikad sorteeritud">
 
-<!ENTITY zotero.citation.suppressAuthor.label "Omit Author">
-<!ENTITY zotero.citation.prefix.label "Prefiks:">
-<!ENTITY zotero.citation.suffix.label "Sufiks:">
-<!ENTITY zotero.citation.editorWarning.label "Hoiatus: kui te redigeerite tsiteeringut siis see ei hakka enam peegeldama muutuseid, mida teete selle kirje zotero andmebaasi või kui muudate seadetes tsiteeringu stiili.">
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Prefiks:">
+<!ENTITY trellis.citation.suffix.label "Sufiks:">
+<!ENTITY trellis.citation.editorWarning.label "Hoiatus: kui te redigeerite tsiteeringut siis see ei hakka enam peegeldama muutuseid, mida teete selle kirje trellis andmebaasi või kui muudate seadetes tsiteeringu stiili.">
 
-<!ENTITY zotero.richText.italic.label "Kaldkiri">
-<!ENTITY zotero.richText.bold.label "Rasvane">
-<!ENTITY zotero.richText.underline.label "Allajoonitud">
-<!ENTITY zotero.richText.superscript.label "Ülaindeks">
-<!ENTITY zotero.richText.subscript.label "Alaindeks">
+<!ENTITY trellis.richText.italic.label "Kaldkiri">
+<!ENTITY trellis.richText.bold.label "Rasvane">
+<!ENTITY trellis.richText.underline.label "Allajoonitud">
+<!ENTITY trellis.richText.superscript.label "Ülaindeks">
+<!ENTITY trellis.richText.subscript.label "Alaindeks">
 
-<!ENTITY zotero.annotate.toolbar.add.label "Annotatsiooni lisamine">
-<!ENTITY zotero.annotate.toolbar.collapse.label "Annotatsioonide peitmine">
-<!ENTITY zotero.annotate.toolbar.expand.label "Annotatsioonide näitamine">
-<!ENTITY zotero.annotate.toolbar.highlight.label "Teksti esiletõstmine">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "Esiletõste eemaldamine">
+<!ENTITY trellis.annotate.toolbar.add.label "Annotatsiooni lisamine">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Annotatsioonide peitmine">
+<!ENTITY trellis.annotate.toolbar.expand.label "Annotatsioonide näitamine">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Teksti esiletõstmine">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Esiletõste eemaldamine">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "Näidata viiteid:">
-<!ENTITY zotero.integration.prefs.footnotes.label "Joonealustena">
-<!ENTITY zotero.integration.prefs.endnotes.label "Lõppmärkustena">
+<!ENTITY trellis.integration.prefs.displayAs.label "Näidata viiteid:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Joonealustena">
+<!ENTITY trellis.integration.prefs.endnotes.label "Lõppmärkustena">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "Store Citations as:">
-<!ENTITY zotero.integration.prefs.bookmarks.label "Järjehoidjaid">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "Bookmarks can be shared between Word and LibreOffice, but may cause errors if accidentally modified and cannot be inserted into footnotes.">
+<!ENTITY trellis.integration.prefs.formatUsing.label "Store Citations as:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Järjehoidjaid">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Bookmarks can be shared between Word and LibreOffice, but may cause errors if accidentally modified and cannot be inserted into footnotes.">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "Automatically update citations">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "Citations with pending updates will be highlighted in the document">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "Disabling updates can speed up citation insertion in large documents. Click Refresh to update citations manually.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatically update citations">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citations with pending updates will be highlighted in the document">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Disabling updates can speed up citation insertion in large documents. Click Refresh to update citations manually.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "Use MEDLINE journal abbreviations">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "The “Journal Abbr” field will be ignored.">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Use MEDLINE journal abbreviations">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "The “Journal Abbr” field will be ignored.">
 
-<!ENTITY zotero.integration.prefs.exportDocument "Switch to a Different Word Processor…">
+<!ENTITY trellis.integration.prefs.exportDocument "Switch to a Different Word Processor…">
 
-<!ENTITY zotero.integration.showEditor.label "Redaktori näitamine">
-<!ENTITY zotero.integration.classicView.label "Tavaline vaade">
+<!ENTITY trellis.integration.showEditor.label "Redaktori näitamine">
+<!ENTITY trellis.integration.classicView.label "Tavaline vaade">
 
-<!ENTITY zotero.integration.references.label "Referentsid bibliograafias">
+<!ENTITY trellis.integration.references.label "Referentsid bibliograafias">
 
-<!ENTITY zotero.sync.stop "Stop Sync">
-<!ENTITY zotero.sync.error "Sünkroniseerimisviga">
-<!ENTITY zotero.sync.storage.progress "Progress:">
-<!ENTITY zotero.sync.storage.downloads "Allalaadimised:">
-<!ENTITY zotero.sync.storage.uploads "Üleslaadimised:">
+<!ENTITY trellis.sync.stop "Stop Sync">
+<!ENTITY trellis.sync.error "Sünkroniseerimisviga">
+<!ENTITY trellis.sync.storage.progress "Progress:">
+<!ENTITY trellis.sync.storage.downloads "Allalaadimised:">
+<!ENTITY trellis.sync.storage.uploads "Üleslaadimised:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "Järgnev lipik Zotero raamatukogus on liiga pikk selleks, et seda sünkroniseerida:">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "Sünkroniseerimiseks peavad lipikud olema lühemad kui 256 märki.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "Võite selle lipiku jagada mitmeks lipikuks, lühendada seda käsitsi või selle hoopis kustutada.">
-<!ENTITY zotero.sync.longTagFixer.split "Jagada">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "Jagada">
-<!ENTITY zotero.sync.longTagFixer.character "märgi juurest">
-<!ENTITY zotero.sync.longTagFixer.characters "märkide juurest">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "Valimata lipikuid ei salvestata.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "Lipik kustutatakse kõigilt kirjetelt.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Järgnev lipik Trellis raamatukogus on liiga pikk selleks, et seda sünkroniseerida:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Sünkroniseerimiseks peavad lipikud olema lühemad kui 256 märki.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Võite selle lipiku jagada mitmeks lipikuks, lühendada seda käsitsi või selle hoopis kustutada.">
+<!ENTITY trellis.sync.longTagFixer.split "Jagada">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Jagada">
+<!ENTITY trellis.sync.longTagFixer.character "märgi juurest">
+<!ENTITY trellis.sync.longTagFixer.characters "märkide juurest">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Valimata lipikuid ei salvestata.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Lipik kustutatakse kõigilt kirjetelt.">
 
-<!ENTITY zotero.merge.title "Konflikti lahendamine">
-<!ENTITY zotero.merge.of " ">
-<!ENTITY zotero.merge.deleted "Kustututatud">
+<!ENTITY trellis.merge.title "Konflikti lahendamine">
+<!ENTITY trellis.merge.of " ">
+<!ENTITY trellis.merge.deleted "Kustututatud">
 
-<!ENTITY zotero.proxy.recognized.title "Proksi omaks võetud.">
-<!ENTITY zotero.proxy.recognized.warning "Lisage vaid oma raamatukogust, koolist või firmast lähtuvaid proksisid">
-<!ENTITY zotero.proxy.recognized.warning.secondary "Teiste prokside lisamine võib kujutada turvariski.">
-<!ENTITY zotero.proxy.recognized.disable.label "Mitte suunata automaatselt eelevalt tuvastatud proksi kaudu">
-<!ENTITY zotero.proxy.recognized.ignore.label "Ignoreerida">
+<!ENTITY trellis.proxy.recognized.title "Proksi omaks võetud.">
+<!ENTITY trellis.proxy.recognized.warning "Lisage vaid oma raamatukogust, koolist või firmast lähtuvaid proksisid">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Teiste prokside lisamine võib kujutada turvariski.">
+<!ENTITY trellis.proxy.recognized.disable.label "Mitte suunata automaatselt eelevalt tuvastatud proksi kaudu">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignoreerida">
 
-<!ENTITY zotero.feedSettings.title "Feed Settings">
-<!ENTITY zotero.feedSettings.saveButton.label "Salvesta">
-<!ENTITY zotero.feedSettings.url.label "URL:">
-<!ENTITY zotero.feedSettings.title.label "Pealkiri:">
-<!ENTITY zotero.feedSettings.refresh.label1 "Update feed every">
-<!ENTITY zotero.feedSettings.refresh.label2 "hour(s)">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "Remove unread feed items after">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "day(s)">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "Remove read feed items after">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "day(s)">
+<!ENTITY trellis.feedSettings.title "Feed Settings">
+<!ENTITY trellis.feedSettings.saveButton.label "Salvesta">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Pealkiri:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Update feed every">
+<!ENTITY trellis.feedSettings.refresh.label2 "hour(s)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Remove unread feed items after">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "day(s)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Remove read feed items after">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "day(s)">
 
-<!ENTITY zotero.rtfScan.title "RTF Skänn">
-<!ENTITY zotero.rtfScan.cancel.label "Tühistada">
-<!ENTITY zotero.rtfScan.citation.label "Viide">
-<!ENTITY zotero.rtfScan.itemName.label "Kirje nimi">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "Paigutamata viited">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "Ebamäärased viited">
-<!ENTITY zotero.rtfScan.mappedCitations.label "Paigutatud viited">
-<!ENTITY zotero.rtfScan.introPage.label "Sissejuhatus">
-<!ENTITY zotero.rtfScan.introPage.description "Zotero suudab automaatselt RTF failidest viiteid lugeda ja ümber formateerida ja ka neisse bibliograafiat salvestada. Alustamiseks valige allpool RTF fail.">
-<!ENTITY zotero.rtfScan.introPage.description2 "Alustamiseks valige allpool RTF sisend ja väljundfail:">
-<!ENTITY zotero.rtfScan.scanPage.label "Viidete otsimine">
-<!ENTITY zotero.rtfScan.scanPage.description "Zotero otsib dokumendist viiteid. Palun kannatust.">
-<!ENTITY zotero.rtfScan.citationsPage.label "Viitekirjete kontroll">
-<!ENTITY zotero.rtfScan.citationsPage.description "Et kindlaks teha, kas Zotero sorteeris kirjed õigesti, palun kontrollida tuvastatud viidete nimekirja. Kõik paigutamata või ebamäärastest viidetest tulenevad probleemid peaks enne järgmist sammu lahendama.">
-<!ENTITY zotero.rtfScan.stylePage.label "Dokumendi formateering">
-<!ENTITY zotero.rtfScan.formatPage.label "Viidete formateering">
-<!ENTITY zotero.rtfScan.formatPage.description "Zotero töötleb RTF dokumenti. Palun kannatust.">
-<!ENTITY zotero.rtfScan.completePage.label "RTF otsing lõppenud">
-<!ENTITY zotero.rtfScan.completePage.description "Dokument on töödeldud. Palun kontrollida formateeringut.">
-<!ENTITY zotero.rtfScan.inputFile.label "Sisendfail">
-<!ENTITY zotero.rtfScan.outputFile.label "Väljundfail">
+<!ENTITY trellis.rtfScan.title "RTF Skänn">
+<!ENTITY trellis.rtfScan.cancel.label "Tühistada">
+<!ENTITY trellis.rtfScan.citation.label "Viide">
+<!ENTITY trellis.rtfScan.itemName.label "Kirje nimi">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Paigutamata viited">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Ebamäärased viited">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Paigutatud viited">
+<!ENTITY trellis.rtfScan.introPage.label "Sissejuhatus">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis suudab automaatselt RTF failidest viiteid lugeda ja ümber formateerida ja ka neisse bibliograafiat salvestada. Alustamiseks valige allpool RTF fail.">
+<!ENTITY trellis.rtfScan.introPage.description2 "Alustamiseks valige allpool RTF sisend ja väljundfail:">
+<!ENTITY trellis.rtfScan.scanPage.label "Viidete otsimine">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis otsib dokumendist viiteid. Palun kannatust.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Viitekirjete kontroll">
+<!ENTITY trellis.rtfScan.citationsPage.description "Et kindlaks teha, kas Trellis sorteeris kirjed õigesti, palun kontrollida tuvastatud viidete nimekirja. Kõik paigutamata või ebamäärastest viidetest tulenevad probleemid peaks enne järgmist sammu lahendama.">
+<!ENTITY trellis.rtfScan.stylePage.label "Dokumendi formateering">
+<!ENTITY trellis.rtfScan.formatPage.label "Viidete formateering">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis töötleb RTF dokumenti. Palun kannatust.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF otsing lõppenud">
+<!ENTITY trellis.rtfScan.completePage.description "Dokument on töödeldud. Palun kontrollida formateeringut.">
+<!ENTITY trellis.rtfScan.inputFile.label "Sisendfail">
+<!ENTITY trellis.rtfScan.outputFile.label "Väljundfail">
 
-<!ENTITY zotero.file.choose.label "Faili valimine...">
-<!ENTITY zotero.file.noneSelected.label "Faili ei ole valitud">
+<!ENTITY trellis.file.choose.label "Faili valimine...">
+<!ENTITY trellis.file.noneSelected.label "Faili ei ole valitud">
 
-<!ENTITY zotero.attachLink.title "Seonda link URI-ga…">
-<!ENTITY zotero.attachLink.label.link "Link:">
-<!ENTITY zotero.attachLink.label.title "Pealkiri:">
+<!ENTITY trellis.attachLink.title "Seonda link URI-ga…">
+<!ENTITY trellis.attachLink.label.link "Link:">
+<!ENTITY trellis.attachLink.label.title "Pealkiri:">
 
-<!ENTITY zotero.context.addChildNote "Add Item Note">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
-<!ENTITY zotero.context.addStandaloneNote "Add Standalone Note">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "Add Standalone Note from Annotations">
-<!ENTITY zotero.context.editInWindow "Muuda eraldi aknas">
+<!ENTITY trellis.context.addChildNote "Add Item Note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
+<!ENTITY trellis.context.addStandaloneNote "Add Standalone Note">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Add Standalone Note from Annotations">
+<!ENTITY trellis.context.editInWindow "Muuda eraldi aknas">
 
-<!ENTITY zotero.pdfReader.firstPage "Esimene lehekülg">
-<!ENTITY zotero.pdfReader.lastPage "Last Page">
-<!ENTITY zotero.pdfReader.back "Tagasi">
-<!ENTITY zotero.pdfReader.forward "Forward">
-<!ENTITY zotero.pdfReader.handTool "Hand Tool">
-<!ENTITY zotero.pdfReader.verticalScrolling "Vertical Scrolling">
-<!ENTITY zotero.pdfReader.horizontalScrolling "Horizontal Scrolling">
-<!ENTITY zotero.pdfReader.wrappedScrolling "Wrapped Scrolling">
-<!ENTITY zotero.pdfReader.noSpreads "No Spreads">
-<!ENTITY zotero.pdfReader.oddSpreads "Odd Spreads">
-<!ENTITY zotero.pdfReader.evenSpreads "Even Spreads">
-<!ENTITY zotero.pdfReader.scrolled "Scrolled">
-<!ENTITY zotero.pdfReader.paginated "Paginated">
-<!ENTITY zotero.pdfReader.zoomIn "Zoom In">
-<!ENTITY zotero.pdfReader.zoomOut "Zoom Out">
-<!ENTITY zotero.pdfReader.zoomReset "Reset Zoom">
-<!ENTITY zotero.pdfReader.zoomAuto "Automatically Resize">
-<!ENTITY zotero.pdfReader.zoomPageWidth "Zoom to Page Width">
-<!ENTITY zotero.pdfReader.zoomPageHeight "Zoom to Page Height">
-<!ENTITY zotero.pdfReader.splitVertically "Split Vertically">
-<!ENTITY zotero.pdfReader.splitHorizontally "Split Horizontally">
-<!ENTITY zotero.pdfReader.transferFromPDF "Import Annotations…">
-<!ENTITY zotero.pdfReader.rotatePageLeft "Rotate Page Left">
-<!ENTITY zotero.pdfReader.rotatePageRight "Rotate Page Right">
+<!ENTITY trellis.pdfReader.firstPage "Esimene lehekülg">
+<!ENTITY trellis.pdfReader.lastPage "Last Page">
+<!ENTITY trellis.pdfReader.back "Tagasi">
+<!ENTITY trellis.pdfReader.forward "Forward">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom In">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom Out">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

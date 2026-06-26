@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Nom :">
+<!ENTITY trellis.search.name "Nom :">
 
-<!ENTITY zotero.search.searchInLibrary "Rechercher dans la bibliothèque :">
+<!ENTITY trellis.search.searchInLibrary "Rechercher dans la bibliothèque :">
 
-<!ENTITY zotero.search.joinMode.prefix "Correspond">
-<!ENTITY zotero.search.joinMode.any "au moins à une">
-<!ENTITY zotero.search.joinMode.all "à toutes les">
-<!ENTITY zotero.search.joinMode.suffix "condition(s) suivante(s) :">
+<!ENTITY trellis.search.joinMode.prefix "Correspond">
+<!ENTITY trellis.search.joinMode.any "au moins à une">
+<!ENTITY trellis.search.joinMode.all "à toutes les">
+<!ENTITY trellis.search.joinMode.suffix "condition(s) suivante(s) :">
 
-<!ENTITY zotero.search.recursive.label "Rechercher dans les sous-collections">
-<!ENTITY zotero.search.noChildren "Ne montrer que les documents de niveau supérieur">
-<!ENTITY zotero.search.includeParentsAndChildren "Inclure les documents parents et enfants correspondants">
+<!ENTITY trellis.search.recursive.label "Rechercher dans les sous-collections">
+<!ENTITY trellis.search.noChildren "Ne montrer que les documents de niveau supérieur">
+<!ENTITY trellis.search.includeParentsAndChildren "Inclure les documents parents et enfants correspondants">
 
-<!ENTITY zotero.search.textModes.phrase "Expression">
-<!ENTITY zotero.search.textModes.phraseBinary "Expression (fichiers binaires incl.)">
-<!ENTITY zotero.search.textModes.regexp "Expression régulière (RegExp)">
-<!ENTITY zotero.search.textModes.regexpCS "Expression régulière (sensible à la casse)">
+<!ENTITY trellis.search.textModes.phrase "Expression">
+<!ENTITY trellis.search.textModes.phraseBinary "Expression (fichiers binaires incl.)">
+<!ENTITY trellis.search.textModes.regexp "Expression régulière (RegExp)">
+<!ENTITY trellis.search.textModes.regexpCS "Expression régulière (sensible à la casse)">
 
-<!ENTITY zotero.search.date.units.days "jours">
-<!ENTITY zotero.search.date.units.months "mois">
-<!ENTITY zotero.search.date.units.years "années">
+<!ENTITY trellis.search.date.units.days "jours">
+<!ENTITY trellis.search.date.units.months "mois">
+<!ENTITY trellis.search.date.units.years "années">
 
-<!ENTITY zotero.search.search "Rechercher">
-<!ENTITY zotero.search.clear "Effacer">
-<!ENTITY zotero.search.saveSearch "Enregistrer la recherche">
+<!ENTITY trellis.search.search "Rechercher">
+<!ENTITY trellis.search.clear "Effacer">
+<!ENTITY trellis.search.saveSearch "Enregistrer la recherche">

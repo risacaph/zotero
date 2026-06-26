@@ -3,28 +3,28 @@
 	
 	Copyright © 2019 Center for History and New Media
 					George Mason University, Fairfax, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 // Run in RunJS:
-// window.open('chrome://zotero/content/tools/data_generator.html', '_blank', 'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar')
+// window.open('chrome://trellis/content/tools/data_generator.html', '_blank', 'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar')
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -86,32 +86,32 @@ async function generateData(options = {}) {
 	if (numCollections) {
 		var itemsPerCollection = Math.ceil(numItems / numCollections);
 		var collectionsCreated = 1;
-		var collection = new Zotero.Collection({ name: randStr(4, 40) });
+		var collection = new Trellis.Collection({ name: randStr(4, 40) });
 		await collection.saveTx();
 	}
-	var itemTypes = Zotero.ItemTypes.getAll()
+	var itemTypes = Trellis.ItemTypes.getAll()
 		// Don't create attachments, notes, or custom item types
 		.filter(x => x.name != 'attachment' && x.name != 'note' && x.id < 10000);
-	var accessDateFieldID = Zotero.ItemFields.getID('accessDate');
+	var accessDateFieldID = Trellis.ItemFields.getID('accessDate');
 	for (let i = 0; i < runs; i++) {
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			for (let j = 0; j < chunkSize && created++ < numItems; j++) {
 				let { id: itemTypeID, name: itemType } =
 					itemTypes[Math.floor(Math.random() * itemTypes.length)];
-				let item = new Zotero.Item(itemType);
+				let item = new Trellis.Item(itemType);
 				item.setField('title', randStr(5, 200));
-				let fieldIDs = Zotero.ItemFields.getItemTypeFields(itemTypeID);
+				let fieldIDs = Trellis.ItemFields.getItemTypeFields(itemTypeID);
 				// Creators
 				if (rand(1, 10) > 2) {
 					let creators = [];
-					let primaryCreatorTypeID = Zotero.CreatorTypes.getPrimaryIDForType(itemTypeID);
+					let primaryCreatorTypeID = Trellis.CreatorTypes.getPrimaryIDForType(itemTypeID);
 					// Add primary type for most items
 					if (rand(1, 10) > 2) {
-						let creatorType = Zotero.CreatorTypes.getName(primaryCreatorTypeID);
+						let creatorType = Trellis.CreatorTypes.getName(primaryCreatorTypeID);
 						addCreatorOfType(creators, creatorType);
 					}
 					// Add other types
-					let creatorTypes = Zotero.CreatorTypes.getTypesForItemType(itemTypeID)
+					let creatorTypes = Trellis.CreatorTypes.getTypesForItemType(itemTypeID)
 						.map(type => type.name);
 					let maxCreators = rand(0, 8);
 					for (let i = 0; i < maxCreators; i++) {
@@ -123,7 +123,7 @@ async function generateData(options = {}) {
 					item.setCreators(creators);
 				}
 				// Fill a random set of fields with random data
-				fieldIDs = getRandomSubarray(fieldIDs, Zotero.Utilities.rand(1, 10));
+				fieldIDs = getRandomSubarray(fieldIDs, Trellis.Utilities.rand(1, 10));
 				for (let fieldID of fieldIDs) {
 					// Avoid warning from invalid access date
 					if (fieldID == accessDateFieldID) continue;
@@ -131,7 +131,7 @@ async function generateData(options = {}) {
 					item.setField(fieldID, randStr(1, 200));
 				}
 				// Add tags to 1 in 4 items
-				if (Zotero.Utilities.rand(1, 4) == 1) {
+				if (Trellis.Utilities.rand(1, 4) == 1) {
 					let numTags = rand(1, 10);
 					for (let i = 0; i < numTags; i++) {
 						item.addTag(
@@ -145,7 +145,7 @@ async function generateData(options = {}) {
 					item.setCollections([collection.id]);
 					if (created % itemsPerCollection == 0) {
 						collectionsCreated++;
-						collection = new Zotero.Collection({ name: randStr(4, 40) });
+						collection = new Trellis.Collection({ name: randStr(4, 40) });
 						await collection.save();
 					}
 				}
@@ -156,9 +156,9 @@ async function generateData(options = {}) {
 	if (collectionsCreated < numCollections) {
 		runs = Math.ceil((numCollections - collectionsCreated) / chunkSize);
 		for (let i = 0; i < runs; i++) {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				for (let j = 0; j < chunkSize && collectionsCreated++ < numCollections; j++) {
-					collection = new Zotero.Collection({ name: randStr(4, 40) });
+					collection = new Trellis.Collection({ name: randStr(4, 40) });
 					await collection.save();
 				}
 			});
@@ -178,14 +178,14 @@ function getRandomSubarray(arr, size) {
 	return shuffled.slice(0, size);
 }
 
-var rand = Zotero.Utilities.rand;
+var rand = Trellis.Utilities.rand;
 function randStr(min, max) {
 	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 		+ "éØü"
 		+ "漢字"
 		+ "                    "
 	do {
-		var rnd = Zotero.Utilities.randomString(rand(min, max), chars);
+		var rnd = Trellis.Utilities.randomString(rand(min, max), chars);
 	}
 	// Make sure string isn't all spaces
 	while (rnd.trim().length == 0);

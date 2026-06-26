@@ -3,22 +3,22 @@
 	
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -39,7 +39,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 					<html:span class="icon"/>
 					<html:span class="label"/>
 				</html:div>
-				<toolbarbutton class="zotero-clicky zotero-clicky-minus" tabindex="0" data-l10n-id="section-button-remove" disabled="false">
+				<toolbarbutton class="trellis-clicky trellis-clicky-minus" tabindex="0" data-l10n-id="section-button-remove" disabled="false">
 					<image class="toolbarbutton-icon"/>
 					<label class="toolbarbutton-text" />
 				</toolbarbutton>
@@ -55,7 +55,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 		attributeChangedCallback(name, oldValue, newValue) {
 			switch (name) {
 				case 'attachment-id':
-					this._attachment = Zotero.Items.get(newValue);
+					this._attachment = Trellis.Items.get(newValue);
 					break;
 			}
 			this.render();
@@ -79,7 +79,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 		init() {
 			this._attachmentButton = this.querySelector('.attachment-btn');
 			this._annotationButton = this.querySelector('.annotation-btn');
-			this._removeButton = this.querySelector('.zotero-clicky-minus');
+			this._removeButton = this.querySelector('.trellis-clicky-minus');
 
 			this._attachmentButton.addEventListener('click', this._handleAttachmentClick);
 			this._attachmentButton.addEventListener('dragstart', this._handleAttachmentDragStart);
@@ -99,35 +99,35 @@ import { getCSSItemTypeIcon } from 'components/icons';
 		}
 		
 		_handleAttachmentClick = (event) => {
-			ZoteroPane.viewAttachment(this._attachment.id, event);
+			TrellisPane.viewAttachment(this._attachment.id, event);
 		};
 
 		_handleAttachmentDragStart = (event) => {
-			Zotero.Utilities.Internal.onDragItems(event, [this._attachment.id]);
+			Trellis.Utilities.Internal.onDragItems(event, [this._attachment.id]);
 		};
 
 		_handleAnnotationClick = () => {
 			// TODO: jump to annotations pane
 			let pane;
-			if (ZoteroContextPane) {
-				pane = ZoteroContextPane.sidenav?.container.querySelector(`:scope > [data-pane="attachment-annotations"]`);
+			if (TrellisContextPane) {
+				pane = TrellisContextPane.sidenav?.container.querySelector(`:scope > [data-pane="attachment-annotations"]`);
 			}
 			if (pane) {
 				pane._section.open = true;
 			}
-			let win = Zotero.getMainWindow();
+			let win = Trellis.getMainWindow();
 			if (win) {
-				win.ZoteroPane.selectItem(this._attachment.id);
-				win.Zotero_Tabs.select('zotero-pane');
+				win.TrellisPane.selectItem(this._attachment.id);
+				win.Trellis_Tabs.select('trellis-pane');
 				win.focus();
 			}
 		};
 
 		_handleRemove = async () => {
-			const promptTitle = Zotero.getString('pane.items.trash.title');
-			const promptMessage = await Zotero.ftl.formatValue('section-attachments-move-to-trash-message', { title: this._attachment.getField('title') });
+			const promptTitle = Trellis.getString('pane.items.trash.title');
+			const promptMessage = await Trellis.ftl.formatValue('section-attachments-move-to-trash-message', { title: this._attachment.getField('title') });
 			if (Services.prompt.confirm(window, promptTitle, promptMessage)) {
-				await Zotero.Items.trashTx([this._attachment.id]);
+				await Trellis.Items.trashTx([this._attachment.id]);
 			}
 		};
 

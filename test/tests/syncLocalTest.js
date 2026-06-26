@@ -1,22 +1,22 @@
 "use strict";
 
-describe("Zotero.Sync.Data.Local", function () {
+describe("Trellis.Sync.Data.Local", function () {
 	describe("#getAPIKey()/#setAPIKey()", function () {
 		it("should get and set an API key", async function () {
-			var apiKey1 = Zotero.Utilities.randomString(24);
-			var apiKey2 = Zotero.Utilities.randomString(24);
-			await Zotero.Sync.Data.Local.setAPIKey(apiKey1);
-			assert.equal(await Zotero.Sync.Data.Local.getAPIKey(apiKey1), apiKey1);
-			await Zotero.Sync.Data.Local.setAPIKey(apiKey2);
-			assert.equal(await Zotero.Sync.Data.Local.getAPIKey(apiKey2), apiKey2);
+			var apiKey1 = Trellis.Utilities.randomString(24);
+			var apiKey2 = Trellis.Utilities.randomString(24);
+			await Trellis.Sync.Data.Local.setAPIKey(apiKey1);
+			assert.equal(await Trellis.Sync.Data.Local.getAPIKey(apiKey1), apiKey1);
+			await Trellis.Sync.Data.Local.setAPIKey(apiKey2);
+			assert.equal(await Trellis.Sync.Data.Local.getAPIKey(apiKey2), apiKey2);
 		})
 		
 		
 		it("should clear an API key by setting an empty string", async function () {
-			var apiKey = Zotero.Utilities.randomString(24);
-			await Zotero.Sync.Data.Local.setAPIKey(apiKey);
-			await Zotero.Sync.Data.Local.setAPIKey("");
-			assert.strictEqual(await Zotero.Sync.Data.Local.getAPIKey(apiKey), "");
+			var apiKey = Trellis.Utilities.randomString(24);
+			await Trellis.Sync.Data.Local.setAPIKey(apiKey);
+			await Trellis.Sync.Data.Local.setAPIKey("");
+			assert.strictEqual(await Trellis.Sync.Data.Local.getAPIKey(apiKey), "");
 		})
 	})
 
@@ -28,7 +28,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				.getInternalKeyToken();
 
 			// No-op if no primary password is set
-			assert.isFalse(Zotero.Sync.Data.Local.repairLoginManager());
+			assert.isFalse(Trellis.Sync.Data.Local.repairLoginManager());
 
 			if (token.needsUserInit) {
 				token.initPassword("repair-test");
@@ -38,19 +38,19 @@ describe("Zotero.Sync.Data.Local", function () {
 			}
 			try {
 				assert.isTrue(token.hasPassword);
-				assert.isTrue(Zotero.Sync.Data.Local.repairLoginManager());
+				assert.isTrue(Trellis.Sync.Data.Local.repairLoginManager());
 				assert.isFalse(token.hasPassword);
 
 				// Credentials should be saveable and readable again
-				var apiKey = Zotero.Utilities.randomString(24);
-				await Zotero.Sync.Data.Local.setAPIKey(apiKey);
-				assert.equal(await Zotero.Sync.Data.Local.getAPIKey(), apiKey);
+				var apiKey = Trellis.Utilities.randomString(24);
+				await Trellis.Sync.Data.Local.setAPIKey(apiKey);
+				assert.equal(await Trellis.Sync.Data.Local.getAPIKey(), apiKey);
 			}
 			finally {
 				if (token.hasPassword) {
 					token.changePassword("repair-test", "");
 				}
-				await Zotero.Sync.Data.Local.setAPIKey("");
+				await Trellis.Sync.Data.Local.setAPIKey("");
 			}
 		})
 	})
@@ -60,22 +60,22 @@ describe("Zotero.Sync.Data.Local", function () {
 		var resetDataDirFile;
 		
 		before(function () {
-			resetDataDirFile = OS.Path.join(Zotero.DataDirectory.dir, 'reset-data-directory');
-			sinon.stub(Zotero.Utilities.Internal, 'quitZotero');
+			resetDataDirFile = OS.Path.join(Trellis.DataDirectory.dir, 'reset-data-directory');
+			sinon.stub(Trellis.Utilities.Internal, 'quitTrellis');
 		});	
 		
 		beforeEach(function* () {
 			yield OS.File.remove(resetDataDirFile, {ignoreAbsent: true});
-			Zotero.Utilities.Internal.quitZotero.reset();
+			Trellis.Utilities.Internal.quitTrellis.reset();
 		});
 		
 		after(function () {
-			Zotero.Utilities.Internal.quitZotero.restore();
+			Trellis.Utilities.Internal.quitTrellis.restore();
 		});
 	
 		it("should prompt for data reset and create a temp 'reset-data-directory' file on accept", async function () {
-			await Zotero.Users.setCurrentUserID(1);
-			await Zotero.Users.setCurrentUsername("A");
+			await Trellis.Users.setCurrentUserID(1);
+			await Trellis.Users.setCurrentUsername("A");
 			
 			var handled = false;
 			waitForDialog(function (window) {
@@ -89,13 +89,13 @@ describe("Zotero.Sync.Data.Local", function () {
 				// Checkbox
 				assert.equal(matches[4], "“A”");
 				
-				window.document.getElementById('zotero-hardConfirmationDialog-checkbox').checked = true;
-				window.document.getElementById('zotero-hardConfirmationDialog-checkbox')
+				window.document.getElementById('trellis-hardConfirmationDialog-checkbox').checked = true;
+				window.document.getElementById('trellis-hardConfirmationDialog-checkbox')
 					.dispatchEvent(new Event('command'));
 				
 				handled = true;
-			}, 'accept', 'chrome://zotero/content/hardConfirmationDialog.xhtml');
-			var cont = await Zotero.Sync.Data.Local.checkUser(window, 2, "B");
+			}, 'accept', 'chrome://trellis/content/hardConfirmationDialog.xhtml');
+			var cont = await Trellis.Sync.Data.Local.checkUser(window, 2, "B");
 			var resetDataDirFileExists = await OS.File.exists(resetDataDirFile);
 			assert.isTrue(handled);
 			assert.isTrue(cont);
@@ -103,55 +103,55 @@ describe("Zotero.Sync.Data.Local", function () {
 		});
 		
 		it("should prompt for data reset and cancel", async function () {
-			await Zotero.Users.setCurrentUserID(1);
-			await Zotero.Users.setCurrentUsername("A");
+			await Trellis.Users.setCurrentUserID(1);
+			await Trellis.Users.setCurrentUsername("A");
 			
-			waitForDialog(false, 'cancel', 'chrome://zotero/content/hardConfirmationDialog.xhtml');
-			var cont = await Zotero.Sync.Data.Local.checkUser(window, 2, "B");
+			waitForDialog(false, 'cancel', 'chrome://trellis/content/hardConfirmationDialog.xhtml');
+			var cont = await Trellis.Sync.Data.Local.checkUser(window, 2, "B");
 			var resetDataDirFileExists = await OS.File.exists(resetDataDirFile);
 			assert.isFalse(cont);
 			assert.isFalse(resetDataDirFileExists);
 			
-			assert.equal(Zotero.Users.getCurrentUserID(), 1);
-			assert.equal(Zotero.Users.getCurrentUsername(), "A");
+			assert.equal(Trellis.Users.getCurrentUserID(), 1);
+			assert.equal(Trellis.Users.getCurrentUsername(), "A");
 		});
 		
 		// extra1 functionality not used at the moment
 		it.skip("should prompt for data reset and allow to choose a new data directory", function* (){
-			sinon.stub(Zotero.DataDirectory, 'forceChange').returns(Promise.resolve(true));
-			yield Zotero.Users.setCurrentUserID(1);
-			yield Zotero.Users.setCurrentUsername("A");
+			sinon.stub(Trellis.DataDirectory, 'forceChange').returns(Promise.resolve(true));
+			yield Trellis.Users.setCurrentUserID(1);
+			yield Trellis.Users.setCurrentUsername("A");
 			
-			waitForDialog(null, 'extra1', 'chrome://zotero/content/hardConfirmationDialog.xhtml');
+			waitForDialog(null, 'extra1', 'chrome://trellis/content/hardConfirmationDialog.xhtml');
 			waitForDialog();
-			var cont = yield Zotero.Sync.Data.Local.checkUser(window, 2, "B");
+			var cont = yield Trellis.Sync.Data.Local.checkUser(window, 2, "B");
 			var resetDataDirFileExists = yield OS.File.exists(resetDataDirFile);
 			assert.isTrue(cont);
-			assert.isTrue(Zotero.DataDirectory.forceChange.called);
+			assert.isTrue(Trellis.DataDirectory.forceChange.called);
 			assert.isFalse(resetDataDirFileExists);
 			
-			Zotero.DataDirectory.forceChange.restore();
+			Trellis.DataDirectory.forceChange.restore();
 		});
 		
 		it("should migrate relations using local user key", async function () {
-			await Zotero.DB.queryAsync("DELETE FROM settings WHERE setting='account'");
-			await Zotero.Users.init();
+			await Trellis.DB.queryAsync("DELETE FROM settings WHERE setting='account'");
+			await Trellis.Users.init();
 			
 			var item1 = await createDataObject('item');
 			var item2 = createUnsavedDataObject('item');
 			item2.addRelatedItem(item1);
 			await item2.save();
 			
-			var pred = Zotero.Relations.relatedItemPredicate;
+			var pred = Trellis.Relations.relatedItemPredicate;
 			assert.isTrue(
-				item2.toJSON().relations[pred][0].startsWith('http://zotero.org/users/local/')
+				item2.toJSON().relations[pred][0].startsWith('http://trellis.org/users/local/')
 			);
 			
-			waitForDialog(false, 'accept', 'chrome://zotero/content/hardConfirmationDialog.xhtml');
-			await Zotero.Sync.Data.Local.checkUser(window, 1, "A");
+			waitForDialog(false, 'accept', 'chrome://trellis/content/hardConfirmationDialog.xhtml');
+			await Trellis.Sync.Data.Local.checkUser(window, 1, "A");
 			
 			assert.isTrue(
-				item2.toJSON().relations[pred][0].startsWith('http://zotero.org/users/1/items/')
+				item2.toJSON().relations[pred][0].startsWith('http://trellis.org/users/1/items/')
 			);
 		});
 	});
@@ -169,13 +169,13 @@ describe("Zotero.Sync.Data.Local", function () {
 				assert.include(text, group.name);
 			});
 			
-			var mock = sinon.mock(Zotero.Sync.Data.Local);
+			var mock = sinon.mock(Trellis.Sync.Data.Local);
 			mock.expects("_libraryHasUnsyncedData").once().returns(Promise.resolve(true));
 			mock.expects("resetUnsyncedLibraryData").once().returns(Promise.resolve());
 			mock.expects("resetUnsyncedLibraryFiles").never();
 			
 			assert.isTrue(
-				await Zotero.Sync.Data.Local.checkLibraryForAccess(null, libraryID, false, false)
+				await Trellis.Sync.Data.Local.checkLibraryForAccess(null, libraryID, false, false)
 			);
 			await promise;
 			
@@ -190,13 +190,13 @@ describe("Zotero.Sync.Data.Local", function () {
 				assert.include(text, group.name);
 			}, "cancel");
 			
-			var mock = sinon.mock(Zotero.Sync.Data.Local);
+			var mock = sinon.mock(Trellis.Sync.Data.Local);
 			mock.expects("_libraryHasUnsyncedData").once().returns(Promise.resolve(true));
 			mock.expects("resetUnsyncedLibraryData").never();
 			mock.expects("resetUnsyncedLibraryFiles").never();
 			
 			assert.isFalse(
-				await Zotero.Sync.Data.Local.checkLibraryForAccess(null, libraryID, false, false)
+				await Trellis.Sync.Data.Local.checkLibraryForAccess(null, libraryID, false, false)
 			);
 			await promise;
 			
@@ -206,7 +206,7 @@ describe("Zotero.Sync.Data.Local", function () {
 		it("should not prompt if library is changing from editable to non-editable", async function () {
 			var group = await createGroup({ editable: false, filesEditable: false });
 			var libraryID = group.libraryID;
-			await Zotero.Sync.Data.Local.checkLibraryForAccess(null, libraryID, true, true);
+			await Trellis.Sync.Data.Local.checkLibraryForAccess(null, libraryID, true, true);
 		});
 		
 		//
@@ -220,13 +220,13 @@ describe("Zotero.Sync.Data.Local", function () {
 				assert.include(text, group.name);
 			});
 			
-			var mock = sinon.mock(Zotero.Sync.Data.Local);
+			var mock = sinon.mock(Trellis.Sync.Data.Local);
 			mock.expects("_libraryHasUnsyncedFiles").once().returns(Promise.resolve(true));
 			mock.expects("resetUnsyncedLibraryData").never();
 			mock.expects("resetUnsyncedLibraryFiles").once().returns(Promise.resolve());
 			
 			assert.isTrue(
-				await Zotero.Sync.Data.Local.checkLibraryForAccess(null, libraryID, true, false)
+				await Trellis.Sync.Data.Local.checkLibraryForAccess(null, libraryID, true, false)
 			);
 			await promise;
 			
@@ -241,13 +241,13 @@ describe("Zotero.Sync.Data.Local", function () {
 				assert.include(text, group.name);
 			}, "cancel");
 			
-			var mock = sinon.mock(Zotero.Sync.Data.Local);
+			var mock = sinon.mock(Trellis.Sync.Data.Local);
 			mock.expects("_libraryHasUnsyncedFiles").once().returns(Promise.resolve(true));
 			mock.expects("resetUnsyncedLibraryData").never();
 			mock.expects("resetUnsyncedLibraryFiles").never();
 			
 			assert.isFalse(
-				await Zotero.Sync.Data.Local.checkLibraryForAccess(null, libraryID, true, false)
+				await Trellis.Sync.Data.Local.checkLibraryForAccess(null, libraryID, true, false)
 			);
 			await promise;
 			
@@ -260,21 +260,21 @@ describe("Zotero.Sync.Data.Local", function () {
 		it("should return true for unsynced setting", async function () {
 			var group = await createGroup();
 			var libraryID = group.libraryID;
-			await Zotero.SyncedSettings.set(libraryID, "testSetting", { foo: "bar" });
-			assert.isTrue(await Zotero.Sync.Data.Local._libraryHasUnsyncedData(libraryID));
+			await Trellis.SyncedSettings.set(libraryID, "testSetting", { foo: "bar" });
+			assert.isTrue(await Trellis.Sync.Data.Local._libraryHasUnsyncedData(libraryID));
 		});
 		
 		it("should return true for unsynced item", async function () {
 			var group = await createGroup();
 			var libraryID = group.libraryID;
 			await createDataObject('item', { libraryID });
-			assert.isTrue(await Zotero.Sync.Data.Local._libraryHasUnsyncedData(libraryID));
+			assert.isTrue(await Trellis.Sync.Data.Local._libraryHasUnsyncedData(libraryID));
 		});
 		
 		it("should return false if no changes", async function () {
 			var group = await createGroup();
 			var libraryID = group.libraryID;
-			assert.isFalse(await Zotero.Sync.Data.Local._libraryHasUnsyncedData(libraryID));
+			assert.isFalse(await Trellis.Sync.Data.Local._libraryHasUnsyncedData(libraryID));
 		});
 	});
 	
@@ -288,26 +288,26 @@ describe("Zotero.Sync.Data.Local", function () {
 			var libraryID = group.libraryID;
 			
 			// New setting
-			await Zotero.SyncedSettings.set(libraryID, "testSetting", { foo: "bar" });
+			await Trellis.SyncedSettings.set(libraryID, "testSetting", { foo: "bar" });
 			
 			// Changed collection
 			var changedCollection = await createDataObject('collection', { libraryID, version: 1 });
 			var originalCollectionName = changedCollection.name;
-			await Zotero.Sync.Data.Local.saveCacheObject(
+			await Trellis.Sync.Data.Local.saveCacheObject(
 				'collection', libraryID, changedCollection.toJSON()
 			);
 			await modifyDataObject(changedCollection);
 			
 			// Unchanged item
 			var unchangedItem = await createDataObject('item', { libraryID, version: 1, synced: true });
-			await Zotero.Sync.Data.Local.saveCacheObject(
+			await Trellis.Sync.Data.Local.saveCacheObject(
 				'item', libraryID, unchangedItem.toJSON()
 			);
 			
 			// Changed item
 			var changedItem = await createDataObject('item', { libraryID, version: 1 });
 			var originalChangedItemTitle = changedItem.getField('title');
-			await Zotero.Sync.Data.Local.saveCacheObject('item', libraryID, changedItem.toJSON());
+			await Trellis.Sync.Data.Local.saveCacheObject('item', libraryID, changedItem.toJSON());
 			await modifyDataObject(changedItem);
 			
 			// New item
@@ -323,9 +323,9 @@ describe("Zotero.Sync.Data.Local", function () {
 			group.editable = false;
 			await group.saveTx();
 			
-			await Zotero.Sync.Data.Local.resetUnsyncedLibraryData(libraryID);
+			await Trellis.Sync.Data.Local.resetUnsyncedLibraryData(libraryID);
 			
-			assert.isNull(Zotero.SyncedSettings.get(group.libraryID, "testSetting"));
+			assert.isNull(Trellis.SyncedSettings.get(group.libraryID, "testSetting"));
 			
 			assert.equal(changedCollection.name, originalCollectionName);
 			assert.isTrue(changedCollection.synced);
@@ -335,9 +335,9 @@ describe("Zotero.Sync.Data.Local", function () {
 			assert.equal(changedItem.getField('title'), originalChangedItemTitle);
 			assert.isTrue(changedItem.synced);
 			
-			assert.isFalse(Zotero.Items.get(newItemKey));
+			assert.isFalse(Trellis.Items.get(newItemKey));
 			
-			assert.isFalse(await Zotero.Sync.Data.Local.getDateDeleted('item', libraryID, deletedItemKey));
+			assert.isFalse(await Trellis.Sync.Data.Local.getDateDeleted('item', libraryID, deletedItemKey));
 			
 			assert.equal(group.libraryVersion, -1);
 		});
@@ -362,7 +362,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				skipSyncedUpdate: true
 			});
 			// Save original in cache
-			await Zotero.Sync.Data.Local.saveCacheObject(
+			await Trellis.Sync.Data.Local.saveCacheObject(
 				'item',
 				libraryID,
 				Object.assign(
@@ -379,12 +379,12 @@ describe("Zotero.Sync.Data.Local", function () {
 			attachment.setField('title', "New Title");
 			await attachment.saveTx();
 			
-			await Zotero.Sync.Data.Local.resetUnsyncedLibraryFiles(libraryID);
+			await Trellis.Sync.Data.Local.resetUnsyncedLibraryFiles(libraryID);
 			
 			assert.isTrue(await attachment.fileExists());
 			assert.equal(attachment.getField('title'), originalTitle);
 			assert.equal(
-				attachment.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_IN_SYNC
+				attachment.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_IN_SYNC
 			);
 		});
 	});
@@ -427,22 +427,22 @@ describe("Zotero.Sync.Data.Local", function () {
 			});
 			
 			// Has to be called before resetUnsyncedLibraryFiles()
-			assert.isTrue(await Zotero.Sync.Data.Local._libraryHasUnsyncedFiles(libraryID));
+			assert.isTrue(await Trellis.Sync.Data.Local._libraryHasUnsyncedFiles(libraryID));
 			
-			await Zotero.Sync.Data.Local.resetUnsyncedLibraryFiles(libraryID);
+			await Trellis.Sync.Data.Local.resetUnsyncedLibraryFiles(libraryID);
 			
 			assert.isTrue(await attachment1.fileExists());
 			assert.isFalse(await attachment2.fileExists());
 			assert.isFalse(await attachment3.fileExists());
 			assert.isFalse(await embeddedImage.fileExists());
 			assert.equal(
-				attachment1.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_IN_SYNC
+				attachment1.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_IN_SYNC
 			);
 			assert.equal(
-				attachment2.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD
+				attachment2.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD
 			);
-			assert.isFalse(Zotero.Items.get(attachment3.id));
-			assert.ok(Zotero.Items.get(embeddedImage.id));
+			assert.isFalse(Trellis.Items.get(attachment3.id));
+			assert.ok(Trellis.Items.get(embeddedImage.id));
 		});
 	});
 	
@@ -454,9 +454,9 @@ describe("Zotero.Sync.Data.Local", function () {
 				skipBundledFiles: true
 			});
 			
-			yield Zotero.Sync.Data.Local.saveCacheObjects(
+			yield Trellis.Sync.Data.Local.saveCacheObjects(
 				'item',
-				Zotero.Libraries.userLibraryID,
+				Trellis.Libraries.userLibraryID,
 				[
 					{
 						key: 'AAAAAAAA',
@@ -488,9 +488,9 @@ describe("Zotero.Sync.Data.Local", function () {
 		})
 		
 		it("should return latest version of all objects if no keys passed", async function () {
-			var versions = await Zotero.Sync.Data.Local.getLatestCacheObjectVersions(
+			var versions = await Trellis.Sync.Data.Local.getLatestCacheObjectVersions(
 				'item',
-				Zotero.Libraries.userLibraryID
+				Trellis.Libraries.userLibraryID
 			);
 			var keys = Object.keys(versions);
 			assert.lengthOf(keys, 3);
@@ -501,9 +501,9 @@ describe("Zotero.Sync.Data.Local", function () {
 		})
 		
 		it("should return latest version of objects with passed keys", async function () {
-			var versions = await Zotero.Sync.Data.Local.getLatestCacheObjectVersions(
+			var versions = await Trellis.Sync.Data.Local.getLatestCacheObjectVersions(
 				'item',
-				Zotero.Libraries.userLibraryID,
+				Trellis.Libraries.userLibraryID,
 				['AAAAAAAA', 'CCCCCCCC']
 			);
 			var keys = Object.keys(versions);
@@ -522,7 +522,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			var annotation1 = await createAnnotation('highlight', attachment);
 			var annotation2 = await createAnnotation('highlight', attachment, { isExternal: true });
 			
-			var ids = await Zotero.Sync.Data.Local.getUnsynced('item', Zotero.Libraries.userLibraryID);
+			var ids = await Trellis.Sync.Data.Local.getUnsynced('item', Trellis.Libraries.userLibraryID);
 			assert.include(ids, attachment.id);
 			assert.include(ids, annotation1.id);
 		});
@@ -534,7 +534,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			c1.parentID = c2.id;
 			await c1.saveTx();
 			
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE collections SET parentCollectionID=? WHERE collectionID=?",
 				[
 					c1.id,
@@ -543,7 +543,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			);
 			await c2.reload(['primaryData'], true);
 			
-			var ids = await Zotero.Sync.Data.Local.getUnsynced('collection', Zotero.Libraries.userLibraryID);
+			var ids = await Trellis.Sync.Data.Local.getUnsynced('collection', Trellis.Libraries.userLibraryID);
 			
 			// One of the items should still be the parent of the other, though which one is undefined
 			assert.isTrue(
@@ -558,32 +558,32 @@ describe("Zotero.Sync.Data.Local", function () {
 			
 			// Simulate an unloaded library
 			// TODO: Make a way to actually unload a library's data, and use it for inactive libraries!
-			Zotero.Items.unload(item.id);
+			Trellis.Items.unload(item.id);
 			assert.isTrue(group._dataLoaded.item);
 			assert.isObject(group._dataLoadedDeferreds.item);
 			group._dataLoaded.item = false;
 			delete group._dataLoadedDeferreds.item;
-			await Zotero.Items._loadIDsAndKeys();
+			await Trellis.Items._loadIDsAndKeys();
 			
-			var ids = await Zotero.Sync.Data.Local.getUnsynced('item', libraryID);
+			var ids = await Trellis.Sync.Data.Local.getUnsynced('item', libraryID);
 			assert.include(ids, item.id);
 		});
 	});
 	
 	
 	describe("#processObjectsFromJSON()", function () {
-		var types = Zotero.DataObjectUtilities.getTypes();
+		var types = Trellis.DataObjectUtilities.getTypes();
 		
 		beforeEach(function* () {
 			yield resetData();
 		})
 		
 		it("shouldn't trigger an auto-sync", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			var item = createUnsavedDataObject('item');
 			let data = item.toJSON();
-			data.key = Zotero.DataObjectUtilities.generateKey();
+			data.key = Trellis.DataObjectUtilities.generateKey();
 			data.version = 10;
 			let json = {
 				key: data.key,
@@ -592,11 +592,11 @@ describe("Zotero.Sync.Data.Local", function () {
 			};
 			
 			// Make sure the pref in question is still disabled by default during tests
-			assert.isFalse(Zotero.Prefs.get('sync.autoSync'));
-			Zotero.Prefs.set('sync.autoSync', true);
-			var stub = sinon.stub(Zotero.Sync.Runner, 'setSyncTimeout');
+			assert.isFalse(Trellis.Prefs.get('sync.autoSync'));
+			Trellis.Prefs.set('sync.autoSync', true);
+			var stub = sinon.stub(Trellis.Sync.Runner, 'setSyncTimeout');
 			
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			
@@ -604,14 +604,14 @@ describe("Zotero.Sync.Data.Local", function () {
 			assert.isFalse(stub.called);
 			
 			stub.restore();
-			Zotero.Prefs.set('sync.autoSync', false);
+			Trellis.Prefs.set('sync.autoSync', false);
 		});
 		
 		it("should update local version number and mark as synced if remote version is identical", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				let obj = await createDataObject(type);
 				let data = obj.toJSON();
 				data.key = obj.key;
@@ -621,7 +621,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 10,
 					data: data
 				};
-				await Zotero.Sync.Data.Local.processObjectsFromJSON(
+				await Trellis.Sync.Data.Local.processObjectsFromJSON(
 					type, libraryID, [json], { stopOnError: true }
 				);
 				let localObj = objectsClass.getByLibraryAndKey(libraryID, obj.key);
@@ -631,11 +631,11 @@ describe("Zotero.Sync.Data.Local", function () {
 		})
 		
 		it("should keep local item changes while applying non-conflicting remote changes", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			let item = await createDataObject('item', { version: 5 });
 			let data = item.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObjects('item', libraryID, [data]);
+			await Trellis.Sync.Data.Local.saveCacheObjects('item', libraryID, [data]);
 			
 			// Change local title
 			await modifyDataObject(item)
@@ -659,7 +659,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				version: 10,
 				data
 			};
-			var results = await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			var results = await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			assert.isTrue(results[0].processed);
@@ -672,7 +672,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			// Item should be marked as unsynced so the local changes are uploaded
 			assert.isFalse(item.synced);
 			// Sync cache should match remote
-			var cacheJSON = await Zotero.Sync.Data.Local.getCacheObject(
+			var cacheJSON = await Trellis.Sync.Data.Local.getCacheObject(
 				'item', libraryID, data.key, data.version
 			);
 			assert.notProperty(cacheJSON.data, 'title');
@@ -681,12 +681,12 @@ describe("Zotero.Sync.Data.Local", function () {
 		});
 		
 		it("should keep local item changes while ignoring matching remote changes", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			var type = 'item';
 			let obj = await createDataObject(type, { version: 5 });
 			let data = obj.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObjects(type, libraryID, [data]);
+			await Trellis.Sync.Data.Local.saveCacheObjects(type, libraryID, [data]);
 			
 			// Change local title and place
 			await modifyDataObject(obj)
@@ -704,7 +704,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				version: 10,
 				data: data
 			};
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				type, libraryID, [json], { stopOnError: true }
 			);
 			assert.equal(obj.version, 10);
@@ -715,7 +715,7 @@ describe("Zotero.Sync.Data.Local", function () {
 		});
 		
 		it("should save item with overriding local conflict as unsynced", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			var isbn = '978-0-335-22006-9';
 			var type = 'item';
@@ -732,7 +732,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				version: 10,
 				data
 			};
-			var results = await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			var results = await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				type, libraryID, [json], { stopOnError: true }
 			);
 			assert.isTrue(results[0].processed);
@@ -742,15 +742,15 @@ describe("Zotero.Sync.Data.Local", function () {
 			assert.equal(obj.getField('ISBN'), isbn);
 			assert.isFalse(obj.synced);
 			// Sync cache should match remote
-			var cacheJSON = await Zotero.Sync.Data.Local.getCacheObject(type, libraryID, data.key, data.version);
+			var cacheJSON = await Trellis.Sync.Data.Local.getCacheObject(type, libraryID, data.key, data.version);
 			assert.propertyVal(cacheJSON.data, "ISBN", data.ISBN);
 		});
 		
 		it("should restore locally deleted collections and searches that changed remotely", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			for (let type of ['collection', 'search']) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				let obj = await createDataObject(type, { version: 1 });
 				let data = obj.toJSON();
 				
@@ -763,7 +763,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 2,
 					data
 				};
-				let results = await Zotero.Sync.Data.Local.processObjectsFromJSON(
+				let results = await Trellis.Sync.Data.Local.processObjectsFromJSON(
 					type, libraryID, [json], { stopOnError: true }
 				);
 				assert.isTrue(results[0].processed);
@@ -774,18 +774,18 @@ describe("Zotero.Sync.Data.Local", function () {
 				obj = objectsClass.getByLibraryAndKey(libraryID, data.key);
 				assert.equal(obj.version, 2);
 				assert.isTrue(obj.synced);
-				assert.isFalse(await Zotero.Sync.Data.Local.getDateDeleted(type, libraryID, data.key));
+				assert.isFalse(await Trellis.Sync.Data.Local.getDateDeleted(type, libraryID, data.key));
 			}
 		});
 		
 		it("should handle local item becoming child and remote being added to a collection", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			var collection = await createDataObject('collection');
 			var parentItem = await createDataObject('item');
 			var childItem = await createDataObject('item', { itemType: 'note' });
 			var data = childItem.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObjects('item', libraryID, [data]);
+			await Trellis.Sync.Data.Local.saveCacheObjects('item', libraryID, [data]);
 			
 			// Add to parent locally
 			childItem.parentID = parentItem.id;
@@ -798,7 +798,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				version: 10,
 				data
 			};
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			
@@ -806,16 +806,16 @@ describe("Zotero.Sync.Data.Local", function () {
 		});
 		
 		it("should automatically resolve collection name conflict", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			var type = 'collection';
 			let obj = await createDataObject(type, { version: 5 });
 			let data = obj.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObjects(type, libraryID, [data]);
+			await Trellis.Sync.Data.Local.saveCacheObjects(type, libraryID, [data]);
 			
 			// Change local name
 			await modifyDataObject(obj);
-			var changedName = Zotero.Utilities.randomString();
+			var changedName = Trellis.Utilities.randomString();
 			
 			// Create remote version with changed name
 			data.version = 10;
@@ -825,19 +825,19 @@ describe("Zotero.Sync.Data.Local", function () {
 				version: 10,
 				data
 			};
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				type, libraryID, [json], { stopOnError: true }
 			);
 			assert.equal(obj.version, 10);
 			assert.equal(obj.name, changedName);
 			assert.isTrue(obj.synced);
 			// Sync cache should match remote
-			var cacheJSON = await Zotero.Sync.Data.Local.getCacheObject(type, libraryID, data.key, data.version);
+			var cacheJSON = await Trellis.Sync.Data.Local.getCacheObject(type, libraryID, data.key, data.version);
 			assert.propertyVal(cacheJSON.data, "name", changedName);
 		});
 		
 		it("should remove creators that were removed remotely and change existing", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			let item = await createDataObject(
 				'item',
@@ -860,7 +860,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				}
 			);
 			let data = item.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObjects('item', libraryID, [data]);
+			await Trellis.Sync.Data.Local.saveCacheObjects('item', libraryID, [data]);
 			
 			var newCreators = [
 				{
@@ -877,40 +877,40 @@ describe("Zotero.Sync.Data.Local", function () {
 				version: 10,
 				data
 			};
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			assert.equal(item.version, 10);
 			var creatorJSON = item.getCreatorsJSON();
 			assert.sameDeepMembers(creatorJSON, newCreators);
 			// Sync cache should match remote
-			var cacheJSON = await Zotero.Sync.Data.Local.getCacheObject('item', libraryID, data.key, data.version);
+			var cacheJSON = await Trellis.Sync.Data.Local.getCacheObject('item', libraryID, data.key, data.version);
 			assert.sameDeepMembers(cacheJSON.data.creators, newCreators);
 		});
 		
 		it("should delete older versions in sync cache after processing", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				
 				// Save original version
 				let obj = await createDataObject(type, { version: 5 });
 				let data = obj.toJSON();
-				await Zotero.Sync.Data.Local.saveCacheObjects(
+				await Trellis.Sync.Data.Local.saveCacheObjects(
 					type, libraryID, [data]
 				);
 				
 				// Save newer version
 				data.version = 10;
-				await Zotero.Sync.Data.Local.processObjectsFromJSON(
+				await Trellis.Sync.Data.Local.processObjectsFromJSON(
 					type, libraryID, [data], { stopOnError: true }
 				);
 				
 				let localObj = objectsClass.getByLibraryAndKey(libraryID, obj.key);
 				assert.equal(localObj.version, 10);
 				
-				let versions = await Zotero.Sync.Data.Local.getCacheObjectVersions(
+				let versions = await Trellis.Sync.Data.Local.getCacheObjectVersions(
 					type, libraryID, obj.key
 				);
 				assert.sameMembers(
@@ -923,12 +923,12 @@ describe("Zotero.Sync.Data.Local", function () {
 		
 		it("should delete object from sync queue after processing", async function () {
 			var objectType = 'item';
-			var libraryID = Zotero.Libraries.userLibraryID;
-			var key = Zotero.DataObjectUtilities.generateKey();
+			var libraryID = Trellis.Libraries.userLibraryID;
+			var key = Trellis.DataObjectUtilities.generateKey();
 			
-			await Zotero.Sync.Data.Local.addObjectsToSyncQueue(objectType, libraryID, [key]);
+			await Trellis.Sync.Data.Local.addObjectsToSyncQueue(objectType, libraryID, [key]);
 			
-			var versions = await Zotero.Sync.Data.Local.getObjectsFromSyncQueue(objectType, libraryID);
+			var versions = await Trellis.Sync.Data.Local.getObjectsFromSyncQueue(objectType, libraryID);
 			assert.include(versions, key);
 			
 			var json = {
@@ -942,20 +942,20 @@ describe("Zotero.Sync.Data.Local", function () {
 				}
 			};
 			
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				objectType, libraryID, [json], { stopOnError: true }
 			);
 			
-			var versions = await Zotero.Sync.Data.Local.getObjectsFromSyncQueue(objectType, libraryID);
+			var versions = await Trellis.Sync.Data.Local.getObjectsFromSyncQueue(objectType, libraryID);
 			assert.notInclude(versions, key);
 		});
 		
 		it("should mark new attachment items and library for download", async function () {
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			var libraryID = library.id;
-			Zotero.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
+			Trellis.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
 			
-			var key = Zotero.DataObjectUtilities.generateKey();
+			var key = Trellis.DataObjectUtilities.generateKey();
 			var version = 10;
 			var json = {
 				key,
@@ -970,18 +970,18 @@ describe("Zotero.Sync.Data.Local", function () {
 				}
 			};
 			
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
-			var item = Zotero.Items.getByLibraryAndKey(libraryID, key);
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD);
+			var item = Trellis.Items.getByLibraryAndKey(libraryID, key);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD);
 			assert.isTrue(library.storageDownloadNeeded);
 		})
 		
 		it("should mark remotely updated attachment item for forced download", async function () {
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			var libraryID = library.id;
-			Zotero.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
+			Trellis.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
 			
 			var item = await importFileAttachment('test.png');
 			item.version = 5;
@@ -1000,18 +1000,18 @@ describe("Zotero.Sync.Data.Local", function () {
 			json.data.version = 10;
 			json.data.md5 = '57f8a4fda823187b91e1191487b87fe6';
 			json.data.mtime = new Date().getTime() + 10000;
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD);
 			assert.isTrue(library.storageDownloadNeeded);
 		})
 		
 		it("should mark remotely updated attachment item with missing file for download", async function () {
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			var libraryID = library.id;
-			Zotero.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
+			Trellis.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
 			
 			var item = await importFileAttachment('test.png');
 			item.version = 5;
@@ -1033,18 +1033,18 @@ describe("Zotero.Sync.Data.Local", function () {
 			json.data.version = 10;
 			json.data.md5 = '57f8a4fda823187b91e1191487b87fe6';
 			json.data.mtime = new Date().getTime() + 10000;
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD);
 			assert.isTrue(library.storageDownloadNeeded);
 		});
 		
 		it("should rename existing local file on remote filename change", async function () {
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			var libraryID = library.id;
-			Zotero.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
+			Trellis.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
 			
 			var item = await importFileAttachment('test.png');
 			item.version = 5;
@@ -1064,7 +1064,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			json.version = 10;
 			json.data.version = 10;
 			json.data.filename = newFilename;
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			
@@ -1074,14 +1074,14 @@ describe("Zotero.Sync.Data.Local", function () {
 		});
 		
 		it("should ignore attachment metadata when resolving metadata conflict", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
-			Zotero.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
+			var libraryID = Trellis.Libraries.userLibraryID;
+			Trellis.Sync.Storage.Local.setModeForLibrary(libraryID, 'zfs');
 			
 			var item = await importFileAttachment('test.png');
 			item.version = 5;
 			await item.saveTx();
 			var json = item.toResponseJSON();
-			await Zotero.Sync.Data.Local.saveCacheObjects('item', libraryID, [json]);
+			await Trellis.Sync.Data.Local.saveCacheObjects('item', libraryID, [json]);
 			
 			// Set file as synced
 			item.attachmentSyncedModificationTime = await item.attachmentModificationTime;
@@ -1090,7 +1090,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			await item.saveTx({ skipAll: true });
 			
 			// Modify title locally, leaving item unsynced
-			var newTitle = Zotero.Utilities.randomString();
+			var newTitle = Trellis.Utilities.randomString();
 			item.setField('title', newTitle);
 			await item.saveTx();
 			
@@ -1099,16 +1099,16 @@ describe("Zotero.Sync.Data.Local", function () {
 			json.data.version = 10;
 			json.data.md5 = '57f8a4fda823187b91e1191487b87fe6';
 			json.data.mtime = new Date().getTime() + 10000;
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
 			
 			assert.equal(item.getField('title'), newTitle);
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD);
 		})
 		
 		it("should roll back partial object changes on error", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			var key1 = "AAAAAAAA";
 			var key2 = "BBBBBBBB";
 			var json = [
@@ -1133,14 +1133,14 @@ describe("Zotero.Sync.Data.Local", function () {
 					}
 				}
 			];
-			await Zotero.Sync.Data.Local.processObjectsFromJSON('item', libraryID, json);
+			await Trellis.Sync.Data.Local.processObjectsFromJSON('item', libraryID, json);
 			
 			// Shouldn't roll back the successful item
-			assert.equal(await Zotero.DB.valueQueryAsync(
+			assert.equal(await Trellis.DB.valueQueryAsync(
 				"SELECT COUNT(*) FROM items WHERE libraryID=? AND key=?", [libraryID, key1]
 			), 1);
 			// Should rollback the unsuccessful item
-			assert.equal(await Zotero.DB.valueQueryAsync(
+			assert.equal(await Trellis.DB.valueQueryAsync(
 				"SELECT COUNT(*) FROM items WHERE libraryID=? AND key=?", [libraryID, key2]
 			), 0);
 		});
@@ -1168,16 +1168,16 @@ describe("Zotero.Sync.Data.Local", function () {
 				},
 				data
 			};
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
-			let localItem = Zotero.Items.getByLibraryAndKey(libraryID, item.key);
+			let localItem = Trellis.Items.getByLibraryAndKey(libraryID, item.key);
 			assert.isTrue(localItem.synced);
 			
 			assert.equal(localItem.createdByUserID, 12345);
 			assert.equal(localItem.lastModifiedByUserID, 23456);
-			assert.equal(Zotero.Users.getName(12345), 'Foo Foo');
-			assert.equal(Zotero.Users.getName(23456), 'Bar Bar');
+			assert.equal(Trellis.Users.getName(12345), 'Foo Foo');
+			assert.equal(Trellis.Users.getName(23456), 'Bar Bar');
 		});
 		
 		it("should use username if empty name for createdByUser when saving group item", async function () {
@@ -1198,14 +1198,14 @@ describe("Zotero.Sync.Data.Local", function () {
 				},
 				data
 			};
-			await Zotero.Sync.Data.Local.processObjectsFromJSON(
+			await Trellis.Sync.Data.Local.processObjectsFromJSON(
 				'item', libraryID, [json], { stopOnError: true }
 			);
-			let localItem = Zotero.Items.getByLibraryAndKey(libraryID, item.key);
+			let localItem = Trellis.Items.getByLibraryAndKey(libraryID, item.key);
 			assert.isTrue(localItem.synced);
 			
 			assert.equal(localItem.createdByUserID, 12345);
-			assert.equal(Zotero.Users.getName(12345), 'foo');
+			assert.equal(Trellis.Users.getName(12345), 'foo');
 		});
 	})
 	
@@ -1213,28 +1213,28 @@ describe("Zotero.Sync.Data.Local", function () {
 		var lib1, lib2;
 		
 		before(function* () {
-			lib1 = Zotero.Libraries.userLibraryID;
+			lib1 = Trellis.Libraries.userLibraryID;
 			lib2 = (yield getGroup()).libraryID;
 		});
 		
 		beforeEach(function* () {
-			yield Zotero.DB.queryAsync("DELETE FROM syncQueue");
+			yield Trellis.DB.queryAsync("DELETE FROM syncQueue");
 		});
 		
 		after(function* () {
-			yield Zotero.DB.queryAsync("DELETE FROM syncQueue");
+			yield Trellis.DB.queryAsync("DELETE FROM syncQueue");
 		});
 		
 		describe("#addObjectsToSyncQueue()", function () {
 			it("should add new objects and update lastCheck and tries for existing objects", async function () {
 				var objectType = 'item';
-				var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
-				var now = Zotero.Date.getUnixTimestamp();
-				var key1 = Zotero.DataObjectUtilities.generateKey();
-				var key2 = Zotero.DataObjectUtilities.generateKey();
-				var key3 = Zotero.DataObjectUtilities.generateKey();
-				var key4 = Zotero.DataObjectUtilities.generateKey();
-				await Zotero.DB.queryAsync(
+				var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+				var now = Trellis.Date.getUnixTimestamp();
+				var key1 = Trellis.DataObjectUtilities.generateKey();
+				var key2 = Trellis.DataObjectUtilities.generateKey();
+				var key3 = Trellis.DataObjectUtilities.generateKey();
+				var key4 = Trellis.DataObjectUtilities.generateKey();
+				await Trellis.DB.queryAsync(
 					"INSERT INTO syncQueue (libraryID, key, syncObjectTypeID, lastCheck, tries) "
 						+ "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
 					[
@@ -1244,26 +1244,26 @@ describe("Zotero.Sync.Data.Local", function () {
 					]
 				);
 				
-				await Zotero.Sync.Data.Local.addObjectsToSyncQueue(objectType, lib1, [key1, key2]);
-				await Zotero.Sync.Data.Local.addObjectsToSyncQueue(objectType, lib2, [key4]);
+				await Trellis.Sync.Data.Local.addObjectsToSyncQueue(objectType, lib1, [key1, key2]);
+				await Trellis.Sync.Data.Local.addObjectsToSyncQueue(objectType, lib2, [key4]);
 				
 				var sql = "SELECT lastCheck, tries FROM syncQueue WHERE libraryID=? "
 					+ `AND syncObjectTypeID=${syncObjectTypeID} AND key=?`;
 				var row;
 				// key1
-				row = await Zotero.DB.rowQueryAsync(sql, [lib1, key1]);
+				row = await Trellis.DB.rowQueryAsync(sql, [lib1, key1]);
 				assert.approximately(row.lastCheck, now, 1);
 				assert.equal(row.tries, 1);
 				// key2
-				row = await Zotero.DB.rowQueryAsync(sql, [lib1, key2]);
+				row = await Trellis.DB.rowQueryAsync(sql, [lib1, key2]);
 				assert.approximately(row.lastCheck, now, 1);
 				assert.equal(row.tries, 2);
 				// key3
-				row = await Zotero.DB.rowQueryAsync(sql, [lib2, key3]);
+				row = await Trellis.DB.rowQueryAsync(sql, [lib2, key3]);
 				assert.equal(row.lastCheck, now - 86400);
 				assert.equal(row.tries, 2);
 				// key4
-				row = await Zotero.DB.rowQueryAsync(sql, [lib2, key4]);
+				row = await Trellis.DB.rowQueryAsync(sql, [lib2, key4]);
 				assert.approximately(row.lastCheck, now, 1);
 				assert.equal(row.tries, 0);
 			});
@@ -1272,13 +1272,13 @@ describe("Zotero.Sync.Data.Local", function () {
 		describe("#getObjectsToTryFromSyncQueue()", function () {
 			it("should get objects that should be retried", async function () {
 				var objectType = 'item';
-				var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
-				var now = Zotero.Date.getUnixTimestamp();
-				var key1 = Zotero.DataObjectUtilities.generateKey();
-				var key2 = Zotero.DataObjectUtilities.generateKey();
-				var key3 = Zotero.DataObjectUtilities.generateKey();
-				var key4 = Zotero.DataObjectUtilities.generateKey();
-				await Zotero.DB.queryAsync(
+				var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+				var now = Trellis.Date.getUnixTimestamp();
+				var key1 = Trellis.DataObjectUtilities.generateKey();
+				var key2 = Trellis.DataObjectUtilities.generateKey();
+				var key3 = Trellis.DataObjectUtilities.generateKey();
+				var key4 = Trellis.DataObjectUtilities.generateKey();
+				await Trellis.DB.queryAsync(
 					"INSERT INTO syncQueue (libraryID, key, syncObjectTypeID, lastCheck, tries) "
 						+ "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
 					[
@@ -1288,9 +1288,9 @@ describe("Zotero.Sync.Data.Local", function () {
 					]
 				);
 				
-				var keys = await Zotero.Sync.Data.Local.getObjectsToTryFromSyncQueue('item', lib1);
+				var keys = await Trellis.Sync.Data.Local.getObjectsToTryFromSyncQueue('item', lib1);
 				assert.sameMembers(keys, [key1]);
-				var keys = await Zotero.Sync.Data.Local.getObjectsToTryFromSyncQueue('item', lib2);
+				var keys = await Trellis.Sync.Data.Local.getObjectsToTryFromSyncQueue('item', lib2);
 				assert.sameMembers(keys, [key3]);
 			});
 		});
@@ -1298,12 +1298,12 @@ describe("Zotero.Sync.Data.Local", function () {
 		describe("#removeObjectsFromSyncQueue()", function () {
 			it("should remove objects from the sync queue", async function () {
 				var objectType = 'item';
-				var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
-				var now = Zotero.Date.getUnixTimestamp();
-				var key1 = Zotero.DataObjectUtilities.generateKey();
-				var key2 = Zotero.DataObjectUtilities.generateKey();
-				var key3 = Zotero.DataObjectUtilities.generateKey();
-				await Zotero.DB.queryAsync(
+				var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+				var now = Trellis.Date.getUnixTimestamp();
+				var key1 = Trellis.DataObjectUtilities.generateKey();
+				var key2 = Trellis.DataObjectUtilities.generateKey();
+				var key3 = Trellis.DataObjectUtilities.generateKey();
+				await Trellis.DB.queryAsync(
 					"INSERT INTO syncQueue (libraryID, key, syncObjectTypeID, lastCheck, tries) "
 						+ "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
 					[
@@ -1313,13 +1313,13 @@ describe("Zotero.Sync.Data.Local", function () {
 					]
 				);
 				
-				await Zotero.Sync.Data.Local.removeObjectsFromSyncQueue('item', lib1, [key1]);
+				await Trellis.Sync.Data.Local.removeObjectsFromSyncQueue('item', lib1, [key1]);
 				
 				var sql = "SELECT COUNT(*) FROM syncQueue WHERE libraryID=? "
 					+ `AND syncObjectTypeID=${syncObjectTypeID} AND key=?`;
-				assert.notOk(await Zotero.DB.valueQueryAsync(sql, [lib1, key1]));
-				assert.ok(await Zotero.DB.valueQueryAsync(sql, [lib1, key2]));
-				assert.ok(await Zotero.DB.valueQueryAsync(sql, [lib2, key3]));
+				assert.notOk(await Trellis.DB.valueQueryAsync(sql, [lib1, key1]));
+				assert.ok(await Trellis.DB.valueQueryAsync(sql, [lib1, key2]));
+				assert.ok(await Trellis.DB.valueQueryAsync(sql, [lib2, key3]));
 			})
 		});
 		
@@ -1334,10 +1334,10 @@ describe("Zotero.Sync.Data.Local", function () {
 			
 			it("should be run on version upgrade", async function () {
 				var sql = "REPLACE INTO settings (setting, key, value) VALUES ('client', 'lastVersion', ?)";
-				await Zotero.DB.queryAsync(sql, "5.0foo");
+				await Trellis.DB.queryAsync(sql, "5.0foo");
 				
-				spy = sinon.spy(Zotero.Sync.Data.Local, "resetSyncQueueTries");
-				await Zotero.Schema.updateSchema();
+				spy = sinon.spy(Trellis.Sync.Data.Local, "resetSyncQueueTries");
+				await Trellis.Schema.updateSchema();
 				assert.ok(spy.called);
 			});
 		});
@@ -1347,18 +1347,18 @@ describe("Zotero.Sync.Data.Local", function () {
 	describe("#showConflictResolutionWindow()", function () {
 		it("should show title of note parent", async function () {
 			var parentItem = await createDataObject('item', { title: "Parent" });
-			var note = new Zotero.Item('note');
+			var note = new Trellis.Item('note');
 			note.parentKey = parentItem.key;
 			note.setNote("Test");
 			await note.saveTx();
 			
-			var promise = waitForWindow('chrome://zotero/content/merge.xhtml', function (dialog) {
+			var promise = waitForWindow('chrome://trellis/content/merge.xhtml', function (dialog) {
 				var doc = dialog.document;
 				var wizard = doc.querySelector('wizard');
 				var mergeGroup = wizard.getElementsByTagName('merge-group')[0];
 				
 				// Show title for middle and right panes
-				var parentText = Zotero.getString('pane.item.parentItem') + " Parent";
+				var parentText = Trellis.getString('pane.item.parentItem') + " Parent";
 				assert.equal(mergeGroup.leftPane.parentRow.textContent, "");
 				assert.equal(mergeGroup.rightPane.parentRow.textContent, parentText);
 				assert.equal(mergeGroup.mergePane.parentRow.textContent, parentText);
@@ -1366,7 +1366,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				wizard.getButton('finish').click();
 			});
 			
-			Zotero.Sync.Data.Local.showConflictResolutionWindow([
+			Trellis.Sync.Data.Local.showConflictResolutionWindow([
 				{
 					libraryID: note.libraryID,
 					key: note.key,
@@ -1387,7 +1387,7 @@ describe("Zotero.Sync.Data.Local", function () {
 			var note = await createDataObject('item', { itemType: 'note' });
 			var item = await createDataObject('item');
 			
-			var promise = waitForWindow('chrome://zotero/content/merge.xhtml', function (dialog) {
+			var promise = waitForWindow('chrome://trellis/content/merge.xhtml', function (dialog) {
 				var doc = dialog.document;
 				var wizard = doc.querySelector('wizard');
 				var mergeGroup = wizard.getElementsByTagName('merge-group')[0];
@@ -1399,7 +1399,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				
 				// 2 (accept remote deletion)
 				mergeGroup.rightPane.click();
-				if (Zotero.isMac) {
+				if (Trellis.isMac) {
 					assert.isTrue(wizard.getButton('next').hidden);
 					assert.isFalse(wizard.getButton('finish').hidden);
 				}
@@ -1409,7 +1409,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				wizard.getButton('finish').click();
 			});
 			
-			var mergeData = Zotero.Sync.Data.Local.showConflictResolutionWindow([
+			var mergeData = Trellis.Sync.Data.Local.showConflictResolutionWindow([
 				{
 					libraryID: note.libraryID,
 					key: note.key,
@@ -1457,7 +1457,7 @@ describe("Zotero.Sync.Data.Local", function () {
 							creatorType: "author"
 						}
 					],
-					url: "http://zotero.org/",
+					url: "http://trellis.org/",
 					publicationTitle: "Publisher", // Remove locally
 					extra: "Extra", // Removed on both
 					dateModified: "2015-05-14 12:34:56",
@@ -1504,7 +1504,7 @@ describe("Zotero.Sync.Data.Local", function () {
 							creatorType: "editor"
 						}
 					],
-					url: "https://www.zotero.org/", // Same change on local and remote
+					url: "https://www.trellis.org/", // Same change on local and remote
 					place: "Place", // Added locally
 					dateModified: "2015-05-14 14:12:34", // Changed locally and remotely, but ignored
 					collections: [
@@ -1551,7 +1551,7 @@ describe("Zotero.Sync.Data.Local", function () {
 							creatorType: "editor"
 						}
 					],
-					url: "https://www.zotero.org/",
+					url: "https://www.trellis.org/",
 					publicationTitle: "Publisher",
 					date: "2015-05-15", // Added remotely
 					dateModified: "2015-05-14 13:45:12",
@@ -1580,7 +1580,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					]
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', cacheJSON, json1, json2, ignoreFields
 				);
 				assert.sameDeepMembers(
@@ -1676,7 +1676,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 1234,
 					itemType: "book",
 					title: "Title 1",
-					url: "http://zotero.org/",
+					url: "http://trellis.org/",
 					publicationTitle: "Publisher", // Remove locally
 					extra: "Extra", // Removed on both
 					dateModified: "2015-05-14 12:34:56",
@@ -1702,7 +1702,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 1234,
 					itemType: "book",
 					title: "Title 2", // Changed locally
-					url: "https://www.zotero.org/", // Same change on local and remote
+					url: "https://www.trellis.org/", // Same change on local and remote
 					place: "Place", // Added locally
 					dateModified: "2015-05-14 14:12:34", // Changed locally and remotely, but ignored
 					collections: [
@@ -1731,7 +1731,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 1235,
 					itemType: "book",
 					title: "Title 1",
-					url: "https://www.zotero.org/",
+					url: "https://www.trellis.org/",
 					publicationTitle: "Publisher",
 					dateModified: "2015-05-14 13:45:12",
 					collections: [
@@ -1757,7 +1757,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					]
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', cacheJSON, json1, json2, ignoreFields
 				);
 				assert.lengthOf(result.changes, 0);
@@ -1784,7 +1784,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					dateModified: "2015-05-14 13:45:12"
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', cacheJSON, json1, json2, ignoreFields
 				);
 				assert.lengthOf(result.changes, 0);
@@ -1848,7 +1848,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					dateModified: "2015-05-14 13:45:12"
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', cacheJSON, json1, json2, ignoreFields
 				);
 				assert.lengthOf(result.changes, 0);
@@ -1948,10 +1948,10 @@ describe("Zotero.Sync.Data.Local", function () {
 					]
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', false, json1, json2, ignoreFields
 				);
-				Zotero.debug(result);
+				Trellis.debug(result);
 				assert.sameDeepMembers(
 					result.changes,
 					[
@@ -2070,7 +2070,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					dateModified: "2015-05-14 13:45:12"
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', cacheJSON, json1, json2, ignoreFields
 				);
 				assert.lengthOf(result.changes, 1);
@@ -2107,7 +2107,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					dateModified: "2017-04-03 12:34:56"
 				};
 				var ignoreFields = ['dateAdded', 'dateModified'];
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'item', cacheJSON, json1, json2, ignoreFields
 				);
 				assert.lengthOf(result.changes, 1);
@@ -2154,7 +2154,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						B: "B" // Added remotely
 					}
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'collection', cacheJSON, json1, json2
 				);
 				assert.sameDeepMembers(
@@ -2237,7 +2237,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						}
 					]
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', cacheJSON, json1, json2
 				);
 				assert.lengthOf(result.changes, 0);
@@ -2260,7 +2260,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 1234,
 					name: "Name 3"
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', cacheJSON, json1, json2
 				);
 				assert.sameDeepMembers(
@@ -2311,7 +2311,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						}
 					]
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', false, json1, json2
 				);
 				assert.sameDeepMembers(
@@ -2400,7 +2400,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						}
 					]
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', cacheJSON, json1, json2
 				);
 				assert.sameDeepMembers(
@@ -2486,7 +2486,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						}
 					]
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', cacheJSON, json1, json2
 				);
 				assert.lengthOf(result.changes, 0);
@@ -2509,7 +2509,7 @@ describe("Zotero.Sync.Data.Local", function () {
 					version: 1234,
 					name: "Name 3"
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', cacheJSON, json1, json2
 				);
 				assert.sameDeepMembers(
@@ -2560,7 +2560,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						}
 					]
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'search', false, json1, json2
 				);
 				assert.sameDeepMembers(
@@ -2595,7 +2595,7 @@ describe("Zotero.Sync.Data.Local", function () {
 		
 		
 		describe("tags", function () {
-			// https://forums.zotero.org/discussion/79429/syncing-error-c1-is-undefined
+			// https://forums.trellis.org/discussion/79429/syncing-error-c1-is-undefined
 			it("should handle multiple local type 1 and remote type 0", async function () {
 				var cacheJSON = {
 					tags: []
@@ -2622,7 +2622,7 @@ describe("Zotero.Sync.Data.Local", function () {
 						}
 					]
 				};
-				var result = Zotero.Sync.Data.Local._reconcileChanges(
+				var result = Trellis.Sync.Data.Local._reconcileChanges(
 					'tag', cacheJSON, json1, json2
 				);
 				assert.lengthOf(result.changes, 4);
@@ -2683,7 +2683,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				dateModified: "2015-05-14 13:45:12"
 			};
 			var ignoreFields = ['dateAdded', 'dateModified'];
-			var result = Zotero.Sync.Data.Local._reconcileChangesWithoutCache(
+			var result = Trellis.Sync.Data.Local._reconcileChangesWithoutCache(
 				'item', json1, json2, ignoreFields
 			);
 			assert.lengthOf(result.changes, 0);
@@ -2746,7 +2746,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				dateModified: "2017-06-13 13:45:12"
 			};
 			var ignoreFields = ['dateAdded', 'dateModified'];
-			var result = Zotero.Sync.Data.Local._reconcileChangesWithoutCache(
+			var result = Trellis.Sync.Data.Local._reconcileChangesWithoutCache(
 				'item', json1, json2, ignoreFields
 			);
 			assert.lengthOf(result.changes, 1);
@@ -2779,7 +2779,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				dateModified: "2017-06-13 13:45:12"
 			};
 			var ignoreFields = ['dateAdded', 'dateModified'];
-			var result = Zotero.Sync.Data.Local._reconcileChangesWithoutCache(
+			var result = Trellis.Sync.Data.Local._reconcileChangesWithoutCache(
 				'item', json1, json2, ignoreFields
 			);
 			assert.lengthOf(result.changes, 0);
@@ -2804,7 +2804,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				dateModified: "2015-05-14 13:45:12"
 			};
 			var ignoreFields = ['dateAdded', 'dateModified'];
-			var result = Zotero.Sync.Data.Local._reconcileChangesWithoutCache(
+			var result = Trellis.Sync.Data.Local._reconcileChangesWithoutCache(
 				'item', json1, json2, ignoreFields
 			);
 			assert.lengthOf(result.changes, 3);
@@ -2843,7 +2843,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				ISBN: "9780335220069"
 			};
 			var ignoreFields = ['dateAdded', 'dateModified'];
-			var result = Zotero.Sync.Data.Local._reconcileChangesWithoutCache(
+			var result = Trellis.Sync.Data.Local._reconcileChangesWithoutCache(
 				'item', json1, json2, ignoreFields
 			);
 			assert.lengthOf(result.changes, 0);
@@ -2865,7 +2865,7 @@ describe("Zotero.Sync.Data.Local", function () {
 				ISBN: "978-0-335-22006-9"
 			};
 			var ignoreFields = ['dateAdded', 'dateModified'];
-			var result = Zotero.Sync.Data.Local._reconcileChangesWithoutCache(
+			var result = Trellis.Sync.Data.Local._reconcileChangesWithoutCache(
 				'item', json1, json2, ignoreFields
 			);
 			assert.sameDeepMembers(

@@ -5,11 +5,11 @@ connector_dir=${1:-}
 client_dir=${2:-}
 
 if [[ -z "$connector_dir" ]]; then
-	connector_dir=~/zotero-connectors
+	connector_dir=~/trellis-connectors
 fi
 
 if [[ -z "$client_dir" ]]; then
-	client_dir=~/zotero-client
+	client_dir=~/trellis-client
 fi
 
 json_file=$connector_dir/src/messages.json
@@ -25,6 +25,6 @@ if [ ! -d "$client_dir" ]; then
 	exit 1
 fi
 
-cp $json_file $client_dir/en-US/zotero/connector.json
+cp $json_file $client_dir/en-US/trellis/connector.json
 cd $client_dir
 git diff

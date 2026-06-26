@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Search = function (params = {}) {
-	Zotero.Search._super.apply(this);
+Trellis.Search = function (params = {}) {
+	Trellis.Search._super.apply(this);
 	
 	this._name = null;
 	
@@ -36,44 +36,44 @@ Zotero.Search = function (params = {}) {
 	this._conditions = {};
 	this._hasPrimaryConditions = false;
 	
-	Zotero.Utilities.Internal.assignProps(this, params, ['name', 'libraryID']);
+	Trellis.Utilities.Internal.assignProps(this, params, ['name', 'libraryID']);
 }
 
-Zotero.extendClass(Zotero.DataObject, Zotero.Search);
+Trellis.extendClass(Trellis.DataObject, Trellis.Search);
 
-Zotero.Search.prototype._objectType = 'search';
-Zotero.Search.prototype._dataTypes = Zotero.Search._super.prototype._dataTypes.concat([
+Trellis.Search.prototype._objectType = 'search';
+Trellis.Search.prototype._dataTypes = Trellis.Search._super.prototype._dataTypes.concat([
 	'conditions'
 ]);
 
-Zotero.Search.prototype.getID = function (){
-	Zotero.debug('Zotero.Search.getName() is deprecated -- use Search.id');
+Trellis.Search.prototype.getID = function (){
+	Trellis.debug('Trellis.Search.getName() is deprecated -- use Search.id');
 	return this._id;
 }
 
-Zotero.Search.prototype.getName = function () {
-	Zotero.debug('Zotero.Search.getName() is deprecated -- use Search.name');
+Trellis.Search.prototype.getName = function () {
+	Trellis.debug('Trellis.Search.getName() is deprecated -- use Search.name');
 	return this.name;
 }
 
-Zotero.Search.prototype.setName = function (val) {
-	Zotero.debug('Zotero.Search.setName() is deprecated -- use Search.name');
+Trellis.Search.prototype.setName = function (val) {
+	Trellis.debug('Trellis.Search.setName() is deprecated -- use Search.name');
 	this.name = val;
 }
 
-Zotero.defineProperty(Zotero.Search.prototype, 'id', {
+Trellis.defineProperty(Trellis.Search.prototype, 'id', {
 	get: function () { return this._get('id'); },
 	set: function (val) { return this._set('id', val); }
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'libraryID', {
+Trellis.defineProperty(Trellis.Search.prototype, 'libraryID', {
 	get: function () { return this._get('libraryID'); },
 	set: function (val) { return this._set('libraryID', val); }
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'key', {
+Trellis.defineProperty(Trellis.Search.prototype, 'key', {
 	get: function () { return this._get('key'); },
 	set: function (val) { return this._set('key', val); }
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'name', {
+Trellis.defineProperty(Trellis.Search.prototype, 'name', {
 	get: function () { return this._get('name'); },
 	set: function (val) {
 		if (!val) {
@@ -82,40 +82,40 @@ Zotero.defineProperty(Zotero.Search.prototype, 'name', {
 		return this._set('name', val);
 	}
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'version', {
+Trellis.defineProperty(Trellis.Search.prototype, 'version', {
 	get: function () { return this._get('version'); },
 	set: function (val) { return this._set('version', val); }
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'synced', {
+Trellis.defineProperty(Trellis.Search.prototype, 'synced', {
 	get: function () { return this._get('synced'); },
 	set: function (val) { return this._set('synced', val); }
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'conditions', {
+Trellis.defineProperty(Trellis.Search.prototype, 'conditions', {
 	get: function () { return this.getConditions(); }
 });
-Zotero.defineProperty(Zotero.Search.prototype, 'scope', {
+Trellis.defineProperty(Trellis.Search.prototype, 'scope', {
 	get: function() { return this._scope; }
 });
-Zotero.defineProperty(Zotero.Search.prototype, '_canHaveParent', {
+Trellis.defineProperty(Trellis.Search.prototype, '_canHaveParent', {
 	value: false
 });
 
-Zotero.defineProperty(Zotero.Search.prototype, 'treeViewID', {
+Trellis.defineProperty(Trellis.Search.prototype, 'treeViewID', {
 	get: function () {
 		return "S" + this.id;
 	}
 });
 
-Zotero.defineProperty(Zotero.Search.prototype, 'treeViewImage', {
+Trellis.defineProperty(Trellis.Search.prototype, 'treeViewImage', {
 	get: function () {
-		return "chrome://zotero/skin/16/universal/saved-search.svg";
+		return "chrome://trellis/skin/16/universal/saved-search.svg";
 	}
 });
 
 // Properties for a search to "pretend" to be an item for trash itemTree
-Object.assign(Zotero.Search.prototype, Zotero.DataObjectUtilities.itemTreeMockProperties);
+Object.assign(Trellis.Search.prototype, Trellis.DataObjectUtilities.itemTreeMockProperties);
 
-Zotero.Search.prototype.loadFromRow = function (row) {
+Trellis.Search.prototype.loadFromRow = function (row) {
 	var primaryFields = this._ObjectsClass.primaryFields;
 	for (let i=0; i<primaryFields.length; i++) {
 		let col = primaryFields[i];
@@ -123,7 +123,7 @@ Zotero.Search.prototype.loadFromRow = function (row) {
 			var val = row[col];
 		}
 		catch (e) {
-			Zotero.debug('Skipping missing ' + this._objectType + ' field ' + col);
+			Trellis.debug('Skipping missing ' + this._objectType + ' field ' + col);
 			continue;
 		}
 		
@@ -160,18 +160,18 @@ Zotero.Search.prototype.loadFromRow = function (row) {
 	this._identified = true;
 }
 
-Zotero.Search.prototype._initSave = async function (env) {
+Trellis.Search.prototype._initSave = async function (env) {
 	if (!this.name) {
 		throw new Error('Name not provided for saved search');
 	}
-	return Zotero.Search._super.prototype._initSave.apply(this, arguments);
+	return Trellis.Search._super.prototype._initSave.apply(this, arguments);
 };
 
-Zotero.Search.prototype._saveData = async function (env) {
+Trellis.Search.prototype._saveData = async function (env) {
 	var isNew = env.isNew;
 	var options = env.options;
 	
-	var searchID = this._id = this.id ? this.id : Zotero.ID.get('savedSearches');
+	var searchID = this._id = this.id ? this.id : Trellis.ID.get('savedSearches');
 	
 	env.sqlColumns.push(
 		'savedSearchName'
@@ -188,20 +188,20 @@ Zotero.Search.prototype._saveData = async function (env) {
 			let placeholders = env.sqlColumns.map(() => '?').join();
 			let sql = "INSERT INTO savedSearches (" + env.sqlColumns.join(', ') + ") "
 				+ "VALUES (" + placeholders + ")";
-			await Zotero.DB.queryAsync(sql, env.sqlValues);
+			await Trellis.DB.queryAsync(sql, env.sqlValues);
 		}
 		else {
 			let sql = 'UPDATE savedSearches SET '
 				+ env.sqlColumns.map(x => x + '=?').join(', ') + ' WHERE savedSearchID=?';
 			env.sqlValues.push(searchID ? { int: searchID } : null);
-			await Zotero.DB.queryAsync(sql, env.sqlValues);
+			await Trellis.DB.queryAsync(sql, env.sqlValues);
 		}
 	}
 	
 	if (this._changed.conditions) {
 		if (!isNew) {
 			var sql = "DELETE FROM savedSearchConditions WHERE savedSearchID=?";
-			await Zotero.DB.queryAsync(sql, this.id);
+			await Trellis.DB.queryAsync(sql, this.id);
 		}
 		
 		var i = 0;
@@ -223,7 +223,7 @@ Zotero.Search.prototype._saveData = async function (env) {
 				condition.operator ? condition.operator : null,
 				condition.value ? condition.value : null
 			];
-			await Zotero.DB.queryAsync(sql, sqlParams);
+			await Trellis.DB.queryAsync(sql, sqlParams);
 			i++;
 		}
 	}
@@ -236,22 +236,22 @@ Zotero.Search.prototype._saveData = async function (env) {
 		else {
 			sql = "DELETE FROM deletedSearches WHERE savedSearchID=?";
 		}
-		await Zotero.DB.queryAsync(sql, searchID);
+		await Trellis.DB.queryAsync(sql, searchID);
 		
 		this._clearChanged('deleted');
 		this._markForReload('primaryData');
 	}
 };
 
-Zotero.Search.prototype._finalizeSave = async function (env) {
+Trellis.Search.prototype._finalizeSave = async function (env) {
 	if (env.isNew) {
 		// Update library searches status
-		await Zotero.Libraries.get(this.libraryID).updateSearches();
+		await Trellis.Libraries.get(this.libraryID).updateSearches();
 		
-		Zotero.Notifier.queue('add', 'search', this.id, env.notifierData, env.options.notifierQueue);
+		Trellis.Notifier.queue('add', 'search', this.id, env.notifierData, env.options.notifierQueue);
 	}
 	else if (!env.options.skipNotifier) {
-		Zotero.Notifier.queue('modify', 'search', this.id, env.notifierData, env.options.notifierQueue);
+		Trellis.Notifier.queue('modify', 'search', this.id, env.notifierData, env.options.notifierQueue);
 	}
 	
 	if (!env.skipCache) {
@@ -267,48 +267,48 @@ Zotero.Search.prototype._finalizeSave = async function (env) {
 };
 
 
-Zotero.Search.prototype.clone = function (libraryID) {
-	var s = new Zotero.Search();
+Trellis.Search.prototype.clone = function (libraryID) {
+	var s = new Trellis.Search();
 	s.libraryID = libraryID === undefined ? this.libraryID : libraryID;
 	s.fromJSON(this.toJSON());
 	return s;
 };
 
 
-Zotero.Search.prototype._eraseData = async function (env) {
-	Zotero.DB.requireTransaction();
+Trellis.Search.prototype._eraseData = async function (env) {
+	Trellis.DB.requireTransaction();
 	
 	var sql = "DELETE FROM savedSearchConditions WHERE savedSearchID=?";
-	await Zotero.DB.queryAsync(sql, this.id);
+	await Trellis.DB.queryAsync(sql, this.id);
 	
 	var sql = "DELETE FROM savedSearches WHERE savedSearchID=?";
-	await Zotero.DB.queryAsync(sql, this.id);
+	await Trellis.DB.queryAsync(sql, this.id);
 };
 
-Zotero.Search.prototype._finalizeErase = async function (env) {
-	await Zotero.Search._super.prototype._finalizeErase.call(this, env);
+Trellis.Search.prototype._finalizeErase = async function (env) {
+	await Trellis.Search._super.prototype._finalizeErase.call(this, env);
 	
 	// Update library searches status
-	await Zotero.Libraries.get(this.libraryID).updateSearches();
+	await Trellis.Libraries.get(this.libraryID).updateSearches();
 };
 
 
-Zotero.Search.prototype.addCondition = function (condition, operator, value, required) {
+Trellis.Search.prototype.addCondition = function (condition, operator, value, required) {
 	this._requireData('conditions');
 	
 	if (required) {
 		throw new Error("The 'required' parameter is no longer supported; use a condition group");
 	}
 	
-	if (!Zotero.SearchConditions.hasOperator(condition, operator)){
+	if (!Trellis.SearchConditions.hasOperator(condition, operator)){
 		let e = new Error("Invalid operator '" + operator + "' for condition " + condition);
-		e.name = "ZoteroInvalidDataError";
+		e.name = "TrellisInvalidDataError";
 		throw e;
 	}
 	
 	// Shortcut to add a condition on every table -- does not return an id
 	if (condition.match(/^quicksearch/)) {
-		var parts = Zotero.SearchConditions.parseSearchString(value);
+		var parts = Trellis.SearchConditions.parseSearchString(value);
 
 		for (let part of parts) {
 			if (condition == 'quicksearch-titleCreatorYearNote') {
@@ -321,7 +321,7 @@ Zotero.Search.prototype.addCondition = function (condition, operator, value, req
 			this.addCondition('joinMode', 'any');
 
 			// Allow searching for exact object key
-			if (operator == 'contains' && Zotero.Utilities.isValidObjectKey(part.text)) {
+			if (operator == 'contains' && Trellis.Utilities.isValidObjectKey(part.text)) {
 				this.addCondition('key', 'is', part.text, false);
 			}
 
@@ -347,7 +347,7 @@ Zotero.Search.prototype.addCondition = function (condition, operator, value, req
 					this.addCondition('fulltextContent', operator, part.text, false);
 				}
 				else {
-					var splits = Zotero.Fulltext.semanticSplitter(part.text);
+					var splits = Trellis.Fulltext.semanticSplitter(part.text);
 					for (let split of splits) {
 						this.addCondition('fulltextWord', operator, split, false);
 					}
@@ -368,30 +368,30 @@ Zotero.Search.prototype.addCondition = function (condition, operator, value, req
 	}
 	// Shortcut to add a collection (which must be loaded first)
 	else if (condition == 'collectionID') {
-		let {libraryID, key} = Zotero.Collections.getLibraryAndKeyFromID(value);
+		let {libraryID, key} = Trellis.Collections.getLibraryAndKeyFromID(value);
 		if (!key) {
 			let msg = "Collection " + value + " not found";
-			Zotero.debug(msg, 2);
+			Trellis.debug(msg, 2);
 			Components.utils.reportError(msg);
 			return;
 		}
 		if (this.libraryID && libraryID != this.libraryID) {
-			Zotero.logError(new Error("Collection " + value + " is in different library"));
+			Trellis.logError(new Error("Collection " + value + " is in different library"));
 			return;
 		}
 		return this.addCondition('collection', operator, key, required);
 	}
 	// Shortcut to add a saved search (which must be loaded first)
 	else if (condition == 'savedSearchID') {
-		let {libraryID, key} = Zotero.Searches.getLibraryAndKeyFromID(value);
+		let {libraryID, key} = Trellis.Searches.getLibraryAndKeyFromID(value);
 		if (!key) {
 			let msg = "Saved search " + value + " not found";
-			Zotero.debug(msg, 2);
+			Trellis.debug(msg, 2);
 			Components.utils.reportError(msg);
 			return;
 		}
 		if (this.libraryID && libraryID != this.libraryID) {
-			Zotero.logError(new Error("Collection " + value + " is in different library"));
+			Trellis.logError(new Error("Collection " + value + " is in different library"));
 			return;
 		}
 		return this.addCondition('savedSearch', operator, key, required);
@@ -399,7 +399,7 @@ Zotero.Search.prototype.addCondition = function (condition, operator, value, req
 	// Parse old-style collection/savedSearch conditions ('0_ABCD2345' -> 'ABCD2345')
 	else if (condition == 'collection' || condition == 'savedSearch') {
 		if (value.includes('_')) {
-			Zotero.logError(`'condition' value '${value}' should be an object key`);
+			Trellis.logError(`'condition' value '${value}' should be an object key`);
 			let [_, objKey] = value.split('_');
 			value = objKey;
 		}
@@ -408,7 +408,7 @@ Zotero.Search.prototype.addCondition = function (condition, operator, value, req
 	var searchConditionID = ++this._maxSearchConditionID;
 	
 	let mode;
-	[condition, mode] = Zotero.SearchConditions.parseCondition(condition);
+	[condition, mode] = Trellis.SearchConditions.parseCondition(condition);
 	
 	if (typeof value == 'string') value = value.normalize();
 	
@@ -432,7 +432,7 @@ Zotero.Search.prototype.addCondition = function (condition, operator, value, req
 /*
  * Sets scope of search to the results of the passed Search object
  */
-Zotero.Search.prototype.setScope = function (searchObj, includeChildren) {
+Trellis.Search.prototype.setScope = function (searchObj, includeChildren) {
 	this._scope = searchObj;
 	this._scopeIncludeChildren = includeChildren;
 }
@@ -445,7 +445,7 @@ Zotero.Search.prototype.setScope = function (searchObj, includeChildren) {
  * @param {String} value
  * @return {Promise}
  */
-Zotero.Search.prototype.updateCondition = function (searchConditionID, condition, operator, value, required) {
+Trellis.Search.prototype.updateCondition = function (searchConditionID, condition, operator, value, required) {
 	this._requireData('conditions');
 	
 	if (required) {
@@ -456,13 +456,13 @@ Zotero.Search.prototype.updateCondition = function (searchConditionID, condition
 		throw new Error('Invalid searchConditionID ' + searchConditionID);
 	}
 	
-	if (!Zotero.SearchConditions.hasOperator(condition, operator)){
+	if (!Trellis.SearchConditions.hasOperator(condition, operator)){
 		let e = new Error("Invalid operator '" + operator + "' for condition " + condition);
-		e.name = "ZoteroInvalidDataError";
+		e.name = "TrellisInvalidDataError";
 		throw e;
 	}
 	
-	var [condition, mode] = Zotero.SearchConditions.parseCondition(condition);
+	var [condition, mode] = Trellis.SearchConditions.parseCondition(condition);
 	
 	if (typeof value == 'string') value = value.normalize();
 	
@@ -481,7 +481,7 @@ Zotero.Search.prototype.updateCondition = function (searchConditionID, condition
 }
 
 
-Zotero.Search.prototype.removeCondition = function (searchConditionID) {
+Trellis.Search.prototype.removeCondition = function (searchConditionID) {
 	this._requireData('conditions');
 	
 	if (typeof this._conditions[searchConditionID] == 'undefined'){
@@ -512,7 +512,7 @@ Zotero.Search.prototype.removeCondition = function (searchConditionID) {
  * Returns an array with 'condition', 'operator', 'value'
  * for the given searchConditionID
  */
-Zotero.Search.prototype.getCondition = function (searchConditionID){
+Trellis.Search.prototype.getCondition = function (searchConditionID){
 	this._requireData('conditions');
 	return this._conditions[searchConditionID];
 }
@@ -522,7 +522,7 @@ Zotero.Search.prototype.getCondition = function (searchConditionID){
  * Returns an object of conditions/operator/value sets used in the search,
  * indexed by searchConditionID
  */
-Zotero.Search.prototype.getConditions = function (){
+Trellis.Search.prototype.getConditions = function (){
 	this._requireData('conditions');
 	var conditions = {};
 	for (let id in this._conditions) {
@@ -539,7 +539,7 @@ Zotero.Search.prototype.getConditions = function (){
 }
 
 
-Zotero.Search.prototype.hasPostSearchFilter = function () {
+Trellis.Search.prototype.hasPostSearchFilter = function () {
 	this._requireData('conditions');
 	for (let i of Object.values(this._conditions)) {
 		if (i.condition == 'fulltextContent'){
@@ -556,7 +556,7 @@ Zotero.Search.prototype.hasPostSearchFilter = function () {
  * @param {Boolean} [asTempTable=false]
  * @return {Promise}
  */
-Zotero.Search.prototype.search = async function (asTempTable) {
+Trellis.Search.prototype.search = async function (asTempTable) {
 	var tmpTable;
 	
 	// Mark conditions as loaded
@@ -607,16 +607,16 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 				if (!ids) {
 					return [];
 				}
-				tmpTable = await Zotero.Search.idsToTempTable(ids);
+				tmpTable = await Trellis.Search.idsToTempTable(ids);
 			}
 			// Otherwise, just copy to temp table directly
 			else {
-				tmpTable = "tmpSearchResults_" + Zotero.randomString(8);
+				tmpTable = "tmpSearchResults_" + Trellis.randomString(8);
 				var sql = "CREATE TEMPORARY TABLE " + tmpTable + " AS "
 					+ ((await this._scope.getSQL()));
-				await Zotero.DB.queryAsync(sql, await this._scope.getSQLParams(), { noCache: true });
+				await Trellis.DB.queryAsync(sql, await this._scope.getSQLParams(), { noCache: true });
 				var sql = "CREATE INDEX " + tmpTable + "_itemID ON " + tmpTable + "(itemID)";
-				await Zotero.DB.queryAsync(sql, false, { noCache: true });
+				await Trellis.DB.queryAsync(sql, false, { noCache: true });
 			}
 			
 			// Search ids in temp table
@@ -639,26 +639,26 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 			}
 			sql += ")";
 			
-			var res = await Zotero.DB.valueQueryAsync(sql, this._sqlParams, { noCache: true });
+			var res = await Trellis.DB.valueQueryAsync(sql, this._sqlParams, { noCache: true });
 			var ids = res ? res.split(",").map(id => parseInt(id)) : [];
 			/*
 			// DEBUG: Should this be here?
 			//
 			if (!ids) {
-				Zotero.DB.query("DROP TABLE " + tmpTable);
-				Zotero.DB.commitTransaction();
+				Trellis.DB.query("DROP TABLE " + tmpTable);
+				Trellis.DB.commitTransaction();
 				return false;
 			}
 			*/
 		}
 		// Or just run main search
 		else {
-			var ids = await Zotero.DB.columnQueryAsync(this._sql, this._sqlParams, { noCache: true });
+			var ids = await Trellis.DB.columnQueryAsync(this._sql, this._sqlParams, { noCache: true });
 		}
 		
-		//Zotero.debug('IDs from main search or subsearch: ');
-		//Zotero.debug(ids);
-		//Zotero.debug('Join mode: ' + this._joinMode);
+		//Trellis.debug('IDs from main search or subsearch: ');
+		//Trellis.debug(ids);
+		//Trellis.debug('Join mode: ' + this._joinMode);
 		
 		// Filter top-level fulltextContent conditions with a full-text search (grouped
 		// ones are already in the SQL; see _buildQuery).
@@ -694,15 +694,15 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 				// In ANY mode, include items that haven't already been found, as long as they're in
 				// the right library
 				if (joinModeAny) {
-					let tmpTable = await Zotero.Search.idsToTempTable(fullTextResults);
+					let tmpTable = await Trellis.Search.idsToTempTable(fullTextResults);
 					let sql = "SELECT GROUP_CONCAT(itemID) FROM items WHERE "
 						+ "itemID NOT IN (SELECT itemID FROM " + tmpTable + ")";
 					if (this.libraryID) {
 						sql += " AND libraryID=?";
 					}
-					let res = await Zotero.DB.valueQueryAsync(sql, this.libraryID, { noCache: true });
+					let res = await Trellis.DB.valueQueryAsync(sql, this.libraryID, { noCache: true });
 					scopeIDs = res ? res.split(",").map(id => parseInt(id)) : [];
-					await Zotero.DB.queryAsync("DROP TABLE " + tmpTable, false, { noCache: true });
+					await Trellis.DB.queryAsync("DROP TABLE " + tmpTable, false, { noCache: true });
 				}
 				// In ALL mode, include remaining items from the main search
 				else {
@@ -712,12 +712,12 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 			// If not regexp mode, run a new search against the full-text word index for words in
 			// this phrase
 			else {
-				//Zotero.debug('Running subsearch against full-text word index');
-				let s = new Zotero.Search();
+				//Trellis.debug('Running subsearch against full-text word index');
+				let s = new Trellis.Search();
 				if (this.libraryID) {
 					s.libraryID = this.libraryID;
 				}
-				let splits = Zotero.Fulltext.semanticSplitter(condition.value);
+				let splits = Trellis.Fulltext.semanticSplitter(condition.value);
 				for (let split of splits){
 					s.addCondition('fulltextWord', condition.operator, split);
 				}
@@ -728,8 +728,8 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 				numSplits = splits.length;
 				let wordMatches = await s.search();
 				
-				//Zotero.debug("Word index matches");
-				//Zotero.debug(wordMatches);
+				//Trellis.debug("Word index matches");
+				//Trellis.debug(wordMatches);
 				
 				// In ANY mode, include hits from word index that aren't already in the results
 				if (joinModeAny) {
@@ -752,7 +752,7 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 			// Search the full-text content
 			else if (scopeIDs.length) {
 				let found = new Set(
-					(await Zotero.Fulltext.findTextInItems(
+					(await Trellis.Fulltext.findTextInItems(
 						scopeIDs,
 						condition.value,
 						condition.mode
@@ -766,13 +766,13 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 				});
 			}
 			
-			//Zotero.debug("Filtered IDs:")
-			//Zotero.debug(filteredIDs);
+			//Trellis.debug("Filtered IDs:")
+			//Trellis.debug(filteredIDs);
 			
 			// If join mode ANY, add any new items from the full-text content search to the results,
 			// and remove from the scope so that we don't search through items we already matched
 			if (joinModeAny) {
-				//Zotero.debug("Adding filtered IDs to results and removing from scope");
+				//Trellis.debug("Adding filtered IDs to results and removing from scope");
 				fullTextResults = fullTextResults.concat(filteredIDs);
 				
 				let idSet = new Set(ids);
@@ -782,7 +782,7 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 				ids = Array.from(idSet);
 			}
 			else {
-				//Zotero.debug("Replacing results with filtered IDs");
+				//Trellis.debug("Replacing results with filtered IDs");
 				ids = filteredIDs;
 				fullTextResults = filteredIDs;
 			}
@@ -793,10 +793,10 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 		
 		if (this.hasPostSearchFilter() &&
 				(includeParentsAndChildren || includeParents || includeChildren)) {
-			var tmpTable = await Zotero.Search.idsToTempTable(ids);
+			var tmpTable = await Trellis.Search.idsToTempTable(ids);
 			
 			if (includeParentsAndChildren || includeParents) {
-				//Zotero.debug("Adding parent items to result set");
+				//Trellis.debug("Adding parent items to result set");
 				var sql = "SELECT parentItemID FROM itemAttachments "
 					+ "WHERE itemID IN (SELECT itemID FROM " + tmpTable + ") "
 						+ " AND parentItemID IS NOT NULL "
@@ -806,7 +806,7 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 			}
 			
 			if (includeParentsAndChildren || includeChildren) {
-				//Zotero.debug("Adding child items to result set");
+				//Trellis.debug("Adding child items to result set");
 				var childrenSQL = "SELECT itemID FROM itemAttachments WHERE "
 					+ "parentItemID IN (SELECT itemID FROM " + tmpTable + ") UNION "
 					+ "SELECT itemID FROM itemNotes WHERE parentItemID IN "
@@ -821,7 +821,7 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 			}
 			
 			sql = "SELECT GROUP_CONCAT(itemID) FROM items WHERE itemID IN (" + sql + ")";
-			var res = await Zotero.DB.valueQueryAsync(sql, false, { noCache: true });
+			var res = await Trellis.DB.valueQueryAsync(sql, false, { noCache: true });
 			var parentChildIDs = res ? res.split(",").map(id => parseInt(id)) : [];
 			
 			// Add parents and children to main ids
@@ -834,19 +834,19 @@ Zotero.Search.prototype.search = async function (asTempTable) {
 	}
 	finally {
 		if (tmpTable && !asTempTable) {
-			await Zotero.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable, false, { noCache: true });
+			await Trellis.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable, false, { noCache: true });
 		}
 	}
 	
-	//Zotero.debug('Final result set');
-	//Zotero.debug(ids);
+	//Trellis.debug('Final result set');
+	//Trellis.debug(ids);
 	
 	if (!ids || !ids.length) {
 		return [];
 	}
 	
 	if (asTempTable) {
-		return Zotero.Search.idsToTempTable(ids);
+		return Trellis.Search.idsToTempTable(ids);
 	}
 	return ids;
 };
@@ -861,7 +861,7 @@ Zotero.Search.prototype.search = async function (asTempTable) {
  * @param {Object} [options]
  * @param {Boolean} [options.strict = false] - Throw on unknown property
  */
-Zotero.Search.prototype.fromJSON = function (json, options = {}) {
+Trellis.Search.prototype.fromJSON = function (json, options = {}) {
 	if (options.strict) {
 		for (let prop in json) {
 			switch (prop) {
@@ -874,7 +874,7 @@ Zotero.Search.prototype.fromJSON = function (json, options = {}) {
 			
 			default:
 				let e = new Error(`Unknown search property '${prop}'`);
-				e.name = "ZoteroInvalidDataError";
+				e.name = "TrellisInvalidDataError";
 				throw e;
 			}
 		}
@@ -903,7 +903,7 @@ Zotero.Search.prototype.fromJSON = function (json, options = {}) {
 }
 
 
-Zotero.Search.prototype.toJSON = function (options = {}) {
+Trellis.Search.prototype.toJSON = function (options = {}) {
 	var env = this._preToJSON(options);
 	var mode = env.mode;
 	
@@ -927,7 +927,7 @@ Zotero.Search.prototype.toJSON = function (options = {}) {
 /*
  * Get the SQL string for the search
  */
-Zotero.Search.prototype.getSQL = async function () {
+Trellis.Search.prototype.getSQL = async function () {
 	if (!this._sql) {
 		await this._buildQuery();
 	}
@@ -935,7 +935,7 @@ Zotero.Search.prototype.getSQL = async function () {
 };
 
 
-Zotero.Search.prototype.getSQLParams = async function () {
+Trellis.Search.prototype.getSQLParams = async function () {
 	if (!this._sql) {
 		await this._buildQuery();
 	}
@@ -946,10 +946,10 @@ Zotero.Search.prototype.getSQLParams = async function () {
 /*
  * Batch insert
  */
-Zotero.Search.idsToTempTable = async function (ids, { idColumn = 'itemID' } = {}) {
-	var tmpTable = "tmpSearchResults_" + Zotero.randomString(8);
+Trellis.Search.idsToTempTable = async function (ids, { idColumn = 'itemID' } = {}) {
+	var tmpTable = "tmpSearchResults_" + Trellis.randomString(8);
 
-	Zotero.debug(`Creating ${tmpTable} with ${ids.length} item${ids.length != 1 ? 's' : ''}`);
+	Trellis.debug(`Creating ${tmpTable} with ${ids.length} item${ids.length != 1 ? 's' : ''}`);
 	var sql = "CREATE TEMPORARY TABLE " + tmpTable;
 	if (ids.length) {
 		sql += " AS "
@@ -961,9 +961,9 @@ Zotero.Search.idsToTempTable = async function (ids, { idColumn = 'itemID' } = {}
 	else {
 		sql += ` (${idColumn} INTEGER PRIMARY KEY)`;
 	}
-	await Zotero.DB.queryAsync(sql, false, { debug: false, noCache: true });
+	await Trellis.DB.queryAsync(sql, false, { debug: false, noCache: true });
 	if (ids.length) {
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			`CREATE UNIQUE INDEX ${tmpTable}_${idColumn} ON ${tmpTable}(${idColumn})`,
 			false,
 			{
@@ -982,11 +982,11 @@ Zotero.Search.idsToTempTable = async function (ids, { idColumn = 'itemID' } = {}
  * can take part in the SQL AND/OR tree (see _buildQuery). Always returns the *matching* set; the
  * caller applies IN/NOT IN for the contains/doesNotContain operator.
  */
-Zotero.Search.prototype._fullTextContentMatches = async function (value, mode) {
+Trellis.Search.prototype._fullTextContentMatches = async function (value, mode) {
 	var scopeIDs;
 	// Regexp can't use the word index, so scan every item in the library/scope
 	if (mode && mode.startsWith('regexp')) {
-		let s = new Zotero.Search();
+		let s = new Trellis.Search();
 		if (this.libraryID !== null) {
 			s.libraryID = this.libraryID;
 		}
@@ -997,11 +997,11 @@ Zotero.Search.prototype._fullTextContentMatches = async function (value, mode) {
 	}
 	// Otherwise narrow to items matching the words via the full-text word index
 	else {
-		let splits = Zotero.Fulltext.semanticSplitter(value);
+		let splits = Trellis.Fulltext.semanticSplitter(value);
 		if (!splits.length) {
 			return [];
 		}
-		let s = new Zotero.Search();
+		let s = new Trellis.Search();
 		if (this.libraryID !== null) {
 			s.libraryID = this.libraryID;
 		}
@@ -1020,7 +1020,7 @@ Zotero.Search.prototype._fullTextContentMatches = async function (value, mode) {
 	if (!scopeIDs.length) {
 		return [];
 	}
-	let found = await Zotero.Fulltext.findTextInItems(scopeIDs, value, mode);
+	let found = await Trellis.Fulltext.findTextInItems(scopeIDs, value, mode);
 	return found.map(x => x.id);
 };
 
@@ -1028,7 +1028,7 @@ Zotero.Search.prototype._fullTextContentMatches = async function (value, mode) {
 /*
  * Build the SQL query for the search
  */
-Zotero.Search.prototype._buildQuery = async function () {
+Trellis.Search.prototype._buildQuery = async function () {
 	this._requireData('conditions');
 
 	// fulltextContent conditions nested inside a group are materialized into the SQL tree
@@ -1082,7 +1082,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 	for (let conditionIndex = 0; conditionIndex < conditionsToProcess.length; conditionIndex++) {
 		let condition = conditionsToProcess[conditionIndex];
 		let name = condition.condition;
-		let conditionData = Zotero.SearchConditions.get(name);
+		let conditionData = Trellis.SearchConditions.get(name);
 		
 		// Has a table (or 'savedSearch'/'tempTable', which don't have a table but aren't special)
 		if (conditionData.table || name == 'savedSearch' || name == 'tempTable') {
@@ -1111,7 +1111,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 				flags: conditionData.flags,
 				inlineFilter: conditionData.inlineFilter,
 				// Item level(s) this condition matches at, for cross-level mapping
-				level: Zotero.Search._conditionLevel(name, conditionData)
+				level: Trellis.Search._conditionLevel(name, conditionData)
 			};
 			conditions.push(lastCondition);
 			
@@ -1423,7 +1423,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 					// the default path.
 					if (isNegationOperator && resultLevel == 'any') {
 						condSelectSQL += "SELECT itemID FROM items WHERE itemTypeID="
-							+ Zotero.ItemTypes.getID('annotation') + " UNION ";
+							+ Trellis.ItemTypes.getID('annotation') + " UNION ";
 					}
 
 					condSQL += `SELECT itemID FROM ${condition.table} WHERE (`;
@@ -1441,9 +1441,9 @@ Zotero.Search.prototype._buildQuery = async function () {
 						if (condition['alias']) {
 							// Add base field
 							condSQLParams.push(
-								Zotero.ItemFields.getID(condition['alias'])
+								Trellis.ItemFields.getID(condition['alias'])
 							);
-							var typeFields = Zotero.ItemFields.getTypeFieldsFromBase(condition['alias']);
+							var typeFields = Trellis.ItemFields.getTypeFieldsFromBase(condition['alias']);
 							if (typeFields) {
 								condSQL += 'fieldID IN (?,';
 								// Add type-specific fields
@@ -1466,9 +1466,9 @@ Zotero.Search.prototype._buildQuery = async function () {
 						break;
 					
 					case 'year':
-						condSQLParams.push(Zotero.ItemFields.getID('date'));
+						condSQLParams.push(Trellis.ItemFields.getID('date'));
 						//Add base field
-						var dateFields = Zotero.ItemFields.getTypeFieldsFromBase('date');
+						var dateFields = Trellis.ItemFields.getTypeFieldsFromBase('date');
 						if (dateFields) {
 							condSQL += 'fieldID IN (?,';																
 							// Add type-specific date fields (dateEnacted, dateDecided, issueDate)
@@ -1492,7 +1492,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 						let objLibraryID;
 						let objKey = condition.value;
 						let objectType = condition.name == 'collection' ? 'collection' : 'search';
-						let objectTypeClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+						let objectTypeClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
 						
 						// libraryID assigned on search
 						if (this.libraryID !== null) {
@@ -1515,7 +1515,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 								}
 							}
 							if (!foundLibraryID) {
-								Zotero.debug("WARNING: libraryID condition not found for "
+								Trellis.debug("WARNING: libraryID condition not found for "
 									+ objectType + " in search", 2);
 							}
 						}
@@ -1526,15 +1526,15 @@ Zotero.Search.prototype._buildQuery = async function () {
 						}
 						if (obj) {
 							if (objectType == 'search' && obj == this) {
-								Zotero.warn(`Search "${this.name}" references itself -- skipping condition`);
+								Trellis.warn(`Search "${this.name}" references itself -- skipping condition`);
 								continue;
 							}
 						}
 						else {
 							let msg = objectType.charAt(0).toUpperCase() + objectType.substr(1)
 								+ " " + objKey + " specified in search not found";
-							Zotero.debug(msg, 2);
-							Zotero.log(msg, 'warning', 'chrome://zotero/content/xpcom/search.js');
+							Trellis.debug(msg, 2);
+							Trellis.log(msg, 'warning', 'chrome://trellis/content/xpcom/search.js');
 							forceNoResults = true;
 						}
 						
@@ -1601,7 +1601,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 							+ 'WHERE fileTypeID IN ('
 							+ 'SELECT fileTypeID FROM fileTypes WHERE '
 							+ 'fileTypeID=?)';
-						var patterns = await Zotero.DB.columnQueryAsync(ftSQL, { int: condition.value });
+						var patterns = await Trellis.DB.columnQueryAsync(ftSQL, { int: condition.value });
 						if (patterns) {
 							for (let str of patterns) {
 								condSQL += 'contentType LIKE ? OR ';
@@ -1629,7 +1629,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 					case 'author':
 					case 'editor':
 					case 'bookAuthor': {
-						let creatorTypeID = Zotero.CreatorTypes.getID(condition.name);
+						let creatorTypeID = Trellis.CreatorTypes.getID(condition.name);
 						condSQL += `creatorTypeID = ${creatorTypeID} AND creatorID IN (SELECT creatorID FROM creators WHERE `;
 						openParens++;
 						break;
@@ -1662,7 +1662,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 							|| condition.name == 'dateModified'
 							|| condition.name == 'lastRead'
 							|| condition.name == 'datefield')
-							&& !Zotero.Date.isSQLDateTime(condition.value)) {
+							&& !Trellis.Date.isSQLDateTime(condition.value)) {
 						
 						// TODO: document these flags
 						var parseDate = null;
@@ -1726,17 +1726,17 @@ Zotero.Search.prototype._buildQuery = async function () {
 							
 							// Parse 'yesterday'/'today'/'tomorrow'
 							let lc = value.toLowerCase();
-							if (lc == 'yesterday' || lc == Zotero.getString('date.yesterday')) {
-								value = Zotero.Date.dateToSQL(new Date(Date.now() - 1000 * 60 * 60 * 24)).substr(0, 10);
+							if (lc == 'yesterday' || lc == Trellis.getString('date.yesterday')) {
+								value = Trellis.Date.dateToSQL(new Date(Date.now() - 1000 * 60 * 60 * 24)).substr(0, 10);
 							}
-							else if (lc == 'today' || lc == Zotero.getString('date.today')) {
-								value = Zotero.Date.dateToSQL(new Date()).substr(0, 10);
+							else if (lc == 'today' || lc == Trellis.getString('date.today')) {
+								value = Trellis.Date.dateToSQL(new Date()).substr(0, 10);
 							}
-							else if (lc == 'tomorrow' || lc == Zotero.getString('date.tomorrow')) {
-								value = Zotero.Date.dateToSQL(new Date(Date.now() + 1000 * 60 * 60 * 24)).substr(0, 10);
+							else if (lc == 'tomorrow' || lc == Trellis.getString('date.tomorrow')) {
+								value = Trellis.Date.dateToSQL(new Date(Date.now() + 1000 * 60 * 60 * 24)).substr(0, 10);
 							}
 							
-							let dateparts = Zotero.Date.strToDate(value);
+							let dateparts = Trellis.Date.strToDate(value);
 							
 							// Search on SQL date -- underscore is
 							// single-character wildcard
@@ -1745,13 +1745,13 @@ Zotero.Search.prototype._buildQuery = async function () {
 							// to '00' so that a search for just a year works
 							// (and no year will just not find anything)
 							var sqldate = dateparts.year ?
-								Zotero.Utilities.lpad(dateparts.year, '0', 4) : '____';
+								Trellis.Utilities.lpad(dateparts.year, '0', 4) : '____';
 							sqldate += '-'
 							sqldate += dateparts.month || dateparts.month === 0 ?
-								Zotero.Utilities.lpad(dateparts.month + 1, '0', 2) : alt;
+								Trellis.Utilities.lpad(dateparts.month + 1, '0', 2) : alt;
 							sqldate += '-';
 							sqldate += dateparts.day ?
-								Zotero.Utilities.lpad(dateparts.day, '0', 2) : alt;
+								Trellis.Utilities.lpad(dateparts.day, '0', 2) : alt;
 							
 							if (sqldate!='____-__-__'){
 								go = true;
@@ -1833,7 +1833,7 @@ Zotero.Search.prototype._buildQuery = async function () {
 								// leftbound search even for 'contains' condition
 								if (condition['flags'] &&
 										condition['flags']['leftbound'] &&
-										Zotero.Prefs.get('search.useLeftBound')) {
+										Trellis.Prefs.get('search.useLeftBound')) {
 									condSQLParams.push(condition['value'] + '%');
 								}
 								else {
@@ -1964,8 +1964,8 @@ Zotero.Search.prototype._buildQuery = async function () {
 		}
 
 		// Combine the collected predicates and group markers into a single predicate
-		// (see Zotero.Search.combineConditions)
-		let combined = Zotero.Search.combineConditions(builtConditions, resultLevel);
+		// (see Trellis.Search.combineConditions)
+		let combined = Trellis.Search.combineConditions(builtConditions, resultLevel);
 		if (combined.sql) {
 			sql += " AND " + combined.sql;
 			sqlParams = sqlParams.concat(combined.params);
@@ -2004,7 +2004,7 @@ Zotero.Search.prototype._buildQuery = async function () {
  * A group may also carry a 'resultLevel' marker (a level: 'item'/'attachment'/'note'/'annotation'),
  * placed inside the group like 'joinMode'. When the result level is a descendant level of the
  * enclosing row, the group's conditions are matched against descendants and mapped up to
- * the parent (see Zotero.Search.mapPredicate) -- e.g., "the item has an annotation
+ * the parent (see Trellis.Search.mapPredicate) -- e.g., "the item has an annotation
  * matching these conditions".
  *
  * @param {Object[]} builtConditions
@@ -2012,7 +2012,7 @@ Zotero.Search.prototype._buildQuery = async function () {
  *     the mixed-level default unchanged; otherwise each condition is mapped to this level)
  * @return {{ sql: String, params: Array }} Combined predicate (sql is '' if nothing to combine)
  */
-Zotero.Search.combineConditions = function (builtConditions, rootLevel = 'any') {
+Trellis.Search.combineConditions = function (builtConditions, rootLevel = 'any') {
 	let root = { joinMode: 'all', children: [] };
 	let groupStack = [root];
 	for (let item of builtConditions) {
@@ -2060,7 +2060,7 @@ Zotero.Search.combineConditions = function (builtConditions, rootLevel = 'any') 
 			// their own level by the combineGroup() call above.
 			let childSQL = result.sql;
 			if (!child.children) {
-				childSQL = Zotero.Search.mapPredicate(childSQL, result.level || 'item', level, result.negate);
+				childSQL = Trellis.Search.mapPredicate(childSQL, result.level || 'item', level, result.negate);
 			}
 			// When mapping reduces a predicate to a constant ('0'/'1' -- e.g., a condition
 			// whose level can't reach the result level), its placeholders are gone, so drop its params
@@ -2095,7 +2095,7 @@ Zotero.Search.combineConditions = function (builtConditions, rootLevel = 'any') 
 		// anchors to the top-level item ("the item has a descendant match").
 		let target = parentLevel == 'any' ? 'item' : parentLevel;
 		if (node.level && node.level != 'any' && node.level != target) {
-			sql = Zotero.Search.mapPredicate(sql, node.level, target);
+			sql = Trellis.Search.mapPredicate(sql, node.level, target);
 		}
 		return {
 			sql,
@@ -2110,18 +2110,18 @@ Zotero.Search.combineConditions = function (builtConditions, rootLevel = 'any') 
 
 // The item hierarchy used for cross-level mapping: each child level maps to its parent
 // level via (itemID -> parentItemID) in the given table. 'item' is the top level.
-Zotero.Search._levelParent = {
+Trellis.Search._levelParent = {
 	annotation: 'attachment',
 	attachment: 'item',
 	note: 'item'
 };
-Zotero.Search._levelChildTable = {
+Trellis.Search._levelChildTable = {
 	annotation: 'itemAnnotations',
 	attachment: 'itemAttachments',
 	note: 'itemNotes'
 };
 // Attachments and notes can be top-level (parentItemID NULL); annotations always have a parent
-Zotero.Search._levelCanBeStandalone = {
+Trellis.Search._levelCanBeStandalone = {
 	annotation: false,
 	attachment: true,
 	note: true
@@ -2132,10 +2132,10 @@ Zotero.Search._levelCanBeStandalone = {
  * ancestor of 'annotation'; 'attachment' is an ancestor of 'annotation'; 'note' and
  * 'annotation' are unrelated).
  */
-Zotero.Search._isAncestorLevel = function (anc, desc) {
+Trellis.Search._isAncestorLevel = function (anc, desc) {
 	let l = desc;
 	while (l != 'item') {
-		l = Zotero.Search._levelParent[l];
+		l = Trellis.Search._levelParent[l];
 		if (!l) {
 			return false;
 		}
@@ -2150,11 +2150,11 @@ Zotero.Search._isAncestorLevel = function (anc, desc) {
  * The number of parent hops between two levels in either direction, or null if they're on
  * unrelated branches (e.g., note and annotation).
  */
-Zotero.Search._levelDistance = function (a, b) {
+Trellis.Search._levelDistance = function (a, b) {
 	let l = a;
 	let d = 0;
 	while (l && l != b) {
-		l = Zotero.Search._levelParent[l];
+		l = Trellis.Search._levelParent[l];
 		d++;
 	}
 	if (l == b) {
@@ -2163,7 +2163,7 @@ Zotero.Search._levelDistance = function (a, b) {
 	l = b;
 	d = 0;
 	while (l && l != a) {
-		l = Zotero.Search._levelParent[l];
+		l = Trellis.Search._levelParent[l];
 		d++;
 	}
 	return l == a ? d : null;
@@ -2173,14 +2173,14 @@ Zotero.Search._levelDistance = function (a, b) {
  * Given the levels a condition matches at, return the one closest (fewest hops) to `toLevel`,
  * or null if none is related to it. Used to map a multi-level field from a single level.
  */
-Zotero.Search._closestRelatedLevel = function (levels, toLevel) {
+Trellis.Search._closestRelatedLevel = function (levels, toLevel) {
 	let best = null;
 	let bestDist = Infinity;
 	for (let level of levels) {
 		if (level == 'any') {
 			continue;
 		}
-		let d = Zotero.Search._levelDistance(level, toLevel);
+		let d = Trellis.Search._levelDistance(level, toLevel);
 		if (d !== null && d < bestDist) {
 			best = level;
 			bestDist = d;
@@ -2195,14 +2195,14 @@ Zotero.Search._closestRelatedLevel = function (levels, toLevel) {
  * for the few itemData fields that attachments also have (title, url, accessDate per the
  * schema), which match at either the item or the attachment level.
  */
-Zotero.Search._conditionLevel = function (name, conditionData) {
+Trellis.Search._conditionLevel = function (name, conditionData) {
 	if (conditionData.level) {
 		return conditionData.level;
 	}
 	if (conditionData.table == 'itemData') {
-		let fieldID = Zotero.ItemFields.getID(name);
+		let fieldID = Trellis.ItemFields.getID(name);
 		if (fieldID
-				&& Zotero.ItemFields.isValidForType(fieldID, Zotero.ItemTypes.getID('attachment'))) {
+				&& Trellis.ItemFields.isValidForType(fieldID, Trellis.ItemTypes.getID('attachment'))) {
 			return ['item', 'attachment'];
 		}
 	}
@@ -2232,7 +2232,7 @@ Zotero.Search._conditionLevel = function (name, conditionData) {
  *     negated level-agnostic match is left at its own level rather than rolled up
  * @return {String} A predicate in terms of the `toLevel` itemID
  */
-Zotero.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false) {
+Trellis.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false) {
 	if (toLevel == 'any') {
 		return sql;
 	}
@@ -2244,7 +2244,7 @@ Zotero.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false)
 	if (fromLevels.length == 1 && fromLevels[0] == 'any') {
 		// Level-agnostic (e.g., tag): roll a positive match up to the result level; leave a
 		// negation at its carrying level (see above)
-		return negated ? sql : Zotero.Search._rollUpAnyToLevel(sql, toLevel);
+		return negated ? sql : Trellis.Search._rollUpAnyToLevel(sql, toLevel);
 	}
 
 	// The condition already selects rows at the result level (it natively matches there), so
@@ -2256,7 +2256,7 @@ Zotero.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false)
 	// Otherwise map from the one level in the set closest to the result level -- a
 	// descendant match up or an ancestor match down. Referencing the predicate's SQL exactly
 	// once keeps its bound parameters from being duplicated, so map from a single level.
-	let from = Zotero.Search._closestRelatedLevel(fromLevels, toLevel);
+	let from = Trellis.Search._closestRelatedLevel(fromLevels, toLevel);
 	if (!from) {
 		// No level in the set is related to the result level (e.g., note vs annotation)
 		return '0';
@@ -2273,11 +2273,11 @@ Zotero.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false)
 		let l = from;
 		let s = inner;
 		while (l != to) {
-			let table = Zotero.Search._levelChildTable[l];
-			let select = Zotero.Search._levelCanBeStandalone[l]
+			let table = Trellis.Search._levelChildTable[l];
+			let select = Trellis.Search._levelCanBeStandalone[l]
 				? 'COALESCE(parentItemID, itemID)' : 'parentItemID';
 			s = `SELECT ${select} FROM ${table} WHERE itemID IN (${s})`;
-			l = Zotero.Search._levelParent[l];
+			l = Trellis.Search._levelParent[l];
 			if (!l) {
 				return null;
 			}
@@ -2292,20 +2292,20 @@ Zotero.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false)
 		let l = to;
 		while (l != from) {
 			path.push(l);
-			l = Zotero.Search._levelParent[l];
+			l = Trellis.Search._levelParent[l];
 			if (!l) {
 				return null;
 			}
 		}
 		let s = inner;
 		for (let i = path.length - 1; i >= 0; i--) {
-			let table = Zotero.Search._levelChildTable[path[i]];
+			let table = Trellis.Search._levelChildTable[path[i]];
 			s = `SELECT itemID FROM ${table} WHERE parentItemID IN (${s})`;
 		}
 		return s;
 	};
 
-	let mapped = Zotero.Search._isAncestorLevel(toLevel, from)
+	let mapped = Trellis.Search._isAncestorLevel(toLevel, from)
 		? mapUp(matches, from, toLevel)
 		: mapDown(matches, from, toLevel);
 	if (mapped === null) {
@@ -2326,7 +2326,7 @@ Zotero.Search.mapPredicate = function (sql, fromLevel, toLevel, negated = false)
  * @param {String} toLevel - 'item' / 'attachment' / 'note' / 'annotation'
  * @return {String} A predicate in terms of the `toLevel` itemID
  */
-Zotero.Search._rollUpAnyToLevel = function (sql, toLevel) {
+Trellis.Search._rollUpAnyToLevel = function (sql, toLevel) {
 	let matches = `SELECT itemID FROM items WHERE ${sql}`;
 	switch (toLevel) {
 		// No descendants below these, so only a match at the level itself counts

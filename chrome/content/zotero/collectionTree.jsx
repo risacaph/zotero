@@ -3,22 +3,22 @@
 	
 	Copyright © 2019 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -36,13 +36,13 @@ const CHILD_INDENT = 16;
 
 var CollectionTree = class CollectionTree extends LibraryTree {
 	static async init(domEl, opts) {
-		Zotero.debug("Initializing React CollectionTree");
+		Trellis.debug("Initializing React CollectionTree");
 		var ref;
 		opts.domEl = domEl;
 		await new Promise(resolve => {
 			ReactDOM.createRoot(domEl).render(<CollectionTree ref={(c) => { ref = c; resolve()} } {...opts } />)
 		});
-		Zotero.debug('React CollectionTree initialized');
+		Trellis.debug('React CollectionTree initialized');
 		return ref;
 	}
 
@@ -74,7 +74,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		this._rows = [];
 		this._rowMap = {};
 		this._highlightedRows = new Set();
-		this._unregisterID = Zotero.Notifier.registerObserver(
+		this._unregisterID = Trellis.Notifier.registerObserver(
 			this,
 			[
 				'collection',
@@ -90,7 +90,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		);
 		
 		try {
-			this._containerState = JSON.parse(Zotero.Prefs.get("sourceList.persist"));
+			this._containerState = JSON.parse(Trellis.Prefs.get("sourceList.persist"));
 		}
 		catch (e) {
 			this._containerState = {};
@@ -121,14 +121,14 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	
 	async makeVisible() {
 		await this.refresh();
-		var lastViewedID = this.props.initialFolder || Zotero.Prefs.get('lastViewedFolder');
+		var lastViewedID = this.props.initialFolder || Trellis.Prefs.get('lastViewedFolder');
 		if (lastViewedID) {
 			var selected = await this.selectByID(lastViewedID);
 		}
 		if (!selected) {
 			// If the last viewed folder was not selected, default to the first library from
 			// filterLibraryIDs (if any), or the user library
-			let libraryToSelect = ((this.props.filterLibraryIDs || [])[0] || Zotero.Libraries.userLibraryID);
+			let libraryToSelect = ((this.props.filterLibraryIDs || [])[0] || Trellis.Libraries.userLibraryID);
 			await this.selectByID('L' + libraryToSelect);
 		}
 		if (this.selection.selectEventsSuppressed) {
@@ -137,7 +137,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			await promise;
 		}
 		await this.runListeners('load');
-		Zotero.debug("React CollectionTree loaded");
+		Trellis.debug("React CollectionTree loaded");
 	}
 
 	componentDidMount() {
@@ -177,16 +177,16 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				|| event.altKey || event.metaKey)) {
 			this.collapseLibrary(libraryID);
 		}
-		else if ((event.key == 'Backspace' && Zotero.isMac) || event.key == 'Delete') {
-			var deleteItems = event.metaKey || (!Zotero.isMac && event.shiftKey);
-			window.ZoteroPane.deleteSelectedCollection(deleteItems);
+		else if ((event.key == 'Backspace' && Trellis.isMac) || event.key == 'Delete') {
+			var deleteItems = event.metaKey || (!Trellis.isMac && event.shiftKey);
+			window.TrellisPane.deleteSelectedCollection(deleteItems);
 			event.preventDefault();
 		}
-		else if (event.key == "F2" && !Zotero.isMac && treeRow.isCollection()) {
+		else if (event.key == "F2" && !Trellis.isMac && treeRow.isCollection()) {
 			this.handleActivate(event, [this.selection.focused]);
 		}
 		else if (event.key == 'a' && !event.shiftKey
-				&& (Zotero.isMac ? (event.metaKey && !event.ctrlKey) : event.ctrlKey)) {
+				&& (Trellis.isMac ? (event.metaKey && !event.ctrlKey) : event.ctrlKey)) {
 			if (this.props.multiSelect) {
 				this._handleSelectAll();
 			}
@@ -264,21 +264,21 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			this.startEditing(treeRow);
 		}
 		else if (treeRow.isLibrary()) {
-			let uri = Zotero.URI.getCurrentUserLibraryURI();
+			let uri = Trellis.URI.getCurrentUserLibraryURI();
 			if (uri) {
-				window.ZoteroPane.loadURI(uri);
+				window.TrellisPane.loadURI(uri);
 				event.stopPropagation();
 			}
 		}
 		else if (treeRow.isSearch()) {
-			window.ZoteroPane.editSelectedCollection();
+			window.TrellisPane.editSelectedCollection();
 		}
 		else if (treeRow.isFeed()) {
-			window.ZoteroPane.editSelectedFeed();
+			window.TrellisPane.editSelectedFeed();
 		}
 		else if (treeRow.isGroup()) {
-			let uri = Zotero.URI.getGroupURI(treeRow.ref, true);
-			window.ZoteroPane.loadURI(uri);
+			let uri = Trellis.URI.getGroupURI(treeRow.ref, true);
+			window.TrellisPane.loadURI(uri);
 		}
 	}
 	
@@ -292,7 +292,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		treeRow.ref.name = treeRow.editingName;
 		delete treeRow.editingName;
 		await treeRow.ref.saveTx({ undoAction: 'undo-action-rename-collection' });
-		window.Zotero_Tabs.rename("zotero-pane", treeRow.ref.name);
+		window.Trellis_Tabs.rename("trellis-pane", treeRow.ref.name);
 	}
 	
 	startEditing = (treeRow) => {
@@ -346,8 +346,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// The arrow on macOS is a full icon's width.
 		// For non-userLibrary/feed items that are drawn under headers
 		// we do not draw the arrow and need to move all items 1 level up
-		if (Zotero.isMac && !treeRow.isHeader() && !treeRow.isFeed()
-				&& treeRow.ref && treeRow.ref.libraryID != Zotero.Libraries.userLibraryID) {
+		if (Trellis.isMac && !treeRow.isHeader() && !treeRow.isFeed()
+				&& treeRow.ref && treeRow.ref.libraryID != Trellis.Libraries.userLibraryID) {
 			depth--;
 		}
 		// Ensures the feeds row has no padding
@@ -363,7 +363,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		let twisty;
 		if (this.isContainerEmpty(index) || !hasChildMatchingFilter) {
 			twisty = document.createElement('span');
-			if (Zotero.isMac && treeRow.isHeader()) {
+			if (Trellis.isMac && treeRow.isHeader()) {
 				twisty.classList.add("spacer-header");
 			}
 			else {
@@ -505,7 +505,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				onKeyDown: this.handleKeyDown,
 				onActivate: (...args) => (this.props.onActivate ? this.props.onActivate(...args) : this.handleActivate(...args)),
 
-				label: Zotero.getString('pane.collections.title')
+				label: Trellis.getString('pane.collections.title')
 			}
 		);
 	}
@@ -523,19 +523,19 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	 */
 	async refresh() {
 		try {
-			Zotero.debug("Refreshing collections pane");
+			Trellis.debug("Refreshing collections pane");
 			
 			if (this.props.hideSources.indexOf('duplicates') == -1) {
 				this._virtualCollectionLibraries.duplicates =
-					Zotero.Prefs.getVirtualCollectionState('duplicates');
+					Trellis.Prefs.getVirtualCollectionState('duplicates');
 			}
 			this._virtualCollectionLibraries.unfiled =
-					Zotero.Prefs.getVirtualCollectionState('unfiled');
+					Trellis.Prefs.getVirtualCollectionState('unfiled');
 			this._virtualCollectionLibraries.recentlyRead =
-				Zotero.Prefs.getVirtualCollectionState('recentlyRead');
+				Trellis.Prefs.getVirtualCollectionState('recentlyRead');
 			this._virtualCollectionLibraries.retracted =
-				Zotero.Prefs.getVirtualCollectionState('retracted');
-			this._virtualCollectionLibraries.publications = Zotero.Prefs.getVirtualCollectionState('publications');
+				Trellis.Prefs.getVirtualCollectionState('retracted');
+			this._virtualCollectionLibraries.publications = Trellis.Prefs.getVirtualCollectionState('publications');
 			
 			var newRows = [];
 			var added = 0;
@@ -544,31 +544,31 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			//
 			// Add "My Library"
 			//
-			libraryIncluded = this._includedInTree({ libraryID: Zotero.Libraries.userLibraryID });
+			libraryIncluded = this._includedInTree({ libraryID: Trellis.Libraries.userLibraryID });
 			if (libraryIncluded) {
 				newRows.splice(added++, 0,
-					new Zotero.CollectionTreeRow(this, 'library', Zotero.Libraries.userLibrary));
+					new Trellis.CollectionTreeRow(this, 'library', Trellis.Libraries.userLibrary));
 				newRows[0].isOpen = true;
 				added += await this._expandRow(newRows, 0);
 			}
 			
 			// Add groups
-			var groups = Zotero.Groups.getAll();
+			var groups = Trellis.Groups.getAll();
 			groupsIncluded = groups.some(group => this._includedInTree(group));
 			if (groups.length && groupsIncluded) {
 				if (libraryIncluded) {
-					newRows.splice(added++, 0, new Zotero.CollectionTreeRow(this, 'separator', false, 0));
+					newRows.splice(added++, 0, new Trellis.CollectionTreeRow(this, 'separator', false, 0));
 				}
-				let groupHeader = new Zotero.CollectionTreeRow(this, 'header', {
+				let groupHeader = new Trellis.CollectionTreeRow(this, 'header', {
 					id: "group-libraries-header",
-					label: Zotero.getString('pane.collections.groupLibraries'),
+					label: Trellis.getString('pane.collections.groupLibraries'),
 					libraryID: -1
 				});
 				newRows.splice(added++, 0, groupHeader);
 				for (let group of groups) {
 					if (!this._includedInTree(group)) continue;
 					newRows.splice(added++, 0,
-						new Zotero.CollectionTreeRow(this, 'group', group, 1),
+						new Trellis.CollectionTreeRow(this, 'group', group, 1),
 					);
 					added += await this._expandRow(newRows, added - 1);
 				}
@@ -576,24 +576,24 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			
 			let feeds = {
 				get unreadCount() {
-					return Zotero.Feeds.totalUnreadCount();
+					return Trellis.Feeds.totalUnreadCount();
 				},
 				
 				async updateFeed() {
-					for (let feed of Zotero.Feeds.getAll()) {
+					for (let feed of Trellis.Feeds.getAll()) {
 						await feed.updateFeed();
 					}
 				}
 			};
 			feedsIncluded = this._includedInTree(feeds);
-			if (this.props.hideSources.indexOf('feeds') == -1 && Zotero.Feeds.haveFeeds() && feedsIncluded) {
+			if (this.props.hideSources.indexOf('feeds') == -1 && Trellis.Feeds.haveFeeds() && feedsIncluded) {
 				if (groupsIncluded || libraryIncluded) {
 					newRows.splice(added++, 0,
-						new Zotero.CollectionTreeRow(this, 'separator', false),
+						new Trellis.CollectionTreeRow(this, 'separator', false),
 					);
 				}
 				newRows.splice(added++, 0,
-					new Zotero.CollectionTreeRow(this, 'feeds', feeds)
+					new Trellis.CollectionTreeRow(this, 'feeds', feeds)
 				);
 				added += await this._expandRow(newRows, added - 1);
 			}
@@ -618,8 +618,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				}
 			}
 		} catch (e) {
-			Zotero.logError(e);
-			window.ZoteroPane.displayErrorMessage();
+			Trellis.logError(e);
+			window.TrellisPane.displayErrorMessage();
 		}
 	}
 	
@@ -646,7 +646,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			break;
 		
 		case 'S':
-			var search = await Zotero.Searches.getAsync(id);
+			var search = await Trellis.Searches.getAsync(id);
 			await this.expandLibrary(search.libraryID);
 			break;
 		
@@ -680,14 +680,14 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	 */
 	async selectWait(index) {
 		if (this.tree && this.selection.isSelected(index)) {
-			Zotero.debug(`CollectionTree.selectWait(): row ${index} already selected`);
+			Trellis.debug(`CollectionTree.selectWait(): row ${index} already selected`);
 			return;
 		}
 		var promise = this.waitForSelect();
 		this.selection.select(index);
 		
 		if (this.selection.selectEventsSuppressed) {
-			Zotero.debug(`CollectionTree.selectWait(): selectEventsSuppressed. Not waiting to select row ${index}`);
+			Trellis.debug(`CollectionTree.selectWait(): selectEventsSuppressed. Not waiting to select row ${index}`);
 			return;
 		}
 		return promise;
@@ -696,7 +696,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	async selectLibrary(libraryID = 1) {
 		var row = this.getRowIndexByID('L' + libraryID);
 		if (row === false) {
-			Zotero.debug(`CollectionTree.selectLibrary(): library with ID ${libraryID} not found in collection tree`);
+			Trellis.debug(`CollectionTree.selectLibrary(): library with ID ${libraryID} not found in collection tree`);
 			return false;
 		}
 		this.ensureRowIsVisible(row);
@@ -736,7 +736,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			return false;
 		}
 		
-		var items = await Zotero.Items.getAsync(itemIDs);
+		var items = await Trellis.Items.getAsync(itemIDs);
 		if (!items.length) {
 			return false;
 		}
@@ -746,7 +746,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// Check if items from multiple libraries were specified
 		// Check if items from multiple libraries were specified
 		if (items.length > 1 && new Set(items.map(item => item.libraryID)).size > 1) {
-			Zotero.debug("Can't select items in multiple libraries", 2);
+			Trellis.debug("Can't select items in multiple libraries", 2);
 			return 0;
 		}
 		
@@ -754,12 +754,12 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		var libraryID = items[0].libraryID;
 		// If in a different library
 		if (libraryID != currentLibraryID) {
-			Zotero.debug("Library ID differs; switching library");
+			Trellis.debug("Library ID differs; switching library");
 			await this.selectLibrary(libraryID);
 		}
 		// Force switch to library view
 		else if (!this.getRow(this.selection.focused).isLibrary() && inLibraryRoot) {
-			Zotero.debug("Told to select in library; switching to library");
+			Trellis.debug("Told to select in library; switching to library");
 			await this.selectLibrary(libraryID);
 		}
 		
@@ -772,11 +772,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		
 		// If there's a single item and it or an ancestor are in the trash, switch to that
 		if (items.length == 1 && items[0].isInTrash()) {
-			Zotero.debug("Item is in trash; switching to trash");
+			Trellis.debug("Item is in trash; switching to trash");
 			await this.selectTrash(libraryID);
 		}
 		else {
-			Zotero.debug("Item was not selected; switching to library");
+			Trellis.debug("Item was not selected; switching to library");
 			await this.selectLibrary(libraryID);
 		}
 		
@@ -789,7 +789,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	}
 	
 	/*
-	 *  Called by Zotero.Notifier on any changes to collections in the data layer
+	 *  Called by Trellis.Notifier on any changes to collections in the data layer
 	 */
 	async notify(action, type, ids, extraData) {
 		if ((!ids || ids.length == 0) && action != 'refresh' && action != 'redraw') {
@@ -797,7 +797,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		}
 		
 		if (!this._rowMap) {
-			Zotero.debug("Row map didn't exist in collectionTree.notify()");
+			Trellis.debug("Row map didn't exist in collectionTree.notify()");
 			return;
 		}
 		
@@ -885,7 +885,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				
 				// If a feed was removed and there are no more, remove the 'Feeds' row
 				// (and the splitter before it)
-				if (feedDeleted && !Zotero.Feeds.haveFeeds()) {
+				if (feedDeleted && !Trellis.Feeds.haveFeeds()) {
 					let row = this._rowMap['F1'];
 					this._removeRow(row);
 					this._removeRow(row - 1);
@@ -907,7 +907,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				let selectedIndex = this.selection.focused;
 				
 				let handleFocusDuringSearch = async (type) => {
-					let object = type == 'collection' ? Zotero.Collections.get(id) : Zotero.Searches.get(id);
+					let object = type == 'collection' ? Trellis.Collections.get(id) : Trellis.Searches.get(id);
 					// If collections/searches are being filtered, some rows
 					// need to be (un-)greyed out or removed, so reload.
 					if (!this._isFilterEmpty()) {
@@ -922,7 +922,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				
 				switch (type) {
 					case 'collection':
-						let collection = Zotero.Collections.get(id);
+						let collection = Trellis.Collections.get(id);
 						row = this.getRowIndexByID(rowID);
 						// If collection is visible
 						if (row !== false) {
@@ -968,7 +968,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 						break;
 					
 					case 'search':
-						let search = Zotero.Searches.get(id);
+						let search = Trellis.Searches.get(id);
 						row = this.getRowIndexByID("S" + id);
 						if (row !== false) {
 							// TODO: Only move if name changed
@@ -1049,7 +1049,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					case 'group':
 					case 'feed':
 						if (type == 'groups' && ids.length != 1) {
-							Zotero.logError("WARNING: Multiple groups shouldn't currently be added "
+							Trellis.logError("WARNING: Multiple groups shouldn't currently be added "
 								+ "together in collectionTree::notify()")
 						}
 						await this.reload();
@@ -1144,9 +1144,9 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	 * @returns {Promise<boolean>}
 	 */
 	async expandToCollection(collectionID) {
-		var col = await Zotero.Collections.getAsync(collectionID);
+		var col = await Trellis.Collections.getAsync(collectionID);
 		if (!col) {
-			Zotero.debug("Cannot expand to nonexistent collection " + collectionID, 2);
+			Trellis.debug("Cannot expand to nonexistent collection " + collectionID, 2);
 			return false;
 		}
 		if (!this._includedInTree(col)) {
@@ -1168,13 +1168,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		while (parentID = col.parentID) {
 			// Detect infinite loop due to invalid nesting in DB
 			if (seen.has(parentID)) {
-				await Zotero.Schema.setIntegrityCheckRequired(true);
-				Zotero.crash();
+				await Trellis.Schema.setIntegrityCheckRequired(true);
+				Trellis.crash();
 				return;
 			}
 			seen.add(parentID);
 			path.unshift(parentID);
-			col = await Zotero.Collections.getAsync(parentID);
+			col = await Trellis.Collections.getAsync(parentID);
 		}
 		for (let id of path) {
 			row = this._rowMap["C" + id];
@@ -1298,7 +1298,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		}
 		let treeViewID = types[type] + libraryID;
 		
-		Zotero.Prefs.setVirtualCollectionStateForLibrary(libraryID, type, show);
+		Trellis.Prefs.setVirtualCollectionStateForLibrary(libraryID, type, show);
 		
 		var promise = this.waitForSelect();
 		var selectedRow = this.selection.focused;
@@ -1351,7 +1351,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				undoAction = 'undo-action-trash-collection';
 				undoActionArgs = { count: collectionCount + searchCount };
 			}
-			await Zotero.DB.executeTransaction(async () => {
+			await Trellis.DB.executeTransaction(async () => {
 				for (let row of others) {
 					row.ref.deleted = true;
 					if (row.isCollection()) {
@@ -1367,7 +1367,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	
 	unregister() {
 		this._uninitialized = true;
-		Zotero.Notifier.unregisterObserver(this._unregisterID);
+		Trellis.Notifier.unregisterObserver(this._unregisterID);
 	}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1418,7 +1418,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	}
 	
 	getSelectedCollection(asID) {
-		Zotero.debug("CollectionTree#getSelectedCollection() is deprecated -- use getSelectedCollections()");
+		Trellis.debug("CollectionTree#getSelectedCollection() is deprecated -- use getSelectedCollections()");
 		return this.getSelectedCollections(asID)[0] || false;
 	}
 	
@@ -1434,7 +1434,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	}
 	
 	getSelectedSearch(asID) {
-		Zotero.debug("CollectionTree#getSelectedSearch() is deprecated -- use getSelectedSearches()");
+		Trellis.debug("CollectionTree#getSelectedSearch() is deprecated -- use getSelectedSearches()");
 		return this.getSelectedSearches(asID)[0] || false;
 	}
 	
@@ -1469,7 +1469,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				icon = 'library-group';
 				break;
 			case 'feed':
-				// Better alternative needed: https://github.com/zotero/zotero/pull/902#issuecomment-183185973
+				// Better alternative needed: https://github.com/trellis/trellis/pull/902#issuecomment-183185973
 				/*
 				if (treeRow.ref.updating) {
 					collectionType += 'Updating';
@@ -1513,7 +1513,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		super.onDragStart(event, index);
 		
 		// See note in #setDropEffect()
-		if (Zotero.isWin || Zotero.isLinux) {
+		if (Trellis.isWin || Trellis.isLinux) {
 			event.dataTransfer.effectAllowed = 'copyMove';
 		}
 		
@@ -1526,11 +1526,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		if (!rows.every(o => o.isCollection() || o.isSearch())) {
 			return;
 		}
-		let type = rows[0].isCollection() ? "zotero/collection" : "zotero/search";
+		let type = rows[0].isCollection() ? "trellis/collection" : "trellis/search";
 		let ids = rows.map(o => o.ref.id);
 		event.dataTransfer.setDragImage(this._dragImageContainer, 0, 0);
 		event.dataTransfer.setData(type, ids);
-		Zotero.debug(`Dragging ${type} ` + (ids.length > 1 ? '[' + ids.join(', ') + ']' : ids[0]));
+		Trellis.debug(`Dragging ${type} ` + (ids.length > 1 ? '[' + ids.join(', ') + ']' : ids[0]));
 	}
 
 	onDragOver(event, index) {
@@ -1541,8 +1541,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		try {
 			// Prevent modifier keys from doing their normal things
 			event.preventDefault();
-			var previousOrientation = Zotero.DragDrop.currentOrientation;
-			Zotero.DragDrop.currentOrientation = getDragTargetOrient(event);
+			var previousOrientation = Trellis.DragDrop.currentOrientation;
+			Trellis.DragDrop.currentOrientation = getDragTargetOrient(event);
 
 			// Expand collapsed collections and groups when they are dragged over for 1 second
 			if (!this.isContainerEmpty(index) && !this.isContainerOpen(index)) {
@@ -1559,7 +1559,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 							this._flashingRow = index;
 							this.tree.invalidateRow(index);
 							// wait for the flashing to finish and then expand the container
-							await Zotero.Promise.delay(300); // 0.2s CSS animation length * 1.5 runs
+							await Trellis.Promise.delay(300); // 0.2s CSS animation length * 1.5 runs
 							this._flashingRow = null;
 							this._expandedRowsOnDrag.add(treeRow.id);
 							if (!this.isContainerOpen(index)) {
@@ -1577,13 +1577,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				this._collapseExpandedRowsTimer = null;
 			}
 			
-			if (!this.canDropCheck(index, Zotero.DragDrop.currentOrientation, event.dataTransfer)) {
+			if (!this.canDropCheck(index, Trellis.DragDrop.currentOrientation, event.dataTransfer)) {
 				this.setDropEffect(event, "none");
 				return;
 			}
 			
-			if (event.dataTransfer.getData("zotero/item")) {
-				var sourceCollectionTreeRow = Zotero.DragDrop.getDragSource(event.dataTransfer);
+			if (event.dataTransfer.getData("trellis/item")) {
+				var sourceCollectionTreeRow = Trellis.DragDrop.getDragSource(event.dataTransfer);
 				if (sourceCollectionTreeRow) {
 					var targetCollectionTreeRow = treeRow;
 					
@@ -1604,13 +1604,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					}
 				}
 				
-				let move = (Zotero.isMac && event.metaKey) || (!Zotero.isMac && event.shiftKey);
+				let move = (Trellis.isMac && event.metaKey) || (!Trellis.isMac && event.shiftKey);
 
 				// A selection from a multiple-collection view can span libraries. Those items can
 				// only be copied, never moved (a move can't coherently move some items and copy
 				// others), so disallow a move rather than silently substituting a copy.
-				let ids = Zotero.DragDrop.getDataFromDataTransfer(event.dataTransfer).data;
-				let items = Zotero.Items.get(ids);
+				let ids = Trellis.DragDrop.getDataFromDataTransfer(event.dataTransfer).data;
+				let items = Trellis.Items.get(ids);
 				if (new Set(items.map(item => item.libraryID)).size > 1) {
 					this.setDropEffect(event, move ? "none" : "copy");
 					return false;
@@ -1623,15 +1623,15 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					this.setDropEffect(event, "copy");
 				}
 			}
-			else if (event.dataTransfer.getData("zotero/collection")) {
-				let collectionID = Zotero.DragDrop.getDataFromDataTransfer(event.dataTransfer).data[0];
-				let { libraryID: sourceLibraryID } = Zotero.Collections.getLibraryAndKeyFromID(collectionID);
+			else if (event.dataTransfer.getData("trellis/collection")) {
+				let collectionID = Trellis.DragDrop.getDataFromDataTransfer(event.dataTransfer).data[0];
+				let { libraryID: sourceLibraryID } = Trellis.Collections.getLibraryAndKeyFromID(collectionID);
 				
 				var targetCollectionTreeRow = treeRow;
 				
 				// For now, all cross-library drags are copies
 				if (sourceLibraryID != targetCollectionTreeRow.ref.libraryID) {
-					/*if ((Zotero.isMac && event.metaKey) || (!Zotero.isMac && event.shiftKey)) {
+					/*if ((Trellis.isMac && event.metaKey) || (!Trellis.isMac && event.shiftKey)) {
 						this.setDropEffect(event, "move");
 					}
 					else {
@@ -1657,7 +1657,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				//
 				// - The cursor effect gets set by the system on Windows 7 and can't
 				//   be overridden.
-				if (!Zotero.isMac) {
+				if (!Trellis.isMac) {
 					if (event.shiftKey) {
 						if (event.ctrlKey) {
 							event.dataTransfer.dropEffect = "link";
@@ -1679,7 +1679,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			} else {
 				this._dropRow = null;
 			}
-			if (prevDropRow != this._dropRow || previousOrientation != Zotero.DragDrop.currentOrientation) {
+			if (prevDropRow != this._dropRow || previousOrientation != Trellis.DragDrop.currentOrientation) {
 				typeof prevDropRow == 'number' && this.tree.invalidateRow(prevDropRow);
 				this.tree.invalidateRow(index);
 			}
@@ -1719,11 +1719,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	canDropCheck = (row, orient, dataTransfer) => {
 		const treeRow = this.getRow(row);
 		// TEMP
-		Zotero.debug("Row is " + row + "; orient is " + orient);
+		Trellis.debug("Row is " + row + "; orient is " + orient);
 		
-		var dragData = Zotero.DragDrop.getDataFromDataTransfer(dataTransfer);
+		var dragData = Trellis.DragDrop.getDataFromDataTransfer(dataTransfer);
 		if (!dragData) {
-			Zotero.debug("No drag data");
+			Trellis.debug("No drag data");
 			return false;
 		}
 		var {dataType, data} = dragData;
@@ -1734,50 +1734,50 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				// Can drop collections, searches, and items into trash of their own library
 				if (treeRow.isTrash()) {
 					let objects = [];
-					if (dataType === 'zotero/item') {
-						objects = Zotero.Items.get(data);
+					if (dataType === 'trellis/item') {
+						objects = Trellis.Items.get(data);
 					}
-					else if (dataType === 'zotero/collection') {
-						objects = Zotero.Collections.get(data);
+					else if (dataType === 'trellis/collection') {
+						objects = Trellis.Collections.get(data);
 					}
-					else if (dataType === 'zotero/search') {
-						objects = Zotero.Searches.get(data);
+					else if (dataType === 'trellis/search') {
+						objects = Trellis.Searches.get(data);
 					}
 					let allInSameLibrary = objects.every(object => object.libraryID === treeRow.ref.libraryID);
 					return allInSameLibrary;
 				}
-				// Zotero.debug("Drop target not editable");
+				// Trellis.debug("Drop target not editable");
 				return false;
 			}
 			
-			if (dataType == 'zotero/item') {
+			if (dataType == 'trellis/item') {
 				// TODO: Is this still required?
 				if (treeRow.isBucket()) {
 					return true;
 				}
 
 				// Cannot add items to collections from trash
-				if (Zotero.DragDrop.currentDragSource.isTrash()) return false;
+				if (Trellis.DragDrop.currentDragSource.isTrash()) return false;
 
 				var ids = data;
-				var items = Zotero.Items.get(ids);
-				items = Zotero.Items.keepTopLevel(items);
+				var items = Trellis.Items.get(ids);
+				items = Trellis.Items.keepTopLevel(items);
 				var skip = true;
 				for (let item of items) {
 					// Can only drag top-level items
 					if (!item.isTopLevelItem()) {
-						Zotero.debug("Can't drag child item");
+						Trellis.debug("Can't drag child item");
 						return false;
 					}
 					
 					if (treeRow.isWithinGroup() && item.isAttachment()) {
 						// Linked files can't be added to groups
-						if (item.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
-							Zotero.debug("Linked files cannot be added to groups");
+						if (item.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
+							Trellis.debug("Linked files cannot be added to groups");
 							return false;
 						}
 						if (!treeRow.filesEditable) {
-							Zotero.debug("Drop target does not allow files to be edited");
+							Trellis.debug("Drop target does not allow files to be edited");
 							return false;
 						}
 						skip = false;
@@ -1786,19 +1786,19 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					
 					if (treeRow.isPublications()) {
 						if (item.isAttachment() || item.isNote()) {
-							Zotero.debug("Top-level attachments and notes cannot be added to My Publications");
+							Trellis.debug("Top-level attachments and notes cannot be added to My Publications");
 							return false;
 						}
-						if(item instanceof Zotero.FeedItem) {
-							Zotero.debug("FeedItems cannot be added to My Publications");
+						if(item instanceof Trellis.FeedItem) {
+							Trellis.debug("FeedItems cannot be added to My Publications");
 							return false;
 						}
 						if (item.inPublications) {
-							Zotero.debug("Item " + item.id + " already exists in My Publications");
+							Trellis.debug("Item " + item.id + " already exists in My Publications");
 							continue;
 						}
 						if (treeRow.ref.libraryID != item.libraryID) {
-							Zotero.debug("Cross-library drag to My Publications not allowed");
+							Trellis.debug("Cross-library drag to My Publications not allowed");
 							continue;
 						}
 						skip = false;
@@ -1809,7 +1809,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					if (treeRow.ref.libraryID != item.libraryID) {
 						// Only allow cross-library drag to root library and collections
 						if (!(treeRow.isLibrary(true) || treeRow.isCollection())) {
-							Zotero.debug("Cross-library drag to non-collection not allowed");
+							Trellis.debug("Cross-library drag to non-collection not allowed");
 							return false;
 						}
 						skip = false;
@@ -1823,14 +1823,14 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					// its out-of-library items here. (If every item is already in this library,
 					// `skip` stays true and the drag is refused below.)
 					if (treeRow.isLibrary(true)) {
-						Zotero.debug("Item " + item.id + " already in library " + treeRow.ref.libraryID);
+						Trellis.debug("Item " + item.id + " already in library " + treeRow.ref.libraryID);
 						continue;
 					}
 					
 					// Make sure there's at least one item that's not already in this destination
 					if (treeRow.isCollection()) {
 						if (treeRow.ref.hasItem(item.id)) {
-							Zotero.debug("Item " + item.id + " already exists in collection");
+							Trellis.debug("Item " + item.id + " already exists in collection");
 							continue;
 						}
 						skip = false;
@@ -1838,7 +1838,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					}
 				}
 				if (skip) {
-					Zotero.debug("Drag skipped");
+					Trellis.debug("Drag skipped");
 					return false;
 				}
 				return true;
@@ -1858,13 +1858,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				
 				return true;
 			}
-			else if (dataType == 'zotero/collection') {
+			else if (dataType == 'trellis/collection') {
 				if (!treeRow.isLibrary(true) && !treeRow.isCollection()) {
 					return false;
 				}
 				
 				for (let id of data) {
-					let draggedCollection = Zotero.Collections.get(id);
+					let draggedCollection = Trellis.Collections.get(id);
 				
 					// Dragging within same library
 					if (treeRow.ref.libraryID == draggedCollection.libraryID) {
@@ -1887,11 +1887,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	}
 	
 	async canDropCheckAsync(row, orient, dataTransfer) {
-		//Zotero.debug("Row is " + row + "; orient is " + orient);
+		//Trellis.debug("Row is " + row + "; orient is " + orient);
 		
-		var dragData = Zotero.DragDrop.getDataFromDataTransfer(dataTransfer);
+		var dragData = Trellis.DragDrop.getDataFromDataTransfer(dataTransfer);
 		if (!dragData) {
-			Zotero.debug("No drag data");
+			Trellis.debug("No drag data");
 			return false;
 		}
 		var dataType = dragData.dataType;
@@ -1900,13 +1900,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		if (orient == 0) {
 			var treeRow = this.getRow(row); //the collection we are dragging over
 			
-			if (dataType == 'zotero/item' && treeRow.isBucket()) {
+			if (dataType == 'trellis/item' && treeRow.isBucket()) {
 				return true;
 			}
 			
-			if (dataType == 'zotero/item') {
+			if (dataType == 'trellis/item') {
 				var ids = data;
-				var items = Zotero.Items.get(ids);
+				var items = Trellis.Items.get(ids);
 				var skip = true;
 				for (let i=0; i<items.length; i++) {
 					let item = items[i];
@@ -1917,7 +1917,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 						if (linkedItem && !linkedItem.deleted) {
 							// For drag to root, skip if linked item exists
 							if (treeRow.isLibrary(true)) {
-								Zotero.debug("Linked item " + linkedItem.key + " already exists "
+								Trellis.debug("Linked item " + linkedItem.key + " already exists "
 									+ "in library " + treeRow.ref.libraryID);
 								continue;
 							}
@@ -1925,13 +1925,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 							else if (treeRow.isCollection()) {
 								// skip if linked item is already in it
 								if (treeRow.ref.hasItem(linkedItem.id)) {
-									Zotero.debug("Linked item " + linkedItem.key + " already exists "
+									Trellis.debug("Linked item " + linkedItem.key + " already exists "
 										+ "in collection");
 									continue;
 								}
 								// or if linked item is a child item
 								else if (!linkedItem.isTopLevelItem()) {
-									Zotero.debug("Linked item " + linkedItem.key + " already exists "
+									Trellis.debug("Linked item " + linkedItem.key + " already exists "
 										+ "as child item");
 									continue;
 								}
@@ -1947,31 +1947,31 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					break;
 				}
 				if (skip) {
-					Zotero.debug("Drag skipped");
+					Trellis.debug("Drag skipped");
 					return false;
 				}
 			}
-			else if (dataType == 'zotero/collection') {
+			else if (dataType == 'trellis/collection') {
 				let draggedCollectionID = data[0];
-				let draggedCollection = Zotero.Collections.get(draggedCollectionID);
+				let draggedCollection = Trellis.Collections.get(draggedCollectionID);
 				
 				// Dragging a collection to a different library
 				if (treeRow.ref.libraryID != draggedCollection.libraryID) {
 					// Disallow if linked collection already exists
 					if (await draggedCollection.getLinkedCollection(treeRow.ref.libraryID, true)) {
-						Zotero.debug("Linked collection already exists in library");
+						Trellis.debug("Linked collection already exists in library");
 						return false;
 					}
 					
 					let descendents = draggedCollection.getDescendents(false, 'collection');
 					for (let descendent of descendents) {
-						descendent = Zotero.Collections.get(descendent.id);
+						descendent = Trellis.Collections.get(descendent.id);
 						// Disallow if linked collection already exists for any subcollections
 						//
 						// If this is allowed in the future for the root collection,
 						// need to allow drag only to root
 						if (await descendent.getLinkedCollection(treeRow.ref.libraryID, true)) {
-							Zotero.debug("Linked subcollection already exists in library");
+							Trellis.debug("Linked subcollection already exists in library");
 							return false;
 						}
 					}
@@ -2007,20 +2007,20 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				var creators = item.getCreators();
 				var linkedCreators = linkedItem.getCreators();
 				if (creators.length != linkedCreators.length) {
-					Zotero.debug('Creators have changed');
+					Trellis.debug('Creators have changed');
 					creatorsChanged = true;
 				}
 				else {
 					for (var i=0; i<creators.length; i++) {
 						if (!creators[i].ref.equals(linkedCreators[i].ref)) {
-							Zotero.debug('changed');
+							Trellis.debug('changed');
 							creatorsChanged = true;
 							break;
 						}
 					}
 				}
 				if (!creatorsChanged) {
-					Zotero.debug("Linked item hasn't changed -- skipping conflict resolution");
+					Trellis.debug("Linked item hasn't changed -- skipping conflict resolution");
 					continue;
 				}
 			}
@@ -2034,19 +2034,19 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			var linkMode = item.attachmentLinkMode;
 			
 			// Skip linked files
-			if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
-				Zotero.debug("Skipping standalone linked file attachment on drag");
+			if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
+				Trellis.debug("Skipping standalone linked file attachment on drag");
 				return false;
 			}
 			
 			if (!targetTreeRow.filesEditable) {
-				Zotero.debug("Skipping standalone file attachment on drag");
+				Trellis.debug("Skipping standalone file attachment on drag");
 				return false;
 			}
 			
-			let newAttachment = await Zotero.Attachments.copyAttachmentToLibrary(item, targetLibraryID);
+			let newAttachment = await Trellis.Attachments.copyAttachmentToLibrary(item, targetLibraryID);
 			if (options.annotations) {
-				await Zotero.Items.copyChildItems(item, newAttachment);
+				await Trellis.Items.copyChildItems(item, newAttachment);
 			}
 			
 			return newAttachment.id;
@@ -2063,8 +2063,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		await newItem.addLinkedItem(item);
 		
 		if (item.isNote()) {
-			if (Zotero.Libraries.get(newItem.libraryID).filesEditable) {
-				await Zotero.Notes.copyEmbeddedImages(item, newItem);
+			if (Trellis.Libraries.get(newItem.libraryID).filesEditable) {
+				await Trellis.Notes.copyEmbeddedImages(item, newItem);
 			}
 			return newItemID;
 		}
@@ -2074,7 +2074,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// Child notes
 		if (options.childNotes) {
 			var noteIDs = item.getNotes();
-			var notes = Zotero.Items.get(noteIDs);
+			var notes = Trellis.Items.get(noteIDs);
 			for (let note of notes) {
 				let newNote = note.clone(targetLibraryID, { skipTags: !options.tags });
 				newNote.parentID = newItemID;
@@ -2082,8 +2082,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					skipSelect: true
 				})
 
-				if (Zotero.Libraries.get(newNote.libraryID).filesEditable) {
-					await Zotero.Notes.copyEmbeddedImages(note, newNote);
+				if (Trellis.Libraries.get(newNote.libraryID).filesEditable) {
+					await Trellis.Notes.copyEmbeddedImages(note, newNote);
 				}
 				await newNote.addLinkedItem(note);
 			}
@@ -2092,36 +2092,36 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// Child attachments
 		if (options.childLinks || options.childFileAttachments) {
 			var attachmentIDs = item.getAttachments();
-			var attachments = Zotero.Items.get(attachmentIDs);
+			var attachments = Trellis.Items.get(attachmentIDs);
 			for (let attachment of attachments) {
 				var linkMode = attachment.attachmentLinkMode;
 				
 				// Skip linked files
-				if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
-					Zotero.debug("Skipping child linked file attachment on drag");
+				if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
+					Trellis.debug("Skipping child linked file attachment on drag");
 					continue;
 				}
 				
 				// Skip imported files if we don't have pref and permissions
-				if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+				if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 					if (!options.childLinks) {
-						Zotero.debug("Skipping child link attachment on drag");
+						Trellis.debug("Skipping child link attachment on drag");
 						continue;
 					}
 				}
 				else {
 					if (!options.childFileAttachments
 							|| (!targetTreeRow.filesEditable && !targetTreeRow.isPublications())) {
-						Zotero.debug("Skipping child file attachment on drag");
+						Trellis.debug("Skipping child file attachment on drag");
 						continue;
 					}
 				}
-				let newAttachment = await Zotero.Attachments.copyAttachmentToLibrary(
+				let newAttachment = await Trellis.Attachments.copyAttachmentToLibrary(
 					attachment, targetLibraryID, newItemID
 				);
 				
 				if (options.annotations) {
-					await Zotero.Items.copyChildItems(attachment, newAttachment);
+					await Trellis.Items.copyChildItems(attachment, newAttachment);
 				}
 			}
 		}
@@ -2137,7 +2137,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		for (var desc of descendents) {
 			// Collections
 			if (desc.type == 'collection') {
-				var c = await Zotero.Collections.getAsync(desc.id);
+				var c = await Trellis.Collections.getAsync(desc.id);
 				let newCollection = c.clone(targetLibraryID);
 				// set the parent collection if provided or null if copying to root library
 				newCollection.parentID = parentID || null;
@@ -2162,7 +2162,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			}
 			// Items
 			else {
-				var item = await Zotero.Items.getAsync(desc.id);
+				var item = await Trellis.Items.getAsync(desc.id);
 				let id = desc.id;
 				// Actually copy items only if moving to another library
 				if (item.libraryID !== targetLibraryID) {
@@ -2189,7 +2189,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					// collection) but target item is a child item (which can't), add
 					// target item's parent to collection instead
 					if (!item.isRegularItem()) {
-						let targetItem = await Zotero.Items.getAsync(id);
+						let targetItem = await Trellis.Items.getAsync(id);
 						let targetItemParentID = targetItem.parentItemID;
 						if (targetItemParentID) {
 							id = targetItemParentID;
@@ -2207,14 +2207,14 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	 *
 	 * Used for drag-and-drop and the "Copy To" context menu option
 	 *
-	 * @param {Zotero.Collection} collection - collection to copy
+	 * @param {Trellis.Collection} collection - collection to copy
 	 * @param {String} targetCollectionID - id of the collection to copy to
 	 * @param {String} targetLibraryID - id of the library to copy to
-	 * @param {Zotero.CollectionTreeRow } targetTreeRow - tree row of the target
+	 * @param {Trellis.CollectionTreeRow } targetTreeRow - tree row of the target
 	 * @param {Object} copyOptions - options how to perform the copy - see onDrop for an example
 	*/
 	async executeCollectionCopy({ collection, targetCollectionID, targetLibraryID, targetTreeRow, copyOptions }) {
-		await Zotero.DB.executeTransaction(async () => {
+		await Trellis.DB.executeTransaction(async () => {
 			var collections = [{
 				id: collection.id,
 				children: collection.getDescendents(true),
@@ -2231,7 +2231,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				copyOptions
 			});
 			for (let [collectionID, items] of addItems.entries()) {
-				let collection = await Zotero.Collections.getAsync(collectionID);
+				let collection = await Trellis.Collections.getAsync(collectionID);
 				await collection.addItems(items);
 			}
 			
@@ -2244,7 +2244,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		const treeRow = this.getRow(index);
 		this._dropRow = null;
 		this.tree.invalidate();
-		let orient = Zotero.DragDrop.currentOrientation;
+		let orient = Trellis.DragDrop.currentOrientation;
 		let row = this._rowMap[treeRow.id];
 		let dataTransfer = event.dataTransfer;
 		
@@ -2259,43 +2259,43 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				|| !(await this.canDropCheckAsync(row, orient, dataTransfer))) {
 			return false;
 		}
-		var dragData = Zotero.DragDrop.getDataFromDataTransfer(dataTransfer);
+		var dragData = Trellis.DragDrop.getDataFromDataTransfer(dataTransfer);
 		if (!dragData) {
-			Zotero.debug("No drag data");
+			Trellis.debug("No drag data");
 			return false;
 		}
 		var dropEffect = dragData.dropEffect;
 		var dataType = dragData.dataType;
 		var data = dragData.data;
-		var sourceTreeRow = Zotero.DragDrop.getDragSource(dataTransfer);
+		var sourceTreeRow = Trellis.DragDrop.getDragSource(dataTransfer);
 		var targetTreeRow = treeRow;
 		
 		var copyOptions = {
-			tags: Zotero.Prefs.get('groups.copyTags'),
-			childNotes: Zotero.Prefs.get('groups.copyChildNotes'),
-			childLinks: Zotero.Prefs.get('groups.copyChildLinks'),
-			childFileAttachments: Zotero.Prefs.get('groups.copyChildFileAttachments'),
-			annotations: Zotero.Prefs.get('groups.copyAnnotations'),
+			tags: Trellis.Prefs.get('groups.copyTags'),
+			childNotes: Trellis.Prefs.get('groups.copyChildNotes'),
+			childLinks: Trellis.Prefs.get('groups.copyChildLinks'),
+			childFileAttachments: Trellis.Prefs.get('groups.copyChildFileAttachments'),
+			annotations: Trellis.Prefs.get('groups.copyAnnotations'),
 		};
 
 		// Dropping items, collections, or searches into trash
 		if (targetTreeRow.isTrash()) {
 			let objects = [];
 			let undoAction;
-			if (dataType == 'zotero/collection') {
-				objects = await Zotero.Collections.getAsync(data);
+			if (dataType == 'trellis/collection') {
+				objects = await Trellis.Collections.getAsync(data);
 				undoAction = 'undo-action-trash-collection';
 			}
-			else if (dataType == 'zotero/search') {
-				objects = await Zotero.Searches.getAsync(data);
+			else if (dataType == 'trellis/search') {
+				objects = await Trellis.Searches.getAsync(data);
 				undoAction = 'undo-action-trash-search';
 			}
-			else if (dataType == 'zotero/item') {
-				objects = await Zotero.Items.getAsync(data);
+			else if (dataType == 'trellis/item') {
+				objects = await Trellis.Items.getAsync(data);
 				undoAction = 'undo-action-trash';
 			}
-			await Zotero.DB.executeTransaction(async function () {
-				Zotero.UndoHistory.stageAction(undoAction, { count: objects.length });
+			await Trellis.DB.executeTransaction(async function () {
+				Trellis.UndoHistory.stageAction(undoAction, { count: objects.length });
 				for (let obj of objects) {
 					obj.deleted = true;
 					await obj.save();
@@ -2307,8 +2307,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		var targetLibraryID = targetTreeRow.ref.libraryID;
 		var targetCollectionID = targetTreeRow.isCollection() ? targetTreeRow.ref.id : false;
 		
-		if (dataType == 'zotero/collection') {
-			let droppedCollections = await Zotero.Collections.getAsync(data);
+		if (dataType == 'trellis/collection') {
+			let droppedCollections = await Trellis.Collections.getAsync(data);
 			if (droppedCollections.some(c => c.id == targetCollectionID)) {
 				throw new Error("Can't drop onto source row");
 			}
@@ -2327,7 +2327,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			}
 			// Collection drag within a library
 			else {
-				await Zotero.DB.executeTransaction(async () => {
+				await Trellis.DB.executeTransaction(async () => {
 					for (let droppedCollection of droppedCollections) {
 						droppedCollection.parentID = targetCollectionID;
 						await droppedCollection.save({ undoAction: 'undo-action-move-collection' });
@@ -2335,7 +2335,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				});
 			}
 		}
-		else if (dataType == 'zotero/item') {
+		else if (dataType == 'trellis/item') {
 			var ids = data;
 			if (ids.length < 1) {
 				return;
@@ -2346,12 +2346,12 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				return;
 			}
 			
-			var items = await Zotero.Items.getAsync(ids);
+			var items = await Trellis.Items.getAsync(ids);
 			if (items.length == 0) {
 				return;
 			}
 			
-			if (items[0] instanceof Zotero.FeedItem) {
+			if (items[0] instanceof Trellis.FeedItem) {
 				if (!(targetTreeRow.isCollection() || targetTreeRow.isLibrary() || targetTreeRow.isGroup())) {
 					return;
 				}
@@ -2361,12 +2361,12 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					// No transaction, because most time is spent traversing urls
 					promises.push(item.translate(targetLibraryID, targetCollectionID))
 				}
-				return Zotero.Promise.all(promises);	
+				return Trellis.Promise.all(promises);	
 			}
 			
 			if (targetTreeRow.isPublications()) {
-				items = Zotero.Items.keepTopLevel(items);
-				let io = window.ZoteroPane.showPublicationsWizard(items);
+				items = Trellis.Items.keepTopLevel(items);
+				let io = window.TrellisPane.showPublicationsWizard(items);
 				if (!io) {
 					return;
 				}
@@ -2403,8 +2403,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			if (sameLibraryItems.length) {
 				if (targetCollectionID) {
 					let ids = sameLibraryItems.map(item => item.id);
-					await Zotero.DB.executeTransaction(async function () {
-						let collection = await Zotero.Collections.getAsync(targetCollectionID);
+					await Trellis.DB.executeTransaction(async function () {
+						let collection = await Trellis.Collections.getAsync(targetCollectionID);
 						await collection.addItems(ids);
 						// If moving, remove from source in the same
 						// transaction so it's a single undo step
@@ -2412,19 +2412,19 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 								&& sourceTreeRow && sourceTreeRow.isCollection()) {
 							await sourceTreeRow.ref.removeItems(toMove);
 							toMove = [];
-							Zotero.UndoHistory.stageAction(
+							Trellis.UndoHistory.stageAction(
 								'undo-action-move-to-collection', { count: ids.length }
 							);
 						}
 						else {
-							Zotero.UndoHistory.stageAction(
+							Trellis.UndoHistory.stageAction(
 								'undo-action-add-to-collection', { count: ids.length }
 							);
 						}
 					}.bind(this));
 				}
 				else if (targetTreeRow.isPublications()) {
-					await Zotero.Items.addToPublications(sameLibraryItems, copyOptions);
+					await Trellis.Items.addToPublications(sameLibraryItems, copyOptions);
 				}
 			}
 			
@@ -2432,11 +2432,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			if (otherLibraryItems.length) {
 				let toReconcile = [];
 				
-				await Zotero.Utilities.Internal.forEachChunkAsync(
+				await Trellis.Utilities.Internal.forEachChunkAsync(
 					otherLibraryItems,
 					100,
 					function (chunk) {
-						return Zotero.DB.executeTransaction(async () => {
+						return Trellis.DB.executeTransaction(async () => {
 							let copiedItemIDs = [];
 							for (let item of chunk) {
 								var id = await this._copyItem({
@@ -2454,7 +2454,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 							// Add copied items to target collection
 							if (targetCollectionID) {
 								for (let itemID of copiedItemIDs) {
-									let item = Zotero.Items.get(itemID);
+									let item = Trellis.Items.get(itemID);
 									if (item.isTopLevelItem()) {
 										item.addToCollection(targetCollectionID);
 										await item.save({ skipSelect: true });
@@ -2466,8 +2466,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				);
 				
 				if (toReconcile.length) {
-					let sourceName = Zotero.Libraries.getName(items[0].libraryID);
-					let targetName = Zotero.Libraries.getName(targetLibraryID);
+					let sourceName = Trellis.Libraries.getName(items[0].libraryID);
+					let targetName = Trellis.Libraries.getName(targetLibraryID);
 					
 					let io = {
 						dataIn: {
@@ -2484,15 +2484,15 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					
 					/*
 					if (type == 'item') {
-						if (!Zotero.Utilities.isEmpty(changedCreators)) {
+						if (!Trellis.Utilities.isEmpty(changedCreators)) {
 							io.dataIn.changedCreators = changedCreators;
 						}
 					}
 					*/
 					
-					window.openDialog('chrome://zotero/content/merge.xhtml', '', 'chrome,modal,centerscreen', io);
+					window.openDialog('chrome://trellis/content/merge.xhtml', '', 'chrome,modal,centerscreen', io);
 					
-					await Zotero.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(async function () {
 						// DEBUG: This probably needs to be updated if this starts being used
 						for (let obj of io.dataOut) {
 							await obj.ref.save();
@@ -2509,14 +2509,14 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				if (!sourceTreeRow || !sourceTreeRow.isCollection()) {
 					throw new Error("Drag source must be a collection for move action");
 				}
-				await Zotero.DB.executeTransaction(async function () {
+				await Trellis.DB.executeTransaction(async function () {
 					await sourceTreeRow.ref.removeItems(toMove);
 				}.bind(this));
 			}
 		}
 		else if (dataType == 'application/x-moz-file') {
 			// See note in onDragOver() above
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				if (event.metaKey) {
 					if (event.altKey) {
 						dropEffect = 'link';
@@ -2543,13 +2543,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				var file = data[i];
 				let item;
 				if (dropEffect == 'link') {
-					item = await Zotero.Attachments.linkFromFile({
+					item = await Trellis.Attachments.linkFromFile({
 						file: file,
 						collections: parentCollectionID ? [parentCollectionID] : undefined
 					});
 				}
 				else {
-					item = await Zotero.Attachments.importFromFile({
+					item = await Trellis.Attachments.importFromFile({
 						file: file,
 						libraryID: targetLibraryID,
 						collections: parentCollectionID ? [parentCollectionID] : undefined
@@ -2560,7 +2560,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 							file.remove(false);
 						}
 						catch (e) {
-							Zotero.logError("Error deleting original file " + file.path + " after drag");
+							Trellis.logError("Error deleting original file " + file.path + " after drag");
 						}
 					}
 				}
@@ -2569,7 +2569,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			}
 			
 			// Automatically retrieve metadata for PDFs and ebooks
-			Zotero.RecognizeDocument.autoRecognizeItems(addedItems);
+			Trellis.RecognizeDocument.autoRecognizeItems(addedItems);
 		}
 		this.closeContainersExpandedOnDrag();
 	}
@@ -2581,9 +2581,9 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// Record the ancestors of the currently selected collection to not collapse them
 		let col = this.selectedTreeRow.ref;
 		let parentIDs = new Set();
-		parentIDs.add(Zotero.Libraries.get(col.libraryID).treeViewID);
+		parentIDs.add(Trellis.Libraries.get(col.libraryID).treeViewID);
 		while (col.parentID) {
-			col = Zotero.Collections.get(col.parentID);
+			col = Trellis.Collections.get(col.parentID);
 			parentIDs.add(col.treeViewID);
 		}
 
@@ -2741,11 +2741,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		
 		// Every so often, remove obsolete rows
 		if (Math.random() < 1/20) {
-			Zotero.debug("Purging sourceList.persist");
+			Trellis.debug("Purging sourceList.persist");
 			for (var id in state) {
 				var m = id.match(/^C([0-9]+)$/);
 				if (m) {
-					if (!(await Zotero.Collections.getAsync(parseInt(m[1])))) {
+					if (!(await Trellis.Collections.getAsync(parseInt(m[1])))) {
 						delete state[id];
 					}
 					continue;
@@ -2753,7 +2753,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 				
 				var m = id.match(/^G([0-9]+)$/);
 				if (m) {
-					if (!Zotero.Groups.get(parseInt(m[1]))) {
+					if (!Trellis.Groups.get(parseInt(m[1]))) {
 						delete state[id];
 					}
 					continue;
@@ -2781,8 +2781,8 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		this._storeOpenStates(state);
 	};
 	
-	_storeOpenStates = Zotero.Utilities.debounce(function(state) {
-		Zotero.Prefs.set("sourceList.persist", JSON.stringify(state));
+	_storeOpenStates = Trellis.Utilities.debounce(function(state) {
+		Trellis.Prefs.set("sourceList.persist", JSON.stringify(state));
 	})
 
 	// When collections are renamed or deleted during search, more than
@@ -2847,7 +2847,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		this.selection.clearSelection();
 		if (currentRow) {
 			// Special treatment for when there are no filter matches
-			// Otherwise, selection.focused does not get updated by selectByID, which breaks ZoteroPane.
+			// Otherwise, selection.focused does not get updated by selectByID, which breaks TrellisPane.
 			if (this._rows.length == 1) {
 				this.selection.select(0);
 			}
@@ -2922,7 +2922,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			return null;
 		}
 
-		return new Zotero.CollectionTreeRow(this, focused.type, focused.ref, 0, false);
+		return new Trellis.CollectionTreeRow(this, focused.type, focused.ref, 0, false);
 	}
 
 	focusedRowMatchesFilter() {
@@ -2945,7 +2945,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// Clear the search field
 		if (collectionsSearchField.value.length) {
 			collectionsSearchField.value = '';
-			ZoteroPane.handleCollectionSearchInput();
+			TrellisPane.handleCollectionSearchInput();
 			return null;
 		}
 		// If the search field is empty, focus the collection tree
@@ -2999,7 +2999,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			// Sanity check to make sure we are not stuck in an infinite loop if something goes wrong
 			loopCounter++;
 			if (loopCounter > 100) {
-				Zotero.debug("Reasonable collections depth exceeded");
+				Trellis.debug("Reasonable collections depth exceeded");
 				return false;
 			}
 		}
@@ -3081,24 +3081,24 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		let objectName = (object.name || "").toLowerCase();
 		// Special treatment to fetch the name for My Library or Feeds
 		if (objectID[0] == 'L' && object._ObjectType !== "Group") {
-			objectName = Zotero.getString('pane.collections.library').toLowerCase();
+			objectName = Trellis.getString('pane.collections.library').toLowerCase();
 		}
 		else if (objectID == 'feeds') {
-			objectName = Zotero.getString('pane.collections.feedLibraries').toLowerCase();
+			objectName = Trellis.getString('pane.collections.feedLibraries').toLowerCase();
 		}
 		let filterValue = this._filter;
 
 		let childrenToSearch = [];
 		if (object._ObjectType == 'Collection') {
-			let collection = Zotero.Collections.get(object.id);
+			let collection = Trellis.Collections.get(object.id);
 			childrenToSearch = collection.getChildCollections();
 		}
 		else if (object.libraryID && !["Search", "Feeds"].includes(object._ObjectType)) {
-			childrenToSearch = Zotero.Collections.getByLibrary(object.libraryID);
-			childrenToSearch = childrenToSearch.concat(Zotero.Searches.getByLibrary(object.libraryID));
+			childrenToSearch = Trellis.Collections.getByLibrary(object.libraryID);
+			childrenToSearch = childrenToSearch.concat(Trellis.Searches.getByLibrary(object.libraryID));
 		}
 		else if (objectID == 'feeds') {
-			childrenToSearch = Zotero.Feeds.getAll();
+			childrenToSearch = Trellis.Feeds.getAll();
 		}
 		let matchesFilter = objectName.includes(filterValue);
 		// For libraries, groups and collections, recursively check if they have any children that match the filter
@@ -3151,7 +3151,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		var collections = treeRow.getChildren();
 		
 		if (isLibrary) {
-			var savedSearches = (await Zotero.Searches.getAll(libraryID)).filter(s => !s.deleted);
+			var savedSearches = (await Trellis.Searches.getAll(libraryID)).filter(s => !s.deleted);
 			// Virtual collections default to showing if not explicitly hidden
 			var showDuplicates = this.props.hideSources.indexOf('duplicates') == -1
 				&& this._virtualCollectionLibraries.duplicates[libraryID] !== false;
@@ -3160,10 +3160,10 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			var showRecentlyRead = this._virtualCollectionLibraries.recentlyRead?.[libraryID] !== false;
 			var showRetracted = this.props.hideSources.indexOf('retracted') == -1
 				&& this._virtualCollectionLibraries.retracted?.[libraryID] !== false
-				&& Zotero.Retractions.libraryHasRetractedItems(libraryID);
+				&& Trellis.Retractions.libraryHasRetractedItems(libraryID);
 			var showPublications = this.props.hideSources.indexOf('publications') == -1
 				&& this._virtualCollectionLibraries.publications?.[libraryID] !== false
-				&& libraryID == Zotero.Libraries.userLibraryID;
+				&& libraryID == Trellis.Libraries.userLibraryID;
 			var showTrash = this.props.hideSources.indexOf('trash') == -1;
 		}
 		else {
@@ -3202,11 +3202,11 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		// Recently Read
 		if (showRecentlyRead && this._isFilterEmpty()) {
 			rows.splice(row + 1 + newRows, 0,
-				new Zotero.CollectionTreeRow(this,
+				new Trellis.CollectionTreeRow(this,
 					'recentlyRead',
 					{
 						libraryID,
-						name: Zotero.getString('recently-read'),
+						name: Trellis.getString('recently-read'),
 					},
 					level + 1
 				)
@@ -3222,7 +3222,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			if (!this._includedInTree(collections[i])) continue;
 			let beforeRow = row + 1 + newRows;
 			rows.splice(beforeRow, 0,
-				new Zotero.CollectionTreeRow(this, isFeeds ? 'feed' : 'collection', collections[i], level + 1));
+				new Trellis.CollectionTreeRow(this, isFeeds ? 'feed' : 'collection', collections[i], level + 1));
 			newRows++;
 			// Recursively expand child collections that should be open
 			newRows += await this._expandRow(rows, beforeRow);
@@ -3239,14 +3239,14 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			// Skip searches not matching the filter
 			if (!this._includedInTree(savedSearches[i])) continue;
 			rows.splice(row + 1 + newRows, 0,
-				new Zotero.CollectionTreeRow(this, 'search', savedSearches[i], level + 1));
+				new Trellis.CollectionTreeRow(this, 'search', savedSearches[i], level + 1));
 			newRows++;
 		}
 		
 		if (showPublications && this._isFilterEmpty()) {
 			// Add "My Publications"
 			rows.splice(row + 1 + newRows, 0,
-				new Zotero.CollectionTreeRow(this,
+				new Trellis.CollectionTreeRow(this,
 					'publications',
 					{
 						libraryID,
@@ -3260,47 +3260,47 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 		
 		// Duplicate items
 		if (showDuplicates && this._isFilterEmpty()) {
-			let d = new Zotero.Duplicates(libraryID);
+			let d = new Trellis.Duplicates(libraryID);
 			rows.splice(row + 1 + newRows, 0,
-				new Zotero.CollectionTreeRow(this, 'duplicates', d, level + 1));
+				new Trellis.CollectionTreeRow(this, 'duplicates', d, level + 1));
 			newRows++;
 		}
 		
 		// Unfiled items
 		if (showUnfiled && this._isFilterEmpty()) {
-			let s = new Zotero.Search;
+			let s = new Trellis.Search;
 			s.libraryID = libraryID;
-			s.name = Zotero.getString('pane.collections.unfiled');
+			s.name = Trellis.getString('pane.collections.unfiled');
 			s.addCondition('libraryID', 'is', libraryID);
 			s.addCondition('unfiled', 'true');
 			rows.splice(row + 1 + newRows, 0,
-				new Zotero.CollectionTreeRow(this, 'unfiled', s, level + 1));
+				new Trellis.CollectionTreeRow(this, 'unfiled', s, level + 1));
 			newRows++;
 		}
 
 		// Retracted items
 		if (showRetracted && this._isFilterEmpty()) {
-			let s = new Zotero.Search;
+			let s = new Trellis.Search;
 			s.libraryID = libraryID;
-			s.name = Zotero.getString('pane.collections.retracted');
+			s.name = Trellis.getString('pane.collections.retracted');
 			s.addCondition('libraryID', 'is', libraryID);
 			s.addCondition('retracted', 'true');
 			rows.splice(row + 1 + newRows, 0,
-				new Zotero.CollectionTreeRow(this, 'retracted', s, level + 1, treeRow));
+				new Trellis.CollectionTreeRow(this, 'retracted', s, level + 1, treeRow));
 			newRows++;
 		}
 		
 		if (showTrash && this._isFilterEmpty()) {
-			let deletedItems = await Zotero.Items.getDeleted(libraryID, true);
-			let deletedCollections = await Zotero.Collections.getDeleted(libraryID, true);
-			let deletedSearches = await Zotero.Searches.getDeleted(libraryID, true);
+			let deletedItems = await Trellis.Items.getDeleted(libraryID, true);
+			let deletedCollections = await Trellis.Collections.getDeleted(libraryID, true);
+			let deletedSearches = await Trellis.Searches.getDeleted(libraryID, true);
 			let trashNotEmpty = deletedItems.length || deletedCollections.length || deletedSearches.length;
-			if (trashNotEmpty || Zotero.Prefs.get("showTrashWhenEmpty")) {
+			if (trashNotEmpty || Trellis.Prefs.get("showTrashWhenEmpty")) {
 				var ref = {
 					libraryID: libraryID
 				};
 				rows.splice(row + 1 + newRows, 0,
-					new Zotero.CollectionTreeRow(this, 'trash', ref, level + 1));
+					new Trellis.CollectionTreeRow(this, 'trash', ref, level + 1));
 				newRows++;
 			}
 			this._trashNotEmpty[libraryID] = trashNotEmpty;
@@ -3319,7 +3319,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 	async _addSortedRow(objectType, id) {
 		let beforeRow;
 		if (objectType == 'collection') {
-			let collection = await Zotero.Collections.getAsync(id);
+			let collection = await Trellis.Collections.getAsync(id);
 			let parentID = collection.parentID;
 			
 			// If parent isn't visible, don't add
@@ -3391,7 +3391,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 							}
 						}
 						
-						if (Zotero.localeCompare(treeRow.ref.name, collection.name) > 0) {
+						if (Trellis.localeCompare(treeRow.ref.name, collection.name) > 0) {
 							break;
 						}
 					}
@@ -3399,13 +3399,13 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			}
 			if (this._includedInTree(collection)) {
 				this._addRow(
-					new Zotero.CollectionTreeRow(this, 'collection', collection, level),
+					new Trellis.CollectionTreeRow(this, 'collection', collection, level),
 					beforeRow
 				);
 			}
 		}
 		else if (objectType == 'search') {
-			let search = Zotero.Searches.get(id);
+			let search = Trellis.Searches.get(id);
 			let libraryID = search.libraryID;
 			let startRow = this._rowMap['L' + libraryID];
 			
@@ -3432,7 +3432,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 					// If we've reached something other than collections, stop
 					if (treeRow.isSearch()) {
 						// If current search sorts after, stop
-						if (Zotero.localeCompare(treeRow.ref.name, search.name) > 0) {
+						if (Trellis.localeCompare(treeRow.ref.name, search.name) > 0) {
 							break;
 						}
 					}
@@ -3444,7 +3444,7 @@ var CollectionTree = class CollectionTree extends LibraryTree {
 			}
 			if (this._includedInTree(search)) {
 				this._addRow(
-					new Zotero.CollectionTreeRow(this, 'search', search, level),
+					new Trellis.CollectionTreeRow(this, 'search', search, level),
 					beforeRow
 				);
 			}

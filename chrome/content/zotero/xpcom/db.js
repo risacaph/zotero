@@ -3,37 +3,37 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-// Exclusive locking mode (default) prevents access to Zotero database while Zotero is open
+// Exclusive locking mode (default) prevents access to Trellis database while Trellis is open
 // and speeds up DB access (http://www.sqlite.org/pragma.html#pragma_locking_mode).
 // Normal mode is more convenient for development, but risks database corruption, particularly if
-// the same database is accessed simultaneously by multiple Zotero instances.
+// the same database is accessed simultaneously by multiple Trellis instances.
 const DB_LOCK_EXCLUSIVE = true;
 
-Zotero.DBConnection = function (dbNameOrPath) {
+Trellis.DBConnection = function (dbNameOrPath) {
 	if (!dbNameOrPath) {
-		throw ('DB name not provided in Zotero.DBConnection()');
+		throw ('DB name not provided in Trellis.DBConnection()');
 	}
 	
 	this.MAX_BOUND_PARAMETERS = 999;
@@ -67,16 +67,16 @@ Zotero.DBConnection = function (dbNameOrPath) {
 	// SQL DATETIME
 	this.__defineGetter__('transactionDateTime', function () {
 		var d = this.transactionDate;
-		return Zotero.Date.dateToSQL(d, true);
+		return Trellis.Date.dateToSQL(d, true);
 	});
 	// Unix timestamp
 	this.__defineGetter__('transactionTimestamp', function () {
 		var d = this.transactionDate;
-		return Zotero.Date.toUnixTimestamp(d);
+		return Trellis.Date.toUnixTimestamp(d);
 	});
 	
 	// Absolute path to DB
-	if (dbNameOrPath.startsWith('/') || (Zotero.isWin && dbNameOrPath.includes('\\'))) {
+	if (dbNameOrPath.startsWith('/') || (Trellis.isWin && dbNameOrPath.includes('\\'))) {
 		this._dbName = PathUtils.filename(dbNameOrPath).replace(/\.sqlite$/, '');
 		this._dbPath = dbNameOrPath;
 		this._externalDB = true;
@@ -84,7 +84,7 @@ Zotero.DBConnection = function (dbNameOrPath) {
 	// DB name in data directory
 	else {
 		this._dbName = dbNameOrPath;
-		this._dbPath = Zotero.DataDirectory.getDatabase(dbNameOrPath);
+		this._dbPath = Trellis.DataDirectory.getDatabase(dbNameOrPath);
 		this._externalDB = false;
 	}
 	this._shutdown = false;
@@ -110,7 +110,7 @@ Zotero.DBConnection = function (dbNameOrPath) {
 
 	this._transactionPromise = null;
 	
-	if (dbNameOrPath == 'zotero') {
+	if (dbNameOrPath == 'trellis') {
 		this.IncompatibleVersionException = function (msg, dbClientVersion) {
 			this.message = msg;
 			this.dbClientVersion = dbClientVersion;
@@ -124,7 +124,7 @@ Zotero.DBConnection = function (dbNameOrPath) {
 // Public methods
 //
 /////////////////////////////////////////////////////////////////
-Zotero.defineProperty(Zotero.DBConnection.prototype, 'path', {
+Trellis.defineProperty(Trellis.DBConnection.prototype, 'path', {
 	get: function () {
 		return this._dbPath;
 	}
@@ -136,12 +136,12 @@ Zotero.defineProperty(Zotero.DBConnection.prototype, 'path', {
  *
  * @return	void
  */
-Zotero.DBConnection.prototype.test = function () {
+Trellis.DBConnection.prototype.test = function () {
 	return this._getConnectionAsync().then(() => {});
 }
 
 
-Zotero.DBConnection.prototype.parseQueryAndParams = function (sql, params) {
+Trellis.DBConnection.prototype.parseQueryAndParams = function (sql, params) {
 	// If single scalar value, wrap in an array
 	if (!Array.isArray(params)) {
 		if (typeof params == 'string' || typeof params == 'number' || typeof params == 'object'
@@ -248,7 +248,7 @@ Zotero.DBConnection.prototype.parseQueryAndParams = function (sql, params) {
 			var sublen = matches[0].length;
 			sql = sql.substring(0, subpos) + repl + sql.substr(subpos + sublen);
 			
-			//Zotero.debug("Hard-coding null bound parameter " + i);
+			//Trellis.debug("Hard-coding null bound parameter " + i);
 			
 			params.splice(i, 1);
 			i--;
@@ -266,7 +266,7 @@ Zotero.DBConnection.prototype.parseQueryAndParams = function (sql, params) {
 };
 
 
-Zotero.DBConnection.prototype.addCallback = function (type, cb) {
+Trellis.DBConnection.prototype.addCallback = function (type, cb) {
 	switch (type) {
 		case 'begin':
 		case 'commit':
@@ -283,13 +283,13 @@ Zotero.DBConnection.prototype.addCallback = function (type, cb) {
 }
 
 
-Zotero.DBConnection.prototype.addCurrentCallback = function (type, cb) {
+Trellis.DBConnection.prototype.addCurrentCallback = function (type, cb) {
 	this.requireTransaction();
 	this._callbacks.current[type].push(cb);
 }
 
 
-Zotero.DBConnection.prototype.removeCallback = function (type, id) {
+Trellis.DBConnection.prototype.removeCallback = function (type, id) {
 	switch (type) {
 		case 'begin':
 		case 'commit':
@@ -309,7 +309,7 @@ Zotero.DBConnection.prototype.removeCallback = function (type, id) {
  *
  * TODO: update or remove
  */
-Zotero.DBConnection.prototype.rollbackAllTransactions = function () {
+Trellis.DBConnection.prototype.rollbackAllTransactions = function () {
 	if (this.transactionInProgress()) {
 		var level = this._transactionNestingLevel;
 		this._transactionNestingLevel = 0;
@@ -323,7 +323,7 @@ Zotero.DBConnection.prototype.rollbackAllTransactions = function () {
 }
 
 
-Zotero.DBConnection.prototype.getColumns = function (table) {
+Trellis.DBConnection.prototype.getColumns = function (table) {
 	return this.queryAsync("PRAGMA table_info(" + table + ")")
 	.then(function (rows) {
 		return rows.map(row => row.name);
@@ -343,9 +343,9 @@ Zotero.DBConnection.prototype.getColumns = function (table) {
 *
 * If _name_ alone is available, returns that
 **/
-Zotero.DBConnection.prototype.getNextName = async function (libraryID, table, field, name) {
-	Zotero.debug("WARNING: Zotero.DB.getNextName() is deprecated -- "
-		+ "use Zotero.Utilities.Internal.getNextName() instead", 2);
+Trellis.DBConnection.prototype.getNextName = async function (libraryID, table, field, name) {
+	Trellis.debug("WARNING: Trellis.DB.getNextName() is deprecated -- "
+		+ "use Trellis.Utilities.Internal.getNextName() instead", 2);
 	
 	if (typeof name == 'undefined') {
 		[libraryID, table, field, name] = [null, libraryID, table, field];
@@ -386,31 +386,31 @@ Zotero.DBConnection.prototype.getNextName = async function (libraryID, table, fi
 // Async methods
 //
 //
-// Zotero.DB.executeTransaction(async function (conn) {
-//     var created = await Zotero.DB.queryAsync("CREATE TEMPORARY TABLE tmpFoo (foo TEXT, bar INT)");
+// Trellis.DB.executeTransaction(async function (conn) {
+//     var created = await Trellis.DB.queryAsync("CREATE TEMPORARY TABLE tmpFoo (foo TEXT, bar INT)");
 //     
 //     // created == true
 //     
-//     var result = await Zotero.DB.queryAsync("INSERT INTO tmpFoo VALUES ('a', ?)", 1);
+//     var result = await Trellis.DB.queryAsync("INSERT INTO tmpFoo VALUES ('a', ?)", 1);
 //     
 //     // result == 1
 //     
-//     await Zotero.DB.queryAsync("INSERT INTO tmpFoo VALUES ('b', 2)");
-//     await Zotero.DB.queryAsync("INSERT INTO tmpFoo VALUES ('c', 3)");
-//     await Zotero.DB.queryAsync("INSERT INTO tmpFoo VALUES ('d', 4)");
+//     await Trellis.DB.queryAsync("INSERT INTO tmpFoo VALUES ('b', 2)");
+//     await Trellis.DB.queryAsync("INSERT INTO tmpFoo VALUES ('c', 3)");
+//     await Trellis.DB.queryAsync("INSERT INTO tmpFoo VALUES ('d', 4)");
 //     
-//     var value = await Zotero.DB.valueQueryAsync("SELECT foo FROM tmpFoo WHERE bar=?", 2);
+//     var value = await Trellis.DB.valueQueryAsync("SELECT foo FROM tmpFoo WHERE bar=?", 2);
 //     
 //     // value == "b"
 //     
-//     var vals = await Zotero.DB.columnQueryAsync("SELECT foo FROM tmpFoo");
+//     var vals = await Trellis.DB.columnQueryAsync("SELECT foo FROM tmpFoo");
 //     
 //     // '0' => "a"
 //     // '1' => "b"
 //     // '2' => "c"
 //     // '3' => "d"
 //     
-//     let rows = await Zotero.DB.queryAsync("SELECT * FROM tmpFoo");
+//     let rows = await Trellis.DB.queryAsync("SELECT * FROM tmpFoo");
 //     for (let i=0; i<rows.length; i++) {
 //         let row = rows[i];
 //         // row.foo == 'a', row.bar == 1
@@ -421,7 +421,7 @@ Zotero.DBConnection.prototype.getNextName = async function (libraryID, table, fi
 // });
 //
 /**
- * @param {Function} func - Async function containing `await Zotero.DB.queryAsync()` and similar
+ * @param {Function} func - Async function containing `await Trellis.DB.queryAsync()` and similar
  * @param {Object} [options]
  * @param {Boolean} [options.disableForeignKeys] - Disable foreign key checks before the
  *    transaction and re-enable after, while preventing any other queries from running.
@@ -430,18 +430,18 @@ Zotero.DBConnection.prototype.getNextName = async function (libraryID, table, fi
  *    the function.)
  * @return {Promise} - Promise for result of generator function
  */
-Zotero.DBConnection.prototype.executeTransaction = async function (func, options = {}) {
+Trellis.DBConnection.prototype.executeTransaction = async function (func, options = {}) {
 	var resolve;
 	
 	var startedTransaction = false;
-	var id = Zotero.Utilities.randomString();
+	var id = Trellis.Utilities.randomString();
 	
 	try {
 		while (this._transactionID) {
 			await Promise.race([
 				this.waitForTransaction(id),
 				new Promise((resolve, reject) => setTimeout(
-					() => reject(new Zotero.DBConnection.TimeoutError()),
+					() => reject(new Trellis.DBConnection.TimeoutError()),
 					options.waitTimeout || 30000
 				))
 			]);
@@ -449,9 +449,9 @@ Zotero.DBConnection.prototype.executeTransaction = async function (func, options
 		startedTransaction = true;
 		this._transactionID = id;
 		
-		Zotero.debug(`Beginning DB transaction ${id}`, 4);
+		Trellis.debug(`Beginning DB transaction ${id}`, 4);
 		
-		this._transactionPromise = new Zotero.Promise(function () {
+		this._transactionPromise = new Trellis.Promise(function () {
 			resolve = arguments[0];
 		});
 		
@@ -471,7 +471,7 @@ Zotero.DBConnection.prototype.executeTransaction = async function (func, options
 			let conn = this._getConnection(options) || (await this._getConnectionAsync(options));
 			
 			if (func.constructor.name == 'GeneratorFunction') {
-				throw new Error("Zotero.DB.executeTransaction() no longer takes a generator function "
+				throw new Error("Trellis.DB.executeTransaction() no longer takes a generator function "
 					+ "-- pass an async function instead");
 			}
 			
@@ -484,7 +484,7 @@ Zotero.DBConnection.prototype.executeTransaction = async function (func, options
 			
 			result = await conn.executeTransaction(func);
 			this._commitCount++;
-			Zotero.debug(`Committed DB transaction ${id}`, 4);
+			Trellis.debug(`Committed DB transaction ${id}`, 4);
 		}
 		finally {
 			if (options.disableForeignKeys) {
@@ -526,12 +526,12 @@ Zotero.DBConnection.prototype.executeTransaction = async function (func, options
 		return result;
 	}
 	catch (e) {
-		if (e instanceof Zotero.DBConnection.TimeoutError) {
-			Zotero.debug(`Timed out waiting for transaction ${id}`, 1);
+		if (e instanceof Trellis.DBConnection.TimeoutError) {
+			Trellis.debug(`Timed out waiting for transaction ${id}`, 1);
 		}
 		else {
-			Zotero.debug(`Rolled back DB transaction ${id}`, 1);
-			Zotero.debug(e.message, 1);
+			Trellis.debug(`Rolled back DB transaction ${id}`, 1);
+			Trellis.debug(e.message, 1);
 		}
 		if (startedTransaction) {
 			this._transactionID = null;
@@ -567,25 +567,25 @@ Zotero.DBConnection.prototype.executeTransaction = async function (func, options
 };
 
 
-Zotero.DBConnection.prototype.inTransaction = function () {
+Trellis.DBConnection.prototype.inTransaction = function () {
 	return !!this._transactionID;
 }
 
 
-Zotero.DBConnection.prototype.waitForTransaction = function (id) {
+Trellis.DBConnection.prototype.waitForTransaction = function (id) {
 	if (!this._transactionID) {
 		return Promise.resolve();
 	}
-	if (Zotero.Debug.enabled) {
-		Zotero.debug(`Waiting for DB transaction ${this._transactionID} to finish`
+	if (Trellis.Debug.enabled) {
+		Trellis.debug(`Waiting for DB transaction ${this._transactionID} to finish`
 			+ (id ? ` to start ${id}` : ""), 4);
-		Zotero.debug(Zotero.Debug.filterStack((new Error).stack), 5);
+		Trellis.debug(Trellis.Debug.filterStack((new Error).stack), 5);
 	}
 	return this._transactionPromise;
 };
 
 
-Zotero.DBConnection.prototype.requireTransaction = function () {
+Trellis.DBConnection.prototype.requireTransaction = function () {
 	if (!this._transactionID) {
 		throw new Error("Not in transaction");
 	}
@@ -599,7 +599,7 @@ Zotero.DBConnection.prototype.requireTransaction = function () {
  *                         rows are Proxy objects that return values from the
  *                         underlying mozIStorageRows based on column names.
  */
-Zotero.DBConnection.prototype.queryAsync = async function (sql, params, options = {}) {
+Trellis.DBConnection.prototype.queryAsync = async function (sql, params, options = {}) {
 	try {
 		let onRow = null;
 		let conn = this._getConnection(options) || (await this._getConnectionAsync(options));
@@ -608,11 +608,11 @@ Zotero.DBConnection.prototype.queryAsync = async function (sql, params, options 
 		}
 		
 		if (this._dbLockPromise && !options.ignoreDBLock) {
-			Zotero.debug(`Waiting for DB lock to be released: ${sql}`, 2);
+			Trellis.debug(`Waiting for DB lock to be released: ${sql}`, 2);
 			await this._dbLockPromise;
 		}
 		
-		if (Zotero.Debug.enabled) {
+		if (Trellis.Debug.enabled) {
 			this.logQuery(sql, params, options);
 		}
 		var failed = false;
@@ -661,9 +661,9 @@ Zotero.DBConnection.prototype.queryAsync = async function (sql, params, options 
 						return target.getResultByName(name);
 					}
 					catch (e) {
-						Zotero.debug(e, 1);
+						Trellis.debug(e, 1);
 						var msg = "DB column '" + name + "' not found";
-						Zotero.debug(msg, 1);
+						Trellis.debug(msg, 1);
 						throw new Error(msg);
 					}
 				},
@@ -709,7 +709,7 @@ Zotero.DBConnection.prototype.queryAsync = async function (sql, params, options 
 };
 
 
-Zotero.DBConnection.prototype.queryTx = function (sql, params, options) {
+Trellis.DBConnection.prototype.queryTx = function (sql, params, options) {
 	return this.executeTransaction(async function () {
 		options = options || {};
 		delete options.tx;
@@ -723,17 +723,17 @@ Zotero.DBConnection.prototype.queryTx = function (sql, params, options) {
  * @param {Array|String|Integer} [params]  SQL parameters to bind
  * @return {Promise<Array|Boolean>}  A promise for either the value or FALSE if no result
  */
-Zotero.DBConnection.prototype.valueQueryAsync = async function (sql, params, options = {}) {
+Trellis.DBConnection.prototype.valueQueryAsync = async function (sql, params, options = {}) {
 	try {
 		let conn = this._getConnection(options) || (await this._getConnectionAsync(options));
 		[sql, params] = this.parseQueryAndParams(sql, params);
 		
 		if (this._dbLockPromise && !options.ignoreDBLock) {
-			Zotero.debug(`Waiting for DB lock to be released: ${sql}`, 2);
+			Trellis.debug(`Waiting for DB lock to be released: ${sql}`, 2);
 			await this._dbLockPromise;
 		}
 		
-		if (Zotero.Debug.enabled) {
+		if (Trellis.Debug.enabled) {
 			this.logQuery(sql, params, options);
 		}
 		let rows;
@@ -765,7 +765,7 @@ Zotero.DBConnection.prototype.valueQueryAsync = async function (sql, params, opt
  * @param {Array|String|Integer} [params] SQL parameters to bind
  * @return {Promise<Object>}  A promise for a proxied storage row
  */
-Zotero.DBConnection.prototype.rowQueryAsync = async function (sql, params) {
+Trellis.DBConnection.prototype.rowQueryAsync = async function (sql, params) {
 	var rows = await this.queryAsync(sql, params);
 	return rows.length ? rows[0] : false;
 };
@@ -776,17 +776,17 @@ Zotero.DBConnection.prototype.rowQueryAsync = async function (sql, params) {
  * @param {Array|String|Integer} [params] SQL parameters to bind
  * @return {Promise<Array>}  A promise for an array of values in the column
  */
-Zotero.DBConnection.prototype.columnQueryAsync = async function (sql, params, options = {}) {
+Trellis.DBConnection.prototype.columnQueryAsync = async function (sql, params, options = {}) {
 	try {
 		let conn = this._getConnection(options) || (await this._getConnectionAsync(options));
 		[sql, params] = this.parseQueryAndParams(sql, params);
 		
 		if (this._dbLockPromise && !options.ignoreDBLock) {
-			Zotero.debug(`Waiting for DB lock to be released: ${sql}`, 2);
+			Trellis.debug(`Waiting for DB lock to be released: ${sql}`, 2);
 			await this._dbLockPromise;
 		}
 		
-		if (Zotero.Debug.enabled) {
+		if (Trellis.Debug.enabled) {
 			this.logQuery(sql, params, options);
 		}
 		let rows;
@@ -817,7 +817,7 @@ Zotero.DBConnection.prototype.columnQueryAsync = async function (sql, params, op
 };
 
 
-Zotero.DBConnection.prototype.logQuery = function (sql, params = [], options) {
+Trellis.DBConnection.prototype.logQuery = function (sql, params = [], options) {
 	if (options && options.debug === false) return;
 	var msg = sql;
 	if (params.length && (!options || options.debugParams !== false)) {
@@ -834,11 +834,11 @@ Zotero.DBConnection.prototype.logQuery = function (sql, params = [], options) {
 		}
 		msg = msg.substr(0, msg.length - 2) + "]";
 	}
-	Zotero.debug(msg, 4);
+	Trellis.debug(msg, 4);
 }
 
 
-Zotero.DBConnection.prototype.tableExists = async function (table, db) {
+Trellis.DBConnection.prototype.tableExists = async function (table, db) {
 	await this._getConnectionAsync();
 	var prefix = db ? db + '.' : '';
 	var sql = `SELECT COUNT(*) FROM ${prefix}sqlite_master WHERE type='table' AND tbl_name=?`;
@@ -847,7 +847,7 @@ Zotero.DBConnection.prototype.tableExists = async function (table, db) {
 };
 
 
-Zotero.DBConnection.prototype.columnExists = async function (table, column) {
+Trellis.DBConnection.prototype.columnExists = async function (table, column) {
 	await this._getConnectionAsync();
 	var sql = `SELECT COUNT(*) FROM pragma_table_info(?) WHERE name=?`;
 	var count = await this.valueQueryAsync(sql, [table, column]);
@@ -855,7 +855,7 @@ Zotero.DBConnection.prototype.columnExists = async function (table, column) {
 };
 
 
-Zotero.DBConnection.prototype.indexExists = async function (index, db) {
+Trellis.DBConnection.prototype.indexExists = async function (index, db) {
 	await this._getConnectionAsync();
 	var prefix = db ? db + '.' : '';
 	var sql = `SELECT COUNT(*) FROM ${prefix}sqlite_master WHERE type='index' AND name=?`;
@@ -863,7 +863,7 @@ Zotero.DBConnection.prototype.indexExists = async function (index, db) {
 };
 
 
-Zotero.DBConnection.prototype.parseSQLFile = function (sql) {
+Trellis.DBConnection.prototype.parseSQLFile = function (sql) {
 	var nonCommentRE = /^[^-]/;
 	var trailingCommentRE = /^(.*?)(?:--.+)?$/;
 	
@@ -890,7 +890,7 @@ Zotero.DBConnection.prototype.parseSQLFile = function (sql) {
  *
  * @return {Promise}
  */
-Zotero.DBConnection.prototype.executeSQLFile = async function (sql) {
+Trellis.DBConnection.prototype.executeSQLFile = async function (sql) {
 	this.requireTransaction();
 	var statements = this.parseSQLFile(sql);
 	var statement;
@@ -903,7 +903,7 @@ Zotero.DBConnection.prototype.executeSQLFile = async function (sql) {
 /*
  * Implements nsIObserver
  */
-Zotero.DBConnection.prototype.observe = async function (subject, topic, data) {
+Trellis.DBConnection.prototype.observe = async function (subject, topic, data) {
 	switch (topic) {
 		case 'idle':
 			try {
@@ -911,19 +911,19 @@ Zotero.DBConnection.prototype.observe = async function (subject, topic, data) {
 				await this.vacuum();
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			break;
 	}
 }
 
 
-Zotero.DBConnection.prototype.numCachedStatements = function () {
+Trellis.DBConnection.prototype.numCachedStatements = function () {
 	return this._connection._connectionData._cachedStatements.size;
 };
 
 
-Zotero.DBConnection.prototype.getCachedStatements = function () {
+Trellis.DBConnection.prototype.getCachedStatements = function () {
 	return [...this._connection._connectionData._cachedStatements].map(x => x[0]);
 };
 
@@ -939,7 +939,7 @@ Zotero.DBConnection.prototype.getCachedStatements = function () {
  * @param {Boolean} [options.force] - Skip time/freelist/disk-space checks
  * @return {Promise<Boolean>} - Whether vacuum was performed
  */
-Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
+Trellis.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 	if (this._externalDB) {
 		return false;
 	}
@@ -950,32 +950,32 @@ Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 
 	if (!force) {
 		// Check time threshold
-		let lastVacuum = Zotero.Prefs.get('vacuum.lastTime') || 0;
-		let intervalDays = Zotero.Prefs.get('vacuum.interval') || 14;
+		let lastVacuum = Trellis.Prefs.get('vacuum.lastTime') || 0;
+		let intervalDays = Trellis.Prefs.get('vacuum.interval') || 14;
 		let intervalSeconds = intervalDays * 24 * 60 * 60;
 		let nowSeconds = Math.floor(Date.now() / 1000);
 		if ((nowSeconds - lastVacuum) < intervalSeconds) {
-			Zotero.debug("Database was vacuumed recently -- skipping");
+			Trellis.debug("Database was vacuumed recently -- skipping");
 			return false;
 		}
 
 		// Check freelist threshold
 		let freelistCount = await this.valueQueryAsync("PRAGMA freelist_count");
 		let pageCount = await this.valueQueryAsync("PRAGMA page_count");
-		let threshold = Zotero.Prefs.get('vacuum.freelistThreshold') || 10;
+		let threshold = Trellis.Prefs.get('vacuum.freelistThreshold') || 10;
 		if (pageCount > 0 && (freelistCount / pageCount * 100) < threshold) {
-			Zotero.debug(`Database freelist is ${freelistCount}/${pageCount} pages `
+			Trellis.debug(`Database freelist is ${freelistCount}/${pageCount} pages `
 				+ `(${(freelistCount / pageCount * 100).toFixed(1)}%) `
 				+ `-- below ${threshold}% threshold, skipping`);
 			return false;
 		}
 
 		// Check disk space
-		let dbFile = Zotero.File.pathToFile(this._dbPath);
+		let dbFile = Trellis.File.pathToFile(this._dbPath);
 		let dbSize = (await IOUtils.stat(this._dbPath)).size;
 		let freeSpace = dbFile.diskSpaceAvailable;
 		if (freeSpace < dbSize) {
-			Zotero.debug(`Not enough disk space to vacuum database `
+			Trellis.debug(`Not enough disk space to vacuum database `
 				+ `(${freeSpace} available, ${dbSize} needed) -- skipping`);
 			return false;
 		}
@@ -989,7 +989,7 @@ Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 			await IOUtils.remove(tmpFile);
 		}
 
-		Zotero.debug("Vacuuming database");
+		Trellis.debug("Vacuuming database");
 		let t = new Date();
 
 		let commitCountBefore = this._commitCount;
@@ -1015,7 +1015,7 @@ Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 			// If any writes happened between VACUUM INTO start and close, the compacted copy is
 			// stale -- abort
 			if (this._commitCount !== commitCountBefore) {
-				Zotero.debug("Database was modified during vacuum -- aborting swap", 1);
+				Trellis.debug("Database was modified during vacuum -- aborting swap", 1);
 				await IOUtils.remove(tmpFile);
 				return false;
 			}
@@ -1023,8 +1023,8 @@ Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 			// Atomic swap
 			await IOUtils.move(tmpFile, this._dbPath);
 
-			Zotero.Prefs.set('vacuum.lastTime', Math.floor(Date.now() / 1000));
-			Zotero.debug("Vacuumed database in " + (new Date() - t) + " ms");
+			Trellis.Prefs.set('vacuum.lastTime', Math.floor(Date.now() / 1000));
+			Trellis.debug("Vacuumed database in " + (new Date() - t) + " ms");
 
 			return true;
 		}
@@ -1034,14 +1034,14 @@ Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 		}
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 		try {
 			if (await IOUtils.exists(tmpFile)) {
 				await IOUtils.remove(tmpFile);
 			}
 		}
 		catch (e2) {
-			Zotero.logError(e2);
+			Trellis.logError(e2);
 		}
 		return false;
 	}
@@ -1049,29 +1049,29 @@ Zotero.DBConnection.prototype.vacuum = async function ({ force } = {}) {
 
 
 // TEMP
-Zotero.DBConnection.prototype.info = async function () {
+Trellis.DBConnection.prototype.info = async function () {
 	var info = {};
 	var pragmas = ['auto_vacuum', 'cache_size', 'journal_mode', 'main.locking_mode', 'page_size', 'synchronous'];
 	for (let p of pragmas) {
-		info[p] = await Zotero.DB.valueQueryAsync(`PRAGMA ${p}`);
+		info[p] = await Trellis.DB.valueQueryAsync(`PRAGMA ${p}`);
 	}
 	return info;
 };
 
 
-Zotero.DBConnection.prototype.quickCheck = async function () {
+Trellis.DBConnection.prototype.quickCheck = async function () {
 	var ok = await this.valueQueryAsync("PRAGMA quick_check(1)");
 	return ok == 'ok';
 };
 
 
-Zotero.DBConnection.prototype.integrityCheck = async function () {
+Trellis.DBConnection.prototype.integrityCheck = async function () {
 	var ok = await this.valueQueryAsync("PRAGMA integrity_check(1)");
 	return ok == 'ok';
 };
 
 
-Zotero.DBConnection.prototype.isCorruptionError = function (e) {
+Trellis.DBConnection.prototype.isCorruptionError = function (e) {
 	return this.DB_CORRUPTION_STRINGS.some(x => e.message.includes(x));
 };
 
@@ -1081,37 +1081,37 @@ Zotero.DBConnection.prototype.isCorruptionError = function (e) {
  * @param {Boolean} [permanent] If true, throw an error instead of
  *     allowing code to re-open the database again
  */
-Zotero.DBConnection.prototype.closeDatabase = async function (permanent) {
+Trellis.DBConnection.prototype.closeDatabase = async function (permanent) {
 	if (this._connection) {
 		// TODO: Replace with automatic detection of likely improperly cached statements
 		// (multiple similar statements, "tmp_", embedded ids)
-		if (Zotero.isSourceBuild) {
+		if (Trellis.isSourceBuild) {
 			try {
-				Zotero.debug("Cached DB statements: " + this.numCachedStatements());
+				Trellis.debug("Cached DB statements: " + this.numCachedStatements());
 			}
 			catch (e) {
-				Zotero.logError(e, 1);
+				Trellis.logError(e, 1);
 			}
 		}
 		
-		Zotero.debug("Closing database");
+		Trellis.debug("Closing database");
 
 		// Checkpoint WAL before closing so all data is in the main file
 		// and -wal file is truncated. Use _connection.execute() directly
 		// to avoid deadlocking with _offlineBackupPromise in queryAsync.
 		try {
-			Zotero.debug("PRAGMA wal_checkpoint(TRUNCATE)");
+			Trellis.debug("PRAGMA wal_checkpoint(TRUNCATE)");
 			await this._connection.execute("PRAGMA wal_checkpoint(TRUNCATE)");
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 
 		this.closed = true;
 		await this._connection.close();
 		this._connection = undefined;
 		this._connection = permanent ? false : null;
-		Zotero.debug("Database closed");
+		Trellis.debug("Database closed");
 	}
 };
 
@@ -1126,7 +1126,7 @@ Zotero.DBConnection.prototype.closeDatabase = async function (permanent) {
  *
  * @param {Function} callback - Async function called with no arguments after each (re)open
  */
-Zotero.DBConnection.prototype.onConnect = function (callback) {
+Trellis.DBConnection.prototype.onConnect = function (callback) {
 	this._onConnectCallbacks.push(callback);
 };
 
@@ -1134,27 +1134,27 @@ Zotero.DBConnection.prototype.onConnect = function (callback) {
 /**
  * @deprecated
  */
-Zotero.DBConnection.prototype.backupDatabase = async function (_suffix, _force) {
-	Zotero.debug("backupDatabase(suffix, force) is now backUpDatabase({ suffix, force }) -- update your code");
+Trellis.DBConnection.prototype.backupDatabase = async function (_suffix, _force) {
+	Trellis.debug("backupDatabase(suffix, force) is now backUpDatabase({ suffix, force }) -- update your code");
 	return this.backUpDatabase({ suffix: arguments[0], force: arguments[1] });
 };
 
 /**
  * @param {Object} [options]
  * @param {Boolean} [options.force] - Perform backup even if not enough time has passed since last one
- * @param {String} [options.suffix] - Suffix to add to 'zotero.sqlite.' before 'bak' (e.g., '123'
- *     for zotero.sqlite.123.bak)
+ * @param {String} [options.suffix] - Suffix to add to 'trellis.sqlite.' before 'bak' (e.g., '123'
+ *     for trellis.sqlite.123.bak)
  * @param {Boolean} [options.online] - Perform an online incremental backup without closing connection
  */
-Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, online }) {
-	if (this.skipBackup || this._externalDB || Zotero.skipLoading) {
+Trellis.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, online }) {
+	if (this.skipBackup || this._externalDB || Trellis.skipLoading) {
 		this._debug("Skipping backup of database '" + this._dbName + "'", 1);
 		return false;
 	}
 	
 	var storageService = Services.storage;
 	
-	var numBackups = Zotero.Prefs.get("backup.numBackups");
+	var numBackups = Trellis.Prefs.get("backup.numBackups");
 	if (!suffix) {
 		// Skip regular backups if numBackups is 0
 		if (numBackups < 1) {
@@ -1165,8 +1165,8 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 		}
 	}
 	
-	if (Zotero.locked && !force) {
-		this._debug("Zotero is locked -- skipping backup of DB '" + this._dbName + "'", 2);
+	if (Trellis.locked && !force) {
+		this._debug("Trellis is locked -- skipping backup of DB '" + this._dbName + "'", 2);
 		return false;
 	}
 	
@@ -1189,7 +1189,7 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 	
 	// On APFS, use cloning for all backups -- it's nearly instant and backup files share
 	// disk blocks via copy-on-write, saving potentially gigabytes of space
-	if (online && Zotero.File.isAPFS(this._dbPath)) {
+	if (online && Trellis.File.isAPFS(this._dbPath)) {
 		online = false;
 	}
 
@@ -1206,7 +1206,7 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 	}
 	
 	try {
-		let corruptMarker = Zotero.File.pathToFile(this._dbPath + '.is.corrupt');
+		let corruptMarker = Trellis.File.pathToFile(this._dbPath + '.is.corrupt');
 		if (this._dbIsCorrupt || corruptMarker.exists()) {
 			this._debug("Database '" + this._dbName + "' is marked as corrupt -- skipping backup", 1);
 			return false;
@@ -1221,15 +1221,15 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 				let currentDBTime = (await OS.File.stat(file)).lastModificationDate;
 				let lastBackupTime = (await OS.File.stat(backupFile)).lastModificationDate;
 				if (currentDBTime == lastBackupTime) {
-					Zotero.debug("Database '" + this._dbName + "' hasn't changed -- skipping backup");
+					Trellis.debug("Database '" + this._dbName + "' hasn't changed -- skipping backup");
 					return false;
 				}
 				
 				var now = new Date();
-				var intervalMinutes = Zotero.Prefs.get('backup.interval');
+				var intervalMinutes = Trellis.Prefs.get('backup.interval');
 				var interval = intervalMinutes * 60 * 1000;
 				if ((now - lastBackupTime) < interval) {
-					Zotero.debug("Last backup of database '" + this._dbName
+					Trellis.debug("Last backup of database '" + this._dbName
 						+ "' was less than " + intervalMinutes + " minutes ago -- skipping backup");
 					return false;
 				}
@@ -1264,20 +1264,20 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 		else {
 			try {
 				await this.closeDatabase();
-				await Zotero.File.copyFile(this._dbPath, tmpFile);
+				await Trellis.File.copyFile(this._dbPath, tmpFile);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				return false;
 			}
 		}
 		
 		// Open the backup to check for corruption
 		try {
-			var connection = storageService.openDatabase(Zotero.File.pathToFile(tmpFile));
+			var connection = storageService.openDatabase(Trellis.File.pathToFile(tmpFile));
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			this._debug("Database file '" + PathUtils.filename(tmpFile) + "' can't be opened -- skipping backup");
 			if (await OS.File.exists(tmpFile)) {
 				await OS.File.remove(tmpFile);
@@ -1286,7 +1286,7 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 		}
 		finally {
 			if (connection) {
-				let deferred = Zotero.Promise.defer();
+				let deferred = Trellis.Promise.defer();
 				connection.asyncClose({
 					complete: function () {
 						deferred.resolve();
@@ -1316,7 +1316,7 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 					continue;
 				}
 				
-				Zotero.debug("Moving " + PathUtils.filename(sourceFile)
+				Trellis.debug("Moving " + PathUtils.filename(sourceFile)
 					+ " to " + PathUtils.filename(targetFile));
 				await OS.File.move(sourceFile, targetFile);
 			}
@@ -1330,7 +1330,7 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 		}
 		
 		await OS.File.move(tmpFile, backupFile);
-		Zotero.debug("Backed up to " + PathUtils.filename(backupFile));
+		Trellis.debug("Backed up to " + PathUtils.filename(backupFile));
 		success = true;
 		return true;
 	}
@@ -1338,10 +1338,10 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
 		// Backups are best-effort, so if anything goes wrong dealing
 		// with them -- e.g., an offline backup file on a network drive
 		// that can't be accessed, which fails with ERROR_FILE_OFFLINE
-		// (https://forums.zotero.org/discussion/132201/) -- log the
+		// (https://forums.trellis.org/discussion/132201/) -- log the
 		// error and skip the backup rather than letting it block a
 		// schema upgrade or startup.
-		Zotero.logError(e);
+		Trellis.logError(e);
 		return false;
 	}
 	finally {
@@ -1360,7 +1360,7 @@ Zotero.DBConnection.prototype.backUpDatabase = async function ({ force, suffix, 
  * Escape '_', '%', and '\' in an SQL LIKE expression so that it can be used with ESCAPE '\' to
  * prevent the wildcards from having special meaning
  */
-Zotero.DBConnection.prototype.escapeSQLExpression = function (expr) {
+Trellis.DBConnection.prototype.escapeSQLExpression = function (expr) {
 	return expr.replace(/([_%\\])/g, '\\$1');
 };
 
@@ -1371,7 +1371,7 @@ Zotero.DBConnection.prototype.escapeSQLExpression = function (expr) {
 //
 /////////////////////////////////////////////////////////////////
 
-Zotero.DBConnection.prototype._getConnection = function () {
+Trellis.DBConnection.prototype._getConnection = function () {
 	if (this._offlineBackupPromise) {
 		return false;
 	}
@@ -1384,10 +1384,10 @@ Zotero.DBConnection.prototype._getConnection = function () {
 /*
  * Retrieve a link to the data store asynchronously
  */
-Zotero.DBConnection.prototype._getConnectionAsync = async function () {
+Trellis.DBConnection.prototype._getConnectionAsync = async function () {
 	// If a backup is in progress, wait until it's done
 	if (this._offlineBackupPromise) {
-		Zotero.debug("Waiting for database backup to complete", 2);
+		Trellis.debug("Waiting for database backup to complete", 2);
 		await this._offlineBackupPromise;
 	}
 	
@@ -1399,7 +1399,7 @@ Zotero.DBConnection.prototype._getConnectionAsync = async function () {
 	}
 	
 	this._debug("Asynchronously opening database '" + this._dbName + "'");
-	Zotero.debug(this._dbPath);
+	Trellis.debug(this._dbPath);
 	
 	// Get the storage service
 	var store = Services.storage;
@@ -1427,7 +1427,7 @@ Zotero.DBConnection.prototype._getConnectionAsync = async function () {
 			throw e;
 		}
 		
-		Zotero.logError(e);
+		Trellis.logError(e);
 		
 		if (this.DB_CORRUPTION_STRINGS.some(x => e.message.includes(x))) {
 			await this._handleCorruptionMarker();
@@ -1463,8 +1463,8 @@ Zotero.DBConnection.prototype._getConnectionAsync = async function () {
 		await this.queryAsync("PRAGMA foreign_keys=true");
 		
 		// Register idle observer for DB backup
-		Zotero.Schema.schemaUpdatePromise.then(() => {
-			Zotero.debug("Initializing DB backup idle observer");
+		Trellis.Schema.schemaUpdatePromise.then(() => {
+			Trellis.debug("Initializing DB backup idle observer");
 			var idleService = Components.classes["@mozilla.org/widget/useridleservice;1"]
 				.getService(Components.interfaces.nsIUserIdleService);
 			idleService.addIdleObserver(this, 300);
@@ -1476,7 +1476,7 @@ Zotero.DBConnection.prototype._getConnectionAsync = async function () {
 			await callback();
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 
@@ -1484,12 +1484,12 @@ Zotero.DBConnection.prototype._getConnectionAsync = async function () {
 };
 
 
-Zotero.DBConnection.prototype._checkException = async function (e) {
+Trellis.DBConnection.prototype._checkException = async function (e) {
 	if (this._externalDB || !this.isCorruptionError(e)) {
 		return true;
 	}
 	
-	const supportURL = 'https://zotero.org/support/kb/corrupted_database';
+	const supportURL = 'https://trellis.org/support/kb/corrupted_database';
 	
 	var filename = PathUtils.filename(this._dbPath);
 	// Skip backups
@@ -1501,7 +1501,7 @@ Zotero.DBConnection.prototype._checkException = async function (e) {
 		let info = await OS.File.stat(this._dbPath + '.bak');
 		backupDate = info.lastModificationDate.toLocaleDateString();
 		backupTime = info.lastModificationDate.toLocaleTimeString();
-		Zotero.debug(`Found ${this._dbPath} with date of ${backupDate}`);
+		Trellis.debug(`Found ${this._dbPath} with date of ${backupDate}`);
 	}
 	catch (e) {}
 	
@@ -1510,35 +1510,35 @@ Zotero.DBConnection.prototype._checkException = async function (e) {
 		+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 	
 	var index = ps.confirmEx(null,
-		Zotero.getString('general.error'),
-		Zotero.getString('db.dbCorrupted', [Zotero.appName, filename]) + '\n\n'
-			+ Zotero.getString('db.dbCorrupted.cloudStorage', Zotero.appName) + '\n\n'
+		Trellis.getString('general.error'),
+		Trellis.getString('db.dbCorrupted', [Trellis.appName, filename]) + '\n\n'
+			+ Trellis.getString('db.dbCorrupted.cloudStorage', Trellis.appName) + '\n\n'
 			+ (backupDate
-				? Zotero.getString(
+				? Trellis.getString(
 						'db.dbCorrupted.restoreFromLastAutomaticBackup',
-						[Zotero.appName, backupDate, backupTime]
+						[Trellis.appName, backupDate, backupTime]
 					) + '\n\n'
-					+ Zotero.getString('db.dbCorrupted.viewMoreInformation', supportURL)
-				: Zotero.getString('db.dbCorrupted.repairOrRestore', Zotero.appName)),
+					+ Trellis.getString('db.dbCorrupted.viewMoreInformation', supportURL)
+				: Trellis.getString('db.dbCorrupted.repairOrRestore', Trellis.appName)),
 		buttonFlags,
-		backupDate ? Zotero.getString('db.dbCorrupted.automaticBackup') : Zotero.getString('general.moreInformation'),
+		backupDate ? Trellis.getString('db.dbCorrupted.automaticBackup') : Trellis.getString('general.moreInformation'),
 		null,
 		null,
 		null, {});
 	
 	if (index == 0) {
 		// Write corrupt marker to data directory
-		let file = Zotero.File.pathToFile(this._dbPath + '.is.corrupt');
-		Zotero.File.putContents(file, '');
-		Zotero.skipLoading = true;
-		Zotero.Utilities.Internal.quit(true);
+		let file = Trellis.File.pathToFile(this._dbPath + '.is.corrupt');
+		Trellis.File.putContents(file, '');
+		Trellis.skipLoading = true;
+		Trellis.Utilities.Internal.quit(true);
 	}
 	else if (index == 1) {
 	}
 	else {
-		Zotero.launchURL(supportURL);
-		Zotero.Utilities.Internal.quit();
-		Zotero.skipLoading = true;
+		Trellis.launchURL(supportURL);
+		Trellis.Utilities.Internal.quit();
+		Trellis.skipLoading = true;
 	}
 	
 	return false;
@@ -1548,7 +1548,7 @@ Zotero.DBConnection.prototype._checkException = async function (e) {
 /**
  * @return {Boolean} - True if recovered, false if not
  */
-Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
+Trellis.DBConnection.prototype._handleCorruptionMarker = async function () {
 	var file = this._dbPath;
 	var fileName = PathUtils.filename(file);
 	var backupFile = this._dbPath + '.bak';
@@ -1566,7 +1566,7 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 		if (await OS.File.exists(file)) {
 			this._debug('Saving damaged DB file with .damaged extension', 1);
 			damagedFile = this._dbPath + '.damaged';
-			damagedFile = await Zotero.File.moveToUnique(file, damagedFile);
+			damagedFile = await Trellis.File.moveToUnique(file, damagedFile);
 		}
 		// If it doesn't exist, assume we already showed a warning and moved it
 		else {
@@ -1583,12 +1583,12 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 		}
 		
 		if (damagedFile) {
-			Zotero.alert(
+			Trellis.alert(
 				null,
-				Zotero.getString('startupError', Zotero.appName),
-				Zotero.getString(
+				Trellis.getString('startupError', Trellis.appName),
+				Trellis.getString(
 					'db.dbCorruptedNoBackup',
-					[Zotero.appName, fileName, PathUtils.filename(damagedFile)]
+					[Trellis.appName, fileName, PathUtils.filename(damagedFile)]
 				)
 			);
 		}
@@ -1598,11 +1598,11 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 	// Save damaged file
 	this._debug('Saving damaged DB file with .damaged extension', 1);
 	var damagedFile = this._dbPath + '.damaged';
-	damagedFile = await Zotero.File.moveToUnique(file, damagedFile);
+	damagedFile = await Trellis.File.moveToUnique(file, damagedFile);
 	
 	// Test the backup file
 	try {
-		Zotero.debug("Asynchronously opening DB connection");
+		Trellis.debug("Asynchronously opening DB connection");
 		this._connection = await Promise.resolve(this.Sqlite.openConnection({
 			path: backupFile
 		}));
@@ -1615,12 +1615,12 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 			path: file
 		}));
 		
-		Zotero.alert(
+		Trellis.alert(
 			null,
-			Zotero.getString('general.error'),
-			Zotero.getString(
+			Trellis.getString('general.error'),
+			Trellis.getString(
 				'db.dbRestoreFailed',
-				[Zotero.appName, fileName, PathUtils.filename(damagedFile)]
+				[Trellis.appName, fileName, PathUtils.filename(damagedFile)]
 			)
 		);
 		
@@ -1636,7 +1636,7 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 	// Copy backup file to main DB file
 	this._debug("Restoring database '" + this._dbName + "' from backup file", 1);
 	try {
-		await Zotero.File.copyFile(backupFile, file);
+		await Trellis.File.copyFile(backupFile, file);
 	}
 	catch (e) {
 		// TODO: deal with low disk space
@@ -1656,16 +1656,16 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 		backupTime = info.lastModificationDate.toLocaleTimeString();
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 	}
-	Zotero.alert(
+	Trellis.alert(
 		null,
-		Zotero.getString('general.warning'),
-		Zotero.getString(
+		Trellis.getString('general.warning'),
+		Trellis.getString(
 			'db.dbRestored',
-			[Zotero.appName, fileName, backupDate, backupTime, PathUtils.filename(damagedFile)]
+			[Trellis.appName, fileName, backupDate, backupTime, PathUtils.filename(damagedFile)]
 		) + '\n\n'
-		+ Zotero.getString('db.dbRestored.cloudStorage')
+		+ Trellis.getString('db.dbRestored.cloudStorage')
 	);
 	
 	if (await OS.File.exists(corruptMarker)) {
@@ -1674,12 +1674,12 @@ Zotero.DBConnection.prototype._handleCorruptionMarker = async function () {
 };
 
 
-Zotero.DBConnection.prototype._debug = function (str, level) {
-	var prefix = this._dbName == 'zotero' ? '' : '[' + this._dbName + '] ';
-	Zotero.debug(prefix + str, level);
+Trellis.DBConnection.prototype._debug = function (str, level) {
+	var prefix = this._dbName == 'trellis' ? '' : '[' + this._dbName + '] ';
+	Trellis.debug(prefix + str, level);
 }
 
-Zotero.DBConnection.TimeoutError = class TimeoutError extends Error {
+Trellis.DBConnection.TimeoutError = class TimeoutError extends Error {
 	constructor(message) {
 		super(message);
 		this.name = 'TimeoutError';

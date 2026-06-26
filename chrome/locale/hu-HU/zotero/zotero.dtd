@@ -1,329 +1,329 @@
-<!ENTITY zotero.general.yes "Igen">
-<!ENTITY zotero.general.no "Nem">
-<!ENTITY zotero.general.optional "(Nem kötelező)">
-<!ENTITY zotero.general.note "Jegyzet:">
-<!ENTITY zotero.general.selectAll "Minden kijelölése">
-<!ENTITY zotero.general.deselectAll "Kijelölés megszüntetése">
-<!ENTITY zotero.general.edit "Szerkesztés">
-<!ENTITY zotero.general.delete "Törlés">
-<!ENTITY zotero.general.moveToTrash "Mozgatás a Kukába">
-<!ENTITY zotero.general.ok "OK">
-<!ENTITY zotero.general.cancel "Mégsem">
-<!ENTITY zotero.general.refresh "Újratöltés">
-<!ENTITY zotero.general.saveAs "Mentés másként…">
-<!ENTITY zotero.general.options "Beállítások">
-<!ENTITY zotero.general.advancedOptions.label "Haladó beállítások">
-<!ENTITY zotero.general.tools "Eszközök">
-<!ENTITY zotero.general.more " Egyéb...">
-<!ENTITY zotero.general.moreInformation "További információ">
-<!ENTITY zotero.general.loading "Betöltés…">
-<!ENTITY zotero.general.close "Bezárás">
-<!ENTITY zotero.general.minimize "Kis méret">
-<!ENTITY zotero.general.other "Másik…">
-<!ENTITY zotero.general.bigger "Nagyobb">
-<!ENTITY zotero.general.smaller "Kisebb">
-<!ENTITY zotero.general.reset "Visszaállítás">
+<!ENTITY trellis.general.yes "Igen">
+<!ENTITY trellis.general.no "Nem">
+<!ENTITY trellis.general.optional "(Nem kötelező)">
+<!ENTITY trellis.general.note "Jegyzet:">
+<!ENTITY trellis.general.selectAll "Minden kijelölése">
+<!ENTITY trellis.general.deselectAll "Kijelölés megszüntetése">
+<!ENTITY trellis.general.edit "Szerkesztés">
+<!ENTITY trellis.general.delete "Törlés">
+<!ENTITY trellis.general.moveToTrash "Mozgatás a Kukába">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Mégsem">
+<!ENTITY trellis.general.refresh "Újratöltés">
+<!ENTITY trellis.general.saveAs "Mentés másként…">
+<!ENTITY trellis.general.options "Beállítások">
+<!ENTITY trellis.general.advancedOptions.label "Haladó beállítások">
+<!ENTITY trellis.general.tools "Eszközök">
+<!ENTITY trellis.general.more " Egyéb...">
+<!ENTITY trellis.general.moreInformation "További információ">
+<!ENTITY trellis.general.loading "Betöltés…">
+<!ENTITY trellis.general.close "Bezárás">
+<!ENTITY trellis.general.minimize "Kis méret">
+<!ENTITY trellis.general.other "Másik…">
+<!ENTITY trellis.general.bigger "Nagyobb">
+<!ENTITY trellis.general.smaller "Kisebb">
+<!ENTITY trellis.general.reset "Visszaállítás">
 
 
-<!ENTITY zotero.errorReport.title "Zotero hibajelentés">
-<!ENTITY zotero.errorReport.submissionInProgress "Várjon a hibajelentés elküldéséig.">
-<!ENTITY zotero.errorReport.submitted "A hibajelentés elküldve.">
-<!ENTITY zotero.errorReport.reportID "Jelentés azonosítója:">
-<!ENTITY zotero.errorReport.postToForums "Küldje el a Zotero fórumba (forums.zotero.org) a probléma leírását, hogy hogyan jutott idáig, ill. a hibaüzenet ID-jét .">
-<!ENTITY zotero.errorReport.notReviewed "A fórumba be nem küldött hibaüzenetek nem kerülnek kivizsgálásra.">
+<!ENTITY trellis.errorReport.title "Trellis hibajelentés">
+<!ENTITY trellis.errorReport.submissionInProgress "Várjon a hibajelentés elküldéséig.">
+<!ENTITY trellis.errorReport.submitted "A hibajelentés elküldve.">
+<!ENTITY trellis.errorReport.reportID "Jelentés azonosítója:">
+<!ENTITY trellis.errorReport.postToForums "Küldje el a Trellis fórumba (forums.trellis.org) a probléma leírását, hogy hogyan jutott idáig, ill. a hibaüzenet ID-jét .">
+<!ENTITY trellis.errorReport.notReviewed "A fórumba be nem küldött hibaüzenetek nem kerülnek kivizsgálásra.">
 
-<!ENTITY zotero.upgrade.title "Zotero frissítés varázsló">
-<!ENTITY zotero.upgrade.newVersionInstalled "A Zotero új verziójának telepítése sikerült.">
-<!ENTITY zotero.upgrade.upgradeRequired "Frissíteni kell a Zotero adatbázist, hogy működjön az új verzióval.">
-<!ENTITY zotero.upgrade.autoBackup "Az adatbázisról a módosítás előtt biztonsági másolat készül.">
-<!ENTITY zotero.upgrade.majorUpgrade "Ez egy komoly frissítés.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "Mindenképpen olvassa el a">
-<!ENTITY zotero.upgrade.majorUpgradeLink "frissítési útmutatót">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "mielőtt folytatná.">
-<!ENTITY zotero.upgrade.upgradeInProgress "Várjon a frissítés befejezéséig. Ez akár percekig is eltarthat.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "A Zotero adatbázis frissítése sikerült.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "Részletesen utánanézhet">
-<!ENTITY zotero.upgrade.changeLogLink "a változások listájában">
-<!ENTITY zotero.upgrade.changeLogAfterLink "az újdonságoknak.">
+<!ENTITY trellis.upgrade.title "Trellis frissítés varázsló">
+<!ENTITY trellis.upgrade.newVersionInstalled "A Trellis új verziójának telepítése sikerült.">
+<!ENTITY trellis.upgrade.upgradeRequired "Frissíteni kell a Trellis adatbázist, hogy működjön az új verzióval.">
+<!ENTITY trellis.upgrade.autoBackup "Az adatbázisról a módosítás előtt biztonsági másolat készül.">
+<!ENTITY trellis.upgrade.majorUpgrade "Ez egy komoly frissítés.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Mindenképpen olvassa el a">
+<!ENTITY trellis.upgrade.majorUpgradeLink "frissítési útmutatót">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "mielőtt folytatná.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Várjon a frissítés befejezéséig. Ez akár percekig is eltarthat.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "A Trellis adatbázis frissítése sikerült.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Részletesen utánanézhet">
+<!ENTITY trellis.upgrade.changeLogLink "a változások listájában">
+<!ENTITY trellis.upgrade.changeLogAfterLink "az újdonságoknak.">
 
-<!ENTITY zotero.tabs.notes.label "Jegyzetek">
-<!ENTITY zotero.tabs.attachments.label "Csatolmányok">
+<!ENTITY trellis.tabs.notes.label "Jegyzetek">
+<!ENTITY trellis.tabs.attachments.label "Csatolmányok">
 
-<!ENTITY zotero.toolbar.duplicate.label "Duplumok listázása">
-<!ENTITY zotero.collections.showUnfiledItems "Besorolatlan elemek mutatása">
-<!ENTITY zotero.collections.showRetractedItems "Visszavont elemek mutatása">
+<!ENTITY trellis.toolbar.duplicate.label "Duplumok listázása">
+<!ENTITY trellis.collections.showUnfiledItems "Besorolatlan elemek mutatása">
+<!ENTITY trellis.collections.showRetractedItems "Visszavont elemek mutatása">
 
-<!ENTITY zotero.items.itemType "Forrás típusa">
-<!ENTITY zotero.items.creator_column "Szerző">
-<!ENTITY zotero.items.year_column "Év">
-<!ENTITY zotero.items.dateModified_column "Módosítás dátuma">
-<!ENTITY zotero.items.moreColumns.label "Több oszlop">
-<!ENTITY zotero.items.restoreColumnOrder.label "Oszlopok sorrendjének visszaállítása">
+<!ENTITY trellis.items.itemType "Forrás típusa">
+<!ENTITY trellis.items.creator_column "Szerző">
+<!ENTITY trellis.items.year_column "Év">
+<!ENTITY trellis.items.dateModified_column "Módosítás dátuma">
+<!ENTITY trellis.items.moreColumns.label "Több oszlop">
+<!ENTITY trellis.items.restoreColumnOrder.label "Oszlopok sorrendjének visszaállítása">
 
-<!ENTITY zotero.items.menu.showInLibrary "Megjelenítés a könyvtárban">
-<!ENTITY zotero.items.menu.attach.note "Jegyzet hozzáadása">
-<!ENTITY zotero.items.menu.attach "Csatolmány hozzáadása">
-<!ENTITY zotero.items.menu.attach.link.uri "Link csatolása az URI-hez…">
-<!ENTITY zotero.items.menu.attach.file "Helyben tárolt példány csatolása">
-<!ENTITY zotero.items.menu.attach.fileLink "Fájlra mutató hivatkozás csatolása">
+<!ENTITY trellis.items.menu.showInLibrary "Megjelenítés a könyvtárban">
+<!ENTITY trellis.items.menu.attach.note "Jegyzet hozzáadása">
+<!ENTITY trellis.items.menu.attach "Csatolmány hozzáadása">
+<!ENTITY trellis.items.menu.attach.link.uri "Link csatolása az URI-hez…">
+<!ENTITY trellis.items.menu.attach.file "Helyben tárolt példány csatolása">
+<!ENTITY trellis.items.menu.attach.fileLink "Fájlra mutató hivatkozás csatolása">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "Visszaállítás könyvtárba">
-<!ENTITY zotero.items.menu.duplicateItem "Kiválasztott elem duplikálása">
-<!ENTITY zotero.items.menu.mergeItems "Elemek összefésülése…">
-<!ENTITY zotero.items.menu.unrecognize "Beolvasott metaadatok visszavonása">
+<!ENTITY trellis.items.menu.restoreToLibrary "Visszaállítás könyvtárba">
+<!ENTITY trellis.items.menu.duplicateItem "Kiválasztott elem duplikálása">
+<!ENTITY trellis.items.menu.mergeItems "Elemek összefésülése…">
+<!ENTITY trellis.items.menu.unrecognize "Beolvasott metaadatok visszavonása">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "Válassza ki azt az elemverziót, amit mester elemnek kíván használni: ">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "Válassza ki az elem más verzióiból megtartandó mezőket:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "Válassza ki azt az elemverziót, amit mester elemnek kíván használni: ">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Válassza ki az elem más verzióiból megtartandó mezőket:">
 
-<!ENTITY zotero.toolbar.newItem.label "Új elem">
-<!ENTITY zotero.toolbar.moreItemTypes.label "Egyéb...">
-<!ENTITY zotero.toolbar.lookup.label "Elem hozzáadása azonosító alapján">
-<!ENTITY zotero.toolbar.removeItem.label "Elem törlése...">
-<!ENTITY zotero.toolbar.newGroup "Új csoport...">
-<!ENTITY zotero.toolbar.newSubcollection.label "Új algyűjtemény...">
-<!ENTITY zotero.toolbar.newSavedSearch.label "Új mentett keresés...">
-<!ENTITY zotero.toolbar.emptyTrash.label "Kuka ürítése">
-<!ENTITY zotero.toolbar.tagSelector.label "Címkeválasztó mutatása/elrejtése">
-<!ENTITY zotero.toolbar.actions.label "Műveletek">
-<!ENTITY zotero.toolbar.import.label "Importálás...">
-<!ENTITY zotero.toolbar.importFromClipboard "Importálás a vágólapról">
-<!ENTITY zotero.toolbar.export.label "Könyvtár exportálása...">
-<!ENTITY zotero.toolbar.rtfScan.label "RTF átvizsgálása…">
-<!ENTITY zotero.toolbar.preferences.label "Beállítások...">
-<!ENTITY zotero.toolbar.supportAndDocumentation "Támogatás és dokumentáció">
-<!ENTITY zotero.toolbar.about.label "Névjegy">
-<!ENTITY zotero.toolbar.advancedSearch "Haladó keresés">
-<!ENTITY zotero.toolbar.openURL.label "Keresés">
-<!ENTITY zotero.toolbar.openURL.tooltip "Hol találom a helyi könyvtárban?">
+<!ENTITY trellis.toolbar.newItem.label "Új elem">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Egyéb...">
+<!ENTITY trellis.toolbar.lookup.label "Elem hozzáadása azonosító alapján">
+<!ENTITY trellis.toolbar.removeItem.label "Elem törlése...">
+<!ENTITY trellis.toolbar.newGroup "Új csoport...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Új algyűjtemény...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Új mentett keresés...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Kuka ürítése">
+<!ENTITY trellis.toolbar.tagSelector.label "Címkeválasztó mutatása/elrejtése">
+<!ENTITY trellis.toolbar.actions.label "Műveletek">
+<!ENTITY trellis.toolbar.import.label "Importálás...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importálás a vágólapról">
+<!ENTITY trellis.toolbar.export.label "Könyvtár exportálása...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF átvizsgálása…">
+<!ENTITY trellis.toolbar.preferences.label "Beállítások...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Támogatás és dokumentáció">
+<!ENTITY trellis.toolbar.about.label "Névjegy">
+<!ENTITY trellis.toolbar.advancedSearch "Haladó keresés">
+<!ENTITY trellis.toolbar.openURL.label "Keresés">
+<!ENTITY trellis.toolbar.openURL.tooltip "Hol találom a helyi könyvtárban?">
 
-<!ENTITY zotero.toolbar.feeds.new "New Feed">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "URL-ből…">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "OPML-ből…">
-<!ENTITY zotero.toolbar.feeds.edit "Edit Feed…">
+<!ENTITY trellis.toolbar.feeds.new "New Feed">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "URL-ből…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "OPML-ből…">
+<!ENTITY trellis.toolbar.feeds.edit "Edit Feed…">
 
-<!ENTITY zotero.item.add "Hozzáadás">
-<!ENTITY zotero.item.attachment.file.show "Fájl mutatása">
-<!ENTITY zotero.item.textTransform "Szöveg átalakítása">
-<!ENTITY zotero.item.textTransform.titlecase "Szókezdő">
-<!ENTITY zotero.item.textTransform.sentencecase "Mondatkezdő">
-<!ENTITY zotero.item.creatorTransform.nameSwap "Keresztnév/Vezetéknév felcserélése">
-<!ENTITY zotero.item.creatorTransform.fixCase "Fix Case">
-<!ENTITY zotero.item.copyAsURL "Másolás URL-ként">
-<!ENTITY zotero.item.deletePermanently "Végleges törlés…">
+<!ENTITY trellis.item.add "Hozzáadás">
+<!ENTITY trellis.item.attachment.file.show "Fájl mutatása">
+<!ENTITY trellis.item.textTransform "Szöveg átalakítása">
+<!ENTITY trellis.item.textTransform.titlecase "Szókezdő">
+<!ENTITY trellis.item.textTransform.sentencecase "Mondatkezdő">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Keresztnév/Vezetéknév felcserélése">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Másolás URL-ként">
+<!ENTITY trellis.item.deletePermanently "Végleges törlés…">
 
-<!ENTITY zotero.item.tags.removeAll "Minden címke eltávolítása…">
+<!ENTITY trellis.item.tags.removeAll "Minden címke eltávolítása…">
 
-<!ENTITY zotero.toolbar.newNote "Új jegyzet">
-<!ENTITY zotero.toolbar.note.standalone "Új önálló jegyzet">
-<!ENTITY zotero.toolbar.note.child "Aljegyzet hozzáadása">
-<!ENTITY zotero.toolbar.lookup "Keresés azonosító alapján...">
-<!ENTITY zotero.toolbar.attachment.linked "Fájlra mutató hivatkozás...">
-<!ENTITY zotero.toolbar.attachment.add "Helyi másolat tárolása...">
-<!ENTITY zotero.toolbar.attachment.weblink "Hivatkozás az aktuális oldalra">
-<!ENTITY zotero.toolbar.attachment.snapshot "Pillanatfelvétel az aktuális oldalról">
-<!ENTITY zotero.toolbar.context.item "Elem">
-<!ENTITY zotero.toolbar.context.notes "Jegyzetek">
+<!ENTITY trellis.toolbar.newNote "Új jegyzet">
+<!ENTITY trellis.toolbar.note.standalone "Új önálló jegyzet">
+<!ENTITY trellis.toolbar.note.child "Aljegyzet hozzáadása">
+<!ENTITY trellis.toolbar.lookup "Keresés azonosító alapján...">
+<!ENTITY trellis.toolbar.attachment.linked "Fájlra mutató hivatkozás...">
+<!ENTITY trellis.toolbar.attachment.add "Helyi másolat tárolása...">
+<!ENTITY trellis.toolbar.attachment.weblink "Hivatkozás az aktuális oldalra">
+<!ENTITY trellis.toolbar.attachment.snapshot "Pillanatfelvétel az aktuális oldalról">
+<!ENTITY trellis.toolbar.context.item "Elem">
+<!ENTITY trellis.toolbar.context.notes "Jegyzetek">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "Nincsenek címkék">
-<!ENTITY zotero.tagSelector.loadingTags "Címkék betöltése…">
-<!ENTITY zotero.tagSelector.showAutomatic "Automatikus címkék megjelenítése">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "Display all tags in this library">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "Címkék automatikus törlése ebben a könyvtárban…">
-<!ENTITY zotero.tagSelector.clearAll "Összes címke kiválasztásának megszüntetése">
-<!ENTITY zotero.tagSelector.assignColor "Szín kiválasztása…">
-<!ENTITY zotero.tagSelector.renameTag "Címke átnevezése...">
-<!ENTITY zotero.tagSelector.deleteTag "Címke törlése...">
-<!ENTITY zotero.tagSelector.splitTag "Feldarabolás…">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Nincsenek címkék">
+<!ENTITY trellis.tagSelector.loadingTags "Címkék betöltése…">
+<!ENTITY trellis.tagSelector.showAutomatic "Automatikus címkék megjelenítése">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Display all tags in this library">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Címkék automatikus törlése ebben a könyvtárban…">
+<!ENTITY trellis.tagSelector.clearAll "Összes címke kiválasztásának megszüntetése">
+<!ENTITY trellis.tagSelector.assignColor "Szín kiválasztása…">
+<!ENTITY trellis.tagSelector.renameTag "Címke átnevezése...">
+<!ENTITY trellis.tagSelector.deleteTag "Címke törlése...">
+<!ENTITY trellis.tagSelector.splitTag "Feldarabolás…">
 
-<!ENTITY zotero.tagColorChooser.title "Válassza ki a címke színét és a pozíciót.">
-<!ENTITY zotero.tagColorChooser.color "Szín:">
-<!ENTITY zotero.tagColorChooser.position "Helyzet:">
-<!ENTITY zotero.tagColorChooser.setColor "Szín beállítása">
-<!ENTITY zotero.tagColorChooser.removeColor "Szín eltávolítása">
+<!ENTITY trellis.tagColorChooser.title "Válassza ki a címke színét és a pozíciót.">
+<!ENTITY trellis.tagColorChooser.color "Szín:">
+<!ENTITY trellis.tagColorChooser.position "Helyzet:">
+<!ENTITY trellis.tagColorChooser.setColor "Szín beállítása">
+<!ENTITY trellis.tagColorChooser.removeColor "Szín eltávolítása">
 
-<!ENTITY zotero.lookup.description "ISBN-k, DOI-k, PMID-k, arXiv ID-k, vagy ADS Bibcodes hozzáadása a könyvtárhoz:">
-<!ENTITY zotero.lookup.button.search "Keresés">
+<!ENTITY trellis.lookup.description "ISBN-k, DOI-k, PMID-k, arXiv ID-k, vagy ADS Bibcodes hozzáadása a könyvtárhoz:">
+<!ENTITY trellis.lookup.button.search "Keresés">
 
-<!ENTITY zotero.createParent.title "Szülő elem létrehozása…">
-<!ENTITY zotero.createParent.button.manual "Kézi bevitel">
+<!ENTITY trellis.createParent.title "Szülő elem létrehozása…">
+<!ENTITY trellis.createParent.button.manual "Kézi bevitel">
 
-<!ENTITY zotero.selectitems.title "Elemek kiválasztása">
-<!ENTITY zotero.selectitems.intro.label "A könyvtárhoz hozzáadni kíván elemek kiválasztása">
-<!ENTITY zotero.selectitems.cancel.label "Mégsem">
-<!ENTITY zotero.selectitems.select.label "OK">
+<!ENTITY trellis.selectitems.title "Elemek kiválasztása">
+<!ENTITY trellis.selectitems.intro.label "A könyvtárhoz hozzáadni kíván elemek kiválasztása">
+<!ENTITY trellis.selectitems.cancel.label "Mégsem">
+<!ENTITY trellis.selectitems.select.label "OK">
 
-<!ENTITY zotero.bibliography.title "Bibliográfia létrehozása">
-<!ENTITY zotero.bibliography.style.label "Hivatkozási stílus:">
-<!ENTITY zotero.bibliography.manageStyles "Stílusok kezelése…">
-<!ENTITY zotero.bibliography.locale.label "Nyelv:">
-<!ENTITY zotero.bibliography.outputMode "Kimeneti mód:">
-<!ENTITY zotero.bibliography.bibliography "Bibliográfia">
-<!ENTITY zotero.bibliography.outputMethod "Kimeneti metódus:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "Mentés RTF-ként">
-<!ENTITY zotero.bibliography.saveAsHTML.label "Mentés HTML-ként">
-<!ENTITY zotero.bibliography.copyToClipboard.label "Másolás a vágólapra">
-<!ENTITY zotero.bibliography.print.label "Nyomtatás">
+<!ENTITY trellis.bibliography.title "Bibliográfia létrehozása">
+<!ENTITY trellis.bibliography.style.label "Hivatkozási stílus:">
+<!ENTITY trellis.bibliography.manageStyles "Stílusok kezelése…">
+<!ENTITY trellis.bibliography.locale.label "Nyelv:">
+<!ENTITY trellis.bibliography.outputMode "Kimeneti mód:">
+<!ENTITY trellis.bibliography.bibliography "Bibliográfia">
+<!ENTITY trellis.bibliography.outputMethod "Kimeneti metódus:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Mentés RTF-ként">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Mentés HTML-ként">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Másolás a vágólapra">
+<!ENTITY trellis.bibliography.print.label "Nyomtatás">
 
-<!ENTITY zotero.integration.docPrefs.title "Dokumentum beállításai">
-<!ENTITY zotero.integration.addEditCitation.title "Hivatkozás hozzáadása/szerkesztése">
-<!ENTITY zotero.integration.editBibliography.title "Bibliográfia szerkesztése">
+<!ENTITY trellis.integration.docPrefs.title "Dokumentum beállításai">
+<!ENTITY trellis.integration.addEditCitation.title "Hivatkozás hozzáadása/szerkesztése">
+<!ENTITY trellis.integration.editBibliography.title "Bibliográfia szerkesztése">
 
-<!ENTITY zotero.progress.title "Folyamatban">
+<!ENTITY trellis.progress.title "Folyamatban">
 
-<!ENTITY zotero.import "Importálás">
-<!ENTITY zotero.import.whereToImportFrom "Honnét szeretné importálni?">
-<!ENTITY zotero.import.source.file "Egy fájl (BibTeX, RIS, Zotero RDF, stb.)">
-<!ENTITY zotero.import.source.folder "PDF-ek vagy más fájlok mappája">
-<!ENTITY zotero.import.onlineImport "online import">
-<!ENTITY zotero.import.importing "Importálás…">
-<!ENTITY zotero.import.database "Adatbázis">
-<!ENTITY zotero.import.lastModified "Utolsó módosítás">
-<!ENTITY zotero.import.size "Méret">
-<!ENTITY zotero.import.createCollection "Importált elemek és gyűjtemények áthelyezése új gyűjteménybe">
-<!ENTITY zotero.import.fileHandling "Fájlkezelés">
-<!ENTITY zotero.import.online.newItemsOnly "Csak új elemek letöltése; nem frissíti a korábban importált elemeket.">
+<!ENTITY trellis.import "Importálás">
+<!ENTITY trellis.import.whereToImportFrom "Honnét szeretné importálni?">
+<!ENTITY trellis.import.source.file "Egy fájl (BibTeX, RIS, Trellis RDF, stb.)">
+<!ENTITY trellis.import.source.folder "PDF-ek vagy más fájlok mappája">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importálás…">
+<!ENTITY trellis.import.database "Adatbázis">
+<!ENTITY trellis.import.lastModified "Utolsó módosítás">
+<!ENTITY trellis.import.size "Méret">
+<!ENTITY trellis.import.createCollection "Importált elemek és gyűjtemények áthelyezése új gyűjteménybe">
+<!ENTITY trellis.import.fileHandling "Fájlkezelés">
+<!ENTITY trellis.import.online.newItemsOnly "Csak új elemek letöltése; nem frissíti a korábban importált elemeket.">
 
-<!ENTITY zotero.exportOptions.title "Exportálás...">
-<!ENTITY zotero.exportOptions.format.label "Formátum:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "Adatkonverter beállításai">
+<!ENTITY trellis.exportOptions.title "Exportálás...">
+<!ENTITY trellis.exportOptions.format.label "Formátum:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Adatkonverter beállításai">
 
-<!ENTITY zotero.charset.label "Karakterkódolás">
-<!ENTITY zotero.moreEncodings.label "További karakterkódolások">
+<!ENTITY trellis.charset.label "Karakterkódolás">
+<!ENTITY trellis.moreEncodings.label "További karakterkódolások">
 
-<!ENTITY zotero.citation.keepSorted.label "Források sorbarendezése">
+<!ENTITY trellis.citation.keepSorted.label "Források sorbarendezése">
 
-<!ENTITY zotero.citation.suppressAuthor.label "Szerző kihagyása">
-<!ENTITY zotero.citation.prefix.label "Előtag:">
-<!ENTITY zotero.citation.suffix.label "Utótag:">
-<!ENTITY zotero.citation.editorWarning.label "Figyelmeztetés: Ha a szerkesztőben szerkeszt egy hivatkozást, akkor nem fog frissülni és nem fogja megjeleníteni az adatbázis vagy a hivatkozási stílus változásait.">
+<!ENTITY trellis.citation.suppressAuthor.label "Szerző kihagyása">
+<!ENTITY trellis.citation.prefix.label "Előtag:">
+<!ENTITY trellis.citation.suffix.label "Utótag:">
+<!ENTITY trellis.citation.editorWarning.label "Figyelmeztetés: Ha a szerkesztőben szerkeszt egy hivatkozást, akkor nem fog frissülni és nem fogja megjeleníteni az adatbázis vagy a hivatkozási stílus változásait.">
 
-<!ENTITY zotero.richText.italic.label "Dőlt">
-<!ENTITY zotero.richText.bold.label "Félkövér">
-<!ENTITY zotero.richText.underline.label "Aláhúzott">
-<!ENTITY zotero.richText.superscript.label "Felsőindex">
-<!ENTITY zotero.richText.subscript.label "Alsóindex">
+<!ENTITY trellis.richText.italic.label "Dőlt">
+<!ENTITY trellis.richText.bold.label "Félkövér">
+<!ENTITY trellis.richText.underline.label "Aláhúzott">
+<!ENTITY trellis.richText.superscript.label "Felsőindex">
+<!ENTITY trellis.richText.subscript.label "Alsóindex">
 
-<!ENTITY zotero.annotate.toolbar.add.label "Új megjegyzés">
-<!ENTITY zotero.annotate.toolbar.collapse.label "Összes megjegyzés bezárása">
-<!ENTITY zotero.annotate.toolbar.expand.label "Összes megjegyzés megnyitása">
-<!ENTITY zotero.annotate.toolbar.highlight.label "Szöveg kiemelése">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "Szöveg kiemelésének megszüntetése">
+<!ENTITY trellis.annotate.toolbar.add.label "Új megjegyzés">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Összes megjegyzés bezárása">
+<!ENTITY trellis.annotate.toolbar.expand.label "Összes megjegyzés megnyitása">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Szöveg kiemelése">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Szöveg kiemelésének megszüntetése">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "Hivatkozások megjelenítése:">
-<!ENTITY zotero.integration.prefs.footnotes.label "Lábjegyzetek">
-<!ENTITY zotero.integration.prefs.endnotes.label "Végjegyzetek">
+<!ENTITY trellis.integration.prefs.displayAs.label "Hivatkozások megjelenítése:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Lábjegyzetek">
+<!ENTITY trellis.integration.prefs.endnotes.label "Végjegyzetek">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "Idézetek visszaállítása">
-<!ENTITY zotero.integration.prefs.bookmarks.label "Könyvjelzők">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "A könyvjelzők megoszthatók a Word és a LibreOffice között, de hibákat okozhatnak, ha véletlenül módosítják őket, és nem illeszthetők be lábjegyzetekbe.">
+<!ENTITY trellis.integration.prefs.formatUsing.label "Idézetek visszaállítása">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Könyvjelzők">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "A könyvjelzők megoszthatók a Word és a LibreOffice között, de hibákat okozhatnak, ha véletlenül módosítják őket, és nem illeszthetők be lábjegyzetekbe.">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "Hivatkozások automatikus frissítése">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "A függőben lévő, frissítésekkel ellátott idézetek kiemelésre kerülnek a dokumentumban">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "A frissítések letiltása felgyorsíthatja a hivatkozások beillesztését a nagy dokumentumokba. A hivatkozások manuális frissítéséhez kattintson a Frissítés gombra.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Hivatkozások automatikus frissítése">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "A függőben lévő, frissítésekkel ellátott idézetek kiemelésre kerülnek a dokumentumban">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "A frissítések letiltása felgyorsíthatja a hivatkozások beillesztését a nagy dokumentumokba. A hivatkozások manuális frissítéséhez kattintson a Frissítés gombra.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "Használja a MEDLINE folyóirat rövidítéseket">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "A &quot;Journal Abbr&quot; mező figyelmen kívül hagyása">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Használja a MEDLINE folyóirat rövidítéseket">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "A &quot;Journal Abbr&quot; mező figyelmen kívül hagyása">
 
-<!ENTITY zotero.integration.prefs.exportDocument "Váltson egy másik szövegszerkesztőre…">
+<!ENTITY trellis.integration.prefs.exportDocument "Váltson egy másik szövegszerkesztőre…">
 
-<!ENTITY zotero.integration.showEditor.label "Editor megjelenítése">
-<!ENTITY zotero.integration.classicView.label "Klasszikus nézet">
+<!ENTITY trellis.integration.showEditor.label "Editor megjelenítése">
+<!ENTITY trellis.integration.classicView.label "Klasszikus nézet">
 
-<!ENTITY zotero.integration.references.label "Hivatkozások a bibliográfiában">
+<!ENTITY trellis.integration.references.label "Hivatkozások a bibliográfiában">
 
-<!ENTITY zotero.sync.stop "A szinkronizálás leállítása">
-<!ENTITY zotero.sync.error "Szinkronizációs hiba">
-<!ENTITY zotero.sync.storage.progress "Állapot:">
-<!ENTITY zotero.sync.storage.downloads "Letöltések:">
-<!ENTITY zotero.sync.storage.uploads "Letöltések:">
+<!ENTITY trellis.sync.stop "A szinkronizálás leállítása">
+<!ENTITY trellis.sync.error "Szinkronizációs hiba">
+<!ENTITY trellis.sync.storage.progress "Állapot:">
+<!ENTITY trellis.sync.storage.downloads "Letöltések:">
+<!ENTITY trellis.sync.storage.uploads "Letöltések:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "A következő címkék túl hosszúak">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "A szinkronizált címkék nem lehetnek 256 karakternél hosszabbak.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "Három lehetőség közül választhat: feldarabolja a címkét, lerövidíti vagy kitöröli.">
-<!ENTITY zotero.sync.longTagFixer.split "Feldarabolás">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "Feldarabolás ennél a pozíciónál">
-<!ENTITY zotero.sync.longTagFixer.character "karakter">
-<!ENTITY zotero.sync.longTagFixer.characters "karakter">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "A jelöletlenül hagyott címkék nem lesznek elmentve.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "Ez a címke törölve lesz valamennyi elemről.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "A következő címkék túl hosszúak">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "A szinkronizált címkék nem lehetnek 256 karakternél hosszabbak.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Három lehetőség közül választhat: feldarabolja a címkét, lerövidíti vagy kitöröli.">
+<!ENTITY trellis.sync.longTagFixer.split "Feldarabolás">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Feldarabolás ennél a pozíciónál">
+<!ENTITY trellis.sync.longTagFixer.character "karakter">
+<!ENTITY trellis.sync.longTagFixer.characters "karakter">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "A jelöletlenül hagyott címkék nem lesznek elmentve.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Ez a címke törölve lesz valamennyi elemről.">
 
-<!ENTITY zotero.merge.title "Conflict Resolution">
-<!ENTITY zotero.merge.of "of">
-<!ENTITY zotero.merge.deleted "Törölve">
+<!ENTITY trellis.merge.title "Conflict Resolution">
+<!ENTITY trellis.merge.of "of">
+<!ENTITY trellis.merge.deleted "Törölve">
 
-<!ENTITY zotero.proxy.recognized.title "Proxy felismerve">
-<!ENTITY zotero.proxy.recognized.warning "Csak a könyvtárból, iskolából vagy vállalati weboldalról linkelt proxy-t adható hozzá">
-<!ENTITY zotero.proxy.recognized.warning.secondary "Más proxyk hozzáadása lehetővé teszi a rosszindulatú webhelyek számára, hogy megbízható webhelyeknek álcázzák magukat.">
-<!ENTITY zotero.proxy.recognized.disable.label "Ne irányítsa át automatikusan a kéréseket az előzőleg felismert proxyikra.">
-<!ENTITY zotero.proxy.recognized.ignore.label "Elutasít">
+<!ENTITY trellis.proxy.recognized.title "Proxy felismerve">
+<!ENTITY trellis.proxy.recognized.warning "Csak a könyvtárból, iskolából vagy vállalati weboldalról linkelt proxy-t adható hozzá">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Más proxyk hozzáadása lehetővé teszi a rosszindulatú webhelyek számára, hogy megbízható webhelyeknek álcázzák magukat.">
+<!ENTITY trellis.proxy.recognized.disable.label "Ne irányítsa át automatikusan a kéréseket az előzőleg felismert proxyikra.">
+<!ENTITY trellis.proxy.recognized.ignore.label "Elutasít">
 
-<!ENTITY zotero.feedSettings.title "Feed Settings">
-<!ENTITY zotero.feedSettings.saveButton.label "Mentés">
-<!ENTITY zotero.feedSettings.url.label "URL">
-<!ENTITY zotero.feedSettings.title.label "Cím:">
-<!ENTITY zotero.feedSettings.refresh.label1 "Feed frissítése minden">
-<!ENTITY zotero.feedSettings.refresh.label2 "óra">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "Az olvasatlan hírcsatorna elemek eltávolítása után">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "nap(ok)">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "Az olvasott hírcsatorna elemek eltávolítása után">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "nap(ok)">
+<!ENTITY trellis.feedSettings.title "Feed Settings">
+<!ENTITY trellis.feedSettings.saveButton.label "Mentés">
+<!ENTITY trellis.feedSettings.url.label "URL">
+<!ENTITY trellis.feedSettings.title.label "Cím:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Feed frissítése minden">
+<!ENTITY trellis.feedSettings.refresh.label2 "óra">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Az olvasatlan hírcsatorna elemek eltávolítása után">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "nap(ok)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Az olvasott hírcsatorna elemek eltávolítása után">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "nap(ok)">
 
-<!ENTITY zotero.rtfScan.title "RTF átvizsgálása…">
-<!ENTITY zotero.rtfScan.cancel.label "Mégsem">
-<!ENTITY zotero.rtfScan.citation.label "Hivatkozás">
-<!ENTITY zotero.rtfScan.itemName.label "Elem neve">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "Nem felismert hivatkozások">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "Bizonytalan hivatkozások">
-<!ENTITY zotero.rtfScan.mappedCitations.label "Felismert">
-<!ENTITY zotero.rtfScan.introPage.label "Bevezetés">
-<!ENTITY zotero.rtfScan.introPage.description "A Zotero automatikusan képes kinyerni és újraformázni a hivatkozásokat és bibliográfiát beilleszteni RTF fájlokba. Az RTF Scan jelenleg az alábbi formátumokban támogatja a hivatkozásokat:">
-<!ENTITY zotero.rtfScan.introPage.description2 "A kezdéshez, válasszon egy RTF bemeneti fájlt és egy kimenti fájlt alább:">
-<!ENTITY zotero.rtfScan.scanPage.label "Hivatkozások keresése">
-<!ENTITY zotero.rtfScan.scanPage.description "A Zotero hivatkozásokat keres a dokumentumban. Kérem várjon.">
-<!ENTITY zotero.rtfScan.citationsPage.label "Hivatkozott elemek ellenőrzése">
-<!ENTITY zotero.rtfScan.citationsPage.description "Kérem, tekintse át az alábbi felismert hivatkozásokat, hogy meggyőződjön arról, hogy a Zotero a helyesen választotta ki a megfelelő elemeket. A nem egyértelmű vagy mappa nélküli hivatkozásokat javítani kell, mielőtt rátér a következő lépésre.">
-<!ENTITY zotero.rtfScan.stylePage.label "Dokumentum formázása">
-<!ENTITY zotero.rtfScan.formatPage.label "Hivatkozás formázása">
-<!ENTITY zotero.rtfScan.formatPage.description "A Zotero feldolgozza és formázza az RTF fájlt. Kérem várjon.">
-<!ENTITY zotero.rtfScan.completePage.label "Az RTF átvizsgálása befejeződött">
-<!ENTITY zotero.rtfScan.completePage.description "A dokumentum átvizsgálása és feldolgozása megtörtént. Győződjön meg róla, hogy megfelelően van formázva.">
-<!ENTITY zotero.rtfScan.inputFile.label "Bemeneti fájl">
-<!ENTITY zotero.rtfScan.outputFile.label "Kimeneti fájl">
+<!ENTITY trellis.rtfScan.title "RTF átvizsgálása…">
+<!ENTITY trellis.rtfScan.cancel.label "Mégsem">
+<!ENTITY trellis.rtfScan.citation.label "Hivatkozás">
+<!ENTITY trellis.rtfScan.itemName.label "Elem neve">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Nem felismert hivatkozások">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Bizonytalan hivatkozások">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Felismert">
+<!ENTITY trellis.rtfScan.introPage.label "Bevezetés">
+<!ENTITY trellis.rtfScan.introPage.description "A Trellis automatikusan képes kinyerni és újraformázni a hivatkozásokat és bibliográfiát beilleszteni RTF fájlokba. Az RTF Scan jelenleg az alábbi formátumokban támogatja a hivatkozásokat:">
+<!ENTITY trellis.rtfScan.introPage.description2 "A kezdéshez, válasszon egy RTF bemeneti fájlt és egy kimenti fájlt alább:">
+<!ENTITY trellis.rtfScan.scanPage.label "Hivatkozások keresése">
+<!ENTITY trellis.rtfScan.scanPage.description "A Trellis hivatkozásokat keres a dokumentumban. Kérem várjon.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Hivatkozott elemek ellenőrzése">
+<!ENTITY trellis.rtfScan.citationsPage.description "Kérem, tekintse át az alábbi felismert hivatkozásokat, hogy meggyőződjön arról, hogy a Trellis a helyesen választotta ki a megfelelő elemeket. A nem egyértelmű vagy mappa nélküli hivatkozásokat javítani kell, mielőtt rátér a következő lépésre.">
+<!ENTITY trellis.rtfScan.stylePage.label "Dokumentum formázása">
+<!ENTITY trellis.rtfScan.formatPage.label "Hivatkozás formázása">
+<!ENTITY trellis.rtfScan.formatPage.description "A Trellis feldolgozza és formázza az RTF fájlt. Kérem várjon.">
+<!ENTITY trellis.rtfScan.completePage.label "Az RTF átvizsgálása befejeződött">
+<!ENTITY trellis.rtfScan.completePage.description "A dokumentum átvizsgálása és feldolgozása megtörtént. Győződjön meg róla, hogy megfelelően van formázva.">
+<!ENTITY trellis.rtfScan.inputFile.label "Bemeneti fájl">
+<!ENTITY trellis.rtfScan.outputFile.label "Kimeneti fájl">
 
-<!ENTITY zotero.file.choose.label "Fájl kiválasztása...">
-<!ENTITY zotero.file.noneSelected.label "Nincs fájl kiválasztva">
+<!ENTITY trellis.file.choose.label "Fájl kiválasztása...">
+<!ENTITY trellis.file.noneSelected.label "Nincs fájl kiválasztva">
 
-<!ENTITY zotero.attachLink.title "Link csatolása az URI-hoz">
-<!ENTITY zotero.attachLink.label.link "Link:">
-<!ENTITY zotero.attachLink.label.title "Cím:">
+<!ENTITY trellis.attachLink.title "Link csatolása az URI-hoz">
+<!ENTITY trellis.attachLink.label.link "Link:">
+<!ENTITY trellis.attachLink.label.title "Cím:">
 
-<!ENTITY zotero.context.addChildNote "Elem jegyzetének hozzáadása">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "Elem jegyzet hozzáadása a jegyzetekből">
-<!ENTITY zotero.context.addStandaloneNote "Önálló jegyzet hozzáadása">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "Önálló jegyzet hozzáadása jegyzetekből">
-<!ENTITY zotero.context.editInWindow "Szerkesztés külön ablakban">
+<!ENTITY trellis.context.addChildNote "Elem jegyzetének hozzáadása">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Elem jegyzet hozzáadása a jegyzetekből">
+<!ENTITY trellis.context.addStandaloneNote "Önálló jegyzet hozzáadása">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Önálló jegyzet hozzáadása jegyzetekből">
+<!ENTITY trellis.context.editInWindow "Szerkesztés külön ablakban">
 
-<!ENTITY zotero.pdfReader.firstPage "Első oldal">
-<!ENTITY zotero.pdfReader.lastPage "Utolsó oldal">
-<!ENTITY zotero.pdfReader.back "Vissza">
-<!ENTITY zotero.pdfReader.forward "Előre">
-<!ENTITY zotero.pdfReader.handTool "Kéz eszköz">
-<!ENTITY zotero.pdfReader.verticalScrolling "Függőleges görgetés">
-<!ENTITY zotero.pdfReader.horizontalScrolling "Vízszintes görgetés">
-<!ENTITY zotero.pdfReader.wrappedScrolling "Rácsos görgetés">
-<!ENTITY zotero.pdfReader.noSpreads "Nincs oldaltapasztás">
-<!ENTITY zotero.pdfReader.oddSpreads "Oldalak összetapasztása: páratlan">
-<!ENTITY zotero.pdfReader.evenSpreads "Oldalak összetapasztása: páros">
-<!ENTITY zotero.pdfReader.scrolled "Scrolled">
-<!ENTITY zotero.pdfReader.paginated "Oldalszámozás">
-<!ENTITY zotero.pdfReader.zoomIn "Nagyítás">
-<!ENTITY zotero.pdfReader.zoomOut "Kicsinyítés">
-<!ENTITY zotero.pdfReader.zoomReset "Nagyítás visszaállítása">
-<!ENTITY zotero.pdfReader.zoomAuto "Automatikus átméretezés">
-<!ENTITY zotero.pdfReader.zoomPageWidth "Nagyítás oldalszélességre">
-<!ENTITY zotero.pdfReader.zoomPageHeight "Teljes oldal">
-<!ENTITY zotero.pdfReader.splitVertically "Függőlegesen osztva">
-<!ENTITY zotero.pdfReader.splitHorizontally "Vízszintesen osztva">
-<!ENTITY zotero.pdfReader.transferFromPDF "Jegyzetek importálása…">
-<!ENTITY zotero.pdfReader.rotatePageLeft "Oldal elforgatása balra">
-<!ENTITY zotero.pdfReader.rotatePageRight "Oldal elforgatása jobbra">
+<!ENTITY trellis.pdfReader.firstPage "Első oldal">
+<!ENTITY trellis.pdfReader.lastPage "Utolsó oldal">
+<!ENTITY trellis.pdfReader.back "Vissza">
+<!ENTITY trellis.pdfReader.forward "Előre">
+<!ENTITY trellis.pdfReader.handTool "Kéz eszköz">
+<!ENTITY trellis.pdfReader.verticalScrolling "Függőleges görgetés">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Vízszintes görgetés">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Rácsos görgetés">
+<!ENTITY trellis.pdfReader.noSpreads "Nincs oldaltapasztás">
+<!ENTITY trellis.pdfReader.oddSpreads "Oldalak összetapasztása: páratlan">
+<!ENTITY trellis.pdfReader.evenSpreads "Oldalak összetapasztása: páros">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Oldalszámozás">
+<!ENTITY trellis.pdfReader.zoomIn "Nagyítás">
+<!ENTITY trellis.pdfReader.zoomOut "Kicsinyítés">
+<!ENTITY trellis.pdfReader.zoomReset "Nagyítás visszaállítása">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatikus átméretezés">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Nagyítás oldalszélességre">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Teljes oldal">
+<!ENTITY trellis.pdfReader.splitVertically "Függőlegesen osztva">
+<!ENTITY trellis.pdfReader.splitHorizontally "Vízszintesen osztva">
+<!ENTITY trellis.pdfReader.transferFromPDF "Jegyzetek importálása…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Oldal elforgatása balra">
+<!ENTITY trellis.pdfReader.rotatePageRight "Oldal elforgatása jobbra">

@@ -3,27 +3,27 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-Zotero.Prompt = {
+Trellis.Prompt = {
 	BUTTON_TITLE_OK: Services.prompt.BUTTON_TITLE_OK,
 	BUTTON_TITLE_CANCEL: Services.prompt.BUTTON_TITLE_CANCEL,
 	BUTTON_TITLE_YES: Services.prompt.BUTTON_TITLE_YES,
@@ -37,7 +37,7 @@ Zotero.Prompt = {
 	 * but with a friendlier interface.
 	 *
 	 * Button text can use special static variables from
-	 * Zotero.Prompt
+	 * Trellis.Prompt
 	 *
 	 * @param options
 	 * - {mozIDOMWindowProxy} window - The parent window or null.
@@ -68,10 +68,10 @@ Zotero.Prompt = {
 		}
 		// Skip button delay in CI
 		if (delayButtons) {
-			Zotero.warn("Zotero.Prompt.confirm() option 'delayButtons' is deprecated -- use 'buttonDelay'");
+			Trellis.warn("Trellis.Prompt.confirm() option 'delayButtons' is deprecated -- use 'buttonDelay'");
 			buttonDelay = true;
 		}
-		let flags = (buttonDelay && !Zotero.test) ? Services.prompt.BUTTON_DELAY_ENABLE : 0;
+		let flags = (buttonDelay && !Trellis.test) ? Services.prompt.BUTTON_DELAY_ENABLE : 0;
 		if (typeof button0 == 'number') flags += Services.prompt.BUTTON_POS_0 * button0;
 		else if (typeof button0 == 'string') flags += Services.prompt.BUTTON_POS_0 * Services.prompt.BUTTON_TITLE_IS_STRING;
 		if (typeof button1 == 'number') flags += Services.prompt.BUTTON_POS_1 * button1;

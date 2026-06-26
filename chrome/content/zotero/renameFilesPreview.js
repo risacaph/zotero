@@ -3,22 +3,22 @@
 
 	Copyright © 2026 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 http://zotero.org
+					 http://trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@ import VirtualizedTable from 'components/virtualized-table';
 import React from 'react'; // eslint-disable-line no-unused-vars
 import ReactDOM from "react-dom";
 
-const { renameFilesFromParent } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+const { renameFilesFromParent } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 
 var RenameFilesPreview = { // eslint-disable-line no-unused-vars
 	_rows: [],
@@ -51,11 +51,11 @@ var RenameFilesPreview = { // eslint-disable-line no-unused-vars
 		this.cancelBtn.addEventListener('command', () => window.close());
 		this.acceptBtn.addEventListener('command', this.handleAccept.bind(this));
 
-		if (this.libraryID === Zotero.Libraries.userLibraryID) {
+		if (this.libraryID === Trellis.Libraries.userLibraryID) {
 			document.l10n.setAttributes(this.introEl, 'file-renaming-preview-window-intro');
 		}
 		else {
-			let libraryName = Zotero.Libraries.get(this.libraryID).name;
+			let libraryName = Trellis.Libraries.get(this.libraryID).name;
 			document.l10n.setAttributes(this.introEl, 'file-renaming-preview-window-intro-library', { library: libraryName });
 		}
 
@@ -76,8 +76,8 @@ var RenameFilesPreview = { // eslint-disable-line no-unused-vars
 			document.l10n.setAttributes(this.acceptBtn, 'file-renaming-done-button');
 
 			// Mark as done for user library
-			if (this.libraryID === Zotero.Libraries.userLibraryID) {
-				Zotero.Prefs.set('autoRenameFiles.done', true);
+			if (this.libraryID === Trellis.Libraries.userLibraryID) {
+				Trellis.Prefs.set('autoRenameFiles.done', true);
 			}
 		}
 		else {

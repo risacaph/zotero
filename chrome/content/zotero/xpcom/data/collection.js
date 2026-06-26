@@ -3,116 +3,116 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Collection = function (params = {}) {
-	Zotero.Collection._super.apply(this);
+Trellis.Collection = function (params = {}) {
+	Trellis.Collection._super.apply(this);
 	
 	this._name = null;
 	
 	this._childCollections = new Set();
 	this._childItems = new Set();
 	
-	Zotero.Utilities.Internal.assignProps(this, params, ['name', 'libraryID', 'parentID', 'parentKey']);
+	Trellis.Utilities.Internal.assignProps(this, params, ['name', 'libraryID', 'parentID', 'parentKey']);
 }
 
-Zotero.extendClass(Zotero.DataObject, Zotero.Collection);
+Trellis.extendClass(Trellis.DataObject, Trellis.Collection);
 
-Zotero.Collection.prototype._objectType = 'collection';
-Zotero.Collection.prototype._dataTypes = Zotero.Collection._super.prototype._dataTypes.concat([
+Trellis.Collection.prototype._objectType = 'collection';
+Trellis.Collection.prototype._dataTypes = Trellis.Collection._super.prototype._dataTypes.concat([
 	'childCollections',
 	'childItems',
 	'relations'
 ]);
 
-Zotero.defineProperty(Zotero.Collection.prototype, 'ChildObjects', {
-	get: function () { return Zotero.Items; }
+Trellis.defineProperty(Trellis.Collection.prototype, 'ChildObjects', {
+	get: function () { return Trellis.Items; }
 });
 
-Zotero.defineProperty(Zotero.Collection.prototype, 'id', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'id', {
 	get: function () { return this._get('id'); },
 	set: function (val) { return this._set('id', val); }
 });
-Zotero.defineProperty(Zotero.Collection.prototype, 'libraryID', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'libraryID', {
 	get: function () { return this._get('libraryID'); },
 	set: function (val) { return this._set('libraryID', val); }
 });
-Zotero.defineProperty(Zotero.Collection.prototype, 'key', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'key', {
 	get: function () { return this._get('key'); },
 	set: function (val) { return this._set('key', val); }
 });
-Zotero.defineProperty(Zotero.Collection.prototype, 'name', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'name', {
 	get: function () { return this._get('name'); },
 	set: function (val) { return this._set('name', val); }
 });
-Zotero.defineProperty(Zotero.Collection.prototype, 'version', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'version', {
 	get: function () { return this._get('version'); },
 	set: function (val) { return this._set('version', val); }
 });
-Zotero.defineProperty(Zotero.Collection.prototype, 'synced', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'synced', {
 	get: function () { return this._get('synced'); },
 	set: function (val) { return this._set('synced', val); }
 });
-Zotero.defineProperty(Zotero.Collection.prototype, 'parent', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'parent', {
 	get: function () {
-		Zotero.debug("WARNING: Zotero.Collection.prototype.parent has been deprecated -- use .parentID or .parentKey", 2);
+		Trellis.debug("WARNING: Trellis.Collection.prototype.parent has been deprecated -- use .parentID or .parentKey", 2);
 		return this.parentID;
 	},
 	set: function (val) {
-		Zotero.debug("WARNING: Zotero.Collection.prototype.parent has been deprecated -- use .parentID or .parentKey", 2);
+		Trellis.debug("WARNING: Trellis.Collection.prototype.parent has been deprecated -- use .parentID or .parentKey", 2);
 		this.parentID = val;
 	},
 	enumerable: false
 });
 
-Zotero.defineProperty(Zotero.Collection.prototype, 'treeViewID', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'treeViewID', {
 	get: function () {
 		return "C" + this.id;
 	}
 });
 
-Zotero.defineProperty(Zotero.Collection.prototype, 'treeViewImage', {
+Trellis.defineProperty(Trellis.Collection.prototype, 'treeViewImage', {
 	get: function () {
 		// Keep in sync with collectionTreeView::getImageSrc()
-		return "chrome://zotero/skin/16/universal/folder.svg";
+		return "chrome://trellis/skin/16/universal/folder.svg";
 	}
 });
 
-Zotero.Collection.prototype.getID = function () {
-	Zotero.debug('Collection.getID() deprecated -- use Collection.id');
+Trellis.Collection.prototype.getID = function () {
+	Trellis.debug('Collection.getID() deprecated -- use Collection.id');
 	return this.id;
 }
 
-Zotero.Collection.prototype.getName = function () {
-	Zotero.debug('Collection.getName() deprecated -- use Collection.name');
+Trellis.Collection.prototype.getName = function () {
+	Trellis.debug('Collection.getName() deprecated -- use Collection.name');
 	return this.name;
 }
 
 // Properties for a collection to "pretend" to be an item for trash itemTree
-Object.assign(Zotero.Collection.prototype, Zotero.DataObjectUtilities.itemTreeMockProperties);
+Object.assign(Trellis.Collection.prototype, Trellis.DataObjectUtilities.itemTreeMockProperties);
 
 /*
  * Populate collection data from a database row
  */
-Zotero.Collection.prototype.loadFromRow = function (row) {
+Trellis.Collection.prototype.loadFromRow = function (row) {
 	var primaryFields = this._ObjectsClass.primaryFields;
 	for (let i=0; i<primaryFields.length; i++) {
 		let col = primaryFields[i];
@@ -120,7 +120,7 @@ Zotero.Collection.prototype.loadFromRow = function (row) {
 			var val = row[col];
 		}
 		catch (e) {
-			Zotero.debug('Skipping missing ' + this._objectType + ' field ' + col);
+			Trellis.debug('Skipping missing ' + this._objectType + ' field ' + col);
 			continue;
 		}
 		
@@ -173,7 +173,7 @@ Zotero.Collection.prototype.loadFromRow = function (row) {
 }
 
 
-Zotero.Collection.prototype.hasChildCollections = function (includeTrashed) {
+Trellis.Collection.prototype.hasChildCollections = function (includeTrashed) {
 	this._requireData('childCollections');
 	if (!this._childCollections.size) {
 		return false;
@@ -184,7 +184,7 @@ Zotero.Collection.prototype.hasChildCollections = function (includeTrashed) {
 	return !this.getChildCollections().every(c => c.deleted);
 }
 
-Zotero.Collection.prototype.hasChildItems = function () {
+Trellis.Collection.prototype.hasChildItems = function () {
 	this._requireData('childItems');
 	return this._childItems.size > 0;
 }
@@ -195,9 +195,9 @@ Zotero.Collection.prototype.hasChildItems = function () {
  *
  * @param {Boolean} [asIDs=false] Return as collectionIDs
  * @param {Boolean} [includeTrashed=false] - Include collections in the trash
- * @return {Zotero.Collection[]|Integer[]}
+ * @return {Trellis.Collection[]|Integer[]}
  */
-Zotero.Collection.prototype.getChildCollections = function (asIDs, includeTrashed) {
+Trellis.Collection.prototype.getChildCollections = function (asIDs, includeTrashed) {
 	this._requireData('childCollections');
 	
 	var collections = [...this._childCollections].map(id => this.ObjectsClass.get(id));
@@ -210,7 +210,7 @@ Zotero.Collection.prototype.getChildCollections = function (asIDs, includeTrashe
 		return collections.map(c => c.id);
 	}
 	
-	// Return Zotero.Collection objects
+	// Return Trellis.Collection objects
 	return collections;
 }
 
@@ -220,9 +220,9 @@ Zotero.Collection.prototype.getChildCollections = function (asIDs, includeTrashe
  *
  * @param	{Boolean}	asIDs			Return as itemIDs
  * @param	{Boolean}	includeDeleted	Include items in Trash
- * @return {Zotero.Item[]|Integer[]} - Array of Zotero.Item instances or itemIDs
+ * @return {Trellis.Item[]|Integer[]} - Array of Trellis.Item instances or itemIDs
  */
-Zotero.Collection.prototype.getChildItems = function (asIDs, includeTrashed) {
+Trellis.Collection.prototype.getChildItems = function (asIDs, includeTrashed) {
 	this._requireData('childItems');
 	
 	if (this._childItems.size == 0) {
@@ -243,16 +243,16 @@ Zotero.Collection.prototype.getChildItems = function (asIDs, includeTrashed) {
 		return childItems.map(item => item.id);
 	}
 	
-	// Return Zotero.Item objects
+	// Return Trellis.Item objects
 	return childItems.slice();
 }
 
-Zotero.Collection.prototype._initSave = async function (env) {
+Trellis.Collection.prototype._initSave = async function (env) {
 	if (!this.name) {
 		throw new Error(this._ObjectType + ' name is empty');
 	}
 	
-	var proceed = await Zotero.Collection._super.prototype._initSave.apply(this, arguments);
+	var proceed = await Trellis.Collection._super.prototype._initSave.apply(this, arguments);
 	if (!proceed) return false;
 	
 		// Verify parent
@@ -282,13 +282,13 @@ Zotero.Collection.prototype._initSave = async function (env) {
 	return true;
 };
 
-Zotero.Collection.prototype._saveData = async function (env) {
+Trellis.Collection.prototype._saveData = async function (env) {
 	var isNew = env.isNew;
 	var options = env.options;
 
-	var collectionID = this._id = this.id ? this.id : Zotero.ID.get('collections');
+	var collectionID = this._id = this.id ? this.id : Trellis.ID.get('collections');
 	
-	Zotero.debug("Saving collection " + this.id);
+	Trellis.debug("Saving collection " + this.id);
 	
 	env.sqlColumns.push(
 		'collectionName',
@@ -307,13 +307,13 @@ Zotero.Collection.prototype._saveData = async function (env) {
 			let placeholders = env.sqlColumns.map(() => '?').join();
 			let sql = "INSERT INTO collections (" + env.sqlColumns.join(', ') + ") "
 				+ "VALUES (" + placeholders + ")";
-			await Zotero.DB.queryAsync(sql, env.sqlValues);
+			await Trellis.DB.queryAsync(sql, env.sqlValues);
 		}
 		else {
 			let sql = 'UPDATE collections SET '
 				+ env.sqlColumns.map(x => x + '=?').join(', ') + ' WHERE collectionID=?';
 			env.sqlValues.push(collectionID ? { int: collectionID } : null);
-			await Zotero.DB.queryAsync(sql, env.sqlValues);
+			await Trellis.DB.queryAsync(sql, env.sqlValues);
 		}
 	}
 	
@@ -324,7 +324,7 @@ Zotero.Collection.prototype._saveData = async function (env) {
 			let parentCollectionID = this.ObjectsClass.getIDFromLibraryAndKey(
 				this.libraryID, this.parentKey
 			);
-			Zotero.DB.addCurrentCallback("commit", function () {
+			Trellis.DB.addCurrentCallback("commit", function () {
 				this.ObjectsClass.registerChildCollection(parentCollectionID, collectionID);
 			}.bind(this));
 		}
@@ -334,7 +334,7 @@ Zotero.Collection.prototype._saveData = async function (env) {
 			let parentCollectionID = this.ObjectsClass.getIDFromLibraryAndKey(
 				this.libraryID, this._previousData.parentKey
 			);
-			Zotero.DB.addCurrentCallback("commit", function () {
+			Trellis.DB.addCurrentCallback("commit", function () {
 				this.ObjectsClass.unregisterChildCollection(parentCollectionID, collectionID);
 			}.bind(this));
 		}
@@ -347,7 +347,7 @@ Zotero.Collection.prototype._saveData = async function (env) {
 		else {
 			let sql = "DELETE FROM deletedCollections WHERE collectionID=?";
 
-			await Zotero.DB.queryAsync(sql, collectionID);
+			await Trellis.DB.queryAsync(sql, collectionID);
 		}
 		
 		this._clearChanged('deleted');
@@ -355,15 +355,15 @@ Zotero.Collection.prototype._saveData = async function (env) {
 	}
 };
 
-Zotero.Collection.prototype._finalizeSave = async function (env) {
+Trellis.Collection.prototype._finalizeSave = async function (env) {
 	if (!env.options.skipNotifier) {
 		if (env.isNew) {
-			Zotero.Notifier.queue(
+			Trellis.Notifier.queue(
 				'add', 'collection', this.id, env.notifierData, env.options.notifierQueue
 			);
 		}
 		else {
-			Zotero.Notifier.queue(
+			Trellis.Notifier.queue(
 				'modify', 'collection', this.id, env.notifierData, env.options.notifierQueue
 			);
 		}
@@ -379,7 +379,7 @@ Zotero.Collection.prototype._finalizeSave = async function (env) {
 	}
 	
 	if (env.isNew) {
-		await Zotero.Libraries.get(this.libraryID).updateCollections();
+		await Trellis.Libraries.get(this.libraryID).updateCollections();
 	}
 	
 	return env.isNew ? this.id : true;
@@ -391,7 +391,7 @@ Zotero.Collection.prototype._finalizeSave = async function (env) {
  * @param {Number} itemID
  * @return {Promise}
  */
-Zotero.Collection.prototype.addItem = function (itemID, options) {
+Trellis.Collection.prototype.addItem = function (itemID, options) {
 	return this.addItems([itemID], options);
 }
 
@@ -405,7 +405,7 @@ Zotero.Collection.prototype.addItem = function (itemID, options) {
  * @param {Number[]} itemIDs
  * @return {Promise}
  */
-Zotero.Collection.prototype.addItems = async function (itemIDs, options = {}) {
+Trellis.Collection.prototype.addItems = async function (itemIDs, options = {}) {
 	options.skipDateModifiedUpdate = true;
 
 	if (!itemIDs || !itemIDs.length) {
@@ -414,12 +414,12 @@ Zotero.Collection.prototype.addItems = async function (itemIDs, options = {}) {
 	
 	var current = this.getChildItems(true);
 	
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 	for (let i = 0; i < itemIDs.length; i++) {
 		let itemID = itemIDs[i];
 		
 		if (current && current.indexOf(itemID) != -1) {
-			Zotero.debug("Item " + itemID + " already a child of collection " + this.id);
+			Trellis.debug("Item " + itemID + " already a child of collection " + this.id);
 			continue;
 		}
 		
@@ -439,7 +439,7 @@ Zotero.Collection.prototype.addItems = async function (itemIDs, options = {}) {
  *
  * @return {Promise}
  */
-Zotero.Collection.prototype.removeItem = function (itemID, options = {}) {
+Trellis.Collection.prototype.removeItem = function (itemID, options = {}) {
 	return this.removeItems([itemID], options);
 }
 
@@ -450,19 +450,19 @@ Zotero.Collection.prototype.removeItem = function (itemID, options = {}) {
  *
  * Does not require a separate save()
  */
-Zotero.Collection.prototype.removeItems = async function (itemIDs, options = {}) {
+Trellis.Collection.prototype.removeItems = async function (itemIDs, options = {}) {
 	if (!itemIDs || !itemIDs.length) {
 		return;
 	}
 	
 	var current = this.getChildItems(true, true);
 	
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 	for (let i=0; i<itemIDs.length; i++) {
 		let itemID = itemIDs[i];
 		
 		if (current.indexOf(itemID) == -1) {
-			Zotero.debug("Item " + itemID + " not a child of collection " + this.id);
+			Trellis.debug("Item " + itemID + " not a child of collection " + this.id);
 			continue;
 		}
 		
@@ -479,18 +479,18 @@ Zotero.Collection.prototype.removeItems = async function (itemIDs, options = {})
 /**
  * Check if an item belongs to the collection
  *
- * @param {Zotero.Item|Number} item - Item or itemID
+ * @param {Trellis.Item|Number} item - Item or itemID
  */
-Zotero.Collection.prototype.hasItem = function (item) {
+Trellis.Collection.prototype.hasItem = function (item) {
 	this._requireData('childItems');
-	if (item instanceof Zotero.Item) {
+	if (item instanceof Trellis.Item) {
 		item = item.id;
 	}
 	return this._childItems.has(item);
 }
 
 
-Zotero.Collection.prototype.hasDescendent = function (type, id) {
+Trellis.Collection.prototype.hasDescendent = function (type, id) {
 	var descendents = this.getDescendents();
 	for (var i=0, len=descendents.length; i<len; i++) {
 		if (descendents[i].type == type && descendents[i].id == id) {
@@ -507,26 +507,26 @@ Zotero.Collection.prototype.hasDescendent = function (type, id) {
  * Returns a two-element array containing two objects with the differing values,
  * or FALSE if no differences
  *
- * @param	{Zotero.Collection}	collection			Zotero.Collection to compare this item to
+ * @param	{Trellis.Collection}	collection			Trellis.Collection to compare this item to
  * @param	{Boolean}		includeMatches			Include all fields, even those that aren't different
  */
-Zotero.Collection.prototype.diff = function (collection, includeMatches) {
+Trellis.Collection.prototype.diff = function (collection, includeMatches) {
 	var diff = [];
 	var thisData = this.serialize();
 	var otherData = collection.serialize();
 	var numDiffs = this.ObjectsClass.diff(thisData, otherData, diff, includeMatches);
 	
 	// For the moment, just compare children and increase numDiffs if any differences
-	var d1 = Zotero.Utilities.arrayDiff(
+	var d1 = Trellis.Utilities.arrayDiff(
 		thisData.childCollections, otherData.childCollections
 	);
-	var d2 = Zotero.Utilities.arrayDiff(
+	var d2 = Trellis.Utilities.arrayDiff(
 		otherData.childCollections, thisData.childCollections
 	);
-	var d3 = Zotero.Utilities.arrayDiff(
+	var d3 = Trellis.Utilities.arrayDiff(
 		thisData.childItems, otherData.childItems
 	);
-	var d4 = Zotero.Utilities.arrayDiff(
+	var d4 = Trellis.Utilities.arrayDiff(
 		otherData.childItems, thisData.childItems
 	);
 	numDiffs += d1.length + d2.length;
@@ -564,8 +564,8 @@ Zotero.Collection.prototype.diff = function (collection, includeMatches) {
  *
  * Doesn't duplicate subcollections or items, because the collection isn't saved
  */
-Zotero.Collection.prototype.clone = function (libraryID) {
-	Zotero.debug('Cloning collection ' + this.id);
+Trellis.Collection.prototype.clone = function (libraryID) {
+	Trellis.debug('Cloning collection ' + this.id);
 	
 	if (libraryID !== undefined && libraryID !== null && typeof libraryID !== 'number') {
 		throw new Error("libraryID must be null or an integer");
@@ -576,7 +576,7 @@ Zotero.Collection.prototype.clone = function (libraryID) {
 	}
 	var sameLibrary = libraryID == this.libraryID;
 	
-	var newCollection = new Zotero.Collection;
+	var newCollection = new Trellis.Collection;
 	newCollection.libraryID = libraryID;
 	
 	var json = this.toJSON();
@@ -593,13 +593,13 @@ Zotero.Collection.prototype.clone = function (libraryID) {
 /**
 * Moves the collection and all descendent collections (and optionally items) to trash
 **/
-Zotero.Collection.prototype.trash = async function (env) {
-	Zotero.DB.requireTransaction();
+Trellis.Collection.prototype.trash = async function (env) {
+	Trellis.DB.requireTransaction();
 	
 	var collections = [this.id];
 	
 	var descendents = env.isNew ? [] : this.getDescendents(false, null, false);
-	var libraryHasTrash = Zotero.Libraries.hasTrash(this.libraryID);
+	var libraryHasTrash = Trellis.Libraries.hasTrash(this.libraryID);
 	
 	var del = [];
 	for(var i=0, len=descendents.length; i<len; i++) {
@@ -618,8 +618,8 @@ Zotero.Collection.prototype.trash = async function (env) {
 					env.notifierData[c.id].skipDeleteLog = true;
 				}
 				// Record undo data for descendent collections
-				if (Zotero.UndoHistory && !c.deleted) {
-					Zotero.UndoHistory.stageChange({
+				if (Trellis.UndoHistory && !c.deleted) {
+					Trellis.UndoHistory.stageChange({
 						objectType: 'collection',
 						id: c.id,
 						libraryID: c.libraryID,
@@ -646,7 +646,7 @@ Zotero.Collection.prototype.trash = async function (env) {
 		}
 		// If library doesn't have trash, just erase
 		else {
-			Zotero.debug(Zotero.Libraries.getName(this.libraryID) + " library does not have trash. "
+			Trellis.debug(Trellis.Libraries.getName(this.libraryID) + " library does not have trash. "
 				+ this.ChildObjects._ZDO_Objects + " will be erased");
 			let options = {};
 			Object.assign(options, env.options);
@@ -658,13 +658,13 @@ Zotero.Collection.prototype.trash = async function (env) {
 		}
 	}
 
-	await Zotero.Utilities.Internal.forEachChunkAsync(
+	await Trellis.Utilities.Internal.forEachChunkAsync(
 		collections,
-		Zotero.DB.MAX_BOUND_PARAMETERS,
+		Trellis.DB.MAX_BOUND_PARAMETERS,
 		async function (chunk) {
 			// Send collection to trash
 			var placeholders = chunk.map(() => '(?)').join(',');
-			await Zotero.DB.queryAsync('INSERT OR IGNORE INTO deletedCollections (collectionID) VALUES ' + placeholders, chunk);
+			await Trellis.DB.queryAsync('INSERT OR IGNORE INTO deletedCollections (collectionID) VALUES ' + placeholders, chunk);
 		}
 	);
 
@@ -674,7 +674,7 @@ Zotero.Collection.prototype.trash = async function (env) {
 	
 	// Reload collection data to show/restore deleted collections from trash
 	for (let collectionID of collections) {
-		let collection = Zotero.Collections.get(collectionID);
+		let collection = Trellis.Collections.get(collectionID);
 		await collection.loadDataType('primaryData', true);
 		await collection.loadDataType('childCollections', true);
 	}
@@ -683,8 +683,8 @@ Zotero.Collection.prototype.trash = async function (env) {
 /**
 * Completely erase the collection and its descendants.
 **/
-Zotero.Collection.prototype._eraseData = async function (env) {
-	Zotero.DB.requireTransaction();
+Trellis.Collection.prototype._eraseData = async function (env) {
+	Trellis.DB.requireTransaction();
 
 	if (!this.deleted) {
 		await this.trash(env);
@@ -699,22 +699,22 @@ Zotero.Collection.prototype._eraseData = async function (env) {
 	// Make sure all descendant collections will be unloaded in this._finalizeErase()
 	env.deletedObjectIDs = collections;
 
-	await Zotero.Utilities.Internal.forEachChunkAsync(
+	await Trellis.Utilities.Internal.forEachChunkAsync(
 		collections,
-		Zotero.DB.MAX_BOUND_PARAMETERS,
+		Trellis.DB.MAX_BOUND_PARAMETERS,
 		async function (chunk) {
 			var placeholders = chunk.map(() => '?').join(',');
 
 			// Remove item associations for all descendent collections
-			await Zotero.DB.queryAsync('DELETE FROM collectionItems WHERE collectionID IN '
+			await Trellis.DB.queryAsync('DELETE FROM collectionItems WHERE collectionID IN '
 				+ '(' + placeholders + ')', chunk);
 			
 			// Remove parent definitions first for FK check
-			await Zotero.DB.queryAsync('UPDATE collections SET parentCollectionID=NULL '
+			await Trellis.DB.queryAsync('UPDATE collections SET parentCollectionID=NULL '
 				+ 'WHERE parentCollectionID IN (' + placeholders + ')', chunk);
 
 			// And delete all descendent collections
-			await Zotero.DB.queryAsync('DELETE FROM collections WHERE collectionID IN '
+			await Trellis.DB.queryAsync('DELETE FROM collections WHERE collectionID IN '
 			+ '(' + placeholders + ')', chunk);
 		}
 	);
@@ -724,7 +724,7 @@ Zotero.Collection.prototype._eraseData = async function (env) {
 		let parentCollectionID = this.ObjectsClass.getIDFromLibraryAndKey(
 			this.libraryID, this.parentKey
 		);
-		Zotero.DB.addCurrentCallback("commit", function () {
+		Trellis.DB.addCurrentCallback("commit", function () {
 			this.ObjectsClass.unregisterChildCollection(parentCollectionID, this.id);
 		}.bind(this));
 	}
@@ -733,19 +733,19 @@ Zotero.Collection.prototype._eraseData = async function (env) {
 	var itemsToUpdate = descendents.filter(d => d.type == 'item').map(c => c.id);
 	let deletedCollections = new Set(collections);
 	itemsToUpdate.forEach((itemID) => {
-		let item = Zotero.Items.get(itemID);
+		let item = Trellis.Items.get(itemID);
 		item._collections = item._collections.filter(c => !deletedCollections.has(c));
 	});
 };
 
-Zotero.Collection.prototype._finalizeErase = async function (env) {
-	await Zotero.Collection._super.prototype._finalizeErase.call(this, env);
+Trellis.Collection.prototype._finalizeErase = async function (env) {
+	await Trellis.Collection._super.prototype._finalizeErase.call(this, env);
 	
-	await Zotero.Libraries.get(this.libraryID).updateCollections();
+	await Trellis.Libraries.get(this.libraryID).updateCollections();
 };
 
 
-Zotero.Collection.prototype.serialize = function (nested) {
+Trellis.Collection.prototype.serialize = function (nested) {
 	var childCollections = this.getChildCollections(true);
 	var childItems = this.getChildItems(true);
 	var obj = {
@@ -766,13 +766,13 @@ Zotero.Collection.prototype.serialize = function (nested) {
 }
 
 
-Zotero.Collection.prototype.toResponseJSON = function (options = {}) {
+Trellis.Collection.prototype.toResponseJSON = function (options = {}) {
 	let json = this.constructor._super.prototype.toResponseJSON.call(this, options);
 	json.meta.numCollections = this.getChildCollections(true).length;
 	json.meta.numItems = this.getChildItems(true).length;
 	if (this.parentID) {
 		json.links.up = {
-			href: Zotero.URI.toAPIURL(Zotero.URI.getCollectionURI(Zotero.Collections.get(this.parentID)), options.apiURL),
+			href: Trellis.URI.toAPIURL(Trellis.URI.getCollectionURI(Trellis.Collections.get(this.parentID)), options.apiURL),
 			type: 'application/json'
 		};
 	}
@@ -785,7 +785,7 @@ Zotero.Collection.prototype.toResponseJSON = function (options = {}) {
  *
  * If this object is identified (has an id or library/key), loadAllData() must have been called.
  */
-Zotero.Collection.prototype.fromJSON = function (json, options = {}) {
+Trellis.Collection.prototype.fromJSON = function (json, options = {}) {
 	if (options.strict) {
 		for (let prop in json) {
 			switch (prop) {
@@ -799,7 +799,7 @@ Zotero.Collection.prototype.fromJSON = function (json, options = {}) {
 			
 			default:
 				let e = new Error(`Unknown collection property '${prop}'`);
-				e.name = "ZoteroInvalidDataError";
+				e.name = "TrellisInvalidDataError";
 				throw e;
 			}
 		}
@@ -819,7 +819,7 @@ Zotero.Collection.prototype.fromJSON = function (json, options = {}) {
 }
 
 
-Zotero.Collection.prototype.toJSON = function (options = {}) {
+Trellis.Collection.prototype.toJSON = function (options = {}) {
 	var env = this._preToJSON(options);
 	var mode = env.mode;
 	
@@ -845,7 +845,7 @@ Zotero.Collection.prototype.toJSON = function (options = {}) {
  * @return	{Object[]} - An array of objects with 'id', 'key', 'type' ('item' or 'collection'),
  *     'parent', and, if collection, 'name' and the nesting 'level'
  */
-Zotero.Collection.prototype.getDescendents = function (nested, type, includeTrashed, level) {
+Trellis.Collection.prototype.getDescendents = function (nested, type, includeTrashed, level) {
 	if (!this.id) {
 		throw new Error('Cannot be called on an unsaved item');
 	}
@@ -864,7 +864,7 @@ Zotero.Collection.prototype.getDescendents = function (nested, type, includeTras
 		}
 	}
 	
-	var collections = Zotero.Collections.getByParent(this.id, false, includeTrashed);
+	var collections = Trellis.Collections.getByParent(this.id, false, includeTrashed);
 	var children = collections.map(c => ({
 		id: c.id,
 		name: c.name,
@@ -883,7 +883,7 @@ Zotero.Collection.prototype.getDescendents = function (nested, type, includeTras
 	
 	children.sort(function (a, b) {
 		if (a.name === null || b.name === null) return 0;
-		return Zotero.localeCompare(a.name, b.name)
+		return Trellis.localeCompare(a.name, b.name)
 	});
 	
 	var toReturn = [];
@@ -936,9 +936,9 @@ Zotero.Collection.prototype.getDescendents = function (nested, type, includeTras
 /**
  * Return a collection in the specified library equivalent to this collection
  *
- * @return {Promise<Zotero.Collection>}
+ * @return {Promise<Trellis.Collection>}
  */
-Zotero.Collection.prototype.getLinkedCollection = function (libraryID, bidrectional) {
+Trellis.Collection.prototype.getLinkedCollection = function (libraryID, bidrectional) {
 	return this._getLinkedObject(libraryID, bidrectional);
 }
 
@@ -948,7 +948,7 @@ Zotero.Collection.prototype.getLinkedCollection = function (libraryID, bidrectio
  *
  * Does not require a separate save()
  */
-Zotero.Collection.prototype.addLinkedCollection = async function (collection) {
+Trellis.Collection.prototype.addLinkedCollection = async function (collection) {
 	return this._addLinkedObject(collection);
 };
 
@@ -959,7 +959,7 @@ Zotero.Collection.prototype.addLinkedCollection = async function (collection) {
 /**
  * Add a collection to the cached child collections list if loaded
  */
-Zotero.Collection.prototype._registerChildCollection = function (collectionID) {
+Trellis.Collection.prototype._registerChildCollection = function (collectionID) {
 	if (this._loaded.childCollections) {
 		let collection = this.ObjectsClass.get(collectionID);
 		if (collection) {
@@ -972,7 +972,7 @@ Zotero.Collection.prototype._registerChildCollection = function (collectionID) {
 /**
  * Remove a collection from the cached child collections list if loaded
  */
-Zotero.Collection.prototype._unregisterChildCollection = function (collectionID) {
+Trellis.Collection.prototype._unregisterChildCollection = function (collectionID) {
 	if (this._loaded.childCollections) {
 		this._childCollections.delete(collectionID);
 	}
@@ -982,7 +982,7 @@ Zotero.Collection.prototype._unregisterChildCollection = function (collectionID)
 /**
  * Add an item to the cached child items list if loaded
  */
-Zotero.Collection.prototype._registerChildItem = function (itemID) {
+Trellis.Collection.prototype._registerChildItem = function (itemID) {
 	if (this._loaded.childItems) {
 		let item = this.ChildObjects.get(itemID);
 		if (item) {
@@ -995,7 +995,7 @@ Zotero.Collection.prototype._registerChildItem = function (itemID) {
 /**
  * Remove an item from the cached child items list if loaded
  */
-Zotero.Collection.prototype._unregisterChildItem = function (itemID) {
+Trellis.Collection.prototype._unregisterChildItem = function (itemID) {
 	if (this._loaded.childItems) {
 		this._childItems.delete(itemID);
 	}

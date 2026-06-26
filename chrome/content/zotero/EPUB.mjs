@@ -3,28 +3,28 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs",
+	Trellis: "chrome://trellis/content/trellis.mjs",
 });
 
 const ZipReader = Components.Constructor(
@@ -47,7 +47,7 @@ export class EPUB {
 	 * @param {String | nsIFile} file
 	 */
 	constructor(file) {
-		this._zipReader = new ZipReader(Zotero.File.pathToFile(file));
+		this._zipReader = new ZipReader(Trellis.File.pathToFile(file));
 	}
 
 	close() {
@@ -80,7 +80,7 @@ export class EPUB {
 			let id = spineItem.getAttribute('idref');
 			let href = idToHref.get(id);
 			if (!href || !this._zipReader.hasEntry(href)) {
-				Zotero.debug('EPUB: Skipping missing or invalid href in spine: ' + href);
+				Trellis.debug('EPUB: Skipping missing or invalid href in spine: ' + href);
 				continue;
 			}
 			let doc = await this._parseEntryToDocument(href, 'application/xhtml+xml');
@@ -180,7 +180,7 @@ export class EPUB {
 		let stream = this._zipReader.getInputStream(entry);
 		let xml;
 		try {
-			xml = await Zotero.File.getContentsAsync(stream);
+			xml = await Trellis.File.getContentsAsync(stream);
 		}
 		finally {
 			stream.close();

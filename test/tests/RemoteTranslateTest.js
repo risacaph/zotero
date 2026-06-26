@@ -1,7 +1,7 @@
 "use strict";
 
-const { HiddenBrowser } = ChromeUtils.importESModule("chrome://zotero/content/HiddenBrowser.mjs");
-const { RemoteTranslate } = ChromeUtils.importESModule("chrome://zotero/content/RemoteTranslate.mjs");
+const { HiddenBrowser } = ChromeUtils.importESModule("chrome://trellis/content/HiddenBrowser.mjs");
+const { RemoteTranslate } = ChromeUtils.importESModule("chrome://trellis/content/RemoteTranslate.mjs");
 
 describe("RemoteTranslate", function () {
 	let dummyTranslator;
@@ -12,18 +12,18 @@ describe("RemoteTranslate", function () {
 	before(async function () {
 		dummyTranslator = buildDummyTranslator('web', `
 			function detectWeb() {
-				Zotero.debug("test string");
+				Trellis.debug("test string");
 				return "book";
 			}
 			
 			function doWeb() {
-				let item = new Zotero.Item("book");
+				let item = new Trellis.Item("book");
 				item.title = "Title";
 				item.complete();
 			}
 		`);
 		
-		translatorProvider = Zotero.Translators.makeTranslatorProvider({
+		translatorProvider = Trellis.Translators.makeTranslatorProvider({
 			get(translatorID) {
 				if (translatorID == dummyTranslator.translatorID) {
 					return dummyTranslator;
@@ -83,7 +83,7 @@ describe("RemoteTranslate", function () {
 	});
 
 	describe("#setTranslatorProvider()", function () {
-		it("should cause the passed provider to be queried instead of Zotero.Translators", async function () {
+		it("should cause the passed provider to be queried instead of Trellis.Translators", async function () {
 			let translate = new RemoteTranslate();
 			let browser = new HiddenBrowser();
 			await browser.load(getTestDataUrl('test.html'));
@@ -133,7 +133,7 @@ describe("RemoteTranslate", function () {
 			let items = await translate.translate({ libraryID: null }); // User library
 			sinon.assert.calledWith(itemDone, translate,
 				sinon.match({
-					libraryID: Zotero.Libraries.userLibraryID
+					libraryID: Trellis.Libraries.userLibraryID
 				}),
 				sinon.match({
 					title: 'Title'
@@ -173,7 +173,7 @@ describe("RemoteTranslate", function () {
 				}
 				
 				function doWeb() {
-					let item = new Zotero.Item("book");
+					let item = new Trellis.Item("book");
 					item.title = new DOMParser().parseFromString("<body>content</body>", "text/html").body.textContent;
 					item.complete();
 				}
@@ -199,13 +199,13 @@ describe("RemoteTranslate", function () {
 				}
 				
 				function doWeb() {
-					let item = new Zotero.Item("book");
-					item.title = Zotero.getHiddenPref("testPref");
+					let item = new Trellis.Item("book");
+					item.title = Trellis.getHiddenPref("testPref");
 					item.complete();
 				}
 			`);
 
-			Zotero.Prefs.set('translators.testPref', 'Test value');
+			Trellis.Prefs.set('translators.testPref', 'Test value');
 			
 			let translate = new RemoteTranslate();
 			let browser = new HiddenBrowser();
@@ -227,7 +227,7 @@ describe("RemoteTranslate", function () {
 				}
 				
 				async function doWeb() {
-					let item = new Zotero.Item("book");
+					let item = new Trellis.Item("book");
 					item.title = await requestText("http://localhost:${port}/readCookie", {
 						headers: { Cookie: "sessionID=1" },
 					});

@@ -3,31 +3,31 @@
     
     Copyright © 2014 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-if (!Zotero.Sync) {
-	Zotero.Sync = {};
+if (!Trellis.Sync) {
+	Trellis.Sync = {};
 }
 
-Zotero.Sync.APIClient = function (options) {
+Trellis.Sync.APIClient = function (options) {
 	if (!options.baseURL) throw new Error("baseURL not set");
 	if (!options.apiVersion) throw new Error("apiVersion not set");
 	if (!options.caller) throw new Error("caller not set");
@@ -35,16 +35,16 @@ Zotero.Sync.APIClient = function (options) {
 	this.baseURL = options.baseURL;
 	this.apiVersion = options.apiVersion;
 	this.apiKey = options.apiKey;
-	this.schemaVersion = options.schemaVersion || Zotero.Schema.globalSchemaVersion;
+	this.schemaVersion = options.schemaVersion || Trellis.Schema.globalSchemaVersion;
 	this.caller = options.caller;
-	this.debugUploadPolicy = Zotero.Prefs.get('sync.debugUploadPolicy');
+	this.debugUploadPolicy = Trellis.Prefs.get('sync.debugUploadPolicy');
 	this.cancellerReceiver = options.cancellerReceiver;
 	
 	this.rateDelayIntervals = [30, 60, 300];
 	this.rateDelayPosition = 0;
 }
 
-Zotero.Sync.APIClient.prototype = {
+Trellis.Sync.APIClient.prototype = {
 	MAX_OBJECTS_PER_REQUEST: 100,
 	MIN_GZIP_SIZE: 1000,
 	UPLOAD_TIMEOUT: 120000,
@@ -158,7 +158,7 @@ Zotero.Sync.APIClient.prototype = {
 		var uri = this.buildRequestURI(params);
 		var xmlhttp = await this.makeRequest("GET", uri, { successCodes: [200, 409] });
 		if (xmlhttp.status == 409) {
-			Zotero.debug(`'since' value '${since}' is earlier than the beginning of the delete log`);
+			Trellis.debug(`'since' value '${since}' is earlier than the beginning of the delete log`);
 			return false;
 		}
 		return {
@@ -211,7 +211,7 @@ Zotero.Sync.APIClient.prototype = {
 	 *     nothing changed since specified library version
 	 */
 	getVersions: async function (libraryType, libraryTypeID, objectType, queryParams) {
-		var objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
+		var objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
 		
 		var params = {
 			target: objectTypePlural,
@@ -294,9 +294,9 @@ Zotero.Sync.APIClient.prototype = {
 		}
 		
 		// Otherwise make request
-		var objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
+		var objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
 		
-		Zotero.debug("Retrieving " + objectKeys.length + " "
+		Trellis.debug("Retrieving " + objectKeys.length + " "
 			+ (objectKeys.length == 1 ? objectType : objectTypePlural));
 		
 		var params = {
@@ -320,8 +320,8 @@ Zotero.Sync.APIClient.prototype = {
 			}.bind(this))
 			// Return the error without failing the whole chain
 			.catch(function (e) {
-				Zotero.logError(e);
-				if (e instanceof Zotero.HTTP.UnexpectedStatusException && e.is4xx()) {
+				Trellis.logError(e);
+				if (e instanceof Trellis.HTTP.UnexpectedStatusException && e.is4xx()) {
 					throw e;
 				}
 				return {
@@ -362,9 +362,9 @@ Zotero.Sync.APIClient.prototype = {
 		var objectTypePlural = "settings";
 		var numSettings = Object.keys(settings).length;
 		
-		Zotero.debug(`Uploading ${numSettings} ${numSettings == 1 ? objectType : objectTypePlural}`);
+		Trellis.debug(`Uploading ${numSettings} ${numSettings == 1 ? objectType : objectTypePlural}`);
 		
-		Zotero.debug("Sending If-Unmodified-Since-Version: " + libraryVersion);
+		Trellis.debug("Sending If-Unmodified-Since-Version: " + libraryVersion);
 		
 		var json = JSON.stringify(settings);
 		var params = {
@@ -395,12 +395,12 @@ Zotero.Sync.APIClient.prototype = {
 			throw new Error("Invalid method '" + method + "'");
 		}
 		
-		var objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
+		var objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
 		
-		Zotero.debug("Uploading " + objects.length + " "
+		Trellis.debug("Uploading " + objects.length + " "
 			+ (objects.length == 1 ? objectType : objectTypePlural));
 		
-		Zotero.debug("Sending If-Unmodified-Since-Version: " + libraryVersion);
+		Trellis.debug("Sending If-Unmodified-Since-Version: " + libraryVersion);
 		
 		var json = JSON.stringify(objects);
 		var params = {
@@ -428,12 +428,12 @@ Zotero.Sync.APIClient.prototype = {
 	
 	
 	uploadDeletions: async function (libraryType, libraryTypeID, libraryVersion, objectType, keys) {
-		var objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
+		var objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
 		
-		Zotero.debug(`Uploading ${keys.length} ${objectType} deletion`
+		Trellis.debug(`Uploading ${keys.length} ${objectType} deletion`
 			+ (keys.length == 1 ? '' : 's'));
 		
-		Zotero.debug("Sending If-Unmodified-Since-Version: " + libraryVersion);
+		Trellis.debug("Sending If-Unmodified-Since-Version: " + libraryVersion);
 		
 		var params = {
 			target: objectTypePlural,
@@ -536,7 +536,7 @@ Zotero.Sync.APIClient.prototype = {
 		var body = JSON.stringify({
 			username,
 			password,
-			name: "Automatic Zotero Client Key",
+			name: "Automatic Trellis Client Key",
 			access: {
 				user: {
 					library: true,
@@ -631,16 +631,16 @@ Zotero.Sync.APIClient.prototype = {
 				errorDelayMax: 8000,
 			});
 
-			let standardCreditsRemaining = noAPIKey ? null : parseInt(xmlhttp.getResponseHeader('Zotero-TTS-Standard-Credits-Remaining'));
+			let standardCreditsRemaining = noAPIKey ? null : parseInt(xmlhttp.getResponseHeader('Trellis-TTS-Standard-Credits-Remaining'));
 			if (isNaN(standardCreditsRemaining)) {
 				standardCreditsRemaining = null;
 			}
-			let premiumCreditsRemaining = noAPIKey ? null : parseInt(xmlhttp.getResponseHeader('Zotero-TTS-Premium-Credits-Remaining'));
+			let premiumCreditsRemaining = noAPIKey ? null : parseInt(xmlhttp.getResponseHeader('Trellis-TTS-Premium-Credits-Remaining'));
 			if (isNaN(premiumCreditsRemaining)) {
 				premiumCreditsRemaining = null;
 			}
 
-			let devMode = xmlhttp.getResponseHeader('Zotero-TTS-Dev') === '1';
+			let devMode = xmlhttp.getResponseHeader('Trellis-TTS-Dev') === '1';
 
 			return {
 				voices: xmlhttp.response ?? {},
@@ -650,10 +650,10 @@ Zotero.Sync.APIClient.prototype = {
 			};
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 
 			let error;
-			if (e instanceof Zotero.HTTP.BrowserOfflineException) {
+			if (e instanceof Trellis.HTTP.BrowserOfflineException) {
 				error = 'network';
 			}
 			else {
@@ -700,14 +700,14 @@ Zotero.Sync.APIClient.prototype = {
 			return { audio: xmlhttp.response, noStore };
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 
 			let error;
-			if (e instanceof Zotero.HTTP.UnexpectedStatusException && e.status === 402) {
+			if (e instanceof Trellis.HTTP.UnexpectedStatusException && e.status === 402) {
 				let body = await e.xmlhttp.response?.text();
 				error = body === 'daily_limit_exceeded' ? 'daily-limit-exceeded' : 'quota-exceeded';
 			}
-			else if (e instanceof Zotero.HTTP.BrowserOfflineException) {
+			else if (e instanceof Trellis.HTTP.BrowserOfflineException) {
 				error = 'network';
 			}
 			else {
@@ -734,8 +734,8 @@ Zotero.Sync.APIClient.prototype = {
 			};
 		}
 		catch (e) {
-			Zotero.debug('Failed to fetch credits');
-			Zotero.logError(e);
+			Trellis.debug('Failed to fetch credits');
+			Trellis.logError(e);
 			return { standardCreditsRemaining: null, premiumCreditsRemaining: null };
 		}
 	},
@@ -754,8 +754,8 @@ Zotero.Sync.APIClient.prototype = {
 			};
 		}
 		catch (e) {
-			Zotero.debug('Failed to reset credits');
-			Zotero.logError(e);
+			Trellis.debug('Failed to reset credits');
+			Trellis.logError(e);
 			return { standardCreditsRemaining: null, premiumCreditsRemaining: null };
 		}
 	},
@@ -832,11 +832,11 @@ Zotero.Sync.APIClient.prototype = {
 	getHeaders: function (headers = {}) {
 		let newHeaders = {};
 		newHeaders = Object.assign(newHeaders, headers);
-		newHeaders["Zotero-API-Version"] = this.apiVersion.toString();
+		newHeaders["Trellis-API-Version"] = this.apiVersion.toString();
 		if (this.apiKey) {
-			newHeaders["Zotero-API-Key"] = this.apiKey;
+			newHeaders["Trellis-API-Key"] = this.apiKey;
 		}
-		newHeaders["Zotero-Schema-Version"] = this.schemaVersion;
+		newHeaders["Trellis-Schema-Version"] = this.schemaVersion;
 		return newHeaders;
 	},
 	
@@ -846,17 +846,17 @@ Zotero.Sync.APIClient.prototype = {
 			throw new Error('API key not set');
 		}
 		
-		if (Zotero.HTTP.isWriteMethod(method) && this.debugUploadPolicy) {
-			// Confirm uploads when extensions.zotero.sync.debugUploadPolicy is 1
+		if (Trellis.HTTP.isWriteMethod(method) && this.debugUploadPolicy) {
+			// Confirm uploads when extensions.trellis.sync.debugUploadPolicy is 1
 			if (this.debugUploadPolicy === 1) {
 				if (options.body) {
-					Zotero.debug(options.body);
+					Trellis.debug(options.body);
 				}
 				if (!Services.prompt.confirm(null, "Allow Upload?", `Allow ${method} to ${uri}?`)) {
 					throw new Error(method + " request denied");
 				}
 			}
-			// Deny uploads when extensions.zotero.sync.debugUploadPolicy is 2
+			// Deny uploads when extensions.trellis.sync.debugUploadPolicy is 2
 			else if (this.debugUploadPolicy === 2) {
 				throw new Error(`Can't make ${method} request in read-only mode`);
 			}
@@ -870,7 +870,7 @@ Zotero.Sync.APIClient.prototype = {
 		opts.anon = true;
 		opts.responseType = options.responseType || 'text';
 		if (options.body && options.body.length >= this.MIN_GZIP_SIZE
-				&& Zotero.Prefs.get('sync.server.compressData')) {
+				&& Trellis.Prefs.get('sync.server.compressData')) {
 			opts.compressBody = true;
 		}
 		opts.cancellerReceiver = this.cancellerReceiver;
@@ -882,21 +882,21 @@ Zotero.Sync.APIClient.prototype = {
 		while (true) {
 			var result = await this.caller.start(async function () {
 				try {
-					var xmlhttp = await Zotero.HTTP.request(method, uri, opts);
+					var xmlhttp = await Trellis.HTTP.request(method, uri, opts);
 					this._checkBackoff(xmlhttp);
 					this.rateDelayPosition = 0;
 					return xmlhttp;
 				}
 				catch (e) {
 					tries++;
-					if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+					if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 						if (this._check429(e.xmlhttp)
 								|| (e.xmlhttp.status == 503 && this._checkRetry(e.xmlhttp))) {
 							// Return false to keep retrying request
 							return false;
 						}
 					}
-					else if (e instanceof Zotero.HTTP.BrowserOfflineException) {
+					else if (e instanceof Trellis.HTTP.BrowserOfflineException) {
 						e.fatal = true;
 					}
 					throw e;
@@ -986,8 +986,8 @@ Zotero.Sync.APIClient.prototype = {
 			json = JSON.parse(json);
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
-			Zotero.debug(json, 1);
+			Trellis.debug(e, 1);
+			Trellis.debug(json, 1);
 			throw e;
 		}
 		return json;
@@ -1008,7 +1008,7 @@ Zotero.Sync.APIClient.prototype = {
 		var delay;
 		if (!retryAfter) return false;
 		if (parseInt(retryAfter) != retryAfter) {
-			Zotero.logError(`Invalid Retry-After delay ${retryAfter}`);
+			Trellis.logError(`Invalid Retry-After delay ${retryAfter}`);
 			return false;
 		}
 		// TODO: Update status?
@@ -1019,10 +1019,10 @@ Zotero.Sync.APIClient.prototype = {
 	
 	
 	_check412: function (xmlhttp) {
-		// Avoid logging error from Zotero.HTTP.request() in ConcurrentCaller
+		// Avoid logging error from Trellis.HTTP.request() in ConcurrentCaller
 		if (xmlhttp.status == 412) {
-			Zotero.debug("Server returned 412: " + xmlhttp.responseText, 2);
-			throw new Zotero.HTTP.UnexpectedStatusException(xmlhttp);
+			Trellis.debug("Server returned 412: " + xmlhttp.responseText, 2);
+			throw new Trellis.HTTP.UnexpectedStatusException(xmlhttp);
 		}
 	},
 	

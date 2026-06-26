@@ -3,22 +3,22 @@
     
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -26,10 +26,10 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
-	let { countWords } = ChromeUtils.importESModule("resource://zotero/allfaz.mjs").default;
+	let { countWords } = ChromeUtils.importESModule("resource://trellis/allfaz.mjs").default;
 
 	class NoteBox extends ItemPaneSectionElementBase {
 		content = MozXULElement.parseXULToFragment(`
@@ -69,8 +69,8 @@
 		}
 
 		set item(val) {
-			if (!(val instanceof Zotero.Item)) {
-				throw new Error("'item' must be a Zotero.Item");
+			if (!(val instanceof Trellis.Item)) {
+				throw new Error("'item' must be a Trellis.Item");
 			}
 			
 			if (val.isNote()) {
@@ -84,7 +84,7 @@
 
 		init() {
 			this.initCollapsibleSection();
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'noteBox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'noteBox');
 
 			for (let label of this.querySelectorAll(".meta-label")) {
 				// Prevent default focus/blur behavior - we implement our own below
@@ -96,7 +96,7 @@
 		}
 
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 
 			for (let label of this.querySelectorAll(".meta-label")) {
 				label.removeEventListener("mousedown", this._handleMetaLabelMousedown);
@@ -145,14 +145,14 @@
 			// Date created
 			let dateAdded = this._item.getField('dateAdded');
 			if (dateAdded) {
-				let date = Zotero.Date.sqlToDate(dateAdded, true);
+				let date = Trellis.Date.sqlToDate(dateAdded, true);
 				dateCreatedField.value = date.toLocaleString();
 			}
 
 			// Date modified
 			let dateModified = this._item.getField('dateModified');
 			if (dateModified) {
-				let date = Zotero.Date.sqlToDate(dateModified, true);
+				let date = Trellis.Date.sqlToDate(dateModified, true);
 				dateModifiedField.value = date.toLocaleString();
 			}
 		}
@@ -185,7 +185,7 @@
 			
 			let labelWrapper = event.target.closest(".meta-label");
 			if (labelWrapper.nextSibling.contains(document.activeElement)) {
-				ZoteroPane.itemsView.focus();
+				TrellisPane.itemsView.focus();
 			}
 			else if (!labelWrapper.nextSibling.firstChild.readOnly) {
 				labelWrapper.nextSibling.firstChild.focus();
@@ -200,9 +200,9 @@
 			event.preventDefault();
 			if (!this._item) return;
 			if (!this._item.parentItemID) {
-				ZoteroPane.selectItem(this._item.id);
+				TrellisPane.selectItem(this._item.id);
 			}
-			ZoteroPane.selectItem(this._item.id);
+			TrellisPane.selectItem(this._item.id);
 		};
 
 		_id(id) {

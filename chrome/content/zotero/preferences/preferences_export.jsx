@@ -3,22 +3,22 @@
     
     Copyright © 2006–2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -30,7 +30,7 @@ var ReactDOM = require('react-dom');
 var VirtualizedTable = require('components/virtualized-table');
 var { makeRowRenderer } = VirtualizedTable;
 
-Zotero_Preferences.Export = {
+Trellis_Preferences.Export = {
 	init: async function () {
 		this.updateQuickCopyInstructions();
 		await this.populateQuickCopyList();
@@ -39,10 +39,10 @@ Zotero_Preferences.Export = {
 	
 	
 	getQuickCopyTranslators: async function () {
-		var translation = new Zotero.Translate("export");
+		var translation = new Trellis.Translate("export");
 		var translators = await translation.getTranslators();
 		translators.sort((a, b) => {
-			var collation = Zotero.getLocaleCollation();
+			var collation = Trellis.getLocaleCollation();
 			return collation.compareString(1, a.label, b.label);
 		});
 		// Exclude note export translators
@@ -56,24 +56,24 @@ Zotero_Preferences.Export = {
 	 */
 	populateQuickCopyList: async function() {
 		// Initialize default format drop-down
-		var format = Zotero.Prefs.get("export.quickCopy.setting");
-		format = Zotero.QuickCopy.unserializeSetting(format);
-		var menulist = document.getElementById("zotero-quickCopy-menu");
-		await Zotero.Styles.init();
+		var format = Trellis.Prefs.get("export.quickCopy.setting");
+		format = Trellis.QuickCopy.unserializeSetting(format);
+		var menulist = document.getElementById("trellis-quickCopy-menu");
+		await Trellis.Styles.init();
 		var translators = await this.getQuickCopyTranslators();
 		this.buildQuickCopyFormatDropDown(
 			menulist, format.contentType, format, translators
 		);
-		menulist.setAttribute('preference', "extensions.zotero.export.quickCopy.setting");
+		menulist.setAttribute('preference', "extensions.trellis.export.quickCopy.setting");
 		
 		// Initialize locale drop-down
-		var localeMenulist = document.getElementById("zotero-quickCopy-locale-menu");
-		Zotero.Styles.populateLocaleList(localeMenulist);
+		var localeMenulist = document.getElementById("trellis-quickCopy-locale-menu");
+		Trellis.Styles.populateLocaleList(localeMenulist);
 		localeMenulist.addEventListener('syncfrompreference', () => {
-			this._lastSelectedLocale = Zotero.Prefs.get("export.quickCopy.locale");
+			this._lastSelectedLocale = Trellis.Prefs.get("export.quickCopy.locale");
 			this.updateQuickCopyUI();
 		});
-		localeMenulist.setAttribute('preference', "extensions.zotero.export.quickCopy.locale");
+		localeMenulist.setAttribute('preference', "extensions.trellis.export.quickCopy.locale");
 		
 		await this.refreshQuickCopySiteList();
 	},
@@ -86,10 +86,10 @@ Zotero_Preferences.Export = {
 		document.getElementById('noteQuickCopy-format-options').removeAttribute('hidden');
 		
 		// Initialize default format drop-down
-		var format = Zotero.Prefs.get("export.noteQuickCopy.setting");
-		format = Zotero.QuickCopy.unserializeSetting(format);
-		var menulist = document.getElementById("zotero-noteQuickCopy-menu");
-		menulist.setAttribute('preference', "extensions.zotero.export.noteQuickCopy.setting");
+		var format = Trellis.Prefs.get("export.noteQuickCopy.setting");
+		format = Trellis.QuickCopy.unserializeSetting(format);
+		var menulist = document.getElementById("trellis-noteQuickCopy-menu");
+		menulist.setAttribute('preference', "extensions.trellis.export.noteQuickCopy.setting");
 		menulist.removeEventListener('command', this.updateNoteQuickCopyUI);
 		menulist.addEventListener('command', this.updateNoteQuickCopyUI);
 
@@ -97,7 +97,7 @@ Zotero_Preferences.Export = {
 			format = menulist.value;
 		}
 		
-		format = Zotero.QuickCopy.unserializeSetting(format);
+		format = Trellis.QuickCopy.unserializeSetting(format);
 		
 		menulist.selectedItem = null;
 		menulist.removeAllItems();
@@ -106,14 +106,14 @@ Zotero_Preferences.Export = {
 		menulist.appendChild(popup);
 
 		// add export formats to list
-		var translation = new Zotero.Translate("export");
+		var translation = new Trellis.Translate("export");
 		var translators = await translation.getTranslators();
 		
 		translators.sort((a, b) => a.label.localeCompare(b.label));
 		
 		// Remove "Note" prefix from Note HTML translator
 		let htmlTranslator = translators.find(
-			x => x.translatorID == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML
+			x => x.translatorID == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML
 		);
 		if (htmlTranslator) {
 			htmlTranslator.label = 'HTML';
@@ -121,11 +121,11 @@ Zotero_Preferences.Export = {
 		
 		// Make sure virtual "Markdown + Rich Text" translator doesn't actually exist
 		translators = translators.filter(
-			x => x.translatorID != Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT
+			x => x.translatorID != Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT
 		);
 
 		let markdownTranslatorIdx = translators.findIndex(
-			x => x.translatorID == Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN
+			x => x.translatorID == Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN
 		);
 		// Make sure we actually have both translators
 		if (markdownTranslatorIdx != -1 && htmlTranslator) {
@@ -133,8 +133,8 @@ Zotero_Preferences.Export = {
 			translators.splice(markdownTranslatorIdx, 1);
 			// Add virtual "Markdown + Rich Text" translator to the top
 			translators.unshift({
-				translatorID: Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT,
-				label: 'Markdown + ' + Zotero.getString('general.richText'),
+				translatorID: Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT,
+				label: 'Markdown + ' + Trellis.getString('general.richText'),
 				configOptions: {
 					noteTranslator: true
 				}
@@ -151,7 +151,7 @@ Zotero_Preferences.Export = {
 			if (translator.translatorID == format.id) {
 				value = format;
 			}
-			else if (translator.translatorID == Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+			else if (translator.translatorID == Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
 				value = {
 					mode: 'export',
 					id: translator.translatorID,
@@ -162,11 +162,11 @@ Zotero_Preferences.Export = {
 						includeAppLinks: false
 					}
 				};
-				if (format.id == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML && format.options) {
+				if (format.id == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML && format.options) {
 					value.htmlOptions = format.options;
 				}
 			}
-			else if (translator.translatorID == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+			else if (translator.translatorID == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 				value = {
 					mode: 'export',
 					id: translator.translatorID,
@@ -174,7 +174,7 @@ Zotero_Preferences.Export = {
 						includeAppLinks: false
 					}
 				};
-				if (format.id == Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT && format.htmlOptions) {
+				if (format.id == Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT && format.htmlOptions) {
 					value.options = format.htmlOptions;
 				}
 			}
@@ -195,7 +195,7 @@ Zotero_Preferences.Export = {
 	},
 
 	updateNoteQuickCopyUI: () => {
-		var format = document.getElementById('zotero-noteQuickCopy-menu').value;
+		var format = document.getElementById('trellis-noteQuickCopy-menu').value;
 		format = JSON.parse(format);
 
 		var markdownOptions = document.getElementById('noteQuickCopy-markdown-options');
@@ -205,20 +205,20 @@ Zotero_Preferences.Export = {
 		var markdownIncludeAppLinks = document.getElementById("noteQuickCopy-markdown-includeAppLinks");
 		var htmlIncludeAppLinks = document.getElementById("noteQuickCopy-html-includeAppLinks");
 		
-		markdownOptionsLabel.value = Zotero.Utilities.Internal.stringWithColon("Markdown");
-		htmlOptionsLabel.value = Zotero.Utilities.Internal.stringWithColon(
-			Zotero.getString('zotero.preferences.export.quickCopy.note.htmlOptions.label')
+		markdownOptionsLabel.value = Trellis.Utilities.Internal.stringWithColon("Markdown");
+		htmlOptionsLabel.value = Trellis.Utilities.Internal.stringWithColon(
+			Trellis.getString('trellis.preferences.export.quickCopy.note.htmlOptions.label')
 		);
-		markdownIncludeAppLinks.label = Zotero.getString('exportOptions.includeAppLinks', Zotero.appName);
-		htmlIncludeAppLinks.label = Zotero.getString('exportOptions.includeAppLinks', Zotero.appName);
+		markdownIncludeAppLinks.label = Trellis.getString('exportOptions.includeAppLinks', Trellis.appName);
+		htmlIncludeAppLinks.label = Trellis.getString('exportOptions.includeAppLinks', Trellis.appName);
 		
-		if (format.id == Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+		if (format.id == Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
 			markdownOptions.hidden = false;
 			htmlOptions.hidden = false;
 			markdownIncludeAppLinks.checked = format.markdownOptions && format.markdownOptions.includeAppLinks;
 			htmlIncludeAppLinks.checked = format.htmlOptions && format.htmlOptions.includeAppLinks;
 		}
-		else if (format.id == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+		else if (format.id == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 			markdownOptions.hidden = true;
 			htmlOptions.hidden = false;
 			htmlIncludeAppLinks.checked = format.options && format.options.includeAppLinks;
@@ -230,14 +230,14 @@ Zotero_Preferences.Export = {
 	},
 
 	onUpdateNoteExportOptions() {
-		var menulist = document.getElementById("zotero-noteQuickCopy-menu");
+		var menulist = document.getElementById("trellis-noteQuickCopy-menu");
 		var markdownIncludeAppLinks = document.getElementById("noteQuickCopy-markdown-includeAppLinks");
 		var htmlIncludeAppLinks = document.getElementById("noteQuickCopy-html-includeAppLinks");
 
 		for (let i = 0; i < menulist.itemCount; i++) {
 			let item = menulist.getItemAtIndex(i);
 			let format = JSON.parse(item.getAttribute('value'));
-			if (format.id == Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+			if (format.id == Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
 				if (!format.markdownOptions) {
 					format.markdownOptions = {};
 				}
@@ -247,7 +247,7 @@ Zotero_Preferences.Export = {
 				format.markdownOptions.includeAppLinks = markdownIncludeAppLinks.checked;
 				format.htmlOptions.includeAppLinks = htmlIncludeAppLinks.checked;
 			}
-			else if (format.id == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+			else if (format.id == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 				if (!format.options) {
 					format.options = {};
 				}
@@ -272,7 +272,7 @@ Zotero_Preferences.Export = {
 			format = menulist.value;
 		}
 		
-		format = Zotero.QuickCopy.unserializeSetting(format);
+		format = Trellis.QuickCopy.unserializeSetting(format);
 		
 		menulist.selectedItem = null;
 		menulist.removeAllItems();
@@ -281,18 +281,18 @@ Zotero_Preferences.Export = {
 		menulist.appendChild(popup);
 		
 		var itemNode = document.createXULElement("menuitem");
-		itemNode.setAttribute("label", Zotero.getString('zotero.preferences.export.quickCopy.citationStyles'));
+		itemNode.setAttribute("label", Trellis.getString('trellis.preferences.export.quickCopy.citationStyles'));
 		itemNode.setAttribute("disabled", true);
 		popup.appendChild(itemNode);
 		
 		// add styles to list
-		var styles = Zotero.Styles.getVisible();
+		var styles = Trellis.Styles.getVisible();
 		styles.forEach(function (style) {
 			var val = 'bibliography' + (contentType == 'html' ? '/html' : '') + '=' + style.styleID;
 			var itemNode = document.createXULElement("menuitem");
 			itemNode.setAttribute("value", val);
 			itemNode.setAttribute("label", style.title);
-			itemNode.setAttribute("oncommand", 'Zotero_Preferences.Export.updateQuickCopyUI()');
+			itemNode.setAttribute("oncommand", 'Trellis_Preferences.Export.updateQuickCopyUI()');
 			popup.appendChild(itemNode);
 			
 			if (format.mode == 'bibliography' && format.id == style.styleID) {
@@ -301,7 +301,7 @@ Zotero_Preferences.Export = {
 		});
 		
 		var itemNode = document.createXULElement("menuitem");
-		itemNode.setAttribute("label", Zotero.getString('zotero.preferences.export.quickCopy.exportFormats'));
+		itemNode.setAttribute("label", Trellis.getString('trellis.preferences.export.quickCopy.exportFormats'));
 		itemNode.setAttribute("disabled", true);
 		popup.appendChild(itemNode);
 		
@@ -318,7 +318,7 @@ Zotero_Preferences.Export = {
 			var itemNode = document.createXULElement("menuitem");
 			itemNode.setAttribute("value", val);
 			itemNode.setAttribute("label", translator.label);
-			itemNode.setAttribute("oncommand", 'Zotero_Preferences.Export.updateQuickCopyUI()');
+			itemNode.setAttribute("oncommand", 'Trellis_Preferences.Export.updateQuickCopyUI()');
 			popup.appendChild(itemNode);
 			
 			if (format.mode == 'export' && format.id == translator.translatorID) {
@@ -331,27 +331,27 @@ Zotero_Preferences.Export = {
 	
 	
 	onCopyAsHTMLChange: async function (checked) {
-		var menulist = document.getElementById('zotero-quickCopy-menu');
+		var menulist = document.getElementById('trellis-quickCopy-menu');
 		var translators = await this.getQuickCopyTranslators();
 		this.buildQuickCopyFormatDropDown(menulist, checked ? 'html' : '', null, translators);
 	},
 	
 	
 	updateQuickCopyUI: function () {
-		var format = document.getElementById('zotero-quickCopy-menu').value;
+		var format = document.getElementById('trellis-quickCopy-menu').value;
 		
 		var mode, contentType;
 		
 		[mode, format] = format.split('=');
 		[mode, contentType] = mode.split('/');
 		
-		var checkbox = document.getElementById('zotero-quickCopy-copyAsHTML');
+		var checkbox = document.getElementById('trellis-quickCopy-copyAsHTML');
 		checkbox.checked = contentType == 'html';
 		checkbox.disabled = mode != 'bibliography';
 		
-		Zotero.Styles.updateLocaleList(
-			document.getElementById('zotero-quickCopy-locale-menu'),
-			mode == 'bibliography' ? Zotero.Styles.get(format) : null,
+		Trellis.Styles.updateLocaleList(
+			document.getElementById('trellis-quickCopy-locale-menu'),
+			mode == 'bibliography' ? Trellis.Styles.get(format) : null,
 			this._lastSelectedLocale
 		);
 	},
@@ -389,9 +389,9 @@ Zotero_Preferences.Export = {
 		if (editExisting) {
 			index = this._tree.selection.focused;
 		}
-		var formattedName = document.getElementById('zotero-quickCopy-menu').label;
+		var formattedName = document.getElementById('trellis-quickCopy-menu').label;
 		var locale = this._lastSelectedLocale;
-		var asHTML = document.getElementById('zotero-quickCopy-copyAsHTML').checked;
+		var asHTML = document.getElementById('trellis-quickCopy-copyAsHTML').checked;
 		
 		if (index !== undefined && index > -1 && index < this._rows.length) {
 			var row = this._rows[index];
@@ -401,33 +401,33 @@ Zotero_Preferences.Export = {
 			asHTML = row.copyAsHTML;
 		}
 		
-		var format = await Zotero.QuickCopy.getSettingFromFormattedName(formattedName);
+		var format = await Trellis.QuickCopy.getSettingFromFormattedName(formattedName);
 		if (asHTML) {
 			format = format.replace('bibliography=', 'bibliography/html=');
 		}
 		
-		var styles = Zotero.Styles.getVisible();
-		var translation = new Zotero.Translate("export");
+		var styles = Trellis.Styles.getVisible();
+		var translation = new Trellis.Translate("export");
 		var translators = await translation.getTranslators();
 		
 		var io = { domain, format, locale, asHTML, ok: false, styles, translators };
-		window.openDialog('chrome://zotero/content/preferences/quickCopySiteEditor.xhtml',
-			"zotero-preferences-quickCopySiteEditor", "chrome,modal,centerscreen", io);
+		window.openDialog('chrome://trellis/content/preferences/quickCopySiteEditor.xhtml',
+			"trellis-preferences-quickCopySiteEditor", "chrome,modal,centerscreen", io);
 		
 		if (!io.ok || !io.domain) {
 			return;
 		}
 		
 		if (domain && domain != io.domain) {
-			await Zotero.DB.queryAsync("DELETE FROM settings WHERE setting='quickCopySite' AND key=?", [domain]);
+			await Trellis.DB.queryAsync("DELETE FROM settings WHERE setting='quickCopySite' AND key=?", [domain]);
 		}
 		
-		var quickCopysetting = Zotero.QuickCopy.unserializeSetting(io.format);
+		var quickCopysetting = Trellis.QuickCopy.unserializeSetting(io.format);
 		quickCopysetting.locale = io.locale;
 		
-		await Zotero.DB.queryAsync("REPLACE INTO settings VALUES ('quickCopySite', ?, ?)", [io.domain, JSON.stringify(quickCopysetting)]);
+		await Trellis.DB.queryAsync("REPLACE INTO settings VALUES ('quickCopySite', ?, ?)", [io.domain, JSON.stringify(quickCopysetting)]);
 		
-		await Zotero.QuickCopy.loadSiteSettings();
+		await Trellis.QuickCopy.loadSiteSettings();
 		
 		await this.refreshQuickCopySiteList();
 	},
@@ -436,13 +436,13 @@ Zotero_Preferences.Export = {
 	refreshQuickCopySiteList: async function () {
 		var sql = "SELECT key AS domainPath, value AS format FROM settings "
 			+ "WHERE setting='quickCopySite' ORDER BY domainPath COLLATE NOCASE";
-		var siteData = await Zotero.DB.queryAsync(sql);
+		var siteData = await Trellis.DB.queryAsync(sql);
 		
 		this._rows = [];
 
 		for (let row of siteData) {
-			var formattedName = await Zotero.QuickCopy.getFormattedNameFromSetting(row.format);
-			var format = Zotero.QuickCopy.unserializeSetting(row.format);
+			var formattedName = await Trellis.QuickCopy.getFormattedNameFromSetting(row.format);
+			var format = Trellis.QuickCopy.unserializeSetting(row.format);
 			this._rows.push({
 				domain: row.domainPath,
 				format: formattedName,
@@ -455,17 +455,17 @@ Zotero_Preferences.Export = {
 			const columns = [
 				{
 					dataKey: "domain",
-					label: "zotero.preferences.quickCopy.siteEditor.domainPath",
+					label: "trellis.preferences.quickCopy.siteEditor.domainPath",
 					flex: 2
 				},
 				{
 					dataKey: "format",
-					label: "zotero.preferences.quickCopy.siteEditor.format",
+					label: "trellis.preferences.quickCopy.siteEditor.format",
 					flex: 4
 				},
 				{
 					dataKey: "locale",
-					label: "zotero.preferences.quickCopy.siteEditor.locale",
+					label: "trellis.preferences.quickCopy.siteEditor.locale",
 					flex: 1
 				},
 				{
@@ -477,8 +477,8 @@ Zotero_Preferences.Export = {
 				}
 			];
 			var handleKeyDown = (event) => {
-				if (event.key == 'Delete' || Zotero.isMac && event.key == 'Backspace') {
-					Zotero_Preferences.Export.deleteSelectedQuickCopySite();
+				if (event.key == 'Delete' || Trellis.isMac && event.key == 'Backspace') {
+					Trellis_Preferences.Export.deleteSelectedQuickCopySite();
 				}
 			};
 			var handleSelectionChange = () => {
@@ -502,7 +502,7 @@ Zotero_Preferences.Export = {
 						onSelectionChange={handleSelectionChange}
 						onKeyDown={handleKeyDown}
 						getRowString={index => this._rows[index].domain}
-						onActivate={(event, indices) => Zotero_Preferences.Export.showQuickCopySiteEditor(true)}
+						onActivate={(event, indices) => Trellis_Preferences.Export.showQuickCopySiteEditor(true)}
 					/>
 				);
 			});
@@ -519,26 +519,26 @@ Zotero_Preferences.Export = {
 	
 	deleteSelectedQuickCopySite: async function() {
 		var domainPath = this._rows[this._tree.selection.focused].domain;
-		await Zotero.DB.queryAsync("DELETE FROM settings WHERE setting='quickCopySite' AND key=?", [domainPath]);
-		await Zotero.QuickCopy.loadSiteSettings();
+		await Trellis.DB.queryAsync("DELETE FROM settings WHERE setting='quickCopySite' AND key=?", [domainPath]);
+		await Trellis.QuickCopy.loadSiteSettings();
 		await this.refreshQuickCopySiteList();
 		this.updateQuickCopySiteButtons();
 	},
 	
 	
 	updateQuickCopyInstructions: function () {
-		var prefix = Zotero.isMac ? Zotero.getString('general.keys.cmdShift') : Zotero.getString('general.keys.ctrlShift');
+		var prefix = Trellis.isMac ? Trellis.getString('general.keys.cmdShift') : Trellis.getString('general.keys.ctrlShift');
 		
-		var key = Zotero.Prefs.get('keys.copySelectedItemsToClipboard');
-		var str = Zotero.getString('zotero.preferences.export.quickCopy.instructions', prefix + key);
+		var key = Trellis.Prefs.get('keys.copySelectedItemsToClipboard');
+		var str = Trellis.getString('trellis.preferences.export.quickCopy.instructions', prefix + key);
 		var instr = document.getElementById('quickCopy-instructions');
 		while (instr.hasChildNodes()) {
 			instr.removeChild(instr.firstChild);
 		}
 		instr.appendChild(document.createTextNode(str));
 		
-		key = Zotero.Prefs.get('keys.copySelectedItemCitationsToClipboard');
-		str = Zotero.getString('zotero.preferences.export.quickCopy.citationInstructions', prefix + key);
+		key = Trellis.Prefs.get('keys.copySelectedItemCitationsToClipboard');
+		str = Trellis.getString('trellis.preferences.export.quickCopy.citationInstructions', prefix + key);
 		instr = document.getElementById('quickCopy-citationInstructions');
 		while (instr.hasChildNodes()) {
 			instr.removeChild(instr.firstChild);

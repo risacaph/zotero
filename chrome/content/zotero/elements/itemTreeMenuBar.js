@@ -3,22 +3,22 @@
     
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -65,7 +65,7 @@ class ItemTreeMenuBar extends XULElement {
 				</menupopup>
 			</menu>
 		</menubar>
-	`, ['chrome://zotero/locale/standalone.dtd']);
+	`, ['chrome://trellis/locale/standalone.dtd']);
 	}
 
 	get suppressed() {
@@ -112,10 +112,10 @@ class ItemTreeMenuBar extends XULElement {
 		let sortSubmenuKeys = document.getElementById('sortSubmenuKeys');
 		for (let i = 0; i < 10; i++) {
 			let key = sortSubmenuKeys.children[i];
-			key.setAttribute('modifiers', Zotero.isMac ? 'accel alt control' : 'alt');
+			key.setAttribute('modifiers', Trellis.isMac ? 'accel alt control' : 'alt');
 			key.setAttribute('key', (i + 1) % 10);
 			key.addEventListener('command', () => {
-				if (!window.Zotero_Tabs || window.Zotero_Tabs.selectedType == 'library') {
+				if (!window.Trellis_Tabs || window.Trellis_Tabs.selectedType == 'library') {
 					itemsView.toggleSort(i, true);
 				}
 			});
@@ -129,7 +129,7 @@ class ItemTreeMenuBar extends XULElement {
 				this.constructor.handleItemTreeMenuShowing(event, menu, itemTree);
 			});
 		}
-		if (!Zotero.isMac) {
+		if (!Trellis.isMac) {
 			// On Alt keypress, DOMMenuBarActive event is fired. On click or tab away from the menubar, DOMMenuBarInactive is fired.
 			// Handle these event to display/hide menubar accordingly.
 			// If a selected menu is clicked, DOMMenuBarInactive event will fire first followed by DOMMenuBarActive.

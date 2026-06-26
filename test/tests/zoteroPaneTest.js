@@ -1,14 +1,14 @@
 "use strict";
 
-describe("ZoteroPane", function () {
+describe("TrellisPane", function () {
 	var win, doc, zp, userLibraryID;
 	
-	// Load Zotero pane and select library
+	// Load Trellis pane and select library
 	before(function* () {
-		win = yield loadZoteroPane();
+		win = yield loadTrellisPane();
 		doc = win.document;
-		zp = win.ZoteroPane;
-		userLibraryID = Zotero.Libraries.userLibraryID;
+		zp = win.TrellisPane;
+		userLibraryID = Trellis.Libraries.userLibraryID;
 	});
 	
 	after(function () {
@@ -27,7 +27,7 @@ describe("ZoteroPane", function () {
 			itemTree.focus();
 			assert.equal(doc.activeElement.id, "item-tree-main-default");
 			
-			var key = Zotero.isMac ? "Alt" : "Control";
+			var key = Trellis.isMac ? "Alt" : "Control";
 			itemTree.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
 			
 			// The handler sets a 225ms timer before applying highlights
@@ -65,20 +65,20 @@ describe("ZoteroPane", function () {
 	
 	describe("#newItem", function () {
 		it("should create an item and focus the title field", async function () {
-			await zp.newItem(Zotero.ItemTypes.getID('book'), {}, null, true);
+			await zp.newItem(Trellis.ItemTypes.getID('book'), {}, null, true);
 			assert.equal(doc.activeElement.closest("editable-text").id, "itembox-field-value-title");
 			doc.activeElement.blur();
-			await Zotero.Promise.delay(1);
+			await Trellis.Promise.delay(1);
 		})
 		
 		it("should save an entered value when New Item is used", async function () {
 			var value = "Test";
-			var item = await zp.newItem(Zotero.ItemTypes.getID('book'), {}, null, true);
-			let header = doc.getElementById('zotero-item-pane-header');
+			var item = await zp.newItem(Trellis.ItemTypes.getID('book'), {}, null, true);
+			let header = doc.getElementById('trellis-item-pane-header');
 			let title = header.querySelector("editable-text");
 			title.value = value;
 			await header.save();
-			item = await Zotero.Items.getAsync(item.id);
+			item = await Trellis.Items.getAsync(item.id);
 			assert.equal(item.getField('title'), value);
 		})
 	});
@@ -108,12 +108,12 @@ describe("ZoteroPane", function () {
 			var promise = waitForDialog(
 				null,
 				'accept',
-				'chrome://zotero/content/newCollectionDialog.xhtml'
+				'chrome://trellis/content/newCollectionDialog.xhtml'
 			);
 			var id = await zp.newCollection();
 			await promise;
-			var collection = Zotero.Collections.get(id);
-			assert.isTrue(collection.name.startsWith(Zotero.getString('pane.collections.untitled')));
+			var collection = Trellis.Collections.get(id);
+			assert.isTrue(collection.name.startsWith(Trellis.getString('pane.collections.untitled')));
 		});
 	});
 	
@@ -121,9 +121,9 @@ describe("ZoteroPane", function () {
 		it("should create a saved search", async function () {
 			await selectLibrary(win);
 			await zp.toggleAdvancedSearchState('open');
-			var deck = doc.getElementById('zotero-advanced-search-pane-deck');
+			var deck = doc.getElementById('trellis-advanced-search-pane-deck');
 			
-			var searchIDs = (await Zotero.Searches.getAll(userLibraryID)).map(s => s.id);
+			var searchIDs = (await Trellis.Searches.getAll(userLibraryID)).map(s => s.id);
 			// Saving prompts for a name; accept the default
 			var promptService = Services.prompt;
 			Services.prompt = { prompt: () => true };
@@ -134,10 +134,10 @@ describe("ZoteroPane", function () {
 				Services.prompt = promptService;
 			}
 
-			var newSearches = (await Zotero.Searches.getAll(userLibraryID))
+			var newSearches = (await Trellis.Searches.getAll(userLibraryID))
 				.filter(s => !searchIDs.includes(s.id));
 			assert.lengthOf(newSearches, 1);
-			assert.isTrue(newSearches[0].name.startsWith(Zotero.getString('pane.collections.untitled')));
+			assert.isTrue(newSearches[0].name.startsWith(Trellis.getString('pane.collections.untitled')));
 			assert.equal(deck.state, 'closed');
 			
 			await newSearches[0].eraseTx();
@@ -146,36 +146,36 @@ describe("ZoteroPane", function () {
 	
 	describe("#itemSelected()", function () {
 		it.skip("should update the item count", function* () {
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "Count Test";
 			var id = yield collection.saveTx();
 			yield waitForItemsLoad(win);
 			
 			// Unselected, with no items in view
 			assert.equal(
-				doc.getElementById('zotero-item-pane-message-box').textContent,
+				doc.getElementById('trellis-item-pane-message-box').textContent,
 				yield doc.l10n.formatValue('item-pane-message-unselected', { count: 0 })
 			);
 			
 			// Unselected, with one item in view
-			var item = new Zotero.Item('newspaperArticle');
+			var item = new Trellis.Item('newspaperArticle');
 			item.setCollections([id]);
 			var itemID1 = yield item.saveTx({
 				skipSelect: true
 			});
 			assert.equal(
-				doc.getElementById('zotero-item-pane-message-box').textContent,
+				doc.getElementById('trellis-item-pane-message-box').textContent,
 				yield doc.l10n.formatValue('item-pane-message-unselected', { count: 1 })
 			);
 			
 			// Unselected, with multiple items in view
-			var item = new Zotero.Item('audioRecording');
+			var item = new Trellis.Item('audioRecording');
 			item.setCollections([id]);
 			var itemID2 = yield item.saveTx({
 				skipSelect: true
 			});
 			assert.equal(
-				doc.getElementById('zotero-item-pane-message-box').textContent,
+				doc.getElementById('trellis-item-pane-message-box').textContent,
 				yield doc.l10n.formatValue('item-pane-message-unselected', { count: 2 })
 			);
 			
@@ -184,38 +184,38 @@ describe("ZoteroPane", function () {
 			zp.itemsView.rememberSelection([itemID1, itemID2]);
 			yield promise;
 			assert.equal(
-				doc.getElementById('zotero-item-pane-message-box').textContent,
-				Zotero.getString('pane.item.selected.multiple', 2)
+				doc.getElementById('trellis-item-pane-message-box').textContent,
+				Trellis.getString('pane.item.selected.multiple', 2)
 			);
 		})
 	})
 	
 	describe("#viewAttachment", function () {
-		var apiKey = Zotero.Utilities.randomString(24);
+		var apiKey = Trellis.Utilities.randomString(24);
 		var baseURL;
 		var httpd;
 		var server;
 		
 		async function downloadOnDemand() {
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			// TODO: Test binary data
-			var text = Zotero.Utilities.randomString();
+			var text = Trellis.Utilities.randomString();
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
 			var mtime = "1441252524000";
-			var md5 = Zotero.Utilities.Internal.md5(text)
+			var md5 = Trellis.Utilities.Internal.md5(text)
 			
 			var s3Path = `pretend-s3/${item.key}`;
 			server.respondWith(function (req) {
 				if (req.method == "GET"
 						&& req.url == baseURL + `users/1/items/${item.key}/file`) {
 					req.respond(302, {
-						"Zotero-File-Modification-Time": mtime,
-						"Zotero-File-MD5": md5,
-						"Zotero-File-Compressed": "No",
+						"Trellis-File-Modification-Time": mtime,
+						"Trellis-File-MD5": md5,
+						"Trellis-File-Compressed": "No",
 						"Location": baseURL + s3Path,
 					}, "");
 				}
@@ -231,7 +231,7 @@ describe("ZoteroPane", function () {
 			);
 
 			// Disable loadURI() so viewAttachment() doesn't trigger translator loading
-			var stub = sinon.stub(Zotero, "launchFile");
+			var stub = sinon.stub(Trellis, "launchFile");
 			
 			await zp.viewAttachment(item.id);
 			
@@ -242,60 +242,60 @@ describe("ZoteroPane", function () {
 			assert.equal(await item.attachmentHash, md5);
 			assert.equal(await item.attachmentModificationTime, mtime);
 			var path = await item.getFilePathAsync();
-			assert.equal(await Zotero.File.getContentsAsync(path), text);
+			assert.equal(await Trellis.File.getContentsAsync(path), text);
 		};
 		
 		before(function () {
-			Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+			Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 		})
 		beforeEach(async function () {
 			var port;
 			({ httpd, port } = await startHTTPServer());
 			baseURL = `http://localhost:${port}/`;
-			Zotero.Prefs.set("api.url", baseURL);
+			Trellis.Prefs.set("api.url", baseURL);
 
 			server = sinon.fakeServer.create();
 			server.autoRespond = true;
 
-			Zotero.Sync.Runner.apiKey = apiKey;
-			await Zotero.Users.setCurrentUserID(1);
-			await Zotero.Users.setCurrentUsername("testuser");
+			Trellis.Sync.Runner.apiKey = apiKey;
+			await Trellis.Users.setCurrentUserID(1);
+			await Trellis.Users.setCurrentUsername("testuser");
 		})
 		afterEach(function* () {
 			server.restore();
-			var defer = Zotero.Promise.defer();
+			var defer = Trellis.Promise.defer();
 			httpd.stop(() => defer.resolve());
 			yield defer.promise;
 		})
 		after(function () {
-			Zotero.HTTP.mock = null;
+			Trellis.HTTP.mock = null;
 		});
 		
 		it("should download an attachment on-demand in as-needed mode", async function () {
-			Zotero.Sync.Storage.Local.downloadAsNeeded(Zotero.Libraries.userLibraryID, true);
+			Trellis.Sync.Storage.Local.downloadAsNeeded(Trellis.Libraries.userLibraryID, true);
 			await downloadOnDemand();
 		});
 		
 		// As noted in viewAttachment(), this is only necessary for files modified before 5.0.85
 		it("should re-download a remotely modified attachment in as-needed mode", async function () {
-			Zotero.Sync.Storage.Local.downloadAsNeeded(Zotero.Libraries.userLibraryID, true);
+			Trellis.Sync.Storage.Local.downloadAsNeeded(Trellis.Libraries.userLibraryID, true);
 			
 			var item = await importFileAttachment('test.txt');
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
-			var text = Zotero.Utilities.randomString();
+			var text = Trellis.Utilities.randomString();
 			var mtime = "1441252524000";
-			var md5 = Zotero.Utilities.Internal.md5(text)
+			var md5 = Trellis.Utilities.Internal.md5(text)
 			
 			var s3Path = `pretend-s3/${item.key}`;
 			server.respondWith(function (req) {
 				if (req.method == "GET"
 						&& req.url == baseURL + `users/1/items/${item.key}/file`) {
 					req.respond(302, {
-						"Zotero-File-Modification-Time": mtime,
-						"Zotero-File-MD5": md5,
-						"Zotero-File-Compressed": "No",
+						"Trellis-File-Modification-Time": mtime,
+						"Trellis-File-MD5": md5,
+						"Trellis-File-Compressed": "No",
 						"Location": baseURL + s3Path,
 					}, "");
 				}
@@ -311,8 +311,8 @@ describe("ZoteroPane", function () {
 			);
 
 			// Disable loadURI() so viewAttachment() doesn't trigger translator loading
-			var downloadSpy = sinon.spy(Zotero.Sync.Runner, "downloadFile");
-			var launchFileStub = sinon.stub(Zotero, "launchFile");
+			var downloadSpy = sinon.spy(Trellis.Sync.Runner, "downloadFile");
+			var launchFileStub = sinon.stub(Trellis, "launchFile");
 			
 			await zp.viewAttachment(item.id);
 			
@@ -325,11 +325,11 @@ describe("ZoteroPane", function () {
 			assert.equal(await item.attachmentHash, md5);
 			assert.equal(await item.attachmentModificationTime, mtime);
 			var path = await item.getFilePathAsync();
-			assert.equal(await Zotero.File.getContentsAsync(path), text);
+			assert.equal(await Trellis.File.getContentsAsync(path), text);
 		});
 		
 		it("should handle a 404 when re-downloading a remotely modified attachment in as-needed mode", async function () {
-			Zotero.Sync.Storage.Local.downloadAsNeeded(Zotero.Libraries.userLibraryID, true);
+			Trellis.Sync.Storage.Local.downloadAsNeeded(Trellis.Libraries.userLibraryID, true);
 			
 			var item = await importFileAttachment('test.txt');
 			item.attachmentSyncState = "to_download";
@@ -337,7 +337,7 @@ describe("ZoteroPane", function () {
 			
 			var mtime = await item.attachmentModificationTime;
 			var md5 = await item.attachmentHash;
-			var text = await Zotero.File.getContentsAsync(item.getFilePath());
+			var text = await Trellis.File.getContentsAsync(item.getFilePath());
 			
 			httpd.registerPathHandler(
 				`/users/1/items/${item.key}/file`,
@@ -349,8 +349,8 @@ describe("ZoteroPane", function () {
 			);
 			
 			// Disable loadURI() so viewAttachment() doesn't trigger translator loading
-			var downloadSpy = sinon.spy(Zotero.Sync.Runner, "downloadFile");
-			var launchFileStub = sinon.stub(Zotero, "launchFile");
+			var downloadSpy = sinon.spy(Trellis.Sync.Runner, "downloadFile");
+			var launchFileStub = sinon.stub(Trellis, "launchFile");
 			
 			await zp.viewAttachment(item.id);
 			
@@ -364,11 +364,11 @@ describe("ZoteroPane", function () {
 			assert.equal(await item.attachmentModificationTime, mtime);
 			assert.equal(await item.attachmentHash, md5);
 			var path = await item.getFilePathAsync();
-			assert.equal(await Zotero.File.getContentsAsync(path), text);
+			assert.equal(await Trellis.File.getContentsAsync(path), text);
 		});
 		
 		it("should download an attachment on-demand in at-sync-time mode", async function () {
-			Zotero.Sync.Storage.Local.downloadOnSync(Zotero.Libraries.userLibraryID, true);
+			Trellis.Sync.Storage.Local.downloadOnSync(Trellis.Libraries.userLibraryID, true);
 			await downloadOnDemand();
 		});
 		
@@ -396,14 +396,14 @@ describe("ZoteroPane", function () {
 		});
 
 		it("should handle Windows paths on macOS/Linux", async function () {
-			if (!Zotero.isMac && !Zotero.isLinux) {
+			if (!Trellis.isMac && !Trellis.isLinux) {
 				this.skip();
 				return;
 			}
 			
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.linkFromFile({ file });
+			let attachment = await Trellis.Attachments.linkFromFile({ file });
 			attachment.attachmentPath = 'C:\\some\\windows\\path';
 			await attachment.saveTx();
 
@@ -725,8 +725,8 @@ describe("ZoteroPane", function () {
 					keyCode: 46,
 					bubbles: true,
 					cancelable: true,
-					metaKey: Zotero.isMac,
-					shiftKey: !Zotero.isMac,
+					metaKey: Trellis.isMac,
+					shiftKey: !Trellis.isMac,
 				}
 			));
 			assert.isTrue(stub.calledOnce);
@@ -812,7 +812,7 @@ describe("ZoteroPane", function () {
 		});
 
 		it("should prompt to remove an item from subcollections when recursiveCollections enabled", async function () {
-			Zotero.Prefs.set('recursiveCollections', true);
+			Trellis.Prefs.set('recursiveCollections', true);
 
 			let collection1 = await createDataObject('collection');
 			let collection2 = await createDataObject('collection', { parentID: collection1.id });
@@ -822,7 +822,7 @@ describe("ZoteroPane", function () {
 			let iv = zp.itemsView;
 			assert.ok(await iv.selectItem(item.id));
 
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 
 			let promise = waitForDialog();
 			let modifyPromise = waitForItemEvent('modify');
@@ -832,10 +832,10 @@ describe("ZoteroPane", function () {
 			let dialog = await promise;
 			await modifyPromise;
 
-			assert.include(dialog.document.documentElement.textContent, Zotero.getString('pane.items.removeRecursive'));
+			assert.include(dialog.document.documentElement.textContent, Trellis.getString('pane.items.removeRecursive'));
 			assert.isFalse(item.inCollection(collection2.id));
 
-			Zotero.Prefs.clear('recursiveCollections');
+			Trellis.Prefs.clear('recursiveCollections');
 		});
 	});
 	
@@ -847,7 +847,7 @@ describe("ZoteroPane", function () {
 			var promise = waitForDialog();
 			await zp.deleteSelectedCollection();
 			assert.isTrue(collection.deleted);
-			assert.isTrue(Zotero.Items.exists(item.id));
+			assert.isTrue(Trellis.Items.exists(item.id));
 			assert.isFalse(item.deleted);
 		});
 		
@@ -858,7 +858,7 @@ describe("ZoteroPane", function () {
 			var promise = waitForDialog();
 			await zp.deleteSelectedCollection(true);
 			assert.isTrue(collection.deleted);
-			assert.isTrue(Zotero.Items.exists(item.id));
+			assert.isTrue(Trellis.Items.exists(item.id));
 			assert.isTrue(item.deleted);
 		});
 	});
@@ -867,11 +867,11 @@ describe("ZoteroPane", function () {
 	describe("#emptyTrash()", function () {
 		it("should clear the undo/redo history", async function () {
 			// Record an undo entry
-			Zotero.UndoHistory.clear();
+			Trellis.UndoHistory.clear();
 			var collection = await createDataObject('collection', { name: 'Original' });
 			collection.name = 'Renamed';
 			await collection.saveTx({ undoAction: 'undo-action-rename-collection' });
-			assert.isTrue(Zotero.UndoHistory.canUndo());
+			assert.isTrue(Trellis.UndoHistory.canUndo());
 
 			// Put something in the trash to empty
 			await createDataObject('item', { deleted: true });
@@ -881,8 +881,8 @@ describe("ZoteroPane", function () {
 			await zp.emptyTrash();
 			await promise;
 
-			assert.isFalse(Zotero.UndoHistory.canUndo());
-			assert.isFalse(Zotero.UndoHistory.canRedo());
+			assert.isFalse(Trellis.UndoHistory.canUndo());
+			assert.isFalse(Trellis.UndoHistory.canRedo());
 		});
 	});
 
@@ -894,20 +894,20 @@ describe("ZoteroPane", function () {
 			cv = zp.collectionsView;
 		});
 		beforeEach(function () {
-			Zotero.Prefs.clear('duplicateLibraries');
-			Zotero.Prefs.clear('unfiledLibraries');
+			Trellis.Prefs.clear('duplicateLibraries');
+			Trellis.Prefs.clear('unfiledLibraries');
 			return selectLibrary(win);
 		})
 		
 		it("should show a hidden virtual collection in My Library", async function () {
 			// Create unfiled, duplicate items
-			var title = Zotero.Utilities.randomString();
+			var title = Trellis.Utilities.randomString();
 			var item1 = await createDataObject('item', { title });
 			var item2 = await createDataObject('item', { title });
 			
 			// Start hidden (tested in collectionTreeViewTest)
-			Zotero.Prefs.set('duplicateLibraries', `{"${userLibraryID}": false}`);
-			Zotero.Prefs.set('unfiledLibraries', `{"${userLibraryID}": false}`);
+			Trellis.Prefs.set('duplicateLibraries', `{"${userLibraryID}": false}`);
+			Trellis.Prefs.set('unfiledLibraries', `{"${userLibraryID}": false}`);
 			await cv.refresh();
 			
 			// Show Duplicate Items
@@ -917,7 +917,7 @@ describe("ZoteroPane", function () {
 			// Duplicate Items should be selected
 			assert.equal(zp.getCollectionTreeRow().id, id);
 			// Should be missing from pref
-			assert.isUndefined(JSON.parse(Zotero.Prefs.get('duplicateLibraries'))[userLibraryID])
+			assert.isUndefined(JSON.parse(Trellis.Prefs.get('duplicateLibraries'))[userLibraryID])
 			
 			// Clicking should select both items
 			var row = cv.getRowIndexByID(id);
@@ -939,15 +939,15 @@ describe("ZoteroPane", function () {
 			// Unfiled Items should be selected
 			assert.equal(zp.getCollectionTreeRow().id, id);
 			// Should be missing from pref
-			assert.isUndefined(JSON.parse(Zotero.Prefs.get('unfiledLibraries'))[userLibraryID])
+			assert.isUndefined(JSON.parse(Trellis.Prefs.get('unfiledLibraries'))[userLibraryID])
 		});
 		
 		it("should expand library if collapsed when showing virtual collection", async function () {
 			// Start hidden (tested in collectionTreeViewTest)
-			Zotero.Prefs.set('duplicateLibraries', `{"${userLibraryID}": false}`);
+			Trellis.Prefs.set('duplicateLibraries', `{"${userLibraryID}": false}`);
 			await cv.refresh();
 			
-			var libraryRow = cv.getRowIndexByID(Zotero.Libraries.userLibrary.treeViewID);
+			var libraryRow = cv.getRowIndexByID(Trellis.Libraries.userLibrary.treeViewID);
 			if (cv.isContainerOpen(libraryRow)) {
 				await cv.toggleOpenState(libraryRow);
 				cv._saveOpenStates();
@@ -970,14 +970,14 @@ describe("ZoteroPane", function () {
 			assert.ok(await cv.selectByID(id));
 			await zp.setVirtual(userLibraryID, 'duplicates', false);
 			assert.isFalse(cv.getRowIndexByID(id));
-			assert.isFalse(JSON.parse(Zotero.Prefs.get('duplicateLibraries'))[userLibraryID])
+			assert.isFalse(JSON.parse(Trellis.Prefs.get('duplicateLibraries'))[userLibraryID])
 			
 			// Hide Unfiled Items
 			id = "U" + userLibraryID;
 			assert.ok(await cv.selectByID(id));
 			await zp.setVirtual(userLibraryID, 'unfiled', false);
 			assert.isFalse(cv.getRowIndexByID(id));
-			assert.isFalse(JSON.parse(Zotero.Prefs.get('unfiledLibraries'))[userLibraryID])
+			assert.isFalse(JSON.parse(Trellis.Prefs.get('unfiledLibraries'))[userLibraryID])
 		});
 		
 		it("should hide a virtual collection in a group", async function () {
@@ -1002,8 +1002,8 @@ describe("ZoteroPane", function () {
 			// Row should have been removed
 			assert.isFalse(cv.getRowIndexByID(id));
 			// Pref should have been updated
-			Zotero.debug(Zotero.Prefs.get('duplicateLibraries'));
-			assert.isFalse(JSON.parse(Zotero.Prefs.get('duplicateLibraries'))[group.libraryID]);
+			Trellis.debug(Trellis.Prefs.get('duplicateLibraries'));
+			assert.isFalse(JSON.parse(Trellis.Prefs.get('duplicateLibraries'))[group.libraryID]);
 			// Group row shouldn't have changed
 			assert.equal(cv.getRowIndexByID(group.treeViewID), groupRow);
 			// Group should remain open
@@ -1019,7 +1019,7 @@ describe("ZoteroPane", function () {
 			// Row should have been removed
 			assert.isFalse(cv.getRowIndexByID(id));
 			// Pref should have been updated
-			assert.isFalse(JSON.parse(Zotero.Prefs.get('unfiledLibraries'))[group.libraryID]);
+			assert.isFalse(JSON.parse(Trellis.Prefs.get('unfiledLibraries'))[group.libraryID]);
 			// Group row shouldn't have changed
 			assert.equal(cv.getRowIndexByID(group.treeViewID), groupRow);
 			// Group should remain open
@@ -1034,12 +1034,12 @@ describe("ZoteroPane", function () {
 			await select(win, search);
 			await zp.editSelectedCollection();
 			
-			var deck = doc.getElementById('zotero-advanced-search-pane-deck');
+			var deck = doc.getElementById('trellis-advanced-search-pane-deck');
 			assert.equal(deck.state, 'open');
 			assert.equal(deck.selectedSearchType, 'saved');
 			
 			var pane = deck.pane;
-			var searchBox = pane.querySelector('zoterosearch');
+			var searchBox = pane.querySelector('trellissearch');
 			var c = searchBox.search.getCondition(
 				searchBox.search.addCondition("title", "contains", "foo")
 			);
@@ -1120,9 +1120,9 @@ describe("ZoteroPane", function () {
 			await zp.selectItems([item1.id, item2.id]);
 			await zp.buildItemContextMenu();
 			
-			var menu = win.document.getElementById('zotero-itemmenu');
-			assert.isTrue(menu.querySelector('.zotero-menuitem-export').hidden);
-			assert.isTrue(menu.querySelector('.zotero-menuitem-create-bibliography').hidden);
+			var menu = win.document.getElementById('trellis-itemmenu');
+			assert.isTrue(menu.querySelector('.trellis-menuitem-export').hidden);
+			assert.isTrue(menu.querySelector('.trellis-menuitem-create-bibliography').hidden);
 		});
 
 		it("should disable the report when selected items span libraries", async function () {
@@ -1141,10 +1141,10 @@ describe("ZoteroPane", function () {
 			await zp.onCollectionSelected();
 			await zp.itemsView.waitForLoad();
 
-			let menu = win.document.getElementById('zotero-itemmenu');
-			let report = menu.querySelector('.zotero-menuitem-create-report');
+			let menu = win.document.getElementById('trellis-itemmenu');
+			let report = menu.querySelector('.trellis-menuitem-create-report');
 
-			// Select within the current (grouped) view rather than ZoteroPane.selectItems(),
+			// Select within the current (grouped) view rather than TrellisPane.selectItems(),
 			// which would navigate the collection tree and drop the multi-selection
 
 			// Items from a single library: report enabled
@@ -1177,7 +1177,7 @@ describe("ZoteroPane", function () {
 			await zp.onCollectionSelected();
 			await zp.itemsView.waitForLoad();
 
-			let headerRow = zp.itemsView.getRowIndexByID("L" + Zotero.Libraries.userLibraryID);
+			let headerRow = zp.itemsView.getRowIndexByID("L" + Trellis.Libraries.userLibraryID);
 			let headerNode = win.document.getElementById(`${zp.itemsView.id}-row-${headerRow}`);
 			assert.isTrue(headerNode.classList.contains('library-header-row'));
 
@@ -1210,7 +1210,7 @@ describe("ZoteroPane", function () {
 			await zp.onCollectionSelected();
 			await zp.itemsView.waitForLoad();
 
-			let headerRow = zp.itemsView.getRowIndexByID("L" + Zotero.Libraries.userLibraryID);
+			let headerRow = zp.itemsView.getRowIndexByID("L" + Trellis.Libraries.userLibraryID);
 			assert.equal(zp.itemsView.getRow(headerRow).type, 'library-header');
 
 			let spy = sinon.spy(zp, 'onItemTreeActivate');
@@ -1235,12 +1235,12 @@ describe("ZoteroPane", function () {
 			await zp.selectItems([item1.id, item2.id]);
 			await zp.buildItemContextMenu();
 			
-			var menu = win.document.getElementById('zotero-itemmenu');
-			var exportMenuItem = menu.querySelector('.zotero-menuitem-export');
+			var menu = win.document.getElementById('trellis-itemmenu');
+			var exportMenuItem = menu.querySelector('.trellis-menuitem-export');
 			assert.isFalse(exportMenuItem.hidden);
 			assert.equal(
 				exportMenuItem.getAttribute('label'),
-				Zotero.getString('pane.items.menu.exportNote.multiple')
+				Trellis.getString('pane.items.menu.exportNote.multiple')
 			);
 		});
 
@@ -1248,14 +1248,14 @@ describe("ZoteroPane", function () {
 			var item1 = await createDataObject('item', { deleted: true });
 			var attachment1 = await importFileAttachment('test.png', { parentItemID: item1.id });
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 
 			// Enable for attachment of item in trash
 			await zp.selectItems([attachment1.id]);
 			await zp.buildItemContextMenu();
-			var menu = win.document.getElementById('zotero-itemmenu');
-			var deleteMenuItem = menu.querySelector('.zotero-menuitem-delete-from-lib');
+			var menu = win.document.getElementById('trellis-itemmenu');
+			var deleteMenuItem = menu.querySelector('.trellis-menuitem-delete-from-lib');
 			assert.isFalse(deleteMenuItem.disabled);
 
 			// Enable for parent and attachment
@@ -1277,13 +1277,13 @@ describe("ZoteroPane", function () {
 			var item1 = await createDataObject('item', { deleted: true });
 			var attachment1 = await importFileAttachment('test.png', { parentItemID: item1.id });
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			
 			await zp.selectItems([item1.id]);
 			await zp.buildItemContextMenu();
-			var menu = win.document.getElementById('zotero-itemmenu');
-			var restoreMenuItem = menu.querySelector('.zotero-menuitem-restore-to-library');
+			var menu = win.document.getElementById('trellis-itemmenu');
+			var restoreMenuItem = menu.querySelector('.trellis-menuitem-restore-to-library');
 			assert.isFalse(restoreMenuItem.disabled);
 
 			await zp.selectItems([item1.id, attachment1.id]);
@@ -1297,13 +1297,13 @@ describe("ZoteroPane", function () {
 			attachment1.deleted = true;
 			await attachment1.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			
 			await zp.selectItems([item1.id]);
 			await zp.buildItemContextMenu();
-			var menu = win.document.getElementById('zotero-itemmenu');
-			var restoreMenuItem = menu.querySelector('.zotero-menuitem-restore-to-library');
+			var menu = win.document.getElementById('trellis-itemmenu');
+			var restoreMenuItem = menu.querySelector('.trellis-menuitem-restore-to-library');
 			assert.isTrue(restoreMenuItem.disabled);
 		});
 	});
@@ -1315,7 +1315,7 @@ describe("ZoteroPane", function () {
 			attachment1.deleted = true;
 			await attachment1.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			await zp.selectItems([item1.id, attachment1.id]);
 			await zp.restoreSelectedItems();
@@ -1330,7 +1330,7 @@ describe("ZoteroPane", function () {
 			attachment1.deleted = true;
 			await attachment1.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			await zp.selectItems([item1.id, attachment1.id]);
 			await zp.restoreSelectedItems();
@@ -1348,7 +1348,7 @@ describe("ZoteroPane", function () {
 			attachment2.deleted = true;
 			await attachment2.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			await zp.selectItems([item1.id, attachment1.id]);
 			await zp.restoreSelectedItems();
@@ -1370,7 +1370,7 @@ describe("ZoteroPane", function () {
 			attachment3.deleted = true;
 			await attachment3.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			await zp.selectItems([item1.id]);
 			await zp.restoreSelectedItems();
@@ -1391,7 +1391,7 @@ describe("ZoteroPane", function () {
 			attachment2.deleted = true;
 			await attachment2.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			await zp.selectItems([item1.id, attachment2.id, attachment3.id]);
 			await zp.restoreSelectedItems();
@@ -1412,7 +1412,7 @@ describe("ZoteroPane", function () {
 			attachment2.deleted = true;
 			await attachment2.saveTx();
 
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			await zp.collectionsView.selectByID('T' + userLibraryID);
 			await zp.selectItems([attachment1.id, attachment2.id, attachment3.id]);
 			await zp.restoreSelectedItems();
@@ -1429,8 +1429,8 @@ describe("ZoteroPane", function () {
 
 		this.beforeEach(async () => {
 			labdDir = await getTempDirectory();
-			Zotero.Prefs.set('baseAttachmentPath', labdDir);
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true);
+			Trellis.Prefs.set('baseAttachmentPath', labdDir);
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true);
 		});
 
 		it("should detect and relink a single attachment", async function () {
@@ -1444,7 +1444,7 @@ describe("ZoteroPane", function () {
 
 			await OS.File.copy(file.path, outsideFile);
 
-			let attachment = await Zotero.Attachments.linkFromFile({
+			let attachment = await Trellis.Attachments.linkFromFile({
 				file: outsideFile,
 				parentItemID: item.id
 			});
@@ -1482,8 +1482,8 @@ describe("ZoteroPane", function () {
 				await OS.File.copy(file1.path, outsideFile1);
 				await OS.File.copy(file2.path, outsideFile2);
 
-				let attachment1 = await Zotero.Attachments.linkFromFile({ file: outsideFile1 });
-				let attachment2 = await Zotero.Attachments.linkFromFile({ file: outsideFile2 });
+				let attachment1 = await Trellis.Attachments.linkFromFile({ file: outsideFile1 });
+				let attachment2 = await Trellis.Attachments.linkFromFile({ file: outsideFile2 });
 
 				assert.isTrue(await attachment1.fileExists());
 				assert.isTrue(await attachment2.fileExists());
@@ -1527,7 +1527,7 @@ describe("ZoteroPane", function () {
 
 			await OS.File.copy(file.path, outsideFile);
 
-			let attachment = await Zotero.Attachments.linkFromFile({ file: outsideFile });
+			let attachment = await Trellis.Attachments.linkFromFile({ file: outsideFile });
 
 			assert.isTrue(await attachment.fileExists());
 			await OS.File.move(outsideFile, labdFile);
@@ -1540,7 +1540,7 @@ describe("ZoteroPane", function () {
 			await zp.checkForLinkedFilesToRelink(attachment);
 			assert.ok(dialogStub.calledOnce);
 			assert.ok(dialogStub.calledWith(attachment, sinon.match.string, 0));
-			//Zotero.debug(existsSpy.calledWith(OS.Path.join(labdSubdir, 'test.pdf')));
+			//Trellis.debug(existsSpy.calledWith(OS.Path.join(labdSubdir, 'test.pdf')));
 			//assert.ok(existsSpy.calledWith(OS.Path.join(labdSubdir, 'test.pdf')));
 			//assert.notOk(existsSpy.calledWith(OS.Path.join(labdDir, 'test.pdf'))); // Should never get there
 
@@ -1566,7 +1566,7 @@ describe("ZoteroPane", function () {
 				await OS.File.copy(file.path, labdFile);
 				labdFiles.push(labdFile);
 
-				let attachment = await Zotero.Attachments.linkFromFile({ file });
+				let attachment = await Trellis.Attachments.linkFromFile({ file });
 				attachment.attachmentPath = `C:\\test\\${parts.join('\\')}`;
 				await attachment.saveTx();
 				attachments.push(attachment);
@@ -1593,22 +1593,22 @@ describe("ZoteroPane", function () {
 	
 	describe("#focus()", function () {
 		before(async function () {
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "Focus Test";
 			await collection.saveTx();
 			// Make sure there is a tag
-			var item = new Zotero.Item('newspaperArticle');
+			var item = new Trellis.Item('newspaperArticle');
 			item.setCollections([collection.id]);
 			await item.setTags(["Tag"]);
 			await item.saveTx({
 				skipSelect: true
 			});
 			// Make sure there is more than one tab so that the tabs menu is focusable
-			if (win.Zotero_Tabs.numTabs == 1) {
+			if (win.Trellis_Tabs.numTabs == 1) {
 				let attachment = await importFileAttachment('test.pdf');
 				await attachment.saveTx();
 				await zp.viewAttachment(attachment.id);
-				win.Zotero_Tabs.select('zotero-pane');
+				win.Trellis_Tabs.select('trellis-pane');
 			}
 			await waitForItemsLoad(win);
 			await zp.collectionsView.selectLibrary(userLibraryID);
@@ -1635,24 +1635,24 @@ describe("ZoteroPane", function () {
 			bubbles: true
 		});
 
-		// Focus sequence for Zotero Pane
+		// Focus sequence for Trellis Pane
 		let sequence = [
-			"zotero-tb-search-textbox",
-			"zotero-tb-search-dropmarker",
-			"zotero-tb-add",
+			"trellis-tb-search-textbox",
+			"trellis-tb-search-dropmarker",
+			"trellis-tb-add",
 			"tag-selector-actions",
 			"search-input",
 			"tag-selector-item",
 			"collection-tree",
-			"zotero-collections-search",
-			"zotero-tb-collection-add",
-			"zotero-tb-sync",
-			"zotero-tb-tabs-menu"
+			"trellis-collections-search",
+			"trellis-tb-collection-add",
+			"trellis-tb-sync",
+			"trellis-tb-tabs-menu"
 		];
 		beforeEach(function () {
 			// Reset collection search field state
-			let collectionSearchField = doc.getElementById("zotero-collections-search");
-			let collectionSearchButton = doc.getElementById("zotero-tb-collections-search");
+			let collectionSearchField = doc.getElementById("trellis-collections-search");
+			let collectionSearchButton = doc.getElementById("trellis-tb-collections-search");
 			collectionSearchField.classList.remove("visible", "expanding");
 			collectionSearchField.setAttribute("disabled", true);
 			collectionSearchField.style.visibility = 'hidden';
@@ -1661,10 +1661,10 @@ describe("ZoteroPane", function () {
 			collectionSearchButton.style.display = '';
 		});
 
-		it("should shift-tab across the zotero pane", async function () {
+		it("should shift-tab across the trellis pane", async function () {
 			// Start from the Advanced Search button (the last focusable element in the
 			// search field) so the first shift-tab exercises advanced button -> search field
-			let advancedButton = doc.getElementById('zotero-tb-search-advanced-button');
+			let advancedButton = doc.getElementById('trellis-tb-search-advanced-button');
 			advancedButton.focus();
 
 			for (let id of sequence) {
@@ -1675,13 +1675,13 @@ describe("ZoteroPane", function () {
 				// <input>; "focus" does not bubble, so a listener on the outer
 				// element would never fire.
 				let focusPromise;
-				if (id === "zotero-collections-search") {
+				if (id === "trellis-collections-search") {
 					focusPromise = waitForDOMEvent(doc.getElementById(id), "focusin");
 				}
 				// Set up hide observer before the shift-tab that blurs collection-search
 				let hidePromise;
-				if (id === "zotero-tb-collection-add") {
-					let field = doc.getElementById("zotero-collections-search");
+				if (id === "trellis-tb-collection-add") {
+					let field = doc.getElementById("trellis-collections-search");
 					if (field.style.visibility !== 'hidden') {
 						hidePromise = waitForDOMAttributes(field, "style",
 							() => field.style.visibility === 'hidden');
@@ -1711,8 +1711,8 @@ describe("ZoteroPane", function () {
 			assert.equal(doc.activeElement.dataset.action, "toggle-pane");
 		});
 
-		it("should tab across the zotero pane", async function () {
-			win.Zotero_Tabs.moveFocus("current");
+		it("should tab across the trellis pane", async function () {
+			win.Trellis_Tabs.moveFocus("current");
 			let reversed = [...sequence].reverse();
 			for (let id of reversed) {
 				// Set up focus listener before dispatching the event
@@ -1720,7 +1720,7 @@ describe("ZoteroPane", function () {
 				// See the shift-tab test above for why this listens on "focusin"
 				// rather than "focus".
 				let focusPromise;
-				if (id === "zotero-collections-search") {
+				if (id === "trellis-collections-search") {
 					focusPromise = waitForDOMEvent(doc.getElementById(id), "focusin");
 				}
 				doc.activeElement.dispatchEvent(tab);
@@ -1738,26 +1738,26 @@ describe("ZoteroPane", function () {
 			}
 			// Tab from the search field to the Advanced Search button at the end of the field
 			doc.activeElement.dispatchEvent(tab);
-			assert.equal(doc.activeElement.id, "zotero-tb-search-advanced-button");
+			assert.equal(doc.activeElement.id, "trellis-tb-search-advanced-button");
 		});
 
 		it("should navigate toolbarbuttons with arrows", async function () {
-			let addItem = doc.getElementById('zotero-tb-add');
+			let addItem = doc.getElementById('trellis-tb-add');
 			addItem.focus();
 			
 			doc.activeElement.dispatchEvent(rightArrow);
-			assert.equal(doc.activeElement.id, "zotero-tb-lookup");
+			assert.equal(doc.activeElement.id, "trellis-tb-lookup");
 			doc.activeElement.dispatchEvent(rightArrow);
-			assert.equal(doc.activeElement.id, "zotero-tb-attachment-add");
+			assert.equal(doc.activeElement.id, "trellis-tb-attachment-add");
 			doc.activeElement.dispatchEvent(rightArrow);
-			assert.equal(doc.activeElement.id, "zotero-tb-note-add");
+			assert.equal(doc.activeElement.id, "trellis-tb-note-add");
 
 			doc.activeElement.dispatchEvent(leftArrow);
-			assert.equal(doc.activeElement.id, "zotero-tb-attachment-add");
+			assert.equal(doc.activeElement.id, "trellis-tb-attachment-add");
 			doc.activeElement.dispatchEvent(leftArrow);
-			assert.equal(doc.activeElement.id, "zotero-tb-lookup");
+			assert.equal(doc.activeElement.id, "trellis-tb-lookup");
 			doc.activeElement.dispatchEvent(leftArrow);
-			assert.equal(doc.activeElement.id, "zotero-tb-add");
+			assert.equal(doc.activeElement.id, "trellis-tb-add");
 		});
 	});
 	
@@ -1766,7 +1766,7 @@ describe("ZoteroPane", function () {
 			let parentItem = await createDataObject('item');
 			
 			// Add a link attachment, which won't affect renaming
-			await Zotero.Attachments.linkFromURL({
+			await Trellis.Attachments.linkFromURL({
 				url: 'https://example.com/',
 				parentItemID: parentItem.id,
 			});
@@ -1776,7 +1776,7 @@ describe("ZoteroPane", function () {
 			file.append('test.pdf');
 			let [pdfAttachment1] = await zp.addAttachmentFromDialog(false, parentItem.id, [file.path]);
 			assert.equal(parentItem.getAttachments().length, 2);
-			assert.equal(pdfAttachment1.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(pdfAttachment1.getField('title'), Trellis.getString('file-type-pdf'));
 			
 			// Add a second, which will get a title based on its filename
 			let [pdfAttachment2] = await zp.addAttachmentFromDialog(false, parentItem.id, [file.path]);
@@ -1788,7 +1788,7 @@ describe("ZoteroPane", function () {
 			file.append('stub.epub');
 			let [epubAttachment] = await zp.addAttachmentFromDialog(false, parentItem.id, [file.path]);
 			assert.equal(parentItem.getAttachments().length, 4);
-			assert.equal(epubAttachment.getField('title'), Zotero.getString('file-type-ebook'));
+			assert.equal(epubAttachment.getField('title'), Trellis.getString('file-type-ebook'));
 		});
 		
 		it("shouldn't set type-based titles when multiple attachments of the same type are added at once", async function () {
@@ -1807,7 +1807,7 @@ describe("ZoteroPane", function () {
 			file.append('stub.epub');
 			let [epubAttachment] = await zp.addAttachmentFromDialog(false, parentItem.id, [file.path]);
 			assert.equal(parentItem.getAttachments().length, 3);
-			assert.equal(epubAttachment.getField('title'), Zotero.getString('file-type-ebook'));
+			assert.equal(epubAttachment.getField('title'), Trellis.getString('file-type-ebook'));
 		});
 		
 		it("should select added file attachment", async function () {
@@ -1825,11 +1825,11 @@ describe("ZoteroPane", function () {
 
 		describe("Linked file renaming", function () {
 			before(() => {
-				Zotero.Prefs.set('autoRenameFiles.linked', true);
+				Trellis.Prefs.set('autoRenameFiles.linked', true);
 			});
 
 			after(() => {
-				Zotero.Prefs.clear('autoRenameFiles.linked');
+				Trellis.Prefs.clear('autoRenameFiles.linked');
 			});
 
 			it("should only rename and change the title of the first PDF attachment", async function () {
@@ -1846,7 +1846,7 @@ describe("ZoteroPane", function () {
 				let parentItem = await createDataObject('item', { title: 'Foo' });
 
 				let [attachment1] = await zp.addAttachmentFromDialog(false, parentItem.id, [copy1]);
-				assert.equal(attachment1.getField('title'), Zotero.getString('file-type-pdf'));
+				assert.equal(attachment1.getField('title'), Trellis.getString('file-type-pdf'));
 				assert.equal(attachment1.attachmentFilename, 'Foo.pdf');
 
 				let [attachment2] = await zp.addAttachmentFromDialog(false, parentItem.id, [copy2]);
@@ -1863,7 +1863,7 @@ describe("ZoteroPane", function () {
 				parent = await createDataObject('item', { title: 'Book Title' });
 				win.arguments[0].dataOut = { parent };
 				win.close();
-			}, false, 'chrome://zotero/content/createParentDialog.xhtml');
+			}, false, 'chrome://trellis/content/createParentDialog.xhtml');
 			let createParentPromise = zp.createParentItemsFromSelected();
 			await dialogPromise;
 			await createParentPromise;
@@ -1879,15 +1879,15 @@ describe("ZoteroPane", function () {
 			let parent = await createParent();
 			assert.equal(attachment.parentItem, parent);
 			assert.equal(attachment.attachmentFilename, 'Book Title.pdf');
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-pdf'));
 		});
 
 		it("shouldn't rename or change the title of an attachment with a disabled type", async function () {
-			Zotero.Prefs.set('autoRenameFiles.fileTypes', 'x-nonexistent/type');
+			Trellis.Prefs.set('autoRenameFiles.fileTypes', 'x-nonexistent/type');
 
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.linkFromFile({
+			let attachment = await Trellis.Attachments.linkFromFile({
 				file,
 				title: 'Attachment title'
 			});
@@ -1898,15 +1898,15 @@ describe("ZoteroPane", function () {
 			assert.equal(attachment.attachmentFilename, 'test.pdf');
 			assert.equal(attachment.getField('title'), 'Attachment title');
 
-			Zotero.Prefs.clear('autoRenameFiles.fileTypes');
+			Trellis.Prefs.clear('autoRenameFiles.fileTypes');
 		});
 
 		it("shouldn't rename a linked attachment or set an automatic title when linked file renaming disabled", async function () {
-			Zotero.Prefs.set('autoRenameFiles.linked', false);
+			Trellis.Prefs.set('autoRenameFiles.linked', false);
 			
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.linkFromFile({
+			let attachment = await Trellis.Attachments.linkFromFile({
 				file,
 				title: 'Attachment title'
 			});
@@ -1917,7 +1917,7 @@ describe("ZoteroPane", function () {
 			assert.equal(attachment.attachmentFilename, 'test.pdf');
 			assert.equal(attachment.getField('title'), 'Attachment title');
 			
-			Zotero.Prefs.clear('autoRenameFiles.linked');
+			Trellis.Prefs.clear('autoRenameFiles.linked');
 		});
 	});
 	describe("#changeParentItem", function () {
@@ -1930,9 +1930,9 @@ describe("ZoteroPane", function () {
 			// Select child items
 			await zp.selectItems([attachment.id, note.id]);
 			// Open the dialog to select new parent and wait for it to load
-			waitForWindow('chrome://zotero/content/selectItemsDialog.xhtml', async (selectWin) => {
+			waitForWindow('chrome://trellis/content/selectItemsDialog.xhtml', async (selectWin) => {
 				do {
-					await Zotero.Promise.delay(50);
+					await Trellis.Promise.delay(50);
 				}
 				while (!selectWin.loaded);
 				console.log(selectWin);
@@ -1959,9 +1959,9 @@ describe("ZoteroPane", function () {
 			// Select child item
 			await zp.selectItems([attachment.id]);
 			// Open the dialog to select new parent and wait for it to load
-			waitForWindow('chrome://zotero/content/selectItemsDialog.xhtml', async (selectWin) => {
+			waitForWindow('chrome://trellis/content/selectItemsDialog.xhtml', async (selectWin) => {
 				do {
-					await Zotero.Promise.delay(50);
+					await Trellis.Promise.delay(50);
 				}
 				while (!selectWin.loaded);
 				await selectWin.itemsView.waitForLoad();
@@ -2006,7 +2006,7 @@ describe("ZoteroPane", function () {
 
 		it("should duplicate top-level collection", async function () {
 			let collection = await createDataObject('collection');
-			let mylibrary = Zotero.Libraries.get(collection.libraryID);
+			let mylibrary = Trellis.Libraries.get(collection.libraryID);
 
 			let itemOne = await createDataObject('item', { collections: [collection.id] });
 
@@ -2016,7 +2016,7 @@ describe("ZoteroPane", function () {
 			await waitForNotifierEvent("add", "collection");
 
 			// Find the duplicated collection and make sure it exists
-			let topLevelCollections = Zotero.Collections.getByLibrary(mylibrary.id);
+			let topLevelCollections = Trellis.Collections.getByLibrary(mylibrary.id);
 			let newCollection = topLevelCollections.find(col => col.name == collection.name && collection.id !== col.id);
 			assert.exists(newCollection);
 
@@ -2046,7 +2046,7 @@ describe("ZoteroPane", function () {
 			assert.sameMembers(collectionNames, [collectionParent.name, collectionChild.name]);
 
 			// Newly created collections also have copies of items
-			let items = groupCollection.getDescendents(false, 'item').map(item => Zotero.Items.get(item.id).getDisplayTitle());
+			let items = groupCollection.getDescendents(false, 'item').map(item => Trellis.Items.get(item.id).getDisplayTitle());
 			assert.sameMembers(items, [itemOne.getDisplayTitle(), itemTwo.getDisplayTitle()]);
 		});
 
@@ -2066,7 +2066,7 @@ describe("ZoteroPane", function () {
 			// Collection has been copies
 			let groupCollections = groupCollection.getDescendents(false, 'collection');
 			let newCollectionID = groupCollections.find(col => col.name == collectionChild.name).id;
-			let newCollection = Zotero.Collections.get(newCollectionID);
+			let newCollection = Trellis.Collections.get(newCollectionID);
 			assert.exists(newCollection);
 
 			// Right click on the selected collection
@@ -2074,8 +2074,8 @@ describe("ZoteroPane", function () {
 			zp.buildCopyCollectionMenu({});
 
 			// Delay for menus to get disabled
-			await Zotero.Promise.delay();
-			let groupMenu = doc.querySelector(`#zotero-copy-collection-popup menu[value="L${groupDestination.libraryID}"]`);
+			await Trellis.Promise.delay();
+			let groupMenu = doc.querySelector(`#trellis-copy-collection-popup menu[value="L${groupDestination.libraryID}"]`);
 			// Menu of the library with linked collection should be disabled
 			assert.equal(groupMenu.disabled, true);
 
@@ -2083,8 +2083,8 @@ describe("ZoteroPane", function () {
 			await zp.collectionsView.selectByID("C" + collection.id);
 			zp.buildCopyCollectionMenu({});
 			// Delay for menus to get disabled
-			await Zotero.Promise.delay();
-			groupMenu = doc.querySelector(`#zotero-copy-collection-popup menu[value="L${groupDestination.libraryID}"]`);
+			await Trellis.Promise.delay();
+			groupMenu = doc.querySelector(`#trellis-copy-collection-popup menu[value="L${groupDestination.libraryID}"]`);
 			// Menu of the library with linked sub-collection should be disabled
 			assert.equal(groupMenu.disabled, true);
 		});
@@ -2092,7 +2092,7 @@ describe("ZoteroPane", function () {
 		it("should copy subcollection to library root", async function () {
 			let collectionParent = await createDataObject('collection');
 			let collectionChild = await createDataObject('collection', { parentID: collectionParent.id });
-			let libraryDestination = Zotero.Libraries.get(collectionChild.libraryID);
+			let libraryDestination = Trellis.Libraries.get(collectionChild.libraryID);
 
 			let item = await createDataObject('item', { collections: [collectionChild.id] });
 
@@ -2101,7 +2101,7 @@ describe("ZoteroPane", function () {
 			await zp.copyCollection(libraryDestination);
 			let data = await waitForNotifierEvent("add", "collection");
 			let collectionID = data.ids[0];
-			let newCollection = Zotero.Collections.get(collectionID);
+			let newCollection = Trellis.Collections.get(collectionID);
 
 			// Copied collection has the same name as the original
 			assert.equal(newCollection.name, collectionChild.name);
@@ -2130,7 +2130,7 @@ describe("ZoteroPane", function () {
 		it("should make collection a top-level collection", async function () {
 			let collectionParent = await createDataObject('collection');
 			let collectionChild = await createDataObject('collection', { parentID: collectionParent.id });
-			let library = Zotero.Libraries.get(collectionChild.libraryID);
+			let library = Trellis.Libraries.get(collectionChild.libraryID);
 
 			await zp.collectionsView.selectByID("C" + collectionChild.id);
 
@@ -2139,7 +2139,7 @@ describe("ZoteroPane", function () {
 			await promise;
 
 			// Child collection was pulled from under its parent to become a top-level collection
-			let topLevelCollections = Zotero.Collections.getByLibrary(library.id);
+			let topLevelCollections = Trellis.Collections.getByLibrary(library.id);
 			assert.includeMembers(topLevelCollections, [collectionChild]);
 		});
 	});
@@ -2147,7 +2147,7 @@ describe("ZoteroPane", function () {
 
 	describe("Multi-Collection Selection", function () {
 		afterEach(async function () {
-			Zotero.Prefs.clear('recursiveCollections');
+			Trellis.Prefs.clear('recursiveCollections');
 			await selectLibrary(win);
 		});
 
@@ -2162,7 +2162,7 @@ describe("ZoteroPane", function () {
 				cv.selection.toggleSelect(row);
 			}
 			// Wait for the items view to reload with the combined set. The
-			// selection-triggered call is queued ahead of this one in Zotero.serial,
+			// selection-triggered call is queued ahead of this one in Trellis.serial,
 			// and this one no-ops once the view matches the selection.
 			await zp.onCollectionSelected();
 			await zp.itemsView.waitForLoad();
@@ -2173,7 +2173,7 @@ describe("ZoteroPane", function () {
 				let collection = await createDataObject('collection');
 				let cv = zp.collectionsView;
 				// Show and select Recently Read
-				await zp.setVirtual(Zotero.Libraries.userLibraryID, 'recentlyRead', true, true);
+				await zp.setVirtual(Trellis.Libraries.userLibraryID, 'recentlyRead', true, true);
 				await waitForItemsLoad(win);
 				// Toggle-select the collection, forming an uncombinable two-row selection
 				cv.selection.toggleSelect(cv.getRowIndexByID("C" + collection.id));
@@ -2185,14 +2185,14 @@ describe("ZoteroPane", function () {
 				assert.lengthOf(rows, 1);
 				assert.isTrue(rows[0].isCollection());
 
-				await zp.setVirtual(Zotero.Libraries.userLibraryID, 'recentlyRead', false);
+				await zp.setVirtual(Trellis.Libraries.userLibraryID, 'recentlyRead', false);
 			});
 
 			it("should keep only the focused row when a library and a collection are selected together", async function () {
 				let collection = await createDataObject('collection');
 				let cv = zp.collectionsView;
 				// Select the library root, then toggle-select a collection within it
-				await cv.selectByID("L" + Zotero.Libraries.userLibraryID);
+				await cv.selectByID("L" + Trellis.Libraries.userLibraryID);
 				await waitForItemsLoad(win);
 				cv.selection.toggleSelect(cv.getRowIndexByID("C" + collection.id));
 				await zp.onCollectionSelected();
@@ -2207,7 +2207,7 @@ describe("ZoteroPane", function () {
 
 		describe("Combinable special views", function () {
 			it("should combine Recently Read across libraries without reducing the selection", async function () {
-				let userLibraryID = Zotero.Libraries.userLibraryID;
+				let userLibraryID = Trellis.Libraries.userLibraryID;
 				let groupLibraryID = (await createGroup()).libraryID;
 				let cv = zp.collectionsView;
 
@@ -2242,7 +2242,7 @@ describe("ZoteroPane", function () {
 
 				await zp.setVirtual(userLibraryID, 'recentlyRead', false);
 				await zp.setVirtual(groupLibraryID, 'recentlyRead', false);
-				Zotero.Items._lastReadCutoffs.clear();
+				Trellis.Items._lastReadCutoffs.clear();
 			});
 		});
 
@@ -2253,7 +2253,7 @@ describe("ZoteroPane", function () {
 			it("should select all library roots when a library is selected", async function () {
 				let group = await createGroup();
 				let cv = zp.collectionsView;
-				await cv.selectByID("L" + Zotero.Libraries.userLibraryID);
+				await cv.selectByID("L" + Trellis.Libraries.userLibraryID);
 				await waitForItemsLoad(win);
 
 				await cv._handleSelectAll();
@@ -2264,7 +2264,7 @@ describe("ZoteroPane", function () {
 				assert.isAbove(rows.length, 1, "More than one row should be selected");
 				assert.isTrue(rows.every(r => r.isLibrary(true)), "Every selected row should be a library root");
 				let libraryIDs = rows.map(r => r.ref.libraryID);
-				assert.include(libraryIDs, Zotero.Libraries.userLibraryID);
+				assert.include(libraryIDs, Trellis.Libraries.userLibraryID);
 				assert.include(libraryIDs, group.libraryID);
 
 				await group.eraseTx();
@@ -2307,7 +2307,7 @@ describe("ZoteroPane", function () {
 			});
 
 			it("should select Recently Read in all libraries", async function () {
-				let userLibraryID = Zotero.Libraries.userLibraryID;
+				let userLibraryID = Trellis.Libraries.userLibraryID;
 				let groupLibraryID = (await createGroup()).libraryID;
 				let cv = zp.collectionsView;
 
@@ -2375,7 +2375,7 @@ describe("ZoteroPane", function () {
 			});
 
 			it("should show items from subcollections with recursiveCollections", async function () {
-				Zotero.Prefs.set('recursiveCollections', true);
+				Trellis.Prefs.set('recursiveCollections', true);
 
 				let collection1 = await createDataObject('collection');
 				let subCollection1 = await createDataObject('collection', { parentID: collection1.id });
@@ -2430,7 +2430,7 @@ describe("ZoteroPane", function () {
 				// The detailed grouping behavior (ordering, header heights, gating) is
 				// covered in collectionViewItemTreeTest; here just confirm that a
 				// cross-library selection produces a library-grouped view
-				assert.isNumber(zp.itemsView.getRowIndexByID("L" + Zotero.Libraries.userLibraryID),
+				assert.isNumber(zp.itemsView.getRowIndexByID("L" + Trellis.Libraries.userLibraryID),
 					"Cross-library selection should show a library header");
 
 				await selectLibrary(win);
@@ -2445,7 +2445,7 @@ describe("ZoteroPane", function () {
 
 				await selectMultipleCollections([collection1, collection2]);
 
-				let item = await zp.newItem(Zotero.ItemTypes.getID('book'), {}, null, true);
+				let item = await zp.newItem(Trellis.ItemTypes.getID('book'), {}, null, true);
 
 				assert.isTrue(item.inCollection(collection1.id),
 					"New item should be in first selected collection");

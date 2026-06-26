@@ -3,39 +3,39 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
 /*
- * Primary interface for accessing Zotero feed items
+ * Primary interface for accessing Trellis feed items
  */
-Zotero.FeedItems = new Proxy(function () {
+Trellis.FeedItems = new Proxy(function () {
 	let _idCache = {},
 		_guidCache = {};
 	
-	// Teach Zotero.Items about Zotero.FeedItem
+	// Teach Trellis.Items about Trellis.FeedItem
 	
 	// This one is a lazy getter, so we don't patch it up until first access
-	let zi_primaryDataSQLParts = Object.getOwnPropertyDescriptor(Zotero.Items, '_primaryDataSQLParts').get;
-	Zotero.defineProperty(Zotero.Items, '_primaryDataSQLParts', {
+	let zi_primaryDataSQLParts = Object.getOwnPropertyDescriptor(Trellis.Items, '_primaryDataSQLParts').get;
+	Trellis.defineProperty(Trellis.Items, '_primaryDataSQLParts', {
 		get: function () {
 			let obj = zi_primaryDataSQLParts.call(this);
 			obj.feedItemGUID = "FI.guid AS feedItemGUID";
@@ -44,21 +44,21 @@ Zotero.FeedItems = new Proxy(function () {
 			return obj;
 		}
 	}, {lazy: true});
-	Zotero.Items._primaryDataSQLFrom += " LEFT JOIN feedItems FI ON (FI.itemID=O.itemID)";
+	Trellis.Items._primaryDataSQLFrom += " LEFT JOIN feedItems FI ON (FI.itemID=O.itemID)";
 	
-	let zi_getObjectForRow = Zotero.Items._getObjectForRow;
-	Zotero.Items._getObjectForRow = function (row) {
+	let zi_getObjectForRow = Trellis.Items._getObjectForRow;
+	Trellis.Items._getObjectForRow = function (row) {
 		if (row.feedItemGUID) {
-			return new Zotero.FeedItem();
+			return new Trellis.FeedItem();
 		}
 		
-		return zi_getObjectForRow.apply(Zotero.Items, arguments);
+		return zi_getObjectForRow.apply(Trellis.Items, arguments);
 	}
 	
 	this.getIDFromGUID = async function (guid) {
 		if (_idCache[guid] !== undefined) return _idCache[guid];
 		
-		let id = await Zotero.DB.valueQueryAsync('SELECT itemID FROM feedItems WHERE guid=?', [guid]);
+		let id = await Trellis.DB.valueQueryAsync('SELECT itemID FROM feedItems WHERE guid=?', [guid]);
 		if (!id) return false;
 		
 		this._setGUIDMapping(guid, id);
@@ -81,8 +81,8 @@ Zotero.FeedItems = new Proxy(function () {
 	};
 	
 	this.unload = function () {
-		Zotero.Items.unload.apply(Zotero.Items, arguments);
-		let ids = Zotero.flattenArguments(arguments);
+		Trellis.Items.unload.apply(Trellis.Items, arguments);
+		let ids = Trellis.flattenArguments(arguments);
 		for (let i=0; i<ids.length; i++) {
 			this._deleteGUIDMapping(null, ids[i]);
 		}
@@ -100,11 +100,11 @@ Zotero.FeedItems = new Proxy(function () {
 			"FROM feedItems FI " +
 			"JOIN items I USING (itemID) " +
 			"WHERE libraryID=? AND readTime IS NOT NULL";
-		let ids = await Zotero.DB.columnQueryAsync(sql, [libraryID]);
+		let ids = await Trellis.DB.columnQueryAsync(sql, [libraryID]);
 		if (onlyGUIDs) {
 			return ids;
 		}
-		return Zotero.FeedItems.getAsync(ids);
+		return Trellis.FeedItems.getAsync(ids);
 		
 	};
 
@@ -113,11 +113,11 @@ Zotero.FeedItems = new Proxy(function () {
 	 */
 	this.markAsReadByGUID = async function (guids) {
 		if (! Array.isArray(guids)) {
-			throw new Error('guids must be an array in Zotero.FeedItems.toggleReadByID');
+			throw new Error('guids must be an array in Trellis.FeedItems.toggleReadByID');
 		}
 		let ids = [];
-		Zotero.debug("Marking items as read");
-		Zotero.debug(guids);
+		Trellis.debug("Marking items as read");
+		Trellis.debug(guids);
 		for (let guid of guids) {
 			let id = await this.getIDFromGUID(guid);
 			if (id) {
@@ -129,7 +129,7 @@ Zotero.FeedItems = new Proxy(function () {
 	
 	this.toggleReadByID = async function (ids, state) {
 		if (!Array.isArray(ids)) {
-			if (typeof ids != 'string') throw new Error('ids must be a string or array in Zotero.FeedItems.toggleReadByID');
+			if (typeof ids != 'string') throw new Error('ids must be a string or array in Trellis.FeedItems.toggleReadByID');
 			
 			ids = [ids];
 		}
@@ -151,16 +151,16 @@ Zotero.FeedItems = new Proxy(function () {
 		}
 
 		let feedsToUpdate = new Set();
-		let readTime = state ? Zotero.Date.dateToSQL(new Date(), true) : null;
+		let readTime = state ? Trellis.Date.dateToSQL(new Date(), true) : null;
 		for (let i=0; i<items.length; i++) {
 			items[i]._feedItemReadTime = readTime;
 
-			let feed = Zotero.Feeds.get(items[i].libraryID);
+			let feed = Trellis.Feeds.get(items[i].libraryID);
 			feedsToUpdate.add(feed);
 		}
 		
-		await Zotero.DB.queryAsync(`UPDATE feedItems SET readTime=? WHERE itemID IN (${ids.join(', ')})`, readTime);
-		await Zotero.Notifier.trigger('modify', 'item', ids, {});
+		await Trellis.DB.queryAsync(`UPDATE feedItems SET readTime=? WHERE itemID IN (${ids.join(', ')})`, readTime);
+		await Trellis.Notifier.trigger('modify', 'item', ids, {});
 
 		for (let feed of feedsToUpdate) {
 			await feed.updateUnreadCount();
@@ -175,9 +175,9 @@ Zotero.FeedItems = new Proxy(function () {
 	get: function (target, name) {
 		return name in target
 			? target[name]
-			: Zotero.Items[name];
+			: Trellis.Items[name];
 	},
 	has: function (target, name) {
-		return name in target || name in Zotero.Items;
+		return name in target || name in Trellis.Items;
 	}
 });

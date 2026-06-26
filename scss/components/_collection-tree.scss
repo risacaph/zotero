@@ -54,7 +54,7 @@ $universal-icons: (
 	}
 }
 
-#zotero-collections-pane {
+#trellis-collections-pane {
 	min-width: $min-width-collections-pane;
 	max-width: var(--max-width-collections-pane);
 	width: $min-width-collections-pane;
@@ -63,17 +63,17 @@ $universal-icons: (
 	background: var(--material-sidepane);
 }
 
-#zotero-collections-tree-container {
+#trellis-collections-tree-container {
 	height: 5.2em;
 }
 
-#zotero-collections-tree {
+#trellis-collections-tree {
 	width: 100%;
 
 	#main-window & {
 		// virtualized-table has a default background (--material-background)
 		// which is what we want in most places, including dialogs that include
-		// #zotero-collections-tree, however main window collection tree is an
+		// #trellis-collections-tree, however main window collection tree is an
 		// exception
 		background: transparent;
 	}

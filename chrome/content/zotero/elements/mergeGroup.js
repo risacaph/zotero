@@ -3,22 +3,22 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -38,12 +38,12 @@ import ReactDOM from "react-dom";
 				<merge-pane id="left-pane" flex="1" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"/>
 				<merge-pane id="right-pane" flex="1" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"/>
 				<merge-pane id="merge-pane" flex="1" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"/>
-			`, ['chrome://zotero/locale/zotero.dtd']);
+			`, ['chrome://trellis/locale/trellis.dtd']);
 		}
 		
 		get stylesheets() {
 			return [
-				'chrome://zotero/skin/merge.css'
+				'chrome://trellis/skin/merge.css'
 			];
 		}
 		
@@ -56,11 +56,11 @@ import ReactDOM from "react-dom";
 			
 			// Select pane with left/right arrow key
 			this.addEventListener('keypress', (event) => {
-				if (event.key == Zotero.arrowNextKey && !this._rightPane.hasAttribute("selected")) {
+				if (event.key == Trellis.arrowNextKey && !this._rightPane.hasAttribute("selected")) {
 					this.choosePane(this._rightPane);
 					this.rightPane.groupbox.focus();
 				}
-				else if (event.key == Zotero.arrowPreviousKey && !this._leftPane.hasAttribute("selected")) {
+				else if (event.key == Trellis.arrowPreviousKey && !this._leftPane.hasAttribute("selected")) {
 					this.choosePane(this._leftPane);
 					this._leftPane.groupbox.focus();
 				}
@@ -186,7 +186,7 @@ import ReactDOM from "react-dom";
 				this._leftPane.objectBox.clickableFields = diffFields;
 				this._rightPane.objectBox.clickableFields = diffFields;
 				
-				var mergeItem = new Zotero.Item(this._leftPane.ref.itemTypeID);
+				var mergeItem = new Trellis.Item(this._leftPane.ref.itemTypeID);
 				this._mergePane.ref = mergeItem;
 				this._mergePane.objectBox.visibleFields = fields;
 			}
@@ -234,7 +234,7 @@ import ReactDOM from "react-dom";
 		
 		_getTypeFromObject(obj) {
 			if (!obj.itemType) {
-				Zotero.debug(obj, 1);
+				Trellis.debug(obj, 1);
 				throw new Error("obj is not item JSON");
 			}
 			switch (obj.itemType) {
@@ -269,15 +269,15 @@ import ReactDOM from "react-dom";
 					<html:div class="parent-row" hidden="true"/>
 					<box class="object-placeholder"/>
 					<hbox class="delete-box" hidden="true" flex="1">
-						<label value="&zotero.merge.deleted;"/>
+						<label value="&trellis.merge.deleted;"/>
 					</hbox>
 				</groupbox>
 				<button class="choose-button"/>
-			`, ['chrome://zotero/locale/zotero.dtd']);
+			`, ['chrome://trellis/locale/trellis.dtd']);
 		}
 		
 		get stylesheets() {
-			return ['chrome://zotero/skin/bindings/merge.css'];
+			return ['chrome://trellis/skin/bindings/merge.css'];
 		}
 		
 		connectedCallback() {
@@ -349,7 +349,7 @@ import ReactDOM from "react-dom";
 			this._data = val;
 			
 			var button = this._class('choose-button');
-			button.label = Zotero.getString('sync.conflict.chooseThisVersion');
+			button.label = Trellis.getString('sync.conflict.chooseThisVersion');
 			if (this.showButton) {
 				button.onclick = this.click.bind(this);
 				button.style.visibility = 'visible';
@@ -402,10 +402,10 @@ import ReactDOM from "react-dom";
 				parentRow.textContent = '';
 				
 				let label = document.createElement('span');
-				label.textContent = Zotero.getString('pane.item.parentItem');
+				label.textContent = Trellis.getString('pane.item.parentItem');
 				parentRow.appendChild(label);
 				
-				let parentItem = Zotero.Items.getByLibraryAndKey(this.libraryID, val.parentItem);
+				let parentItem = Trellis.Items.getByLibraryAndKey(this.libraryID, val.parentItem);
 				let text = document.createTextNode(" " + parentItem.getDisplayTitle(true));
 				parentRow.appendChild(text);
 				
@@ -448,15 +448,15 @@ import ReactDOM from "react-dom";
 			displayJSON.collections = [];
 			
 			// Create item from JSON for metadata box
-			var item = new Zotero.Item(val.itemType);
+			var item = new Trellis.Item(val.itemType);
 			item.libraryID = this.libraryID;
 			item.fromJSON(displayJSON);
 			
 			if (item.isAnnotation()) {
-				Zotero.Annotations.toJSON(item)
+				Trellis.Annotations.toJSON(item)
 				.then((data) => {
 					this._objboxRoot = ReactDOM.createRoot(objbox);
-					Zotero.AnnotationBox.render(this._objboxRoot, { data });
+					Trellis.AnnotationBox.render(this._objboxRoot, { data });
 				});
 			}
 			else {

@@ -10,42 +10,42 @@ describe("Connector HTTP Integration Server", function () {
 			skipBundledFiles: true
 		});
 		
-		serverURL = `http://127.0.0.1:${Zotero.Server.port}/connector/document`;
+		serverURL = `http://127.0.0.1:${Trellis.Server.port}/connector/document`;
 	});
 	
 	describe('/connector/document/execCommand', function () {
 		it('should set HTTPIntegrationClient.inProgress=true and respond with a plugin command', async function () {
-			let stub = sinon.stub(Zotero.Integration, 'execCommand');
+			let stub = sinon.stub(Trellis.Integration, 'execCommand');
 			try {
 				stub.callsFake(() => {
-					let app = new Zotero.HTTPIntegrationClient.Application();
+					let app = new Trellis.HTTPIntegrationClient.Application();
 					app.getActiveDocument();
 				});
-				assert.isNotTrue(Zotero.HTTPIntegrationClient.inProgress);
+				assert.isNotTrue(Trellis.HTTPIntegrationClient.inProgress);
 				
-				let response = await Zotero.HTTP.request(
+				let response = await Trellis.HTTP.request(
 					'POST',
 					`${serverURL}/execCommand`,
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"X-Zotero-Connector-API-Version": "2"
+							"X-Trellis-Connector-API-Version": "2"
 						},
 						body: JSON.stringify({
 							command: "addEditCitation",
-							docId: "zoteroTestDoc",
+							docId: "trellisTestDoc",
 						}),
 					},
 				);
 				
-				assert.isTrue(Zotero.HTTPIntegrationClient.inProgress);
+				assert.isTrue(Trellis.HTTPIntegrationClient.inProgress);
 				assert.equal(response.status, 200);
 				assert.equal(JSON.parse(response.response).command, 'Application.getActiveDocument');
 			}
 			finally {
 				stub.restore();
-				Zotero.HTTPIntegrationClient.inProgress = false;
-				Zotero.Integration.currentDoc = Zotero.Integration.currentSession = null;
+				Trellis.HTTPIntegrationClient.inProgress = false;
+				Trellis.Integration.currentDoc = Trellis.Integration.currentSession = null;
 			}
 		});
 	});
@@ -53,28 +53,28 @@ describe("Connector HTTP Integration Server", function () {
 	describe('/connector/document/respond', function () {
 		it('should pass along the request body via HTTPIntegrationClient', async function () {
 			try {
-				Zotero.HTTPIntegrationClient.deferredResponse = Zotero.Promise.defer();
+				Trellis.HTTPIntegrationClient.deferredResponse = Trellis.Promise.defer();
 
 				let postBody = { outputFormat: 'html' };
-				Zotero.HTTP.request(
+				Trellis.HTTP.request(
 					'POST',
 					`${serverURL}/respond`,
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"X-Zotero-Connector-API-Version": "2"
+							"X-Trellis-Connector-API-Version": "2"
 						},
 						body: JSON.stringify(postBody),
 					},
 				);
 				
-				let receivedBody = await Zotero.HTTPIntegrationClient.deferredResponse.promise;
+				let receivedBody = await Trellis.HTTPIntegrationClient.deferredResponse.promise;
 				
 				assert.deepEqual(postBody, receivedBody);
 			}
 			finally {
-				Zotero.HTTPIntegrationClient.inProgress = false;
-				Zotero.Integration.currentDoc = Zotero.Integration.currentSession = null;
+				Trellis.HTTPIntegrationClient.inProgress = false;
+				Trellis.Integration.currentDoc = Trellis.Integration.currentSession = null;
 			}
 		});
 	});

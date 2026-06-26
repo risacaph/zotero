@@ -5,9 +5,9 @@
 #
 
 APPDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ -w "$APPDIR"/zotero.desktop ]; then
-	sed -i -e "s@^Icon=.*@Icon=$APPDIR/icons/icon128.png@" "$APPDIR"/zotero.desktop
+if [ -w "$APPDIR"/trellis.desktop ]; then
+	sed -i -e "s@^Icon=.*@Icon=$APPDIR/icons/icon128.png@" "$APPDIR"/trellis.desktop
 else
-	echo "$APPDIR"/zotero.desktop is not writable
+	echo "$APPDIR"/trellis.desktop is not writable
 	exit 1
 fi

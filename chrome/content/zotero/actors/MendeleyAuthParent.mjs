@@ -1,7 +1,7 @@
 /* global JSWindowActorParent:false */
 
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs"
+	Trellis: "chrome://trellis/content/trellis.mjs"
 });  
 
 export class MendeleyAuthParent extends JSWindowActorParent {  
@@ -9,10 +9,10 @@ export class MendeleyAuthParent extends JSWindowActorParent {
 		switch (name) {
 			case "debug": {
 				if (data.kind === "log") {
-					Zotero.debug(`MendeleyAuth actor: ${data.message}`);
+					Trellis.debug(`MendeleyAuth actor: ${data.message}`);
 				}
 				else if (data.kind === "error") {
-					Zotero.debug(`MendeleyAuth actor: ${data.message}. Error: ${data.error}`);
+					Trellis.debug(`MendeleyAuth actor: ${data.message}. Error: ${data.error}`);
 				}
 			}
 		}

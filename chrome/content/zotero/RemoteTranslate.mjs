@@ -3,37 +3,37 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs",
-	ZOTERO_CONFIG: "resource://zotero/config.mjs",
-	ActorManager: "chrome://zotero/content/actors/ActorManager.mjs",
-	TranslationManager: "chrome://zotero/content/actors/TranslationParent.mjs",
+	Trellis: "chrome://trellis/content/trellis.mjs",
+	TRELLIS_CONFIG: "resource://trellis/config.mjs",
+	ActorManager: "chrome://trellis/content/actors/ActorManager.mjs",
+	TranslationManager: "chrome://trellis/content/actors/TranslationParent.mjs",
 });
 
 export class RemoteTranslate {
 	_browser = null;
 
-	_id = Zotero.Utilities.randomString();
+	_id = Trellis.Utilities.randomString();
 	
 	_translator = null;
 	
@@ -57,7 +57,7 @@ export class RemoteTranslate {
 		let actor = this._browser.browsingContext.currentWindowGlobal.getActor("Translation");
 
 		// Make only relevant prefs available
-		// https://github.com/zotero/zotero-connectors/blob/d5f025de9b4f513535cbf4639c6b59bf115d790d/src/common/zotero.js#L264-L265
+		// https://github.com/trellis/trellis-connectors/blob/d5f025de9b4f513535cbf4639c6b59bf115d790d/src/common/trellis.js#L264-L265
 		let prefs = this._getPrefs([
 			'downloadAssociatedFiles',
 			'automaticSnapshots',
@@ -70,17 +70,17 @@ export class RemoteTranslate {
 		}
 		
 		await actor.sendAsyncMessage("initTranslation", {
-			schemaJSON: Zotero.File.getResource('resource://zotero/schema/global/schema.json'),
-			dateFormatsJSON: Zotero.File.getResource('resource://zotero/schema/dateFormats.json'),
+			schemaJSON: Trellis.File.getResource('resource://trellis/schema/global/schema.json'),
+			dateFormatsJSON: Trellis.File.getResource('resource://trellis/schema/dateFormats.json'),
 			prefs,
 		});
 	}
 	
 	/**
-	 * Set a handler on the proxied Zotero.Translate instance.
+	 * Set a handler on the proxied Trellis.Translate instance.
 	 * The handler function is passed this RemoteTranslate as its first argument.
 	 *
-	 * Supports all Zotero.Translate handlers.
+	 * Supports all Trellis.Translate handlers.
 	 *
 	 * @param {String} name
 	 * @param {Function} handler
@@ -112,7 +112,7 @@ export class RemoteTranslate {
 	}
 
 	/**
-	 * Clear the handlers for the given type on the proxied Zotero.Translate instance.
+	 * Clear the handlers for the given type on the proxied Trellis.Translate instance.
 	 *
 	 * @param {String} name
 	 */
@@ -127,7 +127,7 @@ export class RemoteTranslate {
 	}
 	
 	/**
-	 * @param {Zotero.Translators} translatorProvider
+	 * @param {Trellis.Translators} translatorProvider
 	 */
 	setTranslatorProvider(translatorProvider) {
 		TranslationManager.setTranslatorProvider(this._id, translatorProvider);
@@ -136,7 +136,7 @@ export class RemoteTranslate {
 	/**
 	 * Set the translator used by #detect(), #translate(), #runTest(), and #newTest().
 	 *
-	 * @param {Zotero.Translator} translator
+	 * @param {Trellis.Translator} translator
 	 */
 	setTranslator(translator) {
 		this._translator = translator;
@@ -166,17 +166,17 @@ export class RemoteTranslate {
 		try {
 			let jsonItems = await actor.sendQuery("translate", { translator: this._translator, id: this._id });
 			if (jsonItems === null) {
-				Zotero.debug('RemoteTranslate: translate query returned null');
+				Trellis.debug('RemoteTranslate: translate query returned null');
 				return null;
 			}
 			if (options.libraryID !== false) {
 				let itemsLeftToSave = jsonItems.length;
 				let attachmentsInProgress = new Set();
 				let doneHandlersInvoked = false;
-				let itemSaver = new Zotero.Translate.ItemSaver({
+				let itemSaver = new Trellis.Translate.ItemSaver({
 					libraryID: options.libraryID,
 					collections: options.collections,
-					attachmentMode: Zotero.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD,
+					attachmentMode: Trellis.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD,
 					forceTagType: 1,
 					referrer: this._browser.currentURI.spec,
 					// proxy: unimplemented in the client
@@ -187,7 +187,7 @@ export class RemoteTranslate {
 						return;
 					}
 					// Call done (saved in #setHandler() above) at the end
-					// The Zotero.Translate instance running in the content process has already tried to call done by now,
+					// The Trellis.Translate instance running in the content process has already tried to call done by now,
 					// but we prevented it from reaching the caller. Now that we've run ItemSaver#saveItems() on this side,
 					// we can pass it through.
 					this._callDoneHandlers(this._wasSuccess);
@@ -266,22 +266,22 @@ export class RemoteTranslate {
 				doneHandler(this, wasSuccess);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	}
 	
 	_getPrefs(keys) {
-		let rootBranch = ZOTERO_CONFIG.PREF_BRANCH;
+		let rootBranch = TRELLIS_CONFIG.PREF_BRANCH;
 		let prefs = {};
 		for (let key of keys) {
 			if (key.endsWith('.')) {
-				for (let childKey of Zotero.Prefs.rootBranch.getChildList(rootBranch + key)) {
-					prefs[childKey.substring(rootBranch.length)] = Zotero.Prefs.get(childKey, true);
+				for (let childKey of Trellis.Prefs.rootBranch.getChildList(rootBranch + key)) {
+					prefs[childKey.substring(rootBranch.length)] = Trellis.Prefs.get(childKey, true);
 				}
 			}
 			else {
-				prefs[key] = Zotero.Prefs.get(key);
+				prefs[key] = Trellis.Prefs.get(key);
 			}
 		}
 		return prefs;

@@ -17,7 +17,7 @@ function makePath {
 
 if [ -z "$Z_EXECUTABLE" ]; then
 	if [ "`uname`" == "Darwin" ]; then
-		Z_EXECUTABLE="$ROOT_DIR/app/staging/Zotero.app/Contents/MacOS/zotero"
+		Z_EXECUTABLE="$ROOT_DIR/app/staging/Trellis.app/Contents/MacOS/trellis"
 	else
 		arch=""
 		if [ "$(uname -m)" = "aarch64" ]; then
@@ -25,7 +25,7 @@ if [ -z "$Z_EXECUTABLE" ]; then
 		else
 			arch="x86_64"
 		fi
-		Z_EXECUTABLE="$ROOT_DIR/app/staging/Zotero_linux-$arch/zotero"
+		Z_EXECUTABLE="$ROOT_DIR/app/staging/Trellis_linux-$arch/trellis"
 	fi
 fi
 
@@ -49,7 +49,7 @@ Options
  -r RETRIES          retry failed tests the given number of times (default: 0)
  -s TEST             start at the given test
  -t                  generate test data and quit
- -x EXECUTABLE       path to Zotero executable (default: $Z_EXECUTABLE)
+ -x EXECUTABLE       path to Trellis executable (default: $Z_EXECUTABLE)
  TESTS               set of tests to run (default: all)
 DONE
 	exit 1
@@ -61,7 +61,7 @@ RETRIES=0
 while getopts "bcd:e:fg:hr:s:tx:" opt; do
 	case $opt in
         b)
-        	Z_ARGS="$Z_ARGS -ZoteroSkipBundledFiles"
+        	Z_ARGS="$Z_ARGS -TrellisSkipBundledFiles"
         	;;
 		c)
 			Z_ARGS="$Z_ARGS -jsconsole -noquit"
@@ -124,42 +124,42 @@ fi
 ulimit -n 4096
 
 # Set up profile directory
-TEMPDIR="`mktemp -d 2>/dev/null || mktemp -d -t 'zotero-unit'`"
+TEMPDIR="`mktemp -d 2>/dev/null || mktemp -d -t 'trellis-unit'`"
 PROFILE="$TEMPDIR/profile"
 mkdir -p "$PROFILE"
 
-makePath ZOTERO_PATH "$ROOT_DIR/build"
+makePath TRELLIS_PATH "$ROOT_DIR/build"
 
 # Create data directory
-mkdir "$TEMPDIR/Zotero"
+mkdir "$TEMPDIR/Trellis"
 
 touch "$PROFILE/prefs.js"
 cat <<EOF >> "$PROFILE/prefs.js"
 user_pref("app.update.enabled", false);
 //user_pref("dom.max_chrome_script_run_time", 0);
 // It would be better to leave this on and handle it in Sinon's FakeXMLHttpRequest
-user_pref("extensions.zotero.sync.server.compressData", false);
-user_pref("extensions.zotero.automaticScraperUpdates", false);
-user_pref("extensions.zotero.debug.log", $DEBUG);
-user_pref("extensions.zotero.debug.level", $DEBUG_LEVEL);
-user_pref("extensions.zotero.debug.time", $DEBUG);
-user_pref("extensions.zotero.firstRun.skipFirefoxProfileAccessCheck", true);
-user_pref("extensions.zotero.firstRunGuidance", false);
-user_pref("extensions.zotero.firstRun2", false);
-user_pref("extensions.zotero.reportTranslationFailure", false);
-user_pref("extensions.zotero.httpServer.enabled", true);
-user_pref("extensions.zotero.httpServer.port", 23124);	// ascii "ZT"
-user_pref("extensions.zotero.httpServer.localAPI.enabled", true);
-user_pref("extensions.zotero.backup.numBackups", 0);
-user_pref("extensions.zotero.sync.autoSync", false);
-user_pref("extensions.zoteroMacWordIntegration.installed", true);
-user_pref("extensions.zoteroMacWordIntegration.skipInstallation", true);
-user_pref("extensions.zoteroWinWordIntegration.skipInstallation", true);
-user_pref("extensions.zoteroOpenOfficeIntegration.skipInstallation", true);
+user_pref("extensions.trellis.sync.server.compressData", false);
+user_pref("extensions.trellis.automaticScraperUpdates", false);
+user_pref("extensions.trellis.debug.log", $DEBUG);
+user_pref("extensions.trellis.debug.level", $DEBUG_LEVEL);
+user_pref("extensions.trellis.debug.time", $DEBUG);
+user_pref("extensions.trellis.firstRun.skipFirefoxProfileAccessCheck", true);
+user_pref("extensions.trellis.firstRunGuidance", false);
+user_pref("extensions.trellis.firstRun2", false);
+user_pref("extensions.trellis.reportTranslationFailure", false);
+user_pref("extensions.trellis.httpServer.enabled", true);
+user_pref("extensions.trellis.httpServer.port", 23124);	// ascii "ZT"
+user_pref("extensions.trellis.httpServer.localAPI.enabled", true);
+user_pref("extensions.trellis.backup.numBackups", 0);
+user_pref("extensions.trellis.sync.autoSync", false);
+user_pref("extensions.trellisMacWordIntegration.installed", true);
+user_pref("extensions.trellisMacWordIntegration.skipInstallation", true);
+user_pref("extensions.trellisWinWordIntegration.skipInstallation", true);
+user_pref("extensions.trellisOpenOfficeIntegration.skipInstallation", true);
 EOF
 
 if [ -n "$CI" ]; then
-	Z_ARGS="$Z_ARGS -ZoteroAutomatedTest -ZoteroTestTimeout 15000"
+	Z_ARGS="$Z_ARGS -TrellisAutomatedTest -TrellisTestTimeout 15000"
 else
 	Z_ARGS="$Z_ARGS -jsconsole"
 fi
@@ -177,11 +177,11 @@ if [[ -z "$CI" ]] && ! ps | grep js-build/build.js | grep -v grep > /dev/null; t
 	echo
 fi
 
-ZOTERO_TEST=1 "$ROOT_DIR/app/scripts/dir_build" -q
+TRELLIS_TEST=1 "$ROOT_DIR/app/scripts/dir_build" -q
 
 makePath FX_PROFILE "$PROFILE"
 MOZ_NO_REMOTE=1 NO_EM_RESTART=1 "$Z_EXECUTABLE" -profile "$FX_PROFILE" \
-    -test "$TESTS" -grep "$GREP" -retries "$RETRIES" -ZoteroTest $Z_ARGS
+    -test "$TESTS" -grep "$GREP" -retries "$RETRIES" -TrellisTest $Z_ARGS
 
 # Check for success
 test -e "$PROFILE/success"

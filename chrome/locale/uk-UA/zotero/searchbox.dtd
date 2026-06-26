@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Назва:">
+<!ENTITY trellis.search.name "Назва:">
 
-<!ENTITY zotero.search.searchInLibrary "Шукати в бібліотеці:">
+<!ENTITY trellis.search.searchInLibrary "Шукати в бібліотеці:">
 
-<!ENTITY zotero.search.joinMode.prefix "Збігаються з">
-<!ENTITY zotero.search.joinMode.any "будь-яким">
-<!ENTITY zotero.search.joinMode.all "всіма">
-<!ENTITY zotero.search.joinMode.suffix "з нижченаведеного:">
+<!ENTITY trellis.search.joinMode.prefix "Збігаються з">
+<!ENTITY trellis.search.joinMode.any "будь-яким">
+<!ENTITY trellis.search.joinMode.all "всіма">
+<!ENTITY trellis.search.joinMode.suffix "з нижченаведеного:">
 
-<!ENTITY zotero.search.recursive.label "Шукати в підпапках">
-<!ENTITY zotero.search.noChildren "Показувати документи тільки верхнього рівня">
-<!ENTITY zotero.search.includeParentsAndChildren "Включити батьківські та дочірні документи, що збігають з шуканим">
+<!ENTITY trellis.search.recursive.label "Шукати в підпапках">
+<!ENTITY trellis.search.noChildren "Показувати документи тільки верхнього рівня">
+<!ENTITY trellis.search.includeParentsAndChildren "Включити батьківські та дочірні документи, що збігають з шуканим">
 
-<!ENTITY zotero.search.textModes.phrase "Фраза">
-<!ENTITY zotero.search.textModes.phraseBinary "Фраза (вкл. двійкові файли)">
-<!ENTITY zotero.search.textModes.regexp "Регулярний вираз">
-<!ENTITY zotero.search.textModes.regexpCS "Регулярний вираз (з врахуванням регістру)">
+<!ENTITY trellis.search.textModes.phrase "Фраза">
+<!ENTITY trellis.search.textModes.phraseBinary "Фраза (вкл. двійкові файли)">
+<!ENTITY trellis.search.textModes.regexp "Регулярний вираз">
+<!ENTITY trellis.search.textModes.regexpCS "Регулярний вираз (з врахуванням регістру)">
 
-<!ENTITY zotero.search.date.units.days "дні">
-<!ENTITY zotero.search.date.units.months "місяці">
-<!ENTITY zotero.search.date.units.years "роки">
+<!ENTITY trellis.search.date.units.days "дні">
+<!ENTITY trellis.search.date.units.months "місяці">
+<!ENTITY trellis.search.date.units.years "роки">
 
-<!ENTITY zotero.search.search "Шукати">
-<!ENTITY zotero.search.clear "Очистити">
-<!ENTITY zotero.search.saveSearch "Зберегти пошук">
+<!ENTITY trellis.search.search "Шукати">
+<!ENTITY trellis.search.clear "Очистити">
+<!ENTITY trellis.search.saveSearch "Зберегти пошук">

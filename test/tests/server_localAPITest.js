@@ -14,9 +14,9 @@ describe("Local API Server", function () {
 	let allItems;
 	
 	function apiGet(endpoint, options = {}) {
-		return Zotero.HTTP.request('GET', apiRoot + endpoint, {
+		return Trellis.HTTP.request('GET', apiRoot + endpoint, {
 			headers: {
-				'Zotero-Allowed-Request': '1'
+				'Trellis-Allowed-Request': '1'
 			},
 			responseType: 'json',
 			...options
@@ -24,7 +24,7 @@ describe("Local API Server", function () {
 	}
 
 	before(async function () {
-		apiRoot = 'http://127.0.0.1:' + Zotero.Server.port + '/api';
+		apiRoot = 'http://127.0.0.1:' + Trellis.Server.port + '/api';
 
 		await resetDB({
 			thisArg: this
@@ -65,23 +65,23 @@ describe("Local API Server", function () {
 	});
 
 	describe("/", function () {
-		it("should return a Zotero-API-Version response header", async function () {
-			let xhr = await Zotero.HTTP.request('GET', apiRoot + '/', {
+		it("should return a Trellis-API-Version response header", async function () {
+			let xhr = await Trellis.HTTP.request('GET', apiRoot + '/', {
 				headers: {
-					'Zotero-Allowed-Request': '1'
+					'Trellis-Allowed-Request': '1'
 				}
 			});
-			assert.equal(xhr.getResponseHeader('Zotero-API-Version'), ZOTERO_CONFIG.API_VERSION);
+			assert.equal(xhr.getResponseHeader('Trellis-API-Version'), TRELLIS_CONFIG.API_VERSION);
 		});
 
-		it("should allow an old Zotero-API-Version request header", async function () {
-			let xhr = await Zotero.HTTP.request('GET', apiRoot + '/', {
+		it("should allow an old Trellis-API-Version request header", async function () {
+			let xhr = await Trellis.HTTP.request('GET', apiRoot + '/', {
 				headers: {
-					'Zotero-Allowed-Request': '1',
-					'Zotero-API-Version': '2',
+					'Trellis-Allowed-Request': '1',
+					'Trellis-API-Version': '2',
 				}
 			});
-			assert.isNotEmpty(xhr.getResponseHeader('Zotero-API-Version'));
+			assert.isNotEmpty(xhr.getResponseHeader('Trellis-API-Version'));
 		});
 	});
 	
@@ -177,7 +177,7 @@ describe("Local API Server", function () {
 			it("should return full-text data from /fulltext", async function () {
 				let { response } = await apiGet(`/users/0/items/${subcollectionAttachment.key}/fulltext`);
 				assert.deepEqual(response, {
-					content: 'Zotero [zoh-TAIR-oh] is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources.',
+					content: 'Trellis [zoh-TAIR-oh] is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources.',
 					indexedPages: 1,
 					totalPages: 1,
 				});
@@ -300,16 +300,16 @@ describe("Local API Server", function () {
 				});
 				
 				describe("&style", function () {
-					for (let [styleID, type] of [['cell', 'name'], ['https://www.zotero.org/styles/cell', 'URL']]) {
+					for (let [styleID, type] of [['cell', 'name'], ['https://www.trellis.org/styles/cell', 'URL']]) {
 						it(`should install the given citation style by ${type} if not yet installed`, async function () {
-							if (Zotero.Styles.get(styleID)) {
-								await Zotero.Styles.get(styleID).remove();
+							if (Trellis.Styles.get(styleID)) {
+								await Trellis.Styles.get(styleID).remove();
 							}
 	
-							let styleString = await Zotero.File.getContentsAsync(
-								Zotero.File.pathToFile(OS.Path.join(getTestDataDirectory().path, 'cell.csl')));
+							let styleString = await Trellis.File.getContentsAsync(
+								Trellis.File.pathToFile(OS.Path.join(getTestDataDirectory().path, 'cell.csl')));
 							
-							let stub = sinon.stub(Zotero.Styles, 'install');
+							let stub = sinon.stub(Trellis.Styles, 'install');
 							stub.callsFake(() => stub.wrappedMethod({ string: styleString }, 'cell.csl', true));
 	
 							let { response } = await apiGet(`/users/0/items/${collectionItem1.key}?include=citation&style=${encodeURIComponent(styleID)}`);
@@ -325,7 +325,7 @@ describe("Local API Server", function () {
 		
 		describe("?since", function () {
 			it("should filter the results", async function () {
-				let { response: response1 } = await apiGet('/users/0/items?since=' + (Zotero.Libraries.userLibrary.libraryVersion + 1));
+				let { response: response1 } = await apiGet('/users/0/items?since=' + (Trellis.Libraries.userLibrary.libraryVersion + 1));
 				assert.isEmpty(response1);
 
 				let { response: response2 } = await apiGet('/users/0/items?since=0');

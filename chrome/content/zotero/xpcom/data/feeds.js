@@ -3,30 +3,30 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-// Mimics Zotero.Libraries
-Zotero.Feeds = new function () {
+// Mimics Trellis.Libraries
+Trellis.Feeds = new function () {
 	var _initPromise;
 	var _nextFeedCheck;
 	var _updating;
@@ -36,33 +36,33 @@ Zotero.Feeds = new function () {
 	
 	this.init = function () {
 		// Delay initialization for tests
-		_initPromise = Zotero.Schema.schemaUpdatePromise
+		_initPromise = Trellis.Schema.schemaUpdatePromise
 		.then(async () => {
 			// Don't run feed checks randomly during tests
-			if (Zotero.test) return;
+			if (Trellis.test) return;
 			
-			await Zotero.Promise.delay(5000);
+			await Trellis.Promise.delay(5000);
 			return this.scheduleNextFeedCheck();
 		})
 		.then(() => _initPromise = null);
 		
-		Zotero.SyncedSettings.onSyncDownload.addListener(Zotero.Libraries.userLibraryID, 'feeds', 
+		Trellis.SyncedSettings.onSyncDownload.addListener(Trellis.Libraries.userLibraryID, 'feeds', 
 			(oldValue, newValue, conflict) => { 
-				Zotero.Feeds.restoreFromJSON(newValue, conflict);
+				Trellis.Feeds.restoreFromJSON(newValue, conflict);
 			}
 		);
 		
-		Zotero.Notifier.registerObserver(
+		Trellis.Notifier.registerObserver(
 			{
 				notify: async function (event) {
 					if (event == 'finish') {
 						// Don't update during tests, since the database will have been closed
-						if (Zotero.test) return;
+						if (Trellis.test) return;
 						
 						if (_initPromise) {
 							await _initPromise;
 						}
-						await Zotero.Feeds.updateFeeds();
+						await Trellis.Feeds.updateFeeds();
 					}
 				},
 			},
@@ -114,7 +114,7 @@ Zotero.Feeds = new function () {
 	}
 	
 	function _pauseInternal() {
-		Zotero.debug("Pausing feed updating");
+		Trellis.debug("Pausing feed updating");
 		if (_nextFeedCheck) {
 			clearTimeout(_nextFeedCheck);
 			_nextFeedCheck = null;
@@ -122,8 +122,8 @@ Zotero.Feeds = new function () {
 	}
 	
 	function _resumeInternal() {
-		Zotero.debug("Resuming feed updating");
-		Zotero.Feeds.scheduleNextFeedCheck();
+		Trellis.debug("Resuming feed updating");
+		Trellis.Feeds.scheduleNextFeedCheck();
 	};
 	
 	this.uninit = function () {
@@ -141,8 +141,8 @@ Zotero.Feeds = new function () {
 	}
 	
 	this.register = function (feed) {
-		if (!this._cache) throw new Error("Zotero.Feeds cache is not initialized");
-		Zotero.debug("Zotero.Feeds: Registering feed " + feed.libraryID, 5);
+		if (!this._cache) throw new Error("Trellis.Feeds cache is not initialized");
+		Trellis.debug("Trellis.Feeds: Registering feed " + feed.libraryID, 5);
 		this._addToCache(this._cache, feed);
 	}
 	
@@ -150,10 +150,10 @@ Zotero.Feeds = new function () {
 		if (!feed.libraryID) throw new Error('Cannot register an unsaved feed');
 		
 		if (cache.libraryIDByURL[feed.url]) {
-			Zotero.debug('Feed with url ' + feed.url + ' is already registered', 2, true);
+			Trellis.debug('Feed with url ' + feed.url + ' is already registered', 2, true);
 		}
 		if (cache.urlByLibraryID[feed.libraryID]) {
-			Zotero.debug('Feed with libraryID ' + feed.libraryID + ' is already registered', 2, true);
+			Trellis.debug('Feed with libraryID ' + feed.libraryID + ' is already registered', 2, true);
 		}
 		
 		cache.libraryIDByURL[feed.url] = feed.libraryID;
@@ -161,13 +161,13 @@ Zotero.Feeds = new function () {
 	}
 	
 	this.unregister = function (libraryID) {
-		if (!this._cache) throw new Error("Zotero.Feeds cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Feeds cache is not initialized");
 		
-		Zotero.debug("Zotero.Feeds: Unregistering feed " + libraryID, 5);
+		Trellis.debug("Trellis.Feeds: Unregistering feed " + libraryID, 5);
 		
 		let url = this._cache.urlByLibraryID[libraryID];
 		if (url === undefined) {
-			Zotero.debug('Attempting to unregister a feed that is not registered (' + libraryID + ')', 2, true);
+			Trellis.debug('Attempting to unregister a feed that is not registered (' + libraryID + ')', 2, true);
 			return;
 		}
 		
@@ -192,18 +192,18 @@ Zotero.Feeds = new function () {
 			if (!url) url = feedElem.getAttribute('url');
 			let name = feedElem.getAttribute('title')
 				|| feedElem.getAttribute('text')
-				|| Zotero.getString('pane.collections.untitled');
-			if (Zotero.Feeds.existsByURL(url) || registeredUrls.has(url)) {
-				Zotero.debug("Feed Import from OPML: Feed " + name + " : " + url + " already exists. Skipping");
+				|| Trellis.getString('pane.collections.untitled');
+			if (Trellis.Feeds.existsByURL(url) || registeredUrls.has(url)) {
+				Trellis.debug("Feed Import from OPML: Feed " + name + " : " + url + " already exists. Skipping");
 				continue;
 			}
 			// Prevent duplicates from the same OPML file
 			registeredUrls.add(url);
-			let feed = new Zotero.Feed({url, name});
+			let feed = new Trellis.Feed({url, name});
 			newFeeds.push(feed);
 		}
 		// This could potentially be a massive list, so we save in a transaction.
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			for (let feed of newFeeds) {
 				await feed.save({
 					skipSelect: true
@@ -211,15 +211,15 @@ Zotero.Feeds = new function () {
 			}
 		});
 		// Finally, update
-		await Zotero.Feeds.updateFeeds();
+		await Trellis.Feeds.updateFeeds();
 		return true;
 	};
 	
 	this.restoreFromJSON = async function (json, merge=false) {
-		Zotero.debug("Restoring feeds from remote JSON");
-		Zotero.debug(json);
+		Trellis.debug("Restoring feeds from remote JSON");
+		Trellis.debug(json);
 		if (merge) {
-			let syncedFeeds = Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, 'feeds');
+			let syncedFeeds = Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, 'feeds');
 			// Overwrite with remote values for names, etc.
 			for (let url in json) {
 				syncedFeeds[url] = json[url];
@@ -228,11 +228,11 @@ Zotero.Feeds = new function () {
 			json = syncedFeeds;
 		}
 		json = this._compactifyFeedJSON(json);
-		await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'feeds', json);
-		let feeds = Zotero.Feeds.getAll();
+		await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'feeds', json);
+		let feeds = Trellis.Feeds.getAll();
 		for (let feed of feeds) {
 			if (json[feed.url]) {
-				Zotero.debug("Feed " + feed.url + " exists remotely and locally");
+				Trellis.debug("Feed " + feed.url + " exists remotely and locally");
 				feed.name = json[feed.url][0];
 				feed.cleanupReadAfter = json[feed.url][1];
 				// TEMP after adding cleanupUnreadAfter for unread items
@@ -242,13 +242,13 @@ Zotero.Feeds = new function () {
 				feed.refreshInterval = json[feed.url][json[feed.url].length-1];
 				delete json[feed.url];
 			} else {
-				Zotero.debug("Feed " + feed.url + " does not exist in remote JSON. Deleting");
+				Trellis.debug("Feed " + feed.url + " does not exist in remote JSON. Deleting");
 				await feed.erase();
 			}
 		}
 		// Because existing json[feed.url] got deleted, `json` now only contains new feeds
 		for (let url in json) {
-			Zotero.debug("Feed " + url + " exists remotely but not locally. Creating");
+			Trellis.debug("Feed " + url + " exists remotely but not locally. Creating");
 			let obj = {
 				url, 
 				name: json[url][0], 
@@ -259,7 +259,7 @@ Zotero.Feeds = new function () {
 			if (json[url].length == 4) {
 				obj.cleanupUnreadAfter = json[url][2];
 			}
-			let feed = new Zotero.Feed(obj);
+			let feed = new Trellis.Feed(obj);
 			await feed.saveTx({
 				skipSelect: true
 			});
@@ -267,7 +267,7 @@ Zotero.Feeds = new function () {
 	};
 	
 	this.getByURL = function (urls) {
-		if (!this._cache) throw new Error("Zotero.Feeds cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Feeds cache is not initialized");
 		
 		let asArray = true;
 		if (!Array.isArray(urls)) {
@@ -282,32 +282,32 @@ Zotero.Feeds = new function () {
 				return
 			}
 			
-			feeds[i] = Zotero.Libraries.get(libraryID);
+			feeds[i] = Trellis.Libraries.get(libraryID);
 		}
 		
 		return asArray ? feeds : feeds[0];
 	}
 	
 	this.existsByURL = function (url) {
-		if (!this._cache) throw new Error("Zotero.Feeds cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Feeds cache is not initialized");
 		
 		return this._cache.libraryIDByURL[url] !== undefined;
 	}
 	
 	this.getAll = function () {
-		if (!this._cache) throw new Error("Zotero.Feeds cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Feeds cache is not initialized");
 		
 		return Object.keys(this._cache.urlByLibraryID)
-			.map(id => Zotero.Libraries.get(id));
+			.map(id => Trellis.Libraries.get(id));
 	}
 	
 	this.get = function (libraryID) {
-		let library = Zotero.Libraries.get(libraryID);
+		let library = Trellis.Libraries.get(libraryID);
 		return library.isFeed ? library : undefined;
 	}
 	
 	this.haveFeeds = function () {
-		if (!this._cache) throw new Error("Zotero.Feeds cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Feeds cache is not initialized");
 		
 		return !!Object.keys(this._cache.urlByLibraryID).length
 	}
@@ -327,14 +327,14 @@ Zotero.Feeds = new function () {
 			return;
 		}
 		
-		Zotero.debug("Scheduling next feed update");
+		Trellis.debug("Scheduling next feed update");
 		let sql = "SELECT ( CASE "
 			+ "WHEN lastCheck IS NULL THEN 0 "
 			+ "ELSE strftime('%s', lastCheck) + refreshInterval * 60 - strftime('%s', 'now') "
 			+ "END ) AS nextCheck "
 			+ "FROM feeds WHERE refreshInterval IS NOT NULL "
 			+ "ORDER BY nextCheck ASC LIMIT 1";
-		var nextCheck = await Zotero.DB.valueQueryAsync(sql);
+		var nextCheck = await Trellis.DB.valueQueryAsync(sql);
 
 		if (_nextFeedCheck) {
 			clearTimeout(_nextFeedCheck);
@@ -344,27 +344,27 @@ Zotero.Feeds = new function () {
 		if (nextCheck !== false) {
 			nextCheck = nextCheck > 0 ? nextCheck * 1000 : 0;
 			this._nextFeedCheckDelay = nextCheck;
-			Zotero.debug("Next feed check in " + (nextCheck / 1000) + " seconds");
+			Trellis.debug("Next feed check in " + (nextCheck / 1000) + " seconds");
 			_nextFeedCheck = setTimeout(async () => {
 				await globalFeedCheckDelay;
 
 				_nextFeedCheck = null;
-				globalFeedCheckDelay = Zotero.Promise.delay(60000); // Don't perform auto-updates more than once per minute
+				globalFeedCheckDelay = Trellis.Promise.delay(60000); // Don't perform auto-updates more than once per minute
 				await this.updateFeeds();
 			}, nextCheck);
 		}
 		else {
-			Zotero.debug("No feeds with auto-update");
+			Trellis.debug("No feeds with auto-update");
 		}
 	};
 	
 	this.updateFeeds = async function () {
 		if (_updating) {
-			Zotero.debug("Feed update already in progress");
+			Trellis.debug("Feed update already in progress");
 			return;
 		}
 		if (_paused) {
-			Zotero.debug("Feed updating is paused");
+			Trellis.debug("Feed updating is paused");
 			return;
 		}
 		if (_nextFeedCheck) {
@@ -378,14 +378,14 @@ Zotero.Feeds = new function () {
 					+ "WHERE refreshInterval IS NOT NULL "
 					+ "AND ( lastCheck IS NULL "
 						+ "OR (julianday(lastCheck, 'utc') + (refreshInterval/1440.0) - julianday('now', 'utc')) <= 0 )";
-				let needUpdate = ((await Zotero.DB.queryAsync(sql))).map(row => row.id);
-				Zotero.debug("Running update for feeds: " + needUpdate.join(', '));
+				let needUpdate = ((await Trellis.DB.queryAsync(sql))).map(row => row.id);
+				Trellis.debug("Running update for feeds: " + needUpdate.join(', '));
 				for (let i=0; i<needUpdate.length; i++) {
 					if (_paused) {
-						Zotero.debug("Stopping feed updates due to pause");
+						Trellis.debug("Stopping feed updates due to pause");
 						break;
 					}
-					let feed = Zotero.Feeds.get(needUpdate[i]);
+					let feed = Trellis.Feeds.get(needUpdate[i]);
 					await feed.waitForDataLoad('item');
 					await feed._updateFeed();
 				}
@@ -396,7 +396,7 @@ Zotero.Feeds = new function () {
 				_updatePromise = null;
 			}
 			
-			Zotero.debug("All feed updates done");
+			Trellis.debug("All feed updates done");
 			this.scheduleNextFeedCheck();
 		});
 	};

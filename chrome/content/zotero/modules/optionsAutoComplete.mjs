@@ -2,7 +2,7 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 
 const OPTIONS_AC_CLASS_ID = Components.ID('{882f1f42-c1ff-458c-9157-06a4a55d32e8}');
-const OPTIONS_AC_NAME = "zotero-options";
+const OPTIONS_AC_NAME = "trellis-options";
 const OPTIONS_AC_CONTRACT_ID = `@mozilla.org/autocomplete/search;1?name=${OPTIONS_AC_NAME}`;
 
 function makeResult(searchString, matches, { noValueLabel, values } = {}) {
@@ -59,7 +59,7 @@ export class OptionsAutoComplete {
 		let matches = filtered.map(({ label }) => label);
 		let values = filtered.map(({ value }) => value);
 		let noValueLabel = searchParams?.includeNoValue && !searchString
-			? Zotero.getString('item-pane-batch-editing-clear-values')
+			? Trellis.getString('item-pane-batch-editing-clear-values')
 			: null;
 		const result = makeResult(searchString, matches, { noValueLabel, values });
 		listener.onSearchResult(this, result);

@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
 
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 <window
 		id="dictionary-manager"
 		xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 		xmlns:html="http://www.w3.org/1999/xhtml"
 		xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-		onload="Zotero_Dictionary_Manager.init()"
-		windowtype="zotero:dictionaries">
+		onload="Trellis_Dictionary_Manager.init()"
+		windowtype="trellis:dictionaries">
 	
 	<script src="chrome://global/content/globalOverlay.js"/>
 	<script src="include.js"/>
@@ -24,9 +24,9 @@
 		<html:div id="status">&#xA0;</html:div>
 		
 		<hbox class="dialog-button-box">
-			<button dlgtype="cancel" label="&zotero.general.cancel;" oncommand="window.close()"/>
-			<button dlgtype="accept" default="true" label="&zotero.general.ok;"
-				oncommand="Zotero_Dictionary_Manager.handleAccept()"/>
+			<button dlgtype="cancel" label="&trellis.general.cancel;" oncommand="window.close()"/>
+			<button dlgtype="accept" default="true" label="&trellis.general.ok;"
+				oncommand="Trellis_Dictionary_Manager.handleAccept()"/>
 		</hbox>
 	</vbox>
 	

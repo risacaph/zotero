@@ -4,32 +4,32 @@
     
     Copyright © 2012 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 const { ComponentUtils } = ChromeUtils.importESModule("resource://gre/modules/ComponentUtils.sys.mjs");
 
-function ZoteroUnit() {
+function TrellisUnit() {
 	this.wrappedJSObject = this;
 }
-ZoteroUnit.prototype = {
+TrellisUnit.prototype = {
 	/* nsICommandLineHandler */
 	handle:function(cmdLine) {
 		this.tests = cmdLine.handleFlagWithParam("test", false);
@@ -41,12 +41,12 @@ ZoteroUnit.prototype = {
 		this.startAt = cmdLine.handleFlagWithParam("startAtTestFile", false);
 		this.stopAt = cmdLine.handleFlagWithParam("stopAtTestFile", false);
 		this.grep = cmdLine.handleFlagWithParam("grep", false);
-		this.timeout = cmdLine.handleFlagWithParam("ZoteroTestTimeout", false);
+		this.timeout = cmdLine.handleFlagWithParam("TrellisTestTimeout", false);
 		
 		if (this.tests) {
 			Services.ww.openWindow(
 				null,
-				"chrome://zotero-unit/content/runtests.html",
+				"chrome://trellis-unit/content/runtests.html",
 				"_blank",
 				"chrome,dialog=no,all",
 				Cc["@mozilla.org/array;1"].createInstance(Ci.nsIMutableArray)
@@ -61,8 +61,8 @@ ZoteroUnit.prototype = {
 	
 	classID: Components.ID("{b8570031-be5e-46e8-9785-38cd50a5d911}"),
 	service: true,
-	_xpcom_categories: [{category:"command-line-handler", entry:"m-zotero-unit"}],
+	_xpcom_categories: [{category:"command-line-handler", entry:"m-trellis-unit"}],
 	QueryInterface: ChromeUtils.generateQI([Components.interfaces.nsICommandLineHandler])
 };
 
-var NSGetFactory = ComponentUtils.generateNSGetFactory([ZoteroUnit]);
+var NSGetFactory = ComponentUtils.generateNSGetFactory([TrellisUnit]);

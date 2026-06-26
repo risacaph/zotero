@@ -3,27 +3,27 @@
     
     Copyright © 2006-2016 Center for History and New Media
                           George Mason University, Fairfax, Virginia, USA
-                          https://zotero.org
+                          https://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.SearchConditions = new function () {
+Trellis.SearchConditions = new function () {
 	this.get = get;
 	this.getStandardConditions = getStandardConditions;
 	this.hasOperator = hasOperator;
@@ -41,7 +41,7 @@ Zotero.SearchConditions = new function () {
 	 * Define the advanced search operators
 	 */
 	var _operators = {
-		// Standard -- these need to match those in zoterosearch.xml
+		// Standard -- these need to match those in trellissearch.xml
 		is: true,
 		isNot: true,
 		beginsWith: true,
@@ -415,8 +415,8 @@ Zotero.SearchConditions = new function () {
 				},
 				table: 'itemNotes',
 				// Exclude note prefix and suffix
-				field: `SUBSTR(note, ${1 + Zotero.Notes.notePrefix.length}, `
-					+ `LENGTH(note) - ${Zotero.Notes.notePrefix.length + Zotero.Notes.noteSuffix.length})`,
+				field: `SUBSTR(note, ${1 + Trellis.Notes.notePrefix.length}, `
+					+ `LENGTH(note) - ${Trellis.Notes.notePrefix.length + Trellis.Notes.noteSuffix.length})`,
 				level: 'note'
 			},
 			
@@ -428,8 +428,8 @@ Zotero.SearchConditions = new function () {
 				},
 				table: 'items',
 				// Exclude note prefix and suffix
-				field: `SUBSTR(note, ${1 + Zotero.Notes.notePrefix.length}, `
-					+ `LENGTH(note) - ${Zotero.Notes.notePrefix.length + Zotero.Notes.noteSuffix.length})`
+				field: `SUBSTR(note, ${1 + Trellis.Notes.notePrefix.length}, `
+					+ `LENGTH(note) - ${Trellis.Notes.notePrefix.length + Trellis.Notes.noteSuffix.length})`
 			},
 			
 			{
@@ -504,7 +504,7 @@ Zotero.SearchConditions = new function () {
 				},
 				table: 'itemData',
 				field: 'value',
-				aliases: await Zotero.DB.columnQueryAsync("SELECT fieldName FROM fieldsCombined "
+				aliases: await Trellis.DB.columnQueryAsync("SELECT fieldName FROM fieldsCombined "
 					+ "WHERE fieldName NOT IN ('accessDate', 'date', 'pages', "
 					+ "'section','seriesNumber','issue')"),
 				template: true // mark for special handling
@@ -602,7 +602,7 @@ Zotero.SearchConditions = new function () {
 				special: true,
 				noLoad: true,
 				inlineFilter: function (val) {
-					return Zotero.Utilities.isValidObjectKey(val) ? `'${val}'` : false;
+					return Trellis.Utilities.isValidObjectKey(val) ? `'${val}'` : false;
 				}
 			},
 			
@@ -683,7 +683,7 @@ Zotero.SearchConditions = new function () {
 					switch (conditions[i]['aliases'][j]) {
 						case 'dateDue':
 						case 'accepted':
-							if (!Zotero.ItemTypes.getID('nsfReviewer')) {
+							if (!Trellis.ItemTypes.getID('nsfReviewer')) {
 								continue;
 							}
 					}
@@ -695,14 +695,14 @@ Zotero.SearchConditions = new function () {
 		
 		_standardConditions = [];
 		
-		var baseMappedFields = Zotero.ItemFields.getBaseMappedFields();
-		var locale = Zotero.locale;
+		var baseMappedFields = Trellis.ItemFields.getBaseMappedFields();
+		var locale = Trellis.locale;
 		
 		// Separate standard conditions for menu display
 		for (var i in _conditions){
 			var fieldID = false;
 			if (['field', 'datefield', 'numberfield'].indexOf(_conditions[i]['name']) != -1) {
-				fieldID = Zotero.ItemFields.getID(i);
+				fieldID = Trellis.ItemFields.getID(i);
 			}
 			
 			// If explicitly special...
@@ -726,7 +726,7 @@ Zotero.SearchConditions = new function () {
 			});
 		}
 		
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		_standardConditions.sort(function (a, b) {
 			// Sort Any Field to the top
 			if (a.name == 'anyField') {
@@ -763,12 +763,12 @@ Zotero.SearchConditions = new function () {
 		var [condition, mode] = this.parseCondition(condition);
 		
 		if (!_conditions) {
-			throw new Zotero.Exception.UnloadedDataException("Search conditions not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Search conditions not yet loaded");
 		}
 		
 		if (!_conditions[condition]){
 			let e = new Error("Invalid condition '" + condition + "' in hasOperator()");
-			e.name = "ZoteroInvalidDataError";
+			e.name = "TrellisInvalidDataError";
 			throw e;
 		}
 		
@@ -786,12 +786,12 @@ Zotero.SearchConditions = new function () {
 			str = 'itemTypeID';
 		}
 		else if (['author', 'editor', 'bookAuthor'].includes(str)) {
-			return Zotero.CreatorTypes.getLocalizedString(str);
+			return Trellis.CreatorTypes.getLocalizedString(str);
 		}
 
 		try {
 			let ftlKey = 'search-conditions-' + str;
-			let conditionString = Zotero.getString(ftlKey);
+			let conditionString = Trellis.getString(ftlKey);
 			if (conditionString && conditionString !== ftlKey) {
 				return conditionString;
 			}
@@ -799,10 +799,10 @@ Zotero.SearchConditions = new function () {
 		catch (e) {}
 
 		try {
-			return Zotero.ItemFields.getLocalizedString(str);
+			return Trellis.ItemFields.getLocalizedString(str);
 		}
 		catch (e) {
-			Zotero.debug(`getLocalizedName: no localized string for '${str}'`, 2);
+			Trellis.debug(`getLocalizedName: no localized string for '${str}'`, 2);
 			return str;
 		}
 	}

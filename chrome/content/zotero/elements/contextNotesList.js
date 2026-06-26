@@ -3,22 +3,22 @@
 	
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -40,7 +40,7 @@
 					<html:div class="body"/>
 				</collapsible-section>
 			</html:div>
-		`, ['chrome://zotero/locale/zotero.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd']);
 		
 		_itemNotes = [];
 		
@@ -111,8 +111,8 @@
 			this._itemNotesSection = this.querySelector('.item-notes');
 			this._allNotesSection = this.querySelector('.all-notes');
 			
-			this._itemNotesSection.label = Zotero.getString('pane.context.itemNotes');
-			this._allNotesSection.label = Zotero.getString('pane.context.allNotes');
+			this._itemNotesSection.label = Trellis.getString('pane.context.itemNotes');
+			this._allNotesSection.label = Trellis.getString('pane.context.allNotes');
 			
 			this._itemNotesSection.addEventListener('add', this._handleAddNote);
 			this._allNotesSection.addEventListener('add', this._handleAddNote);
@@ -146,7 +146,7 @@
 			if (visibleNotes.length < this._allNotes.length) {
 				let moreButton = document.createElement('button');
 				moreButton.className = 'more';
-				moreButton.textContent = Zotero.getString('general.numMore', Zotero.Utilities.numberFormat(
+				moreButton.textContent = Trellis.getString('general.numMore', Trellis.Utilities.numberFormat(
 					[this._allNotes.length - visibleNotes.length], 0));
 				moreButton.addEventListener('click', () => {
 					this.expanded = true;
@@ -222,7 +222,7 @@
 				event.target.previousElementSibling?.focus();
 			}
 			else if (event.key == "Tab" && !event.shiftKey) {
-				Services.focus.moveFocus(window, document.getElementById("zotero-context-pane-sidenav"),
+				Services.focus.moveFocus(window, document.getElementById("trellis-context-pane-sidenav"),
 					Services.focus.MOVEFOCUS_FORWARD, 0);
 				event.preventDefault();
 			}

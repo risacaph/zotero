@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
 
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 <window data-l10n-id="rtfScan-wizard"
 		xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 		xmlns:html="http://www.w3.org/1999/xhtml"
 		id="rtfscan-wizard-window"
-		onload="Zotero_RTFScan.init()"
+		onload="Trellis_RTFScan.init()"
 >
 	<linkset>
 		<html:link rel="localization" href="branding/brand.ftl" />
-		<html:link rel="localization" href="zotero.ftl" />
+		<html:link rel="localization" href="trellis.ftl" />
 	</linkset>
 	
 	<script>
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 	</script>
 	
-	<wizard id="rtfscan-wizard" class="rtfscan-wizard zotero-dialog-window">
+	<wizard id="rtfscan-wizard" class="rtfscan-wizard trellis-dialog-window">
 		<wizardpage pageid="page-start" data-header-label-id="rtfScan-intro-page">
 			<div>
 				<span class="page-start-1" data-l10n-id="rtfScan-introPage-description" />

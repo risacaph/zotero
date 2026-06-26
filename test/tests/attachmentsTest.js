@@ -1,9 +1,9 @@
-describe("Zotero.Attachments", function () {
+describe("Trellis.Attachments", function () {
 	var HiddenBrowser;
 	var browser;
 	
 	before(function () {
-		HiddenBrowser = ChromeUtils.importESModule("chrome://zotero/content/HiddenBrowser.mjs").HiddenBrowser;
+		HiddenBrowser = ChromeUtils.importESModule("chrome://trellis/content/HiddenBrowser.mjs").HiddenBrowser;
 	});
 	
 	afterEach(function () {
@@ -17,86 +17,86 @@ describe("Zotero.Attachments", function () {
 		it("should create a child attachment from a text file", async function () {
 			// Create test file
 			var contents = "Test";
-			var tmpFile = Zotero.getTempDirectory();
+			var tmpFile = Trellis.getTempDirectory();
 			tmpFile.append('test.txt');
-			await Zotero.File.putContentsAsync(tmpFile, contents);
+			await Trellis.File.putContentsAsync(tmpFile, contents);
 			
 			// Create parent item
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var parentItemID = await item.saveTx();
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: tmpFile,
 				parentItemID: parentItemID
 			});
 			var storedFile = item.getFile();
-			assert.equal(((await Zotero.File.getContentsAsync(storedFile))), contents);
+			assert.equal(((await Trellis.File.getContentsAsync(storedFile))), contents);
 			
 			// Clean up
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 		
 		it("should create a top-level attachment from a PNG file", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var contents = await Zotero.File.getBinaryContentsAsync(file);
+			var contents = await Trellis.File.getBinaryContentsAsync(file);
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			var storedFile = item.getFile();
-			assert.equal(((await Zotero.File.getBinaryContentsAsync(storedFile))), contents);
+			assert.equal(((await Trellis.File.getBinaryContentsAsync(storedFile))), contents);
 			
 			// Clean up
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 		
 		it("should create a top-level attachment from a PNG file in a collection", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var contents = await Zotero.File.getBinaryContentsAsync(file);
+			var contents = await Trellis.File.getBinaryContentsAsync(file);
 			
 			var collection = await createDataObject('collection');
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file,
 				collections: [collection.id]
 			});
 			var storedFile = item.getFile();
-			assert.equal(((await Zotero.File.getBinaryContentsAsync(storedFile))), contents);
+			assert.equal(((await Trellis.File.getBinaryContentsAsync(storedFile))), contents);
 			
 			// Clean up
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 		
 		it("should create a child attachment from a PNG file", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var contents = await Zotero.File.getBinaryContentsAsync(file);
+			var contents = await Trellis.File.getBinaryContentsAsync(file);
 			
 			// Create parent item
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var parentItemID = await item.saveTx();
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file,
 				parentItemID: parentItemID
 			});
 			var storedFile = item.getFile();
-			assert.equal(((await Zotero.File.getBinaryContentsAsync(storedFile))), contents);
+			assert.equal(((await Trellis.File.getBinaryContentsAsync(storedFile))), contents);
 			
 			// Clean up
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 
 		it("should set a top-level item's title to the filename, minus its extension", async function () {
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file: file,
 			});
 			assert.equal(attachment.getField('title'), 'test');
@@ -107,11 +107,11 @@ describe("Zotero.Attachments", function () {
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
 			let parent = await createDataObject('item');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file: file,
 				parentItemID: parent.id,
 			});
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-pdf'));
 			await parent.eraseTx();
 		});
 	})
@@ -122,7 +122,7 @@ describe("Zotero.Attachments", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: file,
 				parentItemID: item.id
 			});
@@ -137,7 +137,7 @@ describe("Zotero.Attachments", function () {
 		it("should set a top-level item's title to the filename, minus its extension", async function () {
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.linkFromFile({
+			let attachment = await Trellis.Attachments.linkFromFile({
 				file: file,
 			});
 			assert.equal(attachment.getField('title'), 'test');
@@ -148,11 +148,11 @@ describe("Zotero.Attachments", function () {
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
 			let parent = await createDataObject('item');
-			let attachment = await Zotero.Attachments.linkFromFile({
+			let attachment = await Trellis.Attachments.linkFromFile({
 				file: file,
 				parentItemID: parent.id,
 			});
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-pdf'));
 			await parent.eraseTx();
 		});
 	})
@@ -160,17 +160,17 @@ describe("Zotero.Attachments", function () {
 	
 	describe("#linkFromFileWithRelativePath()", function () {
 		afterEach(function () {
-			Zotero.Prefs.clear('baseAttachmentPath');
+			Trellis.Prefs.clear('baseAttachmentPath');
 		});
 		
 		it("should link to a file using a relative path with no base directory set", async function () {
-			Zotero.Prefs.clear('baseAttachmentPath');
+			Trellis.Prefs.clear('baseAttachmentPath');
 			
 			var item = await createDataObject('item');
-			var spy = sinon.spy(Zotero.Fulltext, 'indexPDF');
+			var spy = sinon.spy(Trellis.Fulltext, 'indexPDF');
 			var relPath = 'a/b/test.pdf';
 			
-			var attachment = await Zotero.Attachments.linkFromFileWithRelativePath({
+			var attachment = await Trellis.Attachments.linkFromFileWithRelativePath({
 				path: relPath,
 				title: 'test.pdf',
 				parentItemID: item.id,
@@ -181,15 +181,15 @@ describe("Zotero.Attachments", function () {
 			spy.restore();
 			assert.equal(
 				attachment.attachmentPath,
-				Zotero.Attachments.BASE_PATH_PLACEHOLDER + relPath
+				Trellis.Attachments.BASE_PATH_PLACEHOLDER + relPath
 			);
 		});
 		
 		
 		it("should link to a file using a relative path within the base directory", async function () {
 			var baseDir = await getTempDirectory();
-			Zotero.Prefs.set('baseAttachmentPath', baseDir);
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true);
+			Trellis.Prefs.set('baseAttachmentPath', baseDir);
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true);
 			
 			var subDir = OS.Path.join(baseDir, 'foo');
 			await OS.File.makeDir(subDir);
@@ -198,10 +198,10 @@ describe("Zotero.Attachments", function () {
 			await OS.File.copy(OS.Path.join(getTestDataDirectory().path, 'test.pdf'), file);
 			
 			var item = await createDataObject('item');
-			var spy = sinon.spy(Zotero.Fulltext, 'indexPDF');
+			var spy = sinon.spy(Trellis.Fulltext, 'indexPDF');
 			var relPath = 'foo/test.pdf';
 			
-			var attachment = await Zotero.Attachments.linkFromFileWithRelativePath({
+			var attachment = await Trellis.Attachments.linkFromFileWithRelativePath({
 				path: relPath,
 				title: 'test.pdf',
 				parentItemID: item.id,
@@ -212,7 +212,7 @@ describe("Zotero.Attachments", function () {
 			spy.restore();
 			assert.equal(
 				attachment.attachmentPath,
-				Zotero.Attachments.BASE_PATH_PLACEHOLDER + relPath
+				Trellis.Attachments.BASE_PATH_PLACEHOLDER + relPath
 			);
 			
 			assert.ok(await attachment.fileExists());
@@ -221,17 +221,17 @@ describe("Zotero.Attachments", function () {
 		
 		it("should link to a nonexistent file using a relative path within the base directory", async function () {
 			var baseDir = await getTempDirectory();
-			Zotero.Prefs.set('baseAttachmentPath', baseDir);
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true);
+			Trellis.Prefs.set('baseAttachmentPath', baseDir);
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true);
 			
 			var subDir = OS.Path.join(baseDir, 'foo');
 			await OS.File.makeDir(subDir);
 			
 			var item = await createDataObject('item');
-			var spy = sinon.spy(Zotero.Fulltext, 'indexPDF');
+			var spy = sinon.spy(Trellis.Fulltext, 'indexPDF');
 			var relPath = 'foo/test.pdf';
 			
-			var attachment = await Zotero.Attachments.linkFromFileWithRelativePath({
+			var attachment = await Trellis.Attachments.linkFromFileWithRelativePath({
 				path: relPath,
 				title: 'test.pdf',
 				parentItemID: item.id,
@@ -242,7 +242,7 @@ describe("Zotero.Attachments", function () {
 			spy.restore();
 			assert.equal(
 				attachment.attachmentPath,
-				Zotero.Attachments.BASE_PATH_PLACEHOLDER + relPath
+				Trellis.Attachments.BASE_PATH_PLACEHOLDER + relPath
 			);
 			
 			assert.isFalse(await attachment.fileExists());
@@ -251,7 +251,7 @@ describe("Zotero.Attachments", function () {
 		
 		it("should reject absolute paths", async function () {
 			try {
-				await Zotero.Attachments.linkFromFileWithRelativePath({
+				await Trellis.Attachments.linkFromFileWithRelativePath({
 					path: '/a/b/test.pdf',
 					title: 'test.pdf',
 					contentType: 'application/pdf'
@@ -271,7 +271,7 @@ describe("Zotero.Attachments", function () {
 			var item = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test.html');
-			var attachment = await Zotero.Attachments.importSnapshotFromFile({
+			var attachment = await Trellis.Attachments.importSnapshotFromFile({
 				title: 'Snapshot',
 				url: 'http://example.com',
 				file,
@@ -280,7 +280,7 @@ describe("Zotero.Attachments", function () {
 				charset: 'utf-8'
 			});
 			
-			var matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'test');
+			var matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'test');
 			assert.lengthOf(matches, 1);
 			assert.propertyVal(matches[0], 'id', attachment.id);
 		});
@@ -289,7 +289,7 @@ describe("Zotero.Attachments", function () {
 			var item = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test.html');
-			var attachment = await Zotero.Attachments.importSnapshotFromFile({
+			var attachment = await Trellis.Attachments.importSnapshotFromFile({
 				title: 'Snapshot',
 				url: 'http://example.com',
 				file,
@@ -299,7 +299,7 @@ describe("Zotero.Attachments", function () {
 			
 			assert.equal(attachment.attachmentCharset, 'utf-8');
 			
-			var matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'test');
+			var matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'test');
 			assert.lengthOf(matches, 1);
 			assert.propertyVal(matches[0], 'id', attachment.id);
 		});
@@ -308,7 +308,7 @@ describe("Zotero.Attachments", function () {
 			var item = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test-js.html');
-			var attachment = await Zotero.Attachments.importSnapshotFromFile({
+			var attachment = await Trellis.Attachments.importSnapshotFromFile({
 				title: 'Snapshot',
 				url: 'http://example.com',
 				file,
@@ -318,7 +318,7 @@ describe("Zotero.Attachments", function () {
 			
 			assert.equal(attachment.attachmentCharset, 'utf-8');
 			
-			var matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'test');
+			var matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'test');
 			assert.lengthOf(matches, 1);
 			assert.propertyVal(matches[0], 'id', attachment.id);
 		});
@@ -327,14 +327,14 @@ describe("Zotero.Attachments", function () {
 	
 	describe("#importFromURL()", function () {
 		it("should use BrowserRequest for a JS redirect page", async function () {
-			let downloadPDFStub = sinon.stub(Zotero.BrowserRequest, "downloadPDF");
+			let downloadPDFStub = sinon.stub(Trellis.BrowserRequest, "downloadPDF");
 			downloadPDFStub.callsFake(async (_url, path) => {
 				await OS.File.copy(OS.Path.join(getTestDataDirectory().path, 'test.pdf'), path);
 			});
 			try {
-				var item = await Zotero.Attachments.importFromURL({
-					libraryID: Zotero.Libraries.userLibraryID,
-					url: 'https://zotero-static.s3.amazonaws.com/test-pdf-redirect.html',
+				var item = await Trellis.Attachments.importFromURL({
+					libraryID: Trellis.Libraries.userLibraryID,
+					url: 'https://trellis-static.s3.amazonaws.com/test-pdf-redirect.html',
 					contentType: 'application/pdf'
 				});
 				
@@ -342,7 +342,7 @@ describe("Zotero.Attachments", function () {
 			}
 			finally {
 				// Clean up
-				await Zotero.Items.erase(item.id);
+				await Trellis.Items.erase(item.id);
 				downloadPDFStub.restore();
 			}
 		});
@@ -359,7 +359,7 @@ describe("Zotero.Attachments", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var attachment = await Zotero.Attachments.linkFromDocument({
+			var attachment = await Trellis.Attachments.linkFromDocument({
 				document: await browser.getDocument(),
 				parentItemID: item.id
 			});
@@ -367,7 +367,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('url'), "file://" + uri);
 			
 			// Check indexing
-			var matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'share your research');
+			var matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'share your research');
 			assert.lengthOf(matches, 1);
 			assert.propertyVal(matches[0], 'id', attachment.id);
 		})
@@ -385,13 +385,13 @@ describe("Zotero.Attachments", function () {
 
 		beforeEach(async function () {
 			// Use random prefix because httpd does not actually stop between tests
-			prefix = Zotero.Utilities.randomString();
+			prefix = Trellis.Utilities.randomString();
 			({ httpd, port: testServerPort } = await startHTTPServer());
 			testServerPath = 'http://127.0.0.1:' + testServerPort + '/' + prefix;
 		});
 
 		afterEach(async function () {
-			var defer = Zotero.Promise.defer();
+			var defer = Trellis.Promise.defer();
 			httpd.stop(() => defer.resolve());
 			await defer.promise;
 		});
@@ -404,8 +404,8 @@ describe("Zotero.Attachments", function () {
 			
 			browser = new HiddenBrowser();
 			await browser.load(testServerPath + "/index.html");
-			Zotero.FullText.indexNextInTest();
-			var attachment = await Zotero.Attachments.importFromDocument({
+			Trellis.FullText.indexNextInTest();
+			var attachment = await Trellis.Attachments.importFromDocument({
 				browser,
 				parentItemID: item.id
 			});
@@ -413,25 +413,25 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('url'), testServerPath + "/index.html");
 			
 			// Check indexing
-			var matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'share your research');
+			var matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'share your research');
 			assert.lengthOf(matches, 1);
 			assert.propertyVal(matches[0], 'id', attachment.id);
 			
-			var storageDir = Zotero.Attachments.getStorageDirectory(attachment).path;
+			var storageDir = Trellis.Attachments.getStorageDirectory(attachment).path;
 			var file = await attachment.getFilePathAsync();
 			assert.equal(OS.Path.basename(file), 'index.html');
 			
 			// Check attachment html file contents
 			let path = OS.Path.join(storageDir, 'index.html');
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
+			let contents = await Trellis.File.getContentsAsync(path);
 			assert.include(contents, "><!--\n Page saved with SingleFile");
 			
 			// Check attachment base64 contents
 			let expectedPath = getTestDataDirectory();
 			expectedPath.append('snapshot');
 			expectedPath.append('img.gif');
-			let needle = await Zotero.File.getBinaryContentsAsync(expectedPath);
+			let needle = await Trellis.File.getBinaryContentsAsync(expectedPath);
 			needle = '<img src=data:image/gif;base64,' + btoa(needle) + '>';
 			assert.include(contents, needle);
 		});
@@ -452,7 +452,7 @@ describe("Zotero.Attachments", function () {
 
 			let browser = new HiddenBrowser();
 			await browser.load(testServerPath + "/index.html");
-			var attachment = await Zotero.Attachments.importFromDocument({
+			var attachment = await Trellis.Attachments.importFromDocument({
 				browser,
 				parentItemID: item.id
 			});
@@ -460,14 +460,14 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('url'), testServerPath + "/index.html");
 
 			// Check for embedded files
-			var storageDir = Zotero.Attachments.getStorageDirectory(attachment).path;
+			var storageDir = Trellis.Attachments.getStorageDirectory(attachment).path;
 			var file = await attachment.getFilePathAsync();
 			assert.equal(OS.Path.basename(file), 'index.html');
 
 			// Check attachment html file contents
 			let path = OS.Path.join(storageDir, 'index.html');
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
+			let contents = await Trellis.File.getContentsAsync(path);
 			assert.include(contents, "><!--\n Page saved with SingleFile");
 
 			// Check attachment base64 contents
@@ -479,7 +479,7 @@ describe("Zotero.Attachments", function () {
 			// trying to load the file. I don't really know of a good way around this for
 			// the moment so I am leaving this assertion commented out, but without the
 			// test is much less useful.
-			// let needle = await Zotero.File.getBinaryContentsAsync(expectedPath);
+			// let needle = await Trellis.File.getBinaryContentsAsync(expectedPath);
 			// needle = '<img src=data:image/gif;base64,' + btoa(needle) + '>';
 			// assert.include(contents, needle);
 		});
@@ -500,7 +500,7 @@ describe("Zotero.Attachments", function () {
 
 			let browser = new HiddenBrowser();
 			await browser.load(testServerPath + "/index.html");
-			var attachment = await Zotero.Attachments.importFromDocument({
+			var attachment = await Trellis.Attachments.importFromDocument({
 				browser,
 				parentItemID: item.id
 			});
@@ -508,7 +508,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('url'), testServerPath + "/index.html");
 
 			// Check for embedded files
-			var storageDir = Zotero.Attachments.getStorageDirectory(attachment).path;
+			var storageDir = Trellis.Attachments.getStorageDirectory(attachment).path;
 			var file = await attachment.getFilePathAsync();
 			assert.equal(OS.Path.basename(file), 'index.html');
 			assert.isFalse(await OS.File.exists(OS.Path.join(storageDir, 'images', '1.gif')));
@@ -516,7 +516,7 @@ describe("Zotero.Attachments", function () {
 			// Check attachment html file contents
 			let path = OS.Path.join(storageDir, 'index.html');
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
+			let contents = await Trellis.File.getContentsAsync(path);
 			assert.include(contents, "><!--\n Page saved with SingleFile");
 		});
 
@@ -547,7 +547,7 @@ describe("Zotero.Attachments", function () {
 
 			let browser = new HiddenBrowser();
 			await browser.load(testServerPath + "/index.html");
-			let attachment = await Zotero.Attachments.importFromDocument({
+			let attachment = await Trellis.Attachments.importFromDocument({
 				browser,
 				parentItemID: item.id
 			});
@@ -555,7 +555,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('url'), testServerPath + "/index.html");
 
 			// Check for embedded files
-			var storageDir = Zotero.Attachments.getStorageDirectory(attachment).path;
+			var storageDir = Trellis.Attachments.getStorageDirectory(attachment).path;
 			var file = await attachment.getFilePathAsync();
 			assert.equal(OS.Path.basename(file), 'index.html');
 			assert.isFalse(await OS.File.exists(OS.Path.join(storageDir, 'images', '1.gif')));
@@ -563,7 +563,7 @@ describe("Zotero.Attachments", function () {
 			// Check attachment html file contents
 			let path = OS.Path.join(storageDir, 'index.html');
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
+			let contents = await Trellis.File.getContentsAsync(path);
 			assert.include(contents, "><!--\n Page saved with SingleFile");
 			assert.notInclude(contents, "<img src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\">'></iframe>");
 		});
@@ -577,10 +577,10 @@ describe("Zotero.Attachments", function () {
 			content.append('snapshot');
 			content.append('index.html');
 			
-			let snapshotContent = await Zotero.File.getContentsAsync(content);
+			let snapshotContent = await Trellis.File.getContentsAsync(content);
 			
-			Zotero.FullText.indexNextInTest();
-			let attachment = await Zotero.Attachments.importFromSnapshotContent({
+			Trellis.FullText.indexNextInTest();
+			let attachment = await Trellis.Attachments.importFromSnapshotContent({
 				parentItemID: item.id,
 				url: "https://example.com/test.html",
 				title: "Testing Title",
@@ -590,20 +590,20 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('url'), "https://example.com/test.html");
 			
 			// Check indexing
-			let matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'share your research');
+			let matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'share your research');
 			assert.lengthOf(matches, 1);
 			assert.propertyVal(matches[0], 'id', attachment.id);
 			
 			// Check for embedded files
-			let storageDir = Zotero.Attachments.getStorageDirectory(attachment).path;
+			let storageDir = Trellis.Attachments.getStorageDirectory(attachment).path;
 			let file = await attachment.getFilePathAsync();
 			assert.equal(OS.Path.basename(file), 'test.html');
 			
 			// Check attachment html file contents
 			let path = OS.Path.join(storageDir, 'test.html');
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
-			let expectedContents = await Zotero.File.getContentsAsync(file);
+			let contents = await Trellis.File.getContentsAsync(path);
+			let expectedContents = await Trellis.File.getContentsAsync(file);
 			assert.equal(contents, expectedContents);
 		});
 	});
@@ -624,7 +624,7 @@ describe("Zotero.Attachments", function () {
 		});
 		
 		it("should use BrowserRequest for 403 when enforcing file type", async function () {
-			let prefix = Zotero.Utilities.randomString();
+			let prefix = Trellis.Utilities.randomString();
 			let testServerPath = 'http://127.0.0.1:' + testServerPort + '/' + prefix;
 			let pdfURL = testServerPath + '/test.pdf';
 			httpd.registerPathHandler(
@@ -637,23 +637,23 @@ describe("Zotero.Attachments", function () {
 				}
 			);
 			
-			let path = OS.Path.join(Zotero.getTempDirectory().path, 'test.pdf');
-			let getEntryStub = sinon.stub(Zotero.BrowserRequest, "getEntryForURL");
-			let downloadPDFStub = sinon.stub(Zotero.BrowserRequest, "downloadPDF");
+			let path = OS.Path.join(Trellis.getTempDirectory().path, 'test.pdf');
+			let getEntryStub = sinon.stub(Trellis.BrowserRequest, "getEntryForURL");
+			let downloadPDFStub = sinon.stub(Trellis.BrowserRequest, "downloadPDF");
 			getEntryStub.returns({ match: 'test' });
 			downloadPDFStub.callsFake(async (_url, path) => {
 				await OS.File.copy(OS.Path.join(getTestDataDirectory().path, 'test.pdf'), path);
 			});
 			var item;
 			try {
-				item = await Zotero.Attachments.downloadFile(pdfURL, path, { enforceFileType: true });
+				item = await Trellis.Attachments.downloadFile(pdfURL, path, { enforceFileType: true });
 				
 				assert.isTrue(getEntryStub.calledOnce);
 				assert.isTrue(downloadPDFStub.calledOnce);
 			}
 			finally {
 				// Clean up
-				if (item) await Zotero.Items.erase(item.id);
+				if (item) await Trellis.Items.erase(item.id);
 				downloadPDFStub.restore();
 				getEntryStub.restore();
 			}
@@ -720,7 +720,7 @@ describe("Zotero.Attachments", function () {
 			if (responseType == 'document') {
 				let parser = new DOMParser();
 				let doc = parser.parseFromString(html, 'text/html');
-				doc = Zotero.HTTP.wrapDocument(doc, responseURL);
+				doc = Trellis.HTTP.wrapDocument(doc, responseURL);
 				response = doc;
 			}
 			else if (responseType == 'blob') {
@@ -744,10 +744,10 @@ describe("Zotero.Attachments", function () {
 		before(async function () {
 			var pdfBlob = await File.createFromFileName(pdfPath);
 			
-			var origFunc = Zotero.HTTP.request.bind(Zotero.HTTP);
-			requestStub = sinon.stub(Zotero.HTTP, 'request');
+			var origFunc = Trellis.HTTP.request.bind(Trellis.HTTP);
+			requestStub = sinon.stub(Trellis.HTTP, 'request');
 			requestStub.callsFake(function (method, url, options) {
-				Zotero.debug("Intercepting " + method + " " + url);
+				Trellis.debug("Intercepting " + method + " " + url);
 				requestStubCallTimes.push(new Date());
 				
 				// Page responses
@@ -860,7 +860,7 @@ describe("Zotero.Attachments", function () {
 				if (url.startsWith(pageURL9)) {
 					if (return429) {
 						return429 = false;
-						throw new Zotero.HTTP.UnexpectedStatusException(
+						throw new Trellis.HTTP.UnexpectedStatusException(
 							{
 								status: 429,
 								response: '',
@@ -887,7 +887,7 @@ describe("Zotero.Attachments", function () {
 				}
 				
 				// OA PDF lookup
-				if (url.startsWith(ZOTERO_CONFIG.SERVICES_URL)) {
+				if (url.startsWith(TRELLIS_CONFIG.SERVICES_URL)) {
 					let json = JSON.parse(options.body);
 					let response = [];
 					if (json.doi == doi2) {
@@ -913,23 +913,23 @@ describe("Zotero.Attachments", function () {
 				return origFunc(...arguments);
 			});
 
-			downloadSpy = sinon.spy(Zotero.HTTP, 'download');
+			downloadSpy = sinon.spy(Trellis.HTTP, 'download');
 
 			pdfSize = await OS.File.stat(pdfPath).size;
 			epubSize = await OS.File.stat(epubPath).size;
 			
-			Zotero.Prefs.clear('findPDFs.resolvers');
+			Trellis.Prefs.clear('findPDFs.resolvers');
 		});
 		
 		beforeEach(async function () {
 			({ httpd } = await startHTTPServer(port));
 			httpd.registerFile(
 				pdfURL.substring(baseURL.length - 1),
-				Zotero.File.pathToFile(pdfPath)
+				Trellis.File.pathToFile(pdfPath)
 			);
 			httpd.registerFile(
 				epubURL.substring(baseURL.length - 1),
-				Zotero.File.pathToFile(epubPath)
+				Trellis.File.pathToFile(epubPath)
 			);
 			
 			// Generate a page with a relative PDF URL
@@ -959,18 +959,18 @@ describe("Zotero.Attachments", function () {
 			await new Promise((resolve) => {
 				httpd.stop(() => resolve());
 			});
-			Zotero.Prefs.clear('findPDFs.resolvers');
+			Trellis.Prefs.clear('findPDFs.resolvers');
 			
 			// Close progress dialog after each run
-			var queue = Zotero.ProgressQueues.get('findFile');
+			var queue = Trellis.ProgressQueues.get('findFile');
 			if (queue) {
 				queue.getDialog().close();
 			}
 		}.bind(this));
 		
 		after(() => {
-			Zotero.HTTP.request.restore();
-			Zotero.HTTP.download.restore();
+			Trellis.HTTP.request.restore();
+			Trellis.HTTP.download.restore();
 		});
 		
 		it("should add a PDF from a resolved DOI webpage", async function () {
@@ -979,7 +979,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('DOI', doi);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 
 			// doi.org, publisher, download
 			assert.equal(requestStub.callCount, 2);
@@ -999,7 +999,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('DOI', doi);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 1);
 			assert.isTrue(requestStub.calledWith('GET', 'https://doi.org/' + doi));
@@ -1017,7 +1017,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('extra', 'DOI: ' + doi);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			// doi.org, publisher, download
 			assert.equal(requestStub.callCount, 2);
@@ -1037,7 +1037,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('PMCID', 'PMC9262588');
 			await item.saveTx();
 
-			var resolvers = Zotero.Attachments.getFileResolvers(item, ['oa']);
+			var resolvers = Trellis.Attachments.getFileResolvers(item, ['oa']);
 
 			assert.deepEqual(resolvers, [
 				{
@@ -1054,7 +1054,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('PMCID', 'PMC9262588');
 			await item.saveTx();
 
-			var resolvers = Zotero.Attachments.getFileResolvers(item, ['oa']);
+			var resolvers = Trellis.Attachments.getFileResolvers(item, ['oa']);
 
 			assert.lengthOf(resolvers, 2);
 			assert.deepEqual(resolvers[0], {
@@ -1070,7 +1070,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('PMCID', 'PMC9262588');
 			await item.saveTx();
 
-			assert.isTrue(Zotero.Attachments.canFindFileForItem(item));
+			assert.isTrue(Trellis.Attachments.canFindFileForItem(item));
 		});
 
 		it("should add a PDF from a URL", async function () {
@@ -1079,7 +1079,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('url', url);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			// URL, download
 			assert.equal(requestStub.callCount, 1);
@@ -1099,7 +1099,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('url', url);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			// URL, redirect target URL
 			assert.equal(requestStub.callCount, 2);
 			var call = requestStub.getCall(0);
@@ -1120,7 +1120,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('DOI', doi);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 3);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1129,7 +1129,7 @@ describe("Zotero.Attachments", function () {
 			var call2 = requestStub.getCall(1);
 			assert.isTrue(call2.calledWith('GET', pageURL2));
 			var call3 = requestStub.getCall(2);
-			assert.isTrue(call3.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call3.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			
 			assert.ok(attachment);
 			var json = attachment.toJSON();
@@ -1145,7 +1145,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('DOI', doi);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 4);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1156,7 +1156,7 @@ describe("Zotero.Attachments", function () {
 			assert.isTrue(call.calledWith('GET', pageURL2));
 			// Check the OA resolver and get page 3
 			call = requestStub.getCall(2);
-			assert.isTrue(call.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			// Check page 3 and find the download URL
 			call = requestStub.getCall(3);
 			assert.isTrue(call.calledWith('GET', pageURL3));
@@ -1176,7 +1176,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('DOI', doi);
 			item.setField('url', pageURL4);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 3);
 			var call = requestStub.getCall(0);
@@ -1184,7 +1184,7 @@ describe("Zotero.Attachments", function () {
 			call = requestStub.getCall(1);
 			assert.isTrue(call.calledWith('GET', pageURL4));
 			call = requestStub.getCall(2);
-			assert.isTrue(call.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			
 			assert.isFalse(attachment);
 		});
@@ -1202,7 +1202,7 @@ describe("Zotero.Attachments", function () {
 			item2.setField('url', url2);
 			await item2.saveTx();
 			
-			var attachments = await Zotero.Attachments.addAvailableFiles([item1, item2]);
+			var attachments = await Trellis.Attachments.addAvailableFiles([item1, item2]);
 			
 			// 2 URLs and 2 downloads
 			assert.equal(requestStub.callCount, 2);
@@ -1235,7 +1235,7 @@ describe("Zotero.Attachments", function () {
 			item3.setField('url', url3);
 			await item3.saveTx();
 			
-			var attachments = await Zotero.Attachments.addAvailableFiles([item1, item2, item3]);
+			var attachments = await Trellis.Attachments.addAvailableFiles([item1, item2, item3]);
 			
 			assert.equal(requestStub.callCount, 6);
 			assert.equal(downloadSpy.callCount, 2);
@@ -1273,7 +1273,7 @@ describe("Zotero.Attachments", function () {
 			item2.setField('url', url2);
 			await item2.saveTx();
 			
-			var attachments = await Zotero.Attachments.addAvailableFiles([item1, item2]);
+			var attachments = await Trellis.Attachments.addAvailableFiles([item1, item2]);
 			
 			// 429, URL9, download, URL3, download
 			assert.equal(requestStub.callCount, 3);
@@ -1295,7 +1295,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			item.setField('url', url);
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 2);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1314,7 +1314,7 @@ describe("Zotero.Attachments", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'journalArticle' });
 			item.setField('url', 'http://website/redirect_loop1');
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			assert.isFalse(attachment);
 			assert.equal(requestStub.callCount, 7);
 		});
@@ -1323,7 +1323,7 @@ describe("Zotero.Attachments", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'journalArticle' });
 			item.setField('url', 'http://website/too_many_redirects1');
 			await item.saveTx();
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			assert.isFalse(attachment);
 			assert.equal(requestStub.callCount, 10);
 		});
@@ -1343,9 +1343,9 @@ describe("Zotero.Attachments", function () {
 				selector: '#pdf-link',
 				attribute: 'href'
 			}];
-			Zotero.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
+			Trellis.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
 			
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 
 			assert.equal(requestStub.callCount, 4);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1354,7 +1354,7 @@ describe("Zotero.Attachments", function () {
 			var call = requestStub.getCall(1);
 			assert.isTrue(call.calledWith('GET', pageURL4));
 			call = requestStub.getCall(2);
-			assert.isTrue(call.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			call = requestStub.getCall(3);
 			assert.isTrue(call.calledWith('GET', pageURL5));
 			
@@ -1382,9 +1382,9 @@ describe("Zotero.Attachments", function () {
 				selector: '#pdf-link',
 				attribute: 'href'
 			}];
-			Zotero.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
+			Trellis.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
 			
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 4);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1393,7 +1393,7 @@ describe("Zotero.Attachments", function () {
 			var call = requestStub.getCall(1);
 			assert.isTrue(call.calledWith('GET', pageURL4));
 			call = requestStub.getCall(2);
-			assert.isTrue(call.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			var call = requestStub.getCall(3);
 			assert.isTrue(call.calledWith('GET', baseURL + doi4));
 			
@@ -1419,9 +1419,9 @@ describe("Zotero.Attachments", function () {
 				mode: 'json',
 				selector: '.oa_locations.url_for_pdf'
 			}];
-			Zotero.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
+			Trellis.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
 			
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 4);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1430,7 +1430,7 @@ describe("Zotero.Attachments", function () {
 			call = requestStub.getCall(1);
 			assert.isTrue(call.calledWith('GET', pageURL4));
 			call = requestStub.getCall(2);
-			assert.isTrue(call.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			call = requestStub.getCall(3);
 			assert.isTrue(call.calledWith('GET', pageURL6));
 			
@@ -1460,9 +1460,9 @@ describe("Zotero.Attachments", function () {
 					pageURL: 'url_for_landing_page',
 				}
 			}];
-			Zotero.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
+			Trellis.Prefs.set('findPDFs.resolvers', JSON.stringify(resolvers));
 			
-			var attachment = await Zotero.Attachments.addAvailableFile(item);
+			var attachment = await Trellis.Attachments.addAvailableFile(item);
 			
 			assert.equal(requestStub.callCount, 5);
 			assert.equal(downloadSpy.callCount, 1);
@@ -1471,7 +1471,7 @@ describe("Zotero.Attachments", function () {
 			call = requestStub.getCall(1);
 			assert.isTrue(call.calledWith('GET', pageURL4));
 			call = requestStub.getCall(2);
-			assert.isTrue(call.calledWith('POST', ZOTERO_CONFIG.SERVICES_URL + 'oa/search'));
+			assert.isTrue(call.calledWith('POST', TRELLIS_CONFIG.SERVICES_URL + 'oa/search'));
 			call = requestStub.getCall(3);
 			assert.isTrue(call.calledWith('GET', pageURL6));
 			call = requestStub.getCall(4);
@@ -1550,274 +1550,274 @@ describe("Zotero.Attachments", function () {
 		it('should strip HTML tags from title', function () {
 			var htmlItem = createUnsavedDataObject('item', { title: 'Foo <i>Bar</i> Foo<br><br/><br />Bar' });
 			htmlItem.libraryID = 1;
-			var str = Zotero.Attachments.getFileBaseNameFromItem(htmlItem, { formatString: '{{ title }}' });
+			var str = Trellis.Attachments.getFileBaseNameFromItem(htmlItem, { formatString: '{{ title }}' });
 			assert.equal(str, 'Foo Bar Foo Bar');
 		});
 
 		it('should accept basic formating options', function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: 'FOO{{year}}BAR' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: 'FOO{{year}}BAR' }),
 				'FOO1975BAR'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{firstCreator suffix=" - "}}{{year suffix=" - "}}{{title truncate="50" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{firstCreator suffix=" - "}}{{year suffix=" - "}}{{title truncate="50" }}' }),
 				'Barius and Pixelus - 1975 - Lorem Ipsum'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{firstCreator suffix=" - " replaceFrom=" *and *" replaceTo="&"}}{{year suffix=" - " replaceFrom="(\\d{2})(\\d{2})" replaceTo="$2"}}{{title truncate="50" replaceFrom=".m" replaceTo="a"}} - {{title truncate="50" replaceFrom=".m" replaceTo="a" regexOpts="g"}}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{firstCreator suffix=" - " replaceFrom=" *and *" replaceTo="&"}}{{year suffix=" - " replaceFrom="(\\d{2})(\\d{2})" replaceTo="$2"}}{{title truncate="50" replaceFrom=".m" replaceTo="a"}} - {{title truncate="50" replaceFrom=".m" replaceTo="a" regexOpts="g"}}' }),
 				'Barius&Pixelus - 75 - Lora Ipsum - Lora Ipsa'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{year suffix="-"}}{{firstCreator truncate="10" suffix="-"}}{{title truncate="5" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{year suffix="-"}}{{firstCreator truncate="10" suffix="-"}}{{title truncate="5" }}' }),
 				'1975-Barius and-Lorem'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: 'foo {{year}} bar {{year prefix="++" truncate="2" suffix="++"}}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: 'foo {{year}} bar {{year prefix="++" truncate="2" suffix="++"}}' }),
 				'foo 1975 bar ++19++'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{firstCreator suffix=" - "}}{{year suffix=" - "}}{{title}}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{firstCreator suffix=" - "}}{{year suffix=" - "}}{{title}}' }),
 				'Author et al. - 2000 - Has Many Authors'
 			);
 		});
 
 		it('should trim whitespaces from a value', function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemSpaces, { formatString: '{{ title }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemSpaces, { formatString: '{{ title }}' }),
 				'Spaces!'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{title truncate="6"}}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{title truncate="6"}}' }),
 				'Lorem'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{firstCreator truncate="7"}}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{firstCreator truncate="7"}}' }),
 				'Barius'
 			);
 			// but preserve if it's configured as a prefix or suffix
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{title prefix=" " suffix=" "}}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{title prefix=" " suffix=" "}}' }),
 				' Lorem Ipsum '
 			);
 		});
 
 		it('should offer a range of options for composing creators', async function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" }}' }),
 				'Barius'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" truncate="3" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" truncate="3" }}' }),
 				'Bar'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="5" join=" " }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="5" join=" " }}' }),
 				'Barius Pixelus'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="3" join=" " }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="3" join=" " }}' }),
 				'Author Creator Person'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ authors }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ authors }}' }),
 				'AcmeCorp'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="2" name="family" initialize="family" join=" " initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="2" name="family" initialize="family" join=" " initialize-with="" }}' }),
 				'A C'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ authors max="2" name="family" initialize="family" initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ authors max="2" name="family" initialize="family" initialize-with="" }}' }),
 				'A'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" name="full" initialize="full" name-part-separator="" initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" name="full" initialize="full" name-part-separator="" initialize-with="" }}' }),
 				'FB'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="3" name="full" initialize="full" name-part-separator="" join=" " initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="3" name="full" initialize="full" name-part-separator="" join=" " initialize-with="" }}' }),
 				'FA SC TP'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" name="family-given" initialize="given" name-part-separator="" initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="1" name="family-given" initialize="given" name-part-separator="" initialize-with="" }}' }),
 				'BariusF'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="2" name="family-given" initialize="given" join=" " name-part-separator="" initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="2" name="family-given" initialize="given" join=" " name-part-separator="" initialize-with="" }}' }),
 				'AuthorF CreatorS'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ editors }}test' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ editors }}test' }),
 				'test'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="1" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="1" }}' }),
 				'Editor1'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="5" join=" " }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="5" join=" " }}' }),
 				'Editor1 ProEditor2 SuperbEditor3'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="2" name="family" initialize="family" join=" " initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="2" name="family" initialize="family" join=" " initialize-with="" }}' }),
 				'E P'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="1" name="full" initialize="full" name-part-separator="" initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="1" name="full" initialize="full" name-part-separator="" initialize-with="" }}' }),
 				'SE'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="1" name="family-given" initialize="given" name-part-separator="" initialize-with="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editors max="1" name="family-given" initialize="given" name-part-separator="" initialize-with="" }}' }),
 				'Editor1S'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="3" name="full" initialize="given" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ authors max="3" name="full" initialize="given" }}' }),
 				'F. Barius, B. Pixelus'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ creators case="upper" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ creators case="upper" }}' }),
 				'BARIUS, PIXELUS'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="2" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authors max="2" }}' }),
 				'Author, Creator'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ creators max="3" join=" " name="given" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ creators max="3" join=" " name="given" }}' }),
 				'First Second Third'
 			);
 		});
 
 		it('should accept case parameter', async function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="upper" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="upper" }}' }),
 				'BEST PUBLICATIONS PLACE'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="lower" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="lower" }}' }),
 				'best publications place'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="title" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="title" }}' }),
 				'Best Publications Place'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="hyphen" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="hyphen" }}' }),
 				'best-publications-place'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="camel" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="camel" }}' }),
 				'bestPublicationsPlace'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="snake" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="snake" }}' }),
 				'best_publications_place'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="pascal" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle case="pascal" }}' }),
 				'BestPublicationsPlace'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemLowerCase, { formatString: '{{ title case="pascal" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemLowerCase, { formatString: '{{ title case="pascal" }}' }),
 				'LowerCaseTitle'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemMixedCase, { formatString: '{{ title case="pascal" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemMixedCase, { formatString: '{{ title case="pascal" }}' }),
 				'OldMacdonaldHadAFarm'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ title case="camel" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ title case="camel" }}' }),
 				'noRepeatedHyphens'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ title case="pascal" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ title case="pascal" }}' }),
 				'NoRepeatedHyphens'
 			);
 		});
 
 		it('should work with unicode characters', async function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title case="camel" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title case="camel" }}' }),
 				'金毛猎犬GoldenRetriever'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title case="pascal" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title case="pascal" }}' }),
 				'金毛猎犬GoldenRetriever'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title case="hyphen" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title case="hyphen" }}' }),
 				'金毛猎犬-golden-retriever'
 			);
 			// By default we include `v flag` to support unicode features
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title replaceFrom="(\\p{L}+)" replaceTo="Dog" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title replaceFrom="(\\p{L}+)" replaceTo="Dog" }}' }),
 				'Dog - Golden Retriever'
 			);
 			// But it's possible to override regexOpts and disable unicode features
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title replaceFrom="(\\p{L}+)" replaceTo="Dog" regexOpts="i" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemUnicode, { formatString: '{{ title replaceFrom="(\\p{L}+)" replaceTo="Dog" regexOpts="i" }}' }),
 				'金毛猎犬 - Golden Retriever'
 			);
 		});
 
 		it('should not create repeated characters when converting case to hyphen or snake', async function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ title case="hyphen" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ title case="hyphen" }}' }),
 				'no-repeated-hyphens'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ publicationTitle case="hyphen" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemNoRepeatedHyphens, { formatString: '{{ publicationTitle case="hyphen" }}' }),
 				'no-repeated-hyphens'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemNoRepeatedUnderscores, { formatString: '{{ title case="snake" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemNoRepeatedUnderscores, { formatString: '{{ title case="snake" }}' }),
 				'no_repeated_underscores'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemNoRepeatedUnderscores, { formatString: '{{ publicationTitle case="snake" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemNoRepeatedUnderscores, { formatString: '{{ publicationTitle case="snake" }}' }),
 				'no_repeated_underscores'
 			);
 		});
 
 		it('should accept itemType, attachmentTitle or any other field', function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ itemType localize="true" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ itemType localize="true" }}' }),
 				'Journal Article'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ publicationTitle }}' }),
 				'Best Publications Place'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ journalAbbreviation }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ journalAbbreviation }}' }),
 				'BPP'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ publisher }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ publisher }}' }),
 				'Awesome House'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ volume }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ volume }}' }),
 				'3'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ issue }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ issue }}' }),
 				'42'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ pages }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ pages }}' }),
 				'321'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ number }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ number }}' }),
 				'HBK-8539b'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ assignee }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemPatent, { formatString: '{{ assignee }}' }),
 				'Fast FooBar'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ attachmentTitle }}', attachmentTitle: 'Full Text' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ attachmentTitle }}', attachmentTitle: 'Full Text' }),
 				'Full Text'
 			);
 		});
@@ -1825,62 +1825,62 @@ describe("Zotero.Attachments", function () {
 		it("should support simple logic in template syntax", function () {
 			const template = '{{ if itemType == "journalArticle" }}j-{{ publicationTitle case="hyphen" }}{{ elseif itemType == "patent" }}p-{{ number case="hyphen" }}{{ else }}o-{{ title case="hyphen" }}{{ endif }}';
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, template), 'j-best-publications-place'
+				Trellis.Attachments.getFileBaseNameFromItem(item, template), 'j-best-publications-place'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemPatent, template), 'p-hbk-8539b'
+				Trellis.Attachments.getFileBaseNameFromItem(itemPatent, template), 'p-hbk-8539b'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, template), 'o-has-many-authors'
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, template), 'o-has-many-authors'
 			);
 		});
 
 		it("should skip missing fields", async function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemIncomplete, { formatString: '{{ authors prefix = "a" suffix="-" }}{{ publicationTitle case="hyphen" suffix="-" }}{{ title }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemIncomplete, { formatString: '{{ authors prefix = "a" suffix="-" }}{{ publicationTitle case="hyphen" suffix="-" }}{{ title }}' }),
 				'Incomplete'
 			);
 		});
 
 		it("should recognized base-mapped fields", function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: '{{ bookTitle case="snake" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: '{{ bookTitle case="snake" }}' }),
 				'book_title'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: '{{ publicationTitle case="snake" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: '{{ publicationTitle case="snake" }}' }),
 				'book_title'
 			);
 		});
 
 		it("should trim spaces and remove new lines from the template string", function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: ' {{ bookTitle case="snake" }}\n{{ bookTitle case="hyphen" prefix="-" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: ' {{ bookTitle case="snake" }}\n{{ bookTitle case="hyphen" prefix="-" }}' }),
 				'book_title-book-title'
 			);
 		});
 
 		it("should suppress suffixes where they would create a repeat character", function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title suffix="-" }}{{ year prefix="-" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title suffix="-" }}{{ year prefix="-" }}' }),
 				'Lorem Ipsum-1975'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemSuffixes, { formatString: '{{ title prefix="-" suffix="-" }}{{ year }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemSuffixes, { formatString: '{{ title prefix="-" suffix="-" }}{{ year }}' }),
 				'-Suffixes-1999'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemSuffixes, { formatString: '{{ title suffix="-" }}{{ year prefix="-" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemSuffixes, { formatString: '{{ title suffix="-" }}{{ year prefix="-" }}' }),
 				'-Suffixes-1999'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemKeepHyphens, { formatString: '{{ title suffix="-" }}{{ year prefix="-" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemKeepHyphens, { formatString: '{{ title suffix="-" }}{{ year prefix="-" }}' }),
 				'keep--hyphens-1999'
 			);
 			// keep--hyphens is a title and should be kept unchanged but "keep" and "hyphens" are fields
 			// separated by prefixes and suffixes where repeated characters should be suppressed
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemKeepHyphens, { formatString: '{{ title suffix="-" }}{{ publicationTitle suffix="-" }}{{ issue prefix="-" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemKeepHyphens, { formatString: '{{ title suffix="-" }}{{ publicationTitle suffix="-" }}{{ issue prefix="-" }}' }),
 				'keep--hyphens-keep-hyphens'
 			);
 			// keep--hyphens is provided as literal part of the template and should be kept unchanged
@@ -1888,11 +1888,11 @@ describe("Zotero.Attachments", function () {
 			// characters should be suppressed. Finally "keep--hyphens" title is appended at the end
 			// which should also be kept as is.
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemKeepHyphens, { formatString: 'keep--hyphens-{{ publicationTitle prefix="-" suffix="-" }}{{ issue prefix="-" suffix="-" }}-keep--hyphens-{{ publicationTitle suffix="-" }}test{{ title prefix="-" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemKeepHyphens, { formatString: 'keep--hyphens-{{ publicationTitle prefix="-" suffix="-" }}{{ issue prefix="-" suffix="-" }}-keep--hyphens-{{ publicationTitle suffix="-" }}test{{ title prefix="-" }}' }),
 				'keep--hyphens-keep-hyphens-keep--hyphens-keep-test-keep--hyphens'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemSuffixes, { formatString: '{{ title prefix="/" suffix="\\" }}{{ year }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemSuffixes, { formatString: '{{ title prefix="/" suffix="\\" }}{{ year }}' }),
 				'-Suffixes-1999'
 			);
 		});
@@ -1904,42 +1904,42 @@ describe("Zotero.Attachments", function () {
 {{ attachmentTitle replaceFrom="\\.pdf|\\.epub|\\.png" }}
 {{ endif }}`;
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: template, attachmentTitle: 'Full Text' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: template, attachmentTitle: 'Full Text' }),
 				'Barius and Pixelus - 1975 - Lorem Ipsum'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: template, attachmentTitle: 'Other Attachment.png' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: template, attachmentTitle: 'Other Attachment.png' }),
 				'Other Attachment'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: `{{ attachmentTitle start = "6" truncate = "4" }}`, attachmentTitle: 'Other Attachment.png' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemBookSection, { formatString: `{{ attachmentTitle start = "6" truncate = "4" }}`, attachmentTitle: 'Other Attachment.png' }),
 				'Atta'
 			);
 		});
 
 		it("should be possible to count authors", function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authorsCount }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ authorsCount }}' }),
 				'4'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editorsCount }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ editorsCount }}' }),
 				'3'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ creatorsCount }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: '{{ creatorsCount }}' }),
 				'7'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: 'test{{ if authorsCount > 4 }}{{ authorsCount prefix="-" }}{{ endif }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: 'test{{ if authorsCount > 4 }}{{ authorsCount prefix="-" }}{{ endif }}' }),
 				'test'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: 'test{{ if authorsCount >= 4 }}{{ authorsCount prefix="-" }}{{ endif }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: 'test{{ if authorsCount >= 4 }}{{ authorsCount prefix="-" }}{{ endif }}' }),
 				'test-4'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: 'test{{ if editorsCount <= 4 }}{{ editorsCount prefix="-" }}{{ endif }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: 'test{{ if editorsCount <= 4 }}{{ editorsCount prefix="-" }}{{ endif }}' }),
 				'test-3'
 			);
 		});
@@ -1947,11 +1947,11 @@ describe("Zotero.Attachments", function () {
 		it("should be possible to test number of authors using equality operator", function () {
 			const template = `{{ if {{ authorsCount == "2" }} }}two{{ else }}not two{{ endif }}`;
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: template }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: template }),
 				'not two'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: template }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: template }),
 				'two'
 			);
 		});
@@ -1963,11 +1963,11 @@ describe("Zotero.Attachments", function () {
 {{ authors join=" & " }}
 {{ endif }}`;
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: template }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemManyAuthors, { formatString: template }),
 				'Author et al'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: template }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: template }),
 				'Barius & Pixelus'
 			);
 		});
@@ -1975,85 +1975,85 @@ describe("Zotero.Attachments", function () {
 		it("should handle zero in relational operators", function () {
 			const template = '{{ if {{ authorsCount > 0 }} }}more than zero{{ elseif {{ authorsCount <= 0 }} }}zero{{ endif }}';
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: template }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: template }),
 				'more than zero'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(itemIncomplete, { formatString: template }),
+				Trellis.Attachments.getFileBaseNameFromItem(itemIncomplete, { formatString: template }),
 				'zero'
 			);
 		});
 
 		it("should perform regex in a case-insensitive way, unless configured otherwise", function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title match="lorem" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title match="lorem" }}' }),
 				'Lorem'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title match="lorem" regexOpts="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title match="lorem" regexOpts="" }}' }),
 				'_' // template formatting results in an empty string, "_" is returned to make it a valid file name
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title replaceFrom="lorem" replaceTo="Foobar" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title replaceFrom="lorem" replaceTo="Foobar" }}' }),
 				'Foobar Ipsum'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title replaceFrom="lorem" replaceTo="foobar" regexOpts="" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ title replaceFrom="lorem" replaceTo="foobar" regexOpts="" }}' }),
 				'Lorem Ipsum'
 			);
 		});
 
 		it('should output the accessDate according to the declared timezone', async function () {
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate timeZone="America/New_York" replaceFrom=":" replaceTo="-" regexOpts="g" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate timeZone="America/New_York" replaceFrom=":" replaceTo="-" regexOpts="g" }}' }),
 				'2009-02-07 01-15-10'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate timeZone="Europe/Berlin" replaceFrom=":" replaceTo="-" regexOpts="g" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate timeZone="Europe/Berlin" replaceFrom=":" replaceTo="-" regexOpts="g" }}' }),
 				'2009-02-07 07-15-10'
 			);
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate timeZone="America/Los_Angeles" truncate="10" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate timeZone="America/Los_Angeles" truncate="10" }}' }),
 				'2009-02-06'
 			);
 			// timeZone is optional; UTC date, as stored, is returned if not specified
 			assert.equal(
-				Zotero.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate replaceFrom=":" replaceTo="-" regexOpts="g" }}' }),
+				Trellis.Attachments.getFileBaseNameFromItem(item, { formatString: '{{ accessDate replaceFrom=":" replaceTo="-" regexOpts="g" }}' }),
 				'2009-02-07 06-15-10'
 			);
 		});
 
 		it("should convert old attachmentRenameFormatString to use new attachmentRenameTemplate syntax", function () {
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{%c - }{%y - }{%t{50}}'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{%c - }{%y - }{%t{50}}'),
 				'{{ firstCreator suffix=" - " }}{{ year suffix=" - " }}{{ title truncate="50" }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{ - %y - }'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{ - %y - }'),
 				'{{ year prefix=" - " suffix=" - " }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{%y{2}00}'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{%y{2}00}'),
 				'{{ year truncate="2" suffix="00" }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{%c5 - }'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{%c5 - }'),
 				'{{ firstCreator suffix="5 - " }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{%c-2 - }'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{%c-2 - }'),
 				'{{ firstCreator suffix="-2 - " }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{%t5 - }'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{%t5 - }'),
 				'{{ title suffix="5 - " }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('{++%t{10}--}'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('{++%t{10}--}'),
 				'{{ title truncate="10" prefix="++" suffix="--" }}'
 			);
 			assert.equal(
-				Zotero.Prefs.convertLegacyAttachmentRenameFormatString('foo{%c}-{%t{10}}-{%y{2}00}'),
+				Trellis.Prefs.convertLegacyAttachmentRenameFormatString('foo{%c}-{%t{10}}-{%y{2}00}'),
 				'foo{{ firstCreator }}-{{ title truncate="10" }}-{{ year truncate="2" suffix="00" }}'
 			);
 		});
@@ -2061,22 +2061,22 @@ describe("Zotero.Attachments", function () {
 		it("should strip bidi isolates from firstCreator", async function () {
 			var item = createUnsavedDataObject('item',
 				{ creators: [{ name: 'Foo', creatorType: 'author' }, { name: 'Bar', creatorType: 'author' }], libraryID: 1 });
-			var str = Zotero.Attachments.getFileBaseNameFromItem(item);
-			assert.equal(str, Zotero.getString('general.andJoiner', ['Foo', 'Bar']) + ' - ');
+			var str = Trellis.Attachments.getFileBaseNameFromItem(item);
+			assert.equal(str, Trellis.getString('general.andJoiner', ['Foo', 'Bar']) + ' - ');
 		});
 	});
 	
 	describe("#getBaseDirectoryRelativePath()", function () {
 		it("should handle base directory at Windows drive root", function () {
-			Zotero.Prefs.set('baseAttachmentPath', "C:\\");
-			var path = Zotero.Attachments.getBaseDirectoryRelativePath("C:\\file.txt");
-			assert.equal(path, Zotero.Attachments.BASE_PATH_PLACEHOLDER + "file.txt");
+			Trellis.Prefs.set('baseAttachmentPath', "C:\\");
+			var path = Trellis.Attachments.getBaseDirectoryRelativePath("C:\\file.txt");
+			assert.equal(path, Trellis.Attachments.BASE_PATH_PLACEHOLDER + "file.txt");
 		});
 		
 		it("should convert backslashes to forward slashes", function () {
-			Zotero.Prefs.set('baseAttachmentPath', "C:\\foo\\bar");
-			var path = Zotero.Attachments.getBaseDirectoryRelativePath("C:\\foo\\bar\\test\\file.txt");
-			assert.equal(path, Zotero.Attachments.BASE_PATH_PLACEHOLDER + "test/file.txt");
+			Trellis.Prefs.set('baseAttachmentPath', "C:\\foo\\bar");
+			var path = Trellis.Attachments.getBaseDirectoryRelativePath("C:\\foo\\bar\\test\\file.txt");
+			assert.equal(path, Trellis.Attachments.BASE_PATH_PLACEHOLDER + "test/file.txt");
 		});
 	});
 	
@@ -2086,11 +2086,11 @@ describe("Zotero.Attachments", function () {
 			file.append('test.png');
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			
-			assert.equal(((await Zotero.Attachments.getTotalFileSize(item))), file.fileSize);
+			assert.equal(((await Trellis.Attachments.getTotalFileSize(item))), file.fileSize);
 		})
 	})
 	
@@ -2100,12 +2100,12 @@ describe("Zotero.Attachments", function () {
 			file.append('test.png');
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			
-			assert.isFalse(await Zotero.Attachments.hasMultipleFiles(item));
-			assert.equal(((await Zotero.Attachments.getNumFiles(item))), 1);
+			assert.isFalse(await Trellis.Attachments.hasMultipleFiles(item));
+			assert.equal(((await Trellis.Attachments.getNumFiles(item))), 1);
 		})
 		
 		it("should return false and 1 for single HTML file with hidden file", async function () {
@@ -2113,14 +2113,14 @@ describe("Zotero.Attachments", function () {
 			file.append('test.html');
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
-			var path = OS.Path.join(OS.Path.dirname(item.getFilePath()), '.zotero-ft-cache');
-			await Zotero.File.putContentsAsync(path, "");
+			var path = OS.Path.join(OS.Path.dirname(item.getFilePath()), '.trellis-ft-cache');
+			await Trellis.File.putContentsAsync(path, "");
 			
-			assert.isFalse(await Zotero.Attachments.hasMultipleFiles(item));
-			assert.equal(((await Zotero.Attachments.getNumFiles(item))), 1);
+			assert.isFalse(await Trellis.Attachments.hasMultipleFiles(item));
+			assert.equal(((await Trellis.Attachments.getNumFiles(item))), 1);
 		})
 		
 		it("should return true and 2 for multiple files", async function () {
@@ -2128,14 +2128,14 @@ describe("Zotero.Attachments", function () {
 			file.append('test.html');
 			
 			// Create attachment and compare content
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			var path = OS.Path.join(OS.Path.dirname(item.getFilePath()), 'test.png');
-			await Zotero.File.putContentsAsync(path, "");
+			await Trellis.File.putContentsAsync(path, "");
 			
-			assert.isTrue(await Zotero.Attachments.hasMultipleFiles(item));
-			assert.equal(((await Zotero.Attachments.getNumFiles(item))), 2);
+			assert.isTrue(await Trellis.Attachments.hasMultipleFiles(item));
+			assert.equal(((await Trellis.Attachments.getNumFiles(item))), 2);
 		})
 	});
 	
@@ -2144,7 +2144,7 @@ describe("Zotero.Attachments", function () {
 			var item = await importFileAttachment('test.png');
 			var path = OS.Path.dirname(item.getFilePath());
 			await OS.File.removeDir(path);
-			await Zotero.Attachments.createDirectoryForItem(item);
+			await Trellis.Attachments.createDirectoryForItem(item);
 			assert.isTrue(await OS.File.exists(path));
 		});
 		
@@ -2153,10 +2153,10 @@ describe("Zotero.Attachments", function () {
 			var path = OS.Path.dirname(item.getFilePath());
 			var files = ['a', 'b', 'c', 'd'];
 			for (let file of files) {
-				await Zotero.File.putContentsAsync(OS.Path.join(path, file), file);
+				await Trellis.File.putContentsAsync(OS.Path.join(path, file), file);
 			}
-			await Zotero.Attachments.createDirectoryForItem(item);
-			assert.isTrue(await Zotero.File.directoryIsEmpty(path));
+			await Trellis.Attachments.createDirectoryForItem(item);
+			assert.isTrue(await Trellis.File.directoryIsEmpty(path));
 			assert.isTrue(await OS.File.exists(path));
 		});
 		
@@ -2165,7 +2165,7 @@ describe("Zotero.Attachments", function () {
 			var file = item.getFilePath();
 			var dir = OS.Path.dirname(item.getFilePath());
 			await OS.File.remove(file);
-			await Zotero.Attachments.createDirectoryForItem(item);
+			await Trellis.Attachments.createDirectoryForItem(item);
 			assert.isTrue(await OS.File.exists(dir));
 		});
 	});
@@ -2176,7 +2176,7 @@ describe("Zotero.Attachments", function () {
 			var relatedItem = await createDataObject('item');
 			
 			var originalFile = OS.Path.join(getTestDataDirectory().path, 'test.pdf');
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: originalFile,
 				title: 'Title',
 				parentItemID: item.id
@@ -2188,13 +2188,13 @@ describe("Zotero.Attachments", function () {
 			relatedItem.addRelatedItem(attachment);
 			await relatedItem.saveTx();
 			// Make sure we're indexed
-			await Zotero.Fulltext.indexItems([attachment.id]);
+			await Trellis.Fulltext.indexItems([attachment.id]);
 			
-			var newAttachment = await Zotero.Attachments.convertLinkedFileToStoredFile(attachment);
+			var newAttachment = await Trellis.Attachments.convertLinkedFileToStoredFile(attachment);
 			
-			assert.isFalse(Zotero.Items.exists(attachment.id));
+			assert.isFalse(Trellis.Items.exists(attachment.id));
 			assert.isTrue(await OS.File.exists(originalFile));
-			assert.equal(newAttachment.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_FILE);
+			assert.equal(newAttachment.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_FILE);
 			assert.equal(newAttachment.attachmentContentType, 'application/pdf');
 			assert.isTrue(await newAttachment.fileExists());
 			assert.equal(newAttachment.getField('title'), 'Title');
@@ -2202,10 +2202,10 @@ describe("Zotero.Attachments", function () {
 			assert.sameDeepMembers(newAttachment.getTags(), [{ tag: 'Tag' }]);
 			assert.sameMembers(newAttachment.relatedItems, [relatedItem.key]);
 			assert.sameMembers(relatedItem.relatedItems, [newAttachment.key]);
-			assert.isTrue(await OS.File.exists(Zotero.Fulltext.getItemCacheFile(newAttachment).path));
+			assert.isTrue(await OS.File.exists(Trellis.Fulltext.getItemCacheFile(newAttachment).path));
 			assert.equal(
-				await Zotero.Fulltext.getIndexedState(newAttachment),
-				Zotero.Fulltext.INDEX_STATE_INDEXED
+				await Trellis.Fulltext.getIndexedState(newAttachment),
+				Trellis.Fulltext.INDEX_STATE_INDEXED
 			);
 		});
 		
@@ -2215,7 +2215,7 @@ describe("Zotero.Attachments", function () {
 			var relatedItem = await createDataObject('item');
 			
 			var originalFile = OS.Path.join(getTestDataDirectory().path, 'test.pdf');
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: originalFile,
 				title: 'Title',
 				parentItemID: item.id
@@ -2223,11 +2223,11 @@ describe("Zotero.Attachments", function () {
 			var annotation1 = await createAnnotation('highlight', attachment);
 			var annotation2 = await createAnnotation('note', attachment);
 			
-			var newAttachment = await Zotero.Attachments.convertLinkedFileToStoredFile(attachment);
+			var newAttachment = await Trellis.Attachments.convertLinkedFileToStoredFile(attachment);
 			
-			assert.isFalse(Zotero.Items.exists(attachment.id));
-			assert.isTrue(Zotero.Items.exists(annotation1.id));
-			assert.isTrue(Zotero.Items.exists(annotation2.id));
+			assert.isFalse(Trellis.Items.exists(attachment.id));
+			assert.isTrue(Trellis.Items.exists(annotation1.id));
+			assert.isTrue(Trellis.Items.exists(annotation2.id));
 			
 			var annotations = newAttachment.getAnnotations();
 			assert.lengthOf(annotations, 2);
@@ -2237,32 +2237,32 @@ describe("Zotero.Attachments", function () {
 		it("should move a linked file to a stored file with `move: true`", async function () {
 			var item = await createDataObject('item');
 			
-			var originalFile = OS.Path.join(Zotero.getTempDirectory().path, 'test.png');
+			var originalFile = OS.Path.join(Trellis.getTempDirectory().path, 'test.png');
 			await OS.File.copy(
 				OS.Path.join(getTestDataDirectory().path, 'test.png'),
 				originalFile
 			);
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: originalFile,
 				parentItemID: item.id
 			});
 			
-			var newAttachment = await Zotero.Attachments.convertLinkedFileToStoredFile(
+			var newAttachment = await Trellis.Attachments.convertLinkedFileToStoredFile(
 				attachment,
 				{
 					move: true
 				}
 			);
 			
-			assert.isFalse(Zotero.Items.exists(attachment.id));
+			assert.isFalse(Trellis.Items.exists(attachment.id));
 			assert.isFalse(await OS.File.exists(originalFile));
-			assert.equal(newAttachment.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_FILE);
+			assert.equal(newAttachment.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_FILE);
 			assert.isTrue(await newAttachment.fileExists());
 		});
 	});
 
 	describe("#renameFile()", function () {
-		let { renameFileFromParent } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+		let { renameFileFromParent } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 
 		it("should rename a linked file", async function () {
 			var oldFilename = 'old.png';
@@ -2277,7 +2277,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Test');
 			await item.saveTx();
 
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: oldFile,
 				parentItemID: item.id
 			});
@@ -2300,13 +2300,13 @@ describe("Zotero.Attachments", function () {
 			var oldFile = OS.Path.join(tmpDir, oldFilename);
 			await OS.File.copy(file.path, oldFile);
 			// Create file with target filename
-			await Zotero.File.putContentsAsync(OS.Path.join(tmpDir, newFilename), '');
+			await Trellis.File.putContentsAsync(OS.Path.join(tmpDir, newFilename), '');
 
 			var item = createUnsavedDataObject('item');
 			item.setField('title', 'Test');
 			await item.saveTx();
 
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: oldFile,
 				parentItemID: item.id
 			});
@@ -2328,13 +2328,13 @@ describe("Zotero.Attachments", function () {
 			var oldFile = OS.Path.join(tmpDir, oldFilename);
 			await OS.File.copy(file.path, oldFile);
 			// Create file with target filename
-			await Zotero.File.putContentsAsync(OS.Path.join(tmpDir, newFilename), '');
+			await Trellis.File.putContentsAsync(OS.Path.join(tmpDir, newFilename), '');
 
 			var item = createUnsavedDataObject('item');
 			item.setField('title', 'Test');
 			await item.saveTx();
 
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: oldFile,
 				parentItemID: item.id
 			});
@@ -2377,7 +2377,7 @@ describe("Zotero.Attachments", function () {
 			await renameFileFromParent(attachment);
 			assert.equal(attachment.attachmentFilename, 'Title.png');
 			// After a manual rename, the title becomes the default for this type
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-image'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-image'));
 		});
 
 		it("should change attachment title if file basename matches the title", async function () {
@@ -2393,7 +2393,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('title'), 'test');
 			await renameFileFromParent(attachment);
 			assert.equal(attachment.attachmentFilename, 'Title.pdf');
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-pdf'));
 		});
 
 		it("should change attachment title if file matches the title exactly", async function () {
@@ -2409,7 +2409,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('title'), 'test.pdf');
 			await renameFileFromParent(attachment);
 			assert.equal(attachment.attachmentFilename, 'Title.pdf');
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-pdf'));
 		});
 
 		it("should change attachment title if file matches the title, case-insensitive", async function () {
@@ -2425,7 +2425,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment.getField('title'), 'tESt.PDF');
 			await renameFileFromParent(attachment);
 			assert.equal(attachment.attachmentFilename, 'Title.pdf');
-			assert.equal(attachment.getField('title'), Zotero.getString('file-type-pdf'));
+			assert.equal(attachment.getField('title'), Trellis.getString('file-type-pdf'));
 		});
 
 		it("should restore an extension when renaming a misnamed file", async function () {
@@ -2439,7 +2439,7 @@ describe("Zotero.Attachments", function () {
 			item.setField('title', 'Title');
 			await item.saveTx();
 
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file: tmpFileToImport,
 				parentItemID: item.id
 			});
@@ -2449,7 +2449,7 @@ describe("Zotero.Attachments", function () {
 		});
 	});
 	describe("#renameFilesFromParent", function () {
-		let { renameFilesFromParent } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+		let { renameFilesFromParent } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 
 		before(async () => {
 			await resetDB({
@@ -2459,13 +2459,13 @@ describe("Zotero.Attachments", function () {
 		});
 
 		beforeEach((() => {
-			Zotero.Prefs.clear('autoRenameFiles.onMetadataChange');
-			Zotero.Prefs.set('autoRenameFiles.done', false);
+			Trellis.Prefs.clear('autoRenameFiles.onMetadataChange');
+			Trellis.Prefs.set('autoRenameFiles.done', false);
 		}));
 
 		after((() => {
-			Zotero.Prefs.clear('autoRenameFiles.onMetadataChange');
-			Zotero.Prefs.clear('autoRenameFiles.done');
+			Trellis.Prefs.clear('autoRenameFiles.onMetadataChange');
+			Trellis.Prefs.clear('autoRenameFiles.done');
 		}));
 
 		it("should rename primary attachment to match parent item title", async function () {
@@ -2494,7 +2494,7 @@ describe("Zotero.Attachments", function () {
 			assert.isTrue(await OS.File.exists(path2pretend));
 
 			// autoRenameFiles.done should still be false
-			assert.isFalse(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isFalse(Trellis.Prefs.get('autoRenameFiles.done'));
 
 			// Actual run
 			await renameFilesFromParent();
@@ -2511,7 +2511,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(OS.Path.basename(path2), 'Lorem.pdf');
 			assert.isTrue(await OS.File.exists(path2));
 
-			assert.isTrue(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isTrue(Trellis.Prefs.get('autoRenameFiles.done'));
 			await attachment1.eraseTx();
 			await attachment2.eraseTx();
 			await item.eraseTx();
@@ -2534,7 +2534,7 @@ describe("Zotero.Attachments", function () {
 			assert.equal(attachment1.attachmentFilename, 'empty');
 			let path1 = await attachment1.getFilePathAsync();
 			assert.isTrue(await OS.File.exists(path1));
-			assert.isTrue(Zotero.Prefs.get('autoRenameFiles.done') === false);
+			assert.isTrue(Trellis.Prefs.get('autoRenameFiles.done') === false);
 
 			// Actual run
 			await renameFilesFromParent();
@@ -2544,7 +2544,7 @@ describe("Zotero.Attachments", function () {
 			let path2 = await attachment1.getFilePathAsync();
 			assert.equal(OS.Path.basename(path2), 'Lorem.pdf');
 			assert.isTrue(await OS.File.exists(path2));
-			assert.isTrue(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isTrue(Trellis.Prefs.get('autoRenameFiles.done'));
 
 			await attachment1.eraseTx();
 			await item.eraseTx();
@@ -2569,14 +2569,14 @@ describe("Zotero.Attachments", function () {
 
 			// No files should be renamed yet
 			assert.equal(attachment1.attachmentFilename, 'empty');
-			assert.isFalse(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isFalse(Trellis.Prefs.get('autoRenameFiles.done'));
 
 			// Actual run
 			await renameFilesFromParent();
 			
 			// pdf is the primary attachment, so renamed
 			assert.equal(attachment1.attachmentFilename, 'Lorem');
-			assert.isTrue(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isTrue(Trellis.Prefs.get('autoRenameFiles.done'));
 			
 			await item.eraseTx();
 			await attachment1.eraseTx();
@@ -2602,14 +2602,14 @@ describe("Zotero.Attachments", function () {
 
 			// No files should be renamed yet
 			assert.equal(attachment1.attachmentFilename, 'test.pdf');
-			assert.isFalse(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isFalse(Trellis.Prefs.get('autoRenameFiles.done'));
 
 			// Actual run
 			await renameFilesFromParent();
 
 			// pdf is the primary attachment, so renamed
 			assert.equal(attachment1.attachmentFilename, 'Lorem.pdf');
-			assert.isTrue(Zotero.Prefs.get('autoRenameFiles.done'));
+			assert.isTrue(Trellis.Prefs.get('autoRenameFiles.done'));
 
 			await item.eraseTx();
 			await attachment1.eraseTx();
@@ -2654,10 +2654,10 @@ describe("Zotero.Attachments", function () {
 		});
 
 		it("should auto-rename a file when parent item type changes", async function () {
-			let libraryID = Zotero.Libraries.userLibraryID;
+			let libraryID = Trellis.Libraries.userLibraryID;
 			// Use a template that depends on the item type so that changing the
 			// type alone is enough to change the derived file name
-			await Zotero.SyncedSettings.set(
+			await Trellis.SyncedSettings.set(
 				libraryID, 'attachmentRenameTemplate', '{{ itemType suffix=" - " }}{{ title truncate="100" }}'
 			);
 			let item, attachment1;
@@ -2669,7 +2669,7 @@ describe("Zotero.Attachments", function () {
 				await renameFilesFromParent();
 				assert.equal(attachment1.attachmentFilename, 'book - Lorem.pdf');
 
-				item.setType(Zotero.ItemTypes.getID('journalArticle'));
+				item.setType(Trellis.ItemTypes.getID('journalArticle'));
 				item.saveTx();
 				assert.include(await waitForItemEvent("modify"), item.id);
 				// Renaming the attachment fires a second `modify` event
@@ -2678,7 +2678,7 @@ describe("Zotero.Attachments", function () {
 				assert.equal(attachment1.attachmentFilename, 'journalArticle - Lorem.pdf');
 			}
 			finally {
-				await Zotero.SyncedSettings.clear(libraryID, 'attachmentRenameTemplate');
+				await Trellis.SyncedSettings.clear(libraryID, 'attachmentRenameTemplate');
 				if (attachment1) {
 					await attachment1.eraseTx();
 				}
@@ -2700,7 +2700,7 @@ describe("Zotero.Attachments", function () {
 
 				// Use the type-specific field name ('caseName'), as the item box
 				// does, so the changed key matches a field of the new type
-				item.setType(Zotero.ItemTypes.getID('case'));
+				item.setType(Trellis.ItemTypes.getID('case'));
 				item.setField('caseName', 'Ipsum');
 				item.saveTx();
 				assert.include(await waitForItemEvent("modify"), item.id);

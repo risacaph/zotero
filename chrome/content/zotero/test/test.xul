@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 
 <window

@@ -1,16 +1,16 @@
-import { documentIsReady } from "chrome://zotero/content/actors/actorUtils.mjs";
+import { documentIsReady } from "chrome://trellis/content/actors/actorUtils.mjs";
 
 const TRANSLATE_SCRIPT_PATHS = [
-	'src/zotero.js',
+	'src/trellis.js',
 	'src/promise.js',
 	'modules/utilities/openurl.js',
 	'modules/utilities/date.js',
 	'modules/utilities/xregexp-all.js',
-	'modules/utilities/xregexp-unicode-zotero.js',
+	'modules/utilities/xregexp-unicode-trellis.js',
 	'modules/utilities/utilities.js',
 	'modules/utilities/utilities_item.js',
 	'modules/utilities/schema.js',
-	'modules/utilities/resource/zoteroTypeSchemaData.js',
+	'modules/utilities/resource/trellisTypeSchemaData.js',
 	'modules/utilities/cachedTypes.js',
 	'src/utilities_translate.js',
 	'src/debug.js',
@@ -33,8 +33,8 @@ const TRANSLATE_SCRIPT_PATHS = [
 ];
 
 const OTHER_SCRIPT_URIS = [
-	'chrome://zotero/content/actors/translation/http.js',
-	'chrome://zotero/content/actors/translation/translate_item.js',
+	'chrome://trellis/content/actors/translation/http.js',
+	'chrome://trellis/content/actors/translation/translate_item.js',
 ];
 
 export class TranslationChild extends JSWindowActorChild {
@@ -53,9 +53,9 @@ export class TranslationChild extends JSWindowActorChild {
 			}
 			case 'detect': {
 				let { translator, id } = data;
-				let { Zotero } = this._sandbox;
+				let { Trellis } = this._sandbox;
 				try {
-					let translate = new Zotero.Translate.Web();
+					let translate = new Trellis.Translate.Web();
 					translate.setTranslatorProvider(this._makeTranslatorProvider(id));
 					translate.setDocument(this.document);
 					this._initHandlers(id, translate);
@@ -71,9 +71,9 @@ export class TranslationChild extends JSWindowActorChild {
 			}
 			case 'translate': {
 				let { translator, id } = data;
-				let { Zotero } = this._sandbox;
+				let { Trellis } = this._sandbox;
 				try {
-					let translate = new Zotero.Translate.Web();
+					let translate = new Trellis.Translate.Web();
 					translate.setTranslatorProvider(this._makeTranslatorProvider(id));
 					translate.setDocument(this.document);
 					this._initHandlers(id, translate);
@@ -91,14 +91,14 @@ export class TranslationChild extends JSWindowActorChild {
 	}
 	
 	_makeTranslatorProvider(id) {
-		let { Zotero } = this._sandbox;
+		let { Trellis } = this._sandbox;
 		let makeProxy = method => 
 			(...args) => this._sandbox.Promise.resolve(
 				this.sendQuery('Translators:call', { id, method, args })
 			).then(result => Cu.cloneInto(result, this._sandbox))
 		;
 		return Cu.cloneInto({
-			...Zotero.Translators,
+			...Trellis.Translators,
 			get: makeProxy('get'),
 			getCodeForTranslator: makeProxy('getCodeForTranslator'),
 			getAllForType: makeProxy('getAllForType'),
@@ -124,13 +124,13 @@ export class TranslationChild extends JSWindowActorChild {
 	}
 
 	/**
-	 * Run the debug handler on the Zotero.Translate instance with the given ID
+	 * Run the debug handler on the Trellis.Translate instance with the given ID
 	 * @return {Promise<void>}
 	 */
 	_debug(id, arg) {
-		let { Zotero } = this._sandbox;
+		let { Trellis } = this._sandbox;
 		if (typeof arg !== 'string') {
-			arg = Zotero.Utilities.varDump(arg);
+			arg = Trellis.Utilities.varDump(arg);
 		}
 		// 8096K ought to be enough for anybody
 		// (And Firefox will throw an error when serializing very large values in fx102.
@@ -146,7 +146,7 @@ export class TranslationChild extends JSWindowActorChild {
 	}
 
 	/**
-	 * Run the error handler on the Zotero.Translate instance with the given ID
+	 * Run the error handler on the Trellis.Translate instance with the given ID
 	 * @return {Promise<void>}
 	 */
 	_error(id, arg) {
@@ -158,7 +158,7 @@ export class TranslationChild extends JSWindowActorChild {
 	}
 
 	/**
-	 * Initialize proxied handlers on the provided Zotero.Translate instance.
+	 * Initialize proxied handlers on the provided Trellis.Translate instance.
 	 */
 	_initHandlers(id, translate) {
 		let names = [
@@ -212,24 +212,24 @@ export class TranslationChild extends JSWindowActorChild {
 		});
 		
 		let scriptURIs = [
-			...TRANSLATE_SCRIPT_PATHS.map(path => 'chrome://zotero/content/xpcom/translate/' + path),
+			...TRANSLATE_SCRIPT_PATHS.map(path => 'chrome://trellis/content/xpcom/translate/' + path),
 			...OTHER_SCRIPT_URIS,
 		];
 		for (let scriptURI of scriptURIs) {
 			Services.scriptloader.loadSubScript(scriptURI, sandbox);
 		}
 
-		let { Zotero } = sandbox;
+		let { Trellis } = sandbox;
 
-		Zotero.Debug.init(1);
-		Zotero.Debug.setStore(true);
+		Trellis.Debug.init(1);
+		Trellis.Debug.setStore(true);
 		
-		Zotero.Translators._initialized = true;
-		Zotero.Schema.init(schemaJSON);
-		Zotero.Date.init(dateFormatsJSON);
+		Trellis.Translators._initialized = true;
+		Trellis.Schema.init(schemaJSON);
+		Trellis.Date.init(dateFormatsJSON);
 		
 		for (let [key, value] of Object.entries(prefs)) {
-			Zotero.Prefs.set(key, value);
+			Trellis.Prefs.set(key, value);
 		}
 
 		return sandbox;

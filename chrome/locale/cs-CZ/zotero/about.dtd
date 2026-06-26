@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "verze">
-<!ENTITY zotero.whatsNew "Co je nového">
-<!ENTITY zotero.createdby "Vytvořili:">
-<!ENTITY zotero.director "Vedoucí:">
-<!ENTITY zotero.directors "Vedoucí:">
-<!ENTITY zotero.developers "Vývojáři:">
-<!ENTITY zotero.alumni "Alumni:">
-<!ENTITY zotero.about.localizations "Lokalizace:">
-<!ENTITY zotero.about.additionalSoftware "Software třetí strany:">
-<!ENTITY zotero.thanks "Zvláštní poděkování:">
-<!ENTITY zotero.about.close "Zavřít">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Další spolupracovníci a poděkování...">
-<!ENTITY zotero.citationProcessing "Zpracování citací a bibliografie">
+<!ENTITY trellis.version "verze">
+<!ENTITY trellis.whatsNew "Co je nového">
+<!ENTITY trellis.createdby "Vytvořili:">
+<!ENTITY trellis.director "Vedoucí:">
+<!ENTITY trellis.directors "Vedoucí:">
+<!ENTITY trellis.developers "Vývojáři:">
+<!ENTITY trellis.alumni "Alumni:">
+<!ENTITY trellis.about.localizations "Lokalizace:">
+<!ENTITY trellis.about.additionalSoftware "Software třetí strany:">
+<!ENTITY trellis.thanks "Zvláštní poděkování:">
+<!ENTITY trellis.about.close "Zavřít">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Další spolupracovníci a poděkování...">
+<!ENTITY trellis.citationProcessing "Zpracování citací a bibliografie">

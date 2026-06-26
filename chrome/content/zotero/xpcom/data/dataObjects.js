@@ -3,32 +3,32 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.DataObjects = function () {
-	if (!this._ZDO_object) throw new Error('this._ZDO_object must be set before calling Zotero.DataObjects constructor');
+Trellis.DataObjects = function () {
+	if (!this._ZDO_object) throw new Error('this._ZDO_object must be set before calling Trellis.DataObjects constructor');
 	
 	if (!this._ZDO_objects) {
-		this._ZDO_objects = Zotero.DataObjectUtilities.getObjectTypePlural(this._ZDO_object);
+		this._ZDO_objects = Trellis.DataObjectUtilities.getObjectTypePlural(this._ZDO_object);
 	}
 	if (!this._ZDO_Object) {
 		this._ZDO_Object = this._ZDO_object.substr(0, 1).toUpperCase()
@@ -48,7 +48,7 @@ Zotero.DataObjects = function () {
 	}
 	
 	if (!this.ObjectClass) {
-		this.ObjectClass = Zotero[this._ZDO_Object];
+		this.ObjectClass = Trellis[this._ZDO_Object];
 	}
 	
 	this._objectCache = {};
@@ -57,38 +57,38 @@ Zotero.DataObjects = function () {
 	this._loadedLibraries = {};
 }
 
-Zotero.DataObjects.prototype._ZDO_idOnly = false;
+Trellis.DataObjects.prototype._ZDO_idOnly = false;
 
 // Public properties
-Zotero.defineProperty(Zotero.DataObjects.prototype, 'idColumn', {
+Trellis.defineProperty(Trellis.DataObjects.prototype, 'idColumn', {
 	get: function () { return this._ZDO_id; }
 });
-Zotero.defineProperty(Zotero.DataObjects.prototype, 'table', {
+Trellis.defineProperty(Trellis.DataObjects.prototype, 'table', {
 	get: function () { return this._ZDO_table; }
 });
 
-Zotero.defineProperty(Zotero.DataObjects.prototype, 'relationsTable', {
+Trellis.defineProperty(Trellis.DataObjects.prototype, 'relationsTable', {
 	get: function () { return this._ZDO_object + 'Relations'; }
 });
 
-Zotero.defineProperty(Zotero.DataObjects.prototype, 'primaryFields', {
+Trellis.defineProperty(Trellis.DataObjects.prototype, 'primaryFields', {
 	get: function () { return Object.keys(this._primaryDataSQLParts); }
 }, {lazy: true});
 
-Zotero.defineProperty(Zotero.DataObjects.prototype, "_primaryDataSQLWhere", {
+Trellis.defineProperty(Trellis.DataObjects.prototype, "_primaryDataSQLWhere", {
 	value: "WHERE 1"
 });
 
-Zotero.defineProperty(Zotero.DataObjects.prototype, 'primaryDataSQLFrom', {
+Trellis.defineProperty(Trellis.DataObjects.prototype, 'primaryDataSQLFrom', {
 	get: function () { return " " + this._primaryDataSQLFrom + " " + this._primaryDataSQLWhere; }
 }, {lateInit: true});
 
-Zotero.DataObjects.prototype.init = function () {
+Trellis.DataObjects.prototype.init = function () {
 	return this._loadIDsAndKeys();
 }
 
 
-Zotero.DataObjects.prototype.isPrimaryField = function (field) {
+Trellis.DataObjects.prototype.isPrimaryField = function (field) {
 	return this.primaryFields.indexOf(field) != -1;
 }
 
@@ -99,10 +99,10 @@ Zotero.DataObjects.prototype.isPrimaryField = function (field) {
  * If an item hasn't been loaded, an error is thrown
  *
  * @param {Array|Integer} ids  An individual object id or an array of object ids
- * @return {Zotero.[Object]|Array<Zotero.[Object]>} A Zotero.[Object], if a scalar id was passed;
- *                                          otherwise, an array of Zotero.[Object]
+ * @return {Trellis.[Object]|Array<Trellis.[Object]>} A Trellis.[Object], if a scalar id was passed;
+ *                                          otherwise, an array of Trellis.[Object]
  */
-Zotero.DataObjects.prototype.get = function (ids) {
+Trellis.DataObjects.prototype.get = function (ids) {
 	if (Array.isArray(ids)) {
 		var singleObject = false;
 	}
@@ -119,7 +119,7 @@ Zotero.DataObjects.prototype.get = function (ids) {
 		if (!this._objectCache[id]) {
 			// If unloaded id is registered, throw an error
 			if (this._objectKeys[id]) {
-				throw new Zotero.Exception.UnloadedDataException(
+				throw new Trellis.Exception.UnloadedDataException(
 					this._ZDO_Object + " " + id + " not yet loaded"
 				);
 			}
@@ -146,10 +146,10 @@ Zotero.DataObjects.prototype.get = function (ids) {
  * @param {Array|Integer} ids  An individual object id or an array of object ids
  * @param {Object} [options]
  * @param {Boolean} [options.noCache=false] - Don't add object to cache after loading
- * @return {Promise<Zotero.DataObject|Zotero.DataObject[]>} - A promise for either a data object,
+ * @return {Promise<Trellis.DataObject|Trellis.DataObject[]>} - A promise for either a data object,
  *     if a scalar id was passed, or an array of data objects, if an array of ids was passed
  */
-Zotero.DataObjects.prototype.getAsync = async function (ids, options) {
+Trellis.DataObjects.prototype.getAsync = async function (ids, options) {
 	var toLoad = [];
 	var toReturn = [];
 	
@@ -175,7 +175,7 @@ Zotero.DataObjects.prototype.getAsync = async function (ids, options) {
 		if (!Number.isInteger(id)) {
 			// TEMP: Re-enable test when removed
 			let e = new Error(`${this._ZDO_object} ID '${id}' is not an integer (${typeof id})`);
-			Zotero.logError(e);
+			Trellis.logError(e);
 			id = parseInt(id);
 			//throw new Error(`${this._ZDO_object} ID '${id}' is not an integer (${typeof id})`);
 		}
@@ -195,7 +195,7 @@ Zotero.DataObjects.prototype.getAsync = async function (ids, options) {
 		for (let id of toLoad) {
 			let obj = loaded[id];
 			if (!obj) {
-				Zotero.debug(this._ZDO_Object + " " + id + " doesn't exist", 2);
+				Trellis.debug(this._ZDO_Object + " " + id + " doesn't exist", 2);
 				continue;
 			}
 			toReturn.push(obj);
@@ -214,9 +214,9 @@ Zotero.DataObjects.prototype.getAsync = async function (ids, options) {
 /**
  * Get all loaded objects
  *
- * @return {Zotero.DataObject[]}
+ * @return {Trellis.DataObject[]}
  */
-Zotero.DataObjects.prototype.getLoaded = function () {
+Trellis.DataObjects.prototype.getLoaded = function () {
 	return Object.keys(this._objectCache).map(id => this._objectCache[id]);
 }
 
@@ -228,9 +228,9 @@ Zotero.DataObjects.prototype.getLoaded = function () {
  * @param {Boolean} [asIDs] - Return object ids instead of objects
  * @param {Integer} [days]
  * @param {Integer} [limit]
- * @return {Promise<Zotero.DataObject[]|Integer[]>}
+ * @return {Promise<Trellis.DataObject[]|Integer[]>}
  */
-Zotero.DataObjects.prototype.getDeleted = async function (libraryID, asIDs, days, limit) {
+Trellis.DataObjects.prototype.getDeleted = async function (libraryID, asIDs, days, limit) {
 	var sql = `SELECT ${this._ZDO_id} FROM ${this._ZDO_table} `
 		+ `JOIN deleted${this._ZDO_Objects} USING (${this._ZDO_id}) `
 		+ "WHERE libraryID=?";
@@ -242,7 +242,7 @@ Zotero.DataObjects.prototype.getDeleted = async function (libraryID, asIDs, days
 		sql += " LIMIT ?";
 		params.push(limit);
 	}
-	var ids = await Zotero.DB.columnQueryAsync(sql, params);
+	var ids = await Trellis.DB.columnQueryAsync(sql, params);
 	if (!ids.length) {
 		return [];
 	}
@@ -255,23 +255,23 @@ Zotero.DataObjects.prototype.getDeleted = async function (libraryID, asIDs, days
 
 
 
-Zotero.DataObjects.prototype.getAllIDs = function (libraryID) {
+Trellis.DataObjects.prototype.getAllIDs = function (libraryID) {
 	var sql = `SELECT ${this._ZDO_id} FROM ${this._ZDO_table} WHERE libraryID=?`;
-	return Zotero.DB.columnQueryAsync(sql, [libraryID]);
+	return Trellis.DB.columnQueryAsync(sql, [libraryID]);
 };
 
 
-Zotero.DataObjects.prototype.getAllKeys = function (libraryID) {
+Trellis.DataObjects.prototype.getAllKeys = function (libraryID) {
 	var sql = "SELECT key FROM " + this._ZDO_table + " WHERE libraryID=?";
-	return Zotero.DB.columnQueryAsync(sql, [libraryID]);
+	return Trellis.DB.columnQueryAsync(sql, [libraryID]);
 };
 
 
 /**
  * @deprecated - use .libraryKey
  */
-Zotero.DataObjects.prototype.makeLibraryKeyHash = function (libraryID, key) {
-	Zotero.debug("WARNING: " + this._ZDO_Objects + ".makeLibraryKeyHash() is deprecated -- use .libraryKey instead");
+Trellis.DataObjects.prototype.makeLibraryKeyHash = function (libraryID, key) {
+	Trellis.debug("WARNING: " + this._ZDO_Objects + ".makeLibraryKeyHash() is deprecated -- use .libraryKey instead");
 	return libraryID + '_' + key;
 }
 
@@ -279,13 +279,13 @@ Zotero.DataObjects.prototype.makeLibraryKeyHash = function (libraryID, key) {
 /**
  * @deprecated - use .libraryKey
  */
-Zotero.DataObjects.prototype.getLibraryKeyHash = function (obj) {
-	Zotero.debug("WARNING: " + this._ZDO_Objects + ".getLibraryKeyHash() is deprecated -- use .libraryKey instead");
+Trellis.DataObjects.prototype.getLibraryKeyHash = function (obj) {
+	Trellis.debug("WARNING: " + this._ZDO_Objects + ".getLibraryKeyHash() is deprecated -- use .libraryKey instead");
 	return this.makeLibraryKeyHash(obj.libraryID, obj.key);
 }
 
 
-Zotero.DataObjects.prototype.parseLibraryKey = function (libraryKey) {
+Trellis.DataObjects.prototype.parseLibraryKey = function (libraryKey) {
 	var [libraryID, key] = libraryKey.split('/');
 	return {
 		libraryID: parseInt(libraryID),
@@ -295,10 +295,10 @@ Zotero.DataObjects.prototype.parseLibraryKey = function (libraryKey) {
 
 
 /**
- * @deprecated - Use Zotero.DataObjects.parseLibraryKey()
+ * @deprecated - Use Trellis.DataObjects.parseLibraryKey()
  */
-Zotero.DataObjects.prototype.parseLibraryKeyHash = function (libraryKey) {
-	Zotero.debug("WARNING: " + this._ZDO_Objects + ".parseLibraryKeyHash() is deprecated -- use .parseLibraryKey() instead");
+Trellis.DataObjects.prototype.parseLibraryKeyHash = function (libraryKey) {
+	Trellis.debug("WARNING: " + this._ZDO_Objects + ".parseLibraryKeyHash() is deprecated -- use .parseLibraryKey() instead");
 	var [libraryID, key] = libraryKey.split('_');
 	if (!key) {
 		return false;
@@ -315,14 +315,14 @@ Zotero.DataObjects.prototype.parseLibraryKeyHash = function (libraryKey) {
  *
  * @param	{Integer}		libraryID
  * @param	{String}			key
- * @return	{Zotero.DataObject}			Zotero data object, or FALSE if not found
+ * @return	{Trellis.DataObject}			Trellis data object, or FALSE if not found
  */
-Zotero.DataObjects.prototype.getByLibraryAndKey = function (libraryID, key, options) {
+Trellis.DataObjects.prototype.getByLibraryAndKey = function (libraryID, key, options) {
 	var id = this.getIDFromLibraryAndKey(libraryID, key);
 	if (!id) {
 		return false;
 	}
-	return Zotero[this._ZDO_Objects].get(id, options);
+	return Trellis[this._ZDO_Objects].get(id, options);
 };
 
 
@@ -333,23 +333,23 @@ Zotero.DataObjects.prototype.getByLibraryAndKey = function (libraryID, key, opti
  * @param {String} - key
  * @param {Object} [options]
  * @param {Boolean} [options.noCache=false] - Don't add object to cache after loading
- * @return {Promise<Zotero.DataObject>} - Promise for a data object, or FALSE if not found
+ * @return {Promise<Trellis.DataObject>} - Promise for a data object, or FALSE if not found
  */
-Zotero.DataObjects.prototype.getByLibraryAndKeyAsync = function (libraryID, key, options) {
+Trellis.DataObjects.prototype.getByLibraryAndKeyAsync = function (libraryID, key, options) {
 	var id = this.getIDFromLibraryAndKey(libraryID, key);
 	if (!id) {
 		return false;
 	}
-	return Zotero[this._ZDO_Objects].getAsync(id, options);
+	return Trellis[this._ZDO_Objects].getAsync(id, options);
 };
 
 
-Zotero.DataObjects.prototype.exists = function (id) {
+Trellis.DataObjects.prototype.exists = function (id) {
 	return !!this.getLibraryAndKeyFromID(id);
 }
 
 
-Zotero.DataObjects.prototype.existsByKey = function (key) {
+Trellis.DataObjects.prototype.existsByKey = function (key) {
 	return !!this.getIDFromLibraryAndKey(id);
 }
 
@@ -357,38 +357,38 @@ Zotero.DataObjects.prototype.existsByKey = function (key) {
 /**
  * @return {Object} Object with 'libraryID' and 'key'
  */
-Zotero.DataObjects.prototype.getLibraryAndKeyFromID = function (id) {
+Trellis.DataObjects.prototype.getLibraryAndKeyFromID = function (id) {
 	var lk = this._objectKeys[id];
 	return lk ? { libraryID: lk[0], key: lk[1] } : false;
 }
 
 
-Zotero.DataObjects.prototype.getIDFromLibraryAndKey = function (libraryID, key) {
+Trellis.DataObjects.prototype.getIDFromLibraryAndKey = function (libraryID, key) {
 	if (!libraryID) throw new Error("Library ID not provided");
 	// TEMP: Just warn for now
 	//if (!key) throw new Error("Key not provided");
-	if (!key) Zotero.logError("Key not provided");
+	if (!key) Trellis.logError("Key not provided");
 	return (this._objectIDs[libraryID] && this._objectIDs[libraryID][key])
 		? this._objectIDs[libraryID][key] : false;
 }
 
 
-Zotero.DataObjects.prototype.getOlder = function (libraryID, date) {
+Trellis.DataObjects.prototype.getOlder = function (libraryID, date) {
 	if (!date || date.constructor.name != 'Date') {
 		throw ("date must be a JS Date in "
-			+ "Zotero." + this._ZDO_Objects + ".getOlder()")
+			+ "Trellis." + this._ZDO_Objects + ".getOlder()")
 	}
 	
 	var sql = "SELECT ROWID FROM " + this._ZDO_table
 		+ " WHERE libraryID=? AND clientDateModified<?";
-	return Zotero.DB.columnQueryAsync(sql, [libraryID, Zotero.Date.dateToSQL(date, true)]);
+	return Trellis.DB.columnQueryAsync(sql, [libraryID, Trellis.Date.dateToSQL(date, true)]);
 };
 
 
-Zotero.DataObjects.prototype.getNewer = function (libraryID, date, ignoreFutureDates) {
+Trellis.DataObjects.prototype.getNewer = function (libraryID, date, ignoreFutureDates) {
 	if (!date || date.constructor.name != 'Date') {
 		throw ("date must be a JS Date in "
-			+ "Zotero." + this._ZDO_Objects + ".getNewer()")
+			+ "Trellis." + this._ZDO_Objects + ".getNewer()")
 	}
 	
 	var sql = "SELECT ROWID FROM " + this._ZDO_table
@@ -396,7 +396,7 @@ Zotero.DataObjects.prototype.getNewer = function (libraryID, date, ignoreFutureD
 	if (ignoreFutureDates) {
 		sql += " AND clientDateModified<=CURRENT_TIMESTAMP";
 	}
-	return Zotero.DB.columnQueryAsync(sql, [libraryID, Zotero.Date.dateToSQL(date, true)]);
+	return Trellis.DB.columnQueryAsync(sql, [libraryID, Trellis.Date.dateToSQL(date, true)]);
 };
 
 
@@ -406,17 +406,17 @@ Zotero.DataObjects.prototype.getNewer = function (libraryID, date, ignoreFutureD
  * @return {Promise<Object>} - A promise for an object with object keys as keys and versions
  *                             as properties
  */
-Zotero.DataObjects.prototype.getObjectVersions = async function (libraryID, keys = null) {
+Trellis.DataObjects.prototype.getObjectVersions = async function (libraryID, keys = null) {
 	var versions = {};
 	
 	if (keys) {
-		await Zotero.Utilities.Internal.forEachChunkAsync(
+		await Trellis.Utilities.Internal.forEachChunkAsync(
 			keys,
-			Zotero.DB.MAX_BOUND_PARAMETERS - 1,
+			Trellis.DB.MAX_BOUND_PARAMETERS - 1,
 			async function (chunk) {
 				var sql = "SELECT key, version FROM " + this._ZDO_table
 					+ " WHERE libraryID=? AND key IN (" + chunk.map(key => '?').join(', ') + ")";
-				var rows = await Zotero.DB.queryAsync(sql, [libraryID].concat(chunk));
+				var rows = await Trellis.DB.queryAsync(sql, [libraryID].concat(chunk));
 				for (let i = 0; i < rows.length; i++) {
 					let row = rows[i];
 					versions[row.key] = row.version;
@@ -426,7 +426,7 @@ Zotero.DataObjects.prototype.getObjectVersions = async function (libraryID, keys
 	}
 	else {
 		let sql = "SELECT key, version FROM " + this._ZDO_table + " WHERE libraryID=?";
-		let rows = await Zotero.DB.queryAsync(sql, [libraryID]);
+		let rows = await Trellis.DB.queryAsync(sql, [libraryID]);
 		for (let i = 0; i < rows.length; i++) {
 			let row = rows[i];
 			versions[row.key] = row.version;
@@ -443,11 +443,11 @@ Zotero.DataObjects.prototype.getObjectVersions = async function (libraryID, keys
  * This would generally be used to load necessary data for cross-library search results, since those
  * results might include objects in libraries that haven't yet been loaded.
  *
- * @param {Zotero.DataObject[]} objects
+ * @param {Trellis.DataObject[]} objects
  * @param {String[]} [dataTypes] - Data types to load, defaulting to all types
  * @return {Promise}
  */
-Zotero.DataObjects.prototype.loadDataTypes = async function (objects, dataTypes) {
+Trellis.DataObjects.prototype.loadDataTypes = async function (objects, dataTypes) {
 	if (!dataTypes) {
 		dataTypes = this.ObjectClass.prototype._dataTypes;
 	}
@@ -475,7 +475,7 @@ Zotero.DataObjects.prototype.loadDataTypes = async function (objects, dataTypes)
  * @param {Integer} libraryID
  * @param {Integer[]} [ids]
  */
-Zotero.DataObjects.prototype._loadDataTypeInLibrary = async function (dataType, libraryID, ids) {
+Trellis.DataObjects.prototype._loadDataTypeInLibrary = async function (dataType, libraryID, ids) {
 	// note → loadNotes
 	// itemData → loadItemData
 	// annotationDeferred → loadAnnotationsDeferred
@@ -485,7 +485,7 @@ Zotero.DataObjects.prototype._loadDataTypeInLibrary = async function (dataType, 
 		+ ((baseDataType.endsWith('s') || baseDataType.endsWith('Data') ? '' : 's'))
 		+ (dataType.endsWith('Deferred') ? 'Deferred' : '');
 	if (!this[funcName]) {
-		throw new Error(`Zotero.${this._ZDO_Objects}.${funcName} is not a function`);
+		throw new Error(`Trellis.${this._ZDO_Objects}.${funcName} is not a function`);
 	}
 	
 	if (ids && ids.length == 0) {
@@ -493,14 +493,14 @@ Zotero.DataObjects.prototype._loadDataTypeInLibrary = async function (dataType, 
 	}
 	
 	var t = new Date;
-	var libraryName = Zotero.Libraries.get(libraryID).name;
+	var libraryName = Trellis.Libraries.get(libraryID).name;
 	
 	var idSQL = "";
 	if (ids) {
 		idSQL = " AND " + this.idColumn + " IN (" + ids.map(id => parseInt(id)).join(", ") + ")";
 	}
 	
-	Zotero.debug("Loading " + dataType + " for "
+	Trellis.debug("Loading " + dataType + " for "
 		+ (ids
 			? ids.length + " " + (ids.length == 1 ? this._ZDO_object : this._ZDO_objects)
 			: this._ZDO_objects)
@@ -508,14 +508,14 @@ Zotero.DataObjects.prototype._loadDataTypeInLibrary = async function (dataType, 
 	
 	await this[funcName](libraryID, ids ? ids : [], idSQL);
 	
-	Zotero.debug(`Loaded ${dataType} in ${libraryName} in ${new Date() - t} ms`);
+	Trellis.debug(`Loaded ${dataType} in ${libraryName} in ${new Date() - t} ms`);
 };
 
-Zotero.DataObjects.prototype.loadAll = async function (libraryID, ids) {
+Trellis.DataObjects.prototype.loadAll = async function (libraryID, ids) {
 	var t = new Date();
-	var library = Zotero.Libraries.get(libraryID)
+	var library = Trellis.Libraries.get(libraryID)
 	
-	Zotero.debug("Loading "
+	Trellis.debug("Loading "
 		+ (ids ? ids.length : "all") + " "
 		+ (ids && ids.length == 1 ? this._ZDO_object : this._ZDO_objects)
 		+ " in " + library.name);
@@ -529,7 +529,7 @@ Zotero.DataObjects.prototype.loadAll = async function (libraryID, ids) {
 		await this._loadDataTypeInLibrary(dataTypes[i], libraryID, ids);
 	}
 	
-	Zotero.debug(`Loaded ${this._ZDO_objects} in ${library.name} in ${new Date() - t} ms`);
+	Trellis.debug(`Loaded ${this._ZDO_objects} in ${library.name} in ${new Date() - t} ms`);
 	
 	if (!ids) {
 		library.setDataLoaded(this._ZDO_object);
@@ -537,7 +537,7 @@ Zotero.DataObjects.prototype.loadAll = async function (libraryID, ids) {
 };
 
 
-Zotero.DataObjects.prototype._loadPrimaryData = async function (libraryID, ids, idSQL, options) {
+Trellis.DataObjects.prototype._loadPrimaryData = async function (libraryID, ids, idSQL, options) {
 	var loaded = {};
 	
 	// If library isn't an integer (presumably false or null), skip it
@@ -555,7 +555,7 @@ Zotero.DataObjects.prototype._loadPrimaryData = async function (libraryID, ids, 
 		sql += ' AND O.' + this._ZDO_id + ' IN (' + ids.join(',') + ')';
 	}
 	
-	await Zotero.DB.queryAsync(
+	await Trellis.DB.queryAsync(
 		sql,
 		params,
 		{
@@ -610,7 +610,7 @@ Zotero.DataObjects.prototype._loadPrimaryData = async function (libraryID, ids, 
 };
 
 
-Zotero.DataObjects.prototype._loadRelations = async function (libraryID, ids, idSQL) {
+Trellis.DataObjects.prototype._loadRelations = async function (libraryID, ids, idSQL) {
 	if (!this._relationsTable) {
 		throw new Error("Relations not supported for " + this._ZDO_objects);
 	}
@@ -643,23 +643,23 @@ Zotero.DataObjects.prototype._loadRelations = async function (libraryID, ids, id
 		}
 		
 		/*if (this._objectType == 'item') {
-			let getURI = Zotero.URI["get" + this._ObjectType + "URI"].bind(Zotero.URI);
+			let getURI = Trellis.URI["get" + this._ObjectType + "URI"].bind(Trellis.URI);
 			let objectURI = getURI(this);
 			
 			// Related items are bidirectional, so include any pointing to this object
-			let objects = yield Zotero.Relations.getByPredicateAndObject(
-				Zotero.Relations.relatedItemPredicate, objectURI
+			let objects = yield Trellis.Relations.getByPredicateAndObject(
+				Trellis.Relations.relatedItemPredicate, objectURI
 			);
 			for (let i = 0; i < objects.length; i++) {
-				addRel(Zotero.Relations.relatedItemPredicate, getURI(objects[i]));
+				addRel(Trellis.Relations.relatedItemPredicate, getURI(objects[i]));
 			}
 			
 			// Also include any owl:sameAs relations pointing to this object
-			objects = yield Zotero.Relations.getByPredicateAndObject(
-				Zotero.Relations.linkedObjectPredicate, objectURI
+			objects = yield Trellis.Relations.getByPredicateAndObject(
+				Trellis.Relations.linkedObjectPredicate, objectURI
 			);
 			for (let i = 0; i < objects.length; i++) {
-				addRel(Zotero.Relations.linkedObjectPredicate, getURI(objects[i]));
+				addRel(Trellis.Relations.linkedObjectPredicate, getURI(objects[i]));
 			}
 		}*/
 		
@@ -669,7 +669,7 @@ Zotero.DataObjects.prototype._loadRelations = async function (libraryID, ids, id
 		obj._clearChanged('relations');
 	}.bind(this);
 	
-	await Zotero.DB.queryAsync(
+	await Trellis.DB.queryAsync(
 		sql,
 		params,
 		{
@@ -711,10 +711,10 @@ Zotero.DataObjects.prototype._loadRelations = async function (libraryID, ids, id
  * This is used to sort higher-level objects first in upload JSON, since otherwise the API would
  * reject lower-level objects for having missing parents.
  *
- * @param {Zotero.DataObject[]} objects - An array of objects
- * @return {Zotero.DataObject[]} - A sorted array of objects
+ * @param {Trellis.DataObject[]} objects - An array of objects
+ * @return {Trellis.DataObject[]} - A sorted array of objects
  */
-Zotero.DataObjects.prototype.sortByLevel = function (objects) {
+Trellis.DataObjects.prototype.sortByLevel = function (objects) {
 	// Convert to ids
 	var ids = objects.map(o => o.id);
 	var levels = {};
@@ -722,7 +722,7 @@ Zotero.DataObjects.prototype.sortByLevel = function (objects) {
 	// Get top-level objects
 	var top = objects.filter(o => !o.parentID).map(o => o.id);
 	levels["0"] = top.slice();
-	ids = Zotero.Utilities.arrayDiff(ids, top);
+	ids = Trellis.Utilities.arrayDiff(ids, top);
 	
 	// For each object in list, walk up its parent tree. If a parent is present in the
 	// list of ids, add it to the appropriate level bucket and remove it.
@@ -732,16 +732,16 @@ Zotero.DataObjects.prototype.sortByLevel = function (objects) {
 		let id = ids.shift();
 		let seen = new Set([id]);
 		while (true) {
-			let o = Zotero[this._ZDO_Objects].get(id);
+			let o = Trellis[this._ZDO_Objects].get(id);
 			let parentID = o.parentID;
 			if (!parentID) {
 				break;
 			}
 			// Avoid an infinite loop if objects are incorrectly nested within each other
 			if (seen.has(parentID)) {
-				throw new Zotero.Error(
+				throw new Trellis.Error(
 					`Incorrectly nested ${this._ZDO_objects}`,
-					Zotero.Error.ERROR_INVALID_OBJECT_NESTING,
+					Trellis.Error.ERROR_INVALID_OBJECT_NESTING,
 					{
 						[this._ZDO_id]: id
 					}
@@ -776,7 +776,7 @@ Zotero.DataObjects.prototype.sortByLevel = function (objects) {
 		ordered = ordered.concat(levels[level]);
 	}
 	// Convert back to objects
-	return ordered.map(id => Zotero[this._ZDO_Objects].get(id));
+	return ordered.map(id => Trellis[this._ZDO_Objects].get(id));
 };
 
 
@@ -788,10 +788,10 @@ Zotero.DataObjects.prototype.sortByLevel = function (objects) {
  * This is used to sort higher-level objects first in upload JSON, since otherwise the API would
  * reject lower-level objects for having missing parents.
  *
- * @param {Zotero.DataObject[]} ids - An array of data objects
- * @return {Zotero.DataObject[]} - A sorted array of data objects
+ * @param {Trellis.DataObject[]} ids - An array of data objects
+ * @return {Trellis.DataObject[]} - A sorted array of data objects
  */
-Zotero.DataObjects.prototype.sortByParent = function (objects) {
+Trellis.DataObjects.prototype.sortByParent = function (objects) {
 	// Convert to ids
 	var ids = objects.map(o => o.id);
 	var ordered = [];
@@ -804,7 +804,7 @@ Zotero.DataObjects.prototype.sortByParent = function (objects) {
 		let keep = [id];
 		let seen = new Set([id]);
 		while (true) {
-			let o = Zotero[this._ZDO_Objects].get(id);
+			let o = Trellis[this._ZDO_Objects].get(id);
 			let parentID = o.parentID;
 			if (!parentID) {
 				// We've reached a top-level object, so add any kept ids to the list
@@ -813,9 +813,9 @@ Zotero.DataObjects.prototype.sortByParent = function (objects) {
 			}
 			// Avoid an infinite loop if objects are incorrectly nested within each other
 			if (seen.has(parentID)) {
-				throw new Zotero.Error(
+				throw new Trellis.Error(
 					`Incorrectly nested ${this._ZDO_objects}`,
-					Zotero.Error.ERROR_INVALID_OBJECT_NESTING,
+					Trellis.Error.ERROR_INVALID_OBJECT_NESTING,
 					{
 						[this._ZDO_id]: id
 					}
@@ -842,7 +842,7 @@ Zotero.DataObjects.prototype.sortByParent = function (objects) {
 	}
 	
 	// Convert back to objects
-	return ordered.map(id => Zotero[this._ZDO_Objects].get(id));
+	return ordered.map(id => Trellis[this._ZDO_Objects].get(id));
 }
 
 
@@ -853,12 +853,12 @@ Zotero.DataObjects.prototype.sortByParent = function (objects) {
  *                             and arrays of URIs as objects
  * @return {Array[]} - Predicate-object pairs
  */
-Zotero.DataObjects.prototype.flattenRelations = function (relations) {
+Trellis.DataObjects.prototype.flattenRelations = function (relations) {
 	var relationsFlat = [];
 	for (let predicate in relations) {
 		let object = relations[predicate];
 		if (Array.isArray(object)) {
-			object = Zotero.Utilities.arrayUnique(object);
+			object = Trellis.Utilities.arrayUnique(object);
 			for (let i = 0; i < object.length; i++) {
 				relationsFlat.push([predicate, object[i]]);
 			}
@@ -867,7 +867,7 @@ Zotero.DataObjects.prototype.flattenRelations = function (relations) {
 			relationsFlat.push([predicate, object]);
 		}
 		else {
-			Zotero.debug(object, 1);
+			Trellis.debug(object, 1);
 			throw new Error("Invalid relation value");
 		}
 	}
@@ -885,10 +885,10 @@ Zotero.DataObjects.prototype.flattenRelations = function (relations) {
    *                                            This should be set to true for data that was
    *                                            changed externally (e.g., globally renamed tags).
    */
-Zotero.DataObjects.prototype.reload = async function (ids, dataTypes, reloadUnchanged) {
-	ids = Zotero.flattenArguments(ids);
+Trellis.DataObjects.prototype.reload = async function (ids, dataTypes, reloadUnchanged) {
+	ids = Trellis.flattenArguments(ids);
 	
-	Zotero.debug('Reloading ' + (dataTypes ? '[' + dataTypes.join(', ') + '] for ' : '')
+	Trellis.debug('Reloading ' + (dataTypes ? '[' + dataTypes.join(', ') + '] for ' : '')
 		+ this._ZDO_objects + ' ' + ids);
 	
 	// If data types not specified, reload loaded data for each object individually.
@@ -924,8 +924,8 @@ Zotero.DataObjects.prototype.reload = async function (ids, dataTypes, reloadUnch
 };
 
 
-Zotero.DataObjects.prototype.reloadAll = function (libraryID) {
-	Zotero.debug("Reloading all " + this._ZDO_objects);
+Trellis.DataObjects.prototype.reloadAll = function (libraryID) {
+	Trellis.debug("Reloading all " + this._ZDO_objects);
 	
 	// Remove objects not stored in database
 	var sql = "SELECT ROWID FROM " + this._ZDO_table;
@@ -934,7 +934,7 @@ Zotero.DataObjects.prototype.reloadAll = function (libraryID) {
 		sql += ' WHERE libraryID=?';
 		params.push(libraryID);
 	}
-	return Zotero.DB.columnQueryAsync(sql, params)
+	return Trellis.DB.columnQueryAsync(sql, params)
 	.then(function (ids) {
 		for (var id in this._objectCache) {
 			if (!ids || ids.indexOf(parseInt(id)) == -1) {
@@ -949,12 +949,12 @@ Zotero.DataObjects.prototype.reloadAll = function (libraryID) {
 }
 
 
-Zotero.DataObjects.prototype.registerObject = function (obj) {
+Trellis.DataObjects.prototype.registerObject = function (obj) {
 	var id = obj.id;
 	var libraryID = obj.libraryID;
 	var key = obj.key;
 	
-	//Zotero.debug("Registering " + this._ZDO_object + " " + id + " as " + libraryID + "/" + key);
+	//Trellis.debug("Registering " + this._ZDO_object + " " + id + " as " + libraryID + "/" + key);
 	if (!this._objectIDs[libraryID]) {
 		this._objectIDs[libraryID] = {};
 	}
@@ -964,10 +964,10 @@ Zotero.DataObjects.prototype.registerObject = function (obj) {
 	obj._inCache = true;
 }
 
-Zotero.DataObjects.prototype.dropDeadObjectsFromCache = function () {
+Trellis.DataObjects.prototype.dropDeadObjectsFromCache = function () {
 	let ids = [];
 	for (let libraryID in this._objectIDs) {
-		if (Zotero.Libraries.exists(libraryID)) continue;
+		if (Trellis.Libraries.exists(libraryID)) continue;
 		for (let key in this._objectIDs[libraryID]) {
 			ids.push(this._objectIDs[libraryID][key]);
 		}
@@ -981,8 +981,8 @@ Zotero.DataObjects.prototype.dropDeadObjectsFromCache = function () {
  *
  * @param	int[]	ids		objectIDs
  */
-Zotero.DataObjects.prototype.unload = function () {
-	var ids = Zotero.flattenArguments(arguments);
+Trellis.DataObjects.prototype.unload = function () {
+	var ids = Trellis.flattenArguments(arguments);
 	for (var i=0; i<ids.length; i++) {
 		let id = ids[i];
 		let {libraryID, key} = this.getLibraryAndKeyFromID(id);
@@ -1001,7 +1001,7 @@ Zotero.DataObjects.prototype.unload = function () {
  * @param {Integer[]} ids - Ids of objects to update
  * @param {Boolean} version
  */
-Zotero.DataObjects.prototype.updateVersion = function (ids, version) {
+Trellis.DataObjects.prototype.updateVersion = function (ids, version) {
 	if (version != parseInt(version)) {
 		throw new Error("'version' must be an integer ('" + version + "' given)");
 	}
@@ -1009,11 +1009,11 @@ Zotero.DataObjects.prototype.updateVersion = function (ids, version) {
 	
 	let sql = "UPDATE " + this.table + " SET version=" + version + " "
 		+ "WHERE " + this.idColumn + " IN (";
-	return Zotero.Utilities.Internal.forEachChunkAsync(
+	return Trellis.Utilities.Internal.forEachChunkAsync(
 		ids,
-		Zotero.DB.MAX_BOUND_PARAMETERS,
+		Trellis.DB.MAX_BOUND_PARAMETERS,
 		async function (chunk) {
-			await Zotero.DB.queryAsync(sql + chunk.map(() => '?').join(', ') + ')', chunk);
+			await Trellis.DB.queryAsync(sql + chunk.map(() => '?').join(', ') + ')', chunk);
 			// Update the internal 'version' property of any loaded objects
 			for (let i = 0; i < chunk.length; i++) {
 				let id = chunk[i];
@@ -1033,14 +1033,14 @@ Zotero.DataObjects.prototype.updateVersion = function (ids, version) {
  * @param {Integer[]} ids - Ids of objects to update
  * @param {Boolean} synced
  */
-Zotero.DataObjects.prototype.updateSynced = function (ids, synced) {
+Trellis.DataObjects.prototype.updateSynced = function (ids, synced) {
 	let sql = "UPDATE " + this.table + " SET synced=" + (synced ? 1 : 0) + " "
 		+ "WHERE " + this.idColumn + " IN (";
-	return Zotero.Utilities.Internal.forEachChunkAsync(
+	return Trellis.Utilities.Internal.forEachChunkAsync(
 		ids,
-		Zotero.DB.MAX_BOUND_PARAMETERS,
+		Trellis.DB.MAX_BOUND_PARAMETERS,
 		async function (chunk) {
-			await Zotero.DB.queryAsync(sql + chunk.map(() => '?').join(', ') + ')', chunk);
+			await Trellis.DB.queryAsync(sql + chunk.map(() => '?').join(', ') + ')', chunk);
 			// Update the internal 'synced' property of any loaded objects
 			for (let i = 0; i < chunk.length; i++) {
 				let id = chunk[i];
@@ -1054,18 +1054,18 @@ Zotero.DataObjects.prototype.updateSynced = function (ids, synced) {
 };
 
 
-Zotero.DataObjects.prototype.isEditable = function (obj) {
+Trellis.DataObjects.prototype.isEditable = function (obj) {
 	var libraryID = obj.libraryID;
 	if (!libraryID) {
 		return true;
 	}
 	
-	if (!Zotero.Libraries.get(libraryID).editable) return false;
+	if (!Trellis.Libraries.get(libraryID).editable) return false;
 	
 	if (obj.objectType == 'item' && obj.isAttachment()
-		&& (obj.attachmentLinkMode == Zotero.Attachments.LINK_MODE_IMPORTED_URL ||
-			obj.attachmentLinkMode == Zotero.Attachments.LINK_MODE_IMPORTED_FILE)
-		&& !Zotero.Libraries.get(libraryID).filesEditable
+		&& (obj.attachmentLinkMode == Trellis.Attachments.LINK_MODE_IMPORTED_URL ||
+			obj.attachmentLinkMode == Trellis.Attachments.LINK_MODE_IMPORTED_FILE)
+		&& !Trellis.Libraries.get(libraryID).filesEditable
 	) {
 		return false;
 	}
@@ -1073,7 +1073,7 @@ Zotero.DataObjects.prototype.isEditable = function (obj) {
 	return true;
 }
 
-Zotero.defineProperty(Zotero.DataObjects.prototype, "primaryDataSQL", {
+Trellis.defineProperty(Trellis.DataObjects.prototype, "primaryDataSQL", {
 	get: function () {
 		return "SELECT "
 		+ Object.keys(this._primaryDataSQLParts).map((val) => this._primaryDataSQLParts[val]).join(', ')
@@ -1081,7 +1081,7 @@ Zotero.defineProperty(Zotero.DataObjects.prototype, "primaryDataSQL", {
 	}
 }, {lazy: true});
 
-Zotero.DataObjects.prototype.getPrimaryDataSQLPart = function (part) {
+Trellis.DataObjects.prototype.getPrimaryDataSQLPart = function (part) {
 	var sql = this._primaryDataSQLParts[part];
 	if (!sql) {
 		throw new Error("Invalid primary data SQL part '" + part + "'");
@@ -1094,13 +1094,13 @@ Zotero.DataObjects.prototype.getPrimaryDataSQLPart = function (part) {
  * Delete one or more objects from the database and caches
  *
  * @param {Integer|Integer[]} ids - Object ids
- * @param {Object} [options] - See Zotero.DataObject.prototype.erase
+ * @param {Object} [options] - See Trellis.DataObject.prototype.erase
  * @param {Function} [options.onProgress] - f(progress, progressMax)
  * @return {Promise}
  */
-Zotero.DataObjects.prototype.erase = async function (ids, options = {}) {
-	ids = Zotero.flattenArguments(ids);
-	await Zotero.DB.executeTransaction(async function () {
+Trellis.DataObjects.prototype.erase = async function (ids, options = {}) {
+	ids = Trellis.flattenArguments(ids);
+	await Trellis.DB.executeTransaction(async function () {
 		for (let i = 0; i < ids.length; i++) {
 			let obj = await this.getAsync(ids[i]);
 			if (!obj) {
@@ -1117,7 +1117,7 @@ Zotero.DataObjects.prototype.erase = async function (ids, options = {}) {
 
 
 // TEMP: remove
-Zotero.DataObjects.prototype._load = async function (libraryID, ids, options) {
+Trellis.DataObjects.prototype._load = async function (libraryID, ids, options) {
 	var loaded = {};
 
 	// If library isn't an integer (presumably false or null), skip it
@@ -1144,7 +1144,7 @@ Zotero.DataObjects.prototype._load = async function (libraryID, ids, options) {
 	}
 
 	var t = new Date();
-	await Zotero.DB.queryAsync(
+	await Trellis.DB.queryAsync(
 		sql,
 		params,
 		{
@@ -1174,7 +1174,7 @@ Zotero.DataObjects.prototype._load = async function (libraryID, ids, options) {
 			}.bind(this)
 		}
 	);
-	Zotero.debug("Loaded " + this._ZDO_objects + " in " + ((new Date) - t) + "ms");
+	Trellis.debug("Loaded " + this._ZDO_objects + " in " + ((new Date) - t) + "ms");
 
 	if (!ids) {
 		this._loadedLibraries[libraryID] = true;
@@ -1198,15 +1198,15 @@ Zotero.DataObjects.prototype._load = async function (libraryID, ids, options) {
 	return loaded;
 };
 
-Zotero.DataObjects.prototype._loadSerial = Zotero.Utilities.Internal.serial(Zotero.DataObjects.prototype._load);
+Trellis.DataObjects.prototype._loadSerial = Trellis.Utilities.Internal.serial(Trellis.DataObjects.prototype._load);
 
-Zotero.DataObjects.prototype._getObjectForRow = function (row) {
-	return new Zotero[this._ZDO_Object];
+Trellis.DataObjects.prototype._getObjectForRow = function (row) {
+	return new Trellis[this._ZDO_Object];
 };
 
-Zotero.DataObjects.prototype._loadIDsAndKeys = async function () {
+Trellis.DataObjects.prototype._loadIDsAndKeys = async function () {
 	var sql = "SELECT ROWID AS id, libraryID, key FROM " + this._ZDO_table;
-	var rows = await Zotero.DB.queryAsync(sql);
+	var rows = await Trellis.DB.queryAsync(sql);
 	for (let i=0; i<rows.length; i++) {
 		let row = rows[i];
 		this._objectKeys[row.id] = [row.libraryID, row.key];

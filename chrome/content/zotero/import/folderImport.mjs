@@ -1,4 +1,4 @@
-Services.scriptloader.loadSubScript("chrome://zotero/content/include.js");
+Services.scriptloader.loadSubScript("chrome://trellis/content/include.js");
 
 // matches "*" and "?" wildcards of a glob pattern, case-insensitive
 function simpleGlobMatch(filename, patterns) {
@@ -17,7 +17,7 @@ function simpleGlobMatch(filename, patterns) {
 }
 
 const collectFilesRecursive = async (dirPath, parents = [], files = []) => {
-	await Zotero.File.iterateDirectory(dirPath, async ({ isDir, _isSymlink, name, path }) => {
+	await Trellis.File.iterateDirectory(dirPath, async ({ isDir, _isSymlink, name, path }) => {
 		if (isDir) {
 			await collectFilesRecursive(path, [...parents, name], files);
 		}
@@ -31,8 +31,8 @@ const collectFilesRecursive = async (dirPath, parents = [], files = []) => {
 
 const findCollection = (libraryID, parentCollectionID, collectionName) => {
 	const collections = parentCollectionID
-		? Zotero.Collections.getByParent(parentCollectionID)
-		: Zotero.Collections.getByLibrary(libraryID);
+		? Trellis.Collections.getByParent(parentCollectionID)
+		: Trellis.Collections.getByLibrary(libraryID);
 
 	return collections.find(c => c.name === collectionName);
 };
@@ -42,7 +42,7 @@ const findItemByHash = async (libraryID, hash) => {
 	return null;
 };
 
-export class Zotero_Import_Folder {
+export class Trellis_Import_Folder {
 	constructor({ mimeTypes = ['application/pdf'], fileTypes, folder, libraryID, recreateStructure }) {
 		this.folder = folder;
 		this.libraryID = libraryID;
@@ -78,9 +78,9 @@ export class Zotero_Import_Folder {
 	}
 
 	async translate({ collections = [], linkFiles = false } = {}) {
-		// https://github.com/zotero/zotero/pull/2862#discussion_r1141324302
+		// https://github.com/trellis/trellis/pull/2862#discussion_r1141324302
 		throw new Error('Folder import is not supported yet');
-		const libraryID = this.libraryID || Zotero.Libraries.userLibraryID;
+		const libraryID = this.libraryID || Trellis.Libraries.userLibraryID;
 		const files = await collectFilesRecursive(this.folder);
 
 		// import is done in four phases: sniff for mime type, calculate md5, import as attachment, recognize.
@@ -89,7 +89,7 @@ export class Zotero_Import_Folder {
 		
 		const mimeTypes = await Promise.all(files.map(
 			async ({ path }) => {
-				const mimeType = Zotero.MIME.sniffForMIMEType(await Zotero.File.getSample(path));
+				const mimeType = Trellis.MIME.sniffForMIMEType(await Trellis.File.getSample(path));
 				this._progress++;
 				this._itemDone();
 				return mimeType;
@@ -104,7 +104,7 @@ export class Zotero_Import_Folder {
 					// don't bother calculating a hash for file that will be ignored
 					return null;
 				}
-				const md5Hash = await Zotero.Utilities.Internal.md5Async(path);
+				const md5Hash = await Trellis.Utilities.Internal.md5Async(path);
 				this._itemDone();
 				return md5Hash;
 			}
@@ -122,7 +122,7 @@ export class Zotero_Import_Folder {
 				if (parents.length) {
 					prevParentCollectionID = (collections && collections.length) ? collections[0] : null;
 					for (const parentName of parents) {
-						const parentCollection = findCollection(libraryID, prevParentCollectionID, parentName) || new Zotero.Collection;
+						const parentCollection = findCollection(libraryID, prevParentCollectionID, parentName) || new Trellis.Collection;
 						parentCollection.libraryID = libraryID;
 						parentCollection.name = parentName;
 						if (prevParentCollectionID) {
@@ -177,10 +177,10 @@ export class Zotero_Import_Folder {
 					}
 					else {
 						if (linkFiles) {
-							attachmentItem = await Zotero.Attachments.linkFromFile(options);
+							attachmentItem = await Trellis.Attachments.linkFromFile(options);
 						}
 						else {
-							attachmentItem = await Zotero.Attachments.importFromFile(options);
+							attachmentItem = await Trellis.Attachments.importFromFile(options);
 						}
 						
 						this.newItems.push(attachmentItem);
@@ -188,7 +188,7 @@ export class Zotero_Import_Folder {
 					}
 				}
 
-				if (attachmentItem && !Zotero.RecognizeDocument.canRecognize(attachmentItem)) {
+				if (attachmentItem && !Trellis.RecognizeDocument.canRecognize(attachmentItem)) {
 					// @TODO: store hash of an item that cannot be recognized
 					await attachmentItem.saveTx({ skipSelect: true });
 					attachmentItem = null;
@@ -205,25 +205,25 @@ export class Zotero_Import_Folder {
 		this._progress += attachmentItems.length - recognizableItems.length;
 		this._itemDone();
 
-		const recognizeQueue = Zotero.ProgressQueues.get('recognize');
+		const recognizeQueue = Trellis.ProgressQueues.get('recognize');
 		const itemsToSavePostRecognize = [];
 		
 		const processRecognizedItem = ({ status, id }) => {
 			const updatedItem = recognizableItems.find(i => i.id === id);
-			if (status === Zotero.ProgressQueue.ROW_SUCCEEDED) {
+			if (status === Trellis.ProgressQueue.ROW_SUCCEEDED) {
 				const recognizedItem = updatedItem.parentItem;
 				if (recognizedItem && id in attachmentItemHashLookup) {
 					// @TODO: Store hash of an attachment (attachmentItemHashLookup[id]) for this recognized item
 					itemsToSavePostRecognize.push(recognizedItem);
 				}
 			}
-			if (status === Zotero.ProgressQueue.ROW_FAILED) {
+			if (status === Trellis.ProgressQueue.ROW_FAILED) {
 				if (updatedItem && id in attachmentItemHashLookup) {
 					// @TODO: Store hash of a file that failed to be recognized (attachmentItemHashLookup[id])
 					itemsToSavePostRecognize.push(updatedItem);
 				}
 			}
-			if ([Zotero.ProgressQueue.ROW_FAILED, Zotero.ProgressQueue.ROW_SUCCEEDED].includes(status)) {
+			if ([Trellis.ProgressQueue.ROW_FAILED, Trellis.ProgressQueue.ROW_SUCCEEDED].includes(status)) {
 				this._progress++;
 				this._itemDone();
 			}
@@ -231,7 +231,7 @@ export class Zotero_Import_Folder {
 		
 		recognizeQueue.addListener('rowupdated', processRecognizedItem);
 		try {
-			await Zotero.RecognizeDocument.recognizeItems(recognizableItems);
+			await Trellis.RecognizeDocument.recognizeItems(recognizableItems);
 		}
 		finally {
 			recognizeQueue.removeListener('rowupdated', processRecognizedItem);

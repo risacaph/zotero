@@ -3,29 +3,29 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// Zotero_File_Interface_Export
+// Trellis_File_Interface_Export
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +33,7 @@ const OPTION_PREFIX = "export-option-";
 
 // Class to provide options for export
 
-var Zotero_File_Interface_Export = new function() {
+var Trellis_File_Interface_Export = new function() {
 	this.accept = accept;
 	this.cancel = cancel;
 	
@@ -44,8 +44,8 @@ var Zotero_File_Interface_Export = new function() {
 	 */
 	this.init = function () {
 		// Set font size from pref
-		var sbc = document.getElementById('zotero-export-options-container');
-		Zotero.UIProperties.registerRoot(sbc);
+		var sbc = document.getElementById('trellis-export-options-container');
+		Trellis.UIProperties.registerRoot(sbc);
 		
 		var addedOptions = new Object();
 		
@@ -57,7 +57,7 @@ var Zotero_File_Interface_Export = new function() {
 		var optionsBox = document.getElementById("translator-options");
 		var charsetBox = document.getElementById("charset-box");
 		
-		var selectedTranslator = Zotero.Prefs.get(
+		var selectedTranslator = Trellis.Prefs.get(
 			exportingNotes ? "export.lastNoteTranslator" : "export.lastTranslator"
 		);
 		
@@ -75,10 +75,10 @@ var Zotero_File_Interface_Export = new function() {
 					let optionLabel;
 					try {
 						if (option == 'includeAppLinks') {
-							optionLabel = Zotero.getString("exportOptions." + option, Zotero.appName);
+							optionLabel = Trellis.getString("exportOptions." + option, Trellis.appName);
 						}
 						else {
-							optionLabel = Zotero.getString("exportOptions." + option);
+							optionLabel = Trellis.getString("exportOptions." + option);
 						}
 						if (optionLabel == "exportOptions." + option) {
 							optionLabel = option;
@@ -107,7 +107,7 @@ var Zotero_File_Interface_Export = new function() {
 							checkbox.setAttribute("id", OPTION_PREFIX + 'includeAnnotations');
 							checkbox.setAttribute(
 								"label",
-								Zotero.getString('exportOptions.includeAnnotations')
+								Trellis.getString('exportOptions.includeAnnotations')
 							);
 							checkbox.setAttribute("native", true);
 							optionsBox.insertBefore(checkbox, charsetBox);
@@ -130,11 +130,11 @@ var Zotero_File_Interface_Export = new function() {
 		}
 		
 		// from charsetMenu.js
-		if(Zotero.Prefs.get("export.displayCharsetOption")) {
-			_charsets = Zotero_Charset_Menu.populate(document.getElementById(OPTION_PREFIX+"exportCharset"), true);
+		if(Trellis.Prefs.get("export.displayCharsetOption")) {
+			_charsets = Trellis_Charset_Menu.populate(document.getElementById(OPTION_PREFIX+"exportCharset"), true);
 		}
 		
-		this.updateOptions(Zotero.Prefs.get(
+		this.updateOptions(Trellis.Prefs.get(
 			exportingNotes ? "export.noteTranslatorSettings" : "export.translatorSettings"
 		));
 
@@ -242,7 +242,7 @@ var Zotero_File_Interface_Export = new function() {
 		window.arguments[0].selectedTranslator = window.arguments[0].translators[index];
 		
 		// save selected translator
-		Zotero.Prefs.set(
+		Trellis.Prefs.set(
 			window.arguments[0].exportingNotes ? "export.lastNoteTranslator" : "export.lastTranslator",
 			window.arguments[0].translators[index].translatorID
 		);
@@ -274,7 +274,7 @@ var Zotero_File_Interface_Export = new function() {
 		
 		// save options
 		var optionString = JSON.stringify(displayOptions);
-		Zotero.Prefs.set(
+		Trellis.Prefs.set(
 			window.arguments[0].exportingNotes ? "export.noteTranslatorSettings" : "export.translatorSettings",
 			optionString
 		);

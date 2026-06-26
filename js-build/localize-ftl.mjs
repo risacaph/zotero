@@ -7,10 +7,10 @@ import { onError, onProgress, onSuccess } from './utils.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const localesDir = join(ROOT, 'chrome', 'locale');
-const TRANSIFEX_FILE_NAME = 'zotero.json';
+const TRANSIFEX_FILE_NAME = 'trellis.json';
 
 function getLocaleDir(locale) {
-	return join(localesDir, locale, 'zotero');
+	return join(localesDir, locale, 'trellis');
 }
 
 async function getFTL() {
@@ -70,7 +70,7 @@ async function getFTL() {
 				
 				// Special handling for 'general-sentence-separator', which doesn't get uploaded to
 				// Transifex
-				if (sourceFileBaseName == 'zotero') {
+				if (sourceFileBaseName == 'trellis') {
 					// Don't include space for Chinese, Japanese, Thai, Burmese, Khmer, or Lao
 					let spaceValue = /^(zh|ja|th|my|km|lo)/.test(locale) ? '' : ' '
 					ftl = ftl.replace(

@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -26,14 +26,14 @@
 
 {
 	let { isPaneCollapsed, setPaneCollapsed } = ChromeUtils.importESModule(
-		'chrome://zotero/content/elements/utils/collapsiblePane.mjs'
+		'chrome://trellis/content/elements/utils/collapsiblePane.mjs'
 	);
 
 	class ContextPane extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
-			<deck id="zotero-context-pane-deck" flex="1" selectedIndex="0">
-				<deck id="zotero-context-pane-item-deck"></deck>
-				<deck id="zotero-context-pane-notes-deck" class="notes-pane-deck" flex="1"></deck>
+			<deck id="trellis-context-pane-deck" flex="1" selectedIndex="0">
+				<deck id="trellis-context-pane-item-deck"></deck>
+				<deck id="trellis-context-pane-notes-deck" class="notes-pane-deck" flex="1"></deck>
 			</deck>
 		`);
 
@@ -90,28 +90,28 @@
 
 		handleCollapse(prevState, newState) {
 			if (prevState === "true" && (!newState || newState === "false")) {
-				let itemContext = this._getItemContext(Zotero_Tabs.selectedID);
+				let itemContext = this._getItemContext(Trellis_Tabs.selectedID);
 				itemContext?.render();
 			}
 		}
 
 		init() {
-			this._panesDeck = this.querySelector('#zotero-context-pane-deck');
+			this._panesDeck = this.querySelector('#trellis-context-pane-deck');
 			// Item pane deck
-			this._itemPaneDeck = this.querySelector('#zotero-context-pane-item-deck');
+			this._itemPaneDeck = this.querySelector('#trellis-context-pane-item-deck');
 			// Notes pane deck
-			this._notesPaneDeck = this.querySelector('#zotero-context-pane-notes-deck');
+			this._notesPaneDeck = this.querySelector('#trellis-context-pane-notes-deck');
 
 			this._notifierIDs = [
-				Zotero.Notifier.registerObserver(this, ['item'], 'contextPane'),
+				Trellis.Notifier.registerObserver(this, ['item'], 'contextPane'),
 				// We want to be notified quickly about tab events
-				Zotero.Notifier.registerObserver(this, ['tab'], 'contextPane', 20),
+				Trellis.Notifier.registerObserver(this, ['tab'], 'contextPane', 20),
 			];
 		}
 
 		destroy() {
 			for (let id of this._notifierIDs) {
-				Zotero.Notifier.unregisterObserver(id);
+				Trellis.Notifier.unregisterObserver(id);
 			}
 		}
 
@@ -138,8 +138,8 @@
 			if (action === 'modify') {
 				for (let itemDetails of Array.from(this._itemPaneDeck.children)) {
 					let tabID = itemDetails.tabID;
-					let tab = Zotero_Tabs._getTab(tabID).tab;
-					let item = Zotero.Items.get(tab?.data.itemID);
+					let tab = Trellis_Tabs._getTab(tabID).tab;
+					let item = Trellis.Items.get(tab?.data.itemID);
 					if ((item.parentID || itemDetails.parentID)
 						&& item.parentID !== itemDetails.parentID) {
 						this._removeItemContext(tabID);
@@ -152,7 +152,7 @@
 			if (['add', 'delete', 'modify'].includes(action)) {
 				let libraryIDs = [];
 				for (let id of ids) {
-					let item = Zotero.Items.get(id);
+					let item = Trellis.Items.get(id);
 					if (item && (item.isNote() || item.isRegularItem())) {
 						libraryIDs.push(item.libraryID);
 					}
@@ -175,7 +175,7 @@
 			for (let id of ids) {
 				this._removeItemContext(id);
 			}
-			if (Zotero_Tabs.deck.children.length == 1) {
+			if (Trellis_Tabs.deck.children.length == 1) {
 				Array.from(this._notesPaneDeck.children).forEach(x => x.notesList.expanded = false);
 			}
 			// Close tab specific notes if tab id no longer exists, but
@@ -183,7 +183,7 @@
 			setTimeout(() => {
 				let contextNodes = Array.from(this._notesPaneDeck.children);
 				for (let contextNode of contextNodes) {
-					let nodes = Array.from(contextNode.querySelector('.zotero-context-pane-tab-notes-deck').children);
+					let nodes = Array.from(contextNode.querySelector('.trellis-context-pane-tab-notes-deck').children);
 					for (let node of nodes) {
 						let tabID = node.getAttribute('data-tab-id');
 						if (!document.getElementById(tabID)) {
@@ -192,14 +192,14 @@
 					}
 				}
 				// For unknown reason fx102, unlike 60, sometimes doesn't automatically update selected index
-				this._selectItemContext(Zotero_Tabs.selectedID);
+				this._selectItemContext(Trellis_Tabs.selectedID);
 			});
 		}
 
 		async _handleTabSelect(action, type, ids, extraData) {
-			// TEMP: move these variables to ZoteroContextPane
-			let _contextPaneSplitter = ZoteroContextPane.splitter;
-			let _contextPane = document.getElementById('zotero-context-pane');
+			// TEMP: move these variables to TrellisContextPane
+			let _contextPaneSplitter = TrellisContextPane.splitter;
+			let _contextPane = document.getElementById('trellis-context-pane');
 			let tabID = ids[0];
 			let tabType = extraData[tabID].type;
 			// It seems that changing `hidden` or `collapsed` values might
@@ -208,17 +208,17 @@
 			if (tabType == 'library') {
 				_contextPaneSplitter.setAttribute('hidden', true);
 				_contextPane.setAttribute('collapsed', true);
-				ZoteroContextPane.showLoadingMessage(false);
+				TrellisContextPane.showLoadingMessage(false);
 				this._sidenav.hidden = true;
 			}
-			else if (Zotero_Tabs.hasContextPane(tabType)
+			else if (Trellis_Tabs.hasContextPane(tabType)
 					// The reader tab load event is triggered asynchronously.
 					// If the tab is no longer selected by the time the event is triggered,
 					// we don't need to update the context pane, since it must already be
 					// updated by another select tab event.
 					&& (action === 'select'
-						|| (action === 'load' && Zotero_Tabs.selectedID == tabID))) {
-				if (Zotero_Tabs.hasNoteContext(tabType)) {
+						|| (action === 'load' && Trellis_Tabs.selectedID == tabID))) {
+				if (Trellis_Tabs.hasNoteContext(tabType)) {
 					this._setupNotesContext(tabID);
 				}
 				else {
@@ -230,20 +230,20 @@
 				
 				this._sidenav.hidden = false;
 
-				let tab = Zotero_Tabs._getTab(tabID).tab;
+				let tab = Trellis_Tabs._getTab(tabID).tab;
 				await this._addItemContext(ids[0], tab.data.itemID, tab.type);
 	
 				this._selectItemContext(tabID);
 			}
 
-			ZoteroContextPane.update();
-			Zotero_Tabs.updateSidebarLayout();
+			TrellisContextPane.update();
+			Trellis_Tabs.updateSidebarLayout();
 		}
 
 		async _setupNotesContext(tabID) {
-			let { tab } = Zotero_Tabs._getTab(tabID);
+			let { tab } = Trellis_Tabs._getTab(tabID);
 			if (!tab || !tab.data.itemID) return;
-			let attachment = await Zotero.Items.getAsync(tab.data.itemID);
+			let attachment = await Trellis.Items.getAsync(tab.data.itemID);
 			if (attachment) {
 				this._selectNotesContext(attachment.libraryID);
 				let notesContext = this._getNotesContext(attachment.libraryID);
@@ -251,7 +251,7 @@
 			}
 			let currentNoteContext = this._getCurrentNotesContext();
 			// Always switch to the current selected tab, since the selection might have changed
-			currentNoteContext.switchToTab(Zotero_Tabs.selectedID);
+			currentNoteContext.switchToTab(Trellis_Tabs.selectedID);
 			this.sidenav.contextNotesPaneEnabled = true;
 		}
 
@@ -313,11 +313,11 @@
 				return;
 			}
 
-			let { libraryID } = Zotero.Items.getLibraryAndKeyFromID(itemID);
-			let library = Zotero.Libraries.get(libraryID);
+			let { libraryID } = Trellis.Items.getLibraryAndKeyFromID(itemID);
+			let library = Trellis.Libraries.get(libraryID);
 			await library.waitForDataLoad('item');
 	
-			let item = Zotero.Items.get(itemID);
+			let item = Trellis.Items.get(itemID);
 			if (!item) {
 				return;
 			}
@@ -331,22 +331,22 @@
 				targetItem = item;
 			}
 			else {
-				targetItem = parentID ? Zotero.Items.get(parentID) : item;
+				targetItem = parentID ? Trellis.Items.get(parentID) : item;
 			}
 			
-			let editable = Zotero.Libraries.get(libraryID).editable
+			let editable = Trellis.Libraries.get(libraryID).editable
 				// If the parent item or the attachment itself is in trash, itemPane is not editable
 				&& !item.deleted && !targetItem.deleted;
 	
 			let itemDetails = document.createXULElement('item-details');
 			itemDetails.id = tabID + '-context';
 			itemDetails.dataset.tabId = tabID;
-			itemDetails.className = 'zotero-item-pane-content';
+			itemDetails.className = 'trellis-item-pane-content';
 			this._itemPaneDeck.appendChild(itemDetails);
 	
 			itemDetails.editable = editable;
 			itemDetails.tabID = tabID;
-			itemDetails.tabType = Zotero_Tabs.parseTabType(tabType).tabContentType;
+			itemDetails.tabType = Trellis_Tabs.parseTabType(tabType).tabContentType;
 			itemDetails.item = targetItem;
 			// Manually cache parentID
 			itemDetails.parentID = parentID;
@@ -354,7 +354,7 @@
 			if (previousPinnedPane) itemDetails.pinnedPane = previousPinnedPane;
 	
 			// Make sure that the context pane of the selected tab is rendered
-			if (tabID == Zotero_Tabs.selectedID) {
+			if (tabID == Trellis_Tabs.selectedID) {
 				this._selectItemContext(tabID);
 			}
 		}

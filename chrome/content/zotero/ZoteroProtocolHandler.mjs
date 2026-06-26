@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
 	
 	Based on nsChromeExtensionHandler example code by Ed Anuff at
@@ -27,10 +27,10 @@
     ***** END LICENSE BLOCK *****
 */
 
-const ZOTERO_SCHEME = "zotero";
-const ZOTERO_PROTOCOL_CID = Components.ID("{9BC3D762-9038-486A-9D70-C997AF848A7C}");
-const ZOTERO_PROTOCOL_CONTRACTID = "@mozilla.org/network/protocol;1?name=" + ZOTERO_SCHEME;
-const ZOTERO_PROTOCOL_NAME = "Zotero Chrome Extension Protocol";
+const TRELLIS_SCHEME = "trellis";
+const TRELLIS_PROTOCOL_CID = Components.ID("{9BC3D762-9038-486A-9D70-C997AF848A7C}");
+const TRELLIS_PROTOCOL_CONTRACTID = "@mozilla.org/network/protocol;1?name=" + TRELLIS_SCHEME;
+const TRELLIS_PROTOCOL_NAME = "Trellis Chrome Extension Protocol";
 
 import { NetUtil } from "resource://gre/modules/NetUtil.sys.mjs";
 
@@ -40,11 +40,11 @@ const Cr = Components.results;
 const ios = Services.io;
 
 // Dummy chrome URL used to obtain a valid chrome channel
-const DUMMY_CHROME_URL = "chrome://zotero/content/zoteroPane.xul";
+const DUMMY_CHROME_URL = "chrome://trellis/content/trellisPane.xul";
 
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
-export function ZoteroProtocolHandler() {
+export function TrellisProtocolHandler() {
 	this.wrappedJSObject = this;
 	this._principal = null;
 	this._extensions = {};
@@ -52,12 +52,12 @@ export function ZoteroProtocolHandler() {
 	
 	
 	/**
-	 * zotero://attachment/library/items/[itemKey]
-	 * zotero://attachment/groups/[groupID]/items/[itemKey]
+	 * trellis://attachment/library/items/[itemKey]
+	 * trellis://attachment/groups/[groupID]/items/[itemKey]
 	 *
 	 * And for snapshot attachments only:
-	 * zotero://attachment/library/items/[itemKey]/[resourcePath]
-	 * zotero://attachment/groups/[groupID]/items/[itemKey]/[resourcePath]
+	 * trellis://attachment/library/items/[itemKey]/[resourcePath]
+	 * trellis://attachment/groups/[groupID]/items/[itemKey]/[resourcePath]
 	 */
 	var AttachmentExtension = {
 		loadAsChrome: false,
@@ -72,20 +72,20 @@ export function ZoteroProtocolHandler() {
 					uriPath = uriPath.substring(1);
 					
 					var params = {};
-					var router = new Zotero.Router(params);
+					var router = new Trellis.Router(params);
 					router.add('library/items/:itemKey', function () {
-						params.libraryID = Zotero.Libraries.userLibraryID;
+						params.libraryID = Trellis.Libraries.userLibraryID;
 					});
 					router.add('groups/:groupID/items/:itemKey');
 					router.run(uriPath);
 					
 					if (params.groupID) {
-						params.libraryID = Zotero.Groups.getLibraryIDFromGroupID(params.groupID);
+						params.libraryID = Trellis.Groups.getLibraryIDFromGroupID(params.groupID);
 					}
 					if (!params.itemKey) {
 						return this._errorChannel("Item key not provided");
 					}
-					var item = await Zotero.Items.getByLibraryAndKeyAsync(params.libraryID, params.itemKey);
+					var item = await Trellis.Items.getByLibraryAndKeyAsync(params.libraryID, params.itemKey);
 					
 					if (!item) {
 						return this._errorChannel(`No item found for ${uriPath}`);
@@ -111,7 +111,7 @@ export function ZoteroProtocolHandler() {
 							path = PathUtils.join(PathUtils.parent(path), ...resourcePathParts);
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 							return this._errorChannel(`Resource ${resourcePathParts.join('/')} not found`);
 						}
 						if (!(await IOUtils.exists(path))) {
@@ -119,12 +119,12 @@ export function ZoteroProtocolHandler() {
 						}
 					}
 					
-					// Set originalURI so that it seems like we're serving from zotero:// protocol.
+					// Set originalURI so that it seems like we're serving from trellis:// protocol.
 					// This is necessary to allow url() links to work from within CSS files.
 					// Otherwise they try to link to files on the file:// protocol, which isn't allowed.
 					this.originalURI = uri;
 					
-					return Zotero.File.pathToFile(path);
+					return Trellis.File.pathToFile(path);
 				}
 				catch (e) {
 					return this._errorChannel(e.message);
@@ -134,7 +134,7 @@ export function ZoteroProtocolHandler() {
 		
 		
 		_errorChannel: function (msg) {
-			Zotero.logError(msg);
+			Trellis.logError(msg);
 			this.status = Components.results.NS_ERROR_FAILURE;
 			this.contentType = 'text/plain';
 			return msg;
@@ -144,8 +144,8 @@ export function ZoteroProtocolHandler() {
 	
 	
 	/**
-	 * zotero://data/library/collection/ABCD1234/items?sort=itemType&direction=desc
-	 * zotero://data/groups/12345/collection/ABCD1234/items?sort=title&direction=asc
+	 * trellis://data/library/collection/ABCD1234/items?sort=itemType&direction=desc
+	 * trellis://data/groups/12345/collection/ABCD1234/items?sort=title&direction=asc
 	 */
 	var DataExtension = {
 		loadAsChrome: false,
@@ -154,15 +154,15 @@ export function ZoteroProtocolHandler() {
 			return new AsyncChannel(uri, loadInfo, async function () {
 				this.contentType = 'text/plain';
 				
-				var path = uri.spec.match(/zotero:\/\/[^/]+(.*)/)[1];
+				var path = uri.spec.match(/trellis:\/\/[^/]+(.*)/)[1];
 				
 				try {
-					return Zotero.Utilities.Internal.getAsyncInputStream(
-						Zotero.API.Data.getGenerator(path)
+					return Trellis.Utilities.Internal.getAsyncInputStream(
+						Trellis.API.Data.getGenerator(path)
 					);
 				}
 				catch (e) {
-					if (e instanceof Zotero.Router.InvalidPathException) {
+					if (e instanceof Trellis.Router.InvalidPathException) {
 						return "URL could not be parsed";
 					}
 				}
@@ -172,14 +172,14 @@ export function ZoteroProtocolHandler() {
 	
 	
 	/*
-	 * Report generation extension for Zotero protocol
+	 * Report generation extension for Trellis protocol
 	 */
 	var ReportExtension = {
 		loadAsChrome: true,
 		
 		newChannel: function (uri, loadInfo) {
 			return new AsyncChannel(uri, loadInfo, async function () {
-				var userLibraryID = Zotero.Libraries.userLibraryID;
+				var userLibraryID = Trellis.Libraries.userLibraryID;
 				
 				var path = uri.pathQueryRef;
 				if (!path) {
@@ -189,8 +189,8 @@ export function ZoteroProtocolHandler() {
 				
 				// Proxy CSS files
 				if (path.endsWith('.css')) {
-					var chromeURL = 'chrome://zotero/skin/report/' + path;
-					Zotero.debug(chromeURL);
+					var chromeURL = 'chrome://trellis/skin/report/' + path;
+					Trellis.debug(chromeURL);
 					let uri = ios.newURI(chromeURL, null, null);
 					var chromeReg = Components.classes["@mozilla.org/chrome/chrome-registry;1"]
 						.getService(Components.interfaces.nsIChromeRegistry);
@@ -202,7 +202,7 @@ export function ZoteroProtocolHandler() {
 					format: 'html',
 					sort: 'title'
 				};
-				var router = new Zotero.Router(params);
+				var router = new Trellis.Router(params);
 				
 				// Items within a collection or search
 				router.add('library/:scopeObject/:scopeObjectKey/items', function () {
@@ -219,7 +219,7 @@ export function ZoteroProtocolHandler() {
 				// Old-style URLs
 				router.add('collection/:id/html/report.html', function () {
 					params.scopeObject = 'collections';
-					var lkh = Zotero.Collections.parseLibraryKeyHash(params.id);
+					var lkh = Trellis.Collections.parseLibraryKeyHash(params.id);
 					if (lkh) {
 						params.libraryID = lkh.libraryID || userLibraryID;
 						params.scopeObjectKey = lkh.key;
@@ -231,7 +231,7 @@ export function ZoteroProtocolHandler() {
 				});
 				router.add('search/:id/html/report.html', function () {
 					params.scopeObject = 'searches';
-					var lkh = Zotero.Searches.parseLibraryKeyHash(this.id);
+					var lkh = Trellis.Searches.parseLibraryKeyHash(this.id);
 					if (lkh) {
 						params.libraryID = lkh.libraryID || userLibraryID;
 						params.scopeObjectKey = lkh.key;
@@ -265,11 +265,11 @@ export function ZoteroProtocolHandler() {
 				}
 				
 				try {
-					Zotero.API.parseParams(params);
-					var results = await Zotero.API.getResultsFromParams(params);
+					Trellis.API.parseParams(params);
+					var results = await Trellis.API.getResultsFromParams(params);
 				}
 				catch (e) {
-					Zotero.debug(e, 1);
+					Trellis.debug(e, 1);
 					return e.toString();
 				}
 				
@@ -280,8 +280,8 @@ export function ZoteroProtocolHandler() {
 				var searchParentIDs = new Set(); // Parents of selected child items
 				var searchChildIDs = new Set() // Selected chlid items
 				
-				var includeAllChildItems = Zotero.Prefs.get('report.includeAllChildItems');
-				var combineChildItems = Zotero.Prefs.get('report.combineChildItems');
+				var includeAllChildItems = Trellis.Prefs.get('report.includeAllChildItems');
+				var combineChildItems = Trellis.Prefs.get('report.combineChildItems');
 				
 				var unhandledParents = {};
 				for (var i=0; i<results.length; i++) {
@@ -316,7 +316,7 @@ export function ZoteroProtocolHandler() {
 					for (let id of searchItemIDs) {
 						if (!searchChildIDs.has(id)) {
 							var children = [];
-							var item = await Zotero.Items.getAsync(id);
+							var item = await Trellis.Items.getAsync(id);
 							if (!item.isRegularItem()) {
 								continue;
 							}
@@ -347,7 +347,7 @@ export function ZoteroProtocolHandler() {
 					// Add parents of matches if parents aren't matches themselves
 					for (let id of searchParentIDs) {
 						if (!searchItemIDs.has(id) && !itemsHash[id]) {
-							var item = await Zotero.Items.getAsync(id);
+							var item = await Trellis.Items.getAsync(id);
 							itemsHash[id] = items.length;
 							items.push(item.toJSON({ mode: 'full' }));
 						}
@@ -355,7 +355,7 @@ export function ZoteroProtocolHandler() {
 					
 					// Add children to reportChildren property of parents
 					for (let id of searchChildIDs) {
-						let item = await Zotero.Items.getAsync(id);
+						let item = await Trellis.Items.getAsync(id);
 						var parentID = item.parentID;
 						if (!items[itemsHash[parentID]].reportChildren) {
 							items[itemsHash[parentID]].reportChildren = {
@@ -375,9 +375,9 @@ export function ZoteroProtocolHandler() {
 				// for each matching child
 				else {
 					for (let id of searchChildIDs) {
-						var item = await Zotero.Items.getAsync(id);
+						var item = await Trellis.Items.getAsync(id);
 						var parentID = item.parentID;
-						var parentItem = Zotero.Items.get(parentID);
+						var parentItem = Trellis.Items.get(parentID);
 						
 						if (!itemsHash[parentID]) {
 							// If parent is a search match and not yet added,
@@ -418,7 +418,7 @@ export function ZoteroProtocolHandler() {
 				}];
 				
 				
-				var collation = Zotero.getLocaleCollation();
+				var collation = Trellis.getLocaleCollation();
 				var compareFunction = function (a, b) {
 					var index = 0;
 					
@@ -463,12 +463,12 @@ export function ZoteroProtocolHandler() {
 								valB = b.title; 
 							}
 							
-							valA = Zotero.Items.getSortTitle(valA);
-							valB = Zotero.Items.getSortTitle(valB);
+							valA = Trellis.Items.getSortTitle(valA);
+							valB = Trellis.Items.getSortTitle(valB);
 						}
 						else if (sorts[index].field == 'date') {
-							var itemA = Zotero.Items.getByLibraryAndKey(params.libraryID, a.key);
-							var itemB = Zotero.Items.getByLibraryAndKey(params.libraryID, b.key);
+							var itemA = Trellis.Items.getByLibraryAndKey(params.libraryID, a.key);
+							var itemB = Trellis.Items.getByLibraryAndKey(params.libraryID, b.key);
 							valA = itemA.getField('date', true, true);
 							valB = itemB.getField('date', true, true);
 						}
@@ -476,8 +476,8 @@ export function ZoteroProtocolHandler() {
 						// slightly less broken. To do this right, real creator
 						// sorting needs to be abstracted from itemTreeView.js.
 						else if (sorts[index].field == 'firstCreator') {
-							var itemA = Zotero.Items.getByLibraryAndKey(params.libraryID, a.key);
-							var itemB = Zotero.Items.getByLibraryAndKey(params.libraryID, b.key);
+							var itemA = Trellis.Items.getByLibraryAndKey(params.libraryID, a.key);
+							var itemB = Trellis.Items.getByLibraryAndKey(params.libraryID, b.key);
 							valA = itemA.getField('firstCreator');
 							valB = itemB.getField('firstCreator');
 						}
@@ -528,10 +528,10 @@ export function ZoteroProtocolHandler() {
 					
 					default:
 						this.contentType = 'text/html';
-						return Zotero.Utilities.Internal.getAsyncInputStream(
-							Zotero.Report.HTML.listGenerator(items, combineChildItems, params.libraryID),
+						return Trellis.Utilities.Internal.getAsyncInputStream(
+							Trellis.Report.HTML.listGenerator(items, combineChildItems, params.libraryID),
 							function () {
-								Zotero.logError(e);
+								Trellis.logError(e);
 								return '<span style="color: red; font-weight: 600">Error generating report</span>';
 							}
 						);
@@ -544,19 +544,19 @@ export function ZoteroProtocolHandler() {
 	/**
 	 * Select an item
 	 *
-	 * zotero://select/library/items/[itemKey]
-	 * zotero://select/groups/[groupID]/items/[itemKey]
+	 * trellis://select/library/items/[itemKey]
+	 * trellis://select/groups/[groupID]/items/[itemKey]
 	 *
 	 * Deprecated:
 	 *
-	 * zotero://select/[type]/0_ABCD1234
-	 * zotero://select/[type]/1234 (not consistent across synced machines)
+	 * trellis://select/[type]/0_ABCD1234
+	 * trellis://select/[type]/1234 (not consistent across synced machines)
 	 */
 	var SelectExtension = {
 		noContent: true,
 		
 		doAction: async function (uri) {
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			
 			var path = uri.pathQueryRef;
 			if (!path) {
@@ -567,7 +567,7 @@ export function ZoteroProtocolHandler() {
 			var params = {
 				objectType: 'item'
 			};
-			var router = new Zotero.Router(params);
+			var router = new Trellis.Router(params);
 			
 			// Item within a collection or search
 			router.add('library/:scopeObject/:scopeObjectKey/items/:objectKey', function () {
@@ -583,7 +583,7 @@ export function ZoteroProtocolHandler() {
 			
 			// Old-style URLs
 			router.add('items/:id', function () {
-				var lkh = Zotero.Items.parseLibraryKeyHash(params.id);
+				var lkh = Trellis.Items.parseLibraryKeyHash(params.id);
 				if (lkh) {
 					params.libraryID = lkh.libraryID || userLibraryID;
 					params.objectKey = lkh.key;
@@ -613,30 +613,30 @@ export function ZoteroProtocolHandler() {
 			
 			router.run(path);
 			
-			Zotero.API.parseParams(params);
+			Trellis.API.parseParams(params);
 			
 			if (!params.objectKey && !params.objectID && !params.itemKey) {
-				Zotero.debug("No objects specified");
+				Trellis.debug("No objects specified");
 				return;
 			}
 			
-			var results = await Zotero.API.getResultsFromParams(params);
+			var results = await Trellis.API.getResultsFromParams(params);
 			
 			if (!results.length) {
 				var msg = "Objects not found";
-				Zotero.debug(msg, 2);
+				Trellis.debug(msg, 2);
 				Components.utils.reportError(msg);
 				return;
 			}
 			
-			var win = Zotero.getMainWindow();
-			var zp = win?.ZoteroPane;
+			var win = Trellis.getMainWindow();
+			var zp = win?.TrellisPane;
 			if (!zp) {
 				// TEMP
 				throw new Error("Pane not open");
 			}
 			
-			win.Zotero_Tabs.select('zotero-pane');
+			win.Trellis_Tabs.select('trellis-pane');
 			if (params.objectType == 'collection') {
 				return zp.collectionsView.selectCollection(results[0].id);
 			}
@@ -648,24 +648,24 @@ export function ZoteroProtocolHandler() {
 				if (params.scopeObject == 'collections') {
 					let col;
 					if (params.scopeObjectKey) {
-						col = Zotero.Collections.getByLibraryAndKey(
+						col = Trellis.Collections.getByLibraryAndKey(
 							params.libraryID, params.scopeObjectKey
 						);
 					}
 					else {
-						col = Zotero.Collections.get(params.scopeObjectID);
+						col = Trellis.Collections.get(params.scopeObjectID);
 					}
 					await zp.collectionsView.selectCollection(col.id);
 				}
 				else if (params.scopeObject == 'searches') {
 					let s;
 					if (params.scopeObjectKey) {
-						s = Zotero.Searches.getByLibraryAndKey(
+						s = Trellis.Searches.getByLibraryAndKey(
 							params.libraryID, params.scopeObjectKey
 						);
 					}
 					else {
-						s = Zotero.Searches.get(params.scopeObjectID);
+						s = Trellis.Searches.get(params.scopeObjectID);
 					}
 					await zp.collectionsView.selectSearch(s.id);
 				}
@@ -683,7 +683,7 @@ export function ZoteroProtocolHandler() {
 	};
 	
 	/*
-		zotero://debug/
+		trellis://debug/
 	*/
 	var DebugExtension = {
 		loadAsChrome: false,
@@ -693,10 +693,10 @@ export function ZoteroProtocolHandler() {
 				this.contentType = "text/plain";
 				
 				try {
-					return Zotero.Debug.get();
+					return Trellis.Debug.get();
 				}
 				catch (e) {
-					Zotero.debug(e, 1);
+					Trellis.debug(e, 1);
 					throw e;
 				}
 			});
@@ -704,8 +704,8 @@ export function ZoteroProtocolHandler() {
 	};
 	
 	/*
-		zotero://pdf.js/viewer.html
-		zotero://pdf.js/pdf/1/ABCD5678
+		trellis://pdf.js/viewer.html
+		trellis://pdf.js/pdf/1/ABCD5678
 	*/
 	var PDFJSExtension = {
 		loadAsChrome: true,
@@ -715,21 +715,21 @@ export function ZoteroProtocolHandler() {
 				try {
 					uri = uri.spec;
 					// Proxy PDF.js files
-					if (uri.startsWith('zotero://pdf.js/') && !uri.startsWith('zotero://pdf.js/pdf/')) {
-						uri = uri.replace(/zotero:\/\/pdf.js\//, 'resource://zotero/pdf.js/');
+					if (uri.startsWith('trellis://pdf.js/') && !uri.startsWith('trellis://pdf.js/pdf/')) {
+						uri = uri.replace(/trellis:\/\/pdf.js\//, 'resource://trellis/pdf.js/');
 						let newURI = Services.io.newURI(uri, null, null);
 						return this.getURIInputStream(newURI);
 					}
 					
 					// Proxy attachment PDFs
-					var pdfPrefix = 'zotero://pdf.js/pdf/';
+					var pdfPrefix = 'trellis://pdf.js/pdf/';
 					if (!uri.startsWith(pdfPrefix)) {
 						return this._errorChannel("File not found");
 					}
 					var [libraryID, key] = uri.substr(pdfPrefix.length).split('/');
 					libraryID = parseInt(libraryID);
 					
-					var item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, key);
+					var item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, key);
 					if (!item) {
 						return this._errorChannel("Item not found");
 					}
@@ -740,7 +740,7 @@ export function ZoteroProtocolHandler() {
 					return this.getURIInputStream(OS.Path.toFileURI(path));
 				}
 				catch (e) {
-					Zotero.debug(e, 1);
+					Trellis.debug(e, 1);
 					throw e;
 				}
 			}.bind(this));
@@ -748,7 +748,7 @@ export function ZoteroProtocolHandler() {
 		
 		
 		getURIInputStream: function (uri) {
-			return new Zotero.Promise((resolve, reject) => {
+			return new Trellis.Promise((resolve, reject) => {
 				NetUtil.asyncFetch(uri, function (inputStream, result) {
 					if (!Components.isSuccessCode(result)) {
 						// TODO: Handle error
@@ -771,17 +771,17 @@ export function ZoteroProtocolHandler() {
 	/**
 	 * Open a PDF at a given page (or try to)
 	 *
-	 * zotero://open-pdf/library/items/[itemKey]?page=[page]
-	 * zotero://open-pdf/groups/[groupID]/items/[itemKey]?page=[page]
+	 * trellis://open-pdf/library/items/[itemKey]?page=[page]
+	 * trellis://open-pdf/groups/[groupID]/items/[itemKey]?page=[page]
 	 *
 	 * Also supports ZotFile format:
-	 * zotero://open-pdf/[libraryID]_[key]/[page]
+	 * trellis://open-pdf/[libraryID]_[key]/[page]
 	 */
 	var OpenExtension = {
 		noContent: true,
 		
 		doAction: async function (uri) {
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			
 			var uriPath = uri.pathQueryRef;
 			if (!uriPath) {
@@ -792,7 +792,7 @@ export function ZoteroProtocolHandler() {
 			var params = {
 				objectType: 'item'
 			};
-			var router = new Zotero.Router(params);
+			var router = new Trellis.Router(params);
 			
 			// All items
 			router.add('library/items/:objectKey', function () {
@@ -802,9 +802,9 @@ export function ZoteroProtocolHandler() {
 			
 			// ZotFile URLs
 			router.add(':id/:page', function () {
-				var lkh = Zotero.Items.parseLibraryKeyHash(params.id);
+				var lkh = Trellis.Items.parseLibraryKeyHash(params.id);
 				if (!lkh) {
-					Zotero.warn(`Invalid URL ${url}`);
+					Trellis.warn(`Invalid URL ${url}`);
 					return;
 				}
 				params.libraryID = lkh.libraryID || userLibraryID;
@@ -813,25 +813,25 @@ export function ZoteroProtocolHandler() {
 			});
 			router.run(uriPath);
 			
-			Zotero.API.parseParams(params);
-			var results = await Zotero.API.getResultsFromParams(params);
+			Trellis.API.parseParams(params);
+			var results = await Trellis.API.getResultsFromParams(params);
 			var { annotation, page, cfi, sel } = params;
 			
 			if (!results.length) {
-				Zotero.warn(`No item found for ${uriPath}`);
+				Trellis.warn(`No item found for ${uriPath}`);
 				return;
 			}
 			
 			var item = results[0];
 			
 			if (!item.isFileAttachment()) {
-				Zotero.warn(`Item for ${uriPath} is not a file attachment`);
+				Trellis.warn(`Item for ${uriPath} is not a file attachment`);
 				return;
 			}
 			
 			var path = await item.getFilePathAsync();
 			if (!path) {
-				Zotero.warn(`${path} not found`);
+				Trellis.warn(`${path} not found`);
 				return;
 			}
 			
@@ -863,19 +863,19 @@ export function ZoteroProtocolHandler() {
 				location = null;
 			}
 
-			var openInWindow = Zotero.Prefs.get('openReaderInNewWindow');
+			var openInWindow = Trellis.Prefs.get('openReaderInNewWindow');
 
 			try {
-				await Zotero.FileHandlers.open(item, {
+				await Trellis.FileHandlers.open(item, {
 					location,
 					openInWindow,
 				});
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			
-			Zotero.Notifier.trigger('open', 'file', item.id);
+			Trellis.Notifier.trigger('open', 'file', item.id);
 		},
 		
 		
@@ -884,23 +884,23 @@ export function ZoteroProtocolHandler() {
 		}
 	};
 	
-	this._extensions[ZOTERO_SCHEME + "://attachment"] = AttachmentExtension;
-	this._extensions[ZOTERO_SCHEME + "://data"] = DataExtension;
-	this._extensions[ZOTERO_SCHEME + "://report"] = ReportExtension;
-	this._extensions[ZOTERO_SCHEME + "://select"] = SelectExtension;
-	this._extensions[ZOTERO_SCHEME + "://debug"] = DebugExtension;
-	this._extensions[ZOTERO_SCHEME + "://pdf.js"] = PDFJSExtension;
-	this._extensions[ZOTERO_SCHEME + "://open"] = OpenExtension;
-	this._extensions[ZOTERO_SCHEME + "://open-pdf"] = OpenExtension;
+	this._extensions[TRELLIS_SCHEME + "://attachment"] = AttachmentExtension;
+	this._extensions[TRELLIS_SCHEME + "://data"] = DataExtension;
+	this._extensions[TRELLIS_SCHEME + "://report"] = ReportExtension;
+	this._extensions[TRELLIS_SCHEME + "://select"] = SelectExtension;
+	this._extensions[TRELLIS_SCHEME + "://debug"] = DebugExtension;
+	this._extensions[TRELLIS_SCHEME + "://pdf.js"] = PDFJSExtension;
+	this._extensions[TRELLIS_SCHEME + "://open"] = OpenExtension;
+	this._extensions[TRELLIS_SCHEME + "://open-pdf"] = OpenExtension;
 }
 
 
 /*
  * Implements nsIProtocolHandler
  */
-ZoteroProtocolHandler.prototype = {
+TrellisProtocolHandler.prototype = {
 	get scheme() {
-		return ZOTERO_SCHEME;
+		return TRELLIS_SCHEME;
 	},
 	protocolFlags:
 		Ci.nsIProtocolHandler.URI_NORELATIVE
@@ -981,7 +981,7 @@ ZoteroProtocolHandler.prototype = {
 		}
 		catch (e) {
 			Components.utils.reportError(e);
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 			throw Components.results.NS_ERROR_FAILURE;
 		}
 		
@@ -998,9 +998,9 @@ ZoteroProtocolHandler.prototype = {
 		return channel;
 	},
 	
-	contractID: ZOTERO_PROTOCOL_CONTRACTID,
-	classDescription: ZOTERO_PROTOCOL_NAME,
-	classID: ZOTERO_PROTOCOL_CID,
+	contractID: TRELLIS_PROTOCOL_CONTRACTID,
+	classDescription: TRELLIS_PROTOCOL_NAME,
+	classID: TRELLIS_PROTOCOL_CID,
 	//QueryInterface: ChromeUtils.generateQI([Components.interfaces.nsIProtocolHandler])
 	QueryInterface: ChromeUtils.generateQI([Ci.nsISupportsWeakReference, Ci.nsIProtocolHandler]),
 };
@@ -1008,14 +1008,14 @@ ZoteroProtocolHandler.prototype = {
 /**
  * @static
  *
- * Unregistered in Zotero.reinit() for tests
+ * Unregistered in Trellis.reinit() for tests
  */
-ZoteroProtocolHandler.init = function () {
+TrellisProtocolHandler.init = function () {
 	Services.io.registerProtocolHandler(
-		'zotero',
-		new ZoteroProtocolHandler(),
-		ZoteroProtocolHandler.prototype.protocolFlags,
-		ZoteroProtocolHandler.prototype.defaultPort
+		'trellis',
+		new TrellisProtocolHandler(),
+		TrellisProtocolHandler.prototype.protocolFlags,
+		TrellisProtocolHandler.prototype.defaultPort
 	);
 };
 
@@ -1057,18 +1057,18 @@ AsyncChannel.prototype = {
 		
 		var resolve;
 		var reject;
-		var promise = new Zotero.Promise(function () {
+		var promise = new Trellis.Promise(function () {
 			resolve = arguments[0];
 			reject = arguments[1];
 		});
 		
 		var listenerWrapper = {
 			onStartRequest: function (request) {
-				//Zotero.debug("Starting request");
+				//Trellis.debug("Starting request");
 				streamListener.onStartRequest(channel);
 			},
 			onDataAvailable: function (request, inputStream, offset, count) {
-				//Zotero.debug("onDataAvailable");
+				//Trellis.debug("onDataAvailable");
 				try {
 					streamListener.onDataAvailable(channel, inputStream, offset, count);
 				}
@@ -1077,7 +1077,7 @@ AsyncChannel.prototype = {
 				}
 			},
 			onStopRequest: function (request, status) {
-				//Zotero.debug("Stopping request");
+				//Trellis.debug("Stopping request");
 				streamListener.onStopRequest(channel, status);
 				channel._isPending = false;
 				if (status === Cr.NS_OK) {
@@ -1089,7 +1089,7 @@ AsyncChannel.prototype = {
 			}
 		};
 		
-		//Zotero.debug("AsyncChannel's asyncOpen called");
+		//Trellis.debug("AsyncChannel's asyncOpen called");
 		var t = new Date;
 		
 		var data;
@@ -1098,7 +1098,7 @@ AsyncChannel.prototype = {
 				data = await channel._function();
 			}
 			if (typeof data == 'string') {
-				//Zotero.debug("AsyncChannel: Got string from generator");
+				//Trellis.debug("AsyncChannel: Got string from generator");
 				
 				listenerWrapper.onStartRequest(this);
 				
@@ -1112,7 +1112,7 @@ AsyncChannel.prototype = {
 			}
 			// If an async input stream is given, pass the data asynchronously to the stream listener
 			else if (data instanceof Ci.nsIAsyncInputStream) {
-				//Zotero.debug("AsyncChannel: Got input stream from generator");
+				//Trellis.debug("AsyncChannel: Got input stream from generator");
 				
 				var pump = Cc["@mozilla.org/network/input-stream-pump;1"].createInstance(Ci.nsIInputStreamPump);
 				try {
@@ -1125,19 +1125,19 @@ AsyncChannel.prototype = {
 			}
 			else if (data instanceof Ci.nsIFile || data instanceof Ci.nsIURI) {
 				if (data instanceof Ci.nsIFile) {
-					//Zotero.debug("AsyncChannel: Got file from generator");
+					//Trellis.debug("AsyncChannel: Got file from generator");
 					data = ios.newFileURI(data);
 				}
 				else {
-					//Zotero.debug("AsyncChannel: Got URI from generator");
+					//Trellis.debug("AsyncChannel: Got URI from generator");
 				}
 
 				let uri = data;
 				uri.QueryInterface(Ci.nsIURL);
-				this.contentType = Zotero.MIME.getMIMETypeFromExtension(uri.fileExtension);
+				this.contentType = Trellis.MIME.getMIMETypeFromExtension(uri.fileExtension);
 				if (!this.contentType) {
-					let sample = await Zotero.File.getSample(uri.spec);
-					this.contentType = Zotero.MIME.getMIMETypeFromData(sample);
+					let sample = await Trellis.File.getSample(uri.spec);
+					this.contentType = Trellis.MIME.getMIMETypeFromData(sample);
 				}
 				
 				NetUtil.asyncFetch({ uri: data, loadUsingSystemPrincipal: true }, function (inputStream, status) {
@@ -1164,13 +1164,13 @@ AsyncChannel.prototype = {
 			}
 			
 			if (this._isPending) {
-				//Zotero.debug("AsyncChannel request succeeded in " + (new Date - t) + " ms");
+				//Trellis.debug("AsyncChannel request succeeded in " + (new Date - t) + " ms");
 				channel._isPending = false;
 			}
 			
 			return promise;
 		} catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 			if (channel._isPending) {
 				streamListener.onStopRequest(channel, Components.results.NS_ERROR_FAILURE);
 				channel._isPending = false;
@@ -1190,17 +1190,17 @@ AsyncChannel.prototype = {
 	},
 	
 	cancel: function (status) {
-		Zotero.debug("Cancelling");
+		Trellis.debug("Cancelling");
 		this.status = status;
 		this._isPending = false;
 	},
 	
 	resume: function () {
-		Zotero.debug("Resuming");
+		Trellis.debug("Resuming");
 	},
 	
 	suspend: function () {
-		Zotero.debug("Suspending");
+		Trellis.debug("Suspending");
 	},
 	
 	// nsIWritablePropertyBag

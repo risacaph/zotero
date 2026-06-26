@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Navn:">
+<!ENTITY trellis.search.name "Navn:">
 
-<!ENTITY zotero.search.searchInLibrary "Søg i bibliotek:">
+<!ENTITY trellis.search.searchInLibrary "Søg i bibliotek:">
 
-<!ENTITY zotero.search.joinMode.prefix "Match">
-<!ENTITY zotero.search.joinMode.any "enhver">
-<!ENTITY zotero.search.joinMode.all "alle">
-<!ENTITY zotero.search.joinMode.suffix "de følgende:">
+<!ENTITY trellis.search.joinMode.prefix "Match">
+<!ENTITY trellis.search.joinMode.any "enhver">
+<!ENTITY trellis.search.joinMode.all "alle">
+<!ENTITY trellis.search.joinMode.suffix "de følgende:">
 
-<!ENTITY zotero.search.recursive.label "Søg i underliggende mapper">
-<!ENTITY zotero.search.noChildren "Vis kun elementer på øverste niveau">
-<!ENTITY zotero.search.includeParentsAndChildren "Inkluder overordnede og underordnede elementer i resultatet af søgningen">
+<!ENTITY trellis.search.recursive.label "Søg i underliggende mapper">
+<!ENTITY trellis.search.noChildren "Vis kun elementer på øverste niveau">
+<!ENTITY trellis.search.includeParentsAndChildren "Inkluder overordnede og underordnede elementer i resultatet af søgningen">
 
-<!ENTITY zotero.search.textModes.phrase "Tekststreng">
-<!ENTITY zotero.search.textModes.phraseBinary "Tekststreng (inkl. binære filer)">
-<!ENTITY zotero.search.textModes.regexp "Regulære udtryk">
-<!ENTITY zotero.search.textModes.regexpCS "Regulære udtryk (forskel på små og store bogstaver)">
+<!ENTITY trellis.search.textModes.phrase "Tekststreng">
+<!ENTITY trellis.search.textModes.phraseBinary "Tekststreng (inkl. binære filer)">
+<!ENTITY trellis.search.textModes.regexp "Regulære udtryk">
+<!ENTITY trellis.search.textModes.regexpCS "Regulære udtryk (forskel på små og store bogstaver)">
 
-<!ENTITY zotero.search.date.units.days "dage">
-<!ENTITY zotero.search.date.units.months "måneder">
-<!ENTITY zotero.search.date.units.years "år">
+<!ENTITY trellis.search.date.units.days "dage">
+<!ENTITY trellis.search.date.units.months "måneder">
+<!ENTITY trellis.search.date.units.years "år">
 
-<!ENTITY zotero.search.search "Søg">
-<!ENTITY zotero.search.clear "Ryd">
-<!ENTITY zotero.search.saveSearch "Gem søgning">
+<!ENTITY trellis.search.search "Søg">
+<!ENTITY trellis.search.clear "Ryd">
+<!ENTITY trellis.search.saveSearch "Gem søgning">

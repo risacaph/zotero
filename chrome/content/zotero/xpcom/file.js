@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
  * Functions for reading files
  * @namespace
  */
-Zotero.File = new function () {
+Trellis.File = new function () {
 	const { NetUtil } = ChromeUtils.importESModule("resource://gre/modules/NetUtil.sys.mjs");
 	const { FileUtils } = ChromeUtils.importESModule("resource://gre/modules/FileUtils.sys.mjs");
 	
@@ -50,7 +50,7 @@ Zotero.File = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		throw new Error("Unexpected path value '" + pathOrFile + "'");
 	}
@@ -133,8 +133,8 @@ Zotero.File = new function () {
 	 * Get contents of a binary file
 	 */
 	this.getBinaryContents = function (file) {
-		Zotero.debug("Zotero.File.getBinaryContents() is deprecated -- "
-			+ "use Zotero.File.getBinaryContentsAsync() when possible", 2);
+		Trellis.debug("Trellis.File.getBinaryContents() is deprecated -- "
+			+ "use Trellis.File.getBinaryContentsAsync() when possible", 2);
 		var iStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
 					 .createInstance(Components.interfaces.nsIFileInputStream);
 		iStream.init(file, 0x01, 0o664, 0);
@@ -153,7 +153,7 @@ Zotero.File = new function () {
 	 * @param {String} [charset] The character set; defaults to UTF-8
 	 * @param {Integer} [maxLength] The maximum number of bytes to read
 	 * @return {String} The contents of the file
-	 * @deprecated Use {@link Zotero.File.getContentsAsync} when possible
+	 * @deprecated Use {@link Trellis.File.getContentsAsync} when possible
 	 */
 	this.getContents = function (file, charset, maxLength){
 		var fis;
@@ -173,7 +173,7 @@ Zotero.File = new function () {
 		}
 		
 		if (charset) {
-			charset = Zotero.CharacterSets.toLabel(charset, true)
+			charset = Trellis.CharacterSets.toLabel(charset, true)
 		}
 		charset = charset || "UTF-8";
 		
@@ -216,23 +216,23 @@ Zotero.File = new function () {
 	 * @return {Promise} A promise that is resolved with the contents of the file
 	 */
 	this.getContentsAsync = async function (source, charset, maxLength) {
-		Zotero.debug("Getting contents of "
+		Trellis.debug("Getting contents of "
 			+ (source instanceof Components.interfaces.nsIFile
 				? source.path
 				: (source instanceof Components.interfaces.nsIInputStream ? "input stream" : source)));
 		
-		// Send URIs to Zotero.HTTP.request()
+		// Send URIs to Trellis.HTTP.request()
 		if (source instanceof Components.interfaces.nsIURI
 				|| typeof source == 'string' && !source.startsWith('file:') && source.match(/^[a-z]{3,}:/)) {
-			Zotero.logError("Passing a URI to Zotero.File.getContentsAsync() is deprecated "
-				+ "-- use Zotero.HTTP.request() instead");
-			return Zotero.HTTP.request("GET", source);
+			Trellis.logError("Passing a URI to Trellis.File.getContentsAsync() is deprecated "
+				+ "-- use Trellis.HTTP.request() instead");
+			return Trellis.HTTP.request("GET", source);
 		}
 		
 		// Use NetUtil.asyncFetch() for input streams and channels
 		if (source instanceof Components.interfaces.nsIInputStream
 				|| source instanceof Components.interfaces.nsIChannel) {
-			var deferred = Zotero.Promise.defer();
+			var deferred = Trellis.Promise.defer();
 			try {
 				NetUtil.asyncFetch(source, function (inputStream, status) {
 					if (!Components.isSuccessCode(status)) {
@@ -278,7 +278,7 @@ Zotero.File = new function () {
 			}
 			catch(e) {
 				// Make sure this get logged correctly
-				Zotero.logError(e);
+				Trellis.logError(e);
 				throw e;
 			}
 			return deferred.promise;
@@ -373,7 +373,7 @@ Zotero.File = new function () {
 	 * Return a promise for the contents of a URL as a string
 	 */
 	function getContentsFromURLAsync(url, options={}) {
-		return Zotero.HTTP.request("GET", url, Object.assign(options, { responseType: "text" }))
+		return Trellis.HTTP.request("GET", url, Object.assign(options, { responseType: "text" }))
 		.then(function (xmlhttp) {
 			return xmlhttp.response;
 		});
@@ -428,7 +428,7 @@ Zotero.File = new function () {
 		//
 		// data instanceof Blob doesn't work in XPCOM
 		if (typeof data.size != 'undefined' && typeof data.slice == 'function') {
-			let arrayBuffer = await new Zotero.Promise(function (resolve) {
+			let arrayBuffer = await new Trellis.Promise(function (resolve) {
 				let fr = new FileReader();
 				fr.addEventListener("loadend", function () {
 					resolve(fr.result);
@@ -441,7 +441,7 @@ Zotero.File = new function () {
 			data = is;
 		}
 		
-		await new Zotero.Promise(function (resolve, reject) {
+		await new Trellis.Promise(function (resolve, reject) {
 			var os = FileUtils.openSafeFileOutputStream(new FileUtils.File(path));
 			NetUtil.asyncCopy(data, os, function (inputStream, status) {
 				if (!Components.isSuccessCode(status)) {
@@ -520,13 +520,13 @@ Zotero.File = new function () {
 		
 		const isHTTP = uriStr.startsWith('http');
 		if (uriStr.startsWith('http')) {
-			Zotero.warn("Zotero.File.download() is deprecated for HTTP(S) URLs -- use Zotero.HTTP.download()");
-			return Zotero.HTTP.download(uri, path);
+			Trellis.warn("Trellis.File.download() is deprecated for HTTP(S) URLs -- use Trellis.HTTP.download()");
+			return Trellis.HTTP.download(uri, path);
 		}
 		
-		Zotero.debug(`Saving ${uriStr} to ${path.pathQueryRef || path}`);
+		Trellis.debug(`Saving ${uriStr} to ${path.pathQueryRef || path}`);
 		
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		const inputChannel = NetUtil.newChannel({
 			uri,
 			loadUsingSystemPrincipal: true
@@ -547,8 +547,8 @@ Zotero.File = new function () {
 				pipe.outputStream.close();
 
 				if (!Components.isSuccessCode(status)) {
-					Zotero.logError(status);
-					let msg = Zotero.getString('sync.error.checkConnection');
+					Trellis.logError(status);
+					let msg = Trellis.getString('sync.error.checkConnection');
 					switch (status) {
 						case 2152398878:
 							// TODO: Localize
@@ -563,7 +563,7 @@ Zotero.File = new function () {
 					let statusCode = request.QueryInterface(Ci.nsIHttpChannel).responseStatus;
 					if (statusCode != 200) {
 						let msg = `Download failed with response code ${responseStatus}`;
-						Zotero.logError(msg);
+						Trellis.logError(msg);
 						deferred.reject(new Error(msg));
 						return;
 					}
@@ -596,11 +596,11 @@ Zotero.File = new function () {
 		
 		var origPath = file;
 		var origName = PathUtils.filename(origPath);
-		newName = Zotero.File.getValidFileName(newName);
+		newName = Trellis.File.getValidFileName(newName);
 		
 		// Ignore if no change
 		if (origName === newName) {
-			Zotero.debug("Filename has not changed");
+			Trellis.debug("Filename has not changed");
 			return origName;
 		}
 		
@@ -638,7 +638,7 @@ Zotero.File = new function () {
 			}
 			
 			try {
-				Zotero.debug(`Renaming ${origPath} to ${PathUtils.filename(destPath)}`);
+				Trellis.debug(`Renaming ${origPath} to ${PathUtils.filename(destPath)}`);
 				await OS.File.move(origPath, destPath, { noOverwrite: !overwrite })
 			}
 			catch (e) {
@@ -673,7 +673,7 @@ Zotero.File = new function () {
 			if (e instanceof OS.File.Error && e.becauseNoSuchFile) {
 				return false;
 			}
-			Zotero.debug(path, 1);
+			Trellis.debug(path, 1);
 			throw e;
 		});
 	}
@@ -723,15 +723,15 @@ Zotero.File = new function () {
 	 *
 	 * Currently this means using /bin/mv, which only works on macOS and Linux
 	 */
-	this.canMoveDirectoryWithCommand = Zotero.lazy(function () {
+	this.canMoveDirectoryWithCommand = Trellis.lazy(function () {
 		var cmd = "/bin/mv";
-		return !Zotero.isWin && this.pathToFile(cmd).exists();
+		return !Trellis.isWin && this.pathToFile(cmd).exists();
 	});
 	
 	/**
 	 * For tests
 	 */
-	this.canMoveDirectoryWithFunction = Zotero.lazy(function () {
+	this.canMoveDirectoryWithFunction = Trellis.lazy(function () {
 		return true;
 	});
 	
@@ -768,7 +768,7 @@ Zotero.File = new function () {
 		
 		function addError(e) {
 			errors.push(e);
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		var rootDir = oldDir;
@@ -777,21 +777,21 @@ Zotero.File = new function () {
 			
 			// Create target directory
 			try {
-				await Zotero.File.createDirectoryIfMissingAsync(newDir + oldDir.substr(rootDir.length));
+				await Trellis.File.createDirectoryIfMissingAsync(newDir + oldDir.substr(rootDir.length));
 			}
 			catch (e) {
 				addError(e);
 				return;
 			}
 			
-			Zotero.debug("Moving files in " + oldDir);
+			Trellis.debug("Moving files in " + oldDir);
 			
-			await Zotero.File.iterateDirectory(oldDir, async function (entry) {
+			await Trellis.File.iterateDirectory(oldDir, async function (entry) {
 				var dest = newDir + entry.path.substr(rootDir.length);
 				
 				// entry.isDir can be false for some reason on Travis, causing spurious test failures
-				if (Zotero.automatedTest && !entry.isDir && (await OS.File.stat(entry.path)).isDir) {
-					Zotero.debug("Overriding isDir for " + entry.path);
+				if (Trellis.automatedTest && !entry.isDir && (await OS.File.stat(entry.path)).isDir) {
+					Trellis.debug("Overriding isDir for " + entry.path);
 					entry.isDir = true;
 				}
 				
@@ -810,7 +810,7 @@ Zotero.File = new function () {
 					}
 					catch (e) {
 						checkError(e);
-						Zotero.debug("Error moving " + entry.path);
+						Trellis.debug("Error moving " + entry.path);
 						addError(e);
 					}
 				}
@@ -820,22 +820,22 @@ Zotero.File = new function () {
 					let moved = false;
 					
 					if (useCmd && !(await OS.File.exists(dest))) {
-						Zotero.debug(`Moving ${entry.path} with ${cmd}`);
+						Trellis.debug(`Moving ${entry.path} with ${cmd}`);
 						let args = [entry.path, dest];
 						try {
-							await Zotero.Utilities.Internal.exec(cmd, args);
+							await Trellis.Utilities.Internal.exec(cmd, args);
 							moved = true;
 						}
 						catch (e) {
 							checkError(e);
-							Zotero.debug(e, 1);
+							Trellis.debug(e, 1);
 						}
 					}
 					
 					
 					// If can't use command, try moving with IOUtils.move()
 					if (!moved && useFunction) {
-						Zotero.debug(`Moving ${entry.path} with IOUtils`);
+						Trellis.debug(`Moving ${entry.path} with IOUtils`);
 						if (!(await IOUtils.exists(dest))) {
 							try {
 								await IOUtils.move(entry.path, dest);
@@ -843,7 +843,7 @@ Zotero.File = new function () {
 							}
 							catch (e) {
 								checkError(e);
-								Zotero.debug(e, 1);
+								Trellis.debug(e, 1);
 							}
 						}
 					}
@@ -866,7 +866,7 @@ Zotero.File = new function () {
 			// Don't try to remove root directory if there've been errors, since it won't work.
 			// (Deeper directories might fail too, but we don't worry about those.)
 			if (!errors.length || oldDir != rootDir) {
-				Zotero.debug("Removing " + oldDir);
+				Trellis.debug("Removing " + oldDir);
 				try {
 					await OS.File.removeEmptyDir(oldDir);
 				}
@@ -910,7 +910,7 @@ Zotero.File = new function () {
 	
 	this.setNormalFilePermissions = async function (path) {
 		await IOUtils.setPermissions(path, 0o644);
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			await IOUtils.setWindowsAttributes(
 				path,
 				{
@@ -942,24 +942,24 @@ Zotero.File = new function () {
 			catch (e) {
 				let pathError = false;
 				
-				let pathByteLength = Zotero.Utilities.Internal.byteLength(file.path);
-				let fileNameByteLength = Zotero.Utilities.Internal.byteLength(file.leafName);
+				let pathByteLength = Trellis.Utilities.Internal.byteLength(file.path);
+				let fileNameByteLength = Trellis.Utilities.Internal.byteLength(file.leafName);
 				
 				// Windows API only allows paths of 260 characters
 				//
 				// I think this should be >260 but we had a report of an error with exactly
-				// 260 chars: https://forums.zotero.org/discussion/41410
+				// 260 chars: https://forums.trellis.org/discussion/41410
 				if (e.name == "NS_ERROR_FILE_NOT_FOUND" && pathByteLength >= 260) {
-					Zotero.debug("Path is " + file.path);
+					Trellis.debug("Path is " + file.path);
 					pathError = true;
 				}
 				// ext3/ext4/HFS+ have a filename length limit of ~254 bytes
 				else if ((e.name == "NS_ERROR_FAILURE" || e.name == "NS_ERROR_FILE_NAME_TOO_LONG")
-						&& (fileNameByteLength >= 254 || (Zotero.isLinux && fileNameByteLength > 143))) {
-					Zotero.debug("Filename is '" + file.leafName + "'");
+						&& (fileNameByteLength >= 254 || (Trellis.isLinux && fileNameByteLength > 143))) {
+					Trellis.debug("Filename is '" + file.leafName + "'");
 				}
 				else {
-					Zotero.debug("Path is " + file.path);
+					Trellis.debug("Path is " + file.path);
 					throw e;
 				}
 				
@@ -994,7 +994,7 @@ Zotero.File = new function () {
 					}
 					
 					// Check actual byte length, and shorten more if necessary
-					if (Zotero.Utilities.Internal.byteLength(newName) > maxBytes) {
+					if (Trellis.Utilities.Internal.byteLength(newName) > maxBytes) {
 						step = 0;
 						newLength--;
 						continue;
@@ -1009,8 +1009,8 @@ Zotero.File = new function () {
 				}
 				
 				var msg = "Shortening filename to '" + newName + "'";
-				Zotero.debug(msg, 2);
-				Zotero.log(msg, 'warning');
+				Trellis.debug(msg, 2);
+				Trellis.log(msg, 'warning');
 				
 				try {
 					uniqueFile.create(Components.interfaces.nsIFile.type, mode);
@@ -1018,9 +1018,9 @@ Zotero.File = new function () {
 				catch (e) {
 					// On Linux, try 143, which is the max filename length with eCryptfs
 					if (e.name == "NS_ERROR_FILE_NAME_TOO_LONG"
-							&& Zotero.isLinux
-							&& Zotero.Utilities.Internal.byteLength(uniqueFile.leafName) > 143) {
-						Zotero.debug("Trying shorter filename in case of filesystem encryption", 2);
+							&& Trellis.isLinux
+							&& Trellis.Utilities.Internal.byteLength(uniqueFile.leafName) > 143) {
+						Trellis.debug("Trying shorter filename in case of filesystem encryption", 2);
 						maxBytes = 143;
 						continue;
 					}
@@ -1107,7 +1107,7 @@ Zotero.File = new function () {
 	 * @return {Boolean}
 	 */
 	this.isAPFS = function (path) {
-		if (!Zotero.isMac) return false;
+		if (!Trellis.isMac) return false;
 
 		let dir = PathUtils.parent(path);
 		if (dir in _isAPFSCache) {
@@ -1147,7 +1147,7 @@ Zotero.File = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.warn("Failed to check filesystem type: " + e);
+			Trellis.warn("Failed to check filesystem type: " + e);
 		}
 
 		_isAPFSCache[dir] = result;
@@ -1188,7 +1188,7 @@ Zotero.File = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.warn("clonefile() failed -- falling back to regular copy: " + e);
+				Trellis.warn("clonefile() failed -- falling back to regular copy: " + e);
 			}
 		}
 		await IOUtils.copy(source, target);
@@ -1246,7 +1246,7 @@ Zotero.File = new function () {
 					isSymlink = this.pathToFile(path).isSymlink();
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 				if (isSymlink) {
 					throw new Error(`Broken symlink at ${path}`);
@@ -1285,7 +1285,7 @@ Zotero.File = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		
@@ -1305,7 +1305,7 @@ Zotero.File = new function () {
 		// the slashes, because OS.Path.normalize won't handle forward slashes
 		// correctly. Otherwise, we replace slashes first and *then* normalize.
 		// This should ensure consistent behavior across platforms.
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			let normalized = OS.Path.normalize(path);
 			return normalized.replace(/\\/g, '/');
 		}
@@ -1346,20 +1346,20 @@ Zotero.File = new function () {
 		zw.open(this.pathToFile(zipPath), 0x04 | 0x08 | 0x20); // open rw, create, truncate
 		var entries = await _addZipEntries(dirPath, dirPath, zw);
 		if (entries.length == 0) {
-			Zotero.debug('No files to add -- removing ZIP file');
+			Trellis.debug('No files to add -- removing ZIP file');
 			zw.close();
 			await OS.File.remove(zipPath);
 			return false;
 		}
 		
-		Zotero.debug(`Creating ${PathUtils.filename(zipPath)} with ${entries.length} file(s)`);
+		Trellis.debug(`Creating ${PathUtils.filename(zipPath)} with ${entries.length} file(s)`);
 		
 		var context = {
 			zipWriter: zw,
 			entries
 		};
 		
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		zw.processQueue(
 			{
 				onStartRequest: function (request, ctx) {
@@ -1401,13 +1401,13 @@ Zotero.File = new function () {
 			iterator = new OS.File.DirectoryIterator(path);
 			await iterator.forEach(async function (entry) {
 				// entry.isDir can be false for some reason on Travis, causing spurious test failures
-				if (Zotero.automatedTest && !entry.isDir && ((await OS.File.stat(entry.path))).isDir) {
-					Zotero.debug("Overriding isDir for " + entry.path);
+				if (Trellis.automatedTest && !entry.isDir && ((await OS.File.stat(entry.path))).isDir) {
+					Trellis.debug("Overriding isDir for " + entry.path);
 					entry.isDir = true;
 				}
 				
 				if (entry.isSymLink) {
-					Zotero.debug("Skipping symlink " + entry.name);
+					Trellis.debug("Skipping symlink " + entry.name);
 					return;
 				}
 				if (entry.isDir) {
@@ -1415,16 +1415,16 @@ Zotero.File = new function () {
 					return;
 				}
 				if (entry.name.startsWith('.')) {
-					Zotero.debug('Skipping file ' + entry.name);
+					Trellis.debug('Skipping file ' + entry.name);
 					return;
 				}
 				
-				Zotero.debug("Adding ZIP entry " + entry.path);
+				Trellis.debug("Adding ZIP entry " + entry.path);
 				zipWriter.addEntryFile(
 					// Add relative path
 					entry.path.substr(rootPath.length + 1),
 					Components.interfaces.nsIZipWriter.COMPRESSION_DEFAULT,
-					Zotero.File.pathToFile(entry.path),
+					Trellis.File.pathToFile(entry.path),
 					true
 				);
 				entries.push({
@@ -1487,7 +1487,7 @@ Zotero.File = new function () {
 	 * @param {Number} maxLength - Maximum length in bytes
 	 */
 	function truncateFileName(fileName, maxLength) {
-		if (!fileName || Zotero.Utilities.Internal.byteLength((fileName + '')).length <= maxLength) {
+		if (!fileName || Trellis.Utilities.Internal.byteLength((fileName + '')).length <= maxLength) {
 			return fileName;
 		}
 
@@ -1516,11 +1516,11 @@ Zotero.File = new function () {
 
 		// Drop extension if it wouldn't fit within the limit
 		// E.g., for (lorem.json, 5), return "lorem" instead of ".json"
-		if (Zotero.Utilities.Internal.byteLength(ext) >= maxLength) {
+		if (Trellis.Utilities.Internal.byteLength(ext) >= maxLength) {
 			ext = '';
 		}
 		
-		while (Zotero.Utilities.Internal.byteLength(name + ext) > maxLength) {
+		while (Trellis.Utilities.Internal.byteLength(name + ext) > maxLength) {
 			// Split into characters, so we don't corrupt emoji characters (though we might
 			// change multi-part emoji in unfortunate ways by removing some of the characters)
 			let parts = [...name];
@@ -1560,10 +1560,10 @@ Zotero.File = new function () {
 			default:
 				str += 'Updated';
 		}
-		str = Zotero.getString(str, file.path ? file.path : undefined);
+		str = Trellis.getString(str, file.path ? file.path : undefined);
 		
-		Zotero.debug(file.path);
-		Zotero.debug(e, 1);
+		Trellis.debug(file.path);
+		Trellis.debug(e, 1);
 		Components.utils.reportError(e);
 		
 		if (e.name == 'NS_ERROR_FILE_ACCESS_DENIED' || e.name == 'NS_ERROR_FILE_IS_LOCKED'
@@ -1575,25 +1575,25 @@ Zotero.File = new function () {
 				|| e.name == 'NotAllowedError'
 				|| e.name == 'ReadOnlyError'
 				|| e.name == 'NotFoundError') {
-			let checkFileWindows = Zotero.getString('file.accessError.message.windows');
-			let checkFileOther = Zotero.getString('file.accessError.message.other');
+			let checkFileWindows = Trellis.getString('file.accessError.message.windows');
+			let checkFileOther = Trellis.getString('file.accessError.message.other');
 			let msg = str + "\n\n"
-					+ (Zotero.isWin ? checkFileWindows : checkFileOther)
+					+ (Trellis.isWin ? checkFileWindows : checkFileOther)
 					+ "\n\n"
-					+ Zotero.getString('file.accessError.restart');
+					+ Trellis.getString('file.accessError.restart');
 			
-			e = new Zotero.Error(
+			e = new Trellis.Error(
 				msg,
 				0,
 				{
-					dialogButtonText: Zotero.getString('file.accessError.showParentDir'),
+					dialogButtonText: Trellis.getString('file.accessError.showParentDir'),
 					dialogButtonCallback: function () {
 						try {
 							file.parent.reveal();
 						}
 						// Unsupported on some platforms
 						catch (e) {
-							Zotero.launchFile(file.parent);
+							Trellis.launchFile(file.parent);
 						}
 					}
 				}
@@ -1614,7 +1614,7 @@ Zotero.File = new function () {
 		return path.toLowerCase().includes('dropbox')
 			// Google Drive
 			|| path.includes('Google Drive')
-			|| path.includes('GoogleDrive') // https://forums.zotero.org/discussion/109502/
+			|| path.includes('GoogleDrive') // https://forums.trellis.org/discussion/109502/
 			// OneDrive
 			|| path.toLowerCase().includes('onedrive')
 			// Baidu
@@ -1636,17 +1636,17 @@ Zotero.File = new function () {
 			throw new Error(file + " does not exist");
 		}
 		
-		Zotero.debug("Revealing " + file);
+		Trellis.debug("Revealing " + file);
 		
 		var nsIFile = this.pathToFile(file);
 		try {
 			nsIFile.reveal();
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			// On platforms that don't support nsIFile.reveal() (e.g. Linux),
 			// launch the directory
-			let zp = Zotero.getActiveZoteroPane();
+			let zp = Trellis.getActiveTrellisPane();
 			if (zp) {
 				try {
 					let info = await OS.File.stat(file);
@@ -1654,15 +1654,15 @@ Zotero.File = new function () {
 					if (!info.isDir) {
 						file = PathUtils.parent(file);
 					}
-					Zotero.launchFile(file);
+					Trellis.launchFile(file);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					return;
 				}
 			}
 			else {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	};

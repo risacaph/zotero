@@ -1,329 +1,329 @@
-<!ENTITY zotero.general.yes "Да">
-<!ENTITY zotero.general.no "Не">
-<!ENTITY zotero.general.optional "(необавезно)">
-<!ENTITY zotero.general.note "Белешка:">
-<!ENTITY zotero.general.selectAll "Изабери све">
-<!ENTITY zotero.general.deselectAll "Поништи изабрано">
-<!ENTITY zotero.general.edit "Уреди">
-<!ENTITY zotero.general.delete "Обриши">
-<!ENTITY zotero.general.moveToTrash "Премести у смеће">
-<!ENTITY zotero.general.ok "У реду">
-<!ENTITY zotero.general.cancel "Откажи">
-<!ENTITY zotero.general.refresh "Освежи">
-<!ENTITY zotero.general.saveAs "Сачувај као…">
-<!ENTITY zotero.general.options "Опције">
-<!ENTITY zotero.general.advancedOptions.label "Напредне опције">
-<!ENTITY zotero.general.tools "Алати">
-<!ENTITY zotero.general.more "Више">
-<!ENTITY zotero.general.moreInformation "Више података">
-<!ENTITY zotero.general.loading "Учитавам…">
-<!ENTITY zotero.general.close "Затвори">
-<!ENTITY zotero.general.minimize "Умањи">
-<!ENTITY zotero.general.other "Остало…">
-<!ENTITY zotero.general.bigger "Веће">
-<!ENTITY zotero.general.smaller "Мање">
-<!ENTITY zotero.general.reset "Поново постави">
+<!ENTITY trellis.general.yes "Да">
+<!ENTITY trellis.general.no "Не">
+<!ENTITY trellis.general.optional "(необавезно)">
+<!ENTITY trellis.general.note "Белешка:">
+<!ENTITY trellis.general.selectAll "Изабери све">
+<!ENTITY trellis.general.deselectAll "Поништи изабрано">
+<!ENTITY trellis.general.edit "Уреди">
+<!ENTITY trellis.general.delete "Обриши">
+<!ENTITY trellis.general.moveToTrash "Премести у смеће">
+<!ENTITY trellis.general.ok "У реду">
+<!ENTITY trellis.general.cancel "Откажи">
+<!ENTITY trellis.general.refresh "Освежи">
+<!ENTITY trellis.general.saveAs "Сачувај као…">
+<!ENTITY trellis.general.options "Опције">
+<!ENTITY trellis.general.advancedOptions.label "Напредне опције">
+<!ENTITY trellis.general.tools "Алати">
+<!ENTITY trellis.general.more "Више">
+<!ENTITY trellis.general.moreInformation "Више података">
+<!ENTITY trellis.general.loading "Учитавам…">
+<!ENTITY trellis.general.close "Затвори">
+<!ENTITY trellis.general.minimize "Умањи">
+<!ENTITY trellis.general.other "Остало…">
+<!ENTITY trellis.general.bigger "Веће">
+<!ENTITY trellis.general.smaller "Мање">
+<!ENTITY trellis.general.reset "Поново постави">
 
 
-<!ENTITY zotero.errorReport.title "Пријављивање грешака у Зотеру">
-<!ENTITY zotero.errorReport.submissionInProgress "Сачекајте док пошаљемо извештај о грешци.">
-<!ENTITY zotero.errorReport.submitted "Извештај о грешци је послат.">
-<!ENTITY zotero.errorReport.reportID "Број извештаја:">
-<!ENTITY zotero.errorReport.postToForums "Оставите поруку на Зотеровом форуму (forums.zotero.org) са овим бројем извештаја, описом проблема и свим корацима потребним да се понови грешка.">
-<!ENTITY zotero.errorReport.notReviewed "Извештаји о грешкама се обично не прегледају, осим ако се не помињу на форумима.">
+<!ENTITY trellis.errorReport.title "Пријављивање грешака у Зотеру">
+<!ENTITY trellis.errorReport.submissionInProgress "Сачекајте док пошаљемо извештај о грешци.">
+<!ENTITY trellis.errorReport.submitted "Извештај о грешци је послат.">
+<!ENTITY trellis.errorReport.reportID "Број извештаја:">
+<!ENTITY trellis.errorReport.postToForums "Оставите поруку на Зотеровом форуму (forums.trellis.org) са овим бројем извештаја, описом проблема и свим корацима потребним да се понови грешка.">
+<!ENTITY trellis.errorReport.notReviewed "Извештаји о грешкама се обично не прегледају, осим ако се не помињу на форумима.">
 
-<!ENTITY zotero.upgrade.title "Зотеров чаробњак за ажурирање">
-<!ENTITY zotero.upgrade.newVersionInstalled "Инсталирали сте нову верзију Зотера.">
-<!ENTITY zotero.upgrade.upgradeRequired "Зотерова база података мора бити ажурирана да би радила са новом верзијом.">
-<!ENTITY zotero.upgrade.autoBackup "Пре даљих измена, направићемо резервну копију ваше постојеће базе података.">
-<!ENTITY zotero.upgrade.majorUpgrade "Ово је веће ажурирање.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "Уверите се да сте детаљно погледали">
-<!ENTITY zotero.upgrade.majorUpgradeLink "упутства за ажурирање">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "пре него што наставите.">
-<!ENTITY zotero.upgrade.upgradeInProgress "Сачекајте док се програм не ажурира. Ово може потрајати неколико минута.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "Зотеро база података је успешно ажурирана.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "Погледајте">
-<!ENTITY zotero.upgrade.changeLogLink "записник промена">
-<!ENTITY zotero.upgrade.changeLogAfterLink "да би видели шта је ново.">
+<!ENTITY trellis.upgrade.title "Зотеров чаробњак за ажурирање">
+<!ENTITY trellis.upgrade.newVersionInstalled "Инсталирали сте нову верзију Зотера.">
+<!ENTITY trellis.upgrade.upgradeRequired "Зотерова база података мора бити ажурирана да би радила са новом верзијом.">
+<!ENTITY trellis.upgrade.autoBackup "Пре даљих измена, направићемо резервну копију ваше постојеће базе података.">
+<!ENTITY trellis.upgrade.majorUpgrade "Ово је веће ажурирање.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Уверите се да сте детаљно погледали">
+<!ENTITY trellis.upgrade.majorUpgradeLink "упутства за ажурирање">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "пре него што наставите.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Сачекајте док се програм не ажурира. Ово може потрајати неколико минута.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Зотеро база података је успешно ажурирана.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Погледајте">
+<!ENTITY trellis.upgrade.changeLogLink "записник промена">
+<!ENTITY trellis.upgrade.changeLogAfterLink "да би видели шта је ново.">
 
-<!ENTITY zotero.tabs.notes.label "Белешке">
-<!ENTITY zotero.tabs.attachments.label "Прилози">
+<!ENTITY trellis.tabs.notes.label "Белешке">
+<!ENTITY trellis.tabs.attachments.label "Прилози">
 
-<!ENTITY zotero.toolbar.duplicate.label "Прикажи дупликате">
-<!ENTITY zotero.collections.showUnfiledItems "Прикажи неразврстане">
-<!ENTITY zotero.collections.showRetractedItems "Прикажи повучене ставке">
+<!ENTITY trellis.toolbar.duplicate.label "Прикажи дупликате">
+<!ENTITY trellis.collections.showUnfiledItems "Прикажи неразврстане">
+<!ENTITY trellis.collections.showRetractedItems "Прикажи повучене ставке">
 
-<!ENTITY zotero.items.itemType "Врста ставке">
-<!ENTITY zotero.items.creator_column "Аутор">
-<!ENTITY zotero.items.year_column "Година">
-<!ENTITY zotero.items.dateModified_column "Датум промене">
-<!ENTITY zotero.items.moreColumns.label "Још колона">
-<!ENTITY zotero.items.restoreColumnOrder.label "Врати редослед колона">
+<!ENTITY trellis.items.itemType "Врста ставке">
+<!ENTITY trellis.items.creator_column "Аутор">
+<!ENTITY trellis.items.year_column "Година">
+<!ENTITY trellis.items.dateModified_column "Датум промене">
+<!ENTITY trellis.items.moreColumns.label "Још колона">
+<!ENTITY trellis.items.restoreColumnOrder.label "Врати редослед колона">
 
-<!ENTITY zotero.items.menu.showInLibrary "Прикажи у библиотеци">
-<!ENTITY zotero.items.menu.attach.note "Додај белешку">
-<!ENTITY zotero.items.menu.attach "Додај прилог">
-<!ENTITY zotero.items.menu.attach.link.uri "Приложи везу до адресе…">
-<!ENTITY zotero.items.menu.attach.file "Приложи сачувану копију датотеке…">
-<!ENTITY zotero.items.menu.attach.fileLink "Приложи везу до датотеке…">
+<!ENTITY trellis.items.menu.showInLibrary "Прикажи у библиотеци">
+<!ENTITY trellis.items.menu.attach.note "Додај белешку">
+<!ENTITY trellis.items.menu.attach "Додај прилог">
+<!ENTITY trellis.items.menu.attach.link.uri "Приложи везу до адресе…">
+<!ENTITY trellis.items.menu.attach.file "Приложи сачувану копију датотеке…">
+<!ENTITY trellis.items.menu.attach.fileLink "Приложи везу до датотеке…">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "Врати у библиотеку">
-<!ENTITY zotero.items.menu.duplicateItem "Умножи ставку">
-<!ENTITY zotero.items.menu.mergeItems "Споји ставке…">
-<!ENTITY zotero.items.menu.unrecognize "Опозиви преузимање метаподатака">
+<!ENTITY trellis.items.menu.restoreToLibrary "Врати у библиотеку">
+<!ENTITY trellis.items.menu.duplicateItem "Умножи ставку">
+<!ENTITY trellis.items.menu.mergeItems "Споји ставке…">
+<!ENTITY trellis.items.menu.unrecognize "Опозиви преузимање метаподатака">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "Изаберите верзију ставке која ће постати главна ставка:">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "Изаберите поља која желите да преузмете из друге верзије ставке:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "Изаберите верзију ставке која ће постати главна ставка:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Изаберите поља која желите да преузмете из друге верзије ставке:">
 
-<!ENTITY zotero.toolbar.newItem.label "Нова ставка">
-<!ENTITY zotero.toolbar.moreItemTypes.label "Више">
-<!ENTITY zotero.toolbar.lookup.label "Додај ставку(е) на основу идентификатора">
-<!ENTITY zotero.toolbar.removeItem.label "Уклони ставку…">
-<!ENTITY zotero.toolbar.newGroup "Нова група…">
-<!ENTITY zotero.toolbar.newSubcollection.label "Нова подзбирка…">
-<!ENTITY zotero.toolbar.newSavedSearch.label "Нова сачувана претрага…">
-<!ENTITY zotero.toolbar.emptyTrash.label "Испразни корпу за отпатке">
-<!ENTITY zotero.toolbar.tagSelector.label "Покажи/сакриј изборника ознаке">
-<!ENTITY zotero.toolbar.actions.label "Радње">
-<!ENTITY zotero.toolbar.import.label "Увези…">
-<!ENTITY zotero.toolbar.importFromClipboard "Увези из оставе">
-<!ENTITY zotero.toolbar.export.label "Извези библиотеку…">
-<!ENTITY zotero.toolbar.rtfScan.label "RTF скенер">
-<!ENTITY zotero.toolbar.preferences.label "Поставке…">
-<!ENTITY zotero.toolbar.supportAndDocumentation "Подршка и документација">
-<!ENTITY zotero.toolbar.about.label "О програму Зотеро">
-<!ENTITY zotero.toolbar.advancedSearch "Напредна претрага">
-<!ENTITY zotero.toolbar.openURL.label "Пронађи">
-<!ENTITY zotero.toolbar.openURL.tooltip "Налази ставу у вашој локалној библиотеци">
+<!ENTITY trellis.toolbar.newItem.label "Нова ставка">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Више">
+<!ENTITY trellis.toolbar.lookup.label "Додај ставку(е) на основу идентификатора">
+<!ENTITY trellis.toolbar.removeItem.label "Уклони ставку…">
+<!ENTITY trellis.toolbar.newGroup "Нова група…">
+<!ENTITY trellis.toolbar.newSubcollection.label "Нова подзбирка…">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Нова сачувана претрага…">
+<!ENTITY trellis.toolbar.emptyTrash.label "Испразни корпу за отпатке">
+<!ENTITY trellis.toolbar.tagSelector.label "Покажи/сакриј изборника ознаке">
+<!ENTITY trellis.toolbar.actions.label "Радње">
+<!ENTITY trellis.toolbar.import.label "Увези…">
+<!ENTITY trellis.toolbar.importFromClipboard "Увези из оставе">
+<!ENTITY trellis.toolbar.export.label "Извези библиотеку…">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF скенер">
+<!ENTITY trellis.toolbar.preferences.label "Поставке…">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Подршка и документација">
+<!ENTITY trellis.toolbar.about.label "О програму Зотеро">
+<!ENTITY trellis.toolbar.advancedSearch "Напредна претрага">
+<!ENTITY trellis.toolbar.openURL.label "Пронађи">
+<!ENTITY trellis.toolbar.openURL.tooltip "Налази ставу у вашој локалној библиотеци">
 
-<!ENTITY zotero.toolbar.feeds.new "Нови довод">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "Из адресе…">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "Са ОПМЛ-а…">
-<!ENTITY zotero.toolbar.feeds.edit "Уреди довод…">
+<!ENTITY trellis.toolbar.feeds.new "Нови довод">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Из адресе…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Са ОПМЛ-а…">
+<!ENTITY trellis.toolbar.feeds.edit "Уреди довод…">
 
-<!ENTITY zotero.item.add "Додај">
-<!ENTITY zotero.item.attachment.file.show "Прикажи датотеку">
-<!ENTITY zotero.item.textTransform "Преобликуј текст">
-<!ENTITY zotero.item.textTransform.titlecase "Величина слова у наслову">
-<!ENTITY zotero.item.textTransform.sentencecase "Величина слова у реченици">
-<!ENTITY zotero.item.creatorTransform.nameSwap "Замени првог/последњег">
-<!ENTITY zotero.item.creatorTransform.fixCase "Исправи величину слова">
-<!ENTITY zotero.item.copyAsURL "Копирај као адресу">
-<!ENTITY zotero.item.deletePermanently "Трајно изриши…">
+<!ENTITY trellis.item.add "Додај">
+<!ENTITY trellis.item.attachment.file.show "Прикажи датотеку">
+<!ENTITY trellis.item.textTransform "Преобликуј текст">
+<!ENTITY trellis.item.textTransform.titlecase "Величина слова у наслову">
+<!ENTITY trellis.item.textTransform.sentencecase "Величина слова у реченици">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Замени првог/последњег">
+<!ENTITY trellis.item.creatorTransform.fixCase "Исправи величину слова">
+<!ENTITY trellis.item.copyAsURL "Копирај као адресу">
+<!ENTITY trellis.item.deletePermanently "Трајно изриши…">
 
-<!ENTITY zotero.item.tags.removeAll "Уклони све ознаке…">
+<!ENTITY trellis.item.tags.removeAll "Уклони све ознаке…">
 
-<!ENTITY zotero.toolbar.newNote "Нова белешка">
-<!ENTITY zotero.toolbar.note.standalone "Нова самостална белешка">
-<!ENTITY zotero.toolbar.note.child "Додај подбелешку">
-<!ENTITY zotero.toolbar.lookup "Потражи на основу идентификатора…">
-<!ENTITY zotero.toolbar.attachment.linked "Повежи са датотеком…">
-<!ENTITY zotero.toolbar.attachment.add "Сачувај копију датотеке…">
-<!ENTITY zotero.toolbar.attachment.weblink "Сачувај везу на тренутну страницу">
-<!ENTITY zotero.toolbar.attachment.snapshot "Сачувај слику тренутне странице">
-<!ENTITY zotero.toolbar.context.item "Ставка">
-<!ENTITY zotero.toolbar.context.notes "Белешке">
+<!ENTITY trellis.toolbar.newNote "Нова белешка">
+<!ENTITY trellis.toolbar.note.standalone "Нова самостална белешка">
+<!ENTITY trellis.toolbar.note.child "Додај подбелешку">
+<!ENTITY trellis.toolbar.lookup "Потражи на основу идентификатора…">
+<!ENTITY trellis.toolbar.attachment.linked "Повежи са датотеком…">
+<!ENTITY trellis.toolbar.attachment.add "Сачувај копију датотеке…">
+<!ENTITY trellis.toolbar.attachment.weblink "Сачувај везу на тренутну страницу">
+<!ENTITY trellis.toolbar.attachment.snapshot "Сачувај слику тренутне странице">
+<!ENTITY trellis.toolbar.context.item "Ставка">
+<!ENTITY trellis.toolbar.context.notes "Белешке">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "Нема ознака за приказ">
-<!ENTITY zotero.tagSelector.loadingTags "Учитавам ознаке…">
-<!ENTITY zotero.tagSelector.showAutomatic "Аутоматски прикажи">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "Прикажи све ознаке у овој библиотеци">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "Избриши аутоматске ознаке у овој библиотеци…">
-<!ENTITY zotero.tagSelector.clearAll "Поништи избор">
-<!ENTITY zotero.tagSelector.assignColor "Додели боју…">
-<!ENTITY zotero.tagSelector.renameTag "Преименуј ознаку…">
-<!ENTITY zotero.tagSelector.deleteTag "Избриши ознаку…">
-<!ENTITY zotero.tagSelector.splitTag "Подели…">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Нема ознака за приказ">
+<!ENTITY trellis.tagSelector.loadingTags "Учитавам ознаке…">
+<!ENTITY trellis.tagSelector.showAutomatic "Аутоматски прикажи">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Прикажи све ознаке у овој библиотеци">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Избриши аутоматске ознаке у овој библиотеци…">
+<!ENTITY trellis.tagSelector.clearAll "Поништи избор">
+<!ENTITY trellis.tagSelector.assignColor "Додели боју…">
+<!ENTITY trellis.tagSelector.renameTag "Преименуј ознаку…">
+<!ENTITY trellis.tagSelector.deleteTag "Избриши ознаку…">
+<!ENTITY trellis.tagSelector.splitTag "Подели…">
 
-<!ENTITY zotero.tagColorChooser.title "Одаберите боју и место ознаке">
-<!ENTITY zotero.tagColorChooser.color "Боја:">
-<!ENTITY zotero.tagColorChooser.position "Место:">
-<!ENTITY zotero.tagColorChooser.setColor "Постави боју">
-<!ENTITY zotero.tagColorChooser.removeColor "Уклони боју">
+<!ENTITY trellis.tagColorChooser.title "Одаберите боју и место ознаке">
+<!ENTITY trellis.tagColorChooser.color "Боја:">
+<!ENTITY trellis.tagColorChooser.position "Место:">
+<!ENTITY trellis.tagColorChooser.setColor "Постави боју">
+<!ENTITY trellis.tagColorChooser.removeColor "Уклони боју">
 
-<!ENTITY zotero.lookup.description "Унесите ИСБН, ДОИ, ПМИД, арХив ИБ, или АДС бибкод да додате у библиотеку:">
-<!ENTITY zotero.lookup.button.search "Претрага">
+<!ENTITY trellis.lookup.description "Унесите ИСБН, ДОИ, ПМИД, арХив ИБ, или АДС бибкод да додате у библиотеку:">
+<!ENTITY trellis.lookup.button.search "Претрага">
 
-<!ENTITY zotero.createParent.title "Направи родитељску ставку">
-<!ENTITY zotero.createParent.button.manual "Ручни унос">
+<!ENTITY trellis.createParent.title "Направи родитељску ставку">
+<!ENTITY trellis.createParent.button.manual "Ручни унос">
 
-<!ENTITY zotero.selectitems.title "Изабери ставке">
-<!ENTITY zotero.selectitems.intro.label "Изаберите које ставке желите да додате у вашу библиотеку">
-<!ENTITY zotero.selectitems.cancel.label "Откажи">
-<!ENTITY zotero.selectitems.select.label "У реду">
+<!ENTITY trellis.selectitems.title "Изабери ставке">
+<!ENTITY trellis.selectitems.intro.label "Изаберите које ставке желите да додате у вашу библиотеку">
+<!ENTITY trellis.selectitems.cancel.label "Откажи">
+<!ENTITY trellis.selectitems.select.label "У реду">
 
-<!ENTITY zotero.bibliography.title "Направи цитат/библиографију">
-<!ENTITY zotero.bibliography.style.label "Стил цитата:">
-<!ENTITY zotero.bibliography.manageStyles "Уреди стилове…">
-<!ENTITY zotero.bibliography.locale.label "Језик:">
-<!ENTITY zotero.bibliography.outputMode "Извези као:">
-<!ENTITY zotero.bibliography.bibliography "Библиографију">
-<!ENTITY zotero.bibliography.outputMethod "Начин извоза:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "Сними као РТФ">
-<!ENTITY zotero.bibliography.saveAsHTML.label "Сними као ХТМЛ">
-<!ENTITY zotero.bibliography.copyToClipboard.label "Копирај">
-<!ENTITY zotero.bibliography.print.label "Штампај">
+<!ENTITY trellis.bibliography.title "Направи цитат/библиографију">
+<!ENTITY trellis.bibliography.style.label "Стил цитата:">
+<!ENTITY trellis.bibliography.manageStyles "Уреди стилове…">
+<!ENTITY trellis.bibliography.locale.label "Језик:">
+<!ENTITY trellis.bibliography.outputMode "Извези као:">
+<!ENTITY trellis.bibliography.bibliography "Библиографију">
+<!ENTITY trellis.bibliography.outputMethod "Начин извоза:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Сними као РТФ">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Сними као ХТМЛ">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Копирај">
+<!ENTITY trellis.bibliography.print.label "Штампај">
 
-<!ENTITY zotero.integration.docPrefs.title "Поставке документа">
-<!ENTITY zotero.integration.addEditCitation.title "Додај/уреди цитат">
-<!ENTITY zotero.integration.editBibliography.title "Уреди библиографију">
+<!ENTITY trellis.integration.docPrefs.title "Поставке документа">
+<!ENTITY trellis.integration.addEditCitation.title "Додај/уреди цитат">
+<!ENTITY trellis.integration.editBibliography.title "Уреди библиографију">
 
-<!ENTITY zotero.progress.title "Напредак">
+<!ENTITY trellis.progress.title "Напредак">
 
-<!ENTITY zotero.import "Увези">
-<!ENTITY zotero.import.whereToImportFrom "Одакле желите да увезете?">
-<!ENTITY zotero.import.source.file "Из датотеке (BibTeX, RIS, Зотеров RDF…)">
-<!ENTITY zotero.import.source.folder "Фасцикла са ПДФ-овима или другим датотекама">
-<!ENTITY zotero.import.onlineImport "увоз са мреже">
-<!ENTITY zotero.import.importing "Увозим…">
-<!ENTITY zotero.import.database "База података">
-<!ENTITY zotero.import.lastModified "Последња измена">
-<!ENTITY zotero.import.size "Величина">
-<!ENTITY zotero.import.createCollection "Постави увезене збирке и ставке у нову збирку">
-<!ENTITY zotero.import.fileHandling "Рад са датотекама">
-<!ENTITY zotero.import.online.newItemsOnly "Преузми само нове ставке; не ажурирај претходно увезене ставке">
+<!ENTITY trellis.import "Увези">
+<!ENTITY trellis.import.whereToImportFrom "Одакле желите да увезете?">
+<!ENTITY trellis.import.source.file "Из датотеке (BibTeX, RIS, Зотеров RDF…)">
+<!ENTITY trellis.import.source.folder "Фасцикла са ПДФ-овима или другим датотекама">
+<!ENTITY trellis.import.onlineImport "увоз са мреже">
+<!ENTITY trellis.import.importing "Увозим…">
+<!ENTITY trellis.import.database "База података">
+<!ENTITY trellis.import.lastModified "Последња измена">
+<!ENTITY trellis.import.size "Величина">
+<!ENTITY trellis.import.createCollection "Постави увезене збирке и ставке у нову збирку">
+<!ENTITY trellis.import.fileHandling "Рад са датотекама">
+<!ENTITY trellis.import.online.newItemsOnly "Преузми само нове ставке; не ажурирај претходно увезене ставке">
 
-<!ENTITY zotero.exportOptions.title "Извоз…">
-<!ENTITY zotero.exportOptions.format.label "Формат:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "Опције преводиоца">
+<!ENTITY trellis.exportOptions.title "Извоз…">
+<!ENTITY trellis.exportOptions.format.label "Формат:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Опције преводиоца">
 
-<!ENTITY zotero.charset.label "Кодирање знакова">
-<!ENTITY zotero.moreEncodings.label "Додатна кодирања">
+<!ENTITY trellis.charset.label "Кодирање знакова">
+<!ENTITY trellis.moreEncodings.label "Додатна кодирања">
 
-<!ENTITY zotero.citation.keepSorted.label "Држи изворе поређане">
+<!ENTITY trellis.citation.keepSorted.label "Држи изворе поређане">
 
-<!ENTITY zotero.citation.suppressAuthor.label "Прескочи аутора">
-<!ENTITY zotero.citation.prefix.label "Префикс:">
-<!ENTITY zotero.citation.suffix.label "Суфикс:">
-<!ENTITY zotero.citation.editorWarning.label "Упозорење: Цитат неће пратити измене које направите у вашој бази података уколико га директно измените у програму за уређивање текста.">
+<!ENTITY trellis.citation.suppressAuthor.label "Прескочи аутора">
+<!ENTITY trellis.citation.prefix.label "Префикс:">
+<!ENTITY trellis.citation.suffix.label "Суфикс:">
+<!ENTITY trellis.citation.editorWarning.label "Упозорење: Цитат неће пратити измене које направите у вашој бази података уколико га директно измените у програму за уређивање текста.">
 
-<!ENTITY zotero.richText.italic.label "Курзив">
-<!ENTITY zotero.richText.bold.label "Подебљано">
-<!ENTITY zotero.richText.underline.label "Подвучено">
-<!ENTITY zotero.richText.superscript.label "Експонент">
-<!ENTITY zotero.richText.subscript.label "Индекс">
+<!ENTITY trellis.richText.italic.label "Курзив">
+<!ENTITY trellis.richText.bold.label "Подебљано">
+<!ENTITY trellis.richText.underline.label "Подвучено">
+<!ENTITY trellis.richText.superscript.label "Експонент">
+<!ENTITY trellis.richText.subscript.label "Индекс">
 
-<!ENTITY zotero.annotate.toolbar.add.label "Додај напомену">
-<!ENTITY zotero.annotate.toolbar.collapse.label "Скупи све напомене">
-<!ENTITY zotero.annotate.toolbar.expand.label "Рашири све напомене">
-<!ENTITY zotero.annotate.toolbar.highlight.label "Истакни текст">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "Уклони истицање">
+<!ENTITY trellis.annotate.toolbar.add.label "Додај напомену">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Скупи све напомене">
+<!ENTITY trellis.annotate.toolbar.expand.label "Рашири све напомене">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Истакни текст">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Уклони истицање">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "Прикажи цитате као:">
-<!ENTITY zotero.integration.prefs.footnotes.label "Фуснота">
-<!ENTITY zotero.integration.prefs.endnotes.label "Енднота">
+<!ENTITY trellis.integration.prefs.displayAs.label "Прикажи цитате као:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Фуснота">
+<!ENTITY trellis.integration.prefs.endnotes.label "Енднота">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "Сачувај цитате као:">
-<!ENTITY zotero.integration.prefs.bookmarks.label "Обележивачи">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "Обележивачи се могу делити између програма Word и LibreOffice, али могу направити проблеме уколико их случајно промените и не могу бити уметнути као фусноте.">
+<!ENTITY trellis.integration.prefs.formatUsing.label "Сачувај цитате као:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Обележивачи">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Обележивачи се могу делити између програма Word и LibreOffice, али могу направити проблеме уколико их случајно промените и не могу бити уметнути као фусноте.">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "Аутоматски ажурирај цитате">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "Цитати који чекају на ажурирање ће бити истакнути унутар документа">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "Онемогућавање ажурирања може убрзати уметање цитата када радите са великим документима. Увек можете кликните на „Освежи“ како би ручно ажурурати цитате.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Аутоматски ажурирај цитате">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Цитати који чекају на ажурирање ће бити истакнути унутар документа">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Онемогућавање ажурирања може убрзати уметање цитата када радите са великим документима. Увек можете кликните на „Освежи“ како би ручно ажурурати цитате.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "Користи скраћенице часописа из Медлајна">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "Поље „Скраћеница часописа“ ће бити занемарено.">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Користи скраћенице часописа из Медлајна">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Поље „Скраћеница часописа“ ће бити занемарено.">
 
-<!ENTITY zotero.integration.prefs.exportDocument "Пребаците се на други програм за обраду текста…">
+<!ENTITY trellis.integration.prefs.exportDocument "Пребаците се на други програм за обраду текста…">
 
-<!ENTITY zotero.integration.showEditor.label "Прикажи уређивача">
-<!ENTITY zotero.integration.classicView.label "Класични приказ">
+<!ENTITY trellis.integration.showEditor.label "Прикажи уређивача">
+<!ENTITY trellis.integration.classicView.label "Класични приказ">
 
-<!ENTITY zotero.integration.references.label "Референце у библиографији">
+<!ENTITY trellis.integration.references.label "Референце у библиографији">
 
-<!ENTITY zotero.sync.stop "Заустави синхронизацију">
-<!ENTITY zotero.sync.error "Грешка приликом усклађивања">
-<!ENTITY zotero.sync.storage.progress "Напредак:">
-<!ENTITY zotero.sync.storage.downloads "Преузимања:">
-<!ENTITY zotero.sync.storage.uploads "Слања:">
+<!ENTITY trellis.sync.stop "Заустави синхронизацију">
+<!ENTITY trellis.sync.error "Грешка приликом усклађивања">
+<!ENTITY trellis.sync.storage.progress "Напредак:">
+<!ENTITY trellis.sync.storage.downloads "Преузимања:">
+<!ENTITY trellis.sync.storage.uploads "Слања:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "Следећа обелешка у Зотеровој библиотеци је предугачка да би била усклађена са сервером:">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "Усклађене ознаке морају бити краће од 256 знакова.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "Можете поделити ознаку на више мањих, скратити је или обрисати.">
-<!ENTITY zotero.sync.longTagFixer.split "Подели">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "Подели на">
-<!ENTITY zotero.sync.longTagFixer.character "знак">
-<!ENTITY zotero.sync.longTagFixer.characters "знакова">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "Необележене ознаке неће бити сачуване.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "Ознака ће бити избрисана из свих ставки.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Следећа обелешка у Зотеровој библиотеци је предугачка да би била усклађена са сервером:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Усклађене ознаке морају бити краће од 256 знакова.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Можете поделити ознаку на више мањих, скратити је или обрисати.">
+<!ENTITY trellis.sync.longTagFixer.split "Подели">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Подели на">
+<!ENTITY trellis.sync.longTagFixer.character "знак">
+<!ENTITY trellis.sync.longTagFixer.characters "знакова">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Необележене ознаке неће бити сачуване.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Ознака ће бити избрисана из свих ставки.">
 
-<!ENTITY zotero.merge.title "Решавање конфликта">
-<!ENTITY zotero.merge.of "од">
-<!ENTITY zotero.merge.deleted "Обрисано">
+<!ENTITY trellis.merge.title "Решавање конфликта">
+<!ENTITY trellis.merge.of "од">
+<!ENTITY trellis.merge.deleted "Обрисано">
 
-<!ENTITY zotero.proxy.recognized.title "Прокси је препознат">
-<!ENTITY zotero.proxy.recognized.warning "Додајте само прокције који су повезани са вашом библиотеком, школом или веб страницом фирме">
-<!ENTITY zotero.proxy.recognized.warning.secondary "Додавање других проксија омогућава злонамерним страницама да се прикажу као странице од поверења.">
-<!ENTITY zotero.proxy.recognized.disable.label "Немој аутоматски да преусмераваш захтеве кроз претходно препознат прокси">
-<!ENTITY zotero.proxy.recognized.ignore.label "Занемари">
+<!ENTITY trellis.proxy.recognized.title "Прокси је препознат">
+<!ENTITY trellis.proxy.recognized.warning "Додајте само прокције који су повезани са вашом библиотеком, школом или веб страницом фирме">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Додавање других проксија омогућава злонамерним страницама да се прикажу као странице од поверења.">
+<!ENTITY trellis.proxy.recognized.disable.label "Немој аутоматски да преусмераваш захтеве кроз претходно препознат прокси">
+<!ENTITY trellis.proxy.recognized.ignore.label "Занемари">
 
-<!ENTITY zotero.feedSettings.title "Подешавања довода">
-<!ENTITY zotero.feedSettings.saveButton.label "Сачувај">
-<!ENTITY zotero.feedSettings.url.label "Адреса:">
-<!ENTITY zotero.feedSettings.title.label "Наслов:">
-<!ENTITY zotero.feedSettings.refresh.label1 "Ажурирај све доводе">
-<!ENTITY zotero.feedSettings.refresh.label2 "сат(и)">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "Уклони непрочитане ставке након">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "дан(а)">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "Уклони прочитане ставке након">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "дан(а)">
+<!ENTITY trellis.feedSettings.title "Подешавања довода">
+<!ENTITY trellis.feedSettings.saveButton.label "Сачувај">
+<!ENTITY trellis.feedSettings.url.label "Адреса:">
+<!ENTITY trellis.feedSettings.title.label "Наслов:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Ажурирај све доводе">
+<!ENTITY trellis.feedSettings.refresh.label2 "сат(и)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Уклони непрочитане ставке након">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "дан(а)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Уклони прочитане ставке након">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "дан(а)">
 
-<!ENTITY zotero.rtfScan.title "РТФ скенирање">
-<!ENTITY zotero.rtfScan.cancel.label "Откажи">
-<!ENTITY zotero.rtfScan.citation.label "Цитат">
-<!ENTITY zotero.rtfScan.itemName.label "Назив ставке">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "Немапирани цитати">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "Двосмислени цитати">
-<!ENTITY zotero.rtfScan.mappedCitations.label "Мапирани цитати">
-<!ENTITY zotero.rtfScan.introPage.label "Увод">
-<!ENTITY zotero.rtfScan.introPage.description "Зотеро може аутоматски да извуче и форматира цитате и да уметне библиографију у РТФ датотеке. РТФ скенирање тренутно подржава цитирање у неколико доступних формата:">
-<!ENTITY zotero.rtfScan.introPage.description2 "За початак отворите РТФ датотеку и изаберите излазну датотеку:">
-<!ENTITY zotero.rtfScan.scanPage.label "Тражим цитате">
-<!ENTITY zotero.rtfScan.scanPage.description "Зотеро скенира документ у потрази за цитатима. Будите стрпљиви.">
-<!ENTITY zotero.rtfScan.citationsPage.label "Верификуј цитиране ставке">
-<!ENTITY zotero.rtfScan.citationsPage.description "Прегледајте приложену листу препознатих цитата како би потврдили да је Зотеро изабрао праву ставку. Било који немапиран или двосмислен цитат мора бити потврђен пре него што пређете на наредни корак.">
-<!ENTITY zotero.rtfScan.stylePage.label "Форматирање документа">
-<!ENTITY zotero.rtfScan.formatPage.label "Форамтирање цитата">
-<!ENTITY zotero.rtfScan.formatPage.description "Зотеро обрађује и форматира РТФ датотеку. Будите стрпљиви.">
-<!ENTITY zotero.rtfScan.completePage.label "РТФ скенирање је завршено">
-<!ENTITY zotero.rtfScan.completePage.description "Ваш документ је скениран и обрађен. Проверите да ли је исправно форматиран.">
-<!ENTITY zotero.rtfScan.inputFile.label "Улазна датотека">
-<!ENTITY zotero.rtfScan.outputFile.label "Излазна датотека">
+<!ENTITY trellis.rtfScan.title "РТФ скенирање">
+<!ENTITY trellis.rtfScan.cancel.label "Откажи">
+<!ENTITY trellis.rtfScan.citation.label "Цитат">
+<!ENTITY trellis.rtfScan.itemName.label "Назив ставке">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Немапирани цитати">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Двосмислени цитати">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Мапирани цитати">
+<!ENTITY trellis.rtfScan.introPage.label "Увод">
+<!ENTITY trellis.rtfScan.introPage.description "Зотеро може аутоматски да извуче и форматира цитате и да уметне библиографију у РТФ датотеке. РТФ скенирање тренутно подржава цитирање у неколико доступних формата:">
+<!ENTITY trellis.rtfScan.introPage.description2 "За початак отворите РТФ датотеку и изаберите излазну датотеку:">
+<!ENTITY trellis.rtfScan.scanPage.label "Тражим цитате">
+<!ENTITY trellis.rtfScan.scanPage.description "Зотеро скенира документ у потрази за цитатима. Будите стрпљиви.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Верификуј цитиране ставке">
+<!ENTITY trellis.rtfScan.citationsPage.description "Прегледајте приложену листу препознатих цитата како би потврдили да је Зотеро изабрао праву ставку. Било који немапиран или двосмислен цитат мора бити потврђен пре него што пређете на наредни корак.">
+<!ENTITY trellis.rtfScan.stylePage.label "Форматирање документа">
+<!ENTITY trellis.rtfScan.formatPage.label "Форамтирање цитата">
+<!ENTITY trellis.rtfScan.formatPage.description "Зотеро обрађује и форматира РТФ датотеку. Будите стрпљиви.">
+<!ENTITY trellis.rtfScan.completePage.label "РТФ скенирање је завршено">
+<!ENTITY trellis.rtfScan.completePage.description "Ваш документ је скениран и обрађен. Проверите да ли је исправно форматиран.">
+<!ENTITY trellis.rtfScan.inputFile.label "Улазна датотека">
+<!ENTITY trellis.rtfScan.outputFile.label "Излазна датотека">
 
-<!ENTITY zotero.file.choose.label "Изабери датотеку…">
-<!ENTITY zotero.file.noneSelected.label "Није изабрана датотека">
+<!ENTITY trellis.file.choose.label "Изабери датотеку…">
+<!ENTITY trellis.file.noneSelected.label "Није изабрана датотека">
 
-<!ENTITY zotero.attachLink.title "Додај везу до УРИ адресе">
-<!ENTITY zotero.attachLink.label.link "Веза:">
-<!ENTITY zotero.attachLink.label.title "Наслов:">
+<!ENTITY trellis.attachLink.title "Додај везу до УРИ адресе">
+<!ENTITY trellis.attachLink.label.link "Веза:">
+<!ENTITY trellis.attachLink.label.title "Наслов:">
 
-<!ENTITY zotero.context.addChildNote "Додај белешку ставке">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "Додај белешку ставке из напомена">
-<!ENTITY zotero.context.addStandaloneNote "Додај самосталну белешку">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "Додај самосталну белешку из напомена">
-<!ENTITY zotero.context.editInWindow "Уреди у засебном прозору">
+<!ENTITY trellis.context.addChildNote "Додај белешку ставке">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Додај белешку ставке из напомена">
+<!ENTITY trellis.context.addStandaloneNote "Додај самосталну белешку">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Додај самосталну белешку из напомена">
+<!ENTITY trellis.context.editInWindow "Уреди у засебном прозору">
 
-<!ENTITY zotero.pdfReader.firstPage "Прва страница">
-<!ENTITY zotero.pdfReader.lastPage "Последња страница">
-<!ENTITY zotero.pdfReader.back "Назад">
-<!ENTITY zotero.pdfReader.forward "Следећа">
-<!ENTITY zotero.pdfReader.handTool "Ручни алати">
-<!ENTITY zotero.pdfReader.verticalScrolling "Усправно листање">
-<!ENTITY zotero.pdfReader.horizontalScrolling "Водоравно листање">
-<!ENTITY zotero.pdfReader.wrappedScrolling "Непрекидно листање">
-<!ENTITY zotero.pdfReader.noSpreads "Без проширења">
-<!ENTITY zotero.pdfReader.oddSpreads "Прошири непарне">
-<!ENTITY zotero.pdfReader.evenSpreads "Прошири парне">
-<!ENTITY zotero.pdfReader.scrolled "Листање">
-<!ENTITY zotero.pdfReader.paginated "По страницама">
-<!ENTITY zotero.pdfReader.zoomIn "Увећај">
-<!ENTITY zotero.pdfReader.zoomOut "Умањи">
-<!ENTITY zotero.pdfReader.zoomReset "Поништи увећање">
-<!ENTITY zotero.pdfReader.zoomAuto "Сам промени величину">
-<!ENTITY zotero.pdfReader.zoomPageWidth "Уклопи висину странице">
-<!ENTITY zotero.pdfReader.zoomPageHeight "Уклопи ширину странице">
-<!ENTITY zotero.pdfReader.splitVertically "Подели усправно">
-<!ENTITY zotero.pdfReader.splitHorizontally "Подели водоравно">
-<!ENTITY zotero.pdfReader.transferFromPDF "Увези напомене…">
-<!ENTITY zotero.pdfReader.rotatePageLeft "Ротирај страницу улево">
-<!ENTITY zotero.pdfReader.rotatePageRight "Ротирај страницу удесно">
+<!ENTITY trellis.pdfReader.firstPage "Прва страница">
+<!ENTITY trellis.pdfReader.lastPage "Последња страница">
+<!ENTITY trellis.pdfReader.back "Назад">
+<!ENTITY trellis.pdfReader.forward "Следећа">
+<!ENTITY trellis.pdfReader.handTool "Ручни алати">
+<!ENTITY trellis.pdfReader.verticalScrolling "Усправно листање">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Водоравно листање">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Непрекидно листање">
+<!ENTITY trellis.pdfReader.noSpreads "Без проширења">
+<!ENTITY trellis.pdfReader.oddSpreads "Прошири непарне">
+<!ENTITY trellis.pdfReader.evenSpreads "Прошири парне">
+<!ENTITY trellis.pdfReader.scrolled "Листање">
+<!ENTITY trellis.pdfReader.paginated "По страницама">
+<!ENTITY trellis.pdfReader.zoomIn "Увећај">
+<!ENTITY trellis.pdfReader.zoomOut "Умањи">
+<!ENTITY trellis.pdfReader.zoomReset "Поништи увећање">
+<!ENTITY trellis.pdfReader.zoomAuto "Сам промени величину">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Уклопи висину странице">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Уклопи ширину странице">
+<!ENTITY trellis.pdfReader.splitVertically "Подели усправно">
+<!ENTITY trellis.pdfReader.splitHorizontally "Подели водоравно">
+<!ENTITY trellis.pdfReader.transferFromPDF "Увези напомене…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Ротирај страницу улево">
+<!ENTITY trellis.pdfReader.rotatePageRight "Ротирај страницу удесно">

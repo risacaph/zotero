@@ -20,7 +20,7 @@
     }
 
     // on macos, align buttons with content
-    // https: //github.com/zotero/zotero/issues/4322#issuecomment-2207032862
+    // https: //github.com/trellis/trellis/issues/4322#issuecomment-2207032862
     @media (-moz-platform: macos) {
         .wizard-buttons-btm {
             padding-left: 0;

@@ -3,22 +3,22 @@
     
     Copyright © 2009-2011 Center for History and New Media
                           George Mason University, Fairfax, Virginia, USA
-                          http://zotero.org
+                          http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
  * Handles UI for lookup panel
  * @namespace
  */
-var Zotero_Lookup = new function () {
+var Trellis_Lookup = new function () {
 	this._button = null;
 	this._accepted = false;
 
@@ -40,26 +40,26 @@ var Zotero_Lookup = new function () {
 	 * saved for the parent.
 	 *
 	 * @param textBox {HTMLElement} - Textbox containing identifiers
-	 * @param childItem {Zotero.Item|false} - Child item (optional)
+	 * @param childItem {Trellis.Item|false} - Child item (optional)
 	 * @param toggleProgress {function} - Callback to toggle progress on/off
-	 * @returns {Promise<Zotero.Item[]>}
+	 * @returns {Promise<Trellis.Item[]>}
 	 */
 	this.addItemsFromIdentifier = async function (textBox, childItem, toggleProgress) {
-		var identifiers = Zotero.Utilities.extractIdentifiers(textBox.value);
+		var identifiers = Trellis.Utilities.extractIdentifiers(textBox.value);
 		if (!identifiers.length) {
-			Zotero.alert(
+			Trellis.alert(
 				window,
-				Zotero.getString("lookup.failure.title"),
-				Zotero.getString("lookup.failureToID.description")
+				Trellis.getString("lookup.failure.title"),
+				Trellis.getString("lookup.failureToID.description")
 			);
 			return false;
 		}
 		else if (childItem && identifiers.length > 1) {
 			// Only allow one identifier when creating a parent for a child
-			Zotero.alert(
+			Trellis.alert(
 				window,
-				Zotero.getString("lookup.failure.title"),
-				Zotero.getString("lookup.failureTooMany.description")
+				Trellis.getString("lookup.failure.title"),
+				Trellis.getString("lookup.failureTooMany.description")
 			);
 			return false;
 		}
@@ -72,8 +72,8 @@ var Zotero_Lookup = new function () {
 		}
 		else {
 			try {
-				libraryID = ZoteroPane.getSelectedLibraryID();
-				let selectedCollections = ZoteroPane.getSelectedCollections();
+				libraryID = TrellisPane.getSelectedLibraryID();
+				let selectedCollections = TrellisPane.getSelectedCollections();
 				collections = selectedCollections.length ? selectedCollections.map(c => c.id) : false;
 			}
 			catch (e) {
@@ -102,7 +102,7 @@ var Zotero_Lookup = new function () {
 		
 		let newItems = [];
 		for (let identifier of identifiers) {
-			let translate = new Zotero.Translate.Search();
+			let translate = new Trellis.Translate.Search();
 			translate.setIdentifier(identifier);
 
 			// be lenient about translators
@@ -118,16 +118,16 @@ var Zotero_Lookup = new function () {
 			}
 			// Continue with other ids on failure
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 
 		toggleProgress(false);
 		if (!newItems.length) {
-			Zotero.alert(
+			Trellis.alert(
 				window,
-				Zotero.getString("lookup.failure.title"),
-				Zotero.getString("lookup.failure.description")
+				Trellis.getString("lookup.failure.title"),
+				Trellis.getString("lookup.failure.description")
 			);
 		}
 		// TODO: Give indication if some, but not all failed
@@ -141,32 +141,32 @@ var Zotero_Lookup = new function () {
 	this.accept = async function (textBox) {
 		this._accepted = true;
 		
-		let newItems = await Zotero_Lookup.addItemsFromIdentifier(
+		let newItems = await Trellis_Lookup.addItemsFromIdentifier(
 			textBox,
 			false,
-			on => Zotero_Lookup.setShowProgress(on)
+			on => Trellis_Lookup.setShowProgress(on)
 		);
 
 		if (newItems.length) {
 			// Send the focus to the item tree after the popup closes
-			ZoteroPane.lastFocusedElement = null;
-			document.getElementById("zotero-lookup-panel").hidePopup();
+			TrellisPane.lastFocusedElement = null;
+			document.getElementById("trellis-lookup-panel").hidePopup();
 			// The item tree's DOM id has a view-specific suffix, so use the current view's id
-			document.getElementById(ZoteroPane.itemsView.id).focus();
+			document.getElementById(TrellisPane.itemsView.id).focus();
 		}
 		else {
 			// Hide on failure too
-			document.getElementById("zotero-lookup-panel").hidePopup();
+			document.getElementById("trellis-lookup-panel").hidePopup();
 		}
 		return false;
 	};
 
 
 	this.showPanel = function (button) {
-		var panel = document.getElementById('zotero-lookup-panel');
+		var panel = document.getElementById('trellis-lookup-panel');
 		this._button = button;
 		if (!button) {
-			button = document.getElementById("zotero-tb-lookup");
+			button = document.getElementById("trellis-tb-lookup");
 		}
 		panel.openPopup(button, "after_start", 0, 0, false, false);
 	};
@@ -198,7 +198,7 @@ var Zotero_Lookup = new function () {
 	
 	this.onShown = function (event) {
 		// Ignore context menu
-		if (event.originalTarget.id != 'zotero-lookup-panel') return;
+		if (event.originalTarget.id != 'trellis-lookup-panel') return;
 
 		this._accepted = false;
 		
@@ -212,7 +212,7 @@ var Zotero_Lookup = new function () {
 		// closing on click outside (_onMouseDown) and closing on a window
 		// switch when there's no content (_onBlur)
 		window.addEventListener('mousedown', this._onMouseDown, { capture: true });
-		document.getElementById('zotero-lookup-panel').addEventListener('blur', this._onBlur, { capture: true });
+		document.getElementById('trellis-lookup-panel').addEventListener('blur', this._onBlur, { capture: true });
 	};
 
 
@@ -225,10 +225,10 @@ var Zotero_Lookup = new function () {
 		if (event.target.closest("panel, menupopup")) {
 			return;
 		}
-		document.getElementById("zotero-lookup-panel").hidePopup();
+		document.getElementById("trellis-lookup-panel").hidePopup();
 		// Prevent the toolbar button's own handlers from triggering, so the
 		// popup doesn't immediately reopen
-		if (document.getElementById("zotero-tb-lookup").contains(event.target)) {
+		if (document.getElementById("trellis-tb-lookup").contains(event.target)) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
@@ -239,9 +239,9 @@ var Zotero_Lookup = new function () {
 		if (Services.focus.activeWindow === window) {
 			return;
 		}
-		let textBox = document.getElementById('zotero-lookup-textbox');
+		let textBox = document.getElementById('trellis-lookup-textbox');
 		if (textBox.value.trim() === '') {
-			document.getElementById('zotero-lookup-panel').hidePopup();
+			document.getElementById('trellis-lookup-panel').hidePopup();
 		}
 	};
 	
@@ -251,15 +251,15 @@ var Zotero_Lookup = new function () {
 	 */
 	this.onHidden = function (event) {
 		// Ignore context menu
-		if (event.originalTarget.id != 'zotero-lookup-panel') return;
+		if (event.originalTarget.id != 'trellis-lookup-panel') return;
 		
 		window.removeEventListener('mousedown', this._onMouseDown, { capture: true });
-		document.getElementById('zotero-lookup-panel').removeEventListener('blur', this._onBlur, { capture: true });
+		document.getElementById('trellis-lookup-panel').removeEventListener('blur', this._onBlur, { capture: true });
 
 		if (this._accepted) {
-			document.getElementById("zotero-lookup-textbox").value = "";
+			document.getElementById("trellis-lookup-textbox").value = "";
 		}
-		Zotero_Lookup.setShowProgress(false);
+		Trellis_Lookup.setShowProgress(false);
 		
 		// Revert to single-line when closing
 		this.setMultiline(false);
@@ -267,7 +267,7 @@ var Zotero_Lookup = new function () {
 	
 	
 	this.getActivePanel = function() {
-		return document.getElementById("zotero-lookup-multiline");
+		return document.getElementById("trellis-lookup-multiline");
 	};
 	
 	
@@ -291,15 +291,15 @@ var Zotero_Lookup = new function () {
 		var search = multiline ? event.shiftKey : !event.shiftKey;
 		if (keyCode === 13 || keyCode === 14) {
 			if (search) {
-				Zotero_Lookup.accept(textBox);
+				Trellis_Lookup.accept(textBox);
 				event.preventDefault();
 			}
 			else if (!multiline) {	// switch to multiline
-				Zotero_Lookup.setMultiline(true);
+				Trellis_Lookup.setMultiline(true);
 			}
 		}
 		else if (keyCode == event.DOM_VK_ESCAPE) {
-			document.getElementById("zotero-lookup-panel").hidePopup();
+			document.getElementById("trellis-lookup-panel").hidePopup();
 		}
 	};
 	
@@ -334,8 +334,8 @@ var Zotero_Lookup = new function () {
 	
 	
 	this.setMultiline = function (on) {
-		var mlTxtBox = document.getElementById("zotero-lookup-textbox");
-		var mlButtons = document.getElementById('zotero-lookup-buttons');
+		var mlTxtBox = document.getElementById("trellis-lookup-textbox");
+		var mlButtons = document.getElementById('trellis-lookup-buttons');
 
 		mlTxtBox.rows = on ? 5 : 1;
 		mlButtons.hidden = !on;
@@ -347,8 +347,8 @@ var Zotero_Lookup = new function () {
 		// In Firefox 52.6.0, progressmeters burn CPU at idle on Linux when undetermined, even
 		// if they're hidden. (Being hidden is enough on macOS.)
 		
-		document.getElementById("zotero-lookup-textbox").disabled = !!on;
-		var p = document.getElementById("zotero-lookup-multiline-progress");
+		document.getElementById("trellis-lookup-textbox").disabled = !!on;
+		var p = document.getElementById("trellis-lookup-multiline-progress");
 		if (on) {
 			p.removeAttribute('value');
 		}

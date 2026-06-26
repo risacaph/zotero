@@ -3,27 +3,27 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 // Handle the logic of opening popups and saving/discarding edits to the citation items
 export class CitationDialogPopupsHandler {
@@ -72,7 +72,7 @@ export class CitationDialogPopupsHandler {
 		this._getNode("#itemDetails .show").addEventListener("click", (_) => {
 			this.discardItemDetailsEdits = true;
 			this._getNode("#itemDetails").hidePopup();
-			Zotero.Utilities.Internal.showInLibrary(this.bubbleItem.item);
+			Trellis.Utilities.Internal.showInLibrary(this.bubbleItem.item);
 		});
 		this._getNode("#itemDetails .done").addEventListener("click", (_) => {
 			this._getNode("#itemDetails").hidePopup();
@@ -101,7 +101,7 @@ export class CitationDialogPopupsHandler {
 		this._getNode("#itemDetails .show").hidden = !this.bubbleItem.item.id;
 		// Hide the typed-locator tip once the shortcut has been used
 		this._getNode("#itemDetails .details-locator-info").hidden
-			= !Zotero.Prefs.get("integration.citationDialogShowLocatorTip");
+			= !Trellis.Prefs.get("integration.citationDialogShowLocatorTip");
 		let topLevelItem = this.bubbleItem.item.topLevelItem;
 
 		// Add header and fill inputs with their values
@@ -130,9 +130,9 @@ export class CitationDialogPopupsHandler {
 		};
 		// add locator labels if they don't exist yet
 		if (this._getNode("#label").childElementCount == 0) {
-			let locators = Zotero.Cite.labels.map((locator) => {
+			let locators = Trellis.Cite.labels.map((locator) => {
 				return {
-					label: Zotero.Cite.getLocatorString(locator),
+					label: Trellis.Cite.getLocatorString(locator),
 					value: locator
 				};
 			});
@@ -223,26 +223,26 @@ export class CitationDialogPopupsHandler {
 			+ ps.BUTTON_POS_2 * ps.BUTTON_TITLE_IS_STRING;
 		var disableWarningCheckbox = { value: false };
 		var result = ps.confirmEx(null,
-			Zotero.getString('general.warning'),
-			Zotero.getString('retraction.citeWarning.text1') + '\n\n'
-				+ Zotero.getString('retraction.citeWarning.text2'),
+			Trellis.getString('general.warning'),
+			Trellis.getString('retraction.citeWarning.text1') + '\n\n'
+				+ Trellis.getString('retraction.citeWarning.text2'),
 			buttonFlags,
-			Zotero.getString('general.continue'),
+			Trellis.getString('general.continue'),
 			null,
-			Zotero.getString('pane.items.showItemInLibrary'),
-			Zotero.getString('retraction.citationWarning.dontWarn'), disableWarningCheckbox);
+			Trellis.getString('pane.items.showItemInLibrary'),
+			Trellis.getString('retraction.citationWarning.dontWarn'), disableWarningCheckbox);
 		// Cancel
 		if (result == 1) {
 			return false;
 		}
 		// Show in library
 		if (result == 2) {
-			Zotero.Utilities.Internal.showInLibrary(item);
+			Trellis.Utilities.Internal.showInLibrary(item);
 			return false;
 		}
 		// Checked "Do not warn about this item"
 		if (disableWarningCheckbox.value) {
-			Zotero.Retractions.disableCitationWarningsForItem(item);
+			Trellis.Retractions.disableCitationWarningsForItem(item);
 		}
 		return true;
 	}

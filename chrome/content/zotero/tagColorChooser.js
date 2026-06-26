@@ -3,41 +3,41 @@
     
     Copyright © 2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-var Zotero_Tag_Color_Chooser = new function() {
+var Trellis_Tag_Color_Chooser = new function() {
 	var _io;
 	
 	this.init = function () {
 		var dialog = document.querySelector('dialog');
 
-		window.addEventListener('dialogaccept', () => Zotero_Tag_Color_Chooser.onDialogAccept());
-		window.addEventListener('dialogcancel', () => Zotero_Tag_Color_Chooser.onDialogCancel());
-		window.addEventListener('dialogextra1', () => Zotero_Tag_Color_Chooser.onDialogRemoveColor());
+		window.addEventListener('dialogaccept', () => Trellis_Tag_Color_Chooser.onDialogAccept());
+		window.addEventListener('dialogcancel', () => Trellis_Tag_Color_Chooser.onDialogCancel());
+		window.addEventListener('dialogextra1', () => Trellis_Tag_Color_Chooser.onDialogRemoveColor());
 		
 		try {
 			// Set font size from pref
-			Zotero.UIProperties.registerRoot(document.getElementById("tag-color-chooser-container"));
+			Trellis.UIProperties.registerRoot(document.getElementById("tag-color-chooser-container"));
 			
 			if (window.arguments && window.arguments.length) {
 				_io = window.arguments[0];
@@ -53,7 +53,7 @@ var Zotero_Tag_Color_Chooser = new function() {
 			var tagPosition = document.getElementById('tag-position');
 			
 			var maxTags = document.getElementById('max-tags');
-			maxTags.value = Zotero.getString('tagColorChooser.maxTags', Zotero.Tags.MAX_COLORED_TAGS);
+			maxTags.value = Trellis.getString('tagColorChooser.maxTags', Trellis.Tags.MAX_COLORED_TAGS);
 			
 			var tagColors = _io.tagColors;
 			var colorData = tagColors.get(_io.name);
@@ -69,10 +69,10 @@ var Zotero_Tag_Color_Chooser = new function() {
 				for (let x of tagColors.values()) {
 					usedColors.push(x.color);
 				}
-				var unusedColors = Zotero.Utilities.arrayDiff(
+				var unusedColors = Trellis.Utilities.arrayDiff(
 					colorPicker.colors, usedColors
 				);
-				var color = unusedColors[Zotero.Utilities.rand(0, unusedColors.length - 1)];
+				var color = unusedColors[Trellis.Utilities.rand(0, unusedColors.length - 1)];
 				colorPicker.color = color;
 				dialog.buttons = "cancel,accept";
 			}
@@ -104,7 +104,7 @@ var Zotero_Tag_Color_Chooser = new function() {
 			window.sizeToContent();
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			if (dialog.cancelDialog) {
 				dialog.cancelDialog();
 			}
@@ -120,7 +120,7 @@ var Zotero_Tag_Color_Chooser = new function() {
 			instructions.removeChild(instructions.firstChild);
 		}
 		
-		var msg = Zotero.getString('tagColorChooser.numberKeyInstructions');
+		var msg = Trellis.getString('tagColorChooser.numberKeyInstructions');
 		var matches = msg.match(/(.+)\$NUMBER(.+)/);
 		
 		var num = document.createXULElement('label');

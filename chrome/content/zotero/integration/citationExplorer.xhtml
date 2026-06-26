@@ -4,36 +4,36 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     
     ***** END LICENSE BLOCK *****
 -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
-<?xml-stylesheet href="chrome://zotero/skin/integration.css" type="text/css"?>
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/integration.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 <xul:window
-	id="zotero-citation-explorer-dialog"
+	id="trellis-citation-explorer-dialog"
 	orient="vertical"
 	title="Citation Explorer"
 	width="750" height="450"
@@ -47,10 +47,10 @@
 	<script>
 		var {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 
-		Services.scriptloader.loadSubScript("chrome://zotero/content/integration/citationExplorer.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/integration/citationExplorer.js", this);
 
 	</script>
 	<div class="vbox flex xul-border-div">
@@ -58,7 +58,7 @@
 			<div class="vbox flex">
 				<div id="citations-label">Citations</div>
 				<div class="vbox flex panel" style="border-right: none">
-					<xul:search-textbox id="citation-search" class="search-box" timeout="250" oncommand="ZoteroDocumentCitations.onCitationFilter()" dir="reverse"/>
+					<xul:search-textbox id="citation-search" class="search-box" timeout="250" oncommand="TrellisDocumentCitations.onCitationFilter()" dir="reverse"/>
 					<div id="citation-list-container" class="virtualized-table-container">
 						<div id="citation-list"></div>
 					</div>
@@ -70,7 +70,7 @@
 			</div>
 			<div class="splitter"></div>
 			<div class="vbox flex">
-				<xul:tabbox onselect="ZoteroDocumentCitations.onSelectTab(this.selectedIndex)">
+				<xul:tabbox onselect="TrellisDocumentCitations.onSelectTab(this.selectedIndex)">
 					<xul:tabs>
 						<xul:tab id="tab-cited-items" label="Cited Items"/>
 						<xul:tab id="tab-uncited-items" label="Uncited Items"/>
@@ -79,18 +79,18 @@
 					<xul:tabpanels hidden="true"><xul:tabpanel/><xul:tabpanel/></xul:tabpanels>
 				</xul:tabbox>
 				<div id="items-panel" class="vbox flex panel">
-					<xul:search-textbox id="item-search" class="search-box" timeout="250" oncommand="ZoteroDocumentCitations.onItemFilter()" dir="reverse"/>
+					<xul:search-textbox id="item-search" class="search-box" timeout="250" oncommand="TrellisDocumentCitations.onItemFilter()" dir="reverse"/>
 					<div id="item-list-container" class="virtualized-table-container">
 						<div id="item-list"></div>
 					</div>
 					<div class="hbox button-container">
-						<input type="button" id="button-show-in-zotero" value="Show in Zotero"/>
+						<input type="button" id="button-show-in-trellis" value="Show in Trellis"/>
 						<input type="button" id="button-relink-item" value="Relink Item" hidden="true"/>
 						<button is="split-menu-button" id="button-addTo-library"
-									 onclick="ZoteroDocumentCitations.addToLibraryAndLink()"
+									 onclick="TrellisDocumentCitations.addToLibraryAndLink()"
 									 popup="item-addTo-menu" style="display: none"/>
 						<xul:popupset>
-							<xul:menupopup id="item-addTo-menu" onpopupshowing="ZoteroDocumentCitations.buildAddToLibraryContextMenu(event);"/>
+							<xul:menupopup id="item-addTo-menu" onpopupshowing="TrellisDocumentCitations.buildAddToLibraryContextMenu(event);"/>
 						</xul:popupset>
 					</div>
 				</div>

@@ -2,10 +2,10 @@ describe("CollectionTreeRow", function () {
 	var win, zp, cv, userLibraryID;
 	
 	before(async function () {
-		win = await loadZoteroPane();
-		zp = win.ZoteroPane;
+		win = await loadTrellisPane();
+		zp = win.TrellisPane;
 		cv = zp.collectionsView;
-		userLibraryID = Zotero.Libraries.userLibraryID;
+		userLibraryID = Trellis.Libraries.userLibraryID;
 	});
 	
 	beforeEach(function () {
@@ -88,7 +88,7 @@ describe("CollectionTreeRow", function () {
 					err = e;
 				}
 				assert.ok(err, 'getSearchResults() should throw');
-				assert.instanceOf(err, Zotero.CollectionTreeRow.SearchError);
+				assert.instanceOf(err, Trellis.CollectionTreeRow.SearchError);
 			}
 			finally {
 				stub.restore();
@@ -106,7 +106,7 @@ describe("CollectionTreeRow", function () {
 					err = e;
 				}
 				assert.ok(err, 'getItems() should throw');
-				assert.instanceOf(err, Zotero.CollectionTreeRow.SearchError);
+				assert.instanceOf(err, Trellis.CollectionTreeRow.SearchError);
 			}
 			finally {
 				stub.restore();
@@ -124,7 +124,7 @@ describe("CollectionTreeRow", function () {
 					err = e;
 				}
 				assert.ok(err, 'getTags() should throw');
-				assert.instanceOf(err, Zotero.CollectionTreeRow.SearchError);
+				assert.instanceOf(err, Trellis.CollectionTreeRow.SearchError);
 			}
 			finally {
 				stub.restore();
@@ -133,7 +133,7 @@ describe("CollectionTreeRow", function () {
 	});
 	
 	describe("Unfiled Items", function () {
-		// https://github.com/zotero/zotero/issues/2771
+		// https://github.com/trellis/trellis/issues/2771
 		it("shouldn't show filed attachments with annotations", async function () {
 			var item1 = await createDataObject('item');
 			

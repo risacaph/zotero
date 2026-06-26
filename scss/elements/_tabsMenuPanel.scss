@@ -7,7 +7,7 @@ panel[is=tabs-menu-panel] {
 		--panel-background: var(--material-sidepane);
 	}
 
-	& #zotero-tabs-menu-wrapper {
+	& #trellis-tabs-menu-wrapper {
 		width: 100%;
 		border-radius: 5px;
 		--width-focus-border: 2px;
@@ -16,7 +16,7 @@ panel[is=tabs-menu-panel] {
 		min-height: 0;
 		gap: 6px;
 
-		& #zotero-tabs-menu-filter {
+		& #trellis-tabs-menu-filter {
 			margin: 0;
 			border-radius: 5px;
 			border: 1px solid transparent;
@@ -28,7 +28,7 @@ panel[is=tabs-menu-panel] {
 			}
 		}
 
-		& #zotero-tabs-menu-list {
+		& #trellis-tabs-menu-list {
 			appearance: none;
 			margin: 0;
 			overflow-x: hidden;
@@ -55,12 +55,12 @@ panel[is=tabs-menu-panel] {
 					background-color: var(--color-accent) !important;
 					color: #fff;
 
-					@include state("#zotero-tabs-menu-wrapper:not(:focus-within)") {
+					@include state("#trellis-tabs-menu-wrapper:not(:focus-within)") {
 						color: currentColor;
 						background-color: var(--color-quarternary-on-sidepane) !important;
 					}
 
-					.zotero-tabs-menu-entry.close {
+					.trellis-tabs-menu-entry.close {
 						&:hover,
 						&:focus-visible {
 							background-color: #ffffff1a;
@@ -73,12 +73,12 @@ panel[is=tabs-menu-panel] {
 				}
 
 				&:not(:hover, .selected) {
-					.zotero-tabs-menu-entry.close {
+					.trellis-tabs-menu-entry.close {
 						display: none;
 					}
 				}
 
-				.zotero-tabs-menu-entry {
+				.trellis-tabs-menu-entry {
 					// @include focus-ring;
 					border-radius: 2px;
 					height: 18px;
@@ -151,16 +151,16 @@ panel[is=tabs-menu-panel] {
 				}
 			}
 			
-			#zotero-tabs-menu-row-empty {
+			#trellis-tabs-menu-row-empty {
 				pointer-events: none;
 
-				.zotero-tabs-menu-entry {
+				.trellis-tabs-menu-entry {
 					padding-inline: 8px;
 					color: var(--fill-tertiary);
 				}
 			}
 			
-			#zotero-tabs-menu-dragged {
+			#trellis-tabs-menu-dragged {
 				opacity: 0;
 			}	
 		}

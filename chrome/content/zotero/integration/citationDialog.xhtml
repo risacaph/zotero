@@ -4,22 +4,22 @@
     
 	Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
@@ -32,16 +32,16 @@
 	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	drawintitlebar-platforms="mac,win"
 	resizable="false"
-	windowtype="zotero:citation-dialog"
+	windowtype="trellis:citation-dialog"
 	>
 	<head>
 		<title data-l10n-id="integration-citationDialog"></title>
-		<link rel="localization" href="zotero.ftl"/>
+		<link rel="localization" href="trellis.ftl"/>
 		<link rel="localization" href="integration.ftl"/>
 		<link rel="stylesheet" href="chrome://global/skin/global.css" />
-		<link rel="stylesheet" href="chrome://zotero/skin/zotero.css" />
-		<link rel="stylesheet" href="chrome://zotero/skin/overlay.css" />
-		<link rel="stylesheet" href="chrome://zotero-platform/content/zotero.css" />
+		<link rel="stylesheet" href="chrome://trellis/skin/trellis.css" />
+		<link rel="stylesheet" href="chrome://trellis/skin/overlay.css" />
+		<link rel="stylesheet" href="chrome://trellis-platform/content/trellis.css" />
 		<script src="../include.js"/>
 		<script src="../customElements.js"/>
 		<script src="citationDialog.js"/>
@@ -60,7 +60,7 @@
 				<xul:bubble-input id="bubble-input" class="flex" data-arrow-nav="horizontal" data-tabindex="10" tabindex="-1"/>
 				<progress id="progress" max="100" hidden="true"></progress>
 				<div id="top-level-btn-group">
-					<image id="loading-spinner" class="zotero-spinner-16"/>
+					<image id="loading-spinner" class="trellis-spinner-16"/>
 					<button id="accept-button" class="btn-icon icon-citation-dialog-accept" data-l10n-id="integration-citationDialog-btn-accept"/>
 					<div class="vertical-separator"></div>
 					<button id="cancel-button" class="btn-icon icon-citation-dialog-cancel" data-l10n-id="integration-citationDialog-btn-cancel"/>
@@ -82,11 +82,11 @@
 			<div class="divider"></div>
 			<div id="library-trees" class="hbox">
 				<div id="collections-tree-container" class="vbox virtualized-table-container">
-					<div id="zotero-collections-tree" data-tabindex="50"/>
+					<div id="trellis-collections-tree" data-tabindex="50"/>
 				</div>
 				<div id="collections-tree-divider"/>
 				<div id="item-tree-container" class="hbox virtualized-table-container">
-					<div id="zotero-items-tree" data-tabindex="60" style="--highlight-color: var(--accent-blue30);"/>
+					<div id="trellis-items-tree" data-tabindex="60" style="--highlight-color: var(--accent-blue30);"/>
 				</div>
 				<div id="sidebar" class="vbox">
 					<div id="annotations-sidebar" class="vbox" data-dialog-type="annotations">
@@ -157,7 +157,7 @@
 							<select name="locator" id="label" class="details-label" size="0"></select>
 							<input id="locator" class="details-data" aria-labelledby="label" aria-describedby="itemDetails-combinedInfo"/>
 							<div class="details-locator-info" data-l10n-id="integration-citationDialog-details-locator-info">
-								<a data-l10n-name="docs-link" class="link" tabindex="0" href="https://www.zotero.org/support/word_processor_plugin_usage#page_and_other_locators" onclick="Zotero.launchURL(this.href)"/>
+								<a data-l10n-name="docs-link" class="link" tabindex="0" href="https://www.trellis.org/support/word_processor_plugin_usage#page_and_other_locators" onclick="Trellis.launchURL(this.href)"/>
 							</div>
 							
 							<label class="details-label" for="prefix" data-l10n-id="integration-citationDialog-details-prefix"></label>

@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "نام:">
+<!ENTITY trellis.search.name "نام:">
 
-<!ENTITY zotero.search.searchInLibrary "جستجو در کتابخانه:">
+<!ENTITY trellis.search.searchInLibrary "جستجو در کتابخانه:">
 
-<!ENTITY zotero.search.joinMode.prefix "مطابقت با">
-<!ENTITY zotero.search.joinMode.any "حداقل یکی از">
-<!ENTITY zotero.search.joinMode.all "همه">
-<!ENTITY zotero.search.joinMode.suffix "این موارد:">
+<!ENTITY trellis.search.joinMode.prefix "مطابقت با">
+<!ENTITY trellis.search.joinMode.any "حداقل یکی از">
+<!ENTITY trellis.search.joinMode.all "همه">
+<!ENTITY trellis.search.joinMode.suffix "این موارد:">
 
-<!ENTITY zotero.search.recursive.label "جستجو در زیرشاخه‌ها">
-<!ENTITY zotero.search.noChildren "فقط آیتم‌های رویی جستجو شوند">
-<!ENTITY zotero.search.includeParentsAndChildren "نمایش آیتم‌های مادر و آیتم‌های فرزند در نتایج جستجو">
+<!ENTITY trellis.search.recursive.label "جستجو در زیرشاخه‌ها">
+<!ENTITY trellis.search.noChildren "فقط آیتم‌های رویی جستجو شوند">
+<!ENTITY trellis.search.includeParentsAndChildren "نمایش آیتم‌های مادر و آیتم‌های فرزند در نتایج جستجو">
 
-<!ENTITY zotero.search.textModes.phrase "عبارت">
-<!ENTITY zotero.search.textModes.phraseBinary "عبارت (شامل پرونده‌های دودویی)‏">
-<!ENTITY zotero.search.textModes.regexp "عبارت با قاعده (Regexp)">
-<!ENTITY zotero.search.textModes.regexpCS "Regexp (حساس به حروف کوچک و بزرگ)">
+<!ENTITY trellis.search.textModes.phrase "عبارت">
+<!ENTITY trellis.search.textModes.phraseBinary "عبارت (شامل پرونده‌های دودویی)‏">
+<!ENTITY trellis.search.textModes.regexp "عبارت با قاعده (Regexp)">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (حساس به حروف کوچک و بزرگ)">
 
-<!ENTITY zotero.search.date.units.days "روز">
-<!ENTITY zotero.search.date.units.months "ماه">
-<!ENTITY zotero.search.date.units.years "سال">
+<!ENTITY trellis.search.date.units.days "روز">
+<!ENTITY trellis.search.date.units.months "ماه">
+<!ENTITY trellis.search.date.units.years "سال">
 
-<!ENTITY zotero.search.search "جستجو">
-<!ENTITY zotero.search.clear "پاک کردن">
-<!ENTITY zotero.search.saveSearch "ذخیره جستجو">
+<!ENTITY trellis.search.search "جستجو">
+<!ENTITY trellis.search.clear "پاک کردن">
+<!ENTITY trellis.search.saveSearch "ذخیره جستجو">

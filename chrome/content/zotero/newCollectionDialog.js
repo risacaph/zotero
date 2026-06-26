@@ -3,27 +3,27 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 http://zotero.org
+					 http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-var Zotero_New_Collection_Dialog = {
+var Trellis_New_Collection_Dialog = {
 	_handleLoad() {
 		let io = window.arguments[0];
 		
@@ -50,8 +50,8 @@ var Zotero_New_Collection_Dialog = {
 		let menupopup = createInField.firstElementChild;
 		menupopup.replaceChildren();
 
-		let createdNode = Zotero.Utilities.Internal.createMenuForTarget(
-			Zotero.Libraries.get(this._libraryID),
+		let createdNode = Trellis.Utilities.Internal.createMenuForTarget(
+			Trellis.Libraries.get(this._libraryID),
 			menupopup,
 			this._parentCollectionID ? 'C' + this._parentCollectionID : 'L' + this._libraryID,
 			(event, libraryOrCollection) => {

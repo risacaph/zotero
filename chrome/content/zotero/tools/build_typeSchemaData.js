@@ -1,18 +1,18 @@
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
 (async function () {
     // Create schema
     var schema = {"itemTypes":{}, "creatorTypes":{}, "fields":{}};
-    var types = Zotero.ItemTypes.getTypes();
+    var types = Trellis.ItemTypes.getTypes();
 
-    var fieldIDs = await Zotero.DB.columnQueryAsync("SELECT fieldID FROM fieldsCombined");
-    var baseMappedFields = Zotero.ItemFields.getBaseMappedFields();
+    var fieldIDs = await Trellis.DB.columnQueryAsync("SELECT fieldID FROM fieldsCombined");
+    var baseMappedFields = Trellis.ItemFields.getBaseMappedFields();
     
     for (let fieldID of fieldIDs) {
-        var fieldObj = [/* name */Zotero.ItemFields.getName(fieldID)];
+        var fieldObj = [/* name */Trellis.ItemFields.getName(fieldID)];
         try {
             // localizedString
-            let str = Zotero.getString("itemFields." + fieldObj.name);
+            let str = Trellis.getString("itemFields." + fieldObj.name);
             if (str == "itemFields." + fieldObj.name) {
                 // Use name for localizedString
                 str = fieldObj[0];
@@ -27,23 +27,23 @@ var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules
 
     // names, localizedStrings, creatorTypes, and fields for each item type
     for (let type of types) {
-        var fieldIDs = Zotero.ItemFields.getItemTypeFields(type.id);
+        var fieldIDs = Trellis.ItemFields.getItemTypeFields(type.id);
         var baseFields = {};
         for (let fieldID of fieldIDs) {
             if (baseMappedFields.includes(fieldID)) {
-                baseFields[fieldID] = Zotero.ItemFields.getBaseIDFromTypeAndField(type.id, fieldID);
+                baseFields[fieldID] = Trellis.ItemFields.getBaseIDFromTypeAndField(type.id, fieldID);
             }
         }
 
-        var icon = Zotero.ItemTypes.getImageSrc(type.name);
+        var icon = Trellis.ItemTypes.getImageSrc(type.name);
         icon = icon.substr(icon.lastIndexOf("/")+1);
 
         try {
-            var creatorTypes = Zotero.CreatorTypes.getTypesForItemType(type.id).map((creatorType) => creatorType.id);
+            var creatorTypes = Trellis.CreatorTypes.getTypesForItemType(type.id).map((creatorType) => creatorType.id);
         } catch (e) {
             creatorTypes = [];
         }
-        var primaryCreatorType = Zotero.CreatorTypes.getPrimaryIDForType(type.id);
+        var primaryCreatorType = Trellis.CreatorTypes.getPrimaryIDForType(type.id);
         if(creatorTypes[0] != primaryCreatorType) {
             creatorTypes.splice(creatorTypes.indexOf(primaryCreatorType), 1);
             creatorTypes.unshift(primaryCreatorType);
@@ -51,7 +51,7 @@ var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules
 
         schema.itemTypes[type.id] = [
                         /* name */type.name,
-                        /* localizedString */Zotero.ItemTypes.getLocalizedString(type.name),
+                        /* localizedString */Trellis.ItemTypes.getLocalizedString(type.name),
                         /* creatorTypes */creatorTypes,
                         /* fields */ fieldIDs,
                         /* baseFields */baseFields,
@@ -60,28 +60,28 @@ var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules
 
     }
 
-    var types = Zotero.CreatorTypes.getTypes();
+    var types = Trellis.CreatorTypes.getTypes();
     for (let type of types) {
         schema.creatorTypes[type.id] = [
                         /* name */type.name,
-                        /* localizedString */Zotero.CreatorTypes.getLocalizedString(type.name)
+                        /* localizedString */Trellis.CreatorTypes.getLocalizedString(type.name)
         ];
     }
 
     // Write to file
     var fp = new FilePicker();
-    fp.init(window, Zotero.getString('dataDir.selectDir'), fp.modeGetFolder);
+    fp.init(window, Trellis.getString('dataDir.selectDir'), fp.modeGetFolder);
     
     let resultElem = document.getElementById('result');
     if (await fp.show() != fp.returnOK) {
         resultElem.innerHTML = '<p>Failed.</p>';
     } else {
-        let schemaFile = Zotero.File.pathToFile(fp.file);
-        schemaFile.append("zoteroTypeSchemaData.js");
-        await Zotero.File.putContentsAsync(
+        let schemaFile = Trellis.File.pathToFile(fp.file);
+        schemaFile.append("trellisTypeSchemaData.js");
+        await Trellis.File.putContentsAsync(
             schemaFile,
-            `var ZOTERO_TYPE_SCHEMA = ${JSON.stringify(schema, null, '\t')};\n\n`
-                 + "if (typeof module !== 'undefined') {\n\tmodule.exports = ZOTERO_TYPE_SCHEMA;\n}\n"
+            `var TRELLIS_TYPE_SCHEMA = ${JSON.stringify(schema, null, '\t')};\n\n`
+                 + "if (typeof module !== 'undefined') {\n\tmodule.exports = TRELLIS_TYPE_SCHEMA;\n}\n"
         );
         resultElem.innerHTML = `<p>Wrote ${schemaFile.path} successfully.</p>`;
     }

@@ -3,44 +3,44 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 /*
 
-This file provides a reasonably complete local implementation of the Zotero API (api.zotero.org).
+This file provides a reasonably complete local implementation of the Trellis API (api.trellis.org).
 Endpoints are accessible on the local server (localhost:23119 by default) under /api/.
 
-Limitations compared to api.zotero.org:
+Limitations compared to api.trellis.org:
 
-- Only API version 3 (https://www.zotero.org/support/dev/web_api/v3/basics) is supported, and only
+- Only API version 3 (https://www.trellis.org/support/dev/web_api/v3/basics) is supported, and only
   one API version will ever be supported at a time. If a new API version is released and your
   client needs to maintain support for older versions, first query /api/ and read the
-  Zotero-API-Version response header, then make requests conditionally.
+  Trellis-API-Version response header, then make requests conditionally.
 - Write access is not yet supported.
 - No authentication.
 - No access to user data for users other than the local logged-in user. Use user ID 0 or the user's
-  actual API user ID (https://www.zotero.org/settings/keys).
+  actual API user ID (https://www.trellis.org/settings/keys).
 - Minimal access to metadata about groups.
 - Atom is not supported.
-- Item type/field endpoints (https://www.zotero.org/support/dev/web_api/v3/types_and_fields) will
+- Item type/field endpoints (https://www.trellis.org/support/dev/web_api/v3/types_and_fields) will
   return localized names in the user's locale. The locale query parameter is not supported. The
   single exception is /api/creatorFields, which follows the web API's behavior in always returning
   results in English, *not* the user's locale.
@@ -76,7 +76,7 @@ const exportFormats = new Map([
 	['refer', '881f60f2-0802-411a-9228-ce5f47b64c7d'],
 	['rdf_bibliontology', '14763d25-8ba0-45df-8f52-b8d1108e7ac9'],
 	['rdf_dc', '6e372642-ed9d-4934-b5d1-c11ac758ebb7'],
-	['rdf_zotero', '14763d24-8ba0-45df-8f52-b8d1108e7ac9'],
+	['rdf_trellis', '14763d24-8ba0-45df-8f52-b8d1108e7ac9'],
 	['ris', '32d59d2d-b65a-4da4-b0a3-bdd3cfb979e7'],
 	['tei', '032ae9b7-ab90-9205-a479-baf81f49184a'],
 	['wikipedia', '3f50aaac-7acc-4350-acd0-59cb77faf620'],
@@ -99,14 +99,14 @@ class LocalAPIEndpoint {
 	}
 	
 	async _initInternal(requestData) {
-		if (!Zotero.Prefs.get('httpServer.localAPI.enabled')) {
+		if (!Trellis.Prefs.get('httpServer.localAPI.enabled')) {
 			return this.makeResponse(403, 'text/plain', 'Local API is not enabled');
 		}
 		
 		requestData.headers = new Headers(requestData.headers);
 		
 		let apiVersion = parseInt(
-			requestData.headers.get('Zotero-API-Version')
+			requestData.headers.get('Trellis-API-Version')
 				|| requestData.searchParams.get('v')
 				|| LOCAL_API_VERSION
 		);
@@ -118,9 +118,9 @@ class LocalAPIEndpoint {
 		let userID = requestData.pathParams.userID && parseInt(requestData.pathParams.userID);
 		if (userID !== undefined
 				&& userID != 0
-				&& userID != Zotero.Users.getCurrentUserID()) {
+				&& userID != Trellis.Users.getCurrentUserID()) {
 			let suffix = "";
-			let currentUserID = Zotero.Users.getCurrentUserID();
+			let currentUserID = Trellis.Users.getCurrentUserID();
 			if (currentUserID) {
 				suffix += " or " + currentUserID;
 			}
@@ -129,19 +129,19 @@ class LocalAPIEndpoint {
 		
 		if (requestData.pathParams.groupID) {
 			let groupID = requestData.pathParams.groupID;
-			let libraryID = Zotero.Groups.getLibraryIDFromGroupID(parseInt(groupID));
+			let libraryID = Trellis.Groups.getLibraryIDFromGroupID(parseInt(groupID));
 			if (!libraryID) {
 				return this.makeResponse(404, 'text/plain', 'Not found');
 			}
 			requestData.libraryID = libraryID;
 		}
 		else {
-			requestData.libraryID = Zotero.Libraries.userLibraryID;
+			requestData.libraryID = Trellis.Libraries.userLibraryID;
 		}
 		
-		let library = Zotero.Libraries.get(requestData.libraryID);
+		let library = Trellis.Libraries.get(requestData.libraryID);
 		if (!library.getDataLoaded('item')) {
-			Zotero.debug("Waiting for items to load for library " + library.libraryID);
+			Trellis.debug("Waiting for items to load for library " + library.libraryID);
 			await library.waitForDataLoad('item');
 		}
 		
@@ -185,16 +185,16 @@ class LocalAPIEndpoint {
 				}
 				response.data.sort((a, b) => {
 					let aField = a[sort];
-					if (!aField && a instanceof Zotero.Item) {
+					if (!aField && a instanceof Trellis.Item) {
 						aField = a.getField(sort, true, true);
 					}
 					let bField = b[sort];
-					if (!bField && b instanceof Zotero.Item) {
+					if (!bField && b instanceof Trellis.Item) {
 						bField = b.getField(sort, true, true);
 					}
 					if (sort == 'date') {
-						aField = Zotero.Date.multipartToSQL(aField);
-						bField = Zotero.Date.multipartToSQL(bField);
+						aField = Trellis.Date.multipartToSQL(aField);
+						bField = Trellis.Date.multipartToSQL(bField);
 					}
 					return aField < bField
 						? (-direction)
@@ -226,7 +226,7 @@ class LocalAPIEndpoint {
 				'Link': Object.entries(links).map(([rel, url]) => `<${url}>; rel="${rel}"`).join(', ')
 			};
 			let lastModifiedVersion = dataIsArray
-				? Zotero.Libraries.get(requestData.libraryID).libraryVersion
+				? Trellis.Libraries.get(requestData.libraryID).libraryVersion
 				: response.data.version;
 			if (lastModifiedVersion !== undefined) {
 				headers['Last-Modified-Version'] = lastModifiedVersion;
@@ -263,7 +263,7 @@ class LocalAPIEndpoint {
 			return url.toString();
 		};
 
-		// Logic adapted from https://github.com/zotero/dataserver/blob/18443360/model/API.inc.php#L588-L642
+		// Logic adapted from https://github.com/trellis/dataserver/blob/18443360/model/API.inc.php#L588-L642
 		// first
 		if (start) {
 			let p = new URLSearchParams(requestData.searchParams);
@@ -316,9 +316,9 @@ class LocalAPIEndpoint {
 		}
 
 		// alternate: only include if logged in, cut off '/api/', replace userID 0 with current userID
-		if (Zotero.Users.getCurrentUserID()) {
-			links.alternate = ZOTERO_CONFIG.WWW_BASE_URL + requestData.pathname.substring(5)
-				.replace('users/0/', `users/${Zotero.Users.getCurrentUserID()}/`);
+		if (Trellis.Users.getCurrentUserID()) {
+			links.alternate = TRELLIS_CONFIG.WWW_BASE_URL + requestData.pathname.substring(5)
+				.replace('users/0/', `users/${Trellis.Users.getCurrentUserID()}/`);
 		}
 		
 		return links;
@@ -326,7 +326,7 @@ class LocalAPIEndpoint {
 
 	/**
 	 * @param {Object} requestData Passed to {@link init}
-	 * @param {Zotero.DataObject | Zotero.DataObject[]} dataObjectOrObjects
+	 * @param {Trellis.DataObject | Trellis.DataObject[]} dataObjectOrObjects
 	 * @param {Object} headers
 	 * @returns {Promise} A response to be returned from {@link init}
 	 */
@@ -385,8 +385,8 @@ class LocalAPIEndpoint {
 				'Content-Type': contentTypeOrHeaders
 			};
 		}
-		contentTypeOrHeaders['Zotero-API-Version'] = LOCAL_API_VERSION;
-		contentTypeOrHeaders['Zotero-Schema-Version'] = Zotero.Schema.globalSchemaVersion;
+		contentTypeOrHeaders['Trellis-API-Version'] = LOCAL_API_VERSION;
+		contentTypeOrHeaders['Trellis-Schema-Version'] = Trellis.Schema.globalSchemaVersion;
 		return [status, contentTypeOrHeaders, body];
 	}
 
@@ -395,7 +395,7 @@ class LocalAPIEndpoint {
 	 *
 	 * @param {Object} requestData
 	 * @return {Promise<{ data }> | { data } | [Number, (String | Object), String]}
-	 * 		An object with a 'data' property containing a {@link Zotero.DataObject} or an array of DataObjects,
+	 * 		An object with a 'data' property containing a {@link Trellis.DataObject} or an array of DataObjects,
 	 * 		or an HTTP response array (status code, Content-Type or headers, body).
 	 */
 	// eslint-disable-next-line no-unused-vars
@@ -406,86 +406,86 @@ class LocalAPIEndpoint {
 
 const _404 = [404, 'text/plain', 'Not found'];
 
-Zotero.Server.LocalAPI = {};
+Trellis.Server.LocalAPI = {};
 
-Zotero.Server.LocalAPI.Root = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Root = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run(_) {
 		return [200, 'text/plain', 'Nothing to see here.'];
 	}
 };
-Zotero.Server.Endpoints["/api/"] = Zotero.Server.LocalAPI.Root;
+Trellis.Server.Endpoints["/api/"] = Trellis.Server.LocalAPI.Root;
 
 
-Zotero.Server.LocalAPI.Schema = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Schema = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run(_) {
-		return [200, 'application/json', await Zotero.File.getContentsFromURLAsync('resource://zotero/schema/global/schema.json')];
+		return [200, 'application/json', await Trellis.File.getContentsFromURLAsync('resource://trellis/schema/global/schema.json')];
 	}
 };
-Zotero.Server.Endpoints["/api/schema"] = Zotero.Server.LocalAPI.Schema;
+Trellis.Server.Endpoints["/api/schema"] = Trellis.Server.LocalAPI.Schema;
 
-Zotero.Server.LocalAPI.ItemTypes = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.ItemTypes = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run(_) {
-		let itemTypes = Zotero.ItemTypes.getAll().map((type) => {
+		let itemTypes = Trellis.ItemTypes.getAll().map((type) => {
 			return {
 				itemType: type.name,
-				localized: Zotero.ItemTypes.getLocalizedString(type.name)
+				localized: Trellis.ItemTypes.getLocalizedString(type.name)
 			};
 		});
 		return [200, 'application/json', JSON.stringify(itemTypes, null, 4)];
 	}
 };
-Zotero.Server.Endpoints["/api/itemTypes"] = Zotero.Server.LocalAPI.ItemTypes;
+Trellis.Server.Endpoints["/api/itemTypes"] = Trellis.Server.LocalAPI.ItemTypes;
 
-Zotero.Server.LocalAPI.ItemFields = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.ItemFields = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run(_) {
-		let itemFields = Zotero.ItemFields.getAll().map((field) => {
+		let itemFields = Trellis.ItemFields.getAll().map((field) => {
 			return {
 				field: field.name,
-				localized: Zotero.ItemFields.getLocalizedString(field.name)
+				localized: Trellis.ItemFields.getLocalizedString(field.name)
 			};
 		});
 		return [200, 'application/json', JSON.stringify(itemFields, null, 4)];
 	}
 };
-Zotero.Server.Endpoints["/api/itemFields"] = Zotero.Server.LocalAPI.ItemFields;
+Trellis.Server.Endpoints["/api/itemFields"] = Trellis.Server.LocalAPI.ItemFields;
 
-Zotero.Server.LocalAPI.ItemTypeFields = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.ItemTypeFields = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run({ searchParams }) {
 		let itemType = searchParams.get('itemType');
-		if (!itemType || !Zotero.ItemTypes.getID(itemType)) {
+		if (!itemType || !Trellis.ItemTypes.getID(itemType)) {
 			return [400, 'text/plain', "Invalid or missing 'itemType' value"];
 		}
-		let itemFields = Zotero.ItemFields.getItemTypeFields(Zotero.ItemTypes.getID(itemType))
+		let itemFields = Trellis.ItemFields.getItemTypeFields(Trellis.ItemTypes.getID(itemType))
 			.map((fieldID) => {
 				return {
-					field: Zotero.ItemFields.getName(fieldID),
-					localized: Zotero.ItemFields.getLocalizedString(fieldID)
+					field: Trellis.ItemFields.getName(fieldID),
+					localized: Trellis.ItemFields.getLocalizedString(fieldID)
 				};
 			});
 		return [200, 'application/json', JSON.stringify(itemFields, null, 4)];
 	}
 };
-Zotero.Server.Endpoints["/api/itemTypeFields"] = Zotero.Server.LocalAPI.ItemTypeFields;
+Trellis.Server.Endpoints["/api/itemTypeFields"] = Trellis.Server.LocalAPI.ItemTypeFields;
 
-Zotero.Server.LocalAPI.ItemTypeCreatorTypes = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.ItemTypeCreatorTypes = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run({ searchParams }) {
 		let itemType = searchParams.get('itemType');
-		if (!itemType || !Zotero.ItemTypes.getID(itemType)) {
+		if (!itemType || !Trellis.ItemTypes.getID(itemType)) {
 			return [400, 'text/plain', "Invalid or missing 'itemType' value"];
 		}
-		let creatorTypes = Zotero.CreatorTypes.getTypesForItemType(Zotero.ItemTypes.getID(itemType))
+		let creatorTypes = Trellis.CreatorTypes.getTypesForItemType(Trellis.ItemTypes.getID(itemType))
 			.map((creatorType) => {
 				return {
 					creatorType: creatorType.name,
@@ -495,9 +495,9 @@ Zotero.Server.LocalAPI.ItemTypeCreatorTypes = class extends LocalAPIEndpoint {
 		return [200, 'application/json', JSON.stringify(creatorTypes, null, 4)];
 	}
 };
-Zotero.Server.Endpoints["/api/itemTypeCreatorTypes"] = Zotero.Server.LocalAPI.ItemTypeCreatorTypes;
+Trellis.Server.Endpoints["/api/itemTypeCreatorTypes"] = Trellis.Server.LocalAPI.ItemTypeCreatorTypes;
 
-Zotero.Server.LocalAPI.CreatorFields = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.CreatorFields = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run(_) {
@@ -509,74 +509,74 @@ Zotero.Server.LocalAPI.CreatorFields = class extends LocalAPIEndpoint {
 		return [200, 'application/json', JSON.stringify(creatorFields, null, 4)];
 	}
 };
-Zotero.Server.Endpoints["/api/creatorFields"] = Zotero.Server.LocalAPI.CreatorFields;
+Trellis.Server.Endpoints["/api/creatorFields"] = Trellis.Server.LocalAPI.CreatorFields;
 
 
-Zotero.Server.LocalAPI.Settings = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Settings = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run(_) {
 		return [200, 'application/json', '{}'];
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/settings"] = Zotero.Server.LocalAPI.Settings;
+Trellis.Server.Endpoints["/api/users/:userID/settings"] = Trellis.Server.LocalAPI.Settings;
 
 
-Zotero.Server.LocalAPI.Collections = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Collections = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 	
 	run({ pathname, pathParams, libraryID }) {
 		let top = pathname.endsWith('/top');
 		let collections = pathParams.collectionKey
-			? Zotero.Collections.getByParent(Zotero.Collections.getIDFromLibraryAndKey(libraryID, pathParams.collectionKey))
-			: Zotero.Collections.getByLibrary(libraryID, !top);
+			? Trellis.Collections.getByParent(Trellis.Collections.getIDFromLibraryAndKey(libraryID, pathParams.collectionKey))
+			: Trellis.Collections.getByLibrary(libraryID, !top);
 		return { data: collections };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/collections"] = Zotero.Server.LocalAPI.Collections;
-Zotero.Server.Endpoints["/api/groups/:groupID/collections"] = Zotero.Server.LocalAPI.Collections;
-Zotero.Server.Endpoints["/api/users/:userID/collections/top"] = Zotero.Server.LocalAPI.Collections;
-Zotero.Server.Endpoints["/api/groups/:groupID/collections/top"] = Zotero.Server.LocalAPI.Collections;
-Zotero.Server.Endpoints["/api/users/:userID/collections/:collectionKey/collections"] = Zotero.Server.LocalAPI.Collections;
-Zotero.Server.Endpoints["/api/groups/:groupID/collections/:collectionKey/collections"] = Zotero.Server.LocalAPI.Collections;
+Trellis.Server.Endpoints["/api/users/:userID/collections"] = Trellis.Server.LocalAPI.Collections;
+Trellis.Server.Endpoints["/api/groups/:groupID/collections"] = Trellis.Server.LocalAPI.Collections;
+Trellis.Server.Endpoints["/api/users/:userID/collections/top"] = Trellis.Server.LocalAPI.Collections;
+Trellis.Server.Endpoints["/api/groups/:groupID/collections/top"] = Trellis.Server.LocalAPI.Collections;
+Trellis.Server.Endpoints["/api/users/:userID/collections/:collectionKey/collections"] = Trellis.Server.LocalAPI.Collections;
+Trellis.Server.Endpoints["/api/groups/:groupID/collections/:collectionKey/collections"] = Trellis.Server.LocalAPI.Collections;
 
-Zotero.Server.LocalAPI.Collection = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Collection = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run({ pathParams, libraryID }) {
-		let collection = Zotero.Collections.getByLibraryAndKey(libraryID, pathParams.collectionKey);
+		let collection = Trellis.Collections.getByLibraryAndKey(libraryID, pathParams.collectionKey);
 		if (!collection) return _404;
 		return { data: collection };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/collections/:collectionKey"] = Zotero.Server.LocalAPI.Collection;
-Zotero.Server.Endpoints["/api/groups/:groupID/collections/:collectionKey"] = Zotero.Server.LocalAPI.Collection;
+Trellis.Server.Endpoints["/api/users/:userID/collections/:collectionKey"] = Trellis.Server.LocalAPI.Collection;
+Trellis.Server.Endpoints["/api/groups/:groupID/collections/:collectionKey"] = Trellis.Server.LocalAPI.Collection;
 
 
-Zotero.Server.LocalAPI.Groups = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Groups = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run(_) {
-		let groups = Zotero.Groups.getAll();
+		let groups = Trellis.Groups.getAll();
 		return { data: groups };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/groups"] = Zotero.Server.LocalAPI.Groups;
+Trellis.Server.Endpoints["/api/users/:userID/groups"] = Trellis.Server.LocalAPI.Groups;
 
-Zotero.Server.LocalAPI.Group = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Group = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	run({ pathParams }) {
-		let group = Zotero.Groups.get(pathParams.groupID);
+		let group = Trellis.Groups.get(pathParams.groupID);
 		if (!group) return _404;
 		return { data: group };
 	}
 };
-Zotero.Server.Endpoints["/api/groups/:groupID"] = Zotero.Server.LocalAPI.Group;
-Zotero.Server.Endpoints["/api/users/:userID/groups/:groupID"] = Zotero.Server.LocalAPI.Group;
+Trellis.Server.Endpoints["/api/groups/:groupID"] = Trellis.Server.LocalAPI.Group;
+Trellis.Server.Endpoints["/api/users/:userID/groups/:groupID"] = Trellis.Server.LocalAPI.Group;
 
 
-Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ pathname, pathParams, searchParams, libraryID }) {
@@ -590,7 +590,7 @@ Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 			pathname = pathname.slice(0, -4);
 		}
 
-		let search = new Zotero.Search();
+		let search = new Trellis.Search();
 		search.libraryID = libraryID;
 		
 		if (isTop) {
@@ -603,7 +603,7 @@ Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 		if (pathParams.collectionKey) {
 			search.addCondition('itemType', 'isNot', 'annotation');
 			search.addCondition('collectionID', 'is',
-				Zotero.Collections.getIDFromLibraryAndKey(libraryID, pathParams.collectionKey));
+				Trellis.Collections.getIDFromLibraryAndKey(libraryID, pathParams.collectionKey));
 		}
 		else if (pathParams.itemKey) {
 			// We'll filter out the parent later
@@ -622,13 +622,13 @@ Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 		
 		let savedSearch;
 		if (pathParams.searchKey) {
-			savedSearch = Zotero.Searches.getByLibraryAndKey(libraryID, pathParams.searchKey);
+			savedSearch = Trellis.Searches.getByLibraryAndKey(libraryID, pathParams.searchKey);
 			if (!savedSearch) return _404;
 			search.setScope(savedSearch, true);
 		}
 		
 		if (searchParams.has('itemKey')) {
-			let scope = new Zotero.Search();
+			let scope = new Trellis.Search();
 			if (savedSearch) {
 				scope.setScope(savedSearch, true);
 			}
@@ -660,12 +660,12 @@ Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 			'tag'
 		);
 
-		Zotero.debug('Executing local API search');
-		Zotero.debug(searchToDebugJSON(search));
+		Trellis.debug('Executing local API search');
+		Trellis.debug(searchToDebugJSON(search));
 		// Searches sometimes return duplicate IDs; de-duplicate first
 		// TODO: Fix in search.js
 		let uniqueResultIDs = [...new Set(await search.search())];
-		let items = await Zotero.Items.getAsync(uniqueResultIDs);
+		let items = await Trellis.Items.getAsync(uniqueResultIDs);
 		
 		if (pathParams.itemKey) {
 			// Filter out the parent, as promised
@@ -673,9 +673,9 @@ Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 		}
 
 		if (isTags) {
-			let tmpTable = await Zotero.Search.idsToTempTable(items.map(item => item.id));
+			let tmpTable = await Trellis.Search.idsToTempTable(items.map(item => item.id));
 			try {
-				let tags = await Zotero.Tags.getAllWithin({ tmpTable });
+				let tags = await Trellis.Tags.getAllWithin({ tmpTable });
 				
 				let tagQ = searchParams.get('q');
 				if (tagQ) {
@@ -687,12 +687,12 @@ Zotero.Server.LocalAPI.Items = class extends LocalAPIEndpoint {
 				
 				// getAllWithin() calls cleanData(), which discards type fields when they are 0
 				// But we always want them, so add them back if necessary
-				let json = await Zotero.Tags.toResponseJSON(libraryID,
+				let json = await Trellis.Tags.toResponseJSON(libraryID,
 					tags.map(tag => ({ ...tag, type: tag.type || 0 })));
 				return { data: json };
 			}
 			finally {
-				await Zotero.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable, [], { noCache: true });
+				await Trellis.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable, [], { noCache: true });
 			}
 		}
 		
@@ -706,7 +706,7 @@ for (let trashPart of ['', '/trash']) {
 		for (let tagsPart of ['', '/tags']) {
 			for (let userGroupPart of ['/api/users/:userID', '/api/groups/:groupID']) {
 				let path = userGroupPart + '/items' + trashPart + topPart + tagsPart;
-				Zotero.Server.Endpoints[path] = Zotero.Server.LocalAPI.Items;
+				Trellis.Server.Endpoints[path] = Trellis.Server.LocalAPI.Items;
 			}
 		}
 	}
@@ -717,38 +717,38 @@ for (let topPart of ['', '/top']) {
 	for (let tagsPart of ['', '/tags']) {
 		for (let userGroupPart of ['/api/users/:userID', '/api/groups/:groupID']) {
 			let path = userGroupPart + '/collections/:collectionKey/items' + topPart + tagsPart;
-			Zotero.Server.Endpoints[path] = Zotero.Server.LocalAPI.Items;
+			Trellis.Server.Endpoints[path] = Trellis.Server.LocalAPI.Items;
 		}
 	}
 }
 
 // Add the rest manually
-Zotero.Server.Endpoints["/api/users/:userID/items/:itemKey/children"] = Zotero.Server.LocalAPI.Items;
-Zotero.Server.Endpoints["/api/groups/:groupID/items/:itemKey/children"] = Zotero.Server.LocalAPI.Items;
-Zotero.Server.Endpoints["/api/users/:userID/publications/items"] = Zotero.Server.LocalAPI.Items;
-Zotero.Server.Endpoints["/api/users/:userID/publications/items/top"] = Zotero.Server.LocalAPI.Items;
-Zotero.Server.Endpoints["/api/users/:userID/publications/items/tags"] = Zotero.Server.LocalAPI.Items;
-Zotero.Server.Endpoints["/api/users/:userID/searches/:searchKey/items"] = Zotero.Server.LocalAPI.Items;
-Zotero.Server.Endpoints["/api/groups/:groupID/searches/:searchKey/items"] = Zotero.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/users/:userID/items/:itemKey/children"] = Trellis.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/groups/:groupID/items/:itemKey/children"] = Trellis.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/users/:userID/publications/items"] = Trellis.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/users/:userID/publications/items/top"] = Trellis.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/users/:userID/publications/items/tags"] = Trellis.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/users/:userID/searches/:searchKey/items"] = Trellis.Server.LocalAPI.Items;
+Trellis.Server.Endpoints["/api/groups/:groupID/searches/:searchKey/items"] = Trellis.Server.LocalAPI.Items;
 
-Zotero.Server.LocalAPI.Item = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Item = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ pathParams, libraryID }) {
-		let item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, pathParams.itemKey);
+		let item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, pathParams.itemKey);
 		if (!item) return _404;
 		return { data: item };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/items/:itemKey"] = Zotero.Server.LocalAPI.Item;
-Zotero.Server.Endpoints["/api/groups/:groupID/items/:itemKey"] = Zotero.Server.LocalAPI.Item;
+Trellis.Server.Endpoints["/api/users/:userID/items/:itemKey"] = Trellis.Server.LocalAPI.Item;
+Trellis.Server.Endpoints["/api/groups/:groupID/items/:itemKey"] = Trellis.Server.LocalAPI.Item;
 
 
-Zotero.Server.LocalAPI.ItemFile = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.ItemFile = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ pathname, pathParams, libraryID }) {
-		let item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, pathParams.itemKey);
+		let item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, pathParams.itemKey);
 		if (!item) return _404;
 		if (!item.isFileAttachment()) {
 			return [400, 'text/plain', `Not a file attachment: ${item.key}`];
@@ -759,27 +759,27 @@ Zotero.Server.LocalAPI.ItemFile = class extends LocalAPIEndpoint {
 		return [302, { 'Location': item.getLocalFileURL() }, ''];
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/items/:itemKey/file"] = Zotero.Server.LocalAPI.ItemFile;
-Zotero.Server.Endpoints["/api/groups/:groupID/items/:itemKey/file"] = Zotero.Server.LocalAPI.ItemFile;
-Zotero.Server.Endpoints["/api/users/:userID/items/:itemKey/file/view"] = Zotero.Server.LocalAPI.ItemFile;
-Zotero.Server.Endpoints["/api/groups/:groupID/items/:itemKey/file/view"] = Zotero.Server.LocalAPI.ItemFile;
-Zotero.Server.Endpoints["/api/users/:userID/items/:itemKey/file/view/url"] = Zotero.Server.LocalAPI.ItemFile;
-Zotero.Server.Endpoints["/api/groups/:groupID/items/:itemKey/file/view/url"] = Zotero.Server.LocalAPI.ItemFile;
+Trellis.Server.Endpoints["/api/users/:userID/items/:itemKey/file"] = Trellis.Server.LocalAPI.ItemFile;
+Trellis.Server.Endpoints["/api/groups/:groupID/items/:itemKey/file"] = Trellis.Server.LocalAPI.ItemFile;
+Trellis.Server.Endpoints["/api/users/:userID/items/:itemKey/file/view"] = Trellis.Server.LocalAPI.ItemFile;
+Trellis.Server.Endpoints["/api/groups/:groupID/items/:itemKey/file/view"] = Trellis.Server.LocalAPI.ItemFile;
+Trellis.Server.Endpoints["/api/users/:userID/items/:itemKey/file/view/url"] = Trellis.Server.LocalAPI.ItemFile;
+Trellis.Server.Endpoints["/api/groups/:groupID/items/:itemKey/file/view/url"] = Trellis.Server.LocalAPI.ItemFile;
 
 
-Zotero.Server.LocalAPI.ItemFullText = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.ItemFullText = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ pathParams, libraryID }) {
-		let item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, pathParams.itemKey);
-		if (!item || !item.isFileAttachment() || !Zotero.Fulltext.isCachedMIMEType(item.attachmentContentType)) {
+		let item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, pathParams.itemKey);
+		if (!item || !item.isFileAttachment() || !Trellis.Fulltext.isCachedMIMEType(item.attachmentContentType)) {
 			return _404;
 		}
-		let file = Zotero.Fulltext.getItemCacheFile(item);
+		let file = Trellis.Fulltext.getItemCacheFile(item);
 		if (!file.exists()) {
 			return _404;
 		}
-		let { indexedPages, totalPages, indexedChars, totalChars, version } = await Zotero.DB.rowQueryAsync(
+		let { indexedPages, totalPages, indexedChars, totalChars, version } = await Trellis.DB.rowQueryAsync(
 			"SELECT indexedPages, totalPages, indexedChars, totalChars, version FROM fulltextItems WHERE itemID=?",
 			item.id
 		);
@@ -791,7 +791,7 @@ Zotero.Server.LocalAPI.ItemFullText = class extends LocalAPIEndpoint {
 			},
 			JSON.stringify(
 				{
-					content: await Zotero.File.getContentsAsync(file),
+					content: await Trellis.File.getContentsAsync(file),
 					indexedPages: indexedPages ?? undefined,
 					totalPages: totalPages ?? undefined,
 					indexedChars: indexedChars ?? undefined,
@@ -803,11 +803,11 @@ Zotero.Server.LocalAPI.ItemFullText = class extends LocalAPIEndpoint {
 		];
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/items/:itemKey/fulltext"] = Zotero.Server.LocalAPI.ItemFullText;
-Zotero.Server.Endpoints["/api/groups/:groupID/items/:itemKey/fulltext"] = Zotero.Server.LocalAPI.ItemFullText;
+Trellis.Server.Endpoints["/api/users/:userID/items/:itemKey/fulltext"] = Trellis.Server.LocalAPI.ItemFullText;
+Trellis.Server.Endpoints["/api/groups/:groupID/items/:itemKey/fulltext"] = Trellis.Server.LocalAPI.ItemFullText;
 
 
-Zotero.Server.LocalAPI.FullText = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.FullText = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ searchParams, libraryID }) {
@@ -815,7 +815,7 @@ Zotero.Server.LocalAPI.FullText = class extends LocalAPIEndpoint {
 		if (Number.isNaN(since)) {
 			return [400, 'text/plain', `Invalid 'since' value '${searchParams.get('since')}'`];
 		}
-		let rows = await Zotero.DB.queryAsync(
+		let rows = await Trellis.DB.queryAsync(
 			"SELECT I.key, FI.version "
 				+ "FROM fulltextItems FI JOIN items I USING (itemID) "
 				+ "WHERE libraryID=?1 AND (?2=0 OR FI.version>?2)",
@@ -828,65 +828,65 @@ Zotero.Server.LocalAPI.FullText = class extends LocalAPIEndpoint {
 		return [200, 'application/json', JSON.stringify(obj, null, 4)];
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/fulltext"] = Zotero.Server.LocalAPI.FullText;
-Zotero.Server.Endpoints["/api/groups/:groupID/fulltext"] = Zotero.Server.LocalAPI.FullText;
+Trellis.Server.Endpoints["/api/users/:userID/fulltext"] = Trellis.Server.LocalAPI.FullText;
+Trellis.Server.Endpoints["/api/groups/:groupID/fulltext"] = Trellis.Server.LocalAPI.FullText;
 
 
-Zotero.Server.LocalAPI.Searches = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Searches = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ libraryID }) {
-		let searches = await Zotero.Searches.getAll(libraryID);
+		let searches = await Trellis.Searches.getAll(libraryID);
 		return { data: searches };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/searches"] = Zotero.Server.LocalAPI.Searches;
-Zotero.Server.Endpoints["/api/groups/:groupID/searches"] = Zotero.Server.LocalAPI.Searches;
+Trellis.Server.Endpoints["/api/users/:userID/searches"] = Trellis.Server.LocalAPI.Searches;
+Trellis.Server.Endpoints["/api/groups/:groupID/searches"] = Trellis.Server.LocalAPI.Searches;
 
-Zotero.Server.LocalAPI.Search = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Search = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ pathParams, libraryID }) {
-		let search = Zotero.Searches.getByLibraryAndKey(libraryID, pathParams.searchKey);
+		let search = Trellis.Searches.getByLibraryAndKey(libraryID, pathParams.searchKey);
 		if (!search) return _404;
 		return { data: search };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/searches/:searchKey"] = Zotero.Server.LocalAPI.Search;
-Zotero.Server.Endpoints["/api/groups/:groupID/searches/:searchKey"] = Zotero.Server.LocalAPI.Search;
+Trellis.Server.Endpoints["/api/users/:userID/searches/:searchKey"] = Trellis.Server.LocalAPI.Search;
+Trellis.Server.Endpoints["/api/groups/:groupID/searches/:searchKey"] = Trellis.Server.LocalAPI.Search;
 
 
-Zotero.Server.LocalAPI.Tags = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Tags = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ libraryID }) {
-		let tags = await Zotero.Tags.getAll(libraryID);
-		let json = await Zotero.Tags.toResponseJSON(libraryID, tags);
+		let tags = await Trellis.Tags.getAll(libraryID);
+		let json = await Trellis.Tags.toResponseJSON(libraryID, tags);
 		return { data: json };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/tags"] = Zotero.Server.LocalAPI.Tags;
-Zotero.Server.Endpoints["/api/groups/:groupID/tags"] = Zotero.Server.LocalAPI.Tags;
+Trellis.Server.Endpoints["/api/users/:userID/tags"] = Trellis.Server.LocalAPI.Tags;
+Trellis.Server.Endpoints["/api/groups/:groupID/tags"] = Trellis.Server.LocalAPI.Tags;
 
-Zotero.Server.LocalAPI.Tag = class extends LocalAPIEndpoint {
+Trellis.Server.LocalAPI.Tag = class extends LocalAPIEndpoint {
 	supportedMethods = ['GET'];
 
 	async run({ pathParams, libraryID }) {
 		let tag = decodeURIComponent(pathParams.tag.replaceAll('+', '%20'));
-		let json = await Zotero.Tags.toResponseJSON(libraryID, [{ tag }]);
+		let json = await Trellis.Tags.toResponseJSON(libraryID, [{ tag }]);
 		if (!json) return _404;
 		return { data: json };
 	}
 };
-Zotero.Server.Endpoints["/api/users/:userID/tags/:tag"] = Zotero.Server.LocalAPI.Tag;
-Zotero.Server.Endpoints["/api/groups/:groupID/tags/:tag"] = Zotero.Server.LocalAPI.Tag;
+Trellis.Server.Endpoints["/api/users/:userID/tags/:tag"] = Trellis.Server.LocalAPI.Tag;
+Trellis.Server.Endpoints["/api/groups/:groupID/tags/:tag"] = Trellis.Server.LocalAPI.Tag;
 
 
 /**
- * Convert a {@link Zotero.DataObject}, or an array of DataObjects, to response JSON
+ * Convert a {@link Trellis.DataObject}, or an array of DataObjects, to response JSON
  * 		with appropriate included data based on the 'include' query parameter.
  *
- * @param {Zotero.DataObject | Zotero.DataObject[]} dataObjectOrObjects
+ * @param {Trellis.DataObject | Trellis.DataObject[]} dataObjectOrObjects
  * @param {URLSearchParams} searchParams
  * @returns {Promise<Object>}
  */
@@ -899,7 +899,7 @@ async function toResponseJSON(dataObjectOrObjects, searchParams) {
 	let dataObject = dataObjectOrObjects;
 	let responseJSON = dataObject.toResponseJSONAsync
 		? await dataObject.toResponseJSONAsync({
-			apiURL: `http://localhost:${Zotero.Server.port}/api/`,
+			apiURL: `http://localhost:${Trellis.Server.port}/api/`,
 			includeGroupDetails: true
 		})
 		: dataObject;
@@ -936,7 +936,7 @@ async function toResponseJSON(dataObjectOrObjects, searchParams) {
 /**
  * Use citeproc to output HTML for an item or items.
  *
- * @param {Zotero.Item | Zotero.Item[]} itemOrItems
+ * @param {Trellis.Item | Trellis.Item[]} itemOrItems
  * @param {URLSearchParams} searchParams
  * @param {Boolean} asCitationList
  * @returns {Promise<String>}
@@ -952,22 +952,22 @@ async function citeprocToHTML(itemOrItems, searchParams, asCitationList) {
 	let locale = searchParams.get('locale') || 'en-US';
 	let linkWrap = searchParams.get('linkwrap') == '1';
 	
-	let style = Zotero.Styles.get(styleIDOrURL);
+	let style = Trellis.Styles.get(styleIDOrURL);
 	// If not a URI, try with standard prefix
 	if (!style && !styleIDOrURL.includes(':')) {
-		style = Zotero.Styles.get('http://www.zotero.org/styles/' + styleIDOrURL);
+		style = Trellis.Styles.get('http://www.trellis.org/styles/' + styleIDOrURL);
 	}
 	if (!style) {
 		// The client wants a style we don't have locally, so download it
 		// If they didn't pass an absolute URL, resolve relative to the style repo base
 		try {
-			let styleURL = new URL(styleIDOrURL, 'https://www.zotero.org/styles/');
-			if (styleURL.protocol === 'http:' && styleURL.host === 'www.zotero.org') {
+			let styleURL = new URL(styleIDOrURL, 'https://www.trellis.org/styles/');
+			if (styleURL.protocol === 'http:' && styleURL.host === 'www.trellis.org') {
 				styleURL.protocol = 'https:';
 			}
 			styleURL = styleURL.toString();
-			let { styleID } = await Zotero.Styles.install({ url: styleURL }, styleURL, true);
-			style = Zotero.Styles.get(styleID);
+			let { styleID } = await Trellis.Styles.install({ url: styleURL }, styleURL, true);
+			style = Trellis.Styles.get(styleID);
 		}
 		catch (e) {
 			throw new BadRequestError(`Invalid style: ${styleIDOrURL} (${e.message})`);
@@ -979,13 +979,13 @@ async function citeprocToHTML(itemOrItems, searchParams, asCitationList) {
 	
 	let cslEngine = style.getCiteProc(locale, 'html', { cache: true });
 	cslEngine.opt.development_extensions.wrap_url_and_doi = linkWrap;
-	return Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, 'html', asCitationList);
+	return Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, 'html', asCitationList);
 }
 
 /**
  * Export items to a string with the given translator.
  *
- * @param {Zotero.Item|Zotero.Item[]} itemOrItems
+ * @param {Trellis.Item|Trellis.Item[]} itemOrItems
  * @param {String} translatorID
  * @returns {Promise<String>}
  */
@@ -996,7 +996,7 @@ function exportItems(itemOrItems, translatorID) {
 	// Filter out annotations, which we can't export
 	items = items.filter(item => !item.isAnnotation());
 	return new Promise((resolve, reject) => {
-		let translation = new Zotero.Translate.Export();
+		let translation = new Trellis.Translate.Export();
 		translation.setItems(items.slice());
 		translation.setTranslator(translatorID);
 		translation.setHandler('done', () => {
@@ -1010,9 +1010,9 @@ function exportItems(itemOrItems, translatorID) {
 }
 
 /**
- * Evaluate the API's search syntax: https://www.zotero.org/support/dev/web_api/v3/basics#search_syntax
+ * Evaluate the API's search syntax: https://www.trellis.org/support/dev/web_api/v3/basics#search_syntax
  *
- * @param {Zotero.Search} parentSearch
+ * @param {Trellis.Search} parentSearch
  * @param {String[]} searchStrings The search strings provided by the client as query parameters
  * @param {String} condition The search condition name
  */
@@ -1027,7 +1027,7 @@ function buildSearchFromSearchSyntax(parentSearch, searchStrings, condition) {
 			searchString = searchString.substring(1);
 		}
 		
-		let childSearch = new Zotero.Search();
+		let childSearch = new Trellis.Search();
 		childSearch.libraryID = parentSearch.libraryID;
 		childSearch.setScope(parentSearch, true);
 		childSearch.addCondition('joinMode', 'any');

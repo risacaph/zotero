@@ -58,7 +58,7 @@
 	display: none;
 }
 
-#zotero-title-bar {
+#trellis-title-bar {
 	border-bottom: var(--material-panedivider);
 	background: var(--material-tabbar);
 }
@@ -68,6 +68,6 @@
 	justify-content: center;
 	-moz-window-dragging: drag;
 	menu {
-		font-size: var(--zotero-font-size);
+		font-size: var(--trellis-font-size);
 	}
 }

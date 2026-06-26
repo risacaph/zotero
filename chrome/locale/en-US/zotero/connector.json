@@ -124,7 +124,7 @@
 	},
 	"progressWindow_error_fallback": {
 		"message": "An error occurred saving with $1. Attempting to save using $2 instead.",
-		"description": "The placeholders will contain the names of Zotero translators (e.g., JSTOR or Embedded Metadata)."
+		"description": "The placeholders will contain the names of Trellis translators (e.g., JSTOR or Embedded Metadata)."
 	},
 	"progressWindow_error_upgradeClient": {
 		"message": "This feature is not supported by your version of $1. Please upgrade to the $2.",
@@ -174,7 +174,7 @@
 	},
 	"error_connection_save": {
 		"message": "The $1 was unable to communicate with the $2 desktop application. The Connector can save some pages directly to your $3 account, but for best results you should make sure $2 is open before attempting to save.",
-		"description": "$1 will contain the localized string 'Zotero Connector'. $2 will contain the app name. $3 will contain the domain name."
+		"description": "$1 will contain the localized string 'Trellis Connector'. $2 will contain the app name. $3 will contain the domain name."
 	},
 	"error_connection_downloadOrTroubleshoot": {
 		"message": "You can <a href=\"$1\">download $2</a> or <a href=\"$3\">troubleshoot the connection</a> if necessary."
@@ -184,7 +184,7 @@
 	},
 	
 	"reports_report_submitted": {
-		"message": "Your error report has been submitted.\n\nReport ID: $1\n\nPlease post a message to the Zotero Forums with this Report ID, a description of the problem, and any steps necessary to reproduce it.\n\nError reports are not reviewed unless referred to in the forums."
+		"message": "Your error report has been submitted.\n\nReport ID: $1\n\nPlease post a message to the Trellis Forums with this Report ID, a description of the problem, and any steps necessary to reproduce it.\n\nError reports are not reviewed unless referred to in the forums."
 	},
 	
 	"reports_debug_output_submitted": {
@@ -192,8 +192,8 @@
 	},
 
 	"reports_submission_failed": {
-		"message": "An error occurred submitting your report.\n\n$1\n\nPlease check your internet connection. If the problem persists, post a message to the Zotero Forums.",
-		"description": "$1 will be the error message sent to the Zotero servers"
+		"message": "An error occurred submitting your report.\n\n$1\n\nPlease check your internet connection. If the problem persists, post a message to the Trellis Forums.",
+		"description": "$1 will be the error message sent to the Trellis servers"
 	},
 	
 	"integration_error_clientUpgrade": {
@@ -201,14 +201,14 @@
 	},
 	"integration_error_connection": {
 		"message": "The $1 was unable to communicate with the $2 desktop application. $2 must be open to use web-based citing.",
-		"description": "$1 will be the localized string for the extension (e.g., Zotero Connector). $2 will be the app name (e.g., Zotero)."
+		"description": "$1 will be the localized string for the extension (e.g., Trellis Connector). $2 will be the app name (e.g., Trellis)."
 	},
 	
 	"integration_googleDocs_unlinkBeforeSaving_warning": {
-		"message": "This document contains active Zotero citations that will appear as zotero.org links in a downloaded copy."
+		"message": "This document contains active Trellis citations that will appear as trellis.org links in a downloaded copy."
 	},
 	"integration_googleDocs_unlinkBeforeSaving_instructions": {
-		"message": "To generate a version suitable for sharing, select <b>Make a copy…</b> from the File menu, select <b>Unlink Citations</b> from the Zotero menu in the new document, and then download the unlinked version. Keep this original linked document in case you need to make further changes."
+		"message": "To generate a version suitable for sharing, select <b>Make a copy…</b> from the File menu, select <b>Unlink Citations</b> from the Trellis menu in the new document, and then download the unlinked version. Keep this original linked document in case you need to make further changes."
 	},
 	"integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
 		"message": "Download Linked Version Anyway"
@@ -217,7 +217,7 @@
 		"message": "$1 is updating your document."
 	},
 	"integration_googleDocs_docxAlert": {
-		"message": "$1 integration is not available when editing Microsoft Word .docx files directly in Google Docs. Choose File → Save as Google Docs to enable this functionality.<br/><br/>If you want to transfer a Word document with $1 citations to Google Docs, see <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">Moving Documents Between Word Processors</a>."
+		"message": "$1 integration is not available when editing Microsoft Word .docx files directly in Google Docs. Choose File → Save as Google Docs to enable this functionality.<br/><br/>If you want to transfer a Word document with $1 citations to Google Docs, see <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">Moving Documents Between Word Processors</a>."
 	},
 	"integration_googleDocs_documentLocked": {
 		"message": "The document citations are being edited by another $1 user. Please try again later."
@@ -242,7 +242,7 @@
 		"message": "Relink Citation"
 	},
 	"integration_googleDocs_orphanedCitations_disclaimer": {
-		"message": "These citations have become <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">unlinked from $1</a>. You will need to relink them before they will update or appear in your bibliography."
+		"message": "These citations have become <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">unlinked from $1</a>. You will need to relink them before they will update or appear in your bibliography."
 	},
 	
 	"copyUnproxiedLink": {

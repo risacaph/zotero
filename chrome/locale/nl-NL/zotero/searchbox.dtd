@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Naam:">
+<!ENTITY trellis.search.name "Naam:">
 
-<!ENTITY zotero.search.searchInLibrary "Zoek in bibliotheek:">
+<!ENTITY trellis.search.searchInLibrary "Zoek in bibliotheek:">
 
-<!ENTITY zotero.search.joinMode.prefix "Moet voldoen aan">
-<!ENTITY zotero.search.joinMode.any "één van de">
-<!ENTITY zotero.search.joinMode.all "alle">
-<!ENTITY zotero.search.joinMode.suffix "volgende voorwaarden:">
+<!ENTITY trellis.search.joinMode.prefix "Moet voldoen aan">
+<!ENTITY trellis.search.joinMode.any "één van de">
+<!ENTITY trellis.search.joinMode.all "alle">
+<!ENTITY trellis.search.joinMode.suffix "volgende voorwaarden:">
 
-<!ENTITY zotero.search.recursive.label "Doorzoek deelverzamelingen">
-<!ENTITY zotero.search.noChildren "Toon alleen items op het hoogste niveau">
-<!ENTITY zotero.search.includeParentsAndChildren "Toon bijbehorende hoofd- en subitems">
+<!ENTITY trellis.search.recursive.label "Doorzoek deelverzamelingen">
+<!ENTITY trellis.search.noChildren "Toon alleen items op het hoogste niveau">
+<!ENTITY trellis.search.includeParentsAndChildren "Toon bijbehorende hoofd- en subitems">
 
-<!ENTITY zotero.search.textModes.phrase "Frase">
-<!ENTITY zotero.search.textModes.phraseBinary "Frase (binaire bestanden inbegrepen)">
-<!ENTITY zotero.search.textModes.regexp "Regexp">
-<!ENTITY zotero.search.textModes.regexpCS "Regexp (hoofdlettergevoelig)">
+<!ENTITY trellis.search.textModes.phrase "Frase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (binaire bestanden inbegrepen)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (hoofdlettergevoelig)">
 
-<!ENTITY zotero.search.date.units.days "dagen">
-<!ENTITY zotero.search.date.units.months "maanden">
-<!ENTITY zotero.search.date.units.years "jaren">
+<!ENTITY trellis.search.date.units.days "dagen">
+<!ENTITY trellis.search.date.units.months "maanden">
+<!ENTITY trellis.search.date.units.years "jaren">
 
-<!ENTITY zotero.search.search "Zoeken">
-<!ENTITY zotero.search.clear "Wissen">
-<!ENTITY zotero.search.saveSearch "Zoekopdracht bewaren">
+<!ENTITY trellis.search.search "Zoeken">
+<!ENTITY trellis.search.clear "Wissen">
+<!ENTITY trellis.search.saveSearch "Zoekopdracht bewaren">

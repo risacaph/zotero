@@ -3,27 +3,27 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var Zotero_Merge_Window = new function () {
+var Trellis_Merge_Window = new function () {
 	var _wizard = null;
 	var _wizardPage = null;
 	var _mergeGroup = null;
@@ -48,9 +48,9 @@ var Zotero_Merge_Window = new function () {
 		_wizard.addEventListener('wizardfinish', this.onFinish.bind(this));
 		
 		// Set font size from pref
-		Zotero.UIProperties.registerRoot(_wizardPage);
+		Trellis.UIProperties.registerRoot(_wizardPage);
 		
-		_wizard.getButton('cancel').setAttribute('label', Zotero.getString('sync.cancel'));
+		_wizard.getButton('cancel').setAttribute('label', Trellis.getString('sync.cancel'));
 		
 		_io = window.arguments[0];
 		// Not totally clear when this is necessary
@@ -78,8 +78,8 @@ var Zotero_Merge_Window = new function () {
 			_mergeGroup.onSelectionChange = _updateResolveAllCheckbox;
 		}
 		
-		_numObjects = document.getElementById('zotero-merge-num-objects');
-		document.getElementById('zotero-merge-total-objects').value = _conflicts.length;
+		_numObjects = document.getElementById('trellis-merge-num-objects');
+		document.getElementById('trellis-merge-total-objects').value = _conflicts.length;
 		
 		this.onNext();
 	}
@@ -235,7 +235,7 @@ var Zotero_Merge_Window = new function () {
 			data: {}
 		};
 		Object.assign(mergeInfo.data, _conflicts[pos].left)
-		Zotero.DataObjectUtilities.applyChanges(mergeInfo.data, _conflicts[pos].changes);
+		Trellis.DataObjectUtilities.applyChanges(mergeInfo.data, _conflicts[pos].changes);
 		if (_conflicts[pos].left.dateModified > _conflicts[pos].right.dateModified) {
 			var side = 0;
 		}
@@ -243,7 +243,7 @@ var Zotero_Merge_Window = new function () {
 		else {
 			var side = 1;
 		}
-		Zotero.DataObjectUtilities.applyChanges(
+		Trellis.DataObjectUtilities.applyChanges(
 			mergeInfo.data, _conflicts[pos].conflicts.map(x => x[side])
 		);
 		mergeInfo.selected = side ? 'right' : 'left';
@@ -270,8 +270,8 @@ var Zotero_Merge_Window = new function () {
 		
 		var data = {};
 		Object.assign(data, _conflicts[pos].left)
-		Zotero.DataObjectUtilities.applyChanges(data, _conflicts[pos].changes);
-		Zotero.DataObjectUtilities.applyChanges(
+		Trellis.DataObjectUtilities.applyChanges(data, _conflicts[pos].changes);
+		Trellis.DataObjectUtilities.applyChanges(
 			data, _conflicts[pos].conflicts.map(x => x[side == 'left' ? 0 : 1])
 		);
 		return data;
@@ -285,7 +285,7 @@ var Zotero_Merge_Window = new function () {
 		else {
 			var label = 'resolveAllLocal';
 		}
-		_resolveAllCheckbox.label = Zotero.getString('sync.conflict.' + label);
+		_resolveAllCheckbox.label = Trellis.getString('sync.conflict.' + label);
 	}
 	
 	
@@ -297,7 +297,7 @@ var Zotero_Merge_Window = new function () {
 	function _showNextButton() {
 		var nextButton = _wizard.getButton("next");
 		
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			nextButton.setAttribute("hidden", "false");
 			_wizard.getButton("finish").setAttribute("hidden", "true");
 		}
@@ -313,7 +313,7 @@ var Zotero_Merge_Window = new function () {
 	function _showFinishButton() {
 		var finishButton = _wizard.getButton("finish");
 		
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			_wizard.getButton("next").setAttribute("hidden", "true");
 			finishButton.setAttribute("hidden", "false");
 		}
@@ -338,13 +338,13 @@ var Zotero_Merge_Window = new function () {
 				var msg = 'itemChanged';
 		}
 		
-		msg = Zotero.getString('sync.conflict.' + msg, buttonName)
-		document.getElementById('zotero-merge-instructions').textContent = msg;
+		msg = Trellis.getString('sync.conflict.' + msg, buttonName)
+		document.getElementById('trellis-merge-instructions').textContent = msg;
 	}
 	
 	
 	function _error(e) {
-		Zotero.debug(e);
+		Trellis.debug(e);
 		_io.error = e;
 		_wizard.getButton('cancel').click();
 	}

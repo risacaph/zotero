@@ -1,6 +1,6 @@
-import { AbstractWebTranslationEnvironment } from 'chrome://zotero/content/xpcom/translate/testTranslators/translatorTester.mjs';
+import { AbstractWebTranslationEnvironment } from 'chrome://trellis/content/xpcom/translate/testTranslators/translatorTester.mjs';
 
-export class ZoteroWebTranslationEnvironment extends AbstractWebTranslationEnvironment {
+export class TrellisWebTranslationEnvironment extends AbstractWebTranslationEnvironment {
 
 	/**
 	 * @param {string} url
@@ -8,7 +8,7 @@ export class ZoteroWebTranslationEnvironment extends AbstractWebTranslationEnvir
 	 * @returns {Promise<HiddenBrowser>}
 	 */
 	async fetchPage(url, { tester }) {
-		const { HiddenBrowser } = ChromeUtils.importESModule('chrome://zotero/content/HiddenBrowser.mjs');
+		const { HiddenBrowser } = ChromeUtils.importESModule('chrome://trellis/content/HiddenBrowser.mjs');
 		let browser = new HiddenBrowser({
 			docShell: { allowMetaRedirects: true },
 			userContextId: tester.cookieSandbox,
@@ -35,12 +35,12 @@ export class ZoteroWebTranslationEnvironment extends AbstractWebTranslationEnvir
 	 * @param {AbortSignal} signal
 	 * @returns {Promise<{
 	 *     detectedItemType?: string;
-	 *     items?: Zotero.Item[];
+	 *     items?: Trellis.Item[];
 	 *     reason?: string;
 	 * }>}
 	 */
 	async runTranslation(browser, { tester, handlers, signal }) {
-		const { RemoteTranslate } = ChromeUtils.importESModule('chrome://zotero/content/RemoteTranslate.mjs');
+		const { RemoteTranslate } = ChromeUtils.importESModule('chrome://trellis/content/RemoteTranslate.mjs');
 
 		let translate = new RemoteTranslate({ disableErrorReporting: true });
 		try {

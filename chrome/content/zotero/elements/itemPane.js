@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -26,43 +26,43 @@
 
 {
 	let { isPaneCollapsed, setPaneCollapsed } = ChromeUtils.importESModule(
-		'chrome://zotero/content/elements/utils/collapsiblePane.mjs'
+		'chrome://trellis/content/elements/utils/collapsiblePane.mjs'
 	);
 	
 	class ItemPane extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
-			<deck id="zotero-item-pane-content" class="zotero-item-pane-content" selectedIndex="0" flex="1">
-				<item-message-pane id="zotero-item-message" />
+			<deck id="trellis-item-pane-content" class="trellis-item-pane-content" selectedIndex="0" flex="1">
+				<item-message-pane id="trellis-item-message" />
 				
-				<item-details id="zotero-item-details" tabType="library"/>
+				<item-details id="trellis-item-details" tabType="library"/>
 				
-				<note-editor id="zotero-note-editor" flex="1" notitle="1"
-					previousfocus="zotero-items-tree" />
+				<note-editor id="trellis-note-editor" flex="1" notitle="1"
+					previousfocus="trellis-items-tree" />
 				
-				<duplicates-merge-pane id="zotero-duplicates-merge-pane" />
-				<annotation-items-pane id="zotero-annotations-pane" />
+				<duplicates-merge-pane id="trellis-duplicates-merge-pane" />
+				<annotation-items-pane id="trellis-annotations-pane" />
 				<groupbox id="batch-edit-prompt" pack="center" align="center" data-l10n-id="item-pane-batch-editing-prompt">
 					<description id="batch-edit-prompt-message" />
 					<button id="batch-edit-prompt-enable" data-l10n-id="item-pane-batch-editing-enable" />
 				</groupbox>
 			</deck>
-			<item-pane-sidenav id="zotero-view-item-sidenav" no-context-notes="true" class="zotero-view-item-sidenav"/>
+			<item-pane-sidenav id="trellis-view-item-sidenav" no-context-notes="true" class="trellis-view-item-sidenav"/>
 		`);
 
 		init() {
-			this._itemDetails = this.querySelector("#zotero-item-details");
-			this._noteEditor = this.querySelector("#zotero-note-editor");
-			this._duplicatesPane = this.querySelector("#zotero-duplicates-merge-pane");
-			this._messagePane = this.querySelector("#zotero-item-message");
-			this._annotationsPane = this.querySelector("#zotero-annotations-pane");
+			this._itemDetails = this.querySelector("#trellis-item-details");
+			this._noteEditor = this.querySelector("#trellis-note-editor");
+			this._duplicatesPane = this.querySelector("#trellis-duplicates-merge-pane");
+			this._messagePane = this.querySelector("#trellis-item-message");
+			this._annotationsPane = this.querySelector("#trellis-annotations-pane");
 			this._batchEditEnableBtn = this.querySelector("#batch-edit-prompt button");
 			this._batchEditPromptMessage = this.querySelector("#batch-edit-prompt-message");
-			this._sidenav = this.querySelector("#zotero-view-item-sidenav");
-			this._deck = this.querySelector("#zotero-item-pane-content");
+			this._sidenav = this.querySelector("#trellis-view-item-sidenav");
+			this._deck = this.querySelector("#trellis-item-pane-content");
 
 			this._itemDetails.sidenav = this._sidenav;
 
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item']);
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item']);
 
 			this._batchEditEnableBtn.addEventListener("command", () => {
 				this._isBatchEditEnabled = true;
@@ -76,7 +76,7 @@
 		}
 
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 		}
 
 		get data() {
@@ -160,7 +160,7 @@
 				let item = this.data[0];
 
 				// If a collection or search is selected, it must be in the trash.
-				if (item instanceof Zotero.Collection || item instanceof Zotero.Search) {
+				if (item instanceof Trellis.Collection || item instanceof Trellis.Search) {
 					renderStatus = this.renderMessage();
 				}
 				else if (item.isNote()) {
@@ -187,7 +187,7 @@
 
 		renderAnnotations(annotations) {
 			this.mode = "annotations";
-			let annotationsViewer = document.getElementById("zotero-annotations-pane");
+			let annotationsViewer = document.getElementById("trellis-annotations-pane");
 			annotationsViewer.items = annotations;
 			annotationsViewer.render();
 			return true;
@@ -196,7 +196,7 @@
 		renderNoteEditor(item) {
 			this.mode = "note";
 
-			let noteEditor = document.getElementById('zotero-note-editor');
+			let noteEditor = document.getElementById('trellis-note-editor');
 			noteEditor.mode = this.editable ? 'edit' : 'view';
 			noteEditor.viewMode = 'library';
 			noteEditor.parent = null;
@@ -211,7 +211,7 @@
 				items = [items];
 			}
 
-			// Fix https://forums.zotero.org/discussion/115450/zotero-7-beta-wrong-vertical-position-in-the-item-pane-after-switching-from-a-note
+			// Fix https://forums.trellis.org/discussion/115450/trellis-7-beta-wrong-vertical-position-in-the-item-pane-after-switching-from-a-note
 			if (previousMode === "note") {
 				// Wait for DOM to update and then trigger item-details render
 				await new Promise((resolve) => {
@@ -220,7 +220,7 @@
 			}
 
 			this._itemDetails.editable = this.editable;
-			this._itemDetails.tabID = "zotero-pane";
+			this._itemDetails.tabID = "trellis-pane";
 			this._itemDetails.tabType = "library";
 			this._itemDetails.item = items[0];
 			this._itemDetails.extraItems = items.slice(1);
@@ -233,25 +233,25 @@
 			}
 
 			if (items[0].isFeedItem) {
-				let lastTranslationTarget = Zotero.Prefs.get('feeds.lastTranslationTarget');
+				let lastTranslationTarget = Trellis.Prefs.get('feeds.lastTranslationTarget');
 				if (lastTranslationTarget) {
 					let id = parseInt(lastTranslationTarget.substr(1));
 					if (lastTranslationTarget[0] == "L") {
-						this._translationTarget = Zotero.Libraries.get(id);
+						this._translationTarget = Trellis.Libraries.get(id);
 					}
 					else if (lastTranslationTarget[0] == "C") {
-						this._translationTarget = Zotero.Collections.get(id);
+						this._translationTarget = Trellis.Collections.get(id);
 					}
 				}
 				if (!this._translationTarget) {
-					this._translationTarget = Zotero.Libraries.userLibrary;
+					this._translationTarget = Trellis.Libraries.userLibrary;
 				}
 				this.setTranslateButton();
 				// Too slow for now
 				// if (!item.isTranslated) {
 				// 	item.translate();
 				// }
-				ZoteroPane.startItemReadTimeout(items[0].id);
+				TrellisPane.startItemReadTimeout(items[0].id);
 			}
 			return true;
 		}
@@ -265,7 +265,7 @@
 			if (this.collectionTreeRows[0].isDuplicates()) {
 				if (!this.editable) {
 					if (count) {
-						msg = Zotero.getString('pane.item.duplicates.writeAccessRequired');
+						msg = Trellis.getString('pane.item.duplicates.writeAccessRequired');
 					}
 					else {
 						msg = { l10nId: 'item-pane-message-items-selected', l10nArgs: { count: 0 } };
@@ -283,7 +283,7 @@
 					this._duplicatesPane.setItems(this.data, displayNumItemsOnTypeError);
 				}
 				else {
-					msg = Zotero.getString('pane.item.duplicates.selectToMerge');
+					msg = Trellis.getString('pane.item.duplicates.selectToMerge');
 					this.setItemPaneMessage(msg);
 				}
 			}
@@ -293,13 +293,13 @@
 					let key;
 					// In the trash, we have to check the object type
 					if (this.collectionTreeRows[0].isTrash()) {
-						if (this.data.every(x => x instanceof Zotero.Collection)) {
+						if (this.data.every(x => x instanceof Trellis.Collection)) {
 							key = 'item-pane-message-collections-selected';
 						}
-						else if (this.data.every(x => x instanceof Zotero.Search)) {
+						else if (this.data.every(x => x instanceof Trellis.Search)) {
 							key = 'item-pane-message-searches-selected';
 						}
-						else if (this.data.every(x => x instanceof Zotero.Item)) {
+						else if (this.data.every(x => x instanceof Trellis.Item)) {
 							key = 'item-pane-message-items-selected';
 						}
 						else {
@@ -315,7 +315,7 @@
 					let count = this.itemsView.rowCount;
 					if (this.collectionTreeRows[0].isTrash()
 							&& this.itemsView._rows?.some(
-								x => x.ref instanceof Zotero.Collection || x.ref instanceof Zotero.Search
+								x => x.ref instanceof Trellis.Collection || x.ref instanceof Trellis.Search
 							)) {
 						msg = { l10nId: 'item-pane-message-objects-unselected', l10nArgs: { count } };
 					}
@@ -364,7 +364,7 @@
 				&& this.data.every((item) => {
 					return item.isNote()
 						|| (item.isAttachment()
-							&& item.attachmentLinkMode != Zotero.Attachments.LINK_MODE_LINKED_FILE);
+							&& item.attachmentLinkMode != Trellis.Attachments.LINK_MODE_LINKED_FILE);
 				});
 			
 			if (showMyPublicationsButtons) {
@@ -408,13 +408,13 @@
 			let str, onclick;
 			if (hiddenItemsSelected) {
 				str = 'showInMyPublications';
-				onclick = () => Zotero.Items.addToPublications(this.data);
+				onclick = () => Trellis.Items.addToPublications(this.data);
 			}
 			else {
 				str = 'hideFromMyPublications';
-				onclick = () => Zotero.Items.removeFromPublications(this.data);
+				onclick = () => Trellis.Items.removeFromPublications(this.data);
 			}
-			button.label = Zotero.getString('pane.item.' + str);
+			button.label = Trellis.getString('pane.item.' + str);
 			button.onclick = onclick;
 			append(button);
 		}
@@ -425,14 +425,14 @@
 			restoreButton.classList.add("item-restore-button");
 			restoreButton.dataset.l10nId = "menu-restoreToLibrary";
 			restoreButton.addEventListener("command", () => {
-				ZoteroPane.restoreSelectedItems();
+				TrellisPane.restoreSelectedItems();
 			});
 
 			let deleteButton = doc.createXULElement("button");
 			deleteButton.classList.add("item-delete-button");
 			deleteButton.dataset.l10nId = "menu-deletePermanently";
 			deleteButton.addEventListener("command", () => {
-				ZoteroPane.deleteSelectedItems();
+				TrellisPane.deleteSelectedItems();
 			});
 
 			append(restoreButton, deleteButton);
@@ -445,12 +445,12 @@
 			toggleReadButton.classList.add("feed-item-toggleRead-button");
 			toggleReadButton.classList.add("no-shrink-button");
 			toggleReadButton.addEventListener("command", () => {
-				ZoteroPane.toggleSelectedItemsRead();
+				TrellisPane.toggleSelectedItemsRead();
 			});
 
 			let addToButton = document.createElement("button", { is: "split-menu-button" });
 			addToButton.classList.add("feed-item-addTo-button");
-			addToButton.setAttribute("popup", "zotero-item-addTo-menu");
+			addToButton.setAttribute("popup", "trellis-item-addTo-menu");
 			addToButton.addEventListener("command", () => this.translateSelectedItems());
 
 			append(toggleReadButton, addToButton);
@@ -462,14 +462,14 @@
 			let { doc, append } = data;
 			let button = doc.createXULElement("button");
 			button.disabled = !this.collectionTreeRows.every(o => o.editable);
-			button.id = 'zotero-item-pane-note-from-annotations';
-			if (Zotero.Items.getTopLevel(this.data).length == 1) {
-				button.label = Zotero.getString('pane.items.menu.addNoteFromAnnotations');
-				button.addEventListener("command", () => ZoteroPane.addNoteFromAnnotationsFromSelected());
+			button.id = 'trellis-item-pane-note-from-annotations';
+			if (Trellis.Items.getTopLevel(this.data).length == 1) {
+				button.label = Trellis.getString('pane.items.menu.addNoteFromAnnotations');
+				button.addEventListener("command", () => TrellisPane.addNoteFromAnnotationsFromSelected());
 			}
 			else {
-				button.label = Zotero.getString('pane.items.menu.createNoteFromAnnotations');
-				button.addEventListener("command", () => ZoteroPane.createStandaloneNoteFromAnnotationsFromSelected());
+				button.label = Trellis.getString('pane.items.menu.createNoteFromAnnotations');
+				button.addEventListener("command", () => TrellisPane.createStandaloneNoteFromAnnotationsFromSelected());
 			}
 			append(button);
 		}
@@ -510,11 +510,11 @@
 
 		setReadLabel(isRead) {
 			var elem = this.getCurrentPane().querySelector('.feed-item-toggleRead-button');
-			var label = Zotero.getString('pane.item.' + (isRead ? 'markAsUnread' : 'markAsRead'));
+			var label = Trellis.getString('pane.item.' + (isRead ? 'markAsUnread' : 'markAsRead'));
 			elem.label = label;
 	
-			var key = Zotero.Keys.getKeyForCommand('toggleRead');
-			var tooltip = label + (Zotero.rtl ? ' \u202B' : ' ') + '(' + key + ')';
+			var key = Trellis.Keys.getKeyForCommand('toggleRead');
+			var tooltip = label + (Trellis.rtl ? ' \u202B' : ' ') + '(' + key + ')';
 			elem.title = tooltip;
 		}
 
@@ -527,7 +527,7 @@
 		}
 		
 		buildTranslateSelectContextMenu(event) {
-			var menu = document.querySelector('#zotero-item-addTo-menu');
+			var menu = document.querySelector('#trellis-item-addTo-menu');
 			// Don't trigger rebuilding on nested popupmenu open/close
 			if (event.target != menu) {
 				return;
@@ -537,30 +537,30 @@
 				menu.removeChild(menu.firstChild);
 			}
 			
-			let target = Zotero.Prefs.get('feeds.lastTranslationTarget');
+			let target = Trellis.Prefs.get('feeds.lastTranslationTarget');
 			if (!target) {
-				target = "L" + Zotero.Libraries.userLibraryID;
+				target = "L" + Trellis.Libraries.userLibraryID;
 			}
 			
-			var libraries = Zotero.Libraries.getAll();
+			var libraries = Trellis.Libraries.getAll();
 			for (let library of libraries) {
 				if (!library.editable || library.libraryType == 'publications') {
 					continue;
 				}
-				Zotero.Utilities.Internal.createMenuForTarget(
+				Trellis.Utilities.Internal.createMenuForTarget(
 					library,
 					menu,
 					target,
 					async (event, libraryOrCollection) => {
 						if (event.target.tagName == 'menu') {
 							// Simulate menuitem flash on OS X
-							if (Zotero.isMac) {
+							if (Trellis.isMac) {
 								event.target.setAttribute('_moz-menuactive', false);
-								await Zotero.Promise.delay(50);
+								await Trellis.Promise.delay(50);
 								event.target.setAttribute('_moz-menuactive', true);
-								await Zotero.Promise.delay(50);
+								await Trellis.Promise.delay(50);
 								event.target.setAttribute('_moz-menuactive', false);
-								await Zotero.Promise.delay(50);
+								await Trellis.Promise.delay(50);
 								event.target.setAttribute('_moz-menuactive', true);
 							}
 							menu.hidePopup();
@@ -579,15 +579,15 @@
 		
 		setTranslateButton() {
 			if (!this._translationTarget) return;
-			var label = Zotero.getString('pane.item.addTo', this._translationTarget.name);
+			var label = Trellis.getString('pane.item.addTo', this._translationTarget.name);
 			var elem = this.getCurrentPane().querySelector('.feed-item-addTo-button');
 			elem.label = label;
 	
-			var key = Zotero.Keys.getKeyForCommand('saveToZotero');
+			var key = Trellis.Keys.getKeyForCommand('saveToTrellis');
 			
 			var tooltip = label
-				+ (Zotero.rtl ? ' \u202B' : ' ') + '('
-				+ (Zotero.isMac ? '⇧⌘' : Zotero.getString('general.keys.ctrlShift'))
+				+ (Trellis.rtl ? ' \u202B' : ' ') + '('
+				+ (Trellis.isMac ? '⇧⌘' : Trellis.getString('general.keys.ctrlShift'))
 				+ key + ')';
 			elem.title = tooltip;
 			elem.image = this._translationTarget.treeViewImage;
@@ -601,7 +601,7 @@
 	
 		setTranslationTarget(translationTarget) {
 			this._translationTarget = translationTarget;
-			Zotero.Prefs.set('feeds.lastTranslationTarget', translationTarget.treeViewID);
+			Trellis.Prefs.set('feeds.lastTranslationTarget', translationTarget.treeViewID);
 			this.setTranslateButton();
 		}
 
@@ -633,7 +633,7 @@
 				}
 				// No/multiple objects are selected OR selected object is a trashed collection/search
 				else if (!this.data.length || (this.data.length > 1 && !this._isBatchEditEnabled)
-					|| this.data[0] instanceof Zotero.Collection || this.data[0] instanceof Zotero.Search) {
+					|| this.data[0] instanceof Trellis.Collection || this.data[0] instanceof Trellis.Search) {
 					mode = "message";
 				}
 				else if (this.data[0].isNote()) {

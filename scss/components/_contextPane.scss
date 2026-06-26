@@ -11,7 +11,7 @@
 	}
 }
 
-#zotero-context-pane {
+#trellis-context-pane {
 	display: flex;
 	flex-grow: 0;
 	flex-shrink: 1;
@@ -40,11 +40,11 @@
 	}
 }
 
-#zotero-context-splitter-stacked {
+#trellis-context-splitter-stacked {
 	pointer-events: auto;
 }
 
-#zotero-context-pane-inner {
+#trellis-context-pane-inner {
 	font: message-box;
 	font-size: inherit;
 	min-width: $min-width-context-pane;
@@ -59,28 +59,28 @@
 	}
 }
 
-.zotero-context-panes-deck {
+.trellis-context-panes-deck {
 	width: 100%;
 	display: block;
 }
 
-.zotero-context-panes-deck > deck {
+.trellis-context-panes-deck > deck {
 	height: 100%;
 }
 
-.zotero-view-item-container {
+.trellis-view-item-container {
 	height: 100%;
 }
 
-#zotero-item-toolbar {
+#trellis-item-toolbar {
 	height: 32px;
 }
 
-.zotero-context-note-container {
+.trellis-context-note-container {
 	background-color: var(--material-sidepane);
 }
 
-.zotero-context-pane-editor-parent-line {
+.trellis-context-pane-editor-parent-line {
 	height: 40px;
 	background: var(--material-toolbar);
 
@@ -105,7 +105,7 @@
 	}
 }
 
-.zotero-tb-note-return {
+.trellis-tb-note-return {
 	@include svgicon-menu("chevron", "universal", "20");
 	rotate: 90deg;
 	padding: 4px;
@@ -113,9 +113,9 @@
 	height: 28px;
 }
 
-#zotero-context-pane[collapsed=true] .notes-list-container,
-#zotero-context-pane-inner[collapsed=true] .notes-list-container,
-#zotero-context-pane[collapsed=true] .zotero-view-item > tabpanel > *,
-#zotero-context-pane-inner[collapsed=true] .zotero-view-item > tabpanel > * {
+#trellis-context-pane[collapsed=true] .notes-list-container,
+#trellis-context-pane-inner[collapsed=true] .notes-list-container,
+#trellis-context-pane[collapsed=true] .trellis-view-item > tabpanel > *,
+#trellis-context-pane-inner[collapsed=true] .trellis-view-item > tabpanel > * {
 	overflow: unset !important;
 }

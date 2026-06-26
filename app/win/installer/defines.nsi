@@ -15,9 +15,9 @@
 !define GREVersion            2.0
 !define AB_CD                 "en-US"
 
-!define FileMainEXE           "zotero.exe"
-!define WindowClass           "ZoteroMessageWindow"
-!define AppRegName            "Zotero"
+!define FileMainEXE           "trellis.exe"
+!define WindowClass           "TrellisMessageWindow"
+!define AppRegName            "Trellis"
 
 !define BrandShortName        "Trellis"
 !define PreReleaseSuffix      ""

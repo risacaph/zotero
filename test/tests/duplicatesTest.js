@@ -9,9 +9,9 @@ describe("Duplicate Items", function () {
 			skipBundledFiles: true
 		});
 		
-		Zotero.Prefs.clear('duplicateLibraries');
-		win = yield loadZoteroPane();
-		zp = win.ZoteroPane;
+		Trellis.Prefs.clear('duplicateLibraries');
+		win = yield loadTrellisPane();
+		zp = win.TrellisPane;
 		cv = zp.collectionsView;
 	});
 	beforeEach(function* () {
@@ -22,7 +22,7 @@ describe("Duplicate Items", function () {
 	});
 
 	async function merge(itemID) {
-		var userLibraryID = Zotero.Libraries.userLibraryID;
+		var userLibraryID = Trellis.Libraries.userLibraryID;
 			
 		var selected = await cv.selectByID('D' + userLibraryID);
 		assert.ok(selected);
@@ -36,7 +36,7 @@ describe("Duplicate Items", function () {
 		await promise;
 		
 		// Click merge button
-		var button = win.document.getElementById('zotero-duplicates-merge-button');
+		var button = win.document.getElementById('trellis-duplicates-merge-button');
 		button.click();
 		
 		await waitForNotifierEvent('refresh', 'trash');
@@ -47,7 +47,7 @@ describe("Duplicate Items", function () {
 			var item1 = await createDataObject('item', { setTitle: true });
 			var item2 = item1.clone();
 			await item2.saveTx();
-			var uri2 = Zotero.URI.getItemURI(item2);
+			var uri2 = Trellis.URI.getItemURI(item2);
 			
 			await merge(item1.id);
 			
@@ -57,7 +57,7 @@ describe("Duplicate Items", function () {
 			assert.isFalse(iv.getRowIndexByID(item2.id));
 			assert.isTrue(item2.deleted);
 			var rels = item1.getRelations();
-			var pred = Zotero.Relations.replacedItemPredicate;
+			var pred = Trellis.Relations.replacedItemPredicate;
 			assert.property(rels, pred);
 			assert.equal(rels[pred], uri2);
 		});

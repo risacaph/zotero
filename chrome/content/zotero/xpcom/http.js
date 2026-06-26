@@ -2,7 +2,7 @@
  * Functions for performing HTTP requests, both via XMLHTTPRequest and using a hidden browser
  * @namespace
  */
-Zotero.HTTP = new function () {
+Trellis.HTTP = new function () {
 	this.disableErrorRetry = false;
 	var _errorDelayIntervals = [2500, 5000, 10000, 20000, 40000, 60000, 120000, 240000, 300000];
 	var _errorDelayMax = 60 * 60 * 1000; // 1 hour
@@ -62,7 +62,7 @@ Zotero.HTTP = new function () {
 		// Hide password from debug output
 		//
 		// Password also shows up in channel.name (nsIRequest.name), but that's
-		// read-only and has to be handled in Zotero.varDump()
+		// read-only and has to be handled in Trellis.varDump()
 		try {
 			if (xmlhttp.channel) {
 				if (xmlhttp.channel.URI.password) {
@@ -74,7 +74,7 @@ Zotero.HTTP = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 		}
 		
 		// If the connection failed, try to find out what really happened
@@ -82,14 +82,14 @@ Zotero.HTTP = new function () {
 			try {
 				if (xmlhttp.channel.status) {
 					this.channelStatus = xmlhttp.channel.status;
-					Zotero.debug("Channel status was " + this.channelStatus, 2);
+					Trellis.debug("Channel status was " + this.channelStatus, 2);
 				}
 			}
 			catch (e) {}
 			try {
 				if (xmlhttp.channel.responseStatus) {
 					this.responseStatus = xmlhttp.channel.responseStatus;
-					Zotero.debug("Response status was " + this.responseStatus, 2);
+					Trellis.debug("Response status was " + this.responseStatus, 2);
 				}
 			}
 			catch (e) {}
@@ -108,7 +108,7 @@ Zotero.HTTP = new function () {
 	 * @constructor
 	 */
 	this.BrowserOfflineException = function () {
-		this.message = `Request could not be completed because ${Zotero.appName} is offline`;
+		this.message = `Request could not be completed because ${Trellis.appName} is offline`;
 		this.stack = new Error().stack;
 	};
 	this.BrowserOfflineException.prototype = Object.create(Error.prototype);
@@ -133,13 +133,13 @@ Zotero.HTTP = new function () {
 		}
 	};
 	this.SecurityException.prototype = Object.create(
-		// Zotero.Error not available in the connector
-		Zotero.Error ? Zotero.Error.prototype : Error.prototype
+		// Trellis.Error not available in the connector
+		Trellis.Error ? Trellis.Error.prototype : Error.prototype
 	);
 	
 	
 	this.promise = function () {
-		Zotero.debug("Zotero.HTTP.promise() is deprecated -- use Zotero.HTTP.request()", 2);
+		Trellis.debug("Trellis.HTTP.promise() is deprecated -- use Trellis.HTTP.request()", 2);
 		return this.request.apply(this, arguments);
 	}
 
@@ -252,12 +252,12 @@ Zotero.HTTP = new function () {
 			bodyStart = bodyStart.replace(/password=[^&]+/, 'password=********');
 			bodyStart = bodyStart.replace(/sessionid=[^&]+/, 'sessionid=********');
 			
-			Zotero.debug("HTTP " + method + ' "'
+			Trellis.debug("HTTP " + method + ' "'
 				+ (options.body.length > len
 					? bodyStart + '\u2026" (' + options.body.length + ' chars)' : bodyStart + '"')
 				+ " to " + dispURL);
 		} else {
-			Zotero.debug("HTTP " + method + " " + dispURL);
+			Trellis.debug("HTTP " + method + " " + dispURL);
 		}
 		
 		// Translation framework uses cookieSandbox to hold userContextId number
@@ -267,11 +267,11 @@ Zotero.HTTP = new function () {
 		}
 
 		if (url.startsWith('http') && this.browserIsOffline()) {
-			Zotero.debug(`HTTP ${method} ${dispURL} failed: ${Zotero.appName} is offline`);
+			Trellis.debug(`HTTP ${method} ${dispURL} failed: ${Trellis.appName} is offline`);
 			throw new this.BrowserOfflineException();
 		}
 		
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		
 		// Use anonymous XMLHttpRequest for requests with embedded credentials (e.g. WebDAV).
 		// All other requests use the Firefox cookie jar unless the caller passed { anon: true }.
@@ -335,7 +335,7 @@ Zotero.HTTP = new function () {
 			// Disable caching if requested
 			if (options.noCache || options.dontCache) {
 				if (options.dontCache) {
-					Zotero.warn("HTTP.request() 'dontCache' option is deprecated -- use noCache instead");
+					Trellis.warn("HTTP.request() 'dontCache' option is deprecated -- use noCache instead");
 				}
 				channel.loadFlags |= Components.interfaces.nsIRequest.LOAD_BYPASS_CACHE;
 			}
@@ -370,7 +370,7 @@ Zotero.HTTP = new function () {
 		}
 		
 		// Send headers
-		var headers = new Zotero.HTTP.CasePreservingHeaders(options?.headers || {});
+		var headers = new Trellis.HTTP.CasePreservingHeaders(options?.headers || {});
 		var compressedBody = false;
 		if (options.body) {
 			if (!headers.get("Content-Type")) {
@@ -383,22 +383,22 @@ Zotero.HTTP = new function () {
 			
 			if (options.compressBody && this.isWriteMethod(method)) {
 				headers.set('Content-Encoding', 'gzip');
-				compressedBody = await Zotero.Utilities.Internal.gzip(options.body);
+				compressedBody = await Trellis.Utilities.Internal.gzip(options.body);
 				
 				let oldLen = options.body.length;
 				let newLen = compressedBody.length;
-				Zotero.debug(`${method} body gzipped from ${oldLen} to ${newLen}; `
+				Trellis.debug(`${method} body gzipped from ${oldLen} to ${newLen}; `
 					+ Math.round(((oldLen - newLen) / oldLen) * 100) + "% savings");
 			}
 		}
 		if (options.debug) {
-			let dispHeaders = new Zotero.HTTP.CasePreservingHeaders(headers);
-			["Zotero-API-Key", "Authorization"].forEach((header) => {
+			let dispHeaders = new Trellis.HTTP.CasePreservingHeaders(headers);
+			["Trellis-API-Key", "Authorization"].forEach((header) => {
 				if (headers.has(header)) {
 					dispHeaders.set(header, "[Not shown]");
 				}
 			});
-			Zotero.debug(Object.fromEntries(dispHeaders.entries()));
+			Trellis.debug(Object.fromEntries(dispHeaders.entries()));
 		}
 		for (var [header, value] of headers) {
 			// Convert numbers to string to make Sinon happy
@@ -410,7 +410,7 @@ Zotero.HTTP = new function () {
 			let requestTimeout = options.timeout || defaultTimeout;
 			xmlhttp.timeout = requestTimeout;
 			xmlhttp.ontimeout = function () {
-				deferred.reject(new Zotero.HTTP.TimeoutException(requestTimeout));
+				deferred.reject(new Trellis.HTTP.TimeoutException(requestTimeout));
 			};
 		}
 		
@@ -418,10 +418,10 @@ Zotero.HTTP = new function () {
 		if (options.cancellerReceiver) {
 			options.cancellerReceiver(() => {
 				if (xmlhttp.readyState == 4) {
-					Zotero.debug("Request already finished -- not cancelling");
+					Trellis.debug("Request already finished -- not cancelling");
 					return;
 				}
-				deferred.reject(new Zotero.HTTP.CancelledException);
+				deferred.reject(new Trellis.HTTP.CancelledException);
 				xmlhttp.abort();
 			});
 		}
@@ -449,7 +449,7 @@ Zotero.HTTP = new function () {
 							2152398875, // NS_ERROR_INVALID_CONTENT_ENCODING
 						];
 						if (statuses.includes(xmlhttp.channel.status)) {
-							Zotero.warn(`Overriding status for invalid response for ${dispURL} `
+							Trellis.warn(`Overriding status for invalid response for ${dispURL} `
 								+ `(${xmlhttp.channel.status})`);
 							status = responseStatus;
 						}
@@ -494,10 +494,10 @@ Zotero.HTTP = new function () {
 			}
 			
 			if(success) {
-				Zotero.debug("HTTP " + method + " " + dispURL
+				Trellis.debug("HTTP " + method + " " + dispURL
 					+ " succeeded with " + status);
 				if (options.debug && (xmlhttp.responseType == '' || xmlhttp.responseType == 'text')) {
-					Zotero.debug(xmlhttp.responseText);
+					Trellis.debug(xmlhttp.responseText);
 				}
 				
 				// Follow meta redirects
@@ -524,7 +524,7 @@ Zotero.HTTP = new function () {
 							}
 							
 							// Meta redirect is always GET
-							return Zotero.HTTP.request("GET", resolvedURL, options)
+							return Trellis.HTTP.request("GET", resolvedURL, options)
 								.then(xmlhttp => deferred.resolve(xmlhttp))
 								.catch(e => deferred.reject(e));
 						}
@@ -537,7 +537,7 @@ Zotero.HTTP = new function () {
 				if ((!xmlhttp.responseType || xmlhttp.responseType == 'text') && xmlhttp.responseText) {
 					msg += ":\n\n" + xmlhttp.responseText;
 				}
-				Zotero.debug(msg, 1);
+				Trellis.debug(msg, 1);
 				
 				if (xmlhttp.status == 0) {
 					try {
@@ -549,7 +549,7 @@ Zotero.HTTP = new function () {
 					}
 				}
 				
-				deferred.reject(new Zotero.HTTP.UnexpectedStatusException(xmlhttp, url, msg));
+				deferred.reject(new Trellis.HTTP.UnexpectedStatusException(xmlhttp, url, msg));
 			}
 		}.bind(this);
 		
@@ -638,10 +638,10 @@ Zotero.HTTP = new function () {
 		}
 		dispURL = dispURL.replace(/key=[^&]+&?/, "").replace(/\?$/, "");
 
-		Zotero.debug("HTTP GET " + dispURL);
+		Trellis.debug("HTTP GET " + dispURL);
 
 		if (this.browserIsOffline()) {
-			Zotero.debug(`HTTP GET ${dispURL} failed: ${Zotero.appName} is offline`);
+			Trellis.debug(`HTTP GET ${dispURL} failed: ${Trellis.appName} is offline`);
 			throw new this.BrowserOfflineException();
 		}
 
@@ -670,7 +670,7 @@ Zotero.HTTP = new function () {
 			clearTimeout(inactivityTimerID);
 			if (timeout) {
 				inactivityTimerID = setTimeout(() => {
-					Zotero.warn(`Inactivity timeout for GET ${ctx.dispURL}`
+					Trellis.warn(`Inactivity timeout for GET ${ctx.dispURL}`
 						+ " -- aborting request");
 					controller.abort();
 				}, timeout);
@@ -692,7 +692,7 @@ Zotero.HTTP = new function () {
 		}
 
 		// Build headers
-		let headers = new Zotero.HTTP.CasePreservingHeaders(options.headers || {});
+		let headers = new Trellis.HTTP.CasePreservingHeaders(options.headers || {});
 		if (ctx.username) {
 			let encoded = btoa(ctx.username + ':' + (ctx.password || ''));
 			headers.set('Authorization', `Basic ${encoded}`);
@@ -703,7 +703,7 @@ Zotero.HTTP = new function () {
 		let connectTimerID;
 		if (timeout) {
 			connectTimerID = setTimeout(() => {
-				Zotero.warn(`Connect timeout for GET ${ctx.dispURL} -- aborting request`);
+				Trellis.warn(`Connect timeout for GET ${ctx.dispURL} -- aborting request`);
 				controller.abort();
 			}, timeout);
 		}
@@ -716,7 +716,7 @@ Zotero.HTTP = new function () {
 			clearTimeout(connectTimerID);
 			clearTimeout(inactivityTimerID);
 			if (controller.signal.aborted) {
-				throw new Zotero.HTTP.TimeoutException(timeout);
+				throw new Trellis.HTTP.TimeoutException(timeout);
 			}
 			throw e;
 		}
@@ -738,13 +738,13 @@ Zotero.HTTP = new function () {
 
 		if (!success) {
 			let msg = "HTTP GET " + ctx.dispURL + " failed with status code " + status;
-			Zotero.debug(msg, 1);
-			throw new Zotero.HTTP.UnexpectedStatusException(response, url, msg);
+			Trellis.debug(msg, 1);
+			throw new Trellis.HTTP.UnexpectedStatusException(response, url, msg);
 		}
 
 		// For non-2xx success (e.g., 404 in successCodes), don't write a file
 		if (status < 200 || status >= 300) {
-			Zotero.debug("HTTP GET " + ctx.dispURL + " finished with " + status);
+			Trellis.debug("HTTP GET " + ctx.dispURL + " finished with " + status);
 			return response;
 		}
 
@@ -767,23 +767,23 @@ Zotero.HTTP = new function () {
 						onProgress(totalBytes, contentLength);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 			}
 		}
 		catch (e) {
 			clearTimeout(inactivityTimerID);
-			IOUtils.remove(path, { ignoreAbsent: true }).catch(e2 => Zotero.logError(e2));
+			IOUtils.remove(path, { ignoreAbsent: true }).catch(e2 => Trellis.logError(e2));
 			if (controller.signal.aborted) {
-				throw new Zotero.HTTP.TimeoutException(timeout);
+				throw new Trellis.HTTP.TimeoutException(timeout);
 			}
 			throw e;
 		}
 		clearTimeout(inactivityTimerID);
 
-		Zotero.debug("HTTP GET " + ctx.dispURL + " succeeded with " + status);
-		Zotero.debug("Saved " + path + " (" + totalBytes + " byte"
+		Trellis.debug("HTTP GET " + ctx.dispURL + " succeeded with " + status);
+		Trellis.debug("Saved " + path + " (" + totalBytes + " byte"
 			+ (totalBytes != 1 ? 's' : '') + ")");
 
 		return response;
@@ -800,17 +800,17 @@ Zotero.HTTP = new function () {
 	 * @param {Object} requestHeaders HTTP headers to include with request
 	 * @return {XMLHttpRequest} The XMLHttpRequest object if the request was sent, or
 	 *     false if the browser is offline
-	 * @deprecated Use {@link Zotero.HTTP.request}
+	 * @deprecated Use {@link Trellis.HTTP.request}
 	 */
 	this.doGet = function (url, onDone, responseCharset, _unused, requestHeaders) {
 		if (url instanceof Components.interfaces.nsIURI) {
 			// Don't display password in console
 			var disp = this.getDisplayURI(url);
-			Zotero.debug("HTTP GET " + disp.spec);
+			Trellis.debug("HTTP GET " + disp.spec);
 			url = url.spec;
 		}
 		else {
-			Zotero.debug("HTTP GET " + url);
+			Trellis.debug("HTTP GET " + url);
 		}
 		if (this.browserIsOffline()){
 			return false;
@@ -863,7 +863,7 @@ Zotero.HTTP = new function () {
 	 * @param {String} responseCharset Character set to force on the response
 	 * @return {XMLHttpRequest} The XMLHttpRequest object if the request was sent, or
 	 *     false if the browser is offline
-	 * @deprecated Use {@link Zotero.HTTP.request}
+	 * @deprecated Use {@link Trellis.HTTP.request}
 	 */
 	this.doPost = function (url, body, onDone, headers, responseCharset) {
 		if (url instanceof Components.interfaces.nsIURI) {
@@ -877,7 +877,7 @@ Zotero.HTTP = new function () {
 		bodyStart = bodyStart.replace(/password=[^&]+/, 'password=********');
 		bodyStart = bodyStart.replace(/sessionid=[^&]+/, 'sessionid=********');
 		
-		Zotero.debug("HTTP POST "
+		Trellis.debug("HTTP POST "
 			+ (body.length > 1024 ?
 				bodyStart + '... (' + body.length + ' chars)' : bodyStart)
 			+ " to " + (disp ? disp.spec : url));
@@ -904,7 +904,7 @@ Zotero.HTTP = new function () {
 		if (headers) {
 			if (typeof headers == 'string') {
 				var msg = "doPost() now takes a headers object rather than a requestContentType -- update your code";
-				Zotero.debug(msg, 2);
+				Trellis.debug(msg, 2);
 				Components.utils.reportError(msg);
 				headers = {
 					"Content-Type": headers
@@ -942,17 +942,17 @@ Zotero.HTTP = new function () {
 	 * @param {Object} requestHeaders HTTP headers to include with request
 	 * @return {XMLHttpRequest} The XMLHttpRequest object if the request was sent, or
 	 *     false if the browser is offline
-	 * @deprecated Use {@link Zotero.HTTP.request}
+	 * @deprecated Use {@link Trellis.HTTP.request}
 	 */
 	this.doHead = function (url, onDone, requestHeaders) {
 		if (url instanceof Components.interfaces.nsIURI) {
 			// Don't display password in console
 			var disp = this.getDisplayURI(url);
-			Zotero.debug("HTTP HEAD " + disp.spec);
+			Trellis.debug("HTTP HEAD " + disp.spec);
 			url = url.spec;
 		}
 		else {
-			Zotero.debug("HTTP HEAD " + url);
+			Trellis.debug("HTTP HEAD " + url);
 		
 		}
 		
@@ -961,7 +961,7 @@ Zotero.HTTP = new function () {
 		}
 		
 		// Workaround for "Accept third-party cookies" being off in Firefox 3.0.1
-		// https://www.zotero.org/trac/ticket/1070
+		// https://www.trellis.org/trac/ticket/1070
 		var xmlhttp = new XMLHttpRequest();
 		// Prevent certificate/authentication dialogs from popping up
 		xmlhttp.mozBackgroundRequest = true;
@@ -997,14 +997,14 @@ Zotero.HTTP = new function () {
 	 * @param	{nsIURI}		url
 	 * @param	{Function}	onDone
 	 * @return	{XMLHTTPRequest}
-	 * @deprecated Use {@link Zotero.HTTP.request}
+	 * @deprecated Use {@link Trellis.HTTP.request}
 	 */
 	this.doOptions = function (uri, callback) {
 		// Don't display password in console
 		var disp = this.getDisplayURI(uri);
-		Zotero.debug("HTTP OPTIONS for " + disp.spec);
+		Trellis.debug("HTTP OPTIONS for " + disp.spec);
 		
-		if (Zotero.HTTP.browserIsOffline()){
+		if (Trellis.HTTP.browserIsOffline()){
 			return false;
 		}
 		
@@ -1042,7 +1042,7 @@ Zotero.HTTP = new function () {
 				resolvedURL = Services.io.newURI(url, null, null).resolve(refreshURL);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			// Make sure the URL is actually resolved
 			if (resolvedURL && /^https?:\/\//.test(resolvedURL)) {
@@ -1067,11 +1067,11 @@ Zotero.HTTP = new function () {
 		observe: function (channel, topic) {
 			channel.QueryInterface(Components.interfaces.nsIHttpChannel);
 			if (topic == "http-on-modify-request") {
-				// https://github.com/zotero/zotero/issues/2249
+				// https://github.com/trellis/trellis/issues/2249
 				if (this.enabledRules.has('remove-nature-feed-origin')
 						&& channel.URI.spec.match(/^https?:\/\/idp\.nature\.com\/.+\.rss/)) {
-					let dispURL = Zotero.HTTP.getDisplayURI(channel.URI).spec;
-					Zotero.debug("RequestModifier: Removing Origin header for " + dispURL);
+					let dispURL = Trellis.HTTP.getDisplayURI(channel.URI).spec;
+					Trellis.debug("RequestModifier: Removing Origin header for " + dispURL);
 					channel.setRequestHeader("Origin", "", false);
 				}
 			}
@@ -1082,7 +1082,7 @@ Zotero.HTTP = new function () {
 				throw new Error(`RequestModifier: Can't enable invalid rule '${rule}'`);
 			}
 			if (this.enabledRules.has(rule)) {
-				Zotero.debug(`RequestModifier: Rule '${rule}' is already enabled`);
+				Trellis.debug(`RequestModifier: Rule '${rule}' is already enabled`);
 				return;
 			}
 			this.enabledRules.add(rule);
@@ -1097,7 +1097,7 @@ Zotero.HTTP = new function () {
 				throw new Error(`RequestModifier: Can't disable invalid rule '${rule}'`);
 			}
 			if (!this.enabledRules.has(rule)) {
-				Zotero.debug(`RequestModifier: Rule '${rule}' isn't enabled`);
+				Trellis.debug(`RequestModifier: Rule '${rule}' isn't enabled`);
 				return;
 			}
 			this.enabledRules.delete(rule);
@@ -1131,8 +1131,8 @@ Zotero.HTTP = new function () {
 			if (topic == "http-on-modify-request") {
 				for (let url of this.urls) {
 					if (channel.URI.spec.startsWith(url)) {
-						let dispURL = Zotero.HTTP.getDisplayURI(channel.URI).spec;
-						Zotero.debug("CookieBlocker: Ignoring cookies for " + dispURL);
+						let dispURL = Trellis.HTTP.getDisplayURI(channel.URI).spec;
+						Trellis.debug("CookieBlocker: Ignoring cookies for " + dispURL);
 						channel.setRequestHeader("Cookie", "", false);
 					}
 				}
@@ -1140,7 +1140,7 @@ Zotero.HTTP = new function () {
 			else if (topic == "http-on-examine-response") {
 				for (let url of this.urls) {
 					if (channel.URI.spec.startsWith(url)) {
-						let dispURL = Zotero.HTTP.getDisplayURI(channel.URI).spec;
+						let dispURL = Trellis.HTTP.getDisplayURI(channel.URI).spec;
 						channel.setResponseHeader("Set-Cookie", "", false);
 					}
 				}
@@ -1149,15 +1149,15 @@ Zotero.HTTP = new function () {
 		
 		addURL: function (url) {
 			if (!this.registered) {
-				Zotero.debug("CookieBlocker: Registering observers");
+				Trellis.debug("CookieBlocker: Registering observers");
 				for (let topic of this.observeredTopics) {
 					Services.obs.addObserver(this, topic, false);
 				}
 				this.registered = true;
 			}
 			if (!this.urls.includes(url)) {
-				let dispURL = Zotero.HTTP.getDisplayURI(NetUtil.newURI(url)).spec;
-				Zotero.debug("CookieBlocker: Adding " + dispURL + " to blocklist");
+				let dispURL = Trellis.HTTP.getDisplayURI(NetUtil.newURI(url)).spec;
+				Trellis.debug("CookieBlocker: Adding " + dispURL + " to blocklist");
 				this.urls.push(url);
 			}
 		},
@@ -1166,12 +1166,12 @@ Zotero.HTTP = new function () {
 		removeURL: function (url) {
 			let pos = this.urls.indexOf(url);
 			if (pos != -1) {
-				let dispURL = Zotero.HTTP.getDisplayURI(NetUtil.newURI(url)).spec;
-				Zotero.debug("CookieBlocker: Removing " + dispURL + " from blocklist");
+				let dispURL = Trellis.HTTP.getDisplayURI(NetUtil.newURI(url)).spec;
+				Trellis.debug("CookieBlocker: Removing " + dispURL + " from blocklist");
 				this.urls.splice(pos, 1);
 			}
 			if (!this.urls.length) {
-				Zotero.debug("CookieBlocker: Removing observers");
+				Trellis.debug("CookieBlocker: Removing observers");
 				for (let topic of this.observeredTopics) {
 					Services.obs.removeObserver(this, topic, false);
 				}
@@ -1184,26 +1184,26 @@ Zotero.HTTP = new function () {
 	/**
 	 * Make a foreground HTTP request in order to trigger a proxy authentication dialog
 	 *
-	 * Other Zotero.HTTP requests are background requests by default, and
+	 * Other Trellis.HTTP requests are background requests by default, and
 	 * background requests don't trigger a proxy auth prompt, so we make a
 	 * foreground request on startup and resolve the promise
-	 * Zotero.proxyAuthComplete when we're done. Any network requests that want
+	 * Trellis.proxyAuthComplete when we're done. Any network requests that want
 	 * to wait for proxy authentication can wait for that promise.
 	 */
 	this.triggerProxyAuth = function () {
-		if (!Zotero.Prefs.get("triggerProxyAuthentication")
-				|| Zotero.HTTP.browserIsOffline()) {
-			Zotero.proxyAuthComplete = Promise.resolve();
+		if (!Trellis.Prefs.get("triggerProxyAuthentication")
+				|| Trellis.HTTP.browserIsOffline()) {
+			Trellis.proxyAuthComplete = Promise.resolve();
 			return false;
 		}
 		
-		var deferred = Zotero.Promise.defer();
-		Zotero.proxyAuthComplete = deferred.promise;
+		var deferred = Trellis.Promise.defer();
+		Trellis.proxyAuthComplete = deferred.promise;
 		
 		(async () => {
-			var uris = Zotero.Prefs.get('proxyAuthenticationURLs').split(',');
-			uris = Zotero.Utilities.arrayShuffle(uris);
-			uris.unshift(ZOTERO_CONFIG.PROXY_AUTH_URL);
+			var uris = Trellis.Prefs.get('proxyAuthenticationURLs').split(',');
+			uris = Trellis.Utilities.arrayShuffle(uris);
+			uris.unshift(TRELLIS_CONFIG.PROXY_AUTH_URL);
 			
 			for (let i = 0; i <= uris.length; i++) {
 				let uri = uris.shift();
@@ -1211,53 +1211,53 @@ Zotero.HTTP = new function () {
 					break;
 				}
 				
-				// For non-Zotero URLs, wait for PAC initialization
+				// For non-Trellis URLs, wait for PAC initialization
 				if (i == 1 && !_pacInstalled()) {
 					for (let delayIncrement = 0; delayIncrement < 3; delayIncrement++) {
-						await Zotero.Promise.delay(500 * Math.pow(2, delayIncrement));
+						await Trellis.Promise.delay(500 * Math.pow(2, delayIncrement));
 						if (_pacInstalled()) {
 							break;
 						}
 					}
 					if (!_pacInstalled()) {
-						Zotero.debug("No general proxy or PAC file found -- assuming direct connection");
+						Trellis.debug("No general proxy or PAC file found -- assuming direct connection");
 						break;
 					}
 				}
 				
 				let proxyInfo = await _proxyAsyncResolve(uri);
 				if (proxyInfo) {
-					Zotero.debug("Proxy required for " + uri + " -- making HEAD request to trigger auth prompt");
-					await Zotero.HTTP.request("HEAD", uri, {
+					Trellis.debug("Proxy required for " + uri + " -- making HEAD request to trigger auth prompt");
+					await Trellis.HTTP.request("HEAD", uri, {
 						foreground: true,
 						noCache: true,
 						isProxyAuthRequest: true
 					})
 					.catch(function (e) {
-						Zotero.logError("Error connecting to proxy -- proxied requests may not work");
-						Zotero.logError(e);
+						Trellis.logError("Error connecting to proxy -- proxied requests may not work");
+						Trellis.logError(e);
 						
 						// Show error icon at startup
-						e.dialogHeader = Zotero.getString('networkError.errorViaProxy');
+						e.dialogHeader = Trellis.getString('networkError.errorViaProxy');
 						if (!e.dialogButtonText) {
-							e.dialogButtonText = Zotero.getString('general.moreInformation');
+							e.dialogButtonText = Trellis.getString('general.moreInformation');
 							e.dialogButtonCallback = () => {
-								Zotero.launchURL('https://www.zotero.org/support/kb/connection_error');
+								Trellis.launchURL('https://www.trellis.org/support/kb/connection_error');
 							};
 						}
-						Zotero.proxyFailure = e;
+						Trellis.proxyFailure = e;
 					});
 					break;
 				}
 				else {
-					Zotero.debug("Proxy not required for " + uri);
+					Trellis.debug("Proxy not required for " + uri);
 				}
 			}
 			deferred.resolve();
 		})()
 		.catch(function (e) {
 			Components.utils.reportError(e);
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 			deferred.resolve();
 		});
 	}
@@ -1270,21 +1270,21 @@ Zotero.HTTP = new function () {
 	 * through the error log and doing a fragile string comparison.
 	 */
 	var _pacInstalled = function () {
-		return Zotero.getErrors(true).some(val => val.indexOf("PAC file installed") == 0)
+		return Trellis.getErrors(true).some(val => val.indexOf("PAC file installed") == 0)
 	}
 	
 	
 	var _proxyAsyncResolve = function (uri) {
 		var pps = Components.classes["@mozilla.org/network/protocol-proxy-service;1"]
 			.getService(Components.interfaces.nsIProtocolProxyService);
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		pps.asyncResolve(
 			NetUtil.newURI(uri),
 			0,
 			{
 				onProxyAvailable: function (req, uri, proxyInfo, status) {
-					//Zotero.debug("onProxyAvailable");
-					//Zotero.debug(status);
+					//Trellis.debug("onProxyAvailable");
+					//Trellis.debug(status);
 					deferred.resolve(proxyInfo);
 				},
 				
@@ -1345,7 +1345,7 @@ Zotero.HTTP = new function () {
 			return authHeader;
 		}
 		catch (e) {
-			//Zotero.debug(e);
+			//Trellis.debug(e);
 			return false;
 		}
 	}
@@ -1376,7 +1376,7 @@ Zotero.HTTP = new function () {
 	this.processDocuments = async function (urls, processor, options = {}) {
 		// Handle old signature: urls, processor, onDone, onError, dontDelete, cookieSandbox
 		if (arguments.length > 3) {
-			Zotero.debug("Zotero.HTTP.processDocuments() now takes only 3 arguments -- update your code");
+			Trellis.debug("Trellis.HTTP.processDocuments() now takes only 3 arguments -- update your code");
 			var onDone = arguments[2];
 			var onError = arguments[3];
 		}
@@ -1386,7 +1386,7 @@ Zotero.HTTP = new function () {
 
 		if (typeof urls == "string") urls = [urls];
 		var funcs = urls.map(url => () => {
-			return Zotero.HTTP.request(
+			return Trellis.HTTP.request(
 				"GET",
 				url,
 				{
@@ -1465,12 +1465,12 @@ Zotero.HTTP = new function () {
 		var dialogButtonCallback = null;
 		
 		if (xmlhttp.status === 0) {
-			msg = Zotero.getString('sync.error.checkConnection');
-			dialogButtonText = Zotero.getString('general.moreInformation');
-			let supportURL = 'https://www.zotero.org/support/kb/connection_error';
-			dialogButtonCallback = () => Zotero.launchURL(supportURL);
+			msg = Trellis.getString('sync.error.checkConnection');
+			dialogButtonText = Trellis.getString('general.moreInformation');
+			let supportURL = 'https://www.trellis.org/support/kb/connection_error';
+			dialogButtonCallback = () => Trellis.launchURL(supportURL);
 		}
-		throw new Zotero.HTTP.UnexpectedStatusException(
+		throw new Trellis.HTTP.UnexpectedStatusException(
 			xmlhttp,
 			url,
 			msg,
@@ -1495,26 +1495,26 @@ Zotero.HTTP = new function () {
 		let dialogButtonText;
 		let dialogButtonCallback;
 		let domain = channel.originalURI?.host ?? '';
-		let msg = Zotero.getString('networkError.insecureConnectionTo', [Zotero.appName, domain])
+		let msg = Trellis.getString('networkError.insecureConnectionTo', [Trellis.appName, domain])
 			 + "\n\n";
-		if (channel.originalURI?.spec.includes(ZOTERO_CONFIG.DOMAIN_NAME)
-				|| channel.originalURI?.spec.includes(ZOTERO_CONFIG.PROXY_AUTH_URL.match(/^https:\/\/([^\/]+)\//)[1])) {
-			msg += Zotero.getString('networkError.connectionMonitored', Zotero.appName)
+		if (channel.originalURI?.spec.includes(TRELLIS_CONFIG.DOMAIN_NAME)
+				|| channel.originalURI?.spec.includes(TRELLIS_CONFIG.PROXY_AUTH_URL.match(/^https:\/\/([^\/]+)\//)[1])) {
+			msg += Trellis.getString('networkError.connectionMonitored', Trellis.appName)
 				+ "\n\n"
 				+ (isProxyAuthRequest
-					? Zotero.getString('startupError.internetFunctionalityMayNotWork') + "\n\n"
+					? Trellis.getString('startupError.internetFunctionalityMayNotWork') + "\n\n"
 					: "");
 		}
 		msg += errorMessage ?? channel.securityInfo?.errorCodeString ?? '';
 		msg = msg.trim();
-		dialogButtonText = Zotero.getString('general.moreInformation');
+		dialogButtonText = Trellis.getString('general.moreInformation');
 		dialogButtonCallback = function () {
-			Zotero.launchURL('https://www.zotero.org/support/kb/ssl_certificate_error');
+			Trellis.launchURL('https://www.trellis.org/support/kb/ssl_certificate_error');
 		};
-		throw new Zotero.HTTP.SecurityException(
+		throw new Trellis.HTTP.SecurityException(
 			msg,
 			{
-				dialogHeader: Zotero.getString('networkError.connectionNotSecure'),
+				dialogHeader: Trellis.getString('networkError.connectionNotSecure'),
 				dialogButtonText,
 				dialogButtonCallback
 			}
@@ -1531,7 +1531,7 @@ Zotero.HTTP = new function () {
 			return null;
 		}
 		if (parseInt(retryAfter) != retryAfter) {
-			Zotero.logError(`Invalid Retry-After delay ${retryAfter}`);
+			Trellis.logError(`Invalid Retry-After delay ${retryAfter}`);
 			return null;
 		}
 		return parseInt(retryAfter);
@@ -1542,8 +1542,8 @@ Zotero.HTTP = new function () {
 		if (retryAfter === null) {
 			return false;
 		}
-		Zotero.debug(`Delaying ${retryAfter} seconds for Retry-After`);
-		await Zotero.Promise.delay(retryAfter * 1000);
+		Trellis.debug(`Delaying ${retryAfter} seconds for Retry-After`);
+		await Trellis.Promise.delay(retryAfter * 1000);
 		return true;
 	}
 
@@ -1567,7 +1567,7 @@ Zotero.HTTP = new function () {
 				return await fn();
 			}
 			catch (e) {
-				if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+				if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 					_checkConnection(e.xmlhttp, url);
 
 					// Callers that handle server-signaled throttling themselves
@@ -1580,7 +1580,7 @@ Zotero.HTTP = new function () {
 					}
 
 					if (e.status == 429 || e.is5xx()) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 						// Check for Retry-After header on 429 or 503
 						if ((e.status == 429 || e.status == 503)
 								&& (await _checkRetry(e.xmlhttp))) {
@@ -1588,14 +1588,14 @@ Zotero.HTTP = new function () {
 						}
 						// Don't retry if errorDelayMax is 0
 						if (options.errorDelayMax === 0
-								|| Zotero.HTTP.disableErrorRetry) {
+								|| Trellis.HTTP.disableErrorRetry) {
 							throw e;
 						}
 						// Automatically retry other 429/5xx errors by default
 						if (!errorDelayGenerator) {
 							// Keep trying for up to an hour
 							errorDelayGenerator
-								= Zotero.Utilities.Internal.delayGenerator(
+								= Trellis.Utilities.Internal.delayGenerator(
 									options.errorDelayIntervals
 										|| _errorDelayIntervals,
 									options.errorDelayMax !== undefined
@@ -1610,11 +1610,11 @@ Zotero.HTTP = new function () {
 						if (options.cancellerReceiver) {
 							let resolve;
 							let reject;
-							let cancelPromise = new Zotero.Promise(
+							let cancelPromise = new Trellis.Promise(
 								(res, rej) => {
 									resolve = res;
 									reject = function () {
-										rej(new Zotero.HTTP.CancelledException);
+										rej(new Trellis.HTTP.CancelledException);
 									};
 								}
 							);
@@ -1625,7 +1625,7 @@ Zotero.HTTP = new function () {
 								);
 							}
 							catch (e) {
-								Zotero.debug("Request cancelled");
+								Trellis.debug("Request cancelled");
 								throw e;
 							}
 							resolve();
@@ -1634,7 +1634,7 @@ Zotero.HTTP = new function () {
 							keepGoing = await delayPromise;
 						}
 						if (!keepGoing) {
-							Zotero.logError("Failed too many times");
+							Trellis.logError("Failed too many times");
 							throw e;
 						}
 						continue;
@@ -1685,7 +1685,7 @@ Zotero.HTTP = new function () {
 	this.Window = function (url) {
 		this._url = url;
 		this.top = this;
-		this.location = Zotero.HTTP.Location(url);
+		this.location = Trellis.HTTP.Location(url);
 	};
 	this.Window.prototype.__exposedProps__ = {
 		"top":"r",
@@ -1694,7 +1694,7 @@ Zotero.HTTP = new function () {
 
 	/**
 	 * Wraps an HTMLDocument object returned by XMLHttpRequest DOMParser to make it look more like it belongs
-	 * to a browser. This is necessary if the document is to be passed to Zotero.Translate.
+	 * to a browser. This is necessary if the document is to be passed to Trellis.Translate.
 	 * @param {HTMLDocument} doc Document returned by 
 	 * @param {nsIURL|String} url
 	 */
@@ -1702,11 +1702,11 @@ Zotero.HTTP = new function () {
 		if(typeof url !== "object") {
 			url = Services.io.newURI(url, null, null).QueryInterface(Components.interfaces.nsIURL);
 		}
-		return Zotero.Translate.DOMWrapper.wrap(doc, {
+		return Trellis.Translate.DOMWrapper.wrap(doc, {
 			"documentURI":url.spec,
 			"URL":url.spec,
-			"location":new Zotero.HTTP.Location(url),
-			"defaultView":new Zotero.HTTP.Window(url)
+			"location":new Trellis.HTTP.Location(url),
+			"defaultView":new Trellis.HTTP.Window(url)
 		});
 	};
 
@@ -1718,7 +1718,7 @@ Zotero.HTTP = new function () {
 	 * let headers = new Headers({ 'Header-Name': 'Header value' });
 	 * Array.from(headers)  // -> [['header-name', 'Header value']]
 	 *
-	 * headers = new Zotero.HTTP.CasePreservingHeaders({ 'Header-Name': 'Header value' });
+	 * headers = new Trellis.HTTP.CasePreservingHeaders({ 'Header-Name': 'Header value' });
 	 * Array.from(headers)  // -> [['Header-Name', 'Header value']]
 	 */
 	this.CasePreservingHeaders = class extends Headers {

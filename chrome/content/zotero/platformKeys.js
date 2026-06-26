@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	
 	const { AppConstants } = ChromeUtils.importESModule('resource://gre/modules/AppConstants.sys.mjs');
 	
-	// Can't depend on Zotero object in hidden window initialization
+	// Can't depend on Trellis object in hidden window initialization
 	let isWin = AppConstants.platform == 'win';
 	let isMac = AppConstants.platform == 'macosx';
 
@@ -52,23 +52,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		if (editPreferencesSeparator) editPreferencesSeparator.hidden = true;
 		if (editPreferencesItem) editPreferencesItem.hidden = true;
 		
-		// Non-main windows: Add Window → Zotero to focus/reopen main window
+		// Non-main windows: Add Window → Trellis to focus/reopen main window
 		if (windowMenu && window.location.href !== AppConstants.BROWSER_CHROME_URL) {
 			MozXULElement.insertFTLIfNeeded('branding/brand.ftl');
-			MozXULElement.insertFTLIfNeeded('zotero.ftl');
+			MozXULElement.insertFTLIfNeeded('trellis.ftl');
 			
 			let mainWindowCommand = document.createXULElement('command');
 			mainWindowCommand.id = 'cmd_mainWindow';
 			document.l10n.setAttributes(mainWindowCommand, 'main-window-command');
 			mainWindowCommand.addEventListener('command', () => {
-				// Zotero.getMainWindow()
+				// Trellis.getMainWindow()
 				let win = Services.wm.getMostRecentWindow("navigator:browser");
 				if (win) {
 					win.focus();
 					return;
 				}
 				
-				// Zotero.openMainWindow()
+				// Trellis.openMainWindow()
 				var chromeURI = AppConstants.BROWSER_CHROME_URL;
 				var flags = "chrome,all,dialog=no,resizable=yes";
 				Services.ww.openWindow(null, chromeURI, '_blank', flags, null);
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		// doesn't handle it very well - it shows a context menu on the element
 		// in the middle of the window, whatever element that may be.
 		// Prevent/retarget these events (but not Ctrl-clicks).
-		var { getTargetElement, createContextMenuEvent } = ChromeUtils.importESModule("chrome://zotero/content/contextMenuUtils.sys.mjs");
+		var { getTargetElement, createContextMenuEvent } = ChromeUtils.importESModule("chrome://trellis/content/contextMenuUtils.sys.mjs");
 		let lastPreventedContextMenuTime = 0;
 		document.addEventListener('contextmenu', (event) => {
 			if (!(event.button === 0 && event.buttons === 0 && !event.ctrlKey)) {

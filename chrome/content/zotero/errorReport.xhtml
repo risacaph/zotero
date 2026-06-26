@@ -1,33 +1,33 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/errorReport.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/errorReport.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
 
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 <window
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	onload="Zotero_Error_Report.init()">
+	onload="Trellis_Error_Report.init()">
 
 <linkset>
 	<html:link rel="localization" href="toolkit/global/wizard.ftl"/>
 </linkset>
 
 <script>
-	Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-	Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 </script>
 
-<wizard title="&zotero.errorReport.title;" width="550" height="450">
+<wizard title="&trellis.errorReport.title;" width="550" height="450">
 	<script>
 	<![CDATA[
-		const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
+		const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
 		
-		var Zotero_Error_Report = new function() {
+		var Trellis_Error_Report = new function() {
 			var obj = window.arguments[0].wrappedJSObject;
-			var Zotero = obj.Zotero;
+			var Trellis = obj.Trellis;
 			var data = obj.data;
 			var msg = data.msg;
 			var errorData = data.errorData;
@@ -37,38 +37,38 @@
 			
 			this.init = async function () {
 				// Allow Continue button to be populated
-				await Zotero.Promise.delay(100);
+				await Trellis.Promise.delay(100);
 				
 				var wizard = document.querySelector('wizard');
 				var continueButton = wizard.getButton('next');
 				continueButton.disabled = true;
 				
-				diagnosticInfo = await Zotero.getSystemInfo();
+				diagnosticInfo = await Trellis.getSystemInfo();
 				var errorDataText = errorData.length
 					? data.errorData.join('\n\n')
-					: Zotero.getString('errorReport.noErrorsLogged', Zotero.appName);
+					: Trellis.getString('errorReport.noErrorsLogged', Trellis.appName);
 				
 				var logText = errorDataText + '\n\n'
 					+ (extraData !== '' ? extraData + '\n\n' : '')
 					+ diagnosticInfo;
 				
-				if (document.getElementById('zotero-failure-message').hasChildNodes()) {
-					var textNode = document.getElementById('zotero-failure-message').firstChild;
-					document.getElementById('zotero-failure-message').removeChild(textNode);
+				if (document.getElementById('trellis-failure-message').hasChildNodes()) {
+					var textNode = document.getElementById('trellis-failure-message').firstChild;
+					document.getElementById('trellis-failure-message').removeChild(textNode);
 				}
 				
-				document.getElementById('zotero-failure-message').appendChild(document.createTextNode(msg));
-				document.getElementById('zotero-error-message').value = logText;
+				document.getElementById('trellis-failure-message').appendChild(document.createTextNode(msg));
+				document.getElementById('trellis-error-message').value = logText;
 				
 				continueButton.disabled = false;
 				continueButton.focus();
-				var str = Zotero.getString(
+				var str = Trellis.getString(
 					'errorReport.advanceMessage', continueButton.getAttribute('label')
 				);
-				document.getElementById('zotero-advance-message').setAttribute('value', str);
+				document.getElementById('trellis-advance-message').setAttribute('value', str);
 				
 				var pageSending = document.querySelector('wizardpage[pageid="report-sending"]');
-				pageSending.addEventListener('pageshow', () => Zotero_Error_Report.sendErrorReport());
+				pageSending.addEventListener('pageshow', () => Trellis_Error_Report.sendErrorReport());
 			};
 			
 			this.sendErrorReport = async function () {
@@ -88,9 +88,9 @@
 					body += key + '=' + encodeURIComponent(parts[key]) + '&';
 				}
 				body = body.substr(0, body.length - 1);
-				var req = await Zotero.HTTP.request(
+				var req = await Trellis.HTTP.request(
 					"POST",
-					ZOTERO_CONFIG.REPOSITORY_URL + "report",
+					TRELLIS_CONFIG.REPOSITORY_URL + "report",
 					{
 						body,
 						successCodes: false,
@@ -114,23 +114,23 @@
 						if (xmlhttp.status>1000){
 							ps.alert(
 								null,
-								Zotero.getString('general.error'),
-								Zotero.getString('errorReport.noNetworkConnection')
+								Trellis.getString('general.error'),
+								Trellis.getString('errorReport.noNetworkConnection')
 							);
 						}
 						else {
 							ps.alert(
 								null,
-								Zotero.getString('general.error'),
-								Zotero.getString('errorReport.invalidResponseRepository')
+								Trellis.getString('general.error'),
+								Trellis.getString('errorReport.invalidResponseRepository')
 							);
 						}
 					}
 					catch (e){
 						ps.alert(
 							null,
-							Zotero.getString('general.error'),
-							Zotero.getString('errorReport.repoCannotBeContacted')
+							Trellis.getString('general.error'),
+							Trellis.getString('errorReport.repoCannotBeContacted')
 						);
 					}
 					
@@ -143,8 +143,8 @@
 				if (reported.length != 1) {
 					ps.alert(
 						null,
-						Zotero.getString('general.error'),
-						Zotero.getString('errorReport.invalidResponseRepository')
+						Trellis.getString('general.error'),
+						Trellis.getString('errorReport.invalidResponseRepository')
 					);
 					wizard.rewind();
 					return;
@@ -154,8 +154,8 @@
 				wizard.getButton('cancel').disabled = true;;
 				wizard.canRewind = false;
 				var reportID = reported[0].getAttribute('reportID');
-				document.getElementById('zotero-report-id').setAttribute('value', reportID);
-				document.getElementById('zotero-report-result').hidden = false;
+				document.getElementById('trellis-report-id').setAttribute('value', reportID);
+				document.getElementById('trellis-report-result').hidden = false;
 			}
 		}
 	]]>
@@ -166,34 +166,34 @@
 			pageid="report-start"
 			next="report-sending"
 			data-header-label-id="">
-		<description id="zotero-failure-message"/>
+		<description id="trellis-failure-message"/>
 		<html:textarea
-				id="zotero-error-message"
+				id="trellis-error-message"
 				class="plain"
 				readonly="true"
 				multiline="true"
 		/>
-		<description id="zotero-advance-message"/>
+		<description id="trellis-advance-message"/>
 	</wizardpage>
 	
 	<wizardpage
 			pageid="report-sending"
 			next="report-submitted"
-			onpageshow="Zotero_Error_Report.sendErrorReport()"
+			onpageshow="Trellis_Error_Report.sendErrorReport()"
 			data-header-label-id="">
-		<description>&zotero.errorReport.submissionInProgress;</description>
+		<description>&trellis.errorReport.submissionInProgress;</description>
 	</wizardpage>
 	
 	<wizardpage
 			pageid="report-submitted"
 			data-header-label-id="">
-		<description>&zotero.errorReport.submitted;</description>
-		<description id="zotero-report-result" hidden="true">
-			&zotero.errorReport.reportID;
-			<html:input id="zotero-report-id" type="text" class="plain" readonly="true"/>
+		<description>&trellis.errorReport.submitted;</description>
+		<description id="trellis-report-result" hidden="true">
+			&trellis.errorReport.reportID;
+			<html:input id="trellis-report-id" type="text" class="plain" readonly="true"/>
 		</description>
-		<description>&zotero.errorReport.postToForums;</description>
-		<description>&zotero.errorReport.notReviewed;</description>
+		<description>&trellis.errorReport.postToForums;</description>
+		<description>&trellis.errorReport.notReviewed;</description>
 	</wizardpage>
 </wizard>
 </window>

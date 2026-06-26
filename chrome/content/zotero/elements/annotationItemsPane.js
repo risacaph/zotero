@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
 	class AnnotationItemsPane extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<html:div class="custom-head"></html:div>
-			<html:div class="body zotero-view-item"> </html:div>
+			<html:div class="body trellis-view-item"> </html:div>
 		`);
 
 		set items(items) {
@@ -49,19 +49,19 @@
 
 		init() {
 			this._body = this.querySelector('.body');
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item']);
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item']);
 			this._body.addEventListener('keydown', this._handleKeyDown);
 		}
 
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 			this._body.removeEventListener('keydown', this._handleKeyDown);
 		}
 
 		notify(action, type, ids) {
 			if (action == 'modify') {
 				for (let id of ids) {
-					let updatedItem = Zotero.Items.get(id);
+					let updatedItem = Trellis.Items.get(id);
 					// If a selected annotation is renamed, re-render its annotation row
 					if (updatedItem.isAnnotation()) {
 						let row = this.querySelector(`annotation-row[annotation-id="${id}"]`);
@@ -83,7 +83,7 @@
 		render() {
 			if (!this.initialized) return;
 
-			let topLevelItems = Zotero.Items.getTopLevel(this.items);
+			let topLevelItems = Trellis.Items.getTopLevel(this.items);
 
 			// Remove collapsible sections for top-level items that no longer have any annotations
 			for (let section of [...this.querySelectorAll("collapsible-section")]) {

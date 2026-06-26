@@ -3,22 +3,22 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -45,12 +45,12 @@
 			// the popup if over the end side of the button
 			this.addEventListener('mousedown', (event) => {
 				if (this._isEventInDropmarkerBox(event)) {
-					Zotero.Utilities.Internal.showNativeElementPopup(this);
+					Trellis.Utilities.Internal.showNativeElementPopup(this);
 				}
 			});
 			
 			this.addEventListener('keydown', (event) => {
-				if (event.key == 'ArrowDown' && Zotero.Utilities.Internal.showNativeElementPopup(this)) {
+				if (event.key == 'ArrowDown' && Trellis.Utilities.Internal.showNativeElementPopup(this)) {
 					event.preventDefault();
 				}
 			});
@@ -121,7 +121,7 @@
 					</html:div>
 					<html:div anonid="dropmarker-separator"/>
 					<html:div anonid="dropmarker-box">
-						<image src="chrome://zotero/skin/8/universal/chevron-8.svg" class="split-menu-button-dropmarker"/>
+						<image src="chrome://trellis/skin/8/universal/chevron-8.svg" class="split-menu-button-dropmarker"/>
 					</html:div>
 				`),
 				true
@@ -132,7 +132,7 @@
 		
 		_isEventInDropmarkerBox(event) {
 			let rect = this.querySelector('[anonid="dropmarker-box"]').getBoundingClientRect();
-			return !Zotero.rtl && event.clientX >= rect.left || Zotero.rtl && event.clientX <= rect.right;
+			return !Trellis.rtl && event.clientX >= rect.left || Trellis.rtl && event.clientX <= rect.right;
 		}
 	}
 

@@ -3,28 +3,28 @@
     
     Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs",
+	Trellis: "chrome://trellis/content/trellis.mjs",
 });
 
 export class BlockingObserver {
@@ -48,7 +48,7 @@ export class BlockingObserver {
 		this._ids.add(id);
 		if (!this._observerAdded) {
 			Services.obs.addObserver(this, 'http-on-modify-request');
-			Zotero.debug('BlockingObserver: Added observer');
+			Trellis.debug('BlockingObserver: Added observer');
 			this._observerAdded = true;
 		}
 	}
@@ -61,7 +61,7 @@ export class BlockingObserver {
 		this._ids.delete(id);
 		if (this._observerAdded && !this._ids.size) {
 			Services.obs.removeObserver(this, 'http-on-modify-request');
-			Zotero.debug('BlockingObserver: Removed observer');
+			Trellis.debug('BlockingObserver: Removed observer');
 			this._observerAdded = false;
 		}
 	}
@@ -70,7 +70,7 @@ export class BlockingObserver {
 		if (this._observerAdded) {
 			this._ids.clear();
 			Services.obs.removeObserver(this, 'http-on-modify-request');
-			Zotero.debug('BlockingObserver: Removed observer');
+			Trellis.debug('BlockingObserver: Removed observer');
 			this._observerAdded = false;
 		}
 	}

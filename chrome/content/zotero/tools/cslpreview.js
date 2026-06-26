@@ -3,38 +3,38 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
     Contributed by Julian Onions
 */
 
 // eslint-disable-next-line no-unused-vars
-var Zotero_CSL_Preview = new function () {
+var Trellis_CSL_Preview = new function () {
 	this.lastContent = null;
 	
 	this.init = function () {
 		var menulist = document.getElementById("locale-menu");
 		
-		Zotero.Styles.populateLocaleList(menulist);
-		menulist.value = Zotero.Prefs.get('export.lastLocale');
+		Trellis.Styles.populateLocaleList(menulist);
+		menulist.value = Trellis.Prefs.get('export.lastLocale');
 		
-		this.updateIframe(Zotero.getString('styles.preview.instructions'));
+		this.updateIframe(Trellis.getString('styles.preview.instructions'));
 		
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", () => {
 			this.updateIframe(this.lastContent.content, this.lastContent.containerClass);
@@ -42,26 +42,26 @@ var Zotero_CSL_Preview = new function () {
 	};
 
 	this.refresh = function () {
-		var items = Zotero.getActiveZoteroPane().getSelectedItems();
+		var items = Trellis.getActiveTrellisPane().getSelectedItems();
 		if (items.length === 0) {
-			this.updateIframe(Zotero.getString('styles.editor.warning.noItems'), 'warning');
+			this.updateIframe(Trellis.getString('styles.editor.warning.noItems'), 'warning');
 			return;
 		}
-		var progressWin = new Zotero.ProgressWindow();
+		var progressWin = new Trellis.ProgressWindow();
 		// XXX needs its own string really!
-		progressWin.changeHeadline(Zotero.getString("pane.items.menu.createBib.multiple"));
-		var icon = 'chrome://zotero/skin/treeitem-attachment-file.png';
+		progressWin.changeHeadline(Trellis.getString("pane.items.menu.createBib.multiple"));
+		var icon = 'chrome://trellis/skin/treeitem-attachment-file.png';
 		progressWin.addLines(document.title, icon);
 		progressWin.show();
 		progressWin.startCloseTimer();
 		// Give progress window time to appear
 		setTimeout(() => {
 			var d = new Date();
-			var styles = Zotero.Styles.getVisible();
+			var styles = Trellis.Styles.getVisible();
 			// XXX needs its own string really for the title!
 			var str = '<div>';
 			for (let style of styles) {
-				Zotero.debug("Generate bibliography for " + style.title);
+				Trellis.debug("Generate bibliography for " + style.title);
 				let bib;
 				let err = false;
 				try {
@@ -69,11 +69,11 @@ var Zotero_CSL_Preview = new function () {
 				}
 				catch (e) {
 					err = e;
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 				if (bib || err) {
 					str += '<h3>' + style.title + '</h3>';
-					str += bib || `<p style="color: red">${Zotero.Utilities.htmlSpecialChars(err)}</p>`;
+					str += bib || `<p style="color: red">${Trellis.Utilities.htmlSpecialChars(err)}</p>`;
 					str += '<hr>';
 				}
 			}
@@ -81,19 +81,19 @@ var Zotero_CSL_Preview = new function () {
 			str += '</div>';
 			this.updateIframe(str);
 
-			Zotero.debug(`Generated previews in ${new Date() - d} ms`);
+			Trellis.debug(`Generated previews in ${new Date() - d} ms`);
 		}, 100);
 	};
 	
 	this.generateBibliography = function (style) {
-		var items = Zotero.getActiveZoteroPane().getSelectedItems();
+		var items = Trellis.getActiveTrellisPane().getSelectedItems();
 		if (items.length === 0) {
 			return '';
 		}
 		
 		var citationFormat = document.getElementById("citation-format").selectedItem.value;
 		if (citationFormat != "all" && citationFormat != style.categories) {
-			Zotero.debug("CSL IGNORE: citation format is " + style.categories);
+			Trellis.debug("CSL IGNORE: citation format is " + style.categories);
 			return '';
 		}
 		
@@ -113,7 +113,7 @@ var Zotero_CSL_Preview = new function () {
 		var bibliography = '';
 		if (style.hasBibliography) {
 			styleEngine.updateItems(items.map(item => item.id));
-			bibliography = Zotero.Cite.makeFormattedBibliography(styleEngine, "html");
+			bibliography = Trellis.Cite.makeFormattedBibliography(styleEngine, "html");
 		}
 		
 		styleEngine.free();
@@ -124,18 +124,18 @@ var Zotero_CSL_Preview = new function () {
 	this.updateIframe = function (content, containerClass = 'preview') {
 		this.lastContent = { content, containerClass };
 		const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		let iframe = document.getElementById('zotero-csl-preview-box');
+		let iframe = document.getElementById('trellis-csl-preview-box');
 		iframe.contentDocument.documentElement.innerHTML = `<html>
 		<head>
 			<title></title>
-			<link rel="stylesheet" href="chrome://zotero-platform/content/zotero.css">
+			<link rel="stylesheet" href="chrome://trellis-platform/content/trellis.css">
 			<style>
 				html {
 					color-scheme: ${isDarkMode ? "dark" : "light"};
 				}
 			</style>
 		</head>
-		<body id="csl-edit-preview"><div class="${containerClass} zotero-dialog">${content}</div></body>
+		<body id="csl-edit-preview"><div class="${containerClass} trellis-dialog">${content}</div></body>
 		</html>`;
 	};
 }();

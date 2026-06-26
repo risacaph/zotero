@@ -3,27 +3,27 @@
     
     Copyright © 2014 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Users = new function () {
+Trellis.Users = new function () {
 	var _userID;
 	var _libraryID;
 	var _username;
@@ -33,7 +33,7 @@ Zotero.Users = new function () {
 	
 	this.init = async function () {
 		let sql = "SELECT key, value FROM settings WHERE setting='account'";
-		let rows = await Zotero.DB.queryAsync(sql);
+		let rows = await Trellis.DB.queryAsync(sql);
 		
 		let settings = {};
 		for (let i=0; i<rows.length; i++) {
@@ -62,16 +62,16 @@ Zotero.Users = new function () {
 		if (settings.localUserKey) {
 			_localUserKey = settings.localUserKey;
 		} else {
-			let key = Zotero.randomString(8);
+			let key = Trellis.randomString(8);
 			
 			sql = "INSERT INTO settings VALUES ('account', 'localUserKey', ?)";
-			await Zotero.DB.queryAsync(sql, key);
+			await Trellis.DB.queryAsync(sql, key);
 			
 			_localUserKey = key;
 		}
 
 		_users = {};
-		rows = await Zotero.DB.queryAsync("SELECT userID, name FROM users");
+		rows = await Trellis.DB.queryAsync("SELECT userID, name FROM users");
 		for (let row of rows) {
 			_users[row.userID] = row.name;
 		}
@@ -84,7 +84,7 @@ Zotero.Users = new function () {
 		if (!(val > 0)) throw new Error("userID must be a positive integer");
 		
 		var sql = "REPLACE INTO settings VALUES ('account', 'userID', ?)";
-		await Zotero.DB.queryAsync(sql, val);
+		await Trellis.DB.queryAsync(sql, val);
 		_userID = val;
 	};
 	
@@ -94,7 +94,7 @@ Zotero.Users = new function () {
 		if (!val || typeof val != 'string') throw new Error('username must be a non-empty string');
 		
 		var sql = "REPLACE INTO settings VALUES ('account', 'username', ?)";
-		await Zotero.DB.queryAsync(sql, val);
+		await Trellis.DB.queryAsync(sql, val);
 		_username = val;
 	};
 	
@@ -106,7 +106,7 @@ Zotero.Users = new function () {
 		if (!Array.isArray(val)) throw new Error('emails must be an array');
 
 		let sql = "REPLACE INTO settings VALUES ('account', 'emails', ?)";
-		await Zotero.DB.queryAsync(sql, JSON.stringify(val));
+		await Trellis.DB.queryAsync(sql, JSON.stringify(val));
 		_emails = val;
 	};
 
@@ -138,7 +138,7 @@ Zotero.Users = new function () {
 		if (this.getName(userID) == name) {
 			return;
 		}
-		await Zotero.DB.queryAsync("REPLACE INTO users VALUES (?, ?)", [userID, name]);
+		await Trellis.DB.queryAsync("REPLACE INTO users VALUES (?, ?)", [userID, name]);
 		_users[userID] = name;
 	}
 };

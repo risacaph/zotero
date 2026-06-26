@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-var Zotero_Charset_Menu = new function() {
+var Trellis_Charset_Menu = new function() {
 	this.populate = populate;
 	
 	/**
@@ -47,7 +47,7 @@ var Zotero_Charset_Menu = new function() {
 		if (exportMenu) {
 			charsets.push(
 				{ label: "Unicode (UTF-8)", value: "UTF-8" },
-				{ label: Zotero.getString("charset.UTF8withoutBOM"), value: "UTF-8xBOM" },
+				{ label: Trellis.getString("charset.UTF8withoutBOM"), value: "UTF-8xBOM" },
 				{ label: "Western", value: "windows-1252" }
 			);
 			
@@ -96,7 +96,7 @@ var Zotero_Charset_Menu = new function() {
 			}
 			
 			var itemNode = document.createXULElement("menuitem");
-			itemNode.setAttribute("label", Zotero.getString("charset.autoDetect"));
+			itemNode.setAttribute("label", Trellis.getString("charset.autoDetect"));
 			itemNode.setAttribute("value", "auto");
 			charsetMap["auto"] = itemNode;
 			charsetPopup.insertBefore(itemNode, charsetPopup.firstChild);

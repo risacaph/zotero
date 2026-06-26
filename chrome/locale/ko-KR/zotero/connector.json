@@ -150,13 +150,13 @@
     "message": "온라인 라이브러리에 저장 활성화"
   },
   "reports_report_submitted": {
-    "message": "오류 보고가 제출되었습니다.\n\n보고서 ID: $1\n\nZotero 포럼에 생성된 보고서 ID, 문제 상황에 대한 설명, 재현에 필요한 절차를 담은 메시지를 게시해주세요.\n\n포럼에 언급되지 않은 오류 보고서는 검토되지 않습니다."
+    "message": "오류 보고가 제출되었습니다.\n\n보고서 ID: $1\n\nTrellis 포럼에 생성된 보고서 ID, 문제 상황에 대한 설명, 재현에 필요한 절차를 담은 메시지를 게시해주세요.\n\n포럼에 언급되지 않은 오류 보고서는 검토되지 않습니다."
   },
   "reports_debug_output_submitted": {
     "message": "디버그 출력이 제출되었습니다.\n\n디버그 ID는 $1입니다."
   },
   "reports_submission_failed": {
-    "message": "보고서 제출 중에 오류가 발생했습니다.\n\n$1\n\n인터넷 연결을 확인해주세요. 문제가 지속된다면, Zotero 포럼에 메시지를 게시해주세요."
+    "message": "보고서 제출 중에 오류가 발생했습니다.\n\n$1\n\n인터넷 연결을 확인해주세요. 문제가 지속된다면, Trellis 포럼에 메시지를 게시해주세요."
   },
   "integration_error_clientUpgrade": {
     "message": "웹 기반 인용을 위해 $1 또는 이후 버전이 필요합니다."
@@ -165,10 +165,10 @@
     "message": "$1가 $2 데스크톱 애플리케이션과 통신하지 못했습니다. 웹 기반 인용 기능을 사용하려면 반드시 $2 애플리케이션을 열어두세요."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "이 문서는 활성화된 Zotero 인용문을 담고 있으며, 다운로드된 사본에서 인용문은 \"zotero.org\" 링크로 나타납니다."
+    "message": "이 문서는 활성화된 Trellis 인용문을 담고 있으며, 다운로드된 사본에서 인용문은 \"trellis.org\" 링크로 나타납니다."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "공유하기 알맞은 판본을 생성하려면, 파일 메뉴의 <b>사본 만들기...</b>를 선택한 뒤, 새 (사본) 문서에서 Zotero 메뉴의 <b>인용 연결 해제</b>를 선택하고 나서, 인용 연결이 해제된 판본을 다운로드하세요. 인용문이 연결된 원본 문서는 향후 수정 가능성을 고려하여 남겨두어주세요."
+    "message": "공유하기 알맞은 판본을 생성하려면, 파일 메뉴의 <b>사본 만들기...</b>를 선택한 뒤, 새 (사본) 문서에서 Trellis 메뉴의 <b>인용 연결 해제</b>를 선택하고 나서, 인용 연결이 해제된 판본을 다운로드하세요. 인용문이 연결된 원본 문서는 향후 수정 가능성을 고려하여 남겨두어주세요."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "어쨌든 링크된 버전 다운로드"
@@ -177,7 +177,7 @@
     "message": "$1: 문서 업데이트 중입니다."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "Google Docs에서 Microsoft Word .docx 파일을 직접 편집할 경우 $1 연동 기능을 사용할 수 없습니다. 파일 → Google Docs로 저장 메뉴를 선택하셔서 연동 기능을 활성화하세요.<br/><br/>Word 문서 및 $1 인용문을 Google Docs로 이전하시려면, <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">워드 프로세서간 문서 이전</a> 도움말을 참조하세요."
+    "message": "Google Docs에서 Microsoft Word .docx 파일을 직접 편집할 경우 $1 연동 기능을 사용할 수 없습니다. 파일 → Google Docs로 저장 메뉴를 선택하셔서 연동 기능을 활성화하세요.<br/><br/>Word 문서 및 $1 인용문을 Google Docs로 이전하시려면, <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">워드 프로세서간 문서 이전</a> 도움말을 참조하세요."
   },
   "integration_googleDocs_documentLocked": {
     "message": "문서 인용문을 다른 $1 사용자가 편집하는 중입니다. 다음에 다시 시도하세요."
@@ -201,7 +201,7 @@
     "message": "인용 링크 다시 연결"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "선택된 인용문이 <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">$1에서 연결 해제되어 있습니다</a>. 참고 문헌을 업데이트하거나 표시하려면 다시 연결해야 합니다."
+    "message": "선택된 인용문이 <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">$1에서 연결 해제되어 있습니다</a>. 참고 문헌을 업데이트하거나 표시하려면 다시 연결해야 합니다."
   },
   "copyUnproxiedLink": {
     "message": "프록시 없는 링크 복사"

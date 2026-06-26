@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
 
 <window
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	id="zotero-read-aloud-first-run-window"
-	class="zotero-dialog"
+	id="trellis-read-aloud-first-run-window"
+	class="trellis-dialog"
 	drawintitlebar-platforms="mac"
-	onload="Zotero_Read_Aloud_First_Run.init()">
+	onload="Trellis_Read_Aloud_First_Run.init()">
 <dialog
-	id="zotero-read-aloud-first-run"
-	class="zotero-dialog-window"
+	id="trellis-read-aloud-first-run"
+	class="trellis-dialog-window"
 	buttons="cancel,accept"
 >
 	<linkset>
-		<html:link rel="localization" href="zotero.ftl" />
+		<html:link rel="localization" href="trellis.ftl" />
 	</linkset>
 	<iframe
 		id="read-aloud-first-run-iframe"
 		flex="1"
 		type="content"
 		transparent="true"
-		src="resource://zotero/reader/read-aloud-first-run.html"
+		src="resource://trellis/reader/read-aloud-first-run.html"
 	/>
 	<script src="include.js"/>
 	<script src="titlebar.js"/>

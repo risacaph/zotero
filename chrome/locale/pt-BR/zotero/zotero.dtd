@@ -1,329 +1,329 @@
-<!ENTITY zotero.general.yes "Sim">
-<!ENTITY zotero.general.no "Não">
-<!ENTITY zotero.general.optional "(Opcional)">
-<!ENTITY zotero.general.note "Nota:">
-<!ENTITY zotero.general.selectAll "Selecionar tudo">
-<!ENTITY zotero.general.deselectAll "Desmarcar tudo">
-<!ENTITY zotero.general.edit "Editar">
-<!ENTITY zotero.general.delete "Excluir">
-<!ENTITY zotero.general.moveToTrash "Mover para a lixeira">
-<!ENTITY zotero.general.ok "OK">
-<!ENTITY zotero.general.cancel "Cancelar">
-<!ENTITY zotero.general.refresh "Atualizar">
-<!ENTITY zotero.general.saveAs "Salvar como...">
-<!ENTITY zotero.general.options "Opções">
-<!ENTITY zotero.general.advancedOptions.label "Opções avançadas">
-<!ENTITY zotero.general.tools "Ferramentas">
-<!ENTITY zotero.general.more "Mais">
-<!ENTITY zotero.general.moreInformation "Mais informações">
-<!ENTITY zotero.general.loading "Carregando...">
-<!ENTITY zotero.general.close "Fechar">
-<!ENTITY zotero.general.minimize "Minimizar">
-<!ENTITY zotero.general.other "Outro...">
-<!ENTITY zotero.general.bigger "Aumentar">
-<!ENTITY zotero.general.smaller "Diminuir">
-<!ENTITY zotero.general.reset "Reconfigurar">
+<!ENTITY trellis.general.yes "Sim">
+<!ENTITY trellis.general.no "Não">
+<!ENTITY trellis.general.optional "(Opcional)">
+<!ENTITY trellis.general.note "Nota:">
+<!ENTITY trellis.general.selectAll "Selecionar tudo">
+<!ENTITY trellis.general.deselectAll "Desmarcar tudo">
+<!ENTITY trellis.general.edit "Editar">
+<!ENTITY trellis.general.delete "Excluir">
+<!ENTITY trellis.general.moveToTrash "Mover para a lixeira">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Cancelar">
+<!ENTITY trellis.general.refresh "Atualizar">
+<!ENTITY trellis.general.saveAs "Salvar como...">
+<!ENTITY trellis.general.options "Opções">
+<!ENTITY trellis.general.advancedOptions.label "Opções avançadas">
+<!ENTITY trellis.general.tools "Ferramentas">
+<!ENTITY trellis.general.more "Mais">
+<!ENTITY trellis.general.moreInformation "Mais informações">
+<!ENTITY trellis.general.loading "Carregando...">
+<!ENTITY trellis.general.close "Fechar">
+<!ENTITY trellis.general.minimize "Minimizar">
+<!ENTITY trellis.general.other "Outro...">
+<!ENTITY trellis.general.bigger "Aumentar">
+<!ENTITY trellis.general.smaller "Diminuir">
+<!ENTITY trellis.general.reset "Reconfigurar">
 
 
-<!ENTITY zotero.errorReport.title "Relatório de erros do Zotero">
-<!ENTITY zotero.errorReport.submissionInProgress "Por favor, aguarde enquanto o relatório de erros é enviado.">
-<!ENTITY zotero.errorReport.submitted "Seu relatório de erros foi enviado.">
-<!ENTITY zotero.errorReport.reportID "Identificação do relatório:">
-<!ENTITY zotero.errorReport.postToForums "Por favor, envie uma mensagem para os fóruns do Zotero (forums.zotero.org) com essa identificação do relatório, uma descrição do problema e todos os passos necessários para reproduzi-lo.">
-<!ENTITY zotero.errorReport.notReviewed "Relatórios de erro não são analisados a não ser que sejam mencionados nos fóruns.">
+<!ENTITY trellis.errorReport.title "Relatório de erros do Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Por favor, aguarde enquanto o relatório de erros é enviado.">
+<!ENTITY trellis.errorReport.submitted "Seu relatório de erros foi enviado.">
+<!ENTITY trellis.errorReport.reportID "Identificação do relatório:">
+<!ENTITY trellis.errorReport.postToForums "Por favor, envie uma mensagem para os fóruns do Trellis (forums.trellis.org) com essa identificação do relatório, uma descrição do problema e todos os passos necessários para reproduzi-lo.">
+<!ENTITY trellis.errorReport.notReviewed "Relatórios de erro não são analisados a não ser que sejam mencionados nos fóruns.">
 
-<!ENTITY zotero.upgrade.title "Assistente de atualização do Zotero">
-<!ENTITY zotero.upgrade.newVersionInstalled "Você instalou uma versão nova de Zotero.">
-<!ENTITY zotero.upgrade.upgradeRequired "O banco de dados do seu Zotero deve ser atualizado para funcionar com a nova versão.">
-<!ENTITY zotero.upgrade.autoBackup "Será feita uma cópia de segurança automática de seu banco de dados atual antes de efetuar qualquer alteração.">
-<!ENTITY zotero.upgrade.majorUpgrade "Esta é uma atualização maior.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "Certifique-se de ter revisado as">
-<!ENTITY zotero.upgrade.majorUpgradeLink "instruções de atualização">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "antes de continuar.">
-<!ENTITY zotero.upgrade.upgradeInProgress "Por favor, aguarde o término do processo de atualização. Isso pode levar alguns minutos.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "O banco de dados do seu Zotero foi atualizado com sucesso.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "Por favor, veja">
-<!ENTITY zotero.upgrade.changeLogLink "o registro de mudanças">
-<!ENTITY zotero.upgrade.changeLogAfterLink "para descobrir o que há de novo.">
+<!ENTITY trellis.upgrade.title "Assistente de atualização do Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Você instalou uma versão nova de Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "O banco de dados do seu Trellis deve ser atualizado para funcionar com a nova versão.">
+<!ENTITY trellis.upgrade.autoBackup "Será feita uma cópia de segurança automática de seu banco de dados atual antes de efetuar qualquer alteração.">
+<!ENTITY trellis.upgrade.majorUpgrade "Esta é uma atualização maior.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Certifique-se de ter revisado as">
+<!ENTITY trellis.upgrade.majorUpgradeLink "instruções de atualização">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "antes de continuar.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Por favor, aguarde o término do processo de atualização. Isso pode levar alguns minutos.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "O banco de dados do seu Trellis foi atualizado com sucesso.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Por favor, veja">
+<!ENTITY trellis.upgrade.changeLogLink "o registro de mudanças">
+<!ENTITY trellis.upgrade.changeLogAfterLink "para descobrir o que há de novo.">
 
-<!ENTITY zotero.tabs.notes.label "Notas">
-<!ENTITY zotero.tabs.attachments.label "Anexos">
+<!ENTITY trellis.tabs.notes.label "Notas">
+<!ENTITY trellis.tabs.attachments.label "Anexos">
 
-<!ENTITY zotero.toolbar.duplicate.label "Exibir duplicatas">
-<!ENTITY zotero.collections.showUnfiledItems "Exibir itens sem coleções">
-<!ENTITY zotero.collections.showRetractedItems "Mostrar itens Retratados">
+<!ENTITY trellis.toolbar.duplicate.label "Exibir duplicatas">
+<!ENTITY trellis.collections.showUnfiledItems "Exibir itens sem coleções">
+<!ENTITY trellis.collections.showRetractedItems "Mostrar itens Retratados">
 
-<!ENTITY zotero.items.itemType "Tipo do item">
-<!ENTITY zotero.items.creator_column "Autor">
-<!ENTITY zotero.items.year_column "Ano">
-<!ENTITY zotero.items.dateModified_column "Data de modificação">
-<!ENTITY zotero.items.moreColumns.label "Mais colunas">
-<!ENTITY zotero.items.restoreColumnOrder.label "Restaurar a ordem das colunas">
+<!ENTITY trellis.items.itemType "Tipo do item">
+<!ENTITY trellis.items.creator_column "Autor">
+<!ENTITY trellis.items.year_column "Ano">
+<!ENTITY trellis.items.dateModified_column "Data de modificação">
+<!ENTITY trellis.items.moreColumns.label "Mais colunas">
+<!ENTITY trellis.items.restoreColumnOrder.label "Restaurar a ordem das colunas">
 
-<!ENTITY zotero.items.menu.showInLibrary "Mostrar na biblioteca">
-<!ENTITY zotero.items.menu.attach.note "Adicionar nota">
-<!ENTITY zotero.items.menu.attach "Adicionar anexo">
-<!ENTITY zotero.items.menu.attach.link.uri "Anexar link para URI...">
-<!ENTITY zotero.items.menu.attach.file "Anexar cópia armazenada do arquivo...">
-<!ENTITY zotero.items.menu.attach.fileLink "Anexar link para o arquivo...">
+<!ENTITY trellis.items.menu.showInLibrary "Mostrar na biblioteca">
+<!ENTITY trellis.items.menu.attach.note "Adicionar nota">
+<!ENTITY trellis.items.menu.attach "Adicionar anexo">
+<!ENTITY trellis.items.menu.attach.link.uri "Anexar link para URI...">
+<!ENTITY trellis.items.menu.attach.file "Anexar cópia armazenada do arquivo...">
+<!ENTITY trellis.items.menu.attach.fileLink "Anexar link para o arquivo...">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "Restaurar para a biblioteca">
-<!ENTITY zotero.items.menu.duplicateItem "Duplicar item">
-<!ENTITY zotero.items.menu.mergeItems "Mesclar itens...">
-<!ENTITY zotero.items.menu.unrecognize "Desfazer a recuperação de metadados">
+<!ENTITY trellis.items.menu.restoreToLibrary "Restaurar para a biblioteca">
+<!ENTITY trellis.items.menu.duplicateItem "Duplicar item">
+<!ENTITY trellis.items.menu.mergeItems "Mesclar itens...">
+<!ENTITY trellis.items.menu.unrecognize "Desfazer a recuperação de metadados">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "Escolha a versão do item a ser utilizada como mestre:">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "Selecione os campos a serem mantidos das outras versões do item:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "Escolha a versão do item a ser utilizada como mestre:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Selecione os campos a serem mantidos das outras versões do item:">
 
-<!ENTITY zotero.toolbar.newItem.label "Novo item">
-<!ENTITY zotero.toolbar.moreItemTypes.label "Mais">
-<!ENTITY zotero.toolbar.lookup.label "Adicionar item(ns) segundo identificador">
-<!ENTITY zotero.toolbar.removeItem.label "Remover item...">
-<!ENTITY zotero.toolbar.newGroup "Novo grupo...">
-<!ENTITY zotero.toolbar.newSubcollection.label "Nova subcoleção...">
-<!ENTITY zotero.toolbar.newSavedSearch.label "Nova pesquisa salva...">
-<!ENTITY zotero.toolbar.emptyTrash.label "Esvaziar a lixeira">
-<!ENTITY zotero.toolbar.tagSelector.label "Exibir/ocultar o seletor de etiquetas">
-<!ENTITY zotero.toolbar.actions.label "Ações">
-<!ENTITY zotero.toolbar.import.label "Importar...">
-<!ENTITY zotero.toolbar.importFromClipboard "Importar da área de transferência">
-<!ENTITY zotero.toolbar.export.label "Exportar a biblioteca...">
-<!ENTITY zotero.toolbar.rtfScan.label "Vasculhar RTF ">
-<!ENTITY zotero.toolbar.preferences.label "Preferências...">
-<!ENTITY zotero.toolbar.supportAndDocumentation "Suporte e documentação">
-<!ENTITY zotero.toolbar.about.label "Sobre o Zotero">
-<!ENTITY zotero.toolbar.advancedSearch "Pesquisa avançada">
-<!ENTITY zotero.toolbar.openURL.label "Localizar">
-<!ENTITY zotero.toolbar.openURL.tooltip "Pesquisar na sua biblioteca local">
+<!ENTITY trellis.toolbar.newItem.label "Novo item">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Mais">
+<!ENTITY trellis.toolbar.lookup.label "Adicionar item(ns) segundo identificador">
+<!ENTITY trellis.toolbar.removeItem.label "Remover item...">
+<!ENTITY trellis.toolbar.newGroup "Novo grupo...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Nova subcoleção...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nova pesquisa salva...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Esvaziar a lixeira">
+<!ENTITY trellis.toolbar.tagSelector.label "Exibir/ocultar o seletor de etiquetas">
+<!ENTITY trellis.toolbar.actions.label "Ações">
+<!ENTITY trellis.toolbar.import.label "Importar...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importar da área de transferência">
+<!ENTITY trellis.toolbar.export.label "Exportar a biblioteca...">
+<!ENTITY trellis.toolbar.rtfScan.label "Vasculhar RTF ">
+<!ENTITY trellis.toolbar.preferences.label "Preferências...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Suporte e documentação">
+<!ENTITY trellis.toolbar.about.label "Sobre o Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Pesquisa avançada">
+<!ENTITY trellis.toolbar.openURL.label "Localizar">
+<!ENTITY trellis.toolbar.openURL.tooltip "Pesquisar na sua biblioteca local">
 
-<!ENTITY zotero.toolbar.feeds.new "Nova fonte">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "Da URL...">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "De OPML...">
-<!ENTITY zotero.toolbar.feeds.edit "Editar a fonte">
+<!ENTITY trellis.toolbar.feeds.new "Nova fonte">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Da URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "De OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Editar a fonte">
 
-<!ENTITY zotero.item.add "Adicionar">
-<!ENTITY zotero.item.attachment.file.show "Exibir o arquivo">
-<!ENTITY zotero.item.textTransform "Transformar o texto">
-<!ENTITY zotero.item.textTransform.titlecase "Iniciais em maiúsculas">
-<!ENTITY zotero.item.textTransform.sentencecase "Início da frase em maiúscula">
-<!ENTITY zotero.item.creatorTransform.nameSwap "Inverter primeiro/último">
-<!ENTITY zotero.item.creatorTransform.fixCase "Corrigir maiúsculas/minúsculas">
-<!ENTITY zotero.item.copyAsURL "Copiar como URL">
-<!ENTITY zotero.item.deletePermanently "Excluir permanentemente">
+<!ENTITY trellis.item.add "Adicionar">
+<!ENTITY trellis.item.attachment.file.show "Exibir o arquivo">
+<!ENTITY trellis.item.textTransform "Transformar o texto">
+<!ENTITY trellis.item.textTransform.titlecase "Iniciais em maiúsculas">
+<!ENTITY trellis.item.textTransform.sentencecase "Início da frase em maiúscula">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Inverter primeiro/último">
+<!ENTITY trellis.item.creatorTransform.fixCase "Corrigir maiúsculas/minúsculas">
+<!ENTITY trellis.item.copyAsURL "Copiar como URL">
+<!ENTITY trellis.item.deletePermanently "Excluir permanentemente">
 
-<!ENTITY zotero.item.tags.removeAll "Remover todas as etiquetas">
+<!ENTITY trellis.item.tags.removeAll "Remover todas as etiquetas">
 
-<!ENTITY zotero.toolbar.newNote "Nova nota">
-<!ENTITY zotero.toolbar.note.standalone "Nova nota isolada">
-<!ENTITY zotero.toolbar.note.child "Adicionar nota filha">
-<!ENTITY zotero.toolbar.lookup "Procurar pelo identificador...">
-<!ENTITY zotero.toolbar.attachment.linked "Link para arquivo...">
-<!ENTITY zotero.toolbar.attachment.add "Cópia armazenada do arquivo...">
-<!ENTITY zotero.toolbar.attachment.weblink "Salvar link para página atual">
-<!ENTITY zotero.toolbar.attachment.snapshot "Gerar instantâneo da página atual">
-<!ENTITY zotero.toolbar.context.item "Item">
-<!ENTITY zotero.toolbar.context.notes "Notas">
+<!ENTITY trellis.toolbar.newNote "Nova nota">
+<!ENTITY trellis.toolbar.note.standalone "Nova nota isolada">
+<!ENTITY trellis.toolbar.note.child "Adicionar nota filha">
+<!ENTITY trellis.toolbar.lookup "Procurar pelo identificador...">
+<!ENTITY trellis.toolbar.attachment.linked "Link para arquivo...">
+<!ENTITY trellis.toolbar.attachment.add "Cópia armazenada do arquivo...">
+<!ENTITY trellis.toolbar.attachment.weblink "Salvar link para página atual">
+<!ENTITY trellis.toolbar.attachment.snapshot "Gerar instantâneo da página atual">
+<!ENTITY trellis.toolbar.context.item "Item">
+<!ENTITY trellis.toolbar.context.notes "Notas">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "Nenhuma etiqueta para exibir">
-<!ENTITY zotero.tagSelector.loadingTags "Carregando etiquetas...">
-<!ENTITY zotero.tagSelector.showAutomatic "Exibir automaticamente">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "Exibir todas as etiquetas dessa biblioteca">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "Excluir as etiquetas automáticas nesta biblioteca...">
-<!ENTITY zotero.tagSelector.clearAll "Desmarcar todas">
-<!ENTITY zotero.tagSelector.assignColor "Atribuir cor...">
-<!ENTITY zotero.tagSelector.renameTag "Renomear a etiqueta...">
-<!ENTITY zotero.tagSelector.deleteTag "Excluir a etiqueta...">
-<!ENTITY zotero.tagSelector.splitTag "Dividir...">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Nenhuma etiqueta para exibir">
+<!ENTITY trellis.tagSelector.loadingTags "Carregando etiquetas...">
+<!ENTITY trellis.tagSelector.showAutomatic "Exibir automaticamente">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Exibir todas as etiquetas dessa biblioteca">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Excluir as etiquetas automáticas nesta biblioteca...">
+<!ENTITY trellis.tagSelector.clearAll "Desmarcar todas">
+<!ENTITY trellis.tagSelector.assignColor "Atribuir cor...">
+<!ENTITY trellis.tagSelector.renameTag "Renomear a etiqueta...">
+<!ENTITY trellis.tagSelector.deleteTag "Excluir a etiqueta...">
+<!ENTITY trellis.tagSelector.splitTag "Dividir...">
 
-<!ENTITY zotero.tagColorChooser.title "Escolha a posição e cor da etiqueta">
-<!ENTITY zotero.tagColorChooser.color "Cor:">
-<!ENTITY zotero.tagColorChooser.position "Posição:">
-<!ENTITY zotero.tagColorChooser.setColor "Definir a cor">
-<!ENTITY zotero.tagColorChooser.removeColor "Remover a cor">
+<!ENTITY trellis.tagColorChooser.title "Escolha a posição e cor da etiqueta">
+<!ENTITY trellis.tagColorChooser.color "Cor:">
+<!ENTITY trellis.tagColorChooser.position "Posição:">
+<!ENTITY trellis.tagColorChooser.setColor "Definir a cor">
+<!ENTITY trellis.tagColorChooser.removeColor "Remover a cor">
 
-<!ENTITY zotero.lookup.description "Insira ISBNs, DOIs, PMIDs, arXiv IDs ou ADS Bibcodes para adicionar a sua biblioteca:">
-<!ENTITY zotero.lookup.button.search "Pesquisar">
+<!ENTITY trellis.lookup.description "Insira ISBNs, DOIs, PMIDs, arXiv IDs ou ADS Bibcodes para adicionar a sua biblioteca:">
+<!ENTITY trellis.lookup.button.search "Pesquisar">
 
-<!ENTITY zotero.createParent.title "Criar item pai">
-<!ENTITY zotero.createParent.button.manual "Entrada manual">
+<!ENTITY trellis.createParent.title "Criar item pai">
+<!ENTITY trellis.createParent.button.manual "Entrada manual">
 
-<!ENTITY zotero.selectitems.title "Selecionar itens">
-<!ENTITY zotero.selectitems.intro.label "Selecione os itens que você gostaria de adicionar a sua biblioteca">
-<!ENTITY zotero.selectitems.cancel.label "Cancelar">
-<!ENTITY zotero.selectitems.select.label "Ok">
+<!ENTITY trellis.selectitems.title "Selecionar itens">
+<!ENTITY trellis.selectitems.intro.label "Selecione os itens que você gostaria de adicionar a sua biblioteca">
+<!ENTITY trellis.selectitems.cancel.label "Cancelar">
+<!ENTITY trellis.selectitems.select.label "Ok">
 
-<!ENTITY zotero.bibliography.title "Criar citação/bibliografia">
-<!ENTITY zotero.bibliography.style.label "Estilo da citação:">
-<!ENTITY zotero.bibliography.manageStyles "Gerenciar estilos...">
-<!ENTITY zotero.bibliography.locale.label "Idioma:">
-<!ENTITY zotero.bibliography.outputMode "Modo de saída:">
-<!ENTITY zotero.bibliography.bibliography "Bibliografia">
-<!ENTITY zotero.bibliography.outputMethod "Método de saída:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "Salvar como RTF">
-<!ENTITY zotero.bibliography.saveAsHTML.label "Salvar como HTML">
-<!ENTITY zotero.bibliography.copyToClipboard.label "Copiar para Área de Transferência">
-<!ENTITY zotero.bibliography.print.label "Imprimir">
+<!ENTITY trellis.bibliography.title "Criar citação/bibliografia">
+<!ENTITY trellis.bibliography.style.label "Estilo da citação:">
+<!ENTITY trellis.bibliography.manageStyles "Gerenciar estilos...">
+<!ENTITY trellis.bibliography.locale.label "Idioma:">
+<!ENTITY trellis.bibliography.outputMode "Modo de saída:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografia">
+<!ENTITY trellis.bibliography.outputMethod "Método de saída:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Salvar como RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Salvar como HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Copiar para Área de Transferência">
+<!ENTITY trellis.bibliography.print.label "Imprimir">
 
-<!ENTITY zotero.integration.docPrefs.title "Preferências do documento">
-<!ENTITY zotero.integration.addEditCitation.title "Adicionar/Editar citação">
-<!ENTITY zotero.integration.editBibliography.title "Editar bibliografia">
+<!ENTITY trellis.integration.docPrefs.title "Preferências do documento">
+<!ENTITY trellis.integration.addEditCitation.title "Adicionar/Editar citação">
+<!ENTITY trellis.integration.editBibliography.title "Editar bibliografia">
 
-<!ENTITY zotero.progress.title "Progresso">
+<!ENTITY trellis.progress.title "Progresso">
 
-<!ENTITY zotero.import "Importar">
-<!ENTITY zotero.import.whereToImportFrom "De onde você deseja importar?">
-<!ENTITY zotero.import.source.file "Um arquivo (BibTeX, RIS, RDF do Zotero, etc.)">
-<!ENTITY zotero.import.source.folder "Uma pasta de PDFs ou outros arquivos">
-<!ENTITY zotero.import.onlineImport "Importação on-line">
-<!ENTITY zotero.import.importing "Importando...">
-<!ENTITY zotero.import.database "Banco de dados">
-<!ENTITY zotero.import.lastModified "Última modificação">
-<!ENTITY zotero.import.size "Tamanho">
-<!ENTITY zotero.import.createCollection "Coloque coleções importadas e itens dentro de novas coleções">
-<!ENTITY zotero.import.fileHandling "Manipulação de arquivo">
-<!ENTITY zotero.import.online.newItemsOnly "Baixar apenas itens novos; não atualizar itens importados anteriormente">
+<!ENTITY trellis.import "Importar">
+<!ENTITY trellis.import.whereToImportFrom "De onde você deseja importar?">
+<!ENTITY trellis.import.source.file "Um arquivo (BibTeX, RIS, RDF do Trellis, etc.)">
+<!ENTITY trellis.import.source.folder "Uma pasta de PDFs ou outros arquivos">
+<!ENTITY trellis.import.onlineImport "Importação on-line">
+<!ENTITY trellis.import.importing "Importando...">
+<!ENTITY trellis.import.database "Banco de dados">
+<!ENTITY trellis.import.lastModified "Última modificação">
+<!ENTITY trellis.import.size "Tamanho">
+<!ENTITY trellis.import.createCollection "Coloque coleções importadas e itens dentro de novas coleções">
+<!ENTITY trellis.import.fileHandling "Manipulação de arquivo">
+<!ENTITY trellis.import.online.newItemsOnly "Baixar apenas itens novos; não atualizar itens importados anteriormente">
 
-<!ENTITY zotero.exportOptions.title "Exportar...">
-<!ENTITY zotero.exportOptions.format.label "Formato:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "Opções do tradutor">
+<!ENTITY trellis.exportOptions.title "Exportar...">
+<!ENTITY trellis.exportOptions.format.label "Formato:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Opções do tradutor">
 
-<!ENTITY zotero.charset.label "Codificação de caracteres">
-<!ENTITY zotero.moreEncodings.label "Mais codificações">
+<!ENTITY trellis.charset.label "Codificação de caracteres">
+<!ENTITY trellis.moreEncodings.label "Mais codificações">
 
-<!ENTITY zotero.citation.keepSorted.label "Manter as fontes ordenadas">
+<!ENTITY trellis.citation.keepSorted.label "Manter as fontes ordenadas">
 
-<!ENTITY zotero.citation.suppressAuthor.label "Omitir autor">
-<!ENTITY zotero.citation.prefix.label "Prefixo:">
-<!ENTITY zotero.citation.suffix.label "Sufixo:">
-<!ENTITY zotero.citation.editorWarning.label "Atenção: se você alterar a citação no editor, ela não será mais atualizada de acordo com as mudanças no seu banco de dados ou no estilo de citação.">
+<!ENTITY trellis.citation.suppressAuthor.label "Omitir autor">
+<!ENTITY trellis.citation.prefix.label "Prefixo:">
+<!ENTITY trellis.citation.suffix.label "Sufixo:">
+<!ENTITY trellis.citation.editorWarning.label "Atenção: se você alterar a citação no editor, ela não será mais atualizada de acordo com as mudanças no seu banco de dados ou no estilo de citação.">
 
-<!ENTITY zotero.richText.italic.label "Itálico">
-<!ENTITY zotero.richText.bold.label "Negrito">
-<!ENTITY zotero.richText.underline.label "Sublinhado">
-<!ENTITY zotero.richText.superscript.label "Sobrescrito">
-<!ENTITY zotero.richText.subscript.label "Subscrito">
+<!ENTITY trellis.richText.italic.label "Itálico">
+<!ENTITY trellis.richText.bold.label "Negrito">
+<!ENTITY trellis.richText.underline.label "Sublinhado">
+<!ENTITY trellis.richText.superscript.label "Sobrescrito">
+<!ENTITY trellis.richText.subscript.label "Subscrito">
 
-<!ENTITY zotero.annotate.toolbar.add.label "Adicionar anotação">
-<!ENTITY zotero.annotate.toolbar.collapse.label "Esconder todas as anotações">
-<!ENTITY zotero.annotate.toolbar.expand.label "Exibir todas as anotações">
-<!ENTITY zotero.annotate.toolbar.highlight.label "Destacar texto">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "Remover destaque do texto">
+<!ENTITY trellis.annotate.toolbar.add.label "Adicionar anotação">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Esconder todas as anotações">
+<!ENTITY trellis.annotate.toolbar.expand.label "Exibir todas as anotações">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Destacar texto">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Remover destaque do texto">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "Exibir citações como:">
-<!ENTITY zotero.integration.prefs.footnotes.label "Notas de rodapé">
-<!ENTITY zotero.integration.prefs.endnotes.label "Notas de fim">
+<!ENTITY trellis.integration.prefs.displayAs.label "Exibir citações como:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Notas de rodapé">
+<!ENTITY trellis.integration.prefs.endnotes.label "Notas de fim">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "Armazenar as citações como:">
-<!ENTITY zotero.integration.prefs.bookmarks.label "Marcadores">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "Os marcadores podem ser compartilhados entre o Word e o LibreOffice, mas podem causar erros caso sejam modificados acidentalmente e não podem ser inserido nas notas de rodapé.">
+<!ENTITY trellis.integration.prefs.formatUsing.label "Armazenar as citações como:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Marcadores">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Os marcadores podem ser compartilhados entre o Word e o LibreOffice, mas podem causar erros caso sejam modificados acidentalmente e não podem ser inserido nas notas de rodapé.">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "Atualizar citações automaticamente">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "Citações com atualizações pendentes serão destacadas no documento">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "Desativar atualizações acelera a inserção de citação em documentos grandes. Clique em Refresh para atualizar citações manualmente.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Atualizar citações automaticamente">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citações com atualizações pendentes serão destacadas no documento">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Desativar atualizações acelera a inserção de citação em documentos grandes. Clique em Refresh para atualizar citações manualmente.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "Usar as abreviaturas de periódicos MEDLINE">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "O campo &quot;Abreviatura do periódico&quot; será ignorado.">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Usar as abreviaturas de periódicos MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "O campo &quot;Abreviatura do periódico&quot; será ignorado.">
 
-<!ENTITY zotero.integration.prefs.exportDocument "Trocar para um Editor de Texto diferente...">
+<!ENTITY trellis.integration.prefs.exportDocument "Trocar para um Editor de Texto diferente...">
 
-<!ENTITY zotero.integration.showEditor.label "Exibir o editor">
-<!ENTITY zotero.integration.classicView.label "Visão clássica">
+<!ENTITY trellis.integration.showEditor.label "Exibir o editor">
+<!ENTITY trellis.integration.classicView.label "Visão clássica">
 
-<!ENTITY zotero.integration.references.label "Referências na bibliografia">
+<!ENTITY trellis.integration.references.label "Referências na bibliografia">
 
-<!ENTITY zotero.sync.stop "Parar a sincronização">
-<!ENTITY zotero.sync.error "Erro na sincronização">
-<!ENTITY zotero.sync.storage.progress "Progresso:">
-<!ENTITY zotero.sync.storage.downloads "Downloads:">
-<!ENTITY zotero.sync.storage.uploads "Envios:">
+<!ENTITY trellis.sync.stop "Parar a sincronização">
+<!ENTITY trellis.sync.error "Erro na sincronização">
+<!ENTITY trellis.sync.storage.progress "Progresso:">
+<!ENTITY trellis.sync.storage.downloads "Downloads:">
+<!ENTITY trellis.sync.storage.uploads "Envios:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "A seguinte etiqueta da sua biblioteca Zotero é extensa demais para ser sincronizada com o servidor:">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "Etiquetas sincronizadas devem ter menos de 256 caracteres.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "Você pode dividir a etiqueta em várias, editá-la manualmente para torná-la mais curta ou exclui-la.">
-<!ENTITY zotero.sync.longTagFixer.split "Dividir">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "Dividir no">
-<!ENTITY zotero.sync.longTagFixer.character "caractere">
-<!ENTITY zotero.sync.longTagFixer.characters "caracteres">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "Etiquetas desmarcadas não serão salvas.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "A etiqueta será excluída de todos os itens.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "A seguinte etiqueta da sua biblioteca Trellis é extensa demais para ser sincronizada com o servidor:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Etiquetas sincronizadas devem ter menos de 256 caracteres.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Você pode dividir a etiqueta em várias, editá-la manualmente para torná-la mais curta ou exclui-la.">
+<!ENTITY trellis.sync.longTagFixer.split "Dividir">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Dividir no">
+<!ENTITY trellis.sync.longTagFixer.character "caractere">
+<!ENTITY trellis.sync.longTagFixer.characters "caracteres">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Etiquetas desmarcadas não serão salvas.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "A etiqueta será excluída de todos os itens.">
 
-<!ENTITY zotero.merge.title "Resolução de conflito">
-<!ENTITY zotero.merge.of "de">
-<!ENTITY zotero.merge.deleted "Excluído">
+<!ENTITY trellis.merge.title "Resolução de conflito">
+<!ENTITY trellis.merge.of "de">
+<!ENTITY trellis.merge.deleted "Excluído">
 
-<!ENTITY zotero.proxy.recognized.title "Proxy reconhecido">
-<!ENTITY zotero.proxy.recognized.warning "Somente adicione proxies da sua biblioteca, escola, ou site web corporativo">
-<!ENTITY zotero.proxy.recognized.warning.secondary "Adicionar outros proxies permite que sites maliciosos se passem por sites nos quais você confia.">
-<!ENTITY zotero.proxy.recognized.disable.label "Não redirecionar automaticamente os pedidos através de proxies previamente reconhecidos">
-<!ENTITY zotero.proxy.recognized.ignore.label "Ignorar">
+<!ENTITY trellis.proxy.recognized.title "Proxy reconhecido">
+<!ENTITY trellis.proxy.recognized.warning "Somente adicione proxies da sua biblioteca, escola, ou site web corporativo">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Adicionar outros proxies permite que sites maliciosos se passem por sites nos quais você confia.">
+<!ENTITY trellis.proxy.recognized.disable.label "Não redirecionar automaticamente os pedidos através de proxies previamente reconhecidos">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignorar">
 
-<!ENTITY zotero.feedSettings.title "Configurações da fonte">
-<!ENTITY zotero.feedSettings.saveButton.label "Salvar">
-<!ENTITY zotero.feedSettings.url.label "URL:">
-<!ENTITY zotero.feedSettings.title.label "Título:">
-<!ENTITY zotero.feedSettings.refresh.label1 "Atualizar a fonte a cada">
-<!ENTITY zotero.feedSettings.refresh.label2 "hora(s)">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "Remover itens não lidos da fonte após">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "dia(s)">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "Remover itens lidos da fonte após">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "dia(s)">
+<!ENTITY trellis.feedSettings.title "Configurações da fonte">
+<!ENTITY trellis.feedSettings.saveButton.label "Salvar">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Título:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Atualizar a fonte a cada">
+<!ENTITY trellis.feedSettings.refresh.label2 "hora(s)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Remover itens não lidos da fonte após">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dia(s)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Remover itens lidos da fonte após">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dia(s)">
 
-<!ENTITY zotero.rtfScan.title "Vasculhar o RTF">
-<!ENTITY zotero.rtfScan.cancel.label "Cancelar">
-<!ENTITY zotero.rtfScan.citation.label "Citação">
-<!ENTITY zotero.rtfScan.itemName.label "Nome do item">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "Citações não mapeadas">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "Citações ambíguas">
-<!ENTITY zotero.rtfScan.mappedCitations.label "Citações mapeadas">
-<!ENTITY zotero.rtfScan.introPage.label "Introdução">
-<!ENTITY zotero.rtfScan.introPage.description "O Zotero pode extrair e reformatar citações automaticamente e inserir uma bibliografia em arquivos RTF. O recurso de vascular o RTF atualmente suporta citações em variações dos seguintes formatos:">
-<!ENTITY zotero.rtfScan.introPage.description2 "Para começar, selecione um arquivo RTF de entrada e um arquivo de saída abaixo:">
-<!ENTITY zotero.rtfScan.scanPage.label "Procurando por citações">
-<!ENTITY zotero.rtfScan.scanPage.description "O Zotero está vasculhando o seu documento a procura de citações. Por favor, seja paciente.">
-<!ENTITY zotero.rtfScan.citationsPage.label "Verificar itens citados">
-<!ENTITY zotero.rtfScan.citationsPage.description "Por favor, revise a lista de citações reconhecidas para certificar-se que o Zotero selecionou os itens correspondentes de forma correta. Quaisquer citações não mapeadas ou ambíguas devem ser corrigidas antes de avançar para o próximo passo.">
-<!ENTITY zotero.rtfScan.stylePage.label "Formatação do documento">
-<!ENTITY zotero.rtfScan.formatPage.label "Formatando as citações">
-<!ENTITY zotero.rtfScan.formatPage.description "O Zotero está processando e formatando seu arquivo RTF. Por favor, seja paciente.">
-<!ENTITY zotero.rtfScan.completePage.label "A análise do RTF foi concluída">
-<!ENTITY zotero.rtfScan.completePage.description "Seu documento foi vasculhado e processado. Por favor, certifique-se de que ele está formatado corretamente.">
-<!ENTITY zotero.rtfScan.inputFile.label "Arquivo de entrada">
-<!ENTITY zotero.rtfScan.outputFile.label "Arquivo de saída">
+<!ENTITY trellis.rtfScan.title "Vasculhar o RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Cancelar">
+<!ENTITY trellis.rtfScan.citation.label "Citação">
+<!ENTITY trellis.rtfScan.itemName.label "Nome do item">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Citações não mapeadas">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Citações ambíguas">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Citações mapeadas">
+<!ENTITY trellis.rtfScan.introPage.label "Introdução">
+<!ENTITY trellis.rtfScan.introPage.description "O Trellis pode extrair e reformatar citações automaticamente e inserir uma bibliografia em arquivos RTF. O recurso de vascular o RTF atualmente suporta citações em variações dos seguintes formatos:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Para começar, selecione um arquivo RTF de entrada e um arquivo de saída abaixo:">
+<!ENTITY trellis.rtfScan.scanPage.label "Procurando por citações">
+<!ENTITY trellis.rtfScan.scanPage.description "O Trellis está vasculhando o seu documento a procura de citações. Por favor, seja paciente.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Verificar itens citados">
+<!ENTITY trellis.rtfScan.citationsPage.description "Por favor, revise a lista de citações reconhecidas para certificar-se que o Trellis selecionou os itens correspondentes de forma correta. Quaisquer citações não mapeadas ou ambíguas devem ser corrigidas antes de avançar para o próximo passo.">
+<!ENTITY trellis.rtfScan.stylePage.label "Formatação do documento">
+<!ENTITY trellis.rtfScan.formatPage.label "Formatando as citações">
+<!ENTITY trellis.rtfScan.formatPage.description "O Trellis está processando e formatando seu arquivo RTF. Por favor, seja paciente.">
+<!ENTITY trellis.rtfScan.completePage.label "A análise do RTF foi concluída">
+<!ENTITY trellis.rtfScan.completePage.description "Seu documento foi vasculhado e processado. Por favor, certifique-se de que ele está formatado corretamente.">
+<!ENTITY trellis.rtfScan.inputFile.label "Arquivo de entrada">
+<!ENTITY trellis.rtfScan.outputFile.label "Arquivo de saída">
 
-<!ENTITY zotero.file.choose.label "Selecionar arquivo...">
-<!ENTITY zotero.file.noneSelected.label "Não foi selecionado nenhum arquivo">
+<!ENTITY trellis.file.choose.label "Selecionar arquivo...">
+<!ENTITY trellis.file.noneSelected.label "Não foi selecionado nenhum arquivo">
 
-<!ENTITY zotero.attachLink.title "Anexar link para URI">
-<!ENTITY zotero.attachLink.label.link "Link:">
-<!ENTITY zotero.attachLink.label.title "Título:">
+<!ENTITY trellis.attachLink.title "Anexar link para URI">
+<!ENTITY trellis.attachLink.label.link "Link:">
+<!ENTITY trellis.attachLink.label.title "Título:">
 
-<!ENTITY zotero.context.addChildNote "Adicionar nota de item">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "Adicionar nota de item das anotações">
-<!ENTITY zotero.context.addStandaloneNote "Adicionar nota isolada">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "Adicionar nota isolada das anotações">
-<!ENTITY zotero.context.editInWindow "Editar em uma janela separada">
+<!ENTITY trellis.context.addChildNote "Adicionar nota de item">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Adicionar nota de item das anotações">
+<!ENTITY trellis.context.addStandaloneNote "Adicionar nota isolada">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Adicionar nota isolada das anotações">
+<!ENTITY trellis.context.editInWindow "Editar em uma janela separada">
 
-<!ENTITY zotero.pdfReader.firstPage "Primeira página">
-<!ENTITY zotero.pdfReader.lastPage "Última página">
-<!ENTITY zotero.pdfReader.back "Voltar">
-<!ENTITY zotero.pdfReader.forward "Avançar">
-<!ENTITY zotero.pdfReader.handTool "Ferramenta mão">
-<!ENTITY zotero.pdfReader.verticalScrolling "Rolagem vertical">
-<!ENTITY zotero.pdfReader.horizontalScrolling "Rolagem horizontal">
-<!ENTITY zotero.pdfReader.wrappedScrolling "Deslocamento contido">
-<!ENTITY zotero.pdfReader.noSpreads "Não estender">
-<!ENTITY zotero.pdfReader.oddSpreads "Estender ímpares">
-<!ENTITY zotero.pdfReader.evenSpreads "Estender pares">
-<!ENTITY zotero.pdfReader.scrolled "Percorrido">
-<!ENTITY zotero.pdfReader.paginated "Paginado">
-<!ENTITY zotero.pdfReader.zoomIn "Aumentar o zoom">
-<!ENTITY zotero.pdfReader.zoomOut "Diminuir o zoom">
-<!ENTITY zotero.pdfReader.zoomReset "Redefinir zoom">
-<!ENTITY zotero.pdfReader.zoomAuto "Zoom automático">
-<!ENTITY zotero.pdfReader.zoomPageWidth "Largura da página">
-<!ENTITY zotero.pdfReader.zoomPageHeight "Ampliar à Altura da Página">
-<!ENTITY zotero.pdfReader.splitVertically "Dividir verticalmente">
-<!ENTITY zotero.pdfReader.splitHorizontally "Dividir horizontalmente">
-<!ENTITY zotero.pdfReader.transferFromPDF "Importar anotações...">
-<!ENTITY zotero.pdfReader.rotatePageLeft "Girar página para a esquerda">
-<!ENTITY zotero.pdfReader.rotatePageRight "Girar página para a direita">
+<!ENTITY trellis.pdfReader.firstPage "Primeira página">
+<!ENTITY trellis.pdfReader.lastPage "Última página">
+<!ENTITY trellis.pdfReader.back "Voltar">
+<!ENTITY trellis.pdfReader.forward "Avançar">
+<!ENTITY trellis.pdfReader.handTool "Ferramenta mão">
+<!ENTITY trellis.pdfReader.verticalScrolling "Rolagem vertical">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Rolagem horizontal">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Deslocamento contido">
+<!ENTITY trellis.pdfReader.noSpreads "Não estender">
+<!ENTITY trellis.pdfReader.oddSpreads "Estender ímpares">
+<!ENTITY trellis.pdfReader.evenSpreads "Estender pares">
+<!ENTITY trellis.pdfReader.scrolled "Percorrido">
+<!ENTITY trellis.pdfReader.paginated "Paginado">
+<!ENTITY trellis.pdfReader.zoomIn "Aumentar o zoom">
+<!ENTITY trellis.pdfReader.zoomOut "Diminuir o zoom">
+<!ENTITY trellis.pdfReader.zoomReset "Redefinir zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Zoom automático">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Largura da página">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Ampliar à Altura da Página">
+<!ENTITY trellis.pdfReader.splitVertically "Dividir verticalmente">
+<!ENTITY trellis.pdfReader.splitHorizontally "Dividir horizontalmente">
+<!ENTITY trellis.pdfReader.transferFromPDF "Importar anotações...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Girar página para a esquerda">
+<!ENTITY trellis.pdfReader.rotatePageRight "Girar página para a direita">

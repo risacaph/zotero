@@ -3,58 +3,58 @@
 	
 	Copyright © 2017 Center for History and New Media
 					George Mason University, Fairfax, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 /**
- * This is a HTTP-based integration interface for Zotero. The actual
+ * This is a HTTP-based integration interface for Trellis. The actual
  * heavy lifting occurs in the connector and/or wherever the connector delegates the heavy
  * lifting to.
  */
-Zotero.HTTPIntegrationClient = {
+Trellis.HTTPIntegrationClient = {
 	deferredResponse: null,
 	sendCommandPromise: Promise.resolve(),
 	sendCommand: async function (command, args=[]) {
 		let payload = JSON.stringify({command, arguments: args});
 		function sendCommand() {
-			Zotero.HTTPIntegrationClient.deferredResponse = Zotero.Promise.defer();
-			Zotero.HTTPIntegrationClient.sendResponse.apply(Zotero.HTTPIntegrationClient,
+			Trellis.HTTPIntegrationClient.deferredResponse = Trellis.Promise.defer();
+			Trellis.HTTPIntegrationClient.sendResponse.apply(Trellis.HTTPIntegrationClient,
 				[200, 'application/json', payload]);
-			return Zotero.HTTPIntegrationClient.deferredResponse.promise;
+			return Trellis.HTTPIntegrationClient.deferredResponse.promise;
 		}
 		// Force issued commands to occur sequentially, since these are really just
 		// a sequence of HTTP requests and responses.
 		// We might want to consider something better later, but this has the advantage of
 		// being easy to interface with as a Client, as you don't need SSE or WS.
 		if (command != 'Document.complete') {
-			Zotero.HTTPIntegrationClient.sendCommandPromise = 
-				Zotero.HTTPIntegrationClient.sendCommandPromise.then(sendCommand, sendCommand);
+			Trellis.HTTPIntegrationClient.sendCommandPromise = 
+				Trellis.HTTPIntegrationClient.sendCommandPromise.then(sendCommand, sendCommand);
 		} else {
-			await Zotero.HTTPIntegrationClient.sendCommandPromise;
+			await Trellis.HTTPIntegrationClient.sendCommandPromise;
 			sendCommand();
 		}
-		return Zotero.HTTPIntegrationClient.sendCommandPromise;
+		return Trellis.HTTPIntegrationClient.sendCommandPromise;
 	}
 };
 
-Zotero.HTTPIntegrationClient.Application = function () {
+Trellis.HTTPIntegrationClient.Application = function () {
 	this.primaryFieldType = "Http";
 	this.secondaryFieldType = "Http";
 	this.outputFormat = 'html';
@@ -64,37 +64,37 @@ Zotero.HTTPIntegrationClient.Application = function () {
 	this.supportsCitationMerging = false;
 	this.processorName = "HTTP Integration";
 };
-Zotero.HTTPIntegrationClient.Application.prototype = {
+Trellis.HTTPIntegrationClient.Application.prototype = {
 	getActiveDocument: async function () {
-		let result = await Zotero.HTTPIntegrationClient.sendCommand('Application.getActiveDocument');
+		let result = await Trellis.HTTPIntegrationClient.sendCommand('Application.getActiveDocument');
 		this.outputFormat = result.outputFormat || this.outputFormat;
 		this.supportedNotes = result.supportedNotes || this.supportedNotes;
 		this.supportsImportExport = result.supportsImportExport || this.supportsImportExport;
 		this.supportsTextInsertion = result.supportsTextInsertion || this.supportsTextInsertion;
 		this.supportsCitationMerging = result.supportsCitationMerging || this.supportsCitationMerging;
 		this.processorName = result.processorName || this.processorName;
-		return new Zotero.HTTPIntegrationClient.Document(result.documentID, this.processorName);
+		return new Trellis.HTTPIntegrationClient.Document(result.documentID, this.processorName);
 	}
 };
 
 /**
  * See integrationTests.js
  */
-Zotero.HTTPIntegrationClient.Document = function (documentID, processorName) {
+Trellis.HTTPIntegrationClient.Document = function (documentID, processorName) {
 	this._documentID = documentID;
 	this.processorName = processorName;
 };
 for (let method of ["activate", "canInsertField", "displayAlert", "getDocumentData",
 	"setDocumentData", "setBibliographyStyle", "importDocument", "exportDocument",
 	"insertText"]) {
-	Zotero.HTTPIntegrationClient.Document.prototype[method] = async function () {
-		return Zotero.HTTPIntegrationClient.sendCommand("Document."+method,
+	Trellis.HTTPIntegrationClient.Document.prototype[method] = async function () {
+		return Trellis.HTTPIntegrationClient.sendCommand("Document."+method,
 			[this._documentID].concat(Array.prototype.slice.call(arguments)));
 	};
 }
 
 // @NOTE Currently unused, prompts are done using the connector
-Zotero.HTTPIntegrationClient.Document.prototype._displayAlert = async function (dialogText, icon, buttons) {
+Trellis.HTTPIntegrationClient.Document.prototype._displayAlert = async function (dialogText, icon, buttons) {
 	var ps = Services.prompt;
 	var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_OK)
 		+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_IS_STRING);
@@ -114,7 +114,7 @@ Zotero.HTTPIntegrationClient.Document.prototype._displayAlert = async function (
 
 	var result = ps.confirmEx(
 		null,
-		"Zotero",
+		"Trellis",
 		dialogText,
 		buttonFlags,
 		null, null, null,
@@ -134,37 +134,37 @@ Zotero.HTTPIntegrationClient.Document.prototype._displayAlert = async function (
 	await this.activate();
 	return result;
 }
-Zotero.HTTPIntegrationClient.Document.prototype.cleanup = async function () {};
-Zotero.HTTPIntegrationClient.Document.prototype.cursorInField = async function (fieldType) {
-	var retVal = await Zotero.HTTPIntegrationClient.sendCommand("Document.cursorInField", [this._documentID, fieldType]);
+Trellis.HTTPIntegrationClient.Document.prototype.cleanup = async function () {};
+Trellis.HTTPIntegrationClient.Document.prototype.cursorInField = async function (fieldType) {
+	var retVal = await Trellis.HTTPIntegrationClient.sendCommand("Document.cursorInField", [this._documentID, fieldType]);
 	if (!retVal) return null;
-	return new Zotero.HTTPIntegrationClient.Field(this._documentID, retVal);
+	return new Trellis.HTTPIntegrationClient.Field(this._documentID, retVal);
 };
-Zotero.HTTPIntegrationClient.Document.prototype.insertField = async function (fieldType, noteType) {
-	var retVal = await Zotero.HTTPIntegrationClient.sendCommand("Document.insertField", [this._documentID, fieldType, parseInt(noteType) || 0]);
-	return new Zotero.HTTPIntegrationClient.Field(this._documentID, retVal);
+Trellis.HTTPIntegrationClient.Document.prototype.insertField = async function (fieldType, noteType) {
+	var retVal = await Trellis.HTTPIntegrationClient.sendCommand("Document.insertField", [this._documentID, fieldType, parseInt(noteType) || 0]);
+	return new Trellis.HTTPIntegrationClient.Field(this._documentID, retVal);
 };
-Zotero.HTTPIntegrationClient.Document.prototype.getFields = async function (fieldType) {
-	var retVal = await Zotero.HTTPIntegrationClient.sendCommand("Document.getFields", [this._documentID, fieldType]);
-	return retVal.map(field => new Zotero.HTTPIntegrationClient.Field(this._documentID, field));
+Trellis.HTTPIntegrationClient.Document.prototype.getFields = async function (fieldType) {
+	var retVal = await Trellis.HTTPIntegrationClient.sendCommand("Document.getFields", [this._documentID, fieldType]);
+	return retVal.map(field => new Trellis.HTTPIntegrationClient.Field(this._documentID, field));
 };
-Zotero.HTTPIntegrationClient.Document.prototype.convert = async function (fields, fieldType, noteTypes) {
+Trellis.HTTPIntegrationClient.Document.prototype.convert = async function (fields, fieldType, noteTypes) {
 	fields = fields.map((f) => f._id);
-	await Zotero.HTTPIntegrationClient.sendCommand("Document.convert", [this._documentID, fields, fieldType, noteTypes]);
+	await Trellis.HTTPIntegrationClient.sendCommand("Document.convert", [this._documentID, fields, fieldType, noteTypes]);
 };
-Zotero.HTTPIntegrationClient.Document.prototype.convertPlaceholdersToFields = async function (codes, placeholderIDs, noteType) {
-	var retVal = await Zotero.HTTPIntegrationClient.sendCommand("Document.convertPlaceholdersToFields", [this._documentID, codes, placeholderIDs, noteType]);
-	return retVal.map(field => new Zotero.HTTPIntegrationClient.Field(this._documentID, field));
+Trellis.HTTPIntegrationClient.Document.prototype.convertPlaceholdersToFields = async function (codes, placeholderIDs, noteType) {
+	var retVal = await Trellis.HTTPIntegrationClient.sendCommand("Document.convertPlaceholdersToFields", [this._documentID, codes, placeholderIDs, noteType]);
+	return retVal.map(field => new Trellis.HTTPIntegrationClient.Field(this._documentID, field));
 }
-Zotero.HTTPIntegrationClient.Document.prototype.complete = async function () {
-	Zotero.HTTPIntegrationClient.inProgress = false;
-	Zotero.HTTPIntegrationClient.sendCommand("Document.complete", [this._documentID]);
+Trellis.HTTPIntegrationClient.Document.prototype.complete = async function () {
+	Trellis.HTTPIntegrationClient.inProgress = false;
+	Trellis.HTTPIntegrationClient.sendCommand("Document.complete", [this._documentID]);
 };
 
 /**
  * See integrationTests.js
  */
-Zotero.HTTPIntegrationClient.Field = function (documentID, json) {
+Trellis.HTTPIntegrationClient.Field = function (documentID, json) {
 	this._documentID = documentID; 
 	this._id = json.id;
 	this._code = json.code;
@@ -175,38 +175,38 @@ Zotero.HTTPIntegrationClient.Field = function (documentID, json) {
 		this.isAdjacentToNextField = this._isAdjacentToNextField;
 	}
 };
-Zotero.HTTPIntegrationClient.Field.prototype = {};
+Trellis.HTTPIntegrationClient.Field.prototype = {};
 
 for (let method of ["delete", "select", "removeCode"]) {
-	Zotero.HTTPIntegrationClient.Field.prototype[method] = async function () {
-		return Zotero.HTTPIntegrationClient.sendCommand("Field."+method,
+	Trellis.HTTPIntegrationClient.Field.prototype[method] = async function () {
+		return Trellis.HTTPIntegrationClient.sendCommand("Field."+method,
 			[this._documentID, this._id].concat(Array.prototype.slice.call(arguments)));
 	};
 }
-Zotero.HTTPIntegrationClient.Field.prototype.getText = async function () {
+Trellis.HTTPIntegrationClient.Field.prototype.getText = async function () {
 	return this._text;
 };
-Zotero.HTTPIntegrationClient.Field.prototype.setText = async function (text, isRich) {
+Trellis.HTTPIntegrationClient.Field.prototype.setText = async function (text, isRich) {
 	// The HTML will be stripped by Google Docs and and since we're 
 	// caching this value, we need to strip it ourselves
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(text, "text/html");
 	this._text = doc.documentElement.textContent;
-	return Zotero.HTTPIntegrationClient.sendCommand("Field.setText", [this._documentID, this._id, text, true]);
+	return Trellis.HTTPIntegrationClient.sendCommand("Field.setText", [this._documentID, this._id, text, true]);
 };
-Zotero.HTTPIntegrationClient.Field.prototype.getCode = async function () {
+Trellis.HTTPIntegrationClient.Field.prototype.getCode = async function () {
 	return this._code;
 };
-Zotero.HTTPIntegrationClient.Field.prototype.setCode = async function (code) {
+Trellis.HTTPIntegrationClient.Field.prototype.setCode = async function (code) {
 	this._code = code;
-	return Zotero.HTTPIntegrationClient.sendCommand("Field.setCode", [this._documentID, this._id, code]);
+	return Trellis.HTTPIntegrationClient.sendCommand("Field.setCode", [this._documentID, this._id, code]);
 };
-Zotero.HTTPIntegrationClient.Field.prototype.getNoteIndex = async function () {
+Trellis.HTTPIntegrationClient.Field.prototype.getNoteIndex = async function () {
 	return this._noteIndex;
 };
-Zotero.HTTPIntegrationClient.Field.prototype.equals = async function (arg) {
+Trellis.HTTPIntegrationClient.Field.prototype.equals = async function (arg) {
 	return this._id === arg._id;
 };
-Zotero.HTTPIntegrationClient.Field.prototype._isAdjacentToNextField = async function () {
+Trellis.HTTPIntegrationClient.Field.prototype._isAdjacentToNextField = async function () {
 	return this._adjacent;
 }

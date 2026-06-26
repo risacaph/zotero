@@ -7,14 +7,14 @@ GECKO_VERSION_WIN="140.10.0esr"
 RUST_VERSION=1.86.0
 
 # URL prefix for custom builds of Firefox components
-custom_components_url="https://download.zotero.org/dev/firefox-components/"
+custom_components_url="https://download.trellis.org/dev/firefox-components/"
 custom_components_hash_mac=""
 custom_components_hash_win_x64="d4f13db655004401c114fb937b1535a74919b6516fae637e35847734bde4d602"
 custom_components_hash_win_arm64="69390facb8502fc40127f1ad80012858a3717935d5806331f1b17f54b05c2ca8"
 custom_components_hash_win32="163e98eecf2c17579f47e1c2cfa1eb44e204cc26bcb220bb7c31168ab866e2ef"
 
-APP_NAME="Zotero"
-APP_ID="zotero\@zotero.org"
+APP_NAME="Trellis"
+APP_ID="trellis\@trellis.org"
 
 # Whether to sign builds
 SIGN=0
@@ -39,12 +39,12 @@ STAGE_DIR="$DIR/staging"
 # Directory for packed binaries
 DIST_DIR="$DIR/dist"
 
-SOURCE_REPO_URL="https://github.com/zotero/zotero"
-S3_BUCKET="zotero-download"
+SOURCE_REPO_URL="https://github.com/trellis/trellis"
+S3_BUCKET="trellis-download"
 S3_CI_ZIP_PATH="ci/client"
 S3_DIST_PATH="client"
 
-DEPLOY_HOST="deploy.zotero"
+DEPLOY_HOST="deploy.trellis"
 DEPLOY_PATH="www/www-production/public/download/client"
 
 BUILD_PLATFORMS=""

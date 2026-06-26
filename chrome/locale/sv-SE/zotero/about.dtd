@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "version">
-<!ENTITY zotero.whatsNew "Vad är nytt">
-<!ENTITY zotero.createdby "Skapad av:">
-<!ENTITY zotero.director "Ledare:">
-<!ENTITY zotero.directors "Ledare:">
-<!ENTITY zotero.developers "Utvecklare:">
-<!ENTITY zotero.alumni "Tidigare medlemmar:">
-<!ENTITY zotero.about.localizations "Översättningar:">
-<!ENTITY zotero.about.additionalSoftware "Tredjepartsprogramvara:">
-<!ENTITY zotero.thanks "Särskilt tack:">
-<!ENTITY zotero.about.close "Stäng">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Vi vill också tacka...">
-<!ENTITY zotero.citationProcessing "Referens och källförteckningsbearbetning">
+<!ENTITY trellis.version "version">
+<!ENTITY trellis.whatsNew "Vad är nytt">
+<!ENTITY trellis.createdby "Skapad av:">
+<!ENTITY trellis.director "Ledare:">
+<!ENTITY trellis.directors "Ledare:">
+<!ENTITY trellis.developers "Utvecklare:">
+<!ENTITY trellis.alumni "Tidigare medlemmar:">
+<!ENTITY trellis.about.localizations "Översättningar:">
+<!ENTITY trellis.about.additionalSoftware "Tredjepartsprogramvara:">
+<!ENTITY trellis.thanks "Särskilt tack:">
+<!ENTITY trellis.about.close "Stäng">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Vi vill också tacka...">
+<!ENTITY trellis.citationProcessing "Referens och källförteckningsbearbetning">

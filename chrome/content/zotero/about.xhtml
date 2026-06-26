@@ -1,36 +1,36 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/about.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css" type="text/css"?>
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/about.dtd">
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/about.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/about.dtd">
 
 <window
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="moveToAlertPosition(); sizeToContent(); document.getElementById('zotero-about').getButton('accept').focus();"
+	onload="moveToAlertPosition(); sizeToContent(); document.getElementById('trellis-about').getButton('accept').focus();"
 	inwindowmenu="false">
 	<script>
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 	</script>
 <dialog
-		id="zotero-about"
-		class="zotero-window"
+		id="trellis-about"
+		class="trellis-window"
 		buttons="accept"
-		buttonlabelaccept="&zotero.about.close;"
+		buttonlabelaccept="&trellis.about.close;"
 		ondialogaccept="return true;">
 	
-	<vbox id="aboutcontent" class="zotero-dialog">
+	<vbox id="aboutcontent" class="trellis-dialog">
 		<div xmlns="http://www.w3.org/1999/xhtml">
-			<img id="logo" src="chrome://zotero/skin/zotero.svg" alt="Zotero" />
+			<img id="logo" src="chrome://trellis/skin/trellis.svg" alt="Trellis" />
 		</div>
 		<hbox>
 			<label id="version"/>
-			<label id="changelog" is="zotero-text-link" value="&zotero.whatsNew;"/>
+			<label id="changelog" is="trellis-text-link" value="&trellis.whatsNew;"/>
 		</hbox>
 		<script>
-			var version = Zotero.version;
-			if (!Zotero.isMac) {
+			var version = Trellis.version;
+			if (!Trellis.isMac) {
 				version += ` (${Services.appinfo.is64Bit ? '64' : '32'}-bit)`;
 			}
 			document.getElementById('version').textContent = version
@@ -41,43 +41,43 @@
 				<p id="third-party-software"></p>
 				<p id="get-involved"></p>
 				<script><![CDATA[
-					const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
+					const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
 					
-					document.getElementById('changelog').href = ZOTERO_CONFIG.CHANGELOG_URL;
+					document.getElementById('changelog').href = TRELLIS_CONFIG.CHANGELOG_URL;
 					
 					// Replace [links] in localized strings with spans with onclick handlers
 					//
 					// TODO: Use helper function in common with intro text in itemTreeView.js
 					document.getElementById('created-by').innerHTML =
-						Zotero.Utilities.htmlSpecialChars(
-							Zotero.getString(
+						Trellis.Utilities.htmlSpecialChars(
+							Trellis.getString(
 								'about.createdBy',
-								[Zotero.appName, `[${ZOTERO_CONFIG.PRODUCER}]`]
+								[Trellis.appName, `[${TRELLIS_CONFIG.PRODUCER}]`]
 							),
 						)
 						.replace(
 							/\[([^\]]+)](.+)\[([^\]]+)]/,
-							`<span data-href="${ZOTERO_CONFIG.PRODUCER_URL}">$1</span>`
+							`<span data-href="${TRELLIS_CONFIG.PRODUCER_URL}">$1</span>`
 								+ '$2'
-								+ `<span data-href="${ZOTERO_CONFIG.CREDITS_URL}">$3</span>`
+								+ `<span data-href="${TRELLIS_CONFIG.CREDITS_URL}">$3</span>`
 						);
 					
 					document.getElementById('third-party-software').innerHTML =
-						Zotero.Utilities.htmlSpecialChars(
-							Zotero.getString('about.openSource', Zotero.appName)
+						Trellis.Utilities.htmlSpecialChars(
+							Trellis.getString('about.openSource', Trellis.appName)
 						)
 						.replace(
 							/\[([^\]]+)](.+)\[([^\]]+)]/,
-							`<span data-href="${ZOTERO_CONFIG.LICENSING_URL}">$1</span>`
+							`<span data-href="${TRELLIS_CONFIG.LICENSING_URL}">$1</span>`
 								+ '$2'
-								+ `<span data-href="${ZOTERO_CONFIG.CREDITS_URL}#third-party_software">$3</span>`
+								+ `<span data-href="${TRELLIS_CONFIG.CREDITS_URL}#third-party_software">$3</span>`
 						);
 					
 					document.getElementById('get-involved').innerHTML =
-						Zotero.Utilities.htmlSpecialChars(Zotero.getString('about.getInvolved'))
+						Trellis.Utilities.htmlSpecialChars(Trellis.getString('about.getInvolved'))
 						.replace(
 							/\[([^\]]+)]/,
-							`<span data-href="${ZOTERO_CONFIG.GET_INVOLVED_URL}">$1</span>`
+							`<span data-href="${TRELLIS_CONFIG.GET_INVOLVED_URL}">$1</span>`
 						);
 					
 					// Activate text links
@@ -85,7 +85,7 @@
 						span.className = 'text-link';
 						span.setAttribute('role', 'link');
 						span.onclick = function () {
-							Zotero.launchURL(this.getAttribute('data-href'));
+							Trellis.launchURL(this.getAttribute('data-href'));
 						};
 					}
 				]]></script>

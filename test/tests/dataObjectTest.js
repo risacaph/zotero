@@ -1,12 +1,12 @@
 "use strict";
 
-describe("Zotero.DataObject", function () {
+describe("Trellis.DataObject", function () {
 	var types = ['collection', 'item', 'search'];
 	
 	describe("#library", function () {
-		it("should return a Zotero.Library", async function () {
+		it("should return a Trellis.Library", async function () {
 			var item = await createDataObject('item');
-			assert.equal(item.library, Zotero.Libraries.userLibrary);
+			assert.equal(item.library, Trellis.Libraries.userLibrary);
 		});
 	});
 	
@@ -14,7 +14,7 @@ describe("Zotero.DataObject", function () {
 		it("should return a libraryID", async function () {
 			var item = await createDataObject('item');
 			assert.isNumber(item.libraryID);
-			assert.equal(item.libraryID, Zotero.Libraries.userLibraryID);
+			assert.equal(item.libraryID, Trellis.Libraries.userLibraryID);
 		});
 	});
 	
@@ -25,11 +25,11 @@ describe("Zotero.DataObject", function () {
 				if (type == 'item') {
 					param = 'book';
 				}
-				let obj = new (Zotero[Zotero.Utilities.capitalize(type)])(param);
-				obj.libraryID = Zotero.Libraries.userLibraryID;
+				let obj = new (Trellis[Trellis.Utilities.capitalize(type)])(param);
+				obj.libraryID = Trellis.Libraries.userLibraryID;
 				assert.isNull(obj.key, 'key is null for ' + type);
 				assert.isFalse(obj._loaded.primaryData, 'primary data not loaded for ' + type);
-				obj.key = Zotero.DataObjectUtilities.generateKey();
+				obj.key = Trellis.DataObjectUtilities.generateKey();
 			}
 		})
 	})
@@ -71,10 +71,10 @@ describe("Zotero.DataObject", function () {
 				await obj.saveTx();
 				
 				if (type == 'item') {
-					obj.setField('title', Zotero.Utilities.randomString());
+					obj.setField('title', Trellis.Utilities.randomString());
 				}
 				else {
-					obj.name = Zotero.Utilities.randomString();
+					obj.name = Trellis.Utilities.randomString();
 				}
 				await obj.saveTx();
 				assert.isFalse(obj.synced);
@@ -102,10 +102,10 @@ describe("Zotero.DataObject", function () {
 				var id = await obj.saveTx();
 				
 				if (type == 'item') {
-					obj.setField('title', Zotero.Utilities.randomString());
+					obj.setField('title', Trellis.Utilities.randomString());
 				}
 				else {
-					obj.name = Zotero.Utilities.randomString();
+					obj.name = Trellis.Utilities.randomString();
 				}
 				obj.synced = true;
 				await obj.saveTx();
@@ -126,7 +126,7 @@ describe("Zotero.DataObject", function () {
 					obj.setField('title', 'test');
 				}
 				else {
-					obj.name = Zotero.Utilities.randomString();
+					obj.name = Trellis.Utilities.randomString();
 				}
 				obj.synced = true;
 				await obj.saveTx();
@@ -145,10 +145,10 @@ describe("Zotero.DataObject", function () {
 				await obj.saveTx();
 				
 				if (type == 'item') {
-					obj.setField('title', Zotero.Utilities.randomString());
+					obj.setField('title', Trellis.Utilities.randomString());
 				}
 				else {
-					obj.name = Zotero.Utilities.randomString();
+					obj.name = Trellis.Utilities.randomString();
 				}
 				await obj.saveTx({
 					skipSyncedUpdate: true
@@ -164,8 +164,8 @@ describe("Zotero.DataObject", function () {
 	describe("#deleted", function () {
 		it("should set trash status", async function () {
 			for (let type of types) {
-				let plural = Zotero.DataObjectUtilities.getObjectTypePlural(type)
-				let pluralClass = Zotero[Zotero.Utilities.capitalize(plural)];
+				let plural = Trellis.DataObjectUtilities.getObjectTypePlural(type)
+				let pluralClass = Trellis[Trellis.Utilities.capitalize(plural)];
 				
 				// Set to true
 				var obj = await createDataObject(type);
@@ -204,8 +204,8 @@ describe("Zotero.DataObject", function () {
 			}
 			
 			for (let type of types) {
-				let obj = new (Zotero[Zotero.Utilities.capitalize(type)]);
-				obj.libraryID = Zotero.Libraries.userLibraryID;
+				let obj = new (Trellis[Trellis.Utilities.capitalize(type)]);
+				obj.libraryID = Trellis.Libraries.userLibraryID;
 				obj.key = objs[type].key;
 				await obj.loadPrimaryData();
 				assert.equal(obj.version, objs[type].version);
@@ -213,9 +213,9 @@ describe("Zotero.DataObject", function () {
 		});
 		
 		it("shouldn't overwrite item type set in constructor", async function () {
-			var item = new Zotero.Item('book');
-			item.libraryID = Zotero.Libraries.userLibraryID;
-			item.key = Zotero.DataObjectUtilities.generateKey();
+			var item = new Trellis.Item('book');
+			item.libraryID = Trellis.Libraries.userLibraryID;
+			item.key = Trellis.DataObjectUtilities.generateKey();
 			await item.loadPrimaryData();
 			var saved = await item.saveTx();
 			assert.ok(saved);
@@ -224,21 +224,21 @@ describe("Zotero.DataObject", function () {
 	
 	describe("#loadAllData()", function () {
 		it("should load data on a regular item", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var id = await item.saveTx();
 			await item.loadAllData();
 			assert.throws(item.getNote.bind(item), 'getNote() can only be called on notes and attachments');
 		})
 		
 		it("should load data on an attachment item", async function () {
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			var id = await item.saveTx();
 			await item.loadAllData();
 			assert.equal(item.note, '');
 		})
 		
 		it("should load data on a note item", async function () {
-			var item = new Zotero.Item('note');
+			var item = new Trellis.Item('note');
 			var id = await item.saveTx();
 			await item.loadAllData();
 			assert.equal(item.note, '');
@@ -285,7 +285,7 @@ describe("Zotero.DataObject", function () {
 	describe("#save()", function () {
 		it("should add new identifiers to cache", async function () {
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				let obj = createUnsavedDataObject(type);
 				let id = await obj.saveTx();
 				let { libraryID, key } = objectsClass.getLibraryAndKeyFromID(id);
@@ -296,7 +296,7 @@ describe("Zotero.DataObject", function () {
 		
 		it("should reset changed state on objects", async function () {
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				let obj = createUnsavedDataObject(type);
 				await obj.saveTx();
 				assert.isFalse(obj.hasChanged());
@@ -307,16 +307,16 @@ describe("Zotero.DataObject", function () {
 			var item = await createDataObject('item');
 			item.setTags(['a']);
 			
-			var deferred = Zotero.Promise.defer();
-			var origFunc = Zotero.Notifier.queue.bind(Zotero.Notifier);
-			sinon.stub(Zotero.Notifier, "queue").callsFake(function (event, type, ids, extraData) {
+			var deferred = Trellis.Promise.defer();
+			var origFunc = Trellis.Notifier.queue.bind(Trellis.Notifier);
+			sinon.stub(Trellis.Notifier, "queue").callsFake(function (event, type, ids, extraData) {
 				// Add a new tag after the first one has been added to the DB and before the save is
 				// finished. The changed state should've cleared before saving to the DB the first
 				// time, so the second setTags() should mark the item as changed and allow the new tag
 				// to be saved in the second saveTx().
 				if (event == 'add' && type == 'item-tag') {
 					item.setTags(['a', 'b']);
-					Zotero.Notifier.queue.restore();
+					Trellis.Notifier.queue.restore();
 					deferred.resolve(item.saveTx());
 				}
 				origFunc(...arguments);
@@ -324,7 +324,7 @@ describe("Zotero.DataObject", function () {
 			
 			await Promise.all([item.saveTx(), deferred.promise]);
 			assert.sameMembers(item.getTags().map(o => o.tag), ['a', 'b']);
-			var tags = await Zotero.DB.columnQueryAsync(
+			var tags = await Trellis.DB.columnQueryAsync(
 				"SELECT name FROM tags JOIN itemTags USING (tagID) WHERE itemID=?", item.id
 			);
 			assert.sameMembers(tags, ['a', 'b']);
@@ -375,9 +375,9 @@ describe("Zotero.DataObject", function () {
 					await createDataObject(type, { itemType: 'note', parentID: obj.id });
 				}
 				
-				let deferred = Zotero.Promise.defer();
+				let deferred = Trellis.Promise.defer();
 				promises.push(deferred.promise);
-				observerIDs.push(Zotero.Notifier.registerObserver(
+				observerIDs.push(Trellis.Notifier.registerObserver(
 					{
 						notify: function (event, type, ids) {
 							if (event == 'delete' && ids.includes(obj.id)) {
@@ -395,11 +395,11 @@ describe("Zotero.DataObject", function () {
 			await Promise.race([
 				Promise.all(promises),
 				// Give notifier time to trigger
-				Zotero.Promise.delay(100),
+				Trellis.Promise.delay(100),
 			]);
 			
 			for (let id of observerIDs) {
-				Zotero.Notifier.unregisterObserver(id);
+				Trellis.Notifier.unregisterObserver(id);
 			}
 		})
 		
@@ -409,9 +409,9 @@ describe("Zotero.DataObject", function () {
 				let libraryID = obj.libraryID;
 				let key = obj.key;
 				let json = obj.toJSON();
-				await Zotero.Sync.Data.Local.saveCacheObjects(type, libraryID, [json]);
+				await Trellis.Sync.Data.Local.saveCacheObjects(type, libraryID, [json]);
 				await obj.eraseTx();
-				let versions = await Zotero.Sync.Data.Local.getCacheObjectVersions(
+				let versions = await Trellis.Sync.Data.Local.getCacheObjectVersions(
 					type, libraryID, key
 				);
 				assert.lengthOf(versions, 0);
@@ -494,9 +494,9 @@ describe("Zotero.DataObject", function () {
 		var types = ['collection', 'item'];
 		
 		function makeObjectURI(objectType) {
-			var objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
-			return 'http://zotero.org/groups/1/' + objectTypePlural + '/'
-				+ Zotero.Utilities.generateObjectKey();
+			var objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
+			return 'http://trellis.org/groups/1/' + objectTypePlural + '/'
+				+ Trellis.Utilities.generateObjectKey();
 		}
 		
 		describe("#addRelation()", function () {
@@ -546,7 +546,7 @@ describe("Zotero.DataObject", function () {
 		
 		describe("#setRelations()", function () {
 			it("shouldn't allow invalid 'relations' predicates", async function () {
-				var item = new Zotero.Item("book");
+				var item = new Trellis.Item("book");
 				assert.throws(() => {
 					item.setRelations({
 						"0": ["http://example.com/foo"]
@@ -560,7 +560,7 @@ describe("Zotero.DataObject", function () {
 				var group = await getGroup();
 				var item1 = await createDataObject('item');
 				var item2 = await createDataObject('item', { libraryID: group.libraryID });
-				var item2URI = Zotero.URI.getItemURI(item2);
+				var item2URI = Trellis.URI.getItemURI(item2);
 				
 				await item2.addLinkedItem(item1);
 				var linkedItem = await item1.getLinkedItem(item2.libraryID);
@@ -571,7 +571,7 @@ describe("Zotero.DataObject", function () {
 				var group = await getGroup();
 				var item1 = await createDataObject('item');
 				var item2 = await createDataObject('item', { libraryID: group.libraryID });
-				var item2URI = Zotero.URI.getItemURI(item2);
+				var item2URI = Trellis.URI.getItemURI(item2);
 				
 				await item2.addLinkedItem(item1);
 				item2.deleted = true;
@@ -583,7 +583,7 @@ describe("Zotero.DataObject", function () {
 			it("shouldn't return reverse linked objects by default", async function () {
 				var group = await getGroup();
 				var item1 = await createDataObject('item');
-				var item1URI = Zotero.URI.getItemURI(item1);
+				var item1URI = Trellis.URI.getItemURI(item1);
 				var item2 = await createDataObject('item', { libraryID: group.libraryID });
 				
 				await item2.addLinkedItem(item1);
@@ -594,7 +594,7 @@ describe("Zotero.DataObject", function () {
 			it("should return reverse linked objects with bidirectional flag", async function () {
 				var group = await getGroup();
 				var item1 = await createDataObject('item');
-				var item1URI = Zotero.URI.getItemURI(item1);
+				var item1URI = Trellis.URI.getItemURI(item1);
 				var item2 = await createDataObject('item', { libraryID: group.libraryID });
 				
 				await item2.addLinkedItem(item1);
@@ -609,10 +609,10 @@ describe("Zotero.DataObject", function () {
 				var item1 = await createDataObject('item');
 				var dateModified = item1.getField('dateModified');
 				var item2 = await createDataObject('item', { libraryID: group.libraryID });
-				var item2URI = Zotero.URI.getItemURI(item2);
+				var item2URI = Trellis.URI.getItemURI(item2);
 				
 				await item2.addLinkedItem(item1);
-				var preds = item1.getRelationsByPredicate(Zotero.Relations.linkedObjectPredicate);
+				var preds = item1.getRelationsByPredicate(Trellis.Relations.linkedObjectPredicate);
 				assert.include(preds, item2URI);
 				
 				// Make sure Date Modified hasn't changed
@@ -660,8 +660,8 @@ describe("Zotero.DataObject", function () {
 		describe("'patch' mode", function () {
 			it("should include changed 'deleted' field", async function () {
 				for (let type of types) {
-					let plural = Zotero.DataObjectUtilities.getObjectTypePlural(type)
-					let pluralClass = Zotero[Zotero.Utilities.capitalize(plural)];
+					let plural = Trellis.DataObjectUtilities.getObjectTypePlural(type)
+					let pluralClass = Trellis[Trellis.Utilities.capitalize(plural)];
 					
 					// True to false
 					let obj = createUnsavedDataObject(type)

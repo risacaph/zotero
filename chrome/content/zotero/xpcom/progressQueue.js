@@ -3,27 +3,27 @@
     
     Copyright © 2018 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.ProgressQueue = function (options) {
+Trellis.ProgressQueue = function (options) {
 	let _id = options.id;
 	let _title = options.title;
 	let _columns = options.columns;
@@ -43,11 +43,11 @@ Zotero.ProgressQueue = function (options) {
 	let _progressQueue = this;
 	
 	/**
-	 * @return {Zotero.ProgressQueueDialog}
+	 * @return {Trellis.ProgressQueueDialog}
 	 */
 	this.getDialog = function () {
 		if(!_dialog) {
-			_dialog = new Zotero.ProgressQueueDialog(_progressQueue);
+			_dialog = new Trellis.ProgressQueueDialog(_progressQueue);
 		}
 		return _dialog;
 	};
@@ -98,7 +98,7 @@ Zotero.ProgressQueue = function (options) {
 			throw new Error(`Invalid event listener "${name}"`);
 		}
 		if (!callback) {
-			Zotero.debug(`Calling "removeListener" without specifying which callback to remove is deprecated`);
+			Trellis.debug(`Calling "removeListener" without specifying which callback to remove is deprecated`);
 			_listeners[name] = []; // remove all callbacks to simulate previous behaviour
 		}
 		else {
@@ -130,7 +130,7 @@ Zotero.ProgressQueue = function (options) {
 	 * @return {Number}
 	 */
 	this.getProcessedTotal = function () {
-		return _rows.filter(row => row.status > Zotero.ProgressQueue.ROW_PROCESSING).length;
+		return _rows.filter(row => row.status > Trellis.ProgressQueue.ROW_PROCESSING).length;
 	};
 	
 	
@@ -146,14 +146,14 @@ Zotero.ProgressQueue = function (options) {
 	
 	/**
 	 * Add item for processing
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 */
 	this.addRow = function (item) {
 		this.deleteRow(item.id);
 		
 		let row = {
 			id: item.id,
-			status: Zotero.ProgressQueue.ROW_QUEUED,
+			status: Trellis.ProgressQueue.ROW_QUEUED,
 			fileName: item.getDisplayTitle(),
 			message: ''
 		};
@@ -172,7 +172,7 @@ Zotero.ProgressQueue = function (options) {
 	 * @param {String} message
 	 */
 	this.updateRow = function (itemID, status, message) {
-		Zotero.debug(`ProgressQueue: updating row ${itemID}, ${status}, ${message}`);
+		Trellis.debug(`ProgressQueue: updating row ${itemID}, ${status}, ${message}`);
 		for (let row of _rows) {
 			if (row.id === itemID) {
 				row.status = status;
@@ -204,35 +204,35 @@ Zotero.ProgressQueue = function (options) {
 };
 
 
-Zotero.ProgressQueue.ROW_QUEUED = 1;
-Zotero.ProgressQueue.ROW_PROCESSING = 2;
-Zotero.ProgressQueue.ROW_FAILED = 3;
-Zotero.ProgressQueue.ROW_SUCCEEDED = 4;
+Trellis.ProgressQueue.ROW_QUEUED = 1;
+Trellis.ProgressQueue.ROW_PROCESSING = 2;
+Trellis.ProgressQueue.ROW_FAILED = 3;
+Trellis.ProgressQueue.ROW_SUCCEEDED = 4;
 
 
-Zotero.ProgressQueues = new function () {
+Trellis.ProgressQueues = new function () {
 	let _queues = [];
 	
 	/**
 	 * @param {Object} options
-	 * @return {Zotero.ProgressQueue}
+	 * @return {Trellis.ProgressQueue}
 	 */
 	this.create = function (options) {
-		let queue = new Zotero.ProgressQueue(options);
+		let queue = new Trellis.ProgressQueue(options);
 		_queues.push(queue);
 		return queue;
 	};
 	
 	/**
 	 * @param {Number} id
-	 * @return {Zotero.ProgressQueue}
+	 * @return {Trellis.ProgressQueue}
 	 */
 	this.get = function (id) {
 		return _queues.find(queue => queue.getID() === id);
 	};
 	
 	/**
-	 * @return {Zotero.ProgressQueue[]}
+	 * @return {Trellis.ProgressQueue[]}
 	 */
 	this.getAll = function () {
 		return _queues;

@@ -1,7 +1,7 @@
 new function () {
 var { HttpServer } = ChromeUtils.importESModule("chrome://remote/content/server/httpd.sys.mjs");;
 
-const { HiddenBrowser } = ChromeUtils.importESModule('chrome://zotero/content/HiddenBrowser.mjs');
+const { HiddenBrowser } = ChromeUtils.importESModule('chrome://trellis/content/HiddenBrowser.mjs');
 
 /**
  * Create a new translator that saves the specified items
@@ -18,10 +18,10 @@ function saveItemsThroughTranslator(translatorType, items, translateOptions = {}
 		throw new Error("invalid translator type "+translatorType);
 	}
 
-	let translate = new Zotero.Translate[tyname]();
+	let translate = new Trellis.Translate[tyname]();
 	if (translatorType == "web") {
 		let doc = new DOMParser().parseFromString('<!DOCTYPE html><html></html>', 'text/html');
-		doc = Zotero.HTTP.wrapDocument(doc, 'https://www.example.com/');
+		doc = Trellis.HTTP.wrapDocument(doc, 'https://www.example.com/');
 		translate.setDocument(doc);
 	} else if (translatorType == "import") {
 		translate.setString("");
@@ -32,7 +32,7 @@ function saveItemsThroughTranslator(translatorType, items, translateOptions = {}
 		"function do"+tyname+"() {\n"+
 		"	var json = JSON.parse('"+JSON.stringify(items).replace(/['\\]/g, "\\$&")+"');\n"+
 		"	for (var i=0; i<json.length; i++) {"+
-		"		var item = new Zotero.Item;\n"+
+		"		var item = new Trellis.Item;\n"+
 		"		for (var field in json[i]) { item[field] = json[i][field]; }\n"+
 		"		item.complete();\n"+
 		"	}\n"+
@@ -98,32 +98,32 @@ function getTestPDF() {
 
 /**
  * Set up endpoints for testing attachment saving
- * This must happen immediately before the test, since Zotero might get
+ * This must happen immediately before the test, since Trellis might get
  * restarted by resetDB(), which would erase our registered endpoints.
  */
 function setupAttachmentEndpoints() {
 	var SnapshotTest = function () {};
-	Zotero.Server.Endpoints["/test/translate/test.html"] = SnapshotTest;
+	Trellis.Server.Endpoints["/test/translate/test.html"] = SnapshotTest;
 	SnapshotTest.prototype = {
 		"supportedMethods":["GET"],
 		"init":function (data, sendResponseCallback) {
-			Zotero.File.getBinaryContentsAsync(getTestSnapshot()).then(function (data) {
+			Trellis.File.getBinaryContentsAsync(getTestSnapshot()).then(function (data) {
 				sendResponseCallback(200, "text/html", data);
 			});
 		}
 	}
 	var PDFTest = function () {};
-	Zotero.Server.Endpoints["/test/translate/test.pdf"] = PDFTest;
+	Trellis.Server.Endpoints["/test/translate/test.pdf"] = PDFTest;
 	PDFTest.prototype = {
 		"supportedMethods":["GET"],
 		"init":function (data, sendResponseCallback) {
-			Zotero.File.getBinaryContentsAsync(getTestPDF()).then(function (data) {
+			Trellis.File.getBinaryContentsAsync(getTestPDF()).then(function (data) {
 				sendResponseCallback(200, "application/pdf", data);
 			});
 		}
 	}
 	var NonExistentTest = function () {};
-	Zotero.Server.Endpoints["/test/translate/does_not_exist.html"] = NonExistentTest;
+	Trellis.Server.Endpoints["/test/translate/does_not_exist.html"] = NonExistentTest;
 	NonExistentTest.prototype = {
 		"supportedMethods":["GET"],
 		"init":function (data, sendResponseCallback) {
@@ -138,7 +138,7 @@ function setupAttachmentEndpoints() {
  */
 function setupAsyncEndpoints() {
 	var JSONTest = function () {};
-	Zotero.Server.Endpoints["/test/translate/test.json"] = JSONTest;
+	Trellis.Server.Endpoints["/test/translate/test.json"] = JSONTest;
 	JSONTest.prototype = {
 		"supportedMethods": ["GET"],
 		"init": function (data, sendResponseCallback) {
@@ -150,22 +150,22 @@ function setupAsyncEndpoints() {
 	}
 }
 
-describe("Zotero.Translate", function () {
+describe("Trellis.Translate", function () {
 	let serverURL
 	let htmlURL;
 	
 	before(function* () {
-		serverURL = `http://127.0.0.1:${Zotero.Server.port}/test/translate/`;
+		serverURL = `http://127.0.0.1:${Trellis.Server.port}/test/translate/`;
 		htmlURL = serverURL + 'test.html';
 		
 		// TEMP: Fix for slow translator initialization on Linux/Travis
 		this.timeout(20000);
-		yield Zotero.Translators.init();
+		yield Trellis.Translators.init();
 		
 		setupAttachmentEndpoints();
 	});
 
-	describe("Zotero.Item", function () {
+	describe("Trellis.Item", function () {
 		it('should save ordinary fields and creators', async function () {
 			this.timeout(10000);
 			let data = loadSampleData('allTypesAndFields');
@@ -183,7 +183,7 @@ describe("Zotero.Translate", function () {
 			let savedItems = {};
 			for (let i=0; i<newItems.length; i++) {
 				let savedItem = newItems[i].toJSON();
-				savedItems[Zotero.ItemTypes.getName(newItems[i].itemTypeID)] = savedItem;
+				savedItems[Trellis.ItemTypes.getName(newItems[i].itemTypeID)] = savedItem;
 				delete savedItem.dateAdded;
 				delete savedItem.dateModified;
 				delete savedItem.key;
@@ -268,11 +268,11 @@ describe("Zotero.Translate", function () {
 
 			let newItems = itemsArrayToObject(await saveItemsThroughTranslator("import", myItems));
 			let noteIDs = newItems["Test Item"].getNotes();
-			let note1 = await Zotero.Items.getAsync(noteIDs[0]);
-			assert.equal(Zotero.ItemTypes.getName(note1.itemTypeID), "note");
+			let note1 = await Trellis.Items.getAsync(noteIDs[0]);
+			assert.equal(Trellis.ItemTypes.getName(note1.itemTypeID), "note");
 			assert.equal(note1.note, "1 note as string");
-			let note2 = await Zotero.Items.getAsync(noteIDs[1]);
-			assert.equal(Zotero.ItemTypes.getName(note2.itemTypeID), "note");
+			let note2 = await Trellis.Items.getAsync(noteIDs[1]);
+			assert.equal(Trellis.ItemTypes.getName(note2.itemTypeID), "note");
 			assert.equal(note2.note, "2 note as object");
 			checkTestTags(note2);
 			let note3 = newItems["standalone note"];
@@ -282,7 +282,7 @@ describe("Zotero.Translate", function () {
 		
 		it('should save relations', async function () {
 			var item = await createDataObject('item');
-			var itemURI = Zotero.URI.getItemURI(item);
+			var itemURI = Trellis.URI.getItemURI(item);
 			let myItem = {
 				itemType: "book",
 				title: "Test Item",
@@ -298,23 +298,23 @@ describe("Zotero.Translate", function () {
 		});
 		
 		it('should save collections', async function () {
-			let translate = new Zotero.Translate.Import();
+			let translate = new Trellis.Translate.Import();
 			translate.setString("");
 			translate.setTranslator(buildDummyTranslator(4,
 				'function detectWeb() {}\n'+
 				'function doImport() {\n'+
-				'	var item1 = new Zotero.Item("book");\n'+
+				'	var item1 = new Trellis.Item("book");\n'+
 				'   item1.title = "Not in Collection";\n'+
 				'   item1.complete();\n'+
-				'	var item2 = new Zotero.Item("book");\n'+
+				'	var item2 = new Trellis.Item("book");\n'+
 				'   item2.id = 1;\n'+
 				'   item2.title = "In Parent Collection";\n'+
 				'   item2.complete();\n'+
-				'	var item3 = new Zotero.Item("book");\n'+
+				'	var item3 = new Trellis.Item("book");\n'+
 				'   item3.id = 2;\n'+
 				'   item3.title = "In Child Collection";\n'+
 				'   item3.complete();\n'+
-				'	var collection = new Zotero.Collection();\n'+
+				'	var collection = new Trellis.Collection();\n'+
 				'	collection.name = "Parent Collection";\n'+
 				'	collection.children = [{"id":1}, {"type":"collection", "name":"Child Collection", "children":[{"id":2}]}];\n'+
 				'	collection.complete();\n'+
@@ -326,13 +326,13 @@ describe("Zotero.Translate", function () {
 
 			let parentCollection = newItems["In Parent Collection"].getCollections();
 			assert.equal(parentCollection.length, 1);
-			parentCollection = ((await Zotero.Collections.getAsync(parentCollection)))[0];
+			parentCollection = ((await Trellis.Collections.getAsync(parentCollection)))[0];
 			assert.equal(parentCollection.name, "Parent Collection");
 			assert.isTrue(parentCollection.hasChildCollections());
 
 			let childCollection = newItems["In Child Collection"].getCollections();
 			assert.equal(childCollection.length, 1);
-			childCollection = ((await Zotero.Collections.getAsync(childCollection[0])));
+			childCollection = ((await Trellis.Collections.getAsync(childCollection[0])));
 			assert.equal(childCollection.name, "Child Collection");
 			let parentChildren = parentCollection.getChildCollections();
 			assert.equal(parentChildren.length, 1);
@@ -352,8 +352,8 @@ describe("Zotero.Translate", function () {
 				},
 				{
 					"itemType":"attachment",
-					"url":"http://www.zotero.org/",
-					"title":"Link to zotero.org",
+					"url":"http://www.trellis.org/",
+					"title":"Link to trellis.org",
 					"note":"attachment 2 note",
 					"tags":TEST_TAGS
 				}
@@ -374,27 +374,27 @@ describe("Zotero.Translate", function () {
 			});
 
 			let newItems = itemsArrayToObject(await saveItemsThroughTranslator("import", myItems));
-			let containedAttachments = await Zotero.Items.getAsync(newItems["Container Item"].getAttachments());
+			let containedAttachments = await Trellis.Items.getAsync(newItems["Container Item"].getAttachments());
 			assert.equal(containedAttachments.length, 3);
 
-			for (let savedAttachments of [[newItems["Empty PDF"], newItems["Link to zotero.org"]],
+			for (let savedAttachments of [[newItems["Empty PDF"], newItems["Link to trellis.org"]],
 				                          [containedAttachments[0], containedAttachments[1]]]) {
 				assert.equal(savedAttachments[0].getField("title"), "Empty PDF");
 				assert.equal(savedAttachments[0].note, "attachment note");
-				assert.equal(savedAttachments[0].attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_FILE);
+				assert.equal(savedAttachments[0].attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_FILE);
 				checkTestTags(savedAttachments[0]);
 
-				assert.equal(savedAttachments[1].getField("title"), "Link to zotero.org");
-				assert.equal(savedAttachments[1].getField("url"), "http://www.zotero.org/");
+				assert.equal(savedAttachments[1].getField("title"), "Link to trellis.org");
+				assert.equal(savedAttachments[1].getField("url"), "http://www.trellis.org/");
 				assert.equal(savedAttachments[1].note, "attachment 2 note");
-				assert.equal(savedAttachments[1].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
+				assert.equal(savedAttachments[1].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
 				checkTestTags(savedAttachments[1]);
 			}
 
 			assert.equal(containedAttachments[2].getField("title"), "Snapshot");
 			assert.equal(containedAttachments[2].getField("url"), "http://www.example.com/");
 			assert.equal(containedAttachments[2].note, "attachment 3 note");
-			assert.equal(containedAttachments[2].attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(containedAttachments[2].attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			checkTestTags(containedAttachments[2]);
 		});
 
@@ -423,13 +423,13 @@ describe("Zotero.Translate", function () {
 			let newItems = await saveItemsThroughTranslator("import", myItems);
 			assert.equal(newItems.length, 1);
 			assert.equal(newItems[0].getField("title"), "Container Item");
-			let containedAttachments = await Zotero.Items.getAsync(newItems[0].getAttachments());
+			let containedAttachments = await Trellis.Items.getAsync(newItems[0].getAttachments());
 			assert.equal(containedAttachments.length, 1);
 
 			assert.equal(containedAttachments[0].getField("title"), "Snapshot with missing file");
 			assert.equal(containedAttachments[0].getField("url"), "http://www.example.com/");
 			assert.equal(containedAttachments[0].note, "attachment note");
-			assert.equal(containedAttachments[0].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
+			assert.equal(containedAttachments[0].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
 			checkTestTags(containedAttachments[0]);
 		});
 
@@ -485,7 +485,7 @@ describe("Zotero.Translate", function () {
 					// With mimeType
 					{
 						itemType: "attachment",
-						linkMode: Zotero.Attachments.LINK_MODE_LINKED_URL,
+						linkMode: Trellis.Attachments.LINK_MODE_LINKED_URL,
 						title: "Link 1",
 						url: baseURL + "1",
 						mimeType: 'text/html'
@@ -493,7 +493,7 @@ describe("Zotero.Translate", function () {
 					// Without mimeType
 					{
 						itemType: "attachment",
-						linkMode: Zotero.Attachments.LINK_MODE_LINKED_URL,
+						linkMode: Trellis.Attachments.LINK_MODE_LINKED_URL,
 						title: "Link 2",
 						url: baseURL + "2"
 					}
@@ -504,17 +504,17 @@ describe("Zotero.Translate", function () {
 			
 			assert.equal(callCount, 0);
 			
-			var attachments = await Zotero.Items.getAsync(newItems.Item.getAttachments());
+			var attachments = await Trellis.Items.getAsync(newItems.Item.getAttachments());
 			assert.equal(attachments.length, 2);
 			
 			assert.equal(attachments[0].getField("title"), "Link 1");
 			assert.equal(attachments[0].getField("url"), baseURL + "1");
 			assert.equal(attachments[0].attachmentContentType, "text/html");
-			assert.equal(attachments[0].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
+			assert.equal(attachments[0].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
 			
 			assert.equal(attachments[1].getField("title"), "Link 2");
 			assert.equal(attachments[1].getField("url"), baseURL + "2");
-			assert.equal(attachments[1].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
+			assert.equal(attachments[1].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
 			assert.equal(attachments[1].attachmentContentType, '');
 			
 			await new Promise(function (resolve) {
@@ -540,7 +540,7 @@ describe("Zotero.Translate", function () {
 							title: "Link",
 							mimeType: "text/html",
 							url: "http://example.com",
-							linkMode: Zotero.Attachments.LINK_MODE_LINKED_URL
+							linkMode: Trellis.Attachments.LINK_MODE_LINKED_URL
 						}
 					]
 				}
@@ -557,9 +557,9 @@ describe("Zotero.Translate", function () {
 			);
 			var attachmentIDs = newItems["Parent Item"].getAttachments();
 			assert.lengthOf(attachmentIDs, 2);
-			var attachments = await Zotero.Items.getAsync(attachmentIDs);
-			assert.equal(attachments[0].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
-			assert.equal(attachments[1].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
+			var attachments = await Trellis.Items.getAsync(attachmentIDs);
+			assert.equal(attachments[0].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
+			assert.equal(attachments[1].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
 		});
 		
 		it("import translators should save linked-file attachments with linkFiles: true", async function () {
@@ -599,10 +599,10 @@ describe("Zotero.Translate", function () {
 			);
 			var attachmentIDs = newItems["Parent Item"].getAttachments();
 			assert.lengthOf(attachmentIDs, 2);
-			var attachments = await Zotero.Items.getAsync(attachmentIDs);
-			assert.equal(attachments[0].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_FILE);
+			var attachments = await Trellis.Items.getAsync(attachmentIDs);
+			assert.equal(attachments[0].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_FILE);
 			assert.equal(attachments[0].attachmentContentType, 'application/pdf');
-			assert.equal(attachments[1].attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_FILE);
+			assert.equal(attachments[1].attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_FILE);
 			assert.equal(attachments[1].attachmentContentType, 'text/html');
 			assert.equal(attachments[1].attachmentCharset, 'utf-8');
 			assert.equal(attachments[1].note, file2URL);
@@ -636,8 +636,8 @@ describe("Zotero.Translate", function () {
 			);
 			var attachmentIDs = newItems["Parent Item"].getAttachments();
 			assert.lengthOf(attachmentIDs, 1);
-			var attachments = await Zotero.Items.getAsync(attachmentIDs);
-			assert.equal(attachments[0].attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_FILE);
+			var attachments = await Trellis.Items.getAsync(attachmentIDs);
+			assert.equal(attachments[0].attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_FILE);
 			var newPath = attachments[0].getFilePath();
 			assert.ok(newPath);
 			assert.notEqual(newPath, path);
@@ -647,11 +647,11 @@ describe("Zotero.Translate", function () {
 			let myItem = {
 				"itemType":"webpage",
 				"title":"Test Item",
-				"url":"http://www.zotero.org/"
+				"url":"http://www.trellis.org/"
 			};
 			let newItems = await saveItemsThroughTranslator("web", [myItem]);
 			let currentDate = new Date();
-			let delta = currentDate - Zotero.Date.sqlToDate(newItems[0].getField("accessDate"), true);
+			let delta = currentDate - Trellis.Date.sqlToDate(newItems[0].getField("accessDate"), true);
 			assert.isAbove(delta, -500);
 			assert.isBelow(delta, 5000);
 		});
@@ -660,12 +660,12 @@ describe("Zotero.Translate", function () {
 			let myItem = {
 				itemType: "webpage",
 				title: "Test Item",
-				url: "https://www.zotero.org/",
+				url: "https://www.trellis.org/",
 				accessDate: 'CURRENT_TIMESTAMP'
 			};
 			let newItems = await saveItemsThroughTranslator("web", [myItem]);
 			let currentDate = new Date();
-			let delta = currentDate - Zotero.Date.sqlToDate(newItems[0].getField("accessDate"), true);
+			let delta = currentDate - Trellis.Date.sqlToDate(newItems[0].getField("accessDate"), true);
 			assert.isAbove(delta, -500);
 			assert.isBelow(delta, 5000);
 		});
@@ -677,8 +677,8 @@ describe("Zotero.Translate", function () {
 					"title":"Container Item",
 					"attachments":[
 						{
-							"url":"http://www.zotero.org/",
-							"title":"Link to zotero.org",
+							"url":"http://www.trellis.org/",
+							"title":"Link to trellis.org",
 							"note":"attachment note",
 							"tags":TEST_TAGS,
 							"snapshot":false
@@ -701,25 +701,25 @@ describe("Zotero.Translate", function () {
 
 			let newItems = await saveItemsThroughTranslator("web", myItems);
 			assert.equal(newItems.length, 1);
-			let containedAttachments = itemsArrayToObject(await Zotero.Items.getAsync(newItems[0].getAttachments()));
+			let containedAttachments = itemsArrayToObject(await Trellis.Items.getAsync(newItems[0].getAttachments()));
 
-			let link = containedAttachments["Link to zotero.org"];
-			assert.equal(link.getField("url"), "http://www.zotero.org/");
+			let link = containedAttachments["Link to trellis.org"];
+			assert.equal(link.getField("url"), "http://www.trellis.org/");
 			assert.equal(link.note, "attachment note");
-			assert.equal(link.attachmentLinkMode, Zotero.Attachments.LINK_MODE_LINKED_URL);
+			assert.equal(link.attachmentLinkMode, Trellis.Attachments.LINK_MODE_LINKED_URL);
 			checkTestTags(link, true);
 
 			let snapshot = containedAttachments["Test Snapshot"];
 			assert.equal(snapshot.getField("url"), htmlURL);
 			assert.equal(snapshot.note, "attachment 2 note");
-			assert.equal(snapshot.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(snapshot.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			assert.equal(snapshot.attachmentContentType, "text/html");
 			checkTestTags(snapshot, true);
 
 			let pdf = containedAttachments["Test PDF"];
 			assert.equal(pdf.getField("url"), `${serverURL}test.pdf`);
 			assert.equal(pdf.note, "attachment 3 note");
-			assert.equal(pdf.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(pdf.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			assert.equal(pdf.attachmentContentType, "application/pdf");
 			checkTestTags(pdf, true);
 		});
@@ -729,12 +729,12 @@ describe("Zotero.Translate", function () {
 			await browser.load(htmlURL);
 			let doc = await browser.getDocument();
 
-			let translate = new Zotero.Translate.Web();
+			let translate = new Trellis.Translate.Web();
 			translate.setDocument(doc);
 			translate.setTranslator(buildDummyTranslator(4,
 				'function detectWeb() {}\n'+
 				'function doWeb(doc) {\n'+
-				'	var item = new Zotero.Item("book");\n'+
+				'	var item = new Trellis.Item("book");\n'+
 				'	item.title = "Container Item";\n'+
 				'	item.attachments = [{\n'+
 				'		"document":doc,\n'+
@@ -746,13 +746,13 @@ describe("Zotero.Translate", function () {
 				'}'));
 			let newItems = await translate.translate();
 			assert.equal(newItems.length, 1);
-			let containedAttachments = Zotero.Items.get(newItems[0].getAttachments());
+			let containedAttachments = Trellis.Items.get(newItems[0].getAttachments());
 			assert.equal(containedAttachments.length, 1);
 
 			let snapshot = containedAttachments[0];
 			assert.equal(snapshot.getField("url"), htmlURL);
 			assert.equal(snapshot.note, "attachment note");
-			assert.equal(snapshot.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(snapshot.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			assert.equal(snapshot.attachmentContentType, "text/html");
 			checkTestTags(snapshot, true);
 
@@ -760,15 +760,15 @@ describe("Zotero.Translate", function () {
 		});
 		
 		it('web translators should save attachment from non-browser document', async function () {
-			return Zotero.HTTP.processDocuments(
+			return Trellis.HTTP.processDocuments(
 				htmlURL,
 				async function (doc) {
-					let translate = new Zotero.Translate.Web();
+					let translate = new Trellis.Translate.Web();
 					translate.setDocument(doc);
 					translate.setTranslator(buildDummyTranslator(4,
 						'function detectWeb() {}\n'+
 						'function doWeb(doc) {\n'+
-						'	var item = new Zotero.Item("book");\n'+
+						'	var item = new Trellis.Item("book");\n'+
 						'	item.title = "Container Item";\n'+
 						'	item.attachments = [{\n'+
 						'		"document":doc,\n'+
@@ -780,13 +780,13 @@ describe("Zotero.Translate", function () {
 						'}'));
 					let newItems = await translate.translate();
 					assert.equal(newItems.length, 1);
-					let containedAttachments = Zotero.Items.get(newItems[0].getAttachments());
+					let containedAttachments = Trellis.Items.get(newItems[0].getAttachments());
 					assert.equal(containedAttachments.length, 1);
 		
 					let snapshot = containedAttachments[0];
 					assert.equal(snapshot.getField("url"), htmlURL);
 					assert.equal(snapshot.note, "attachment note");
-					assert.equal(snapshot.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+					assert.equal(snapshot.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 					assert.equal(snapshot.attachmentContentType, "text/html");
 					checkTestTags(snapshot, true);
 				}
@@ -814,7 +814,7 @@ describe("Zotero.Translate", function () {
 
 			let newItems = await saveItemsThroughTranslator("web", myItems);
 			assert.equal(newItems.length, 1);
-			let containedAttachments = await Zotero.Items.getAsync(newItems[0].getAttachments());
+			let containedAttachments = await Trellis.Items.getAsync(newItems[0].getAttachments());
 			assert.equal(containedAttachments.length, 0);
 		});
 
@@ -843,14 +843,14 @@ describe("Zotero.Translate", function () {
 
 			let newItems = await saveItemsThroughTranslator("web", myItems);
 			assert.equal(newItems.length, 1);
-			let containedAttachments = await Zotero.Items.getAsync(newItems[0].getAttachments());
+			let containedAttachments = await Trellis.Items.getAsync(newItems[0].getAttachments());
 			assert.equal(containedAttachments.length, 1);
 
 			let pdf = containedAttachments[0];
 			assert.equal(pdf.getField("title"), "Test PDF");
 			assert.equal(pdf.getField("url"), `${serverURL}test.pdf`);
 			assert.equal(pdf.note, "attachment note");
-			assert.equal(pdf.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(pdf.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			checkTestTags(pdf, true);
 		});
 		
@@ -858,21 +858,21 @@ describe("Zotero.Translate", function () {
 			var childTranslator = buildDummyTranslator(1, 
 				`function detectWeb() {}
 				function doImport() {
-					var item = new Zotero.Item;
+					var item = new Trellis.Item;
 					item.itemType = "book";
 					item.title = "The Definitive Guide of Owls";
 					item.tags = ['owl', 'tag'];
 					item.complete();
 				}`, {translatorID: 'child-dummy-translator'}
 			);
-			sinon.stub(Zotero.Translators, 'get').withArgs('child-dummy-translator').returns(childTranslator);
+			sinon.stub(Trellis.Translators, 'get').withArgs('child-dummy-translator').returns(childTranslator);
 			
 			var parentTranslator = buildDummyTranslator(1,
 				`function detectWeb() {}
 				function doImport() {
-					var translator = Zotero.loadTranslator("import");
+					var translator = Trellis.loadTranslator("import");
 					translator.setTranslator('child-dummy-translator');
-					translator.setHandler('itemDone', Zotero.childItemDone);
+					translator.setHandler('itemDone', Trellis.childItemDone);
 					translator.translate();
 				}`
 			);
@@ -883,7 +883,7 @@ describe("Zotero.Translate", function () {
 				item.complete();
 			}
 			
-			var translate = new Zotero.Translate.Import();
+			var translate = new Trellis.Translate.Import();
 			translate.setTranslator(parentTranslator);
 			translate.setString("");
 			await translate._loadTranslator(parentTranslator);
@@ -894,14 +894,14 @@ describe("Zotero.Translate", function () {
 			// Canonicalized tags after parent translator
 			assert.deepEqual([{tag: 'owl'}, {tag: 'tag'}], items[0].getTags());
 			
-			Zotero.Translators.get.restore();
+			Trellis.Translators.get.restore();
 		});
 		
 		describe("#setExtra()", function () {
 			it("should set extra field", async function () {
 				let translator = buildDummyTranslator(1, 
 					String.raw`function doImport() {
-						var item = new Zotero.Item();
+						var item = new Trellis.Item();
 						item.itemType = "book";
 						item.title = "The Ultimate Owl Guide";
 						item.setExtra("Key 1", "Value 1");
@@ -910,7 +910,7 @@ describe("Zotero.Translate", function () {
 						item.complete();
 					}`
 				);
-				let translate = new Zotero.Translate.Import();
+				let translate = new Trellis.Translate.Import();
 				translate.setTranslator(translator);
 				translate.setString("");
 				let items = await translate.translate();
@@ -923,7 +923,7 @@ describe("Zotero.Translate", function () {
 			it("should overwrite field if already present", async function () {
 				let translator = buildDummyTranslator(1,
 					String.raw`function doImport() {
-						var item = new Zotero.Item();
+						var item = new Trellis.Item();
 						item.itemType = "book";
 						item.title = "The Ultimate Owl Guide";
 						item.extra = "Random junk\nKey 1: Value 1.1";
@@ -934,7 +934,7 @@ describe("Zotero.Translate", function () {
 						item.complete();
 					}`
 				);
-				let translate = new Zotero.Translate.Import();
+				let translate = new Trellis.Translate.Import();
 				translate.setTranslator(translator);
 				translate.setString("");
 				let items = await translate.translate();
@@ -952,11 +952,11 @@ describe("Zotero.Translate", function () {
 		
 		beforeEach(function* () {
 			// This is the main processDocuments, not the translation sandbox one being tested
-			doc = (yield Zotero.HTTP.processDocuments(htmlURL, doc => doc))[0];
+			doc = (yield Trellis.HTTP.processDocuments(htmlURL, doc => doc))[0];
 		});
 		
 		it("should provide document object", async function () {
-			var translate = new Zotero.Translate.Web();
+			var translate = new Trellis.Translate.Web();
 			translate.setDocument(doc);
 			translate.setTranslator(
 				buildDummyTranslator(
@@ -966,7 +966,7 @@ describe("Zotero.Translate", function () {
 						ZU.processDocuments(
 							doc.location.href + '?t',
 							function (doc) {
-								var item = new Zotero.Item("book");
+								var item = new Trellis.Item("book");
 								item.title = "Container Item";
 								// document.location
 								item.url = doc.location.href;
@@ -994,19 +994,19 @@ describe("Zotero.Translate", function () {
 			assert.equal(item.getField('url'), htmlURL + '?t');
 			assert.include(item.getField('extra'), 'your research sources');
 			
-			var containedAttachments = Zotero.Items.get(newItems[0].getAttachments());
+			var containedAttachments = Trellis.Items.get(newItems[0].getAttachments());
 			assert.equal(containedAttachments.length, 1);
 			
 			var snapshot = containedAttachments[0];
 			assert.equal(snapshot.getField("url"), htmlURL + '?t');
 			assert.equal(snapshot.note, "attachment note");
-			assert.equal(snapshot.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(snapshot.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			assert.equal(snapshot.attachmentContentType, "text/html");
 			checkTestTags(snapshot, true);
 		});
 		
 		it("should use loaded document instead of reloading if possible", async function () {
-			var translate = new Zotero.Translate.Web();
+			var translate = new Trellis.Translate.Web();
 			translate.setDocument(doc);
 			translate.setTranslator(
 				buildDummyTranslator(
@@ -1016,7 +1016,7 @@ describe("Zotero.Translate", function () {
 						ZU.processDocuments(
 							doc.location.href,
 							function (doc) {
-								var item = new Zotero.Item("book");
+								var item = new Trellis.Item("book");
 								item.title = "Container Item";
 								// document.location
 								item.url = doc.location.href;
@@ -1044,13 +1044,13 @@ describe("Zotero.Translate", function () {
 			assert.equal(item.getField('url'), htmlURL);
 			assert.include(item.getField('extra'), 'your research sources');
 			
-			var containedAttachments = Zotero.Items.get(newItems[0].getAttachments());
+			var containedAttachments = Trellis.Items.get(newItems[0].getAttachments());
 			assert.equal(containedAttachments.length, 1);
 			
 			var snapshot = containedAttachments[0];
 			assert.equal(snapshot.getField("url"), htmlURL);
 			assert.equal(snapshot.note, "attachment note");
-			assert.equal(snapshot.attachmentLinkMode, Zotero.Attachments.LINK_MODE_IMPORTED_URL);
+			assert.equal(snapshot.attachmentLinkMode, Trellis.Attachments.LINK_MODE_IMPORTED_URL);
 			assert.equal(snapshot.attachmentContentType, "text/html");
 			checkTestTags(snapshot, true);
 		});
@@ -1062,10 +1062,10 @@ describe("Zotero.Translate", function () {
 		
 		beforeEach(function* () {
 			// This is the main processDocuments, not the translation sandbox one being tested
-			doc = (yield Zotero.HTTP.processDocuments(htmlURL, doc => doc))[0];
+			doc = (yield Trellis.HTTP.processDocuments(htmlURL, doc => doc))[0];
 		});
 		
-		it("should set a custom version of Zotero.Translators", async function () {
+		it("should set a custom version of Trellis.Translators", async function () {
 			// Create a dummy translator to be returned by the stub methods
 			var info = {
 				translatorID: "e6111720-1f6c-42b0-a487-99b9fa50b8a1",
@@ -1085,14 +1085,14 @@ describe("Zotero.Translate", function () {
 				+ "return 'journalArticle';"
 				+ "}\n"
 				+ "function doWeb(doc, url) {"
-				+ "var item = new Zotero.Item('journalArticle');"
+				+ "var item = new Trellis.Item('journalArticle');"
 				+ "item.title = 'Test';"
 				+ "item.complete();"
 				+ "}\n";
-			var translator = new Zotero.Translator(info);
+			var translator = new Trellis.Translator(info);
 			
-			var translate = new Zotero.Translate.Web();
-			var provider = Zotero.Translators.makeTranslatorProvider({
+			var translate = new Trellis.Translate.Web();
+			var provider = Trellis.Translators.makeTranslatorProvider({
 				get: function (translatorID) {
 					if (translatorID == info.translatorID) {
 						return translator;
@@ -1119,7 +1119,7 @@ describe("Zotero.Translate", function () {
 			assert.equal(item.getField('title'), 'Test');
 		});
 		
-		it("should set a custom version of Zotero.Translators in a child translator", async function () {
+		it("should set a custom version of Trellis.Translators in a child translator", async function () {
 			// Create dummy translators to be returned by the stub methods
 			var info1 = {
 				translatorID: "e6111720-1f6c-42b0-a487-99b9fa50b8a1",
@@ -1139,7 +1139,7 @@ describe("Zotero.Translate", function () {
 					+ "return 'journalArticle';"
 				+ "}\n"
 				+ "function doWeb(doc, url) {"
-					+ "var translator = Zotero.loadTranslator('import');"
+					+ "var translator = Trellis.loadTranslator('import');"
 					+ "translator.setTranslator('86e58f50-4e2d-4ee8-8a20-bafa225381fa');"
 					+ "translator.setString('foo\\n');"
 					+ "translator.setHandler('itemDone', function(obj, item) {"
@@ -1147,7 +1147,7 @@ describe("Zotero.Translate", function () {
 					+ "});"
 					+ "translator.translate();"
 				+ "}\n";
-			var translator1 = new Zotero.Translator(info1);
+			var translator1 = new Trellis.Translator(info1);
 			
 			var info2 = {
 				translatorID: "86e58f50-4e2d-4ee8-8a20-bafa225381fa",
@@ -1167,14 +1167,14 @@ describe("Zotero.Translate", function () {
 					+ "return true;"
 				+ "}\n"
 				+ "function doImport() {"
-					+ "var item = new Zotero.Item('journalArticle');"
+					+ "var item = new Trellis.Item('journalArticle');"
 					+ "item.title = 'Test';"
 					+ "item.complete();"
 				+ "}\n";
-			var translator2 = new Zotero.Translator(info2);
+			var translator2 = new Trellis.Translator(info2);
 			
-			var translate = new Zotero.Translate.Web();
-			var provider = Zotero.Translators.makeTranslatorProvider({
+			var translate = new Trellis.Translate.Web();
+			var provider = Trellis.Translators.makeTranslatorProvider({
 				get: function (translatorID) {
 					switch (translatorID) {
 						case info1.translatorID:
@@ -1215,10 +1215,10 @@ describe("Zotero.Translate", function () {
 			var item = await createDataObject('item');
 			await importFileAttachment('test.png', { parentItemID: item.id });
 			
-			var translation = new Zotero.Translate.Export();
+			var translation = new Trellis.Translate.Export();
 			var tmpDir = await getTempDirectory();
 			var exportDir = OS.Path.join(tmpDir, 'export');
-			translation.setLocation(Zotero.File.pathToFile(exportDir));
+			translation.setLocation(Trellis.File.pathToFile(exportDir));
 			translation.setItems([item]);
 			translation.setTranslator("9cb70025-a888-4a29-a210-93ec52da40d4");
 			translation.setDisplayOptions({
@@ -1229,24 +1229,24 @@ describe("Zotero.Translate", function () {
 			var exportFile = OS.Path.join(exportDir, 'export.bib');
 			assert.isTrue(await OS.File.exists(exportFile));
 			
-			var translation = new Zotero.Translate.Import();
-			translation.setLocation(Zotero.File.pathToFile(exportFile));
+			var translation = new Trellis.Translate.Import();
+			translation.setLocation(Trellis.File.pathToFile(exportFile));
 			var translators = await translation.getTranslators();
 			translation.setTranslator(translators[0]);
 			var importCollection = await createDataObject('collection');
 			var items = await translation.translate({
-				libraryID: Zotero.Libraries.userLibraryID,
+				libraryID: Trellis.Libraries.userLibraryID,
 				collections: [importCollection.id]
 			});
 			
 			assert.lengthOf(items, 1);
 			var attachments = items[0].getAttachments();
 			assert.lengthOf(attachments, 1);
-			var attachment = Zotero.Items.get(attachments[0]);
+			var attachment = Trellis.Items.get(attachments[0]);
 			assert.isTrue(await attachment.fileExists());
 		});
 		
-		it("should round-trip collections via Zotero RDF", async function () {
+		it("should round-trip collections via Trellis RDF", async function () {
 			this.timeout(60000);
 			await resetDB();
 			
@@ -1258,15 +1258,15 @@ describe("Zotero.Translate", function () {
 			// Add item, standalone note, and standalone attachment to collection
 			var item = await createDataObject(
 				'item',
-				{ collections: [c5.id], title: Zotero.Utilities.randomString() }
+				{ collections: [c5.id], title: Trellis.Utilities.randomString() }
 			);
 			var note = await createDataObject(
 				'item',
-				{ itemType: 'note', collections: [c5.id], note: Zotero.Utilities.randomString() }
+				{ itemType: 'note', collections: [c5.id], note: Trellis.Utilities.randomString() }
 			);
 			var attachment = await importFileAttachment('test.pdf', {
 				url: 'https://example.com/test.pdf',
-				title: Zotero.Utilities.randomString(),
+				title: Trellis.Utilities.randomString(),
 				collections: [c5.id]
 			});
 			
@@ -1277,37 +1277,37 @@ describe("Zotero.Translate", function () {
 			var collectionExportFile = OS.Path.join(collectionExportDir, 'export-collection.rdf');
 			
 			// Export library
-			var translation = new Zotero.Translate.Export();
-			translation.setLocation(Zotero.File.pathToFile(libraryExportDir));
-			translation.setLibraryID(Zotero.Libraries.userLibraryID);
+			var translation = new Trellis.Translate.Export();
+			translation.setLocation(Trellis.File.pathToFile(libraryExportDir));
+			translation.setLibraryID(Trellis.Libraries.userLibraryID);
 			translation.setDisplayOptions({
 				exportFileData: true,
 				exportNotes: true
 			});
-			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Zotero RDF
+			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Trellis RDF
 			await translation.translate();
 			
 			// Export top-most collection
-			translation = new Zotero.Translate.Export();
-			translation.setLocation(Zotero.File.pathToFile(collectionExportDir));
+			translation = new Trellis.Translate.Export();
+			translation.setLocation(Trellis.File.pathToFile(collectionExportDir));
 			translation.setCollection(c1);
 			translation.setDisplayOptions({
 				exportFileData: true,
 				exportNotes: true
 			});
-			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Zotero RDF
+			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Trellis RDF
 			await translation.translate();
 			
 			async function check(file, mode) {
 				var collectionNames = [c1.name, c2.name, c3.name, c4.name, c5.name];
 				
-				var translation = new Zotero.Translate.Import();
-				translation.setLocation(Zotero.File.pathToFile(file));
+				var translation = new Trellis.Translate.Import();
+				translation.setLocation(Trellis.File.pathToFile(file));
 				var translators = await translation.getTranslators();
 				translation.setTranslator(translators[0]);
 				var importCollection = await createDataObject('collection');
 				await translation.translate({
-					libraryID: Zotero.Libraries.userLibraryID,
+					libraryID: Trellis.Libraries.userLibraryID,
 					collections: [importCollection.id]
 				});
 				
@@ -1356,7 +1356,7 @@ describe("Zotero.Translate", function () {
 			notFoundURL = `${serverURL}does_not_exist.html`;
 			setupAttachmentEndpoints();
 			setupAsyncEndpoints();
-			doc = (yield Zotero.HTTP.processDocuments(htmlURL, doc => doc))[0];
+			doc = (yield Trellis.HTTP.processDocuments(htmlURL, doc => doc))[0];
 		});
 
 		it('should support async detectWeb', async function () {
@@ -1387,15 +1387,15 @@ describe("Zotero.Translate", function () {
 
 				// synchronous doWeb
 				function doWeb(doc) {
-					let item = new Zotero.Item('webpage');
+					let item = new Trellis.Item('webpage');
 					item.title = 'Untitled';
 					item.complete();
 				}
 				`;
-			var translator = new Zotero.Translator(info);
+			var translator = new Trellis.Translator(info);
 			
-			var translate = new Zotero.Translate.Web();
-			var provider = Zotero.Translators.makeTranslatorProvider({
+			var translate = new Trellis.Translate.Web();
+			var provider = Trellis.Translators.makeTranslatorProvider({
 				get: function (translatorID) {
 					if (translatorID == info.translatorID) {
 						return translator;
@@ -1423,14 +1423,14 @@ describe("Zotero.Translate", function () {
 			assert.equal(newItems[0].getField('title'), 'Untitled');
 		});
 
-		it('should return detection result passed to Zotero.done() synchronously', async function () {
+		it('should return detection result passed to Trellis.done() synchronously', async function () {
 			var translator = buildDummyTranslator('web', `
 				function detectWeb() {
-					Zotero.done('book');
+					Trellis.done('book');
 				}
 			`);
 
-			var translate = new Zotero.Translate.Web();
+			var translate = new Trellis.Translate.Web();
 			translate.setDocument(doc);
 			// This is the "internal hack" that Scaffold and TranslatorTester use
 			translate._potentialTranslators = [translator];
@@ -1441,7 +1441,7 @@ describe("Zotero.Translate", function () {
 		});
 
 		it('should support async doWeb', async function () {
-			var translate = new Zotero.Translate.Web();
+			var translate = new Trellis.Translate.Web();
 			translate.setDocument(doc);
 			translate.setTranslator(
 				buildDummyTranslator(
@@ -1450,7 +1450,7 @@ describe("Zotero.Translate", function () {
 					function detectWeb() {}
 
 					async function doWeb(doc) {
-						let item = new Zotero.Item('webpage');
+						let item = new Trellis.Item('webpage');
 
 						let otherDoc = await requestDocument('${htmlURL}');
 						item.title = otherDoc.title;
@@ -1462,7 +1462,7 @@ describe("Zotero.Translate", function () {
 
 						let json = await requestJSON('${jsonURL}');
 						if (json.success) {
-							item = new Zotero.Item('webpage');
+							item = new Trellis.Item('webpage');
 							item.title = 'JSON Test';
 							item.complete();
 						}
@@ -1482,7 +1482,7 @@ describe("Zotero.Translate", function () {
 		});
 
 		it('should not fail translation on a non-200 status code', async function () {
-			var translate = new Zotero.Translate.Web();
+			var translate = new Trellis.Translate.Web();
 			translate.setDocument(doc);
 			translate.setTranslator(
 				buildDummyTranslator(
@@ -1491,7 +1491,7 @@ describe("Zotero.Translate", function () {
 
 					async function doWeb(doc) {
 						await request('${notFoundURL}').catch(e => {});
-						let item = new Zotero.Item('webpage');
+						let item = new Trellis.Item('webpage');
 						item.title = 'Nothing';
 						item.complete();
 					}`
@@ -1523,7 +1523,7 @@ describe("Zotero.Translate", function () {
 					}
 				];
 				
-				var translation = new Zotero.Translate.Import();
+				var translation = new Trellis.Translate.Import();
 				translation.setString("");
 				translation.setTranslator(buildDummyTranslator(
 					"import",
@@ -1531,13 +1531,13 @@ describe("Zotero.Translate", function () {
 					+ "function doImport() {\n"
 					+ "	var json = JSON.parse('" + JSON.stringify(collections).replace(/['\\]/g, "\\$&") + "');\n"
 					+ "	for (let o of json) {"
-					+ "		var collection = new Zotero.Collection;\n"
+					+ "		var collection = new Trellis.Collection;\n"
 					+ "		for (let field in o) { collection[field] = o[field]; }\n"
 					+ "		collection.complete();\n"
 					+ "	}\n"
 					+ "	json = JSON.parse('" + JSON.stringify(items).replace(/['\\]/g, "\\$&") + "');\n"
 					+ "	for (let o of json) {"
-					+ "		var item = new Zotero.Item;\n"
+					+ "		var item = new Trellis.Item;\n"
 					+ "		for (let field in o) { item[field] = o[field]; }\n"
 					+ "		item.complete();\n"
 					+ "	}\n"
@@ -1567,7 +1567,7 @@ describe("Zotero.Translate", function () {
 					}
 				];
 				
-				var translation = new Zotero.Translate.Import();
+				var translation = new Trellis.Translate.Import();
 				translation.setString("");
 				translation.setTranslator(buildDummyTranslator(
 					"import",
@@ -1575,7 +1575,7 @@ describe("Zotero.Translate", function () {
 					+ "function doImport() {\n"
 					+ "	var json = JSON.parse('" + JSON.stringify(items).replace(/['\\]/g, "\\$&") + "');\n"
 					+ "	for (var i=0; i<json.length; i++) {"
-					+ "		var item = new Zotero.Item;\n"
+					+ "		var item = new Trellis.Item;\n"
 					+ "		for (var field in json[i]) { item[field] = json[i][field]; }\n"
 					+ "		item.complete();\n"
 					+ "	}\n"
@@ -1600,21 +1600,21 @@ describe("Zotero.Translate", function () {
 					url: 'https://www-example-com.proxy.example.com/pdf.pdf',
 					mimeType: 'application/pdf',
 					title: 'Example PDF'}];
-				var itemSaver = new Zotero.Translate.ItemSaver({
-					libraryID: Zotero.Libraries.userLibraryID,
-					attachmentMode: Zotero.Translate.ItemSaver.ATTACHMENT_MODE_FILE,
-					proxy: new Zotero.Proxy({scheme: 'https://%h.proxy.example.com/%p'})
+				var itemSaver = new Trellis.Translate.ItemSaver({
+					libraryID: Trellis.Libraries.userLibraryID,
+					attachmentMode: Trellis.Translate.ItemSaver.ATTACHMENT_MODE_FILE,
+					proxy: new Trellis.Proxy({scheme: 'https://%h.proxy.example.com/%p'})
 				});
-				var itemDeferred = Zotero.Promise.defer();
-				var attachmentDeferred = Zotero.Promise.defer();
+				var itemDeferred = Trellis.Promise.defer();
+				var attachmentDeferred = Trellis.Promise.defer();
 				itemSaver.saveItems([item], async function (attachment, progressPercentage) {
 					// ItemSaver returns immediately without waiting for attachments, so we use the callback
 					// to test attachments
 					if (progressPercentage != 100) return;
 					try {
 						await itemDeferred.promise;
-						let item = Zotero.Items.get(itemID);
-						attachment = Zotero.Items.get(item.getAttachments()[0]);
+						let item = Trellis.Items.get(itemID);
+						attachment = Trellis.Items.get(item.getAttachments()[0]);
 						assert.equal(attachment.getField('url'), 'https://www.example.com/pdf.pdf');
 						attachmentDeferred.resolve();
 					} catch (e) {
@@ -1648,13 +1648,13 @@ describe("Zotero.Translate", function () {
 			];
 			
 			var added = 0;
-			var notifierID = Zotero.Notifier.registerObserver({
+			var notifierID = Trellis.Notifier.registerObserver({
 				notify: function (event, type, ids, extraData) {
 					added++;
 				}
 			}, ['item']);
 			
-			var translation = new Zotero.Translate.Import();
+			var translation = new Trellis.Translate.Import();
 			translation.setString("");
 			translation.setTranslator(buildDummyTranslator(
 				"import",
@@ -1662,14 +1662,14 @@ describe("Zotero.Translate", function () {
 				+ "function doImport() {"
 				+ "	var json = JSON.parse('" + JSON.stringify(items).replace(/['\\]/g, "\\$&") + "');"
 				+ "	for (let o of json) {"
-				+ "		let item = new Zotero.Item;"
+				+ "		let item = new Trellis.Item;"
 				+ "		for (let field in o) { item[field] = o[field]; }"
 				+ "		item.complete();"
 				+ "	}"
 				+ "}"
 			));
 			var e = await getPromiseError(translation.translate());
-			Zotero.Notifier.unregisterObserver(notifierID);
+			Trellis.Notifier.unregisterObserver(notifierID);
 			assert.ok(e);
 			
 			// Saving should be stopped without any saved items
@@ -1691,13 +1691,13 @@ describe("Zotero.Translate", function () {
 			];
 			
 			var added = 0;
-			var notifierID = Zotero.Notifier.registerObserver({
+			var notifierID = Trellis.Notifier.registerObserver({
 				notify: function (event, type, ids, extraData) {
 					added++;
 				}
 			}, ['item']);
 			
-			var translation = new Zotero.Translate.Import();
+			var translation = new Trellis.Translate.Import();
 			translation.setString("");
 			translation.setTranslator(buildDummyTranslator(
 				"import",
@@ -1711,7 +1711,7 @@ describe("Zotero.Translate", function () {
 					+ "				resolve();"
 					+ "				return;"
 					+ "			}"
-					+ "			var item = new Zotero.Item;"
+					+ "			var item = new Trellis.Item;"
 					+ "			for (let field in data) { item[field] = data[field]; }"
 					+ "			item.complete().then(next).catch(reject);"
 					+ "		}"
@@ -1725,7 +1725,7 @@ describe("Zotero.Translate", function () {
 				}
 			));
 			var e = await getPromiseError(translation.translate());
-			Zotero.Notifier.unregisterObserver(notifierID);
+			Trellis.Notifier.unregisterObserver(notifierID);
 			assert.ok(e);
 			
 			// Saving should be stopped without any saved items
@@ -1736,15 +1736,15 @@ describe("Zotero.Translate", function () {
 		});
 		
 		it("should propagate errors from saveItems with synchronous doSearch()", async function () {
-			var stub = sinon.stub(Zotero.Translate.ItemSaver.prototype, "saveItems");
+			var stub = sinon.stub(Trellis.Translate.ItemSaver.prototype, "saveItems");
 			stub.returns(Promise.reject(new Error("Save error")));
 			
-			var translation = new Zotero.Translate.Search();
+			var translation = new Trellis.Translate.Search();
 			translation.setTranslator(buildDummyTranslator(
 				"search",
 				"function detectSearch() {}"
 					+ "function doSearch() {"
-					+ "	var item = new Zotero.Item('journalArticle');"
+					+ "	var item = new Trellis.Item('journalArticle');"
 					+ "	item.itemType = 'book';"
 					+ "	item.title = 'A';"
 					+ "	item.complete();"
@@ -1752,7 +1752,7 @@ describe("Zotero.Translate", function () {
 			));
 			translation.setSearch({ itemType: "journalArticle", DOI: "10.111/Test"});
 			var e = await getPromiseError(translation.translate({
-				libraryID: Zotero.Libraries.userLibraryID,
+				libraryID: Trellis.Libraries.userLibraryID,
 				saveAttachments: false
 			}));
 			assert.ok(e);
@@ -1761,15 +1761,15 @@ describe("Zotero.Translate", function () {
 		});
 		
 		it("should propagate errors from saveItems() with asynchronous doSearch()", async function () {
-			var stub = sinon.stub(Zotero.Translate.ItemSaver.prototype, "saveItems");
+			var stub = sinon.stub(Trellis.Translate.ItemSaver.prototype, "saveItems");
 			stub.returns(Promise.reject(new Error("Save error")));
 			
-			var translation = new Zotero.Translate.Search();
+			var translation = new Trellis.Translate.Search();
 			translation.setTranslator(buildDummyTranslator(
 				"search",
 				"function detectSearch() {}"
 					+ "function doSearch() {"
-					+ "	var item = new Zotero.Item('journalArticle');"
+					+ "	var item = new Trellis.Item('journalArticle');"
 					+ "	item.itemType = 'book';"
 					+ "	item.title = 'A';"
 					+ "	return new Promise(function (resolve, reject) {"
@@ -1784,7 +1784,7 @@ describe("Zotero.Translate", function () {
 			));
 			translation.setSearch({ itemType: "journalArticle", DOI: "10.111/Test"});
 			var e = await getPromiseError(translation.translate({
-				libraryID: Zotero.Libraries.userLibraryID,
+				libraryID: Trellis.Libraries.userLibraryID,
 				saveAttachments: false
 			}));
 			assert.ok(e);
@@ -1794,24 +1794,24 @@ describe("Zotero.Translate", function () {
 	});
 });
 
-describe("Zotero.Translate.ItemGetter", function () {
+describe("Trellis.Translate.ItemGetter", function () {
 	describe("nextItem", function () {
 		it('should return false for an empty database', async function () {
-			let getter = new Zotero.Translate.ItemGetter();
+			let getter = new Trellis.Translate.ItemGetter();
 			assert.isFalse(getter.nextItem());
 		});
 		it('should return items in order they are supplied', async function () {
-			let getter = new Zotero.Translate.ItemGetter();
+			let getter = new Trellis.Translate.ItemGetter();
 			let items, itemIDs, itemURIs;
 
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				items = [
-					await new Zotero.Item('journalArticle'),
-					await new Zotero.Item('book')
+					await new Trellis.Item('journalArticle'),
+					await new Trellis.Item('book')
 				];
 				
 				itemIDs = [ await items[0].save(), await items[1].save() ];
-				itemURIs = items.map(i => Zotero.URI.getItemURI(i));
+				itemURIs = items.map(i => Trellis.URI.getItemURI(i));
 			});
 			
 			getter._itemsLeft = items;
@@ -1821,19 +1821,19 @@ describe("Zotero.Translate.ItemGetter", function () {
 			assert.isFalse((getter.nextItem()), 'end of item queue');
 		});
 		it('should return items with tags in expected format', async function () {
-			let getter = new Zotero.Translate.ItemGetter();
+			let getter = new Trellis.Translate.ItemGetter();
 			let itemWithAutomaticTag, itemWithManualTag, itemWithMultipleTags
 			
-			await Zotero.DB.executeTransaction(async function () {
-				itemWithAutomaticTag = new Zotero.Item('journalArticle');
+			await Trellis.DB.executeTransaction(async function () {
+				itemWithAutomaticTag = new Trellis.Item('journalArticle');
 				itemWithAutomaticTag.addTag('automatic tag', 0);
 				await itemWithAutomaticTag.save();
 				
-				itemWithManualTag = new Zotero.Item('journalArticle');
+				itemWithManualTag = new Trellis.Item('journalArticle');
 				itemWithManualTag.addTag('manual tag', 1);
 				await itemWithManualTag.save();
 				
-				itemWithMultipleTags = new Zotero.Item('journalArticle');
+				itemWithMultipleTags = new Trellis.Item('journalArticle');
 				itemWithMultipleTags.addTag('tag1', 0);
 				itemWithMultipleTags.addTag('tag2', 1);
 				await itemWithMultipleTags.save();
@@ -1870,23 +1870,23 @@ describe("Zotero.Translate.ItemGetter", function () {
 			}
 		});
 		it('should return item collections in expected format', async function () {
-			let getter = new Zotero.Translate.ItemGetter();
+			let getter = new Trellis.Translate.ItemGetter();
 			let items, collections;
 			
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				items = getter._itemsLeft = [
-					new Zotero.Item('journalArticle'), // Not in collection
-					new Zotero.Item('journalArticle'), // In a single collection
-					new Zotero.Item('journalArticle'), //In two collections
-					new Zotero.Item('journalArticle') // In a nested collection
+					new Trellis.Item('journalArticle'), // Not in collection
+					new Trellis.Item('journalArticle'), // In a single collection
+					new Trellis.Item('journalArticle'), //In two collections
+					new Trellis.Item('journalArticle') // In a nested collection
 				];
 				await Promise.all(items.map(item => item.save()));
 				
 				collections = [
-					new Zotero.Collection,
-					new Zotero.Collection,
-					new Zotero.Collection,
-					new Zotero.Collection
+					new Trellis.Collection,
+					new Trellis.Collection,
+					new Trellis.Collection,
+					new Trellis.Collection
 				];
 				collections[0].name = "test1";
 				collections[1].name = "test2";
@@ -1929,19 +1929,19 @@ describe("Zotero.Translate.ItemGetter", function () {
 		});
 		
 		it('should return item relations in expected format', async function () {
-			let getter = new Zotero.Translate.ItemGetter();
+			let getter = new Trellis.Translate.ItemGetter();
 			let items;
 			
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 					items = [
-						new Zotero.Item('journalArticle'), // Item with no relations
+						new Trellis.Item('journalArticle'), // Item with no relations
 						
-						new Zotero.Item('journalArticle'), // Bidirectional relations
-						new Zotero.Item('journalArticle'), // between these items
+						new Trellis.Item('journalArticle'), // Bidirectional relations
+						new Trellis.Item('journalArticle'), // between these items
 						
-						new Zotero.Item('journalArticle'), // This item is related to two items below
-						new Zotero.Item('journalArticle'), // But this item is not related to the item below
-						new Zotero.Item('journalArticle')
+						new Trellis.Item('journalArticle'), // This item is related to two items below
+						new Trellis.Item('journalArticle'), // But this item is not related to the item below
+						new Trellis.Item('journalArticle')
 					];
 					await Promise.all(items.map(item => item.save()));
 					
@@ -1965,14 +1965,14 @@ describe("Zotero.Translate.ItemGetter", function () {
 			assert.isObject(translatorItem.relations, 'item that is the subject of a single relation has a relations object');
 			assert.equal(Object.keys(translatorItem.relations).length, 1, 'item that is the subject of a single relation lists one relations predicate');
 			assert.lengthOf(translatorItem.relations['dc:relation'], 1, 'item that is the subject of a single relation lists one "dc:relation" object');
-			assert.equal(translatorItem.relations['dc:relation'][0], Zotero.URI.getItemURI(items[2]), 'item that is the subject of a single relation identifies correct object URI');
+			assert.equal(translatorItem.relations['dc:relation'][0], Trellis.URI.getItemURI(items[2]), 'item that is the subject of a single relation identifies correct object URI');
 			
 			// We currently assign these bidirectionally above, so this is a bit redundant
 			translatorItem = getter.nextItem();
 			assert.isObject(translatorItem.relations, 'item that is the object of a single relation has a relations object');
 			assert.equal(Object.keys(translatorItem.relations).length, 1, 'item that is the object of a single relation list one relations predicate');
 			assert.lengthOf(translatorItem.relations['dc:relation'], 1, 'item that is the object of a single relation lists one "dc:relation" object');
-			assert.equal(translatorItem.relations['dc:relation'][0], Zotero.URI.getItemURI(items[1]), 'item that is the object of a single relation identifies correct subject URI');
+			assert.equal(translatorItem.relations['dc:relation'][0], Trellis.URI.getItemURI(items[1]), 'item that is the object of a single relation identifies correct subject URI');
 			
 			translatorItem = getter.nextItem();
 			assert.isObject(translatorItem.relations, 'item that is the subject of two relations has a relations object');
@@ -1982,7 +1982,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 			assert.equal(translatorItem.relations['dc:relation'].length, 2, 'item that is the subject of two relations lists two relations in the "dc:relation" array');
 			assert.deepEqual(
 				translatorItem.relations['dc:relation'].sort(),
-				[Zotero.URI.getItemURI(items[4]), Zotero.URI.getItemURI(items[5])].sort(),
+				[Trellis.URI.getItemURI(items[4]), Trellis.URI.getItemURI(items[5])].sort(),
 				'item that is the subject of two relations identifies correct object URIs'
 			);
 			
@@ -1991,17 +1991,17 @@ describe("Zotero.Translate.ItemGetter", function () {
 			assert.equal(Object.keys(translatorItem.relations).length, 1, 'item that is the object of one relation from item with two relations list one relations predicate');
 			assert.isDefined(translatorItem.relations['dc:relation'], 'item that is the object of one relation from item with two relations uses "dc:relation" as the predicate');
 			assert.lengthOf(translatorItem.relations['dc:relation'], 1, 'item that is the object of one relation from item with two relations lists one "dc:relation" object');
-			assert.equal(translatorItem.relations['dc:relation'][0], Zotero.URI.getItemURI(items[3]), 'item that is the object of one relation from item with two relations identifies correct subject URI');
+			assert.equal(translatorItem.relations['dc:relation'][0], Trellis.URI.getItemURI(items[3]), 'item that is the object of one relation from item with two relations identifies correct subject URI');
 		});
 		
 		it('should return standalone note in expected format', async function () {
 			let relatedItem, note, collection;
 			
-			await Zotero.DB.executeTransaction(async function () {
-				relatedItem = new Zotero.Item('journalArticle');
+			await Trellis.DB.executeTransaction(async function () {
+				relatedItem = new Trellis.Item('journalArticle');
 				await relatedItem.save();
 
-				note = new Zotero.Item('note');
+				note = new Trellis.Item('note');
 				note.setNote('Note');
 				note.addTag('automaticTag', 0);
 				note.addTag('manualTag', 1);
@@ -2011,7 +2011,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 				relatedItem.addRelatedItem(note);
 				await relatedItem.save();
 				
-				collection = new Zotero.Collection;
+				collection = new Trellis.Collection;
 				collection.name = 'test';
 				await collection.save();
 				await collection.addItem(note.id);
@@ -2019,7 +2019,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 			
 			let legacyMode = [false, true];
 			for (let i=0; i<legacyMode.length; i++) {
-				let getter = new Zotero.Translate.ItemGetter();
+				let getter = new Trellis.Translate.ItemGetter();
 				getter._itemsLeft = [note];
 				let legacy = getter.legacy = legacyMode[i];
 				let suffix = legacy ? ' in legacy mode' : '';
@@ -2068,7 +2068,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 				// Relations
 				assert.isObject(translatorNote.relations, 'has relations as object' + suffix);
 				assert.lengthOf(translatorNote.relations['dc:relation'], 1, 'has one relation' + suffix);
-				assert.equal(translatorNote.relations['dc:relation'][0], Zotero.URI.getItemURI(relatedItem), 'relation is correct' + suffix);
+				assert.equal(translatorNote.relations['dc:relation'][0], Trellis.URI.getItemURI(relatedItem), 'relation is correct' + suffix);
 				
 				if (!legacy) {
 					// Collections
@@ -2080,23 +2080,23 @@ describe("Zotero.Translate.ItemGetter", function () {
 		});
 		it('should return attached note in expected format', async function () {
 			let relatedItem, items, collection, note;
-			await Zotero.DB.executeTransaction(async function () {
-				relatedItem = new Zotero.Item('journalArticle');
+			await Trellis.DB.executeTransaction(async function () {
+				relatedItem = new Trellis.Item('journalArticle');
 				await relatedItem.save();
 				
 				items = [
-					new Zotero.Item('journalArticle'),
-					new Zotero.Item('journalArticle')
+					new Trellis.Item('journalArticle'),
+					new Trellis.Item('journalArticle')
 				];
 				await Promise.all(items.map(item => item.save()));
 				
-				collection = new Zotero.Collection;
+				collection = new Trellis.Collection;
 				collection.name = 'test';
 				await collection.save();
 				await collection.addItem(items[0].id);
 				await collection.addItem(items[1].id);
 				
-				note = new Zotero.Item('note');
+				note = new Trellis.Item('note');
 				note.setNote('Note');
 				note.addTag('automaticTag', 0);
 				note.addTag('manualTag', 1);
@@ -2112,7 +2112,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 			for (let i=0; i<legacyMode.length; i++) {
 				let item = items[i];
 				
-				let getter = new Zotero.Translate.ItemGetter();
+				let getter = new Trellis.Translate.ItemGetter();
 				getter._itemsLeft = [item];
 				let legacy = getter.legacy = legacyMode[i];
 				let suffix = legacy ? ' in legacy mode' : '';
@@ -2124,7 +2124,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 				note.parentID = item.id;
 				await note.saveTx();
 				
-				getter = new Zotero.Translate.ItemGetter();
+				getter = new Trellis.Translate.ItemGetter();
 				getter._itemsLeft = [item];
 				getter.legacy = legacy;
 				
@@ -2175,7 +2175,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 				// Relations
 				assert.isObject(translatorNote.relations, 'has relations as object' + suffix);
 				assert.lengthOf(translatorNote.relations['dc:relation'], 1, 'has one relation' + suffix);
-				assert.equal(translatorNote.relations['dc:relation'][0], Zotero.URI.getItemURI(relatedItem), 'relation is correct' + suffix);
+				assert.equal(translatorNote.relations['dc:relation'][0], Trellis.URI.getItemURI(relatedItem), 'relation is correct' + suffix);
 				
 				if (!legacy) {
 					// Collections
@@ -2189,23 +2189,23 @@ describe("Zotero.Translate.ItemGetter", function () {
 			let file = getTestPDF();
 			let item, relatedItem;
 			
-			await Zotero.DB.executeTransaction(async function () {
-				item = new Zotero.Item('journalArticle');
+			await Trellis.DB.executeTransaction(async function () {
+				item = new Trellis.Item('journalArticle');
 				await item.save();
-				relatedItem = new Zotero.Item('journalArticle');
+				relatedItem = new Trellis.Item('journalArticle');
 				await relatedItem.save();
 			});
 
 			// Attachment items
 			let attachments = [
-				await Zotero.Attachments.importFromFile({"file":file}), // Standalone stored file
-				await Zotero.Attachments.linkFromFile({"file":file}), // Standalone link to file
-				await Zotero.Attachments.importFromFile({"file":file, "parentItemID":item.id}), // Attached stored file
-				await Zotero.Attachments.linkFromFile({"file":file, "parentItemID":item.id}), // Attached link to file
-				await Zotero.Attachments.linkFromURL({"url":'http://example.com', "parentItemID":item.id, "contentType":'application/pdf', "title":'empty'}) // Attached link to URL
+				await Trellis.Attachments.importFromFile({"file":file}), // Standalone stored file
+				await Trellis.Attachments.linkFromFile({"file":file}), // Standalone link to file
+				await Trellis.Attachments.importFromFile({"file":file, "parentItemID":item.id}), // Attached stored file
+				await Trellis.Attachments.linkFromFile({"file":file, "parentItemID":item.id}), // Attached link to file
+				await Trellis.Attachments.linkFromURL({"url":'http://example.com', "parentItemID":item.id, "contentType":'application/pdf', "title":'empty'}) // Attached link to URL
 			];
 			
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				// Make sure all fields are populated
 				for (let i=0; i<attachments.length; i++) {
 					let attachment = attachments[i];
@@ -2232,11 +2232,11 @@ describe("Zotero.Translate.ItemGetter", function () {
 			// Run tests
 			let legacyMode = [false, true];
 			for (let i=0; i<legacyMode.length; i++) {
-				let getter = new Zotero.Translate.ItemGetter();
+				let getter = new Trellis.Translate.ItemGetter();
 				getter._itemsLeft = items.slice();
 				
 				let exportDir = await getTempDirectory();
-				getter._exportFileDirectory = Zotero.File.pathToFile(exportDir);
+				getter._exportFileDirectory = Trellis.File.pathToFile(exportDir);
 				
 				let legacy = getter.legacy = legacyMode[i];
 				let suffix = legacy ? ' in legacy mode' : '';
@@ -2288,7 +2288,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 				// we have to rely on URI as the identifier
 				let uriMap = {};
 				for (let i=0; i<attachments.length; i++) {
-					uriMap[Zotero.URI.getItemURI(attachments[i])] = attachments[i];
+					uriMap[Trellis.URI.getItemURI(attachments[i])] = attachments[i];
 				}
 				
 				for (let j=0; j<translatorAttachments.length; j++) {
@@ -2296,13 +2296,13 @@ describe("Zotero.Translate.ItemGetter", function () {
 					let attachment = translatorAttachments[j].attachment;
 					assert.isString(attachment.uri, 'uri is set' + suffix);
 					
-					let zoteroItem = uriMap[attachment.uri];
-					assert.isDefined(zoteroItem, 'uri is correct' + suffix);
+					let trellisItem = uriMap[attachment.uri];
+					assert.isDefined(trellisItem, 'uri is correct' + suffix);
 					delete uriMap[attachment.uri];
 					
-					let storedFile = zoteroItem.attachmentLinkMode == Zotero.Attachments.LINK_MODE_IMPORTED_FILE
-						|| zoteroItem.attachmentLinkMode == Zotero.Attachments.LINK_MODE_IMPORTED_URL;
-					let linkToURL = zoteroItem.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL;
+					let storedFile = trellisItem.attachmentLinkMode == Trellis.Attachments.LINK_MODE_IMPORTED_FILE
+						|| trellisItem.attachmentLinkMode == Trellis.Attachments.LINK_MODE_IMPORTED_URL;
+					let linkToURL = trellisItem.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL;
 					
 					let prefix = (childAttachment ? 'attached ' : '')
 						+ (storedFile ? 'stored ' : 'link to ')
@@ -2310,7 +2310,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 					
 					// Set fields
 					assert.equal(attachment.itemType, 'attachment', prefix + 'itemType is correct' + suffix);
-					assert.include([Zotero.getString('file-type-pdf'), 'empty'], attachment.title, prefix + 'title is correct' + suffix);
+					assert.include([Trellis.getString('file-type-pdf'), 'empty'], attachment.title, prefix + 'title is correct' + suffix);
 					assert.equal(attachment.url, 'http://example.com', prefix + 'url is correct' + suffix);
 					assert.equal(attachment.note, 'note', prefix + 'note is correct' + suffix);
 					
@@ -2340,12 +2340,12 @@ describe("Zotero.Translate.ItemGetter", function () {
 					if (!linkToURL) {
 						// localPath
 						assert.isString(attachment.localPath, prefix + 'localPath is set' + suffix);
-						let attachmentFile = Zotero.File.pathToFile(attachment.localPath);
+						let attachmentFile = Trellis.File.pathToFile(attachment.localPath);
 						assert.isTrue(attachmentFile.exists(), prefix + 'localPath points to a file' + suffix);
-						assert.equal(attachmentFile.spec, zoteroItem.getFile().spec, prefix + 'localPath points to the correct file' + suffix);
+						assert.equal(attachmentFile.spec, trellisItem.getFile().spec, prefix + 'localPath points to the correct file' + suffix);
 						
 						assert.equal(attachment.filename, 'empty.pdf', prefix + 'filename is correct' + suffix);
-						assert.equal(attachment.defaultPath, 'files/' + zoteroItem.id + '/' + attachment.filename, prefix + 'defaultPath is correct' + suffix);
+						assert.equal(attachment.defaultPath, 'files/' + trellisItem.id + '/' + attachment.filename, prefix + 'defaultPath is correct' + suffix);
 						
 						// saveFile function
 						assert.isFunction(attachment.saveFile, prefix + 'has saveFile function' + suffix);
@@ -2390,7 +2390,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 					// Relations
 					assert.isObject(attachment.relations, prefix + 'has relations as object' + suffix);
 					assert.lengthOf(attachment.relations['dc:relation'], 1, prefix + 'has one relation' + suffix);
-					assert.equal(attachment.relations['dc:relation'][0], Zotero.URI.getItemURI(relatedItem), prefix + 'relation is correct' + suffix);
+					assert.equal(attachment.relations['dc:relation'][0], Trellis.URI.getItemURI(relatedItem), prefix + 'relation is correct' + suffix);
 					/** TODO: test other relations and multiple relations per predicate (should be an array) **/
 				}
 			}
@@ -2404,7 +2404,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 			var item2 = await createDataObject('item', { collections: [col.id] });
 			var item3 = await createDataObject('item');
 			
-			let getter = new Zotero.Translate.ItemGetter();
+			let getter = new Trellis.Translate.ItemGetter();
 			getter.setCollection(col);
 			
 			assert.equal(getter.numItems, 2);
@@ -2416,7 +2416,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 			var attachment = await importFileAttachment('test.pdf');
 			var annotation = await createAnnotation('highlight', attachment);
 			
-			var getter = new Zotero.Translate.ItemGetter();
+			var getter = new Trellis.Translate.ItemGetter();
 			await getter.setAll(attachment.libraryID, false);
 			
 			var item;
@@ -2436,12 +2436,12 @@ describe("Zotero.Translate.ItemGetter", function () {
 			// Delete attachment file
 			await OS.File.remove(path);
 			
-			var translation = new Zotero.Translate.Export();
+			var translation = new Trellis.Translate.Export();
 			var tmpDir = await getTempDirectory();
 			var exportDir = OS.Path.join(tmpDir, 'export');
-			translation.setLocation(Zotero.File.pathToFile(exportDir));
+			translation.setLocation(Trellis.File.pathToFile(exportDir));
 			translation.setItems([item]);
-			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Zotero RDF
+			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Trellis RDF
 			translation.setDisplayOptions({
 				exportFileData: true
 			});
@@ -2456,12 +2456,12 @@ describe("Zotero.Translate.ItemGetter", function () {
 			item._attachmentPath = '';
 			assert.equal(item.attachmentPath, '');
 			
-			var translation = new Zotero.Translate.Export();
+			var translation = new Trellis.Translate.Export();
 			var tmpDir = await getTempDirectory();
 			var exportDir = OS.Path.join(tmpDir, 'export');
-			translation.setLocation(Zotero.File.pathToFile(exportDir));
+			translation.setLocation(Trellis.File.pathToFile(exportDir));
 			translation.setItems([item]);
-			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Zotero RDF
+			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Trellis RDF
 			translation.setDisplayOptions({
 				exportFileData: true
 			});
@@ -2473,18 +2473,18 @@ describe("Zotero.Translate.ItemGetter", function () {
 		
 		it("should handle UNC paths", async function () {
 			var path = '\\\\SHARE\\test.png';
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: OS.Path.join(getTestDataDirectory().path, 'test.png')
 			});
 			attachment._attachmentPath = path;
 			assert.equal(attachment.attachmentPath, path);
 			
-			var translation = new Zotero.Translate.Export();
+			var translation = new Trellis.Translate.Export();
 			var tmpDir = await getTempDirectory();
 			var exportDir = OS.Path.join(tmpDir, 'export');
-			translation.setLocation(Zotero.File.pathToFile(exportDir));
+			translation.setLocation(Trellis.File.pathToFile(exportDir));
 			translation.setItems([attachment]);
-			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Zotero RDF
+			translation.setTranslator('14763d24-8ba0-45df-8f52-b8d1108e7ac9'); // Trellis RDF
 			translation.setDisplayOptions({
 				exportFileData: true
 			});
@@ -2492,7 +2492,7 @@ describe("Zotero.Translate.ItemGetter", function () {
 			
 			var exportFile = OS.Path.join(exportDir, 'export.rdf');
 			assert.isAbove((await OS.File.stat(exportFile)).size, 0);
-			var rdf = Zotero.File.getContents(exportFile);
+			var rdf = Trellis.File.getContents(exportFile);
 			var dp = new DOMParser();
 			var doc = dp.parseFromString(rdf, 'text/xml');
 			assert.equal(doc.querySelector('path').getAttribute('rdf:resource'), path);

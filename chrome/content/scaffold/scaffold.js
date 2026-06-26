@@ -3,40 +3,40 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 var { Subprocess } = ChromeUtils.importESModule("resource://gre/modules/Subprocess.sys.mjs");
-var { RemoteTranslate } = ChromeUtils.importESModule("chrome://zotero/content/RemoteTranslate.mjs");
+var { RemoteTranslate } = ChromeUtils.importESModule("chrome://trellis/content/RemoteTranslate.mjs");
 
-var { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
-var { TranslatorTester } = ChromeUtils.importESModule('chrome://zotero/content/xpcom/translate/testTranslators/translatorTester.mjs');
-var { Test } = ChromeUtils.importESModule('chrome://zotero/content/xpcom/translate/testTranslators/test.mjs');
-var { ZoteroWebTranslationEnvironment } = ChromeUtils.importESModule('chrome://scaffold/content/zoteroWebTranslationEnvironment.mjs');
+var { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
+var { TranslatorTester } = ChromeUtils.importESModule('chrome://trellis/content/xpcom/translate/testTranslators/translatorTester.mjs');
+var { Test } = ChromeUtils.importESModule('chrome://trellis/content/xpcom/translate/testTranslators/test.mjs');
+var { TrellisWebTranslationEnvironment } = ChromeUtils.importESModule('chrome://scaffold/content/trellisWebTranslationEnvironment.mjs');
 
-var { CompletionCopilot, registerCompletion } = ChromeUtils.importESModule('resource://zotero/monacopilot.mjs');
+var { CompletionCopilot, registerCompletion } = ChromeUtils.importESModule('resource://trellis/monacopilot.mjs');
 
 var lazy = {};
 ChromeUtils.defineLazyGetter(lazy, 'shellPathPromise', () => {
-	return Zotero.Utilities.Internal.subprocess(Services.env.get('SHELL'), ['-c', 'echo $PATH'])
+	return Trellis.Utilities.Internal.subprocess(Services.env.get('SHELL'), ['-c', 'echo $PATH'])
 		.then(s => s.trimEnd());
 });
 
@@ -122,7 +122,7 @@ var Scaffold = new function () {
 			document.getElementById('tabs').removeAttribute("clicked");
 		});
 		
-		let lastTranslatorID = Zotero.Prefs.get('scaffold.lastTranslatorID');
+		let lastTranslatorID = Trellis.Prefs.get('scaffold.lastTranslatorID');
 		if (lastTranslatorID) {
 			document.getElementById("textbox-translatorID").value = lastTranslatorID;
 			document.getElementById("textbox-label").value = 'Loading…';
@@ -132,7 +132,7 @@ var Scaffold = new function () {
 		}
 		
 		// Add List fields help menu entries for all other item types
-		var types = Zotero.ItemTypes.getAll().map(t => t.name).sort();
+		var types = Trellis.ItemTypes.getAll().map(t => t.name).sort();
 		var morePopup = document.getElementById('mb-help-fields-more-popup');
 		var primaryTypes = ['book', 'bookSection', 'conferencePaper', 'journalArticle', 'magazineArticle', 'newspaperArticle'];
 		for (let type of types) {
@@ -185,10 +185,10 @@ var Scaffold = new function () {
 		this.addEditorKeydownHandlers(_editors.tests);
 
 		// Set font size from general pref
-		Zotero.UIProperties.registerRoot(document.getElementById('scaffold-pane'));
+		Trellis.UIProperties.registerRoot(document.getElementById('scaffold-pane'));
 
 		// Set font size of code editor
-		var size = Zotero.Prefs.get("scaffold.fontSize");
+		var size = Trellis.Prefs.get("scaffold.fontSize");
 		if (size) {
 			this.setFontSize(size);
 		}
@@ -213,18 +213,18 @@ var Scaffold = new function () {
 		if (lastTranslatorID) {
 			this.load(lastTranslatorID).then((success) => {
 				if (!success) {
-					Zotero.Prefs.clear('scaffold.lastTranslatorID');
+					Trellis.Prefs.clear('scaffold.lastTranslatorID');
 					this.newTranslator(true);
 				}
 			});
 		}
 		
-		_prefsObserverID = Zotero.Prefs.registerObserver('scaffold.completions.mistralAPIKey', _handleAPIKeyChange);
+		_prefsObserverID = Trellis.Prefs.registerObserver('scaffold.completions.mistralAPIKey', _handleAPIKeyChange);
 		_handleAPIKeyChange();
 	};
 	
 	this.handleUnload = function () {
-		Zotero.Prefs.unregisterObserver(_prefsObserverID);
+		Trellis.Prefs.unregisterObserver(_prefsObserverID);
 		if (_persistentCookieContext) {
 			_persistentCookieContext.dispose();
 			_persistentCookieContext = null;
@@ -238,11 +238,11 @@ var Scaffold = new function () {
 			+ ps.BUTTON_POS_2 * ps.BUTTON_TITLE_IS_STRING;
 		var index = ps.confirmEx(null,
 			"Scaffold",
-			"To set up Scaffold, select your development directory for Zotero translators.\n\n"
-				+ "In most cases, this should be a git clone of the zotero/translators GitHub repository.",
+			"To set up Scaffold, select your development directory for Trellis translators.\n\n"
+				+ "In most cases, this should be a git clone of the trellis/translators GitHub repository.",
 			buttonFlags,
 			"Choose Directory…",
-			Zotero.getString('general.cancel'),
+			Trellis.getString('general.cancel'),
 			"Open GitHub Repo", null, {}
 		);
 		// Revert to home directory
@@ -253,14 +253,14 @@ var Scaffold = new function () {
 			}
 		}
 		else if (index == 2) {
-			Zotero.launchURL('https://github.com/zotero/translators');
+			Trellis.launchURL('https://github.com/trellis/translators');
 		}
 		return false;
 	};
 	
 	this.setTranslatorsDirectory = async function () {
 		var fp = new FilePicker();
-		var oldPath = Zotero.Prefs.get('scaffold.translatorsDir');
+		var oldPath = Trellis.Prefs.get('scaffold.translatorsDir');
 		if (oldPath) {
 			fp.displayDirectory = oldPath;
 		}
@@ -277,19 +277,19 @@ var Scaffold = new function () {
 		if (oldPath == path) {
 			return false;
 		}
-		Zotero.Prefs.set('scaffold.translatorsDir', path);
+		Trellis.Prefs.set('scaffold.translatorsDir', path);
 		Scaffold_Translators.load(true); // async
 		return path;
 	};
 
 	this.reloadTranslators = async function () {
-		Zotero.debug('Reloading translators quietly');
+		Trellis.debug('Reloading translators quietly');
 		let { numLoaded, numDeleted } = await Scaffold_Translators.load(true);
 		if (numLoaded) {
-			_logOutput(`${numLoaded} ${Zotero.Utilities.pluralize(numLoaded, 'translator')} updated.`);
+			_logOutput(`${numLoaded} ${Trellis.Utilities.pluralize(numLoaded, 'translator')} updated.`);
 		}
 		if (numDeleted) {
-			_logOutput(`${numDeleted} ${Zotero.Utilities.pluralize(numDeleted, 'translator')} deleted.`);
+			_logOutput(`${numDeleted} ${Trellis.Utilities.pluralize(numDeleted, 'translator')} deleted.`);
 		}
 
 		let translatorID = document.getElementById('textbox-translatorID').value;
@@ -304,8 +304,8 @@ var Scaffold = new function () {
 				"Scaffold",
 				"Translator code changed externally. Discard unsaved changes and reload?",
 				buttonFlags,
-				Zotero.getString('general.no'),
-				Zotero.getString('general.yes'),
+				Trellis.getString('general.no'),
+				Trellis.getString('general.yes'),
 				null, null, {}
 			);
 			if (index == 1) {
@@ -338,7 +338,7 @@ var Scaffold = new function () {
 		monaco.languages.registerCompletionItemProvider('javascript', this.createCompletionProvider(monaco, editor));
 		model.onDidChangeContent(() => this.updateModelMarkers());
 
-		let tsLib = await Zotero.File.getContentsAsync(
+		let tsLib = await Trellis.File.getContentsAsync(
 			PathUtils.join(Scaffold_Translators.getDirectory(), 'index.d.ts'));
 		let tsLibPath = 'ts:filename/index.d.ts';
 		monaco.languages.typescript.javascriptDefaults.addExtraLib(tsLib, tsLibPath);
@@ -357,7 +357,7 @@ var Scaffold = new function () {
 				let metadata = _getMetadataObject();
 				Object.assign(body.completionMetadata, {
 					filename: `${metadata.label}.js [body]`,
-					technologies: ['zotero/translators'],
+					technologies: ['trellis/translators'],
 					relatedFiles: [
 						{
 							path: 'index.d.ts',
@@ -367,11 +367,11 @@ var Scaffold = new function () {
 							path: `${metadata.label}.js [metadata]`,
 							content: JSON.stringify(metadata, null, '\t')
 						},
-						metadata.translatorType & Zotero.Translator.TRANSLATOR_TYPES.import && {
+						metadata.translatorType & Trellis.Translator.TRANSLATOR_TYPES.import && {
 							path: `example_import.${metadata.target || 'dat'}`,
 							content: _getImport()
 						},
-						metadata.translatorType & Zotero.Translator.TRANSLATOR_TYPES.search && {
+						metadata.translatorType & Trellis.Translator.TRANSLATOR_TYPES.search && {
 							path: `example_search.json`,
 							content: _getImport()
 						},
@@ -451,7 +451,7 @@ var Scaffold = new function () {
 
 	this.createHoverProvider = function (monaco, _editor) {
 		let uuidRe = `(["'])([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\\1`;
-		let types = Zotero.ItemTypes.getTypes().map(t => t.name);
+		let types = Trellis.ItemTypes.getTypes().map(t => t.name);
 		let itemTypeRe = `(["'])(${types.join('|')})\\1`;
 
 		return {
@@ -639,7 +639,7 @@ var Scaffold = new function () {
 		};
 	};
 
-	this.updateModelMarkers = Zotero.Utilities.debounce(async function () {
+	this.updateModelMarkers = Trellis.Utilities.debounce(async function () {
 		let modelVersionId = _editors.code.getModel().getVersionId();
 		let output = await runESLint();
 		let markers = eslintOutputToModelMarkers(output, modelVersionId);
@@ -654,19 +654,19 @@ var Scaffold = new function () {
 		document.getElementById("scaffold-pane").style.fontSize = sizeWithPX;
 		if (size == 13) {
 			// for the default value 13, clear the prefs
-			Zotero.Prefs.clear('scaffold.fontSize');
+			Trellis.Prefs.clear('scaffold.fontSize');
 		}
 		else {
-			Zotero.Prefs.set("scaffold.fontSize", size);
+			Trellis.Prefs.set("scaffold.fontSize", size);
 		}
 	};
 
 	this.increaseFontSize = function () {
-		var currentSize = Zotero.Prefs.get("scaffold.fontSize") || 13;
+		var currentSize = Trellis.Prefs.get("scaffold.fontSize") || 13;
 		this.setFontSize(currentSize + 2);
 	};
 	this.decreaseFontSize = function () {
-		var currentSize = Zotero.Prefs.get("scaffold.fontSize") || 13;
+		var currentSize = Trellis.Prefs.get("scaffold.fontSize") || 13;
 		this.setFontSize(currentSize - 2);
 	};
 
@@ -680,8 +680,8 @@ var Scaffold = new function () {
 				"Scaffold",
 				`Do you want to save the changes you made to ${label}?`,
 				buttonFlags,
-				Zotero.getString('general.no'),
-				Zotero.getString('general.yes'),
+				Trellis.getString('general.no'),
+				Trellis.getString('general.yes'),
 				null, null, {}
 			);
 			if (index == 1 && !await this.save()) {
@@ -773,7 +773,7 @@ var Scaffold = new function () {
 
 		// Set Test Input editor language based on translator metadata
 		let language = 'plaintext';
-		if (translator.translatorType & Zotero.Translator.TRANSLATOR_TYPES.import) {
+		if (translator.translatorType & Trellis.Translator.TRANSLATOR_TYPES.import) {
 			if (translator.target.includes('json')) {
 				language = 'json';
 			}
@@ -781,7 +781,7 @@ var Scaffold = new function () {
 				language = 'xml';
 			}
 		}
-		else if (translator.translatorType & Zotero.Translator.TRANSLATOR_TYPES.search) {
+		else if (translator.translatorType & Trellis.Translator.TRANSLATOR_TYPES.search) {
 			language = 'json';
 		}
 		_editors.importGlobal.editor.setModelLanguage(_editors.import.getModel(), language);
@@ -816,7 +816,7 @@ var Scaffold = new function () {
 		_loadedTranslatorPath = translator.path;
 		_lastModifiedTime = new Date().getTime();
 		
-		Zotero.Prefs.set('scaffold.lastTranslatorID', translator.translatorID);
+		Trellis.Prefs.set('scaffold.lastTranslatorID', translator.translatorID);
 		
 		_updateTitle();
 		return true;
@@ -872,11 +872,11 @@ var Scaffold = new function () {
 
 		var date = new Date();
 		metadata.lastUpdated = date.getUTCFullYear()
-			+ "-" + Zotero.Utilities.lpad(date.getUTCMonth() + 1, '0', 2)
-			+ "-" + Zotero.Utilities.lpad(date.getUTCDate(), '0', 2)
-			+ " " + Zotero.Utilities.lpad(date.getUTCHours(), '0', 2)
-			+ ":" + Zotero.Utilities.lpad(date.getUTCMinutes(), '0', 2)
-			+ ":" + Zotero.Utilities.lpad(date.getUTCSeconds(), '0', 2);
+			+ "-" + Trellis.Utilities.lpad(date.getUTCMonth() + 1, '0', 2)
+			+ "-" + Trellis.Utilities.lpad(date.getUTCDate(), '0', 2)
+			+ " " + Trellis.Utilities.lpad(date.getUTCHours(), '0', 2)
+			+ ":" + Trellis.Utilities.lpad(date.getUTCMinutes(), '0', 2)
+			+ ":" + Trellis.Utilities.lpad(date.getUTCSeconds(), '0', 2);
 
 		return metadata;
 	}
@@ -893,7 +893,7 @@ var Scaffold = new function () {
 	/*
 	 * save translator to database
 	 */
-	this.save = async function (updateZotero) {
+	this.save = async function (updateTrellis) {
 		var metadata = _getMetadataObject();
 		var code = _getCode();
 		if (metadata.label === "Untitled") {
@@ -904,10 +904,10 @@ var Scaffold = new function () {
 		let newPath = _translatorProvider.getSavePath(metadata);
 		if (_loadedTranslatorPath && newPath !== _loadedTranslatorPath) {
 			try {
-				await Zotero.File.removeIfExists(_loadedTranslatorPath);
+				await Trellis.File.removeIfExists(_loadedTranslatorPath);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			_loadedTranslatorPath = newPath;
 			
@@ -916,9 +916,9 @@ var Scaffold = new function () {
 		
 		await _translatorProvider.save(metadata, code);
 		
-		if (updateZotero) {
-			await Zotero.Translators.save(metadata, code);
-			await Zotero.Translators.reinit();
+		if (updateTrellis) {
+			await Trellis.Translators.save(metadata, code);
+			await Trellis.Translators.reinit();
 		}
 
 		_lastModifiedTime = new Date().getTime();
@@ -1041,15 +1041,15 @@ var Scaffold = new function () {
 
 	this.listFieldsForItemType = function (itemType) {
 		var outputObject = {};
-		outputObject.itemType = Zotero.ItemTypes.getName(itemType);
-		var typeID = Zotero.ItemTypes.getID(itemType);
-		var fieldList = Zotero.ItemFields.getItemTypeFields(typeID);
+		outputObject.itemType = Trellis.ItemTypes.getName(itemType);
+		var typeID = Trellis.ItemTypes.getID(itemType);
+		var fieldList = Trellis.ItemFields.getItemTypeFields(typeID);
 		for (let field of fieldList) {
-			var key = Zotero.ItemFields.getName(field);
-			let fieldLocalizedName = Zotero.ItemFields.getLocalizedString(field);
+			var key = Trellis.ItemFields.getName(field);
+			let fieldLocalizedName = Trellis.ItemFields.getLocalizedString(field);
 			outputObject[key] = fieldLocalizedName;
 		}
-		var creatorList = Zotero.CreatorTypes.getTypesForItemType(typeID);
+		var creatorList = Trellis.CreatorTypes.getTypesForItemType(typeID);
 		var creators = [];
 		for (let creatorType of creatorList) {
 			creators.push({ firstName: "", lastName: "", creatorType: creatorType.name, fieldMode: 1 });
@@ -1071,13 +1071,13 @@ var Scaffold = new function () {
 				document.getElementById('output').value = this.listFieldsForItemType(second);
 				break;
 			case "templateAllTypes":
-				var typeNames = Zotero.ItemTypes.getTypes().map(t => t.name);
+				var typeNames = Trellis.ItemTypes.getTypes().map(t => t.name);
 				document.getElementById('output').value = JSON.stringify(typeNames, null, '\t');
 				break;
 			default: {
 				//newWeb, scrapeEM, scrapeRIS, scrapeBibTeX, scrapeMARC
 				//These names in the XUL file have to match the file names in template folder.
-				let value = Zotero.File.getContentsFromURL(`chrome://scaffold/content/templates/${template}.js`);
+				let value = Trellis.File.getContentsFromURL(`chrome://scaffold/content/templates/${template}.js`);
 				value = value.replace('$$YEAR$$', new Date().getFullYear());
 				let cursorOffset = value.indexOf('$$CURSOR$$');
 				value = value.replace('$$CURSOR$$', '');
@@ -1101,7 +1101,7 @@ var Scaffold = new function () {
 	 */
 	this.loadURLInBrowser = async function () {
 		let url = document.getElementById("browser-url").value;
-		Zotero.debug('Scaffold: Loading URL in browser: ' + url);
+		Trellis.debug('Scaffold: Loading URL in browser: ' + url);
 
 		_setBrowserLoadingIndicator(true);
 
@@ -1168,7 +1168,7 @@ var Scaffold = new function () {
 		let input = await _getInput(functionToRun);
 
 		if (functionToRun.endsWith('Export')) {
-			let numItems = Zotero.getActiveZoteroPane().getSelectedItems().length;
+			let numItems = Trellis.getActiveTrellisPane().getSelectedItems().length;
 			_logOutput(`Exporting ${numItems} item${numItems == 1 ? '' : 's'} selected in library`);
 			await _run(functionToRun, input, _selectItems, () => {}, _getTranslatorsHandler(functionToRun), _myExportDone);
 		}
@@ -1198,15 +1198,15 @@ var Scaffold = new function () {
 			await translate.setBrowser(input);
 		}
 		else if (functionToRun == "detectImport" || functionToRun == "doImport") {
-			translate = new Zotero.Translate.Import();
+			translate = new Trellis.Translate.Import();
 			translate.setString(input);
 		}
 		else if (functionToRun == "doExport") {
-			translate = new Zotero.Translate.Export();
+			translate = new Trellis.Translate.Export();
 			translate.setItems(input);
 		}
 		else if (functionToRun == "detectSearch" || functionToRun == "doSearch") {
-			translate = new Zotero.Translate.Search();
+			translate = new Trellis.Translate.Search();
 			translate.setSearch(input);
 		}
 		translate.setTranslatorProvider(_translatorProvider);
@@ -1351,11 +1351,11 @@ var Scaffold = new function () {
 	 */
 	function _myExportDone({ string }, worked) {
 		if (worked) {
-			Zotero.debug("Export successful");
+			Trellis.debug("Export successful");
 			_logOutput("Returned string:\n" + string);
 		}
 		else {
-			Zotero.debug("Export failed");
+			Trellis.debug("Export failed");
 		}
 	}
 
@@ -1386,7 +1386,7 @@ var Scaffold = new function () {
 		var output = document.getElementById('output');
 
 		if (typeof string != "string") {
-			string = Zotero.Utilities.varDump(string);
+			string = Trellis.Utilities.varDump(string);
 		}
 
 		// Put off actually building the log message and appending it to the console until the next animation frame
@@ -1395,9 +1395,9 @@ var Scaffold = new function () {
 		// requestAnimationFrame() callbacks are guaranteed to be called in the order they were set
 		requestAnimationFrame(() => {
 			if (output.value) output.value += "\n";
-			output.value += Zotero.Utilities.lpad(date.getHours(), '0', 2)
-				+ ":" + Zotero.Utilities.lpad(date.getMinutes(), '0', 2)
-				+ ":" + Zotero.Utilities.lpad(date.getSeconds(), '0', 2)
+			output.value += Trellis.Utilities.lpad(date.getHours(), '0', 2)
+				+ ":" + Trellis.Utilities.lpad(date.getMinutes(), '0', 2)
+				+ ":" + Trellis.Utilities.lpad(date.getSeconds(), '0', 2)
 				+ " " + string.replace(/\n/g, "\n         ");
 			// move to end
 			output.scrollTop = output.scrollHeight;
@@ -1416,7 +1416,7 @@ var Scaffold = new function () {
 	 * gets items to export for export translator
 	 */
 	function _getExport() {
-		return Zotero.getActiveZoteroPane().getSelectedItems();
+		return Trellis.getActiveTrellisPane().getSelectedItems();
 	}
 
 	/*
@@ -1490,9 +1490,9 @@ var Scaffold = new function () {
 
 		translator.code = metadata + "\n" + _getCode();
 
-		// make sure translator gets run in browser in Zotero >2.1
-		if (Zotero.Translator.RUN_MODE_IN_BROWSER) {
-			translator.runMode = Zotero.Translator.RUN_MODE_IN_BROWSER;
+		// make sure translator gets run in browser in Trellis >2.1
+		if (Trellis.Translator.RUN_MODE_IN_BROWSER) {
+			translator.runMode = Trellis.Translator.RUN_MODE_IN_BROWSER;
 		}
 
 		return translator;
@@ -1528,7 +1528,7 @@ var Scaffold = new function () {
 			testCases = JSON.stringify(JSON.parse(testCases), null, '\t');
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		code = normalizeWhitespace(code);
@@ -1569,7 +1569,7 @@ var Scaffold = new function () {
 	
 	/* stringifies an array of tests
 	 * Output is the same as JSON.stringify (with pretty print), except that
-	 * Zotero.Item objects are stringified in a deterministic manner (mostly):
+	 * Trellis.Item objects are stringified in a deterministic manner (mostly):
 	 *   * Certain important fields are placed at the top of the object
 	 *   * Certain less-frequently used fields are placed at the bottom
 	 *   * Remaining fields are sorted alphabetically
@@ -1611,7 +1611,7 @@ var Scaffold = new function () {
 		}
 		
 		if (!value.itemType) {
-			// Not a Zotero.Item object
+			// Not a Trellis.Item object
 			let str = '{';
 						
 			if (level < 2 && value.items) {
@@ -1634,7 +1634,7 @@ var Scaffold = new function () {
 			return str + (str.length > 1 ? "\n}" : '}');
 		}
 		
-		// Zotero.Item object
+		// Trellis.Item object
 		const topFields = ['itemType',
 			'title',
 			'caseName',
@@ -1694,7 +1694,7 @@ var Scaffold = new function () {
 			_writeTestsToPane([..._loadTestsFromPane(), test]);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			_logOutput('Creation failed');
 			return;
 		}
@@ -1921,7 +1921,7 @@ var Scaffold = new function () {
 		if (typeof input !== 'string') {
 			input = JSON.stringify(input, null, '\t');
 		}
-		Zotero.Utilities.Internal.copyTextToClipboard(input);
+		Trellis.Utilities.Internal.copyTextToClipboard(input);
 	};
 	
 	/**
@@ -1934,7 +1934,7 @@ var Scaffold = new function () {
 		var { test } = _testData[listbox.selectedIndex];
 		var url = test.url;
 		if (openExternally) {
-			Zotero.launchURL(url);
+			Trellis.launchURL(url);
 		}
 		else {
 			_browser.loadURI(Services.io.newURI(url), {
@@ -1956,7 +1956,7 @@ var Scaffold = new function () {
 
 		let numTests = testDatas.length;
 		let testIndex = 0;
-		_logOutput(`Running ${numTests} ${Zotero.Utilities.pluralize(numTests, 'test')}`);
+		_logOutput(`Running ${numTests} ${Trellis.Utilities.pluralize(numTests, 'test')}`);
 		for await (let { test, status, reason, updatedTest } of this.runTestsInternal(testDatas.map(d => d.test))) {
 			let statusText;
 			let needsUpdate = false;
@@ -2015,19 +2015,19 @@ var Scaffold = new function () {
 		let cookieContext;
 		if (rememberCookies) {
 			if (!_persistentCookieContext) {
-				_persistentCookieContext = Zotero.HTTP.newCookieContext();
+				_persistentCookieContext = Trellis.HTTP.newCookieContext();
 			}
 			cookieContext = _persistentCookieContext;
 		}
 		else {
-			cookieContext = Zotero.HTTP.newCookieContext();
+			cookieContext = Trellis.HTTP.newCookieContext();
 		}
 
 		let tester = new TranslatorTester(_getTranslatorFromPane(), {
 			translatorProvider: _translatorProvider,
 			cookieSandbox: cookieContext.id,
 			debug: _logOutput,
-			webTranslationEnvironment: new ZoteroWebTranslationEnvironment(),
+			webTranslationEnvironment: new TrellisWebTranslationEnvironment(),
 		});
 
 		try {
@@ -2072,13 +2072,13 @@ var Scaffold = new function () {
 
 	this.populateLinterMenu = function () {
 		let status = 'Path: ' + getDefaultESLintPath();
-		let toggle = Zotero.Prefs.get('scaffold.eslint.enabled') ? 'Disable' : 'Enable';
+		let toggle = Trellis.Prefs.get('scaffold.eslint.enabled') ? 'Disable' : 'Enable';
 		document.getElementById('menu_eslintStatus').label = status;
 		document.getElementById('menu_toggleESLint').label = toggle;
 	};
 
 	this.toggleESLint = async function () {
-		Zotero.Prefs.set('scaffold.eslint.enabled', !Zotero.Prefs.get('scaffold.eslint.enabled'));
+		Trellis.Prefs.set('scaffold.eslint.enabled', !Trellis.Prefs.get('scaffold.eslint.enabled'));
 		await getESLintPath();
 	};
 
@@ -2093,7 +2093,7 @@ var Scaffold = new function () {
 	};
 	
 	/*
-	 * Normalize whitespace to the Zotero norm of tabs
+	 * Normalize whitespace to the Trellis norm of tabs
 	 */
 	function normalizeWhitespace(text) {
 		return text.replace(/^[ \t]+/gm, function (str) {
@@ -2148,7 +2148,7 @@ var Scaffold = new function () {
 	}
 
 	function _getCurrentURI(browser) {
-		return Zotero.Proxies.proxyToProper(browser.currentURI.spec);
+		return Trellis.Proxies.proxyToProper(browser.currentURI.spec);
 	}
 
 	function _findTestObjectTops(monaco, model) {
@@ -2201,7 +2201,7 @@ var Scaffold = new function () {
 	}
 
 	async function getESLintPath() {
-		if (!Zotero.Prefs.get('scaffold.eslint.enabled')) {
+		if (!Trellis.Prefs.get('scaffold.eslint.enabled')) {
 			return null;
 		}
 
@@ -2215,7 +2215,7 @@ var Scaffold = new function () {
 
 			let index = ps.confirmEx(null,
 				"Scaffold",
-				"Zotero uses ESLint to enable code suggestions and error checking, "
+				"Trellis uses ESLint to enable code suggestions and error checking, "
 					+ "but it wasn't found in the selected translators directory.\n\n"
 					+ "You can install it from the command line:\n\n"
 					+ `  cd '${Scaffold_Translators.getDirectory()}'\n`
@@ -2226,7 +2226,7 @@ var Scaffold = new function () {
 				null, null, {}
 			);
 			if (index == 1) {
-				Zotero.Prefs.set('scaffold.eslint.enabled', false);
+				Trellis.Prefs.set('scaffold.eslint.enabled', false);
 				return null;
 			}
 			else if (index == 2) {
@@ -2261,7 +2261,7 @@ var Scaffold = new function () {
 			// the login shell's PATH to GUI processes by default. There's a
 			// launchctl command that fixes it, but we can't expect people
 			// to do that. Pass the login shell's PATH as a workaround.
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				subprocessOptions.environment = { PATH: await lazy.shellPathPromise };
 				subprocessOptions.environmentAppend = true;
 			}
@@ -2284,7 +2284,7 @@ var Scaffold = new function () {
 		}
 		catch (e) {
 			if (!(e instanceof SyntaxError)) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		return [];
@@ -2367,14 +2367,14 @@ var Scaffold = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		document.title = title;
 	}
 	
 	function _handleAPIKeyChange() {
-		let apiKey = Zotero.Prefs.get('scaffold.completions.mistralAPIKey');
+		let apiKey = Trellis.Prefs.get('scaffold.completions.mistralAPIKey');
 		if (apiKey) {
 			_copilot = new CompletionCopilot(apiKey, {
 				provider: 'mistral',

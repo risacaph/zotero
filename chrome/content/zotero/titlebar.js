@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Center for History and New Media
 						  George Mason University, Fairfax, Virginia, USA
-						  http://zotero.org
+						  http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,9 +27,9 @@
 (() => {
 let platforms = document.querySelector("window")?.getAttribute("drawintitlebar-platforms");
 if (platforms) {
-	if (Zotero.isMac && !platforms.includes("mac")) return;
-	else if (Zotero.isWin && !platforms.includes("win")) return;
-	else if (Zotero.isLinux && !platforms.includes("linux")) return;
+	if (Trellis.isMac && !platforms.includes("mac")) return;
+	else if (Trellis.isWin && !platforms.includes("win")) return;
+	else if (Trellis.isLinux && !platforms.includes("linux")) return;
 }
 
 // Set attributes that affect window chrome sizing immediately, to avoid shrinking when
@@ -41,12 +41,12 @@ document.documentElement.setAttribute('customtitlebar', true);
 document.documentElement.toggleAttribute("drawtitle", false);
 
 window.addEventListener("load", function () {
-	// Fix window without menubar/titlebar when Zotero is closed in full-screen mode in OS X 10.11+
-	if (Zotero.isMac && window.document.documentElement.getAttribute('sizemode') == 'fullscreen') {
+	// Fix window without menubar/titlebar when Trellis is closed in full-screen mode in OS X 10.11+
+	if (Trellis.isMac && window.document.documentElement.getAttribute('sizemode') == 'fullscreen') {
 		window.document.documentElement.setAttribute('sizemode', 'normal');
 	}
 
-	if (Zotero.isWin) {
+	if (Trellis.isWin) {
 		let windowIcon = document.querySelector(".titlebar-icon");
 		if (!windowIcon) return;
 		// Simulate Windows window control

@@ -105,13 +105,13 @@
     "message": "Zapnúť ukladanie do Online knižnice"
   },
   "reports_report_submitted": {
-    "message": "Vaše chybové hlásenie bolo odoslané.\n\nID správy: $1\n\nProsím napíšte správu do diskusného fóra Zotero obsahujúcu toto ID, popis problému a kroky, ktoré sú potrebné k jeho reprodukovaniu.\n\nChybové hlásenia sa nekontrolujú dokiaľ sa o nich nediskutuje vo fórach."
+    "message": "Vaše chybové hlásenie bolo odoslané.\n\nID správy: $1\n\nProsím napíšte správu do diskusného fóra Trellis obsahujúcu toto ID, popis problému a kroky, ktoré sú potrebné k jeho reprodukovaniu.\n\nChybové hlásenia sa nekontrolujú dokiaľ sa o nich nediskutuje vo fórach."
   },
   "reports_debug_output_submitted": {
     "message": "Vaše ladiace informácie boli odoslané.\n\nID ladenia je $1."
   },
   "reports_submission_failed": {
-    "message": "Pri odosielaní vašej správy sa vyskytla chyba.\n\n$1\n\nSkontrolujte prosím svoje pripojenie na internet. Ak problémy pretrvávajú, pošlite správu na fóra Zotero."
+    "message": "Pri odosielaní vašej správy sa vyskytla chyba.\n\n$1\n\nSkontrolujte prosím svoje pripojenie na internet. Ak problémy pretrvávajú, pošlite správu na fóra Trellis."
   },
   "integration_error_clientUpgrade": {
     "message": "Webové citovanie vyžaduje verziu $1 alebo vyššiu."
@@ -120,10 +120,10 @@
     "message": "$1 nedokázal komunikovať s počítačovým programom $2. $2 musí byť pre používanie webového citovania spustený."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Tento dokument obsahuje aktívne citácie Zotera, ktoré sa objavia ako odkazy zotero.org v stiahnutej kópii."
+    "message": "Tento dokument obsahuje aktívne citácie Zotera, ktoré sa objavia ako odkazy trellis.org v stiahnutej kópii."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "Pre vytvorenie verzie vhodnej na zdieľaie, zvoľte <b>Vytvoriť kópiu…</b> z ponuky Súbor, zvoľte <b>Odpojiť citácie</b> z ponuky Zotero v novom dokumente a potom stiahnite neprepojenú verziu. Uschovajte tento pôvodný prepojený dokument pre prípad, že budete potrebovať urobiť ďalšie zmeny."
+    "message": "Pre vytvorenie verzie vhodnej na zdieľaie, zvoľte <b>Vytvoriť kópiu…</b> z ponuky Súbor, zvoľte <b>Odpojiť citácie</b> z ponuky Trellis v novom dokumente a potom stiahnite neprepojenú verziu. Uschovajte tento pôvodný prepojený dokument pre prípad, že budete potrebovať urobiť ďalšie zmeny."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "Každopádne stiahnuť prepojenú verziu"
@@ -132,7 +132,7 @@
     "message": "$1 aktualizuje váš dokument."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "Integrácia $1 nie je dostupná pri úprave súborov .docx od Microsoft Word  priamo v Google Docs. Zvoľte Súbor → Uložiť ako Google Docs pre zapnutie tejto funkcie.<br/><br/>Ak chcete preniesť dokument Word s citáciami $1 do Google Docs, pozrite na <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">Presun dokumentov medzi textovými editormi</a>."
+    "message": "Integrácia $1 nie je dostupná pri úprave súborov .docx od Microsoft Word  priamo v Google Docs. Zvoľte Súbor → Uložiť ako Google Docs pre zapnutie tejto funkcie.<br/><br/>Ak chcete preniesť dokument Word s citáciami $1 do Google Docs, pozrite na <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">Presun dokumentov medzi textovými editormi</a>."
   },
   "integration_googleDocs_documentLocked": {
     "message": "Citácie v dokumente práve edituje iný $1 užívateľ. Skúste to prosím neskôr."
@@ -153,7 +153,7 @@
     "message": "Znova prepojiť citáciu"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Tieto citácie prestali byť <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">prepojené s $1</a>. Budete ich musieť znova prepojiť prv ako budú aktualizované alebo sa objavia vo vašej bibliografii."
+    "message": "Tieto citácie prestali byť <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">prepojené s $1</a>. Budete ich musieť znova prepojiť prv ako budú aktualizované alebo sa objavia vo vašej bibliografii."
   },
   "general_saveTo": {
     "message": "Uložiť do $1"

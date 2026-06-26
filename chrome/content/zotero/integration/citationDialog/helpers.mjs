@@ -3,33 +3,33 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 // Helper functions for citationDialog.js
 export class CitationDialogHelpers {
 	constructor({ doc }) {
 		this.doc = doc;
-		this.smoothResizingPromise = Zotero.Promise.resolve();
+		this.smoothResizingPromise = Trellis.Promise.resolve();
 	}
 
 	// shortcut to create a node with specified class and attributes
@@ -51,16 +51,16 @@ export class CitationDialogHelpers {
 			title = item.getDisplayTitle();
 		}
 		else if (item.annotationText) {
-			title = Zotero.Utilities.unescapeHTML(item.annotationText.trim().slice(0, 500));
+			title = Trellis.Utilities.unescapeHTML(item.annotationText.trim().slice(0, 500));
 			titleWrapper.classList.add("annotation-quote");
 			// Add quotation marks around the quoted text
-			titleNode.setAttribute("q-mark-open", Zotero.getString("punctuation.openingQMark"));
-			titleWrapper.setAttribute("q-mark-close", Zotero.getString("punctuation.closingQMark"));
+			titleNode.setAttribute("q-mark-open", Trellis.getString("punctuation.openingQMark"));
+			titleWrapper.setAttribute("q-mark-close", Trellis.getString("punctuation.closingQMark"));
 		}
 		else {
-			title = Zotero.getString(`reader-${item.annotationType}-annotation`);
+			title = Trellis.getString(`reader-${item.annotationType}-annotation`);
 		}
-		Zotero.Utilities.Internal.renderItemTitle(title, titleNode);
+		Trellis.Utilities.Internal.renderItemTitle(title, titleNode);
 		return titleWrapper;
 	}
 
@@ -85,12 +85,12 @@ export class CitationDialogHelpers {
 			}
 		};
 		if (item.isNote()) {
-			var date = Zotero.Date.sqlToDate(item.dateModified, true);
-			date = Zotero.Date.toFriendlyDate(date);
+			var date = Trellis.Date.sqlToDate(item.dateModified, true);
+			date = Trellis.Date.toFriendlyDate(date);
 			let dateLabel = wrapTextInSpan(date);
 			
 			var text = item.note;
-			text = Zotero.Utilities.unescapeHTML(text);
+			text = Trellis.Utilities.unescapeHTML(text);
 			text = text.trim();
 			text = text.slice(0, 500);
 			var parts = text.split('\n').map(x => x.trim()).filter(x => x.length);
@@ -103,7 +103,7 @@ export class CitationDialogHelpers {
 		}
 
 		if (item.isAnnotation()) {
-			let comment = Zotero.Utilities.unescapeHTML((item.annotationComment || "").trim());
+			let comment = Trellis.Utilities.unescapeHTML((item.annotationComment || "").trim());
 			comment = comment.slice(0, 500);
 			let parts = comment.split('\n').map(x => x.trim()).filter(x => x.length);
 			if (parts[0]) {
@@ -118,8 +118,8 @@ export class CitationDialogHelpers {
 
 		var nodes = [];
 		// Add a red label to retracted items
-		if (Zotero.Retractions.isRetracted(item)) {
-			let label = wrapTextInSpan(Zotero.getString("retraction.banner"), { color: 'var(--accent-red)', 'margin-inline-end': '5px' });
+		if (Trellis.Retractions.isRetracted(item)) {
+			let label = wrapTextInSpan(Trellis.getString("retraction.banner"), { color: 'var(--accent-red)', 'margin-inline-end': '5px' });
 			label.setAttribute("no-comma", true);
 			nodes.push(label);
 		}
@@ -214,7 +214,7 @@ export class CitationDialogHelpers {
 		}, "item cited-placeholder");
 		let title = this.createNode("div", {}, "title");
 		let description = this.createNode("div", {}, "description");
-		title.textContent = Zotero.getString("general.loading");
+		title.textContent = Trellis.getString("general.loading");
 		description.textContent = " ";
 		itemNode.append(title, description);
 		return itemNode;
@@ -258,7 +258,7 @@ export class CitationDialogHelpers {
 		for (let word of words) {
 			word = word.toLowerCase();
 			// Check if the current word has a locator label
-			for (let labelCandidate of Zotero.Cite.labels) {
+			for (let labelCandidate of Trellis.Cite.labels) {
 				let { fullLocator, shortLocator, shortLocatorNoPunctuation } = this.getLocatorLabels(labelCandidate);
 				// Potential locator value is a substring from the current word till the end
 				let potentialLocatorValue = words.slice(wordLocatorIndex).join(" ").trim();
@@ -352,14 +352,14 @@ export class CitationDialogHelpers {
 			let comment = item.annotationComment || "";
 			if (text) {
 				let annotationText = text.substr(0, 32) + (text.length > 32 ? "…" : "");
-				annotationContent = Zotero.getString("punctuation.openingQMark") + annotationText + Zotero.getString("punctuation.closingQMark");
+				annotationContent = Trellis.getString("punctuation.openingQMark") + annotationText + Trellis.getString("punctuation.closingQMark");
 			}
 			else if (comment) {
 				let annotationComment = comment.substr(0, 32) + (comment.length > 32 ? "…" : "");
 				annotationContent = annotationComment;
 			}
 			else {
-				annotationContent = Zotero.getString(`reader-${item.annotationType}-annotation`);
+				annotationContent = Trellis.getString(`reader-${item.annotationType}-annotation`);
 			}
 			while (item.parentItem) {
 				item = item.parentItem;
@@ -373,10 +373,10 @@ export class CitationDialogHelpers {
 		title = item.getDisplayTitle();
 		title = title.substr(0, 32) + (title.length > 32 ? "…" : "");
 		if (!str && title) {
-			str = Zotero.getString("punctuation.openingQMark") + title + Zotero.getString("punctuation.closingQMark");
+			str = Trellis.getString("punctuation.openingQMark") + title + Trellis.getString("punctuation.closingQMark");
 		}
 		else if (!str) {
-			str = Zotero.getString("integration-citationDialog-bubble-empty");
+			str = Trellis.getString("integration-citationDialog-bubble-empty");
 		}
 		
 		// Date
@@ -394,23 +394,23 @@ export class CitationDialogHelpers {
 		if (bubbleItem.locator) {
 			// Try to fetch the short form of the locator label. E.g. "p." for "page"
 			// If there is no locator label, default to "page" for now
-			let label = (Zotero.Cite.getLocatorString(bubbleItem.label || 'page', 'short') || '').toLocaleLowerCase();
+			let label = (Trellis.Cite.getLocatorString(bubbleItem.label || 'page', 'short') || '').toLocaleLowerCase();
 			
 			str += `, ${label} ${bubbleItem.locator}`;
 		}
 		
 		// Prefix
-		if (bubbleItem.prefix && Zotero.CiteProc.CSL.ENDSWITH_ROMANESQUE_REGEXP) {
+		if (bubbleItem.prefix && Trellis.CiteProc.CSL.ENDSWITH_ROMANESQUE_REGEXP) {
 			let prefix = bubbleItem.prefix.substr(0, 10) + (bubbleItem.prefix.length > 10 ? "…" : "");
 			str = prefix
-				+ (Zotero.CiteProc.CSL.ENDSWITH_ROMANESQUE_REGEXP.test(bubbleItem.prefix) ? " " : "")
+				+ (Trellis.CiteProc.CSL.ENDSWITH_ROMANESQUE_REGEXP.test(bubbleItem.prefix) ? " " : "")
 				+ str;
 		}
 		
 		// Suffix
-		if (bubbleItem.suffix && Zotero.CiteProc.CSL.STARTSWITH_ROMANESQUE_REGEXP) {
+		if (bubbleItem.suffix && Trellis.CiteProc.CSL.STARTSWITH_ROMANESQUE_REGEXP) {
 			let suffix = bubbleItem.suffix.substr(0, 10) + (bubbleItem.suffix.length > 10 ? "…" : "");
-			str += (Zotero.CiteProc.CSL.STARTSWITH_ROMANESQUE_REGEXP.test(bubbleItem.suffix) ? " " : "") + suffix;
+			str += (Trellis.CiteProc.CSL.STARTSWITH_ROMANESQUE_REGEXP.test(bubbleItem.suffix) ? " " : "") + suffix;
 		}
 		
 		return str;
@@ -418,9 +418,9 @@ export class CitationDialogHelpers {
 
 	getLocatorLabels(loc) {
 		return {
-			fullLocator: Zotero.Cite.getLocatorString(loc).toLowerCase(),
-			shortLocator: Zotero.Cite.getLocatorString(loc, "short").toLowerCase(),
-			shortLocatorNoPunctuation: Zotero.Cite.getLocatorString(loc, "short").toLowerCase().replace(/[.,]/g, "")
+			fullLocator: Trellis.Cite.getLocatorString(loc).toLowerCase(),
+			shortLocator: Trellis.Cite.getLocatorString(loc, "short").toLowerCase(),
+			shortLocatorNoPunctuation: Trellis.Cite.getLocatorString(loc, "short").toLowerCase().replace(/[.,]/g, "")
 		};
 	}
 
@@ -439,7 +439,7 @@ export class CitationDialogHelpers {
 
 	fetchStoredWindowParams() {
 		try {
-			return JSON.parse(Zotero.Prefs.get("integration.citationDialog.windowParams") || "{}");
+			return JSON.parse(Trellis.Prefs.get("integration.citationDialog.windowParams") || "{}");
 		}
 		catch (e) {
 			return {};
@@ -454,7 +454,7 @@ export class CitationDialogHelpers {
 		let chromeHeight = win.outerHeight - win.innerHeight;
 
 		// On Linux, animated resizing is too jumpy, so just resize in one step
-		if (Zotero.isLinux) {
+		if (Trellis.isLinux) {
 			win.resizeTo(targetWidth, targetHeight);
 			resolve();
 			if (onComplete) {

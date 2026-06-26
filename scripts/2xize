@@ -10,7 +10,7 @@ def append2x(content, dir):
     footer = "\n}\n"
     output = ""
     for line in content.split("\n"):
-        matches = re.match('(.+chrome://zotero/skin/)(.+(?<!@2x)\.png)(.+)', line)
+        matches = re.match('(.+chrome://trellis/skin/)(.+(?<!@2x)\.png)(.+)', line)
         
         if not matches:
             # Skip lines that are indented but don't reference an image, which are

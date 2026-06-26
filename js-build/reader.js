@@ -29,22 +29,22 @@ async function getReader(signatures) {
 			await exec(
 				`cd ${tmpDir}`
 				+ ` && (test -f ${filename} || curl -f ${url} -o ${filename})`
-				+ ` && unzip ${filename} zotero/* -d ${targetDir}`
-				+ ` && mv ${path.join(targetDir, 'zotero', '*')} ${targetDir}`
+				+ ` && unzip ${filename} trellis/* -d ${targetDir}`
+				+ ` && mv ${path.join(targetDir, 'trellis', '*')} ${targetDir}`
 			);
 
-			await fs.remove(path.join(targetDir, 'zotero'));
+			await fs.remove(path.join(targetDir, 'trellis'));
 		}
 		catch (e) {
 			if (!e.message?.includes('The requested URL returned error: 403')) {
 				console.error(e);
 			}
 			await exec('npm ci', { cwd: modulePath });
-			await exec('npm run build:zotero', { cwd: modulePath });
-			if (!fs.pathExists(path.join(modulePath, 'build', 'zotero', 'pdf', 'build', 'pdf.mjs'))) {
+			await exec('npm run build:trellis', { cwd: modulePath });
+			if (!fs.pathExists(path.join(modulePath, 'build', 'trellis', 'pdf', 'build', 'pdf.mjs'))) {
 				throw new Error('pdf.js build failed to produce output');
 			}
-			await fs.copy(path.join(modulePath, 'build', 'zotero'), targetDir);
+			await fs.copy(path.join(modulePath, 'build', 'trellis'), targetDir);
 		}
 		signatures['reader'] = { hash };
 	}

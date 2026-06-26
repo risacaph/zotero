@@ -3,22 +3,22 @@
 	
     Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -229,7 +229,7 @@
 			bubble.setAttribute("data-arrow-nav-enabled", true);
 			bubble.className = "bubble";
 			// VoiceOver works better without it
-			if (!Zotero.isMac) {
+			if (!Trellis.isMac) {
 				bubble.setAttribute("aria-label", content);
 			}
 			// On click, tell citationDialog to display the details popup
@@ -257,7 +257,7 @@
 				// On Shift-Left/Right swap focused bubble with it's neighbor
 				event.preventDefault();
 				event.stopPropagation();
-				let nextBubble = Utils.findNextClass("bubble", bubble, event.key == Zotero.arrowNextKey);
+				let nextBubble = Utils.findNextClass("bubble", bubble, event.key == Trellis.arrowNextKey);
 				if (nextBubble) {
 					let nextBubbleIndex = [...this._body.querySelectorAll(".bubble")].findIndex(bubble => bubble == nextBubble);
 					Utils.notifyDialog('move-item', { dialogReferenceID: bubble.getAttribute("dialogReferenceID"), index: nextBubbleIndex });
@@ -359,8 +359,8 @@
 		 */
 		_onInputKeydown(input, event) {
 			// Do not allow focus handler to interfere on arrow key navigation within the input
-			if ((event.key == Zotero.arrowPreviousKey && input.selectionStart !== 0)
-				|| (event.key == Zotero.arrowNextKey && input.selectionEnd !== input.value.length)) {
+			if ((event.key == Trellis.arrowPreviousKey && input.selectionStart !== 0)
+				|| (event.key == Trellis.arrowNextKey && input.selectionEnd !== input.value.length)) {
 				event.stopPropagation();
 			}
 
@@ -407,7 +407,7 @@
 		handleDragStart(event) {
 			if (!this.bubbleInput.sortable) return false;
 			this.dragBubble = event.target;
-			event.dataTransfer.setData("text/plain", '<span id="zotero-drag"/>');
+			event.dataTransfer.setData("text/plain", '<span id="trellis-drag"/>');
 			event.stopPropagation();
 			return true;
 		},
@@ -445,7 +445,7 @@
 		handleDrop(event) {
 			event.preventDefault();
 			event.stopPropagation();
-			let itemIDs = event.dataTransfer.getData("zotero/item");
+			let itemIDs = event.dataTransfer.getData("trellis/item");
 			// Handle drag-drop of items from the citationDialog into bubble-input to add them
 			if (itemIDs) {
 				itemIDs = itemIDs.split(",");
@@ -502,11 +502,11 @@
 		},
 
 		isCursorAtInputStart(input) {
-			return Zotero.rtl ? input.selectionStart == input.value.length : input.selectionStart == 0;
+			return Trellis.rtl ? input.selectionStart == input.value.length : input.selectionStart == 0;
 		},
 	
 		isCursorAtInputEnd(input) {
-			return Zotero.rtl ? input.selectionStart == 0 : input.selectionStart == input.value.length;
+			return Trellis.rtl ? input.selectionStart == 0 : input.selectionStart == input.value.length;
 		},
 
 		findNextClass(className, startNode, isForward) {
@@ -539,7 +539,7 @@
 			let lastBubble = null;
 			let verticalBubbleMargin = parseInt(getComputedStyle(this.bubbleInput).getPropertyValue("--bubble-vertical-margin")) || 0;
 			let isClickAfterBubble = (clickX, bubbleRect) => {
-				return Zotero.rtl ? clickX <= bubbleRect.right : clickX >= bubbleRect.left;
+				return Trellis.rtl ? clickX <= bubbleRect.right : clickX >= bubbleRect.left;
 			};
 			for (let i = 0; i < bubbles.length; i++) {
 				let rect = bubbles[i].getBoundingClientRect();
@@ -655,7 +655,7 @@
 					if (input.classList.contains("just-added-placeholder")
 							&& document.activeElement == input && !input.value) {
 						let placeholder = this.truncateToWidth(
-							" " + Zotero.getString("integration-citationDialog-search-for-items"),
+							" " + Trellis.getString("integration-citationDialog-search-for-items"),
 							parseFloat(input.style.minWidth) || Infinity);
 						document.l10n.setAttributes(input, "integration-citationDialog-just-added-input-citation", { placeholder, title: "" });
 						continue;
@@ -670,7 +670,7 @@
 					input.classList.add("just-added-placeholder");
 					// Leading NBSP gives a small visual gap between the cursor and the placeholder
 					// text (CSS padding/text-indent on input or ::placeholder both move the cursor too)
-					let fullPlaceholder = " " + Zotero.getString("integration-citationDialog-just-added-input-placeholder");
+					let fullPlaceholder = " " + Trellis.getString("integration-citationDialog-just-added-input-placeholder");
 					let availableWidth = bodyRight - input.getBoundingClientRect().left - 20;
 					let placeholderWidth = this.getTextWidth(fullPlaceholder);
 					let placeholder, title, minWidth;

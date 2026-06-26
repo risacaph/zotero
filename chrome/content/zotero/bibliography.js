@@ -3,29 +3,29 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// Zotero_File_Interface_Bibliography
+// Trellis_File_Interface_Bibliography
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -34,10 +34,10 @@
 
 window.isPristine = true;
 
-window.isLoadedDeferred = Zotero.Promise.defer();
+window.isLoadedDeferred = Trellis.Promise.defer();
 window.isLoadedPromise = window.isLoadedDeferred.promise;
 
-window.Zotero_File_Interface_Bibliography = new function () {
+window.Trellis_File_Interface_Bibliography = new function () {
 	var _io;
 	
 	// Only changes when explicitly selected
@@ -68,9 +68,9 @@ window.Zotero_File_Interface_Bibliography = new function () {
 		
 		// Set font size from pref
 		// Affects bibliography.xhtml and integrationDocPrefs.xhtml
-		var bibContainer = document.getElementById("zotero-bibliography-container");
+		var bibContainer = document.getElementById("trellis-bibliography-container");
 		if (bibContainer) {
-			Zotero.UIProperties.registerRoot(bibContainer);
+			Trellis.UIProperties.registerRoot(bibContainer);
 		}
 		
 		if (window.arguments && window.arguments.length) {
@@ -92,13 +92,13 @@ window.Zotero_File_Interface_Bibliography = new function () {
 		
 		// if no style is requested, get the last style used
 		if (!_io.style) {
-			_io.style = Zotero.Prefs.get("export.lastStyle");
+			_io.style = Trellis.Prefs.get("export.lastStyle");
 		}
 		
 		// See note in style.js
-		if (!Zotero.Styles.initialized()) {
+		if (!Trellis.Styles.initialized()) {
 			// Initialize styles
-			await Zotero.Styles.init();
+			await Trellis.Styles.init();
 		}
 		
 		// Wait for CE initialization
@@ -121,7 +121,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 				// Get style with potentially remapped styleID
 				let style;
 				try {
-					style = Zotero.Styles.get(_io.style);
+					style = Trellis.Styles.get(_io.style);
 					if (style) {
 						styleConfigurator.style = style.styleID;
 					}
@@ -156,7 +156,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 
 	this.initBibWindow = function () {
 		if (windowType !== "bibliography") return;
-		var settings = Zotero.Prefs.get("export.bibliographySettings");
+		var settings = Trellis.Prefs.get("export.bibliographySettings");
 		try {
 			settings = JSON.parse(settings);
 			var mode = settings.mode;
@@ -201,7 +201,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 		}
 		if (document.getElementById("automaticJournalAbbreviations")) {
 			if (_io.automaticJournalAbbreviations === undefined) {
-				_io.automaticJournalAbbreviations = Zotero.Prefs.get("cite.automaticJournalAbbreviations");
+				_io.automaticJournalAbbreviations = Trellis.Prefs.get("cite.automaticJournalAbbreviations");
 			}
 			if (_io.automaticJournalAbbreviations) {
 				document.getElementById("automaticJournalAbbreviations").checked = true;
@@ -216,7 +216,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 
 		document.querySelector("#exportDocument")?.addEventListener("command", this.exportDocument.bind(this));
 
-		this.onDocPrefsWindowStyleChange(Zotero.Styles.get(styleConfigurator.style), true);
+		this.onDocPrefsWindowStyleChange(Trellis.Styles.get(styleConfigurator.style), true);
 
 		// If any advanced options are checked, expand the advanced options section
 		let hasCheckedAdvancedOption
@@ -233,7 +233,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 	};
 	
 	this.openHelpLink = function () {
-		Zotero.launchURL("https://www.zotero.org/support/word_processor_integration");
+		Trellis.launchURL("https://www.trellis.org/support/word_processor_integration");
 	};
 
 	/*
@@ -242,7 +242,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 	this.styleChanged = function (event) {
 		lastSelectedStyle = styleConfigurator.style;
 		lastSelectedLocale = styleConfigurator.locale;
-		let selectedStyleObj = Zotero.Styles.get(lastSelectedStyle);
+		let selectedStyleObj = Trellis.Styles.get(lastSelectedStyle);
 		if (event.detail?.type === "style") {
 			this.onBibWindowStyleChange(selectedStyleObj);
 			this.onDocPrefsWindowStyleChange(selectedStyleObj);
@@ -253,7 +253,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 	this.onBibWindowStyleChange = function (style = undefined) {
 		if (windowType !== "bibliography") return;
 		if (!style) {
-			style = Zotero.Styles.get(styleConfigurator.style);
+			style = Trellis.Styles.get(styleConfigurator.style);
 		}
 		if (!style) return;
 		let citations = document.getElementById("citations");
@@ -295,11 +295,11 @@ window.Zotero_File_Interface_Bibliography = new function () {
 		
 		// remember style and locale if user selected these explicitly
 		if (lastSelectedStyle) {
-			Zotero.Prefs.set("export.lastStyle", _io.style);
+			Trellis.Prefs.set("export.lastStyle", _io.style);
 		}
 		
 		if (lastSelectedLocale) {
-			Zotero.Prefs.set("export.lastLocale", lastSelectedLocale);
+			Trellis.Prefs.set("export.lastLocale", lastSelectedLocale);
 		}
 	};
 
@@ -309,7 +309,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 		_io.mode = document.getElementById("output-mode-radio").selectedItem.id;
 		_io.method = document.getElementById("output-method-radio").selectedItem.id;
 		// save settings
-		Zotero.Prefs.set("export.bibliographySettings",
+		Trellis.Prefs.set("export.bibliographySettings",
 			JSON.stringify({ mode: _io.mode, method: _io.method }));
 	};
 
@@ -318,7 +318,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 		var automaticJournalAbbreviationsEl = document.getElementById("automaticJournalAbbreviations");
 		_io.automaticJournalAbbreviations = automaticJournalAbbreviationsEl.checked;
 		if (!automaticJournalAbbreviationsEl.hidden && lastSelectedStyle) {
-			Zotero.Prefs.set("cite.automaticJournalAbbreviations", _io.automaticJournalAbbreviations);
+			Trellis.Prefs.set("cite.automaticJournalAbbreviations", _io.automaticJournalAbbreviations);
 		}
 		_io.useEndnotes = styleConfigurator.displayAs == "endnotes" ? 1 : 0;
 		_io.fieldType = (document.getElementById("formatUsingBookmarks").checked ? _io.secondaryFieldType : _io.primaryFieldType);
@@ -329,11 +329,11 @@ window.Zotero_File_Interface_Bibliography = new function () {
 	this.manageStyles = function () {
 		_io.dontActivateDocument = true;
 		document.querySelector('dialog').cancelDialog();
-		var win = Zotero.Utilities.Internal.openPreferences('zotero-prefpane-cite', {
+		var win = Trellis.Utilities.Internal.openPreferences('trellis-prefpane-cite', {
 			scrollTo: '#styles'
 		});
 		if (window.isDocPrefs) {
-			Zotero.Utilities.Internal.activate(win);
+			Trellis.Utilities.Internal.activate(win);
 		}
 	};
 
@@ -383,7 +383,7 @@ window.Zotero_File_Interface_Bibliography = new function () {
 	 * only called from docPrefs
 	 */
 	this.exportDocument = function () {
-		if (Zotero.Integration.confirmExportDocument()) {
+		if (Trellis.Integration.confirmExportDocument()) {
 			_io.exportDocument = true;
 			document.querySelector('dialog').acceptDialog();
 		}

@@ -1,4 +1,4 @@
-import { documentIsReady } from "chrome://zotero/content/actors/actorUtils.mjs";
+import { documentIsReady } from "chrome://trellis/content/actors/actorUtils.mjs";
 
 export class SingleFileChild extends JSWindowActorChild {
 	async receiveMessage(message) {
@@ -25,15 +25,15 @@ export class SingleFileChild extends JSWindowActorChild {
 		console.log('Injecting single file scripts');
 		// Run all the scripts of SingleFile scripts in Sandbox
 		SCRIPTS.forEach(
-			script => Services.scriptloader.loadSubScript('resource://zotero/SingleFile/' + script, sandbox)
+			script => Services.scriptloader.loadSubScript('resource://trellis/SingleFile/' + script, sandbox)
 		);
 		// Import config
-		Services.scriptloader.loadSubScript('chrome://zotero/content/xpcom/singlefile.js', sandbox);
+		Services.scriptloader.loadSubScript('chrome://trellis/content/xpcom/singlefile.js', sandbox);
 
 		// In the client we turn off this auto-zooming feature because it does not work
 		// since the hidden browser does not have a clientHeight.
 		Cu.evalInSandbox(
-			'Zotero.SingleFile.CONFIG.loadDeferredImagesKeepZoomLevel = true;',
+			'Trellis.SingleFile.CONFIG.loadDeferredImagesKeepZoomLevel = true;',
 			sandbox
 		);
 
@@ -60,7 +60,7 @@ export class SingleFileChild extends JSWindowActorChild {
 
 			// Run all the scripts of SingleFile scripts in Sandbox
 			frameScripts.forEach(
-				script => Services.scriptloader.loadSubScript('resource://zotero/SingleFile/' + script, frameSandbox)
+				script => Services.scriptloader.loadSubScript('resource://trellis/SingleFile/' + script, frameSandbox)
 			);
 
 			frameSandboxes.push(frameSandbox);
@@ -69,8 +69,8 @@ export class SingleFileChild extends JSWindowActorChild {
 		// Use SingleFile to retrieve the html
 		const pageData = await Cu.evalInSandbox(
 			`this.singlefile.getPageData(
-				Zotero.SingleFile.CONFIG,
-				{ fetch: ZoteroFetch }
+				Trellis.SingleFile.CONFIG,
+				{ fetch: TrellisFetch }
 			);`,
 			sandbox
 		);
@@ -92,8 +92,8 @@ export class SingleFileChild extends JSWindowActorChild {
 		});
 		sandbox.browser = false;
 
-		sandbox.Zotero = Cu.cloneInto({ HTTP: {} }, sandbox);
-		sandbox.Zotero.debug = Cu.exportFunction(obj => console.log(obj), sandbox);
+		sandbox.Trellis = Cu.cloneInto({ HTTP: {} }, sandbox);
+		sandbox.Trellis.debug = Cu.exportFunction(obj => console.log(obj), sandbox);
 		// Mostly copied from:
 		// resources/SingleFile/extension/lib/single-file/fetch/bg/fetch.js::fetchResource
 		sandbox.coFetch = Cu.exportFunction(
@@ -138,7 +138,7 @@ export class SingleFileChild extends JSWindowActorChild {
 		// resources/SingleFile/extension/lib/single-file/fetch/content/content-fetch.js::fetch
 		Cu.evalInSandbox(
 			`
-			ZoteroFetch = async function (url, options) {
+			TrellisFetch = async function (url, options) {
 				try {
 					let response = await fetch(url, { cache: "force-cache", headers: options.headers });
 					return response;
@@ -147,8 +147,8 @@ export class SingleFileChild extends JSWindowActorChild {
 					let response = await new Promise((resolve, reject) => {
 						coFetch(url, { headers: options.headers }, (response) => {
 							if (response.error) {
-								Zotero.debug("Error retrieving url: " + url);
-								Zotero.debug(response);
+								Trellis.debug("Error retrieving url: " + url);
+								Trellis.debug(response);
 								reject(new Error(response.error));
 							}
 							else {

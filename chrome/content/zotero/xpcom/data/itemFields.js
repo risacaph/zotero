@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.ItemFields = new function () {
+Trellis.ItemFields = new function () {
 	// Private members
 	var _fields = {};
 	var _allFields = [];
@@ -60,7 +60,7 @@ Zotero.ItemFields = new function () {
 		_fields = {};
 		_fieldsFormats = [];
 		
-		var result = await Zotero.DB.queryAsync('SELECT * FROM fieldFormats');
+		var result = await Trellis.DB.queryAsync('SELECT * FROM fieldFormats');
 		
 		for (var i=0; i<result.length; i++) {
 			_fieldFormats[result[i]['fieldFormatID']] = {
@@ -69,19 +69,19 @@ Zotero.ItemFields = new function () {
 			};
 		}
 		
-		var fields = await Zotero.DB.queryAsync('SELECT * FROM fieldsCombined');
+		var fields = await Trellis.DB.queryAsync('SELECT * FROM fieldsCombined');
 		
 		var fieldItemTypes = await _getFieldItemTypes();
 		
 		var sql = "SELECT DISTINCT baseFieldID FROM baseFieldMappingsCombined";
-		var baseFields = await Zotero.DB.columnQueryAsync(sql);
+		var baseFields = await Trellis.DB.columnQueryAsync(sql);
 		
 		for (let field of fields) {
-			let label = field.label || Zotero.Schema.globalSchemaLocale.fields[field.fieldName];
+			let label = field.label || Trellis.Schema.globalSchemaLocale.fields[field.fieldName];
 			// If string not available, use the field name
 			if (!label) {
-				Zotero.logError(`Localized string not available for field '${field.fieldName}'`);
-				label = Zotero.Utilities.Internal.camelToTitleCase(field.fieldName);
+				Trellis.logError(`Localized string not available for field '${field.fieldName}'`);
+				label = Trellis.Utilities.Internal.camelToTitleCase(field.fieldName);
 			}
 			
 			_fields[field.fieldID] = {
@@ -112,7 +112,7 @@ Zotero.ItemFields = new function () {
 	 */
 	function getID(field) {
 		if (!_fieldsLoaded) {
-			throw new Zotero.Exception.UnloadedDataException("Item field data not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Item field data not yet loaded");
 		}
 		
 		if (typeof field == 'number') {
@@ -128,7 +128,7 @@ Zotero.ItemFields = new function () {
 	 */
 	function getName(field) {
 		if (!_fieldsLoaded) {
-			throw new Zotero.Exception.UnloadedDataException("Item field data not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Item field data not yet loaded");
 		}
 		
 		return _fields[field] ? _fields[field]['name'] : false;
@@ -142,7 +142,7 @@ Zotero.ItemFields = new function () {
 	
 	this.getLocalizedString = function (field) {
 		if (arguments.length == 2) {
-			Zotero.warn("Zotero.ItemFields.getLocalizedString() no longer takes two arguments "
+			Trellis.warn("Trellis.ItemFields.getLocalizedString() no longer takes two arguments "
 				+ "-- update your code");
 			field = arguments[1];
 		}
@@ -154,9 +154,9 @@ Zotero.ItemFields = new function () {
 			case 'dateAdded':
 			case 'dateModified':
 			case 'itemType':
-				return Zotero.Schema.globalSchemaLocale.fields[field];
+				return Trellis.Schema.globalSchemaLocale.fields[field];
 			case 'feed':
-				return Zotero.getString('itemFields.feed');
+				return Trellis.getString('itemFields.feed');
 		}
 		
 		// TODO: different labels for different item types
@@ -190,11 +190,11 @@ Zotero.ItemFields = new function () {
 	this.isDate = function (field) {
 		var fieldID = this.getID(field);
 		var fieldName = this.getName(field);
-		if (Zotero.ItemFields.isFieldOfBase(fieldID, 'date')) {
+		if (Trellis.ItemFields.isFieldOfBase(fieldID, 'date')) {
 			return true;
 		}
-		if (Zotero.Schema.globalSchemaMeta.fields[fieldName]) {
-			return Zotero.Schema.globalSchemaMeta.fields[fieldName].type == 'date'
+		if (Trellis.Schema.globalSchemaMeta.fields[fieldName]) {
+			return Trellis.Schema.globalSchemaMeta.fields[fieldName].type == 'date'
 		}
 		return false;
 	};
@@ -213,12 +213,12 @@ Zotero.ItemFields = new function () {
 	function getItemTypeFields(itemTypeID) {
 		if (!itemTypeID) {
 			let e = new Error("Invalid item type id '" + itemTypeID + "'");
-			e.name = "ZoteroInvalidDataError";
+			e.name = "TrellisInvalidDataError";
 			throw e;
 		}
 		
 		if (!_itemTypeFieldsLoaded) {
-			throw new Zotero.Exception.UnloadedDataException("Item field data not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Item field data not yet loaded");
 		}
 		
 		if (!_itemTypeFields[itemTypeID]) {
@@ -271,7 +271,7 @@ Zotero.ItemFields = new function () {
 	 * Accepts names or ids
 	 */
 	function getFieldIDFromTypeAndBase(itemType, baseField) {
-		var itemTypeID = Zotero.ItemTypes.getID(itemType);
+		var itemTypeID = Trellis.ItemTypes.getID(itemType);
 		if (!itemTypeID) {
 			throw new Error("Invalid item type '" + itemType + "'");
 		}
@@ -304,7 +304,7 @@ Zotero.ItemFields = new function () {
 	 * Accepts names or ids
 	 */
 	function getBaseIDFromTypeAndField(itemType, typeField) {
-		var itemTypeID = Zotero.ItemTypes.getID(itemType);
+		var itemTypeID = Trellis.ItemTypes.getID(itemType);
 		var typeFieldID = this.getID(typeField);
 		
 		if (!itemTypeID) {
@@ -347,7 +347,7 @@ Zotero.ItemFields = new function () {
 	this.isAutocompleteField = function (field) {
 		var fieldName = this.getName(field);
 		if (!fieldName) {
-			Zotero.logError(`Can't check autocomplete for invalid field '${field}'`);
+			Trellis.logError(`Can't check autocomplete for invalid field '${field}'`);
 			return false;
 		}
 		
@@ -374,7 +374,7 @@ Zotero.ItemFields = new function () {
 			// Add the type-specific versions of base fields
 			for (let baseField of ['publisher', 'publicationTitle', 'type', 'medium', 'place']) {
 				_autocompleteFields.add(baseField);
-				for (let typeField of Zotero.ItemFields.getTypeFieldsFromBase(baseField, true)) {
+				for (let typeField of Trellis.ItemFields.getTypeFieldsFromBase(baseField, true)) {
 					_autocompleteFields.add(typeField);
 				}
 			}
@@ -385,7 +385,7 @@ Zotero.ItemFields = new function () {
 	
 	
 	this.isLong = function () {
-		Zotero.warn('Zotero.ItemFields.isLong() is deprecated -- update your code');
+		Trellis.warn('Trellis.ItemFields.isLong() is deprecated -- update your code');
 		return true;
 	};
 	
@@ -417,14 +417,14 @@ Zotero.ItemFields = new function () {
 	this.getDirection = function (itemTypeID, field, itemLanguage) {
 		// Collection in trash
 		if (!itemTypeID) {
-			return Zotero.dir;
+			return Trellis.dir;
 		}
 		// Date fields: follow app locale
 		switch (field) {
 			case 'dateAdded':
 			case 'dateModified':
 			case 'accessDate':
-				return Zotero.dir;
+				return Trellis.dir;
 		}
 		
 		var fieldName = this.getName(field);
@@ -463,7 +463,7 @@ Zotero.ItemFields = new function () {
 			// otherwise auto
 			default:
 				if (itemLanguage) {
-					let languageCode = Zotero.Utilities.Item.languageToISO6391(itemLanguage);
+					let languageCode = Trellis.Utilities.Item.languageToISO6391(itemLanguage);
 					try {
 						let locale = new Intl.Locale(languageCode).maximize();
 						// https://www.w3.org/International/questions/qa-scripts#directions
@@ -474,7 +474,7 @@ Zotero.ItemFields = new function () {
 						}
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 					return 'ltr';
 				}
@@ -488,9 +488,9 @@ Zotero.ItemFields = new function () {
 	* (since it should never actually happen)
 	**/
 	function _fieldCheck(field) {
-		var fieldID = Zotero.ItemFields.getID(field);
+		var fieldID = Trellis.ItemFields.getID(field);
 		if (!fieldID) {
-			Zotero.debug((new Error).stack, 1);
+			Trellis.debug((new Error).stack, 1);
 			throw new Error(`Invalid field '${field}'`);
 		}
 		return fieldID;
@@ -502,7 +502,7 @@ Zotero.ItemFields = new function () {
 	 */
 	var _getFieldItemTypes = async function () {
 		var sql = 'SELECT fieldID, itemTypeID FROM itemTypeFieldsCombined';
-		var results = await Zotero.DB.queryAsync(sql);
+		var results = await Trellis.DB.queryAsync(sql);
 		
 		if (!results) {
 			throw ('No fields in itemTypeFields!');
@@ -530,10 +530,10 @@ Zotero.ItemFields = new function () {
 			+ "FROM itemTypesCombined IT LEFT JOIN fieldsCombined F "
 			+ "LEFT JOIN baseFieldMappingsCombined BFM"
 			+ " ON (IT.itemTypeID=BFM.itemTypeID AND F.fieldID=BFM.baseFieldID)";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		
 		var sql = "SELECT DISTINCT baseFieldID FROM baseFieldMappingsCombined";
-		var baseFields = await Zotero.DB.columnQueryAsync(sql);
+		var baseFields = await Trellis.DB.columnQueryAsync(sql);
 		
 		var fields = [];
 		for (let row of rows) {
@@ -558,7 +558,7 @@ Zotero.ItemFields = new function () {
 		
 		var sql = "SELECT itemTypeID, baseFieldID, fieldID, fieldName "
 			+ "FROM baseFieldMappingsCombined JOIN fieldsCombined USING (fieldID)";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		for (let i = 0; i < rows.length; i++) {
 			let row = rows[i];
 			// Type fields by base
@@ -579,7 +579,7 @@ Zotero.ItemFields = new function () {
 		
 		// Get all fields mapped to base types
 		sql = "SELECT DISTINCT fieldID FROM baseFieldMappingsCombined";
-		_baseMappedFields = await Zotero.DB.columnQueryAsync(sql);
+		_baseMappedFields = await Trellis.DB.columnQueryAsync(sql);
 		
 		_baseTypeFieldsLoaded = true;
 	};
@@ -587,12 +587,12 @@ Zotero.ItemFields = new function () {
 	
 	var _loadItemTypeFields = async function () {
 		var sql = 'SELECT itemTypeID, fieldID FROM itemTypeFieldsCombined ORDER BY orderIndex';
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		
 		_itemTypeFields = {
 			// Notes and annotations have no fields
-			[Zotero.ItemTypes.getID('note')]: [],
-			[Zotero.ItemTypes.getID('annotation')]: []
+			[Trellis.ItemTypes.getID('note')]: [],
+			[Trellis.ItemTypes.getID('annotation')]: []
 		};
 		
 		for (let i=0; i<rows.length; i++) {

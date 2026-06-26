@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "version">
-<!ENTITY zotero.whatsNew "Hvad er nyt">
-<!ENTITY zotero.createdby "Oprettet af:">
-<!ENTITY zotero.director "Instruktør:">
-<!ENTITY zotero.directors "Instruktører:">
-<!ENTITY zotero.developers "Udviklere:">
-<!ENTITY zotero.alumni "Alumner:">
-<!ENTITY zotero.about.localizations "Oversættelser:">
-<!ENTITY zotero.about.additionalSoftware "Trediepartsprogrammer:">
-<!ENTITY zotero.thanks "Særlig tak til:">
-<!ENTITY zotero.about.close "Luk">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Flere anerkendelser">
-<!ENTITY zotero.citationProcessing "Citations- og bibliografiprocessering">
+<!ENTITY trellis.version "version">
+<!ENTITY trellis.whatsNew "Hvad er nyt">
+<!ENTITY trellis.createdby "Oprettet af:">
+<!ENTITY trellis.director "Instruktør:">
+<!ENTITY trellis.directors "Instruktører:">
+<!ENTITY trellis.developers "Udviklere:">
+<!ENTITY trellis.alumni "Alumner:">
+<!ENTITY trellis.about.localizations "Oversættelser:">
+<!ENTITY trellis.about.additionalSoftware "Trediepartsprogrammer:">
+<!ENTITY trellis.thanks "Særlig tak til:">
+<!ENTITY trellis.about.close "Luk">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Flere anerkendelser">
+<!ENTITY trellis.citationProcessing "Citations- og bibliografiprocessering">

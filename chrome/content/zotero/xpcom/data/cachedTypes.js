@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -30,8 +30,8 @@
  *
  * Extend using the following code within a child constructor:
  *
- * 	Zotero.CachedTypes.apply(this, arguments);
- *  this.constructor.prototype = new Zotero.CachedTypes();
+ * 	Trellis.CachedTypes.apply(this, arguments);
+ *  this.constructor.prototype = new Trellis.CachedTypes();
  *
  * And the following properties:
  *
@@ -46,9 +46,9 @@
  *  this._allowAdd: Allow new types to be added via .add(name)
  *	this._ignoreCase: Ignore case when looking for types, and add new types as lowercase
  *
- * And add .init() to zotero.js
+ * And add .init() to trellis.js
  */
-Zotero.CachedTypes = function () {
+Trellis.CachedTypes = function () {
 	this._types = null;
 	this._typesArray = null;
 	var self = this;
@@ -76,8 +76,8 @@ Zotero.CachedTypes = function () {
 	
 	this.getName = function (idOrName) {
 		if (!this._types) {
-			throw new Zotero.Exception.UnloadedDataException(
-				Zotero.Utilities.capitalize(this._typeDesc) + " data not yet loaded"
+			throw new Trellis.Exception.UnloadedDataException(
+				Trellis.Utilities.capitalize(this._typeDesc) + " data not yet loaded"
 			);
 		}
 		
@@ -87,7 +87,7 @@ Zotero.CachedTypes = function () {
 		}
 		
 		if (!this._types['_' + idOrName]) {
-			Zotero.debug(`Unknown ${this._typeDesc} '${idOrName}'`, 1);
+			Trellis.debug(`Unknown ${this._typeDesc} '${idOrName}'`, 1);
 			return '';
 		}
 		
@@ -97,8 +97,8 @@ Zotero.CachedTypes = function () {
 	
 	this.getID = function (idOrName) {
 		if (!this._types) {
-			throw new Zotero.Exception.UnloadedDataException(
-				Zotero.Utilities.capitalize(this._typeDesc) + " data not yet loaded"
+			throw new Trellis.Exception.UnloadedDataException(
+				Trellis.Utilities.capitalize(this._typeDesc) + " data not yet loaded"
 			);
 		}
 		
@@ -108,7 +108,7 @@ Zotero.CachedTypes = function () {
 		}
 		
 		if (!this._types['_' + idOrName]) {
-			Zotero.debug(`Unknown ${this._typeDesc} '${idOrName}'`, 1);
+			Trellis.debug(`Unknown ${this._typeDesc} '${idOrName}'`, 1);
 			return false;
 		}
 		
@@ -118,8 +118,8 @@ Zotero.CachedTypes = function () {
 	
 	this.getAll = this.getTypes = function () {
 		if (!this._typesArray) {
-			throw new Zotero.Exception.UnloadedDataException(
-				Zotero.Utilities.capitalize(this._typeDesc) + " data not yet loaded"
+			throw new Trellis.Exception.UnloadedDataException(
+				Trellis.Utilities.capitalize(this._typeDesc) + " data not yet loaded"
 			);
 		}
 		return this._typesArray;
@@ -162,10 +162,10 @@ Zotero.CachedTypes = function () {
 		}
 		
 		var sql = "INSERT INTO " + this._table + " (" + this._nameCol + ") VALUES (?)";
-		await Zotero.DB.queryAsync(sql, name);
+		await Trellis.DB.queryAsync(sql, name);
 		
 		sql = "SELECT " + this._idCol + " FROM " + this._table + " WHERE " + this._nameCol + "=?";
-		var id = await Zotero.DB.valueQueryAsync(sql, name);
+		var id = await Trellis.DB.valueQueryAsync(sql, name);
 		
 		this._cacheTypeData({
 			id: id,
@@ -185,7 +185,7 @@ Zotero.CachedTypes = function () {
 	 * @return {Promise}
 	 */
 	this._getTypesFromDB = function (where, params) {
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			'SELECT ' + this._idCol + ' AS id, '
 				+ this._nameCol + ' AS name'
 				+ (this._hasCustom ? ', custom' : '')
@@ -215,9 +215,9 @@ Zotero.CachedTypes = function () {
 }
 
 
-Zotero.CreatorTypes = new function () {
-	Zotero.CachedTypes.apply(this, arguments);
-	this.constructor.prototype = new Zotero.CachedTypes();
+Trellis.CreatorTypes = new function () {
+	Trellis.CachedTypes.apply(this, arguments);
+	this.constructor.prototype = new Trellis.CachedTypes();
 	
 	this.isValidForItemType = isValidForItemType;
 	
@@ -238,7 +238,7 @@ Zotero.CreatorTypes = new function () {
 		
 		var sql = "SELECT itemTypeID, creatorTypeID AS id, creatorType AS name, primaryField "
 			+ "FROM itemTypeCreatorTypes NATURAL JOIN creatorTypes";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		_creatorTypesByItemType = {};
 		for (let i=0; i<rows.length; i++) {
 			let row = rows[i];
@@ -257,7 +257,7 @@ Zotero.CreatorTypes = new function () {
 		for (let itemTypeID in _creatorTypesByItemType) {
 			_creatorTypesByItemType[itemTypeID].sort((a, b) => {
 				if (a.primaryField != b.primaryField) return b.primaryField - a.primaryField;
-				return Zotero.localeCompare(a.localizedName, b.localizedName);
+				return Trellis.localeCompare(a.localizedName, b.localizedName);
 			});
 			_creatorTypesByItemType[itemTypeID].forEach((x) => {
 				delete x.primaryField;
@@ -269,7 +269,7 @@ Zotero.CreatorTypes = new function () {
 		_primaryIDCache = {};
 		var sql = "SELECT itemTypeID, creatorTypeID FROM itemTypeCreatorTypes "
 			+ "WHERE primaryField=1";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		for (let i=0; i<rows.length; i++) {
 			let row = rows[i];
 			_primaryIDCache[row.itemTypeID] = row.creatorTypeID;
@@ -309,7 +309,7 @@ Zotero.CreatorTypes = new function () {
 	
 	this.getLocalizedString = function (idOrName) {
 		var name = this.getName(idOrName);
-		return Zotero.Schema.globalSchemaLocale.creatorTypes[name];
+		return Trellis.Schema.globalSchemaLocale.creatorTypes[name];
 	}
 	
 	
@@ -324,7 +324,7 @@ Zotero.CreatorTypes = new function () {
 	
 	this.getPrimaryIDForType = function (itemTypeID) {
 		if (!_primaryIDCache) {
-			throw new Zotero.Exception.UnloadedDataException(
+			throw new Trellis.Exception.UnloadedDataException(
 				"Primary creator types not yet loaded"
 			);
 		}
@@ -338,9 +338,9 @@ Zotero.CreatorTypes = new function () {
 }
 
 
-Zotero.ItemTypes = new function () {
-	Zotero.CachedTypes.apply(this, arguments);
-	this.constructor.prototype = new Zotero.CachedTypes();
+Trellis.ItemTypes = new function () {
+	Trellis.CachedTypes.apply(this, arguments);
+	this.constructor.prototype = new Trellis.CachedTypes();
 	
 	this.customIDOffset = 10000;
 	
@@ -370,7 +370,7 @@ Zotero.ItemTypes = new function () {
 		
 		// Custom labels and icons
 		var sql = "SELECT customItemTypeID AS id, label, icon FROM customItemTypes";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		for (let i=0; i<rows.length; i++) {
 			let row = rows[i];
 			let id = row.id;
@@ -383,7 +383,7 @@ Zotero.ItemTypes = new function () {
 	this.getPrimaryTypes = function () {
 		var names = _primaryTypeNames.concat();
 		
-		var mru = Zotero.Prefs.get('newItemTypeMRU');
+		var mru = Trellis.Prefs.get('newItemTypeMRU');
 		if (mru && mru.length) {
 			// Get types from the MRU list
 			mru = new Set(
@@ -413,7 +413,7 @@ Zotero.ItemTypes = new function () {
 	
 	this.getHiddenTypes = function () {
 		if (!_hiddenTypes) {
-			throw new Zotero.Exception.UnloadedDataException("Hidden item type data not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Hidden item type data not yet loaded");
 		}
 		return _hiddenTypes.concat();
 	}
@@ -430,18 +430,18 @@ Zotero.ItemTypes = new function () {
 			return _customLabels[id];
 		}
 		
-		var label = Zotero.Schema.globalSchemaLocale.itemTypes[typeName];
+		var label = Trellis.Schema.globalSchemaLocale.itemTypes[typeName];
 		if (!label) {
-			Zotero.logError(`Localized string not available for item type '${typeName}'`);
-			label = Zotero.Utilities.Internal.camelToTitleCase(typeName);
+			Trellis.logError(`Localized string not available for item type '${typeName}'`);
+			label = Trellis.Utilities.Internal.camelToTitleCase(typeName);
 		}
 		return label;
 	}
 	
 	this.getImageSrc = function (itemType) {
-		Zotero.debug('WARNING: getImageSrc() is deprecated -- use CSS icons');
+		Trellis.debug('WARNING: getImageSrc() is deprecated -- use CSS icons');
 		
-		var suffix = Zotero.hiDPISuffix;
+		var suffix = Trellis.hiDPISuffix;
 		
 		if (this.isCustom(itemType)) {
 			var id = this.getID(itemType) - this.customIDOffset;
@@ -451,7 +451,7 @@ Zotero.ItemTypes = new function () {
 			return _customImages[id];
 		}
 
-		let isDark = Zotero.getMainWindow()?.matchMedia('(prefers-color-scheme: dark)').matches;
+		let isDark = Trellis.getMainWindow()?.matchMedia('(prefers-color-scheme: dark)').matches;
 		
 		switch (itemType) {
 			// Use treeitem.png
@@ -505,17 +505,17 @@ Zotero.ItemTypes = new function () {
 			case 'videoRecording':
 			case 'webpage':
 				itemType = itemType.replace(/(?<=^|[^A-Z])([A-Z])/g, '-$1').toLowerCase();
-				return "chrome://zotero/skin/item-type/16/" + (isDark ? 'dark' : 'light') + "/" + itemType + suffix + ".svg";
+				return "chrome://trellis/skin/item-type/16/" + (isDark ? 'dark' : 'light') + "/" + itemType + suffix + ".svg";
 		}
 
-		return "chrome://zotero/skin/item-type/16/" + (isDark ? 'dark' : 'light') + "/document" + suffix + ".svg";
+		return "chrome://trellis/skin/item-type/16/" + (isDark ? 'dark' : 'light') + "/document" + suffix + ".svg";
 	}
 }
 
 
-Zotero.FileTypes = new function () {
-	Zotero.CachedTypes.apply(this, arguments);
-	this.constructor.prototype = new Zotero.CachedTypes();
+Trellis.FileTypes = new function () {
+	Trellis.CachedTypes.apply(this, arguments);
+	this.constructor.prototype = new Trellis.CachedTypes();
 	
 	this._typeDesc = 'file type';
 	this._typeDescPlural = 'file types';
@@ -528,14 +528,14 @@ Zotero.FileTypes = new function () {
 	 */
 	this.getIDFromMIMEType = async function (mimeType) {
 		var sql = "SELECT fileTypeID FROM fileTypeMIMETypes WHERE mimeType = ?";
-		return Zotero.DB.valueQueryAsync(sql, [mimeType]);
+		return Trellis.DB.valueQueryAsync(sql, [mimeType]);
 	};
 }
 
 
-Zotero.CharacterSets = new function () {
-	Zotero.CachedTypes.apply(this, arguments);
-	this.constructor.prototype = new Zotero.CachedTypes();
+Trellis.CharacterSets = new function () {
+	Trellis.CachedTypes.apply(this, arguments);
+	this.constructor.prototype = new Trellis.CachedTypes();
 	
 	this._typeDesc = 'character set';
 	this._typeDescPlural = 'character sets';
@@ -552,7 +552,7 @@ Zotero.CharacterSets = new function () {
 	this.toCanonical = function (charset) {
 		let canonical = charsetMap[charset.trim().toLowerCase()];
 		if (!canonical) {
-			Zotero.debug("Unrecognized charset: " + charset);
+			Trellis.debug("Unrecognized charset: " + charset);
 			return false;
 		}
 		return canonical;
@@ -674,9 +674,9 @@ Zotero.CharacterSets = new function () {
 }
 
 
-Zotero.RelationPredicates = new function () {
-	Zotero.CachedTypes.apply(this, arguments);
-	this.constructor.prototype = new Zotero.CachedTypes();
+Trellis.RelationPredicates = new function () {
+	Trellis.CachedTypes.apply(this, arguments);
+	this.constructor.prototype = new Trellis.CachedTypes();
 	
 	this._typeDesc = 'relation predicate';
 	this._typeDescPlural = 'relation predicates';

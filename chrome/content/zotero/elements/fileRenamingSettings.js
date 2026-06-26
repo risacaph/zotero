@@ -3,28 +3,28 @@
 	
 	Copyright © 2026 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 {
-	const { DEFAULT_ATTACHMENT_RENAME_TEMPLATE } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+	const { DEFAULT_ATTACHMENT_RENAME_TEMPLATE } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 	const DEFAULT_EXT = 'pdf';
 	class FileRenameSettings extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
@@ -69,7 +69,7 @@
 					</vbox>
 					<checkbox id="rename-linked-files" class="indented-pref"
 						data-l10n-id="file-renaming-rename-linked"
-						preference="extensions.zotero.autoRenameFiles.linked"
+						preference="extensions.trellis.autoRenameFiles.linked"
 						native="true"
 					/>
 				</groupbox>
@@ -82,8 +82,8 @@
 					<separator class="thin" />
 					<label data-l10n-id="file-renaming-format-instructions-more">
 						<label
-							is="zotero-text-link"
-							href="https://www.zotero.org/support/file_renaming"
+							is="trellis-text-link"
+							href="https://www.trellis.org/support/file_renaming"
 							data-l10n-name="file-renaming-format-help-link"
 						/>
 					</label>	
@@ -230,7 +230,7 @@
 		updatePreview = () => {
 			let [item, ext, attachmentTitle] = this.getActiveItem() ?? [this.mockItem ?? this.makeMockItem(), DEFAULT_EXT, ''];
 			let formatString = this.formatTemplate;
-			let preview = Zotero.Attachments.getFileBaseNameFromItem(item, { formatString, attachmentTitle });
+			let preview = Trellis.Attachments.getFileBaseNameFromItem(item, { formatString, attachmentTitle });
 			this.querySelector('#file-renaming-format-preview').innerText = `${preview}.${ext}`;
 		};
 
@@ -254,7 +254,7 @@
 			this.formatTemplateTextarea.addEventListener("input", this.handleTemplateInput);
 			this.formatTemplateTextarea.addEventListener("blur", this.handleTemplateBlur);
 
-			this._itemsView = Zotero.getActiveZoteroPane()?.itemsView;
+			this._itemsView = Trellis.getActiveTrellisPane()?.itemsView;
 			if (this._itemsView) {
 				this._itemsView.onSelect.addListener(this.updatePreview);
 			}
@@ -294,14 +294,14 @@
 		}
 
 		getActiveItem() {
-			let selectedItem = Zotero.getActiveZoteroPane()?.getSelectedItems()?.[0];
+			let selectedItem = Trellis.getActiveTrellisPane()?.getSelectedItems()?.[0];
 			if (selectedItem) {
 				if (selectedItem.isRegularItem() && !selectedItem.parentKey) {
 					return [selectedItem, DEFAULT_EXT, ''];
 				}
 				if (selectedItem.isFileAttachment() && selectedItem.parentKey) {
-					let ext = Zotero.Attachments.getCorrectFileExtension(selectedItem);
-					let parentItem = Zotero.Items.getByLibraryAndKey(selectedItem.libraryID, selectedItem.parentKey);
+					let ext = Trellis.Attachments.getCorrectFileExtension(selectedItem);
+					let parentItem = Trellis.Items.getByLibraryAndKey(selectedItem.libraryID, selectedItem.parentKey);
 					return [parentItem, ext ?? DEFAULT_EXT, selectedItem.getField('title')];
 				}
 			}
@@ -310,8 +310,8 @@
 		}
 
 		makeMockItem() {
-			this.mockItem = new Zotero.Item('journalArticle');
-			this.mockItem.libraryID = Zotero.Libraries.userLibraryID;
+			this.mockItem = new Trellis.Item('journalArticle');
+			this.mockItem.libraryID = Trellis.Libraries.userLibraryID;
 			this.mockItem.setField('title', 'Example Title: Example Subtitle');
 			this.mockItem.setCreators([
 				{ firstName: 'Jane', lastName: 'Doe', creatorType: 'author' },

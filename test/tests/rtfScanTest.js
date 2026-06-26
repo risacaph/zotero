@@ -1,6 +1,6 @@
 /* global assert, describe, it, before, beforeEach, afterEach, getTestDataDirectory, createDataObject, resetDB */
 
-let { decodeHex, decodeRTF, encodeRTF, parseCitations, processCitations, replaceCitations, UNMAPPED, AMBIGUOUS, MAPPED } = ChromeUtils.importESModule("chrome://zotero/content/modules/rtf.mjs");
+let { decodeHex, decodeRTF, encodeRTF, parseCitations, processCitations, replaceCitations, UNMAPPED, AMBIGUOUS, MAPPED } = ChromeUtils.importESModule("chrome://trellis/content/modules/rtf.mjs");
 
 async function makeItems() {
 	let testItem1 = await createDataObject('item');
@@ -170,11 +170,11 @@ describe("RTF Scan", function () {
 			thisArg: this,
 			skipBundledFiles: true
 		});
-		basicRTF = decodeRTF(await Zotero.File.getContentsAsync(
+		basicRTF = decodeRTF(await Trellis.File.getContentsAsync(
 			OS.Path.join(getTestDataDirectory().path, 'testRTFScanBasic.rtf')
 		));
 
-		advancedRTF = decodeRTF(await Zotero.File.getContentsAsync(
+		advancedRTF = decodeRTF(await Trellis.File.getContentsAsync(
 			OS.Path.join(getTestDataDirectory().path, 'testRTFScanAdvanced.rtf')
 		));
 	});

@@ -3,27 +3,27 @@
     
     Copyright © 2006-2016 Center for History and New Media
                           George Mason University, Fairfax, Virginia, USA
-                          https://zotero.org
+                          https://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Searches = function () {
+Trellis.Searches = function () {
 	this.constructor = null;
 	
 	this._ZDO_object = 'search';
@@ -44,8 +44,8 @@ Zotero.Searches = function () {
 		+ "LEFT JOIN deletedSearches DS ON (O.savedSearchID=DS.savedSearchID)";
 	
 	this.init = async function () {
-		await Zotero.DataObjects.prototype.init.apply(this);
-		await Zotero.SearchConditions.init();
+		await Trellis.DataObjects.prototype.init.apply(this);
+		await Trellis.SearchConditions.init();
 	};
 	
 	
@@ -59,7 +59,7 @@ Zotero.Searches = function () {
 		}
 		
 		// Do proper collation sort
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		searches.sort(function (a, b) {
 			return collation.compareString(1, a.name, b.name);
 		});
@@ -68,20 +68,20 @@ Zotero.Searches = function () {
 	
 	
 	/**
-	 * Returns an array of Zotero.Search objects, ordered by name
+	 * Returns an array of Trellis.Search objects, ordered by name
 	 *
 	 * @param	{Integer}	[libraryID]
 	 */
 	this.getAll = async function (libraryID) {
 		var sql = "SELECT savedSearchID FROM savedSearches WHERE libraryID=?";
-		var ids = await Zotero.DB.columnQueryAsync(sql, libraryID);
+		var ids = await Trellis.DB.columnQueryAsync(sql, libraryID);
 		if (!ids.length) {
 			return []
 		}
 		
 		var searches = this.get(ids);
 		// Do proper collation sort
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		searches.sort(function (a, b) {
 			return collation.compareString(1, a.name, b.name);
 		});
@@ -90,7 +90,7 @@ Zotero.Searches = function () {
 	
 	
 	this.getPrimaryDataSQL = function () {
-		// This should be the same as the query in Zotero.Search.loadPrimaryData(),
+		// This should be the same as the query in Trellis.Search.loadPrimaryData(),
 		// just without a specific savedSearchID
 		return "SELECT "
 			+ Object.keys(this._primaryDataSQLParts).map(key => this._primaryDataSQLParts[key]).join(", ") + " "
@@ -113,11 +113,11 @@ Zotero.Searches = function () {
 		}
 		var sql = "SELECT savedSearchName FROM savedSearches "
 			+ "WHERE libraryID=? AND savedSearchName LIKE ? ESCAPE '\\'";
-		var names = await Zotero.DB.columnQueryAsync(
+		var names = await Trellis.DB.columnQueryAsync(
 			sql,
-			[libraryID, Zotero.DB.escapeSQLExpression(name) + '%']
+			[libraryID, Trellis.DB.escapeSQLExpression(name) + '%']
 		);
-		return Zotero.Utilities.Internal.getNextName(name, names, true);
+		return Trellis.Utilities.Internal.getNextName(name, names, true);
 	};
 	
 	
@@ -146,16 +146,16 @@ Zotero.Searches = function () {
 				let condition = rows[i];
 				
 				// Parse "condition[/mode]"
-				let [conditionName, mode] = Zotero.SearchConditions.parseCondition(condition.condition);
+				let [conditionName, mode] = Trellis.SearchConditions.parseCondition(condition.condition);
 				
 				// Not sure how this can happen, but prevent an error if it does
 				if (condition.value === null) {
 					condition.value = '';
 				}
 				
-				let cond = Zotero.SearchConditions.get(conditionName);
+				let cond = Trellis.SearchConditions.get(conditionName);
 				if (!cond || cond.noLoad) {
-					Zotero.debug("Invalid saved search condition '" + conditionName + "' -- skipping", 2);
+					Trellis.debug("Invalid saved search condition '" + conditionName + "' -- skipping", 2);
 					continue;
 				}
 				
@@ -164,7 +164,7 @@ Zotero.Searches = function () {
 				// TEMP: This can be removed at some point
 				if (conditionName == 'itemTypeID') {
 					conditionName = 'itemType';
-					condition.value = Zotero.ItemTypes.getName(condition.value);
+					condition.value = Trellis.ItemTypes.getName(condition.value);
 				}
 				// Parse old-style collection/savedSearch conditions ('0_ABCD2345' -> 'ABCD2345')
 				else if (conditionName == 'collection' || conditionName == 'savedSearch') {
@@ -186,7 +186,7 @@ Zotero.Searches = function () {
 			search._clearChanged('conditions');
 		}.bind(this);
 		
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -219,7 +219,7 @@ Zotero.Searches = function () {
 		}
 	};
 	
-	Zotero.DataObjects.call(this);
+	Trellis.DataObjects.call(this);
 	
 	return this;
-}.bind(Object.create(Zotero.DataObjects.prototype))();
+}.bind(Object.create(Trellis.DataObjects.prototype))();

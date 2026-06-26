@@ -3,33 +3,33 @@
 
 	Copyright © 2026 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
 
-const { HiddenBrowser } = ChromeUtils.importESModule("chrome://zotero/content/HiddenBrowser.mjs");
+const { HiddenBrowser } = ChromeUtils.importESModule("chrome://trellis/content/HiddenBrowser.mjs");
 
-Zotero.BrowserRequest = {
+Trellis.BrowserRequest = {
 	// Registry of URL patterns that need browser-mediated handling
 	CHALLENGE_URLS: [
 		{
-			match: 'https://zotero-static.s3.amazonaws.com/test-pdf-redirect.html',
+			match: 'https://trellis-static.s3.amazonaws.com/test-pdf-redirect.html',
 			captchaLocator: 'html'
 		},
 		{
@@ -65,7 +65,7 @@ Zotero.BrowserRequest = {
 	 * @returns {object|null}
 	 */
 	getEntryForURL(url) {
-		const unproxiedUrls = Object.keys(Zotero.Proxies.getPotentialProxies(url));
+		const unproxiedUrls = Object.keys(Trellis.Proxies.getPotentialProxies(url));
 		for (let unproxiedUrl of unproxiedUrls) {
 			for (let entry of this.CHALLENGE_URLS) {
 				if (unproxiedUrl.includes(entry.match)) {
@@ -81,7 +81,7 @@ Zotero.BrowserRequest = {
 	 * client-side redirects or cookie-setting challenges to settle.
 	 *
 	 * Cookies acquired by the browser remain in the shared jar keyed on
-	 * userContextId; a subsequent Zotero.HTTP.request using the same ID will
+	 * userContextId; a subsequent Trellis.HTTP.request using the same ID will
 	 * see them.
 	 *
 	 * On timeout, if the page contains the entry's captchaLocator and
@@ -95,7 +95,7 @@ Zotero.BrowserRequest = {
 	 * @returns {Promise<void>}
 	 */
 	async clearChallenge(url, options = {}) {
-		Zotero.debug(`BrowserRequest: Clearing challenge at ${url}`);
+		Trellis.debug(`BrowserRequest: Clearing challenge at ${url}`);
 
 		let { userContextId, entry, allowViewer = false } = options;
 		let successCookie = entry?.successCookie;
@@ -105,9 +105,9 @@ Zotero.BrowserRequest = {
 		let initialCookieValue = successCookie
 			? this._readCookieValue({ ...successCookie, userContextId })
 			: null;
-		// Cloudflare Turnstile rejects the "Zotero/[version]" suffix.
+		// Cloudflare Turnstile rejects the "Trellis/[version]" suffix.
 		// A plain Firefox UA on just this browsing context lets the widget run.
-		let customUserAgent = Zotero.VersionHeader.getPlainFirefoxUA();
+		let customUserAgent = Trellis.VersionHeader.getPlainFirefoxUA();
 
 		// Try the hidden browser first. _loadAndSettle() polls the cookie jar
 		// and resolves as soon as successCookie appears, which may be well
@@ -122,8 +122,8 @@ Zotero.BrowserRequest = {
 			});
 		}
 		catch (e) {
-			Zotero.debug('BrowserRequest: Hidden browser attempt failed');
-			Zotero.logError(e);
+			Trellis.debug('BrowserRequest: Hidden browser attempt failed');
+			Trellis.logError(e);
 		}
 		finally {
 			if (hiddenBrowser) {
@@ -144,7 +144,7 @@ Zotero.BrowserRequest = {
 
 		// Fall back to the viewer: user may need to click a visible Turnstile
 		// widget, after which the cookie lands and we can continue.
-		Zotero.debug(`BrowserRequest: Escalating to viewer for ${url}`);
+		Trellis.debug(`BrowserRequest: Escalating to viewer for ${url}`);
 		if (successCookie) {
 			await this._loadAndWaitForCookieInViewer(url, {
 				userContextId,
@@ -167,14 +167,14 @@ Zotero.BrowserRequest = {
 	 * navigation or change in the DOM.
 	 */
 	async _loadAndWaitForCookieInViewer(url, options) {
-		Zotero.debug(`BrowserRequest: Awaiting user challenge clearance (cookie ${options.successCookie.name}) at ${url}`);
-		const timeout = Zotero.Prefs.get('browserRequest.timeout');
+		Trellis.debug(`BrowserRequest: Awaiting user challenge clearance (cookie ${options.successCookie.name}) at ${url}`);
+		const timeout = Trellis.Prefs.get('browserRequest.timeout');
 		const { successCookie, userContextId, customUserAgent } = options;
 
 		let win, wmListener, pollInterval;
 		let done = false;
-		let cookieDeferred = Zotero.Promise.defer();
-		let closedDeferred = Zotero.Promise.defer();
+		let cookieDeferred = Trellis.Promise.defer();
+		let closedDeferred = Trellis.Promise.defer();
 
 		try {
 			wmListener = this._makeViewerCloseListener(() => {
@@ -182,10 +182,10 @@ Zotero.BrowserRequest = {
 			});
 			Services.wm.addListener(wmListener);
 			await new Promise((resolve) => {
-				win = Zotero.openInViewer(url, { userContextId, customUserAgent });
+				win = Trellis.openInViewer(url, { userContextId, customUserAgent });
 				win.addEventListener('load', resolve);
 			});
-			Zotero.Utilities.Internal.activate(win);
+			Trellis.Utilities.Internal.activate(win);
 
 			pollInterval = this._pollForCookie({
 				successCookie,
@@ -199,7 +199,7 @@ Zotero.BrowserRequest = {
 			await Promise.race([
 				cookieDeferred.promise,
 				closedDeferred.promise,
-				Zotero.Promise.delay(timeout).then(() => {
+				Trellis.Promise.delay(timeout).then(() => {
 					if (!done) {
 						throw new Error(`BrowserRequest: Viewer cookie wait timed out after ${timeout}ms`);
 					}
@@ -230,8 +230,8 @@ Zotero.BrowserRequest = {
 			}
 		}
 		catch (e) {
-			Zotero.debug('BrowserRequest: _readCookieValue() failed');
-			Zotero.logError(e);
+			Trellis.debug('BrowserRequest: _readCookieValue() failed');
+			Trellis.logError(e);
 		}
 		return null;
 	},
@@ -295,14 +295,14 @@ Zotero.BrowserRequest = {
 	 * @returns {Promise<void>}
 	 */
 	async clearChallengeInViewer(url, options) {
-		Zotero.debug(`BrowserRequest: Awaiting user challenge clearance for ${url}`);
-		const onLoadTimeout = Zotero.Prefs.get('browserRequest.onLoadTimeout');
-		const timeout = Zotero.Prefs.get('browserRequest.timeout');
+		Trellis.debug(`BrowserRequest: Awaiting user challenge clearance for ${url}`);
+		const onLoadTimeout = Trellis.Prefs.get('browserRequest.onLoadTimeout');
+		const timeout = Trellis.Prefs.get('browserRequest.timeout');
 
 		let win, browser, wmListener;
 		let cleared = false;
 		let cancelled = false;
-		let clearedDeferred = Zotero.Promise.defer();
+		let clearedDeferred = Trellis.Promise.defer();
 
 		try {
 			wmListener = this._makeViewerCloseListener(() => {
@@ -310,14 +310,14 @@ Zotero.BrowserRequest = {
 			});
 			Services.wm.addListener(wmListener);
 			await new Promise((resolve) => {
-				win = Zotero.openInViewer(url, {
+				win = Trellis.openInViewer(url, {
 					userContextId: options.userContextId,
 					customUserAgent: options.customUserAgent,
 				});
 				win.addEventListener('load', resolve);
 			});
 			browser = win.document.querySelector('browser');
-			Zotero.Utilities.Internal.activate(win);
+			Trellis.Utilities.Internal.activate(win);
 
 			// Poll for the captcha element disappearing, then require the page
 			// to stay stable for onLoadTimeout before we consider it cleared
@@ -331,7 +331,7 @@ Zotero.BrowserRequest = {
 			let sawChallenge = false;
 			await Promise.race([
 				clearedDeferred.promise,
-				Zotero.Promise.delay(timeout).then(() => {
+				Trellis.Promise.delay(timeout).then(() => {
 					if (!cleared) {
 						cancelled = true;
 						throw new Error(`BrowserRequest: Viewer challenge clearance timed out after ${timeout}ms`);
@@ -341,7 +341,7 @@ Zotero.BrowserRequest = {
 					// Set above:
 					// eslint-disable-next-line no-unmodified-loop-condition
 					while (!cleared && !cancelled) {
-						await Zotero.Promise.delay(pollInterval);
+						await Trellis.Promise.delay(pollInterval);
 						let currentLocation = browser.currentURI.spec;
 						if (currentLocation !== lastLocation) {
 							lastLocation = currentLocation;
@@ -390,7 +390,7 @@ Zotero.BrowserRequest = {
 			return await actor.sendQuery('querySelectorMatches', { selector });
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 	},
@@ -417,13 +417,13 @@ Zotero.BrowserRequest = {
 	 * @returns {Promise<void>}
 	 */
 	async _loadAndSettle(hiddenBrowser, url, opts = {}) {
-		const onLoadTimeout = Zotero.Prefs.get('browserRequest.onLoadTimeout');
-		const timeout = Zotero.Prefs.get('browserRequest.timeout');
+		const onLoadTimeout = Trellis.Prefs.get('browserRequest.onLoadTimeout');
+		const timeout = Trellis.Prefs.get('browserRequest.timeout');
 
 		let settled = false;
-		let settleDeferred = Zotero.Promise.defer();
-		let pdfDeferred = Zotero.Promise.defer();
-		let cookieDeferred = Zotero.Promise.defer();
+		let settleDeferred = Trellis.Promise.defer();
+		let pdfDeferred = Trellis.Promise.defer();
+		let cookieDeferred = Trellis.Promise.defer();
 		let pdfFound = false;
 		let pdfHandler;
 
@@ -433,7 +433,7 @@ Zotero.BrowserRequest = {
 				opts.onPDF(blob);
 				pdfDeferred.resolve();
 			});
-			Zotero.MIMETypeHandler.addHandlers('application/pdf', pdfHandler, true);
+			Trellis.MIMETypeHandler.addHandlers('application/pdf', pdfHandler, true);
 		}
 
 		try {
@@ -443,11 +443,11 @@ Zotero.BrowserRequest = {
 				async onLocationChange() {
 					let loc = hiddenBrowser.currentURI.spec;
 					if (currentUrl) {
-						Zotero.debug(`BrowserRequest: A JS redirect occurred to ${loc}`);
+						Trellis.debug(`BrowserRequest: A JS redirect occurred to ${loc}`);
 					}
 					currentUrl = loc;
-					Zotero.debug(`BrowserRequest: Page loaded at ${loc}; waiting ${onLoadTimeout}ms for further JS activity`);
-					await Zotero.Promise.delay(onLoadTimeout);
+					Trellis.debug(`BrowserRequest: Page loaded at ${loc}; waiting ${onLoadTimeout}ms for further JS activity`);
+					await Trellis.Promise.delay(onLoadTimeout);
 					if (currentUrl === loc && !settled && !pdfFound) {
 						settled = true;
 						settleDeferred.resolve();
@@ -463,7 +463,7 @@ Zotero.BrowserRequest = {
 					successCookie: opts.successCookie,
 					userContextId: opts.userContextId,
 					onFound: () => {
-						Zotero.debug(`BrowserRequest: successCookie ${opts.successCookie.name} appeared`);
+						Trellis.debug(`BrowserRequest: successCookie ${opts.successCookie.name} appeared`);
 						cookieDeferred.resolve();
 					}
 				});
@@ -471,7 +471,7 @@ Zotero.BrowserRequest = {
 
 			let races = [
 				settleDeferred.promise,
-				Zotero.Promise.delay(timeout).then(() => {
+				Trellis.Promise.delay(timeout).then(() => {
 					if (!settled && !pdfFound) {
 						throw new Error(`BrowserRequest: Browser request timed out after ${timeout}ms`);
 					}
@@ -492,7 +492,7 @@ Zotero.BrowserRequest = {
 		}
 		finally {
 			if (pdfHandler) {
-				Zotero.MIMETypeHandler.removeHandlers('application/pdf', pdfHandler);
+				Trellis.MIMETypeHandler.removeHandlers('application/pdf', pdfHandler);
 			}
 		}
 	},
@@ -502,7 +502,7 @@ Zotero.BrowserRequest = {
 		let trackedBrowser = browser;
 		return {
 			onStartRequest: function (name, _, channel) {
-				Zotero.debug(`BrowserRequest: Sniffing a PDF loaded at ${name}`);
+				Trellis.debug(`BrowserRequest: Sniffing a PDF loaded at ${name}`);
 				try {
 					channelBrowser = channel.notificationCallbacks.getInterface(Ci.nsILoadContext).topFrameElement;
 				}
@@ -523,11 +523,11 @@ Zotero.BrowserRequest = {
 			},
 			onContent: async (blob, name) => {
 				if (isOurPDF) {
-					Zotero.debug(`BrowserRequest: Found our PDF at ${name}`);
+					Trellis.debug(`BrowserRequest: Found our PDF at ${name}`);
 					onPDFFound(blob);
 					return true;
 				}
-				Zotero.debug(`BrowserRequest: Not our PDF at ${name}`);
+				Trellis.debug(`BrowserRequest: Not our PDF at ${name}`);
 				return false;
 			}
 		};
@@ -540,7 +540,7 @@ Zotero.BrowserRequest = {
 	 * @param {Boolean} [options.shouldDisplayCaptcha=false]
 	 */
 	async downloadPDF(url, path, options = {}) {
-		Zotero.debug(`BrowserRequest: Downloading PDF via hidden browser from ${url}`);
+		Trellis.debug(`BrowserRequest: Downloading PDF via hidden browser from ${url}`);
 
 		let hiddenBrowser;
 		let blob;
@@ -555,17 +555,17 @@ Zotero.BrowserRequest = {
 			if (!blob) {
 				throw new Error('BrowserRequest: Settled without receiving a PDF');
 			}
-			await Zotero.File.putContentsAsync(path, blob);
+			await Trellis.File.putContentsAsync(path, blob);
 		}
 		catch (e) {
 			try {
 				await OS.File.remove(path, { ignoreAbsent: true });
 			}
 			catch (err) {
-				Zotero.logError(err);
+				Trellis.logError(err);
 			}
 			if (options?.shouldDisplayCaptcha) {
-				Zotero.debug(`BrowserRequest: Hidden browser PDF download failed: ${e.message}`);
+				Trellis.debug(`BrowserRequest: Hidden browser PDF download failed: ${e.message}`);
 				const entry = this.getEntryForURL(url);
 				if (entry?.captchaLocator && hiddenBrowser) {
 					let doc;
@@ -589,16 +589,16 @@ Zotero.BrowserRequest = {
 	},
 
 	async downloadPDFViaViewer(url, path, _options) {
-		Zotero.debug(`BrowserRequest: Downloading PDF via viewer for captcha clearing from ${url}`);
+		Trellis.debug(`BrowserRequest: Downloading PDF via viewer for captcha clearing from ${url}`);
 
 		let win, browser, wmListener;
 		let pdfMIMETypeHandler;
 		let pdfFound;
-		let pdfFoundDeferred = Zotero.Promise.defer();
-		const timeout = Zotero.Prefs.get('browserRequest.timeout');
+		let pdfFoundDeferred = Trellis.Promise.defer();
+		const timeout = Trellis.Prefs.get('browserRequest.timeout');
 
-		// As above: Cloudflare Turnstile rejects the "Zotero/[version]" suffix, so strip
-		let customUserAgent = Zotero.VersionHeader.getPlainFirefoxUA();
+		// As above: Cloudflare Turnstile rejects the "Trellis/[version]" suffix, so strip
+		let customUserAgent = Trellis.VersionHeader.getPlainFirefoxUA();
 
 		try {
 			wmListener = this._makeViewerCloseListener(() => {
@@ -606,18 +606,18 @@ Zotero.BrowserRequest = {
 			});
 			Services.wm.addListener(wmListener);
 			await new Promise((resolve) => {
-				win = Zotero.openInViewer(url, { customUserAgent });
+				win = Trellis.openInViewer(url, { customUserAgent });
 				win.addEventListener('load', resolve);
 			});
 			browser = win.document.querySelector('browser');
-			Zotero.Utilities.Internal.activate(win);
+			Trellis.Utilities.Internal.activate(win);
 
 			pdfMIMETypeHandler = this._makePDFMIMETypeHandler(browser, pdfFoundDeferred.resolve);
-			Zotero.MIMETypeHandler.addHandlers('application/pdf', pdfMIMETypeHandler, true);
+			Trellis.MIMETypeHandler.addHandlers('application/pdf', pdfMIMETypeHandler, true);
 
-			Zotero.debug(`BrowserRequest: Awaiting user captcha clearance or timeout after ${timeout}ms`);
+			Trellis.debug(`BrowserRequest: Awaiting user captcha clearance or timeout after ${timeout}ms`);
 			let pdfBlob = await Promise.race([
-				Zotero.Promise.delay(timeout).then(() => {
+				Trellis.Promise.delay(timeout).then(() => {
 					if (!pdfFound) {
 						throw new Error(`BrowserRequest: Viewer PDF download timed out after ${timeout}ms`);
 					}
@@ -625,19 +625,19 @@ Zotero.BrowserRequest = {
 				pdfFoundDeferred.promise
 			]);
 			pdfFound = true;
-			await Zotero.File.putContentsAsync(path, pdfBlob);
+			await Trellis.File.putContentsAsync(path, pdfBlob);
 		}
 		catch (e) {
 			try {
 				await OS.File.remove(path, { ignoreAbsent: true });
 			}
 			catch (err) {
-				Zotero.logError(err);
+				Trellis.logError(err);
 			}
 			throw e;
 		}
 		finally {
-			Zotero.MIMETypeHandler.removeHandlers('application/pdf', pdfMIMETypeHandler);
+			Trellis.MIMETypeHandler.removeHandlers('application/pdf', pdfMIMETypeHandler);
 			Services.wm.removeListener(wmListener);
 			if (win) {
 				win.close();
@@ -648,7 +648,7 @@ Zotero.BrowserRequest = {
 
 // Register hosts that we intercept Cloudflare Turnstile challenges on,
 // so they receive a plain UA everywhere. See comment on
-// Zotero.VersionHeader.registerPlainUAHost().
-for (let host of Zotero.BrowserRequest.PLAIN_UA_HOSTS) {
-	Zotero.VersionHeader.registerPlainUAHost(host);
+// Trellis.VersionHeader.registerPlainUAHost().
+for (let host of Trellis.BrowserRequest.PLAIN_UA_HOSTS) {
+	Trellis.VersionHeader.registerPlainUAHost(host);
 }

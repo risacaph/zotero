@@ -3,27 +3,27 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.History = new function () {
+Trellis.History = new function () {
 	this.begin = begin;
 	this.setAssociatedID = setAssociatedID;
 	this.add = add;
@@ -52,7 +52,7 @@ Zotero.History = new function () {
 	*		'collection-modify', 'collection-delete'...
 	*
 	* id: An id or array of ids that will be passed to
-	* 		Zotero.Notifier.trigger() on an undo or redo
+	* 		Trellis.Notifier.trigger() on an undo or redo
 	**/
 	function begin(event, id){
 		if (_activeID){
@@ -66,7 +66,7 @@ Zotero.History = new function () {
 			this.clearAfter();
 		}
 		
-		Zotero.debug('Beginning history transaction set ' + event);
+		Trellis.debug('Beginning history transaction set ' + event);
 		var sql = "INSERT INTO transactionSets (event, id) VALUES "
 			+ "('" + event + "', ";
 		if (!id){
@@ -81,8 +81,8 @@ Zotero.History = new function () {
 		}
 		sql += ")";
 		
-		Zotero.DB.beginTransaction();
-		_activeID = Zotero.DB.query(sql);
+		Trellis.DB.beginTransaction();
+		_activeID = Trellis.DB.query(sql);
 		_activeEvent = event;
 	}
 	
@@ -92,7 +92,7 @@ Zotero.History = new function () {
 	* 	for use if the ids weren't available at when begin() was called
 	*
 	* id: An id or array of ids that will be passed to
-	* 		Zotero.Notifier.trigger() on an undo or redo
+	* 		Trellis.Notifier.trigger() on an undo or redo
 	**/
 	function setAssociatedID(id){
 		if (!_activeID){
@@ -111,7 +111,7 @@ Zotero.History = new function () {
 			sql += id;
 		}
 		sql += " WHERE transactionSetID=" + _activeID;
-		Zotero.DB.query(sql);
+		Trellis.DB.query(sql);
 	}
 	
 	
@@ -169,8 +169,8 @@ Zotero.History = new function () {
 	* Commit the current transaction set
 	**/
 	function commit(){
-		Zotero.debug('Committing history transaction set ' + _activeEvent);
-		Zotero.DB.commitTransaction();
+		Trellis.debug('Committing history transaction set ' + _activeEvent);
+		Trellis.DB.commitTransaction();
 		_currentID = _activeID;
 		_maxID = _activeID;
 		_activeID = null;
@@ -182,8 +182,8 @@ Zotero.History = new function () {
 	* Cancel the current transaction set
 	**/
 	function cancel(){
-		Zotero.debug('Cancelling history transaction set ' + _activeEvent);
-		Zotero.DB.rollbackTransaction();
+		Trellis.debug('Cancelling history transaction set ' + _activeEvent);
+		Trellis.DB.rollbackTransaction();
 		_activeID = null;
 		_activeEvent = null;
 	}
@@ -199,7 +199,7 @@ Zotero.History = new function () {
 		
 		var sql = "SELECT event FROM transactionSets WHERE transactionSetID="
 			+ _currentID;
-		return Zotero.DB.valueQuery(sql);
+		return Trellis.DB.valueQuery(sql);
 	}
 	
 	
@@ -209,7 +209,7 @@ Zotero.History = new function () {
 	function getNextEvent(){
 		var sql = "SELECT event FROM transactionSets WHERE transactionSetID="
 			+ (_currentID + 1);
-		return Zotero.DB.valueQuery(sql);
+		return Trellis.DB.valueQuery(sql);
 	}
 	
 	
@@ -223,11 +223,11 @@ Zotero.History = new function () {
 		}
 		
 		var id = _currentID;
-		Zotero.debug('Undoing transaction set ' + id);
-		Zotero.DB.beginTransaction();
+		Trellis.debug('Undoing transaction set ' + id);
+		Trellis.DB.beginTransaction();
 		var undone = _do('undo');
 		_currentID--;
-		Zotero.DB.commitTransaction();
+		Trellis.DB.commitTransaction();
 		_reloadAndNotify(id);
 		return true;
 	}
@@ -238,11 +238,11 @@ Zotero.History = new function () {
 	**/
 	function redo(){
 		var id = _currentID + 1;
-		Zotero.debug('Redoing transaction set ' + id);
-		Zotero.DB.beginTransaction();
+		Trellis.debug('Redoing transaction set ' + id);
+		Trellis.DB.beginTransaction();
 		var redone = _do('redo');
 		_currentID++;
-		Zotero.DB.commitTransaction();
+		Trellis.DB.commitTransaction();
 		_reloadAndNotify(id, true);
 		return redone;
 	}
@@ -252,15 +252,15 @@ Zotero.History = new function () {
 	* Clear the entire history
 	**/
 	function clear(){
-		Zotero.DB.beginTransaction();
-		Zotero.DB.query("DELETE FROM transactionSets");
-		Zotero.DB.query("DELETE FROM transactions");
-		Zotero.DB.query("DELETE FROM transactionLog");
+		Trellis.DB.beginTransaction();
+		Trellis.DB.query("DELETE FROM transactionSets");
+		Trellis.DB.query("DELETE FROM transactions");
+		Trellis.DB.query("DELETE FROM transactionLog");
 		_currentID = null;
 		_activeID = null;
 		_activeEvent = null;
 		_maxID = null;
-		Zotero.DB.commitTransaction();
+		Trellis.DB.commitTransaction();
 	}
 	
 	
@@ -268,25 +268,25 @@ Zotero.History = new function () {
 	* Clear all transactions in history after the current one
 	**/
 	function clearAfter(){
-		Zotero.DB.beginTransaction();
-		var min = Zotero.DB.valueQuery("SELECT MIN(transactionID) FROM "
+		Trellis.DB.beginTransaction();
+		var min = Trellis.DB.valueQuery("SELECT MIN(transactionID) FROM "
 			+ "transactions WHERE transactionSetID=" + (_currentID + 1));
 		
 		if (!min){
-			Zotero.DB.commitTransaction();
+			Trellis.DB.commitTransaction();
 			return;
 		}
 		
-		Zotero.DB.query("DELETE FROM transactionLog "
+		Trellis.DB.query("DELETE FROM transactionLog "
 			+ "WHERE transactionID>=" + min);
-		Zotero.DB.query("DELETE FROM transactions "
+		Trellis.DB.query("DELETE FROM transactions "
 			+ "WHERE transactionID>=" + min);
-		Zotero.DB.query("DELETE FROM transactionSets "
+		Trellis.DB.query("DELETE FROM transactionSets "
 			+ "WHERE transactionSetID>" + _currentID);
 		
 		_maxID = _currentID;
 		_activeID = null;
-		Zotero.DB.commitTransaction();
+		Trellis.DB.commitTransaction();
 		return;
 	}
 	
@@ -312,7 +312,7 @@ Zotero.History = new function () {
 			+ "VALUES (" + _activeID + ", '" + contextString
 			+ "', '" + action + "')";
 			
-		var transactionID = Zotero.DB.query(sql);
+		var transactionID = Trellis.DB.query(sql);
 		
 		switch (action){
 			case 'add':
@@ -324,24 +324,24 @@ Zotero.History = new function () {
 				if (field){
 					var sql = "INSERT INTO transactionLog SELECT " + transactionID
 						+ ", '" + field + "', " + field + fromClause;
-					Zotero.DB.query(sql);
+					Trellis.DB.query(sql);
 					break;
 				}
 				// Fall through if no field specified and save all
 			case 'remove':
-				var cols = Zotero.DB.getColumns(table);
+				var cols = Trellis.DB.getColumns(table);
 				for (var i in cols){
 					// If column is not part of the key, log it
 					if (!context['keys'].indexOf(cols[i]) === -1){
 						var sql = "INSERT INTO transactionLog "
 							+ "SELECT " + transactionID + ", '" + cols[i]
 							+ "', " + cols[i] + fromClause;
-						Zotero.DB.query(sql);
+						Trellis.DB.query(sql);
 					}
 				}
 				break;
 			default:
-				Zotero.DB.rollbackTransaction();
+				Trellis.DB.rollbackTransaction();
 				throw("Invalid history action '" + action + "'");
 		}
 	}
@@ -359,7 +359,7 @@ Zotero.History = new function () {
 		
 		var sql = "SELECT transactionID, context, action FROM transactions "
 			+ "WHERE transactionSetID=" + id;
-		var transactions = Zotero.DB.query(sql);
+		var transactions = Trellis.DB.query(sql);
 		
 		if (!transactions){
 			throw('Transaction set not found for '
@@ -387,31 +387,31 @@ Zotero.History = new function () {
 					var fromClause = _contextToSQLFrom(context);
 					
 					// First, store the row we're about to delete for later redo
-					var cols = Zotero.DB.getColumns(context['table']);
+					var cols = Trellis.DB.getColumns(context['table']);
 					for (var i in cols){
 						// If column is not part of the key, log it
 						if (!context['keys'].indexOf(cols[i]) === -1){
 							var sql = "INSERT INTO transactionLog "
 								+ "SELECT " + transactionID + ", '" + cols[i]
 								+ "', " + cols[i] + fromClause;
-							Zotero.DB.query(sql);
+							Trellis.DB.query(sql);
 						}
 					}
 					
 					// And delete the row
 					var sql = "DELETE" + fromClause;
-					Zotero.DB.query(sql);
+					Trellis.DB.query(sql);
 					break;
 					
 				case 'modify':
 					// Retrieve old values
 					var sql = "SELECT field, value FROM transactionLog "
 						+ "WHERE transactionID=" + transactionID;
-					var oldFieldValues = Zotero.DB.query(sql);
+					var oldFieldValues = Trellis.DB.query(sql);
 					
 					// Retrieve new values
 					var sql = "SELECT *" + _contextToSQLFrom(context);
-					var newValues = Zotero.DB.rowQuery(sql);
+					var newValues = Trellis.DB.rowQuery(sql);
 					
 					// Update row with old values
 					var sql = "UPDATE " + context['table'] + " SET ";
@@ -421,14 +421,14 @@ Zotero.History = new function () {
 						values.push(oldFieldValues[i]['value']);
 					}
 					sql = sql.substr(0, sql.length-2) + _contextToSQLWhere(context);
-					Zotero.DB.query(sql, values);
+					Trellis.DB.query(sql, values);
 					
 					// Update log with new values for later redo
 					for (var i in newValues){
 						if (context['keys'].indexOf(i) === -1){
 							var sql = "UPDATE transactionLog SET "
 								+ "value=? WHERE transactionID=? AND field=?";
-							Zotero.DB.query(sql, [i, newValues[i], transactionID]);
+							Trellis.DB.query(sql, [i, newValues[i], transactionID]);
 						}
 					}
 					break;
@@ -437,7 +437,7 @@ Zotero.History = new function () {
 					// Retrieve old values
 					var sql = "SELECT field, value FROM transactionLog "
 						+ "WHERE transactionID=" + transactionID;
-					var oldFieldValues = Zotero.DB.query(sql);
+					var oldFieldValues = Trellis.DB.query(sql);
 					
 					// Add key to parameters
 					var fields = [], values = [], marks = [];
@@ -457,12 +457,12 @@ Zotero.History = new function () {
 					// Insert old values into table
 					var sql = "INSERT INTO " + context['table'] + "("
 						+ fields.join() + ") VALUES (" + marks.join() + ")";
-					Zotero.DB.query(sql, values);
+					Trellis.DB.query(sql, values);
 					
 					// Delete restored data from transactionLog
 					var sql = "DELETE FROM transactionLog WHERE transactionID="
 						+ transactionID;
-					Zotero.DB.query(sql);
+					Trellis.DB.query(sql);
 					break;
 			}
 		}
@@ -506,7 +506,7 @@ Zotero.History = new function () {
 	function _getSetData(transactionSetID){
 		var sql = "SELECT event, id FROM transactionSets WHERE transactionSetID="
 			+ transactionSetID;
-		return Zotero.DB.rowQuery(sql);
+		return Trellis.DB.rowQuery(sql);
 	}
 	
 	
@@ -525,10 +525,10 @@ Zotero.History = new function () {
 		}
 		switch (eventParts[1]){
 			case 'item':
-				Zotero.Items.reload(data['id']);
+				Trellis.Items.reload(data['id']);
 				break;
 		}
 		
-		Zotero.Notifier.trigger(eventParts[0], eventParts[1], data['id']);
+		Trellis.Notifier.trigger(eventParts[0], eventParts[1], data['id']);
 	}
 }

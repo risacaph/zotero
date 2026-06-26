@@ -251,12 +251,12 @@ def esmify(path=None, convert=False, imports=False, prefix=""):
          files to use new APIs
 
     Example 1:
-      # Convert all JSM files inside `chrome/content/zotero/xpcom` directory,
+      # Convert all JSM files inside `chrome/content/trellis/xpcom` directory,
       # and replace all references for ESM-ified files in the entire tree to use
       # new APIs
 
-      $ python3 scripts/migrate-fx140/migrate.py esmify --convert chrome/content/zotero/xpcom
-      $ python3 scripts/migrate-fx140/migrate.py esmify --imports . --prefix=chrome/content/zotero/xpcom
+      $ python3 scripts/migrate-fx140/migrate.py esmify --convert chrome/content/trellis/xpcom
+      $ python3 scripts/migrate-fx140/migrate.py esmify --imports . --prefix=chrome/content/trellis/xpcom
 
     Example 2:
       # Convert all JSM files inside `chrome` directory, and replace all
@@ -289,7 +289,7 @@ def esmify(path=None, convert=False, imports=False, prefix=""):
         vcs_utils = GitUtils()
     else:
         error(
-            "This script needs to be run inside a zotero-client Git clone."
+            "This script needs to be run inside a trellis-client Git clone."
         )
         return 1
 
@@ -462,7 +462,7 @@ def asyncify(path=None):
         vcs_utils = GitUtils()
     else:
         error(
-            "This script needs to be run inside a zotero-client Git clone."
+            "This script needs to be run inside a trellis-client Git clone."
         )
         return 1
 
@@ -536,7 +536,7 @@ def verify_path(command_context, path):
         return False
 
     if path.is_absolute():
-        error("Path must be a relative path from zotero-client checkout.")
+        error("Path must be a relative path from trellis-client checkout.")
         return False
 
     return True
@@ -879,13 +879,13 @@ def eslint_fix(command_context, files):
         remaining = remaining[max_files:]
 
         cmd = args + chunk
-        # Don't check status code or print output -- zotero-client has many unfixable errors
+        # Don't check status code or print output -- trellis-client has many unfixable errors
         subprocess.run(cmd, stdout=subprocess.DEVNULL)
 
     info(f"{len(remaining)} files remaining")
     chunk = remaining
     cmd = args + chunk
-    # Don't check status code or print output -- zotero-client has many unfixable errors
+    # Don't check status code or print output -- trellis-client has many unfixable errors
     subprocess.run(cmd, stdout=subprocess.DEVNULL)
 
 

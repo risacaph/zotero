@@ -7,7 +7,7 @@ const exec = util.promisify(require('child_process').exec);
 const { getSignatures, writeSignatures, onSuccess, onError } = require('./utils');
 const { buildsURL } = require('./config');
 
-async function getZoteroNoteEditor(signatures) {
+async function getTrellisNoteEditor(signatures) {
 	const t1 = Date.now();
 
 	const modulePath = path.join(__dirname, '..', 'note-editor');
@@ -29,17 +29,17 @@ async function getZoteroNoteEditor(signatures) {
 			await exec(
 				`cd ${tmpDir}`
 				+ ` && (test -f ${filename} || curl -f ${url} -o ${filename})`
-				+ ` && unzip ${filename} zotero/* -d ${targetDir}`
-				+ ` && mv ${path.join(targetDir, 'zotero', '*')} ${targetDir}`
+				+ ` && unzip ${filename} trellis/* -d ${targetDir}`
+				+ ` && mv ${path.join(targetDir, 'trellis', '*')} ${targetDir}`
 			);
 
-			await fs.remove(path.join(targetDir, 'zotero'));
+			await fs.remove(path.join(targetDir, 'trellis'));
 		}
 		catch (e) {
 			console.error(e);
 			await exec('npm ci', { cwd: modulePath });
 			await exec('npm run build', { cwd: modulePath });
-			await fs.copy(path.join(modulePath, 'build', 'zotero'), targetDir);
+			await fs.copy(path.join(modulePath, 'build', 'trellis'), targetDir);
 		}
 		signatures['note-editor'] = { hash };
 	}
@@ -54,13 +54,13 @@ async function getZoteroNoteEditor(signatures) {
 	};
 }
 
-module.exports = getZoteroNoteEditor;
+module.exports = getTrellisNoteEditor;
 
 if (require.main === module) {
 	(async () => {
 		try {
 			const signatures = await getSignatures();
-			onSuccess(await getZoteroNoteEditor(signatures));
+			onSuccess(await getTrellisNoteEditor(signatures));
 			await writeSignatures(signatures);
 		}
 		catch (err) {

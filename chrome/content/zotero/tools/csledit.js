@@ -3,44 +3,44 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
-var Zotero_CSL_Editor = new function () {
+var Trellis_CSL_Editor = new function () {
 	let monaco, editor;
 
 	this.init = async function () {
-		await Zotero.Schema.schemaUpdatePromise;
+		await Trellis.Schema.schemaUpdatePromise;
 
 		const isDarkMQL = window.matchMedia('(prefers-color-scheme: dark)');
 		
-		Zotero.Styles.populateLocaleList(document.getElementById("locale-menu"));
+		Trellis.Styles.populateLocaleList(document.getElementById("locale-menu"));
 		
-		var cslList = document.getElementById('zotero-csl-list');
+		var cslList = document.getElementById('trellis-csl-list');
 		cslList.removeAllItems();
 		
-		var lastStyle = Zotero.Prefs.get('export.lastStyle');
+		var lastStyle = Trellis.Prefs.get('export.lastStyle');
 		
-		var styles = Zotero.Styles.getVisible();
+		var styles = Trellis.Styles.getVisible();
 		var currentStyle = null;
 		for (let style of styles) {
 			if (style.source) {
@@ -53,15 +53,15 @@ var Zotero_CSL_Editor = new function () {
 			}
 		}
 		
-		var pageList = document.getElementById('zotero-csl-page-type');
-		var locators = Zotero.Cite.labels;
+		var pageList = document.getElementById('trellis-csl-page-type');
+		var locators = Trellis.Cite.labels;
 		for (let locator of locators) {
-			pageList.appendItem(Zotero.Cite.getLocatorString(locator), locator);
+			pageList.appendItem(Trellis.Cite.getLocatorString(locator), locator);
 		}
 		
 		pageList.selectedIndex = 0;
 
-		let editorWin = document.getElementById("zotero-csl-editor-iframe").contentWindow;
+		let editorWin = document.getElementById("trellis-csl-editor-iframe").contentWindow;
 		let { monaco: _monaco, editor: _editor } = await editorWin.loadMonaco({
 			language: 'xml',
 			theme: isDarkMQL.matches ? 'vs-dark' : 'vs-light',
@@ -74,7 +74,7 @@ var Zotero_CSL_Editor = new function () {
 		editor.getModel().onDidChangeContent(this.onStyleModifiedDebounced);
 
 		if (currentStyle) {
-			// Call asynchronously, see note in Zotero.Styles
+			// Call asynchronously, see note in Trellis.Styles
 			window.setTimeout(this.onStyleSelected.bind(this, currentStyle.styleID), 1);
 		}
 
@@ -85,12 +85,12 @@ var Zotero_CSL_Editor = new function () {
 	};
 	
 	this.onStyleSelected = function (styleID) {
-		Zotero.Prefs.set('export.lastStyle', styleID);
-		let style = Zotero.Styles.get(styleID);
-		Zotero.Styles.updateLocaleList(
+		Trellis.Prefs.set('export.lastStyle', styleID);
+		let style = Trellis.Styles.get(styleID);
+		Trellis.Styles.updateLocaleList(
 			document.getElementById("locale-menu"),
 			style,
-			Zotero.Prefs.get('export.lastLocale')
+			Trellis.Prefs.get('export.lastLocale')
 		);
 		
 		this.loadCSL(style.styleID);
@@ -100,7 +100,7 @@ var Zotero_CSL_Editor = new function () {
 	this.save = async function () {
 		var style = editor.getValue();
 		var fp = new FilePicker();
-		fp.init(window, Zotero.getString('styles.editor.save'), fp.modeSave);
+		fp.init(window, Trellis.getString('styles.editor.save'), fp.modeSave);
 		fp.appendFilter("Citation Style Language", "*.csl");
 		//get the filename from the id; we could consider doing even more here like creating the id from filename.
 		var parser = new DOMParser();
@@ -116,25 +116,25 @@ var Zotero_CSL_Editor = new function () {
 		var rv = await fp.show();
 		if (rv == fp.returnOK || rv == fp.returnReplace) {
 			let outputFile = fp.file;
-			Zotero.File.putContentsAsync(outputFile, style);
+			Trellis.File.putContentsAsync(outputFile, style);
 		}
 	};
 	
 	this.loadCSL = function (cslID) {
-		var style = Zotero.Styles.get(cslID);
+		var style = Trellis.Styles.get(cslID);
 		editor.setValue(style.getXML());
-		document.getElementById('zotero-csl-list').value = cslID;
+		document.getElementById('trellis-csl-list').value = cslID;
 	};
 	
 	this.loadStyleFromEditor = function () {
 		var styleObject;
 		try {
-			styleObject = new Zotero.Style(
+			styleObject = new Trellis.Style(
 				editor.getValue()
 			);
 		}
 		catch (e) {
-			this.updateIframe(Zotero.getString('styles.editor.warning.parseError') + '<div>' + e + '</div>', 'error');
+			this.updateIframe(Trellis.getString('styles.editor.warning.parseError') + '<div>' + e + '</div>', 'error');
 			throw e;
 		}
 		
@@ -143,32 +143,32 @@ var Zotero_CSL_Editor = new function () {
 	
 	this.onStyleModified = function () {
 		let xml = editor.getValue();
-		Zotero.Styles.validate(xml).then(
+		Trellis.Styles.validate(xml).then(
 			() => this.updateMarkers(''),
 			rawErrors => this.updateMarkers(rawErrors)
 		);
-		let cslList = document.getElementById('zotero-csl-list');
-		let savedStyle = Zotero.Styles.get(cslList.value);
+		let cslList = document.getElementById('trellis-csl-list');
+		let savedStyle = Trellis.Styles.get(cslList.value);
 		if (!savedStyle || xml !== savedStyle?.getXML()) {
 			cslList.selectedIndex = -1;
 		}
 		
 		let styleObject = this.loadStyleFromEditor();
 		
-		Zotero.Styles.updateLocaleList(
+		Trellis.Styles.updateLocaleList(
 			document.getElementById("locale-menu"),
 			styleObject,
-			Zotero.Prefs.get('export.lastLocale')
+			Trellis.Prefs.get('export.lastLocale')
 		);
-		Zotero_CSL_Editor.generateBibliography(styleObject);
+		Trellis_CSL_Editor.generateBibliography(styleObject);
 	};
 	
-	this.onStyleModifiedDebounced = Zotero.Utilities.debounce(this.onStyleModified.bind(this), 250);
+	this.onStyleModifiedDebounced = Trellis.Utilities.debounce(this.onStyleModified.bind(this), 250);
 	
 	this.generateBibliography = function (style = this.loadStyleFromEditor()) {
-		var items = Zotero.getActiveZoteroPane().getSelectedItems();
+		var items = Trellis.getActiveTrellisPane().getSelectedItems();
 		if (items.length == 0) {
-			this.updateIframe(Zotero.getString('styles.editor.warning.noItems'), 'warning');
+			this.updateIframe(Trellis.getString('styles.editor.warning.noItems'), 'warning');
 			return;
 		}
 		
@@ -178,7 +178,7 @@ var Zotero_CSL_Editor = new function () {
 			styleEngine = style.getCiteProc(style.locale || selectedLocale, 'html');
 		}
 		catch (e) {
-			this.updateIframe(Zotero.getString('styles.editor.warning.parseError') + '<div>' + e + '</div>');
+			this.updateIframe(Trellis.getString('styles.editor.warning.parseError') + '<div>' + e + '</div>');
 			throw e;
 		}
 		
@@ -198,9 +198,9 @@ var Zotero_CSL_Editor = new function () {
 		// Generate single citations
 		var author = document.getElementById("preview-suppress-author").checked;
 		var search = document.getElementById('preview-pages');
-		var loc = document.getElementById('zotero-csl-page-type');
-		var pos = document.getElementById('zotero-ref-position').selectedItem.value;
-		var citations = '<h3>' + Zotero.getString('styles.editor.output.individualCitations') + '</h3>';
+		var loc = document.getElementById('trellis-csl-page-type');
+		var pos = document.getElementById('trellis-ref-position').selectedItem.value;
+		var citations = '<h3>' + Trellis.getString('styles.editor.output.individualCitations') + '</h3>';
 		for (let i = 0; i < citation.citationItems.length; i++) {
 			citation.citationItems[i]['suppress-author'] = author;
 			if (search.value !== '') {
@@ -220,24 +220,24 @@ var Zotero_CSL_Editor = new function () {
 		}
 		
 		try {
-			var multCitations = '<hr><h3>' + Zotero.getString('styles.editor.output.singleCitation') + '</h3>'
+			var multCitations = '<hr><h3>' + Trellis.getString('styles.editor.output.singleCitation') + '</h3>'
 				+ styleEngine.previewCitationCluster(citation, [], [], "html");
 
 			// Generate bibliography
 			styleEngine.updateItems(itemIds);
-			var bibliography = '<hr/><h3>' + Zotero.getString('styles.bibliography') + '</h3>'
-				+ Zotero.Cite.makeFormattedBibliography(styleEngine, "html");
+			var bibliography = '<hr/><h3>' + Trellis.getString('styles.bibliography') + '</h3>'
+				+ Trellis.Cite.makeFormattedBibliography(styleEngine, "html");
 			
 			this.updateIframe(citations + multCitations + bibliography);
 		}
 		catch (e) {
-			this.updateIframe(Zotero.getString('styles.editor.warning.renderError') + '<div>' + e + '</div>', 'error');
+			this.updateIframe(Trellis.getString('styles.editor.warning.renderError') + '<div>' + e + '</div>', 'error');
 			throw e;
 		}
 		styleEngine.free();
 	};
 
-	this.generateBibliographyDebounced = Zotero.Utilities.debounce(this.generateBibliography, 250);
+	this.generateBibliographyDebounced = Trellis.Utilities.debounce(this.generateBibliography, 250);
 
 	this.updateMarkers = function (rawErrors) {
 		let model = editor.getModel();
@@ -263,18 +263,18 @@ var Zotero_CSL_Editor = new function () {
 
 	this.updateIframe = function (content, containerClass = 'preview') {
 		const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		let iframe = document.getElementById('zotero-csl-preview-box');
+		let iframe = document.getElementById('trellis-csl-preview-box');
 		iframe.contentDocument.documentElement.innerHTML = `<html>
 		<head>
 			<title></title>
-			<link rel="stylesheet" href="chrome://zotero-platform/content/zotero.css">
+			<link rel="stylesheet" href="chrome://trellis-platform/content/trellis.css">
 			<style>
 				html {
 					color-scheme: ${isDarkMode ? "dark" : "light"};
 				}
 			</style>
 		</head>
-		<body id="csl-edit-preview"><div class="${containerClass} zotero-dialog">${content}</div></body>
+		<body id="csl-edit-preview"><div class="${containerClass} trellis-dialog">${content}</div></body>
 		</html>`;
 	};
 }();

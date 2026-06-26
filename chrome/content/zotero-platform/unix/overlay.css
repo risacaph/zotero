@@ -16,9 +16,9 @@ tab:where([visuallyselected="true"]) {
 }
 
 /* Fixes misc Ubuntu 16.10 rendering issue fixes. */
-#zotero-prefs menulist dropmarker{
+#trellis-prefs menulist dropmarker{
 	width: 30px;
 }
-#zotero-prefs .numberbox-input-box{
+#trellis-prefs .numberbox-input-box{
 	-moz-appearance: textfield;
 }

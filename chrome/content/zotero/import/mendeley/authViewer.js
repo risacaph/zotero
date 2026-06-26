@@ -1,9 +1,9 @@
-/* eslint camelcase: ["error", {allow: ["Zotero_File_Interface"]} ] */
-/* global Zotero_File_Interface: false */
+/* eslint camelcase: ["error", {allow: ["Trellis_File_Interface"]} ] */
+/* global Trellis_File_Interface: false */
 
-Services.scriptloader.loadSubScript("chrome://zotero/content/fileInterface.js", window);
+Services.scriptloader.loadSubScript("chrome://trellis/content/fileInterface.js", window);
 const { E10SUtils } = ChromeUtils.importESModule("resource://gre/modules/E10SUtils.sys.mjs");
-const URI = `https://api.mendeley.com/oauth/authorize?client_id=5907&redirect_uri=https%3A%2F%2Fzotero-static.s3.amazonaws.com%2Fmendeley_oauth_redirect.html&response_type=code&state=&scope=all`;
+const URI = `https://api.mendeley.com/oauth/authorize?client_id=5907&redirect_uri=https%3A%2F%2Ftrellis-static.s3.amazonaws.com%2Fmendeley_oauth_redirect.html&response_type=code&state=&scope=all`;
 var startTime;
 
 const tryExtractAuthCode = (browser) => {
@@ -16,7 +16,7 @@ const clearCookies = (since) => {
 	const cookieManager = Cc["@mozilla.org/cookiemanager;1"].getService(Ci.nsICookieManager);
 	const sinceμs = since * 1000;
 	const cookiesSince = cookieManager.getCookiesSince(sinceμs);
-	Zotero.debug(`Deleting ${cookiesSince.length} cookies created during Mendeley Auth (last ${(Date.now() - since)}ms)`);
+	Trellis.debug(`Deleting ${cookiesSince.length} cookies created during Mendeley Auth (last ${(Date.now() - since)}ms)`);
 	cookieManager.removeAllSince(sinceμs);
 };
 
@@ -39,7 +39,7 @@ window.addEventListener("load", () => {
 		const mendeleyCode = tryExtractAuthCode(browser);
 		if (mendeleyCode) {
 			window.close();
-			Zotero_File_Interface.showImportWizard({ mendeleyCode });
+			Trellis_File_Interface.showImportWizard({ mendeleyCode });
 		}
 		document.title = browser.contentTitle;
 	});

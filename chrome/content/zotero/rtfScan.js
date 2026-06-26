@@ -1,25 +1,25 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
 import ReactDOM from 'react-dom';
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
-import VirtualizedTable from 'zotero/components/virtualized-table';
-import { getCSSIcon } from 'zotero/components/icons';
-import { removeKeys } from 'zotero/modules/immutable';
-import { decodeRTF, encodeRTF, parseCitations, processCitations, replaceCitations, UNMAPPED, AMBIGUOUS, MAPPED } from 'zotero/modules/rtf.mjs';
+import VirtualizedTable from 'trellis/components/virtualized-table';
+import { getCSSIcon } from 'trellis/components/icons';
+import { removeKeys } from 'trellis/modules/immutable';
+import { decodeRTF, encodeRTF, parseCitations, processCitations, replaceCitations, UNMAPPED, AMBIGUOUS, MAPPED } from 'trellis/modules/rtf.mjs';
 
-Services.scriptloader.loadSubScript('chrome://zotero/content/elements/styleConfigurator.js', this);
+Services.scriptloader.loadSubScript('chrome://trellis/content/elements/styleConfigurator.js', this);
 
 
 const columns = [
-	{ dataKey: 'rtf', label: "zotero.rtfScan.citation.label", primary: true, flex: 4 },
-	{ dataKey: 'item', label: "zotero.rtfScan.itemName.label", flex: 5 },
+	{ dataKey: 'rtf', label: "trellis.rtfScan.citation.label", primary: true, flex: 4 },
+	{ dataKey: 'item', label: "trellis.rtfScan.itemName.label", flex: 5 },
 	{ dataKey: 'action', label: "", fixedWidth: true, width: "32px" },
 ];
 
 const initialRows = [
-	{ id: 'unmapped', rtf: Zotero.Intl.strings['zotero.rtfScan.unmappedCitations.label'], collapsed: false },
-	{ id: 'ambiguous', rtf: Zotero.Intl.strings['zotero.rtfScan.ambiguousCitations.label'], collapsed: false },
-	{ id: 'mapped', rtf: Zotero.Intl.strings['zotero.rtfScan.mappedCitations.label'], collapsed: false },
+	{ id: 'unmapped', rtf: Trellis.Intl.strings['trellis.rtfScan.unmappedCitations.label'], collapsed: false },
+	{ id: 'ambiguous', rtf: Trellis.Intl.strings['trellis.rtfScan.ambiguousCitations.label'], collapsed: false },
+	{ id: 'mapped', rtf: Trellis.Intl.strings['trellis.rtfScan.mappedCitations.label'], collapsed: false },
 ];
 Object.freeze(initialRows);
 
@@ -32,7 +32,7 @@ const initialRowMap = initialRows.reduce((aggr, row, index) => {
 Object.freeze(initialRowMap);
 
 
-const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
+const Trellis_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 	wizard: null,
 	inputFile: null,
 	outputFile: null,
@@ -89,15 +89,15 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 			/>
 		));
 
-		const lastInputFile = Zotero.Prefs.get("rtfScan.lastInputFile");
+		const lastInputFile = Trellis.Prefs.get("rtfScan.lastInputFile");
 		if (lastInputFile) {
 			document.getElementById('input-path').value = lastInputFile;
-			this.inputFile = Zotero.File.pathToFile(lastInputFile);
+			this.inputFile = Trellis.File.pathToFile(lastInputFile);
 		}
-		const lastOutputFile = Zotero.Prefs.get("rtfScan.lastOutputFile");
+		const lastOutputFile = Trellis.Prefs.get("rtfScan.lastOutputFile");
 		if (lastOutputFile) {
 			document.getElementById('output-path').value = lastOutputFile;
-			this.outputFile = Zotero.File.pathToFile(lastOutputFile);
+			this.outputFile = Trellis.File.pathToFile(lastOutputFile);
 		}
 		
 		// wizard.shadowRoot content isn't exposed to our css
@@ -114,13 +114,13 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 		}
 		ev.stopPropagation();
 		const fp = new FilePicker();
-		fp.init(window, Zotero.getString("rtfScan.openTitle"), fp.modeOpen);
+		fp.init(window, Trellis.getString("rtfScan.openTitle"), fp.modeOpen);
 		fp.appendFilters(fp.filterAll);
-		fp.appendFilter(Zotero.getString("rtfScan.rtf"), "*.rtf");
+		fp.appendFilter(Trellis.getString("rtfScan.rtf"), "*.rtf");
 		const rv = await fp.show();
 		
 		if (rv == fp.returnOK || rv == fp.returnReplace) {
-			this.inputFile = Zotero.File.pathToFile(fp.file);
+			this.inputFile = Trellis.File.pathToFile(fp.file);
 			this.updatePath();
 		}
 	},
@@ -131,15 +131,15 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 		}
 		ev.stopPropagation();
 		const fp = new FilePicker();
-		fp.init(window, Zotero.getString("rtfScan.saveTitle"), fp.modeSave);
-		fp.appendFilter(Zotero.getString("rtfScan.rtf"), "*.rtf");
+		fp.init(window, Trellis.getString("rtfScan.saveTitle"), fp.modeSave);
+		fp.appendFilter(Trellis.getString("rtfScan.rtf"), "*.rtf");
 		if (this.inputFile) {
 			let leafName = this.inputFile.leafName;
 			let dotIndex = leafName.lastIndexOf(".");
 			if (dotIndex !== -1) {
 				leafName = leafName.substr(0, dotIndex);
 			}
-			fp.defaultString = leafName + " " + Zotero.getString("rtfScan.scannedFileSuffix") + ".rtf";
+			fp.defaultString = leafName + " " + Trellis.getString("rtfScan.scannedFileSuffix") + ".rtf";
 		}
 		else {
 			fp.defaultString = "Untitled.rtf";
@@ -148,7 +148,7 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 		var rv = await fp.show();
 
 		if (rv == fp.returnOK || rv == fp.returnReplace) {
-			this.outputFile = Zotero.File.pathToFile(fp.file);
+			this.outputFile = Trellis.File.pathToFile(fp.file);
 			this.updatePath();
 		}
 	},
@@ -159,8 +159,8 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 	},
 
 	onIntroAdvanced() {
-		Zotero.Prefs.set("rtfScan.lastInputFile", this.inputFile.path);
-		Zotero.Prefs.set("rtfScan.lastOutputFile", this.outputFile.path);
+		Trellis.Prefs.set("rtfScan.lastInputFile", this.inputFile.path);
+		Trellis.Prefs.set("rtfScan.lastOutputFile", this.outputFile.path);
 	},
 
 	async onScanPageShow() {
@@ -176,8 +176,8 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 			this.wizard.advance();
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug(e);
+			Trellis.logError(e);
+			Trellis.debug(e);
 		}
 	},
 
@@ -195,7 +195,7 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 			locale: styleConfigurator.locale,
 			displayAs: styleConfigurator.displayAs
 		};
-		Zotero.Prefs.set("export.lastStyle", this.styleConfig.style);
+		Trellis.Prefs.set("export.lastStyle", this.styleConfig.style);
 	},
 
 	onCitationsPageShow() {
@@ -283,11 +283,11 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 				io.select = this.citationItemIDs[citation][0];
 			}
 
-			window.openDialog('chrome://zotero/content/selectItemsDialog.xhtml', '', 'chrome,modal', io);
+			window.openDialog('chrome://trellis/content/selectItemsDialog.xhtml', '', 'chrome,modal', io);
 
 			if (io.dataOut && io.dataOut.length) {
 				var selectedItemID = io.dataOut[0];
-				var selectedItem = Zotero.Items.get(selectedItemID);
+				var selectedItem = Trellis.Items.get(selectedItemID);
 				// update item name
 				row.item = selectedItem.getField("title");
 
@@ -318,7 +318,7 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 		let ambiguousRow = this.rows[this.rowMap.ambiguous];
 		let mappedRow = this.rows[this.rowMap.mapped];
 
-		this.contents = decodeRTF(await Zotero.File.getContentsAsync(this.inputFile));
+		this.contents = decodeRTF(await Trellis.File.getContentsAsync(this.inputFile));
 		this.citations = parseCitations(this.contents);
 		let mappings = await processCitations(this.citations);
 		for (let mapping of mappings) {
@@ -354,12 +354,12 @@ const Zotero_RTFScan = { // eslint-disable-line no-unused-vars, camelcase
 	
 	async formatRTF() {
 		const content = await replaceCitations(this.contents, this.citations, this.citationItemIDs, this.styleConfig.style, this.styleConfig.locale, this.styleConfig.displayAs);
-		Zotero.File.putContents(this.outputFile, encodeRTF(content));
+		Trellis.File.putContents(this.outputFile, encodeRTF(content));
 
 		// save locale
-		const styleHasFixedLocale = Zotero.Styles.get(this.styleConfig.style).locale;
+		const styleHasFixedLocale = Trellis.Styles.get(this.styleConfig.style).locale;
 		if (!styleHasFixedLocale && this.styleConfig.locale) {
-			Zotero.Prefs.set("export.lastLocale", this.styleConfig.locale);
+			Trellis.Prefs.set("export.lastLocale", this.styleConfig.locale);
 		}
 	},
 

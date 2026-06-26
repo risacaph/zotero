@@ -9,7 +9,7 @@
 # Current hard-limit on Ubuntu 16.10 is 4096
 ulimit -n 4096
 
-# Allow profile downgrade for Zotero
+# Allow profile downgrade for Trellis
 export MOZ_ALLOW_DOWNGRADE=1
 # Don't create dedicated profile (default-esr)
 export MOZ_LEGACY_PROFILES=1
@@ -17,4 +17,4 @@ export MOZ_LEGACY_PROFILES=1
 export MOZ_ENABLE_WAYLAND=1
 
 CALLDIR="$(dirname "$(readlink -f "$0")")"
-"$CALLDIR/zotero-bin" -app "$CALLDIR/app/application.ini" "$@"
+"$CALLDIR/trellis-bin" -app "$CALLDIR/app/application.ini" "$@"

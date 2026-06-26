@@ -168,13 +168,13 @@
     "message": "Włącz zapisywanie do zdalnej biblioteki"
   },
   "reports_report_submitted": {
-    "message": "Twój raport o błędzie został przesłany.\n\nID raportu: $1\n\nProszę wyślij wiadomość na Forum Zotero z tym ID raportu, opisem problemu i krokami niezbędnymi do powtórzenia błędu.\n\nRaporty błędów nie są weryfikowane, jeśli nie są przesłane na forum."
+    "message": "Twój raport o błędzie został przesłany.\n\nID raportu: $1\n\nProszę wyślij wiadomość na Forum Trellis z tym ID raportu, opisem problemu i krokami niezbędnymi do powtórzenia błędu.\n\nRaporty błędów nie są weryfikowane, jeśli nie są przesłane na forum."
   },
   "reports_debug_output_submitted": {
     "message": "Informacja debugowania została wysłana.\n\nIdentyfikator informacji to $1."
   },
   "reports_submission_failed": {
-    "message": "Błąd podczas przesyłania raportu.\n\n$1\n\nProszę, sprawdź swoje połączenie internetowe. Jeśli problem wciąż istnieje, wyślij wiadomość na Forum Zotero."
+    "message": "Błąd podczas przesyłania raportu.\n\n$1\n\nProszę, sprawdź swoje połączenie internetowe. Jeśli problem wciąż istnieje, wyślij wiadomość na Forum Trellis."
   },
   "integration_error_clientUpgrade": {
     "message": "Cytowanie oparte na stronach internetowych wymaga $1 lub nowszego."
@@ -183,10 +183,10 @@
     "message": "$1 nie mógł się połączyć z aplikacją desktop $2. $2 musi być uruchomiony, aby używać cytowania opartego na stronach internetowych."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Ten dokument zawiera aktywne cytowania Zotero, które pojawią się w pobranej kopii jako odsyłacze zotero.org."
+    "message": "Ten dokument zawiera aktywne cytowania Trellis, które pojawią się w pobranej kopii jako odsyłacze trellis.org."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "Aby utworzyć wersję możliwą do współdzielenia, wybierz <b>Zapisz kopię…</b> z menu Plik, wybierz <b>Unlink Citations</b> z menu Zotero w nowym dokumencie, a nastepnie pobierz wersję dokumentu z odłączonymi cytowaniami. Zachowaj jednak oryginalny dokument z powiązanymi cytowaniami, w razie potrzeby dokonania w nim zmian w przyszłości."
+    "message": "Aby utworzyć wersję możliwą do współdzielenia, wybierz <b>Zapisz kopię…</b> z menu Plik, wybierz <b>Unlink Citations</b> z menu Trellis w nowym dokumencie, a nastepnie pobierz wersję dokumentu z odłączonymi cytowaniami. Zachowaj jednak oryginalny dokument z powiązanymi cytowaniami, w razie potrzeby dokonania w nim zmian w przyszłości."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "Pobierz wersję z powiązanymi cytowaniami"
@@ -195,7 +195,7 @@
     "message": "$1 uaktualnia twój dokument."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "Integracja z $1 nie jest dostępna podczas edycji plików .docx Microsoft Word bezpośrednio w Dokumentach Google. Wybierz Plik → Zapisz jako plik Dokumentów Google, aby włączyć tę funkcję.<br/><br/> Jeśli chcesz przesłać dokument Word z cytowaniami $1 do Dokumentów Google, zobacz intrukcję <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">Moving Documents Between Word Processors</a>."
+    "message": "Integracja z $1 nie jest dostępna podczas edycji plików .docx Microsoft Word bezpośrednio w Dokumentach Google. Wybierz Plik → Zapisz jako plik Dokumentów Google, aby włączyć tę funkcję.<br/><br/> Jeśli chcesz przesłać dokument Word z cytowaniami $1 do Dokumentów Google, zobacz intrukcję <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">Moving Documents Between Word Processors</a>."
   },
   "integration_googleDocs_documentLocked": {
     "message": "Cytowania w dokumencie są właśnie edytowane przez innego użytkownika $1. Proszę spróbuj ponownie później."
@@ -219,7 +219,7 @@
     "message": "Połącz ponownie cytowanie"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Te cytaty zostały <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">odłączone od $1</a>. Musisz ponownie połączyć je, zanim zostaną zaktualizowane lub pojawią się w Twojej bibliografii."
+    "message": "Te cytaty zostały <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">odłączone od $1</a>. Musisz ponownie połączyć je, zanim zostaną zaktualizowane lub pojawią się w Twojej bibliografii."
   },
   "copyUnproxiedLink": {
     "message": "Skopiuj link bez proxy"

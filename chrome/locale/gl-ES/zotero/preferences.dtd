@@ -1,194 +1,194 @@
-<!ENTITY zotero.preferences.title "Preferencias de Zotero">
+<!ENTITY trellis.preferences.title "Preferencias de Trellis">
 
-<!ENTITY zotero.preferences.helpButton.label "Axuda">
+<!ENTITY trellis.preferences.helpButton.label "Axuda">
 
-<!ENTITY zotero.preferences.default "Por defecto:">
-<!ENTITY zotero.preferences.items "Elementos">
-<!ENTITY zotero.preferences.period ".">
-<!ENTITY zotero.preferences.custom "Personalizado...">
+<!ENTITY trellis.preferences.default "Por defecto:">
+<!ENTITY trellis.preferences.items "Elementos">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Personalizado...">
 
-<!ENTITY zotero.preferences.prefpane.general "Xeral">
+<!ENTITY trellis.preferences.prefpane.general "Xeral">
 
-<!ENTITY zotero.preferences.interface "Interface">
-<!ENTITY zotero.preferences.fileHandling "Xestión de ficheiros">
-<!ENTITY zotero.preferences.automaticSnapshots "Cando se crean elementos a partir de páxinas web facer capturas automaticamente">
-<!ENTITY zotero.preferences.downloadAssociatedFiles "Anexar automaticamente os PDFs e outros ficheiros asociados ao gardar os elementos">
-<!ENTITY zotero.preferences.autoRenameFiles.renameLinked "Renomear os ficheiros ligados">
-<!ENTITY zotero.preferences.fileHandler.openPDFsUsing "Abrir os PDFs con">
-<!ENTITY zotero.preferences.fileHandler.systemDefault "Predefinido no sistema">
+<!ENTITY trellis.preferences.interface "Interface">
+<!ENTITY trellis.preferences.fileHandling "Xestión de ficheiros">
+<!ENTITY trellis.preferences.automaticSnapshots "Cando se crean elementos a partir de páxinas web facer capturas automaticamente">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Anexar automaticamente os PDFs e outros ficheiros asociados ao gardar os elementos">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Renomear os ficheiros ligados">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Abrir os PDFs con">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Predefinido no sistema">
 
-<!ENTITY zotero.preferences.miscellaneous "Miscelánea">
-<!ENTITY zotero.preferences.autoUpdate "Comprobar de xeito automático a actualización de tradutores e estilos">
-<!ENTITY zotero.preferences.updateNow "Actualizar agora">
-<!ENTITY zotero.preferences.reportTranslationFailure "Informar de tradutores de sitio rotos">
-<!ENTITY zotero.preferences.parseRISRefer "Usar Zotero para os ficheiros BibTeX/RIS/Refer descargados">
-<!ENTITY zotero.preferences.automaticTags "Etiquetar automaticamente os elementos con palabras clave e epígrafes temáticos">
-<!ENTITY zotero.preferences.trashAutoEmptyDaysPre "Eliminar automaticamente os elementos que leven no lixo máis de">
-<!ENTITY zotero.preferences.trashAutoEmptyDaysPost "días">
+<!ENTITY trellis.preferences.miscellaneous "Miscelánea">
+<!ENTITY trellis.preferences.autoUpdate "Comprobar de xeito automático a actualización de tradutores e estilos">
+<!ENTITY trellis.preferences.updateNow "Actualizar agora">
+<!ENTITY trellis.preferences.reportTranslationFailure "Informar de tradutores de sitio rotos">
+<!ENTITY trellis.preferences.parseRISRefer "Usar Trellis para os ficheiros BibTeX/RIS/Refer descargados">
+<!ENTITY trellis.preferences.automaticTags "Etiquetar automaticamente os elementos con palabras clave e epígrafes temáticos">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Eliminar automaticamente os elementos que leven no lixo máis de">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "días">
 
-<!ENTITY zotero.preferences.reader.tabsTitle.label "Amosar lapelas como">
-<!ENTITY zotero.preferences.reader.tabsTitle.creatorYearTitle "Creador - Ano - Título">
-<!ENTITY zotero.preferences.reader.tabsTitle.titleCreatorYear "Título - Creador - Ano">
-<!ENTITY zotero.preferences.reader.tabsTitle.filename "Nome de ficheiro">
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Amosar lapelas como">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creador - Ano - Título">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Título - Creador - Ano">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Nome de ficheiro">
 
-<!ENTITY zotero.preferences.groups "Grupos">
-<!ENTITY zotero.preferences.groups.whenCopyingInclude "Ao copiar elementos entre bibliotecas, incluír as:">
-<!ENTITY zotero.preferences.groups.childNotes "notas fillas">
-<!ENTITY zotero.preferences.groups.childFiles "capturas de imaxe fillas e ficheiros importados">
-<!ENTITY zotero.preferences.groups.annotations "apuntamentos">
-<!ENTITY zotero.preferences.groups.childLinks "ligazóns fillas">
-<!ENTITY zotero.preferences.groups.tags "etiquetas">
+<!ENTITY trellis.preferences.groups "Grupos">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Ao copiar elementos entre bibliotecas, incluír as:">
+<!ENTITY trellis.preferences.groups.childNotes "notas fillas">
+<!ENTITY trellis.preferences.groups.childFiles "capturas de imaxe fillas e ficheiros importados">
+<!ENTITY trellis.preferences.groups.annotations "apuntamentos">
+<!ENTITY trellis.preferences.groups.childLinks "ligazóns fillas">
+<!ENTITY trellis.preferences.groups.tags "etiquetas">
 
-<!ENTITY zotero.preferences.feeds "Fonte de novas">
-<!ENTITY zotero.preferences.feeds.sorting.label "Ordenar por:">
-<!ENTITY zotero.preferences.feeds.sorting.newest "as máis novas primeiro">
-<!ENTITY zotero.preferences.feeds.sorting.oldest "as máis antigas primeiro">
-<!ENTITY zotero.preferences.feeds.feedDefaults "Configuracións das fontes">
+<!ENTITY trellis.preferences.feeds "Fonte de novas">
+<!ENTITY trellis.preferences.feeds.sorting.label "Ordenar por:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "as máis novas primeiro">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "as máis antigas primeiro">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Configuracións das fontes">
 
-<!ENTITY zotero.preferences.prefpane.sync "Sincronización">
-<!ENTITY zotero.preferences.sync.username "Usuario:">
-<!ENTITY zotero.preferences.sync.password "Contrasinal:">
-<!ENTITY zotero.preferences.sync.createAccount "Crear unha conta">
-<!ENTITY zotero.preferences.sync.lostPassword "Esqueceu o contrasinal?">
-<!ENTITY zotero.preferences.sync.syncAutomatically "Sincronización automática">
-<!ENTITY zotero.preferences.sync.syncFullTextContent "Sincronizar o contido completo">
-<!ENTITY zotero.preferences.sync.syncFullTextContent.desc "Zotero pode sincronizar todo o contido dos ficheiros das librerías de Zotero empregando zotero.org e outros dispositivos ligados. Con iso, permítelle o acceso aos ficheiros estea onde estea. Os contidos completos non se han compartir de xeito público.">
-<!ENTITY zotero.preferences.sync.about "Acerca da sincronización">
-<!ENTITY zotero.preferences.sync.fileSyncing "Sincronizando o ficheiro">
-<!ENTITY zotero.preferences.sync.fileSyncing.url "URL:">
-<!ENTITY zotero.preferences.sync.fileSyncing.myLibrary "Sincronizar os ficheiros adxuntos da Miña Biblioteca usando">
+<!ENTITY trellis.preferences.prefpane.sync "Sincronización">
+<!ENTITY trellis.preferences.sync.username "Usuario:">
+<!ENTITY trellis.preferences.sync.password "Contrasinal:">
+<!ENTITY trellis.preferences.sync.createAccount "Crear unha conta">
+<!ENTITY trellis.preferences.sync.lostPassword "Esqueceu o contrasinal?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Sincronización automática">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Sincronizar o contido completo">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis pode sincronizar todo o contido dos ficheiros das librerías de Trellis empregando trellis.org e outros dispositivos ligados. Con iso, permítelle o acceso aos ficheiros estea onde estea. Os contidos completos non se han compartir de xeito público.">
+<!ENTITY trellis.preferences.sync.about "Acerca da sincronización">
+<!ENTITY trellis.preferences.sync.fileSyncing "Sincronizando o ficheiro">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Sincronizar os ficheiros adxuntos da Miña Biblioteca usando">
 
-<!ENTITY zotero.preferences.sync.fileSyncing.download "Descargar os ficheiros">
-<!ENTITY zotero.preferences.sync.fileSyncing.download.atSyncTime "no momento de sincronización">
-<!ENTITY zotero.preferences.sync.fileSyncing.download.onDemand "cando se precisen">
-<!ENTITY zotero.preferences.sync.fileSyncing.verifyServer "Verificar o servidor">
-<!ENTITY zotero.preferences.sync.librariesToSync "Bibliotecas sincronizadas">
-<!ENTITY zotero.preferences.sync.librariesToSync.button "Escoller as librarías...">
-<!ENTITY zotero.preferences.sync.librariesToSync.sync "Sincronizar">
-<!ENTITY zotero.preferences.sync.librariesToSync.library "Biblioteca">
-<!ENTITY zotero.preferences.sync.reset.warning1 "As seguintes operacións só son útiles en casos especiais ou específicos e non deberían ser usadas para arranxar problemas habituais. En moitos dos casos o reinicio da configuración causa problemas a maiores. Vexa">
-<!ENTITY zotero.preferences.sync.reset.warning2 "Opcións de reinicio de sincronización">
-<!ENTITY zotero.preferences.sync.reset.warning3 "para máis información.">
-<!ENTITY zotero.preferences.sync.reset.resetDataSyncHistory "Reiniciar o historial de sincronización de datos">
-<!ENTITY zotero.preferences.sync.reset.resetDataSyncHistory.desc "Xunguir os datos locais cos datos do servidor, esquecéndose do historial de sincronización.">
-<!ENTITY zotero.preferences.sync.reset.restoreFromOnlineLibrary "Restaurar a partir da librería en liña">
-<!ENTITY zotero.preferences.sync.reset.restoreFromOnlineLibrary.desc "Sobrescribir a librería local de Zotero cos datos da libraría en liña.">
-<!ENTITY zotero.preferences.sync.reset.restoreToOnlineLibrary "Substituír a librería en liña">
-<!ENTITY zotero.preferences.sync.reset.restoreToOnlineLibrary.desc "Sobrescribir a librería en liña cos datos locais de Zotero">
-<!ENTITY zotero.preferences.sync.reset.resetFileSyncHistory "Reiniciar o historial de sincronización de ficheiros">
-<!ENTITY zotero.preferences.sync.reset.resetFileSyncHistory.desc "Comparar todos os ficheiros anexos co servizo de almacenamento">
-<!ENTITY zotero.preferences.sync.reset "Reiniciar">
-<!ENTITY zotero.preferences.sync.reset.showResetOptions "Mostrar as opcións de reinicio...">
-<!ENTITY zotero.preferences.sync.reset.button "Reiniciar">
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Descargar os ficheiros">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "no momento de sincronización">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "cando se precisen">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Verificar o servidor">
+<!ENTITY trellis.preferences.sync.librariesToSync "Bibliotecas sincronizadas">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Escoller as librarías...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sincronizar">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Biblioteca">
+<!ENTITY trellis.preferences.sync.reset.warning1 "As seguintes operacións só son útiles en casos especiais ou específicos e non deberían ser usadas para arranxar problemas habituais. En moitos dos casos o reinicio da configuración causa problemas a maiores. Vexa">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Opcións de reinicio de sincronización">
+<!ENTITY trellis.preferences.sync.reset.warning3 "para máis información.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Reiniciar o historial de sincronización de datos">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Xunguir os datos locais cos datos do servidor, esquecéndose do historial de sincronización.">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Restaurar a partir da librería en liña">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Sobrescribir a librería local de Trellis cos datos da libraría en liña.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Substituír a librería en liña">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Sobrescribir a librería en liña cos datos locais de Trellis">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Reiniciar o historial de sincronización de ficheiros">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Comparar todos os ficheiros anexos co servizo de almacenamento">
+<!ENTITY trellis.preferences.sync.reset "Reiniciar">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Mostrar as opcións de reinicio...">
+<!ENTITY trellis.preferences.sync.reset.button "Reiniciar">
 
 
-<!ENTITY zotero.preferences.prefpane.search "Busca">
-<!ENTITY zotero.preferences.search.fulltextCache "Caché de texto completo">
-<!ENTITY zotero.preferences.search.indexStats "Estadísticas do índice">
+<!ENTITY trellis.preferences.prefpane.search "Busca">
+<!ENTITY trellis.preferences.search.fulltextCache "Caché de texto completo">
+<!ENTITY trellis.preferences.search.indexStats "Estadísticas do índice">
 
-<!ENTITY zotero.preferences.search.indexStats.indexed "Indexado:">
-<!ENTITY zotero.preferences.search.indexStats.partial "Parcial:">
-<!ENTITY zotero.preferences.search.indexStats.unindexed "Non indexado:">
-<!ENTITY zotero.preferences.search.indexStats.words "Palabras:">
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indexado:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Parcial:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Non indexado:">
+<!ENTITY trellis.preferences.search.indexStats.words "Palabras:">
 
-<!ENTITY zotero.preferences.fulltext.textMaxLength "Número máximo de caracteres a indexar por ficheiro:">
-<!ENTITY zotero.preferences.fulltext.pdfMaxPages "Número máximo de páxinas a indexar por ficheiro:">
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Número máximo de caracteres a indexar por ficheiro:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Número máximo de páxinas a indexar por ficheiro:">
 
-<!ENTITY zotero.preferences.prefpane.export "Exportar">
+<!ENTITY trellis.preferences.prefpane.export "Exportar">
 
-<!ENTITY zotero.preferences.citationOptions.caption "Opcións de cita">
-<!ENTITY zotero.preferences.export.citePaperJournalArticleURL "Incluír as URL dos artigos nas referencias">
-<!ENTITY zotero.preferences.export.citePaperJournalArticleURL.description "Cando esta opción está desactivada, Zotero só inclúe os URL cando se citan publicacións, revistas ou artigos de prensa que non teñen especificado un rango de páxinas.">
+<!ENTITY trellis.preferences.citationOptions.caption "Opcións de cita">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Incluír as URL dos artigos nas referencias">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Cando esta opción está desactivada, Trellis só inclúe os URL cando se citan publicacións, revistas ou artigos de prensa que non teñen especificado un rango de páxinas.">
 
-<!ENTITY zotero.preferences.quickCopy.caption "Copia rápida">
-<!ENTITY zotero.preferences.quickCopy.itemFormat "Formato de elemento:">
-<!ENTITY zotero.preferences.quickCopy.noteFormat "Formato de nota:">
-<!ENTITY zotero.preferences.quickCopy.copyAsHTML "Copiar como HTML">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.setings "Axustes específicos do sitio:">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.domainPath "Dominio/Ruta">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.domainPath.example "(p.ex. trasno.gal)">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.format "Formato">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.locale "Lingua">
-<!ENTITY zotero.preferences.quickCopy.dragLimit "Desactivar a copia rápida cando se arrastran máis de">
+<!ENTITY trellis.preferences.quickCopy.caption "Copia rápida">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Formato de elemento:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Formato de nota:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Copiar como HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Axustes específicos do sitio:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Dominio/Ruta">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(p.ex. trasno.gal)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formato">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Lingua">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Desactivar a copia rápida cando se arrastran máis de">
 
-<!ENTITY zotero.preferences.prefpane.cite "Cita">
-<!ENTITY zotero.preferences.cite.wordProcessors "Procesadores de texto">
-<!ENTITY zotero.preferences.styleEditor "Editor de estilos">
-<!ENTITY zotero.preferences.stylePreview "Visor de estilos">
+<!ENTITY trellis.preferences.prefpane.cite "Cita">
+<!ENTITY trellis.preferences.cite.wordProcessors "Procesadores de texto">
+<!ENTITY trellis.preferences.styleEditor "Editor de estilos">
+<!ENTITY trellis.preferences.stylePreview "Visor de estilos">
 
-<!ENTITY zotero.preferences.cite.styles.styleManager "Xestor de estilos">
-<!ENTITY zotero.preferences.cite.styles.styleManager.title "Título">
-<!ENTITY zotero.preferences.cite.styles.styleManager.updated "Actualizado">
-<!ENTITY zotero.preferences.cite.styles.styleManager.csl "CSL">
+<!ENTITY trellis.preferences.cite.styles.styleManager "Xestor de estilos">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Título">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Actualizado">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
 
-<!ENTITY zotero.preferences.keys.saveToZotero "Gardar en Zotero (icona na barra de direccións)">
-<!ENTITY zotero.preferences.keys.focusLibrariesPane "Foco no panel de bibliotecas">
-<!ENTITY zotero.preferences.keys.quicksearch "Busca rápida">
-<!ENTITY zotero.preferences.keys.newItem "Crear un novo elemento">
-<!ENTITY zotero.preferences.keys.newNote "Crear unha nova nota">
-<!ENTITY zotero.preferences.keys.toggleAllRead "Marcar todas as novas como lidas/sen ler">
-<!ENTITY zotero.preferences.keys.copySelectedItemCitationsToClipboard "Copiar as citas do elemento seleccionado ao portaretallos">
-<!ENTITY zotero.preferences.keys.copySelectedItemsToClipboard "Copiar os elementos seleccionados ao portaretallos">
-<!ENTITY zotero.preferences.keys.importFromClipboard "Importar do portaretallos">
-<!ENTITY zotero.preferences.keys.changesTakeEffect "Os cambios veranse despois de reiniciar">
+<!ENTITY trellis.preferences.keys.saveToTrellis "Gardar en Trellis (icona na barra de direccións)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Foco no panel de bibliotecas">
+<!ENTITY trellis.preferences.keys.quicksearch "Busca rápida">
+<!ENTITY trellis.preferences.keys.newItem "Crear un novo elemento">
+<!ENTITY trellis.preferences.keys.newNote "Crear unha nova nota">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Marcar todas as novas como lidas/sen ler">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Copiar as citas do elemento seleccionado ao portaretallos">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Copiar os elementos seleccionados ao portaretallos">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importar do portaretallos">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Os cambios veranse despois de reiniciar">
 
-<!ENTITY zotero.preferences.prefpane.proxies "Proxies">
+<!ENTITY trellis.preferences.prefpane.proxies "Proxies">
 
-<!ENTITY zotero.preferences.proxies.proxyOptions "Opcións de Proxy">
-<!ENTITY zotero.preferences.proxies.desc_before_link "Zotero redirixe con transparencia as solicitudes a través dos proxies gardados. Vexa a">
-<!ENTITY zotero.preferences.proxies.desc_link "documentación de proxy">
-<!ENTITY zotero.preferences.proxies.desc_after_link "para máis información.">
-<!ENTITY zotero.preferences.proxies.transparent "Activar a redirección por proxy">
-<!ENTITY zotero.preferences.proxies.autoRecognize "Recoñecer automaticamente os recursos en proxy">
-<!ENTITY zotero.preferences.proxies.showRedirectNotification "Mostrar unha notificación cando se redirixa cara a unha proxy">
-<!ENTITY zotero.preferences.proxies.disableByDomain "Desactivar as redireccións proxy cando o meu dominio conteña">
-<!ENTITY zotero.preferences.proxies.configured "Proxies configurados">
-<!ENTITY zotero.preferences.proxies.hostname "Hostname">
-<!ENTITY zotero.preferences.proxies.scheme "Esquema">
+<!ENTITY trellis.preferences.proxies.proxyOptions "Opcións de Proxy">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis redirixe con transparencia as solicitudes a través dos proxies gardados. Vexa a">
+<!ENTITY trellis.preferences.proxies.desc_link "documentación de proxy">
+<!ENTITY trellis.preferences.proxies.desc_after_link "para máis información.">
+<!ENTITY trellis.preferences.proxies.transparent "Activar a redirección por proxy">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Recoñecer automaticamente os recursos en proxy">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Mostrar unha notificación cando se redirixa cara a unha proxy">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Desactivar as redireccións proxy cando o meu dominio conteña">
+<!ENTITY trellis.preferences.proxies.configured "Proxies configurados">
+<!ENTITY trellis.preferences.proxies.hostname "Hostname">
+<!ENTITY trellis.preferences.proxies.scheme "Esquema">
 
-<!ENTITY zotero.preferences.proxies.multiSite "Multi-sitio">
-<!ENTITY zotero.preferences.proxies.autoAssociate "Asociar automaticamente novos hosts">
-<!ENTITY zotero.preferences.proxies.variables "Pode usar as seguintes variables no seu esquema de proxy:">
-<!ENTITY zotero.preferences.proxies.h_variable "&#37;h - O nome do host do sitio a través do proxy (por exemplo, www.zotero.org)">
-<!ENTITY zotero.preferences.proxies.p_variable "&#37;p - A ruta da páxina a través do proxy excluíndo a barra á esquerda (slash) (por exemplo, about/index.html)">
-<!ENTITY zotero.preferences.proxies.d_variable "&#37;d - A ruta do cartafol (por exemplo, about/)">
-<!ENTITY zotero.preferences.proxies.f_variable "&#37;f - O nome do ficheiro (por exemplo, index.html)">
-<!ENTITY zotero.preferences.proxies.a_variable "&#37;a - Calquera cadea">
+<!ENTITY trellis.preferences.proxies.multiSite "Multi-sitio">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Asociar automaticamente novos hosts">
+<!ENTITY trellis.preferences.proxies.variables "Pode usar as seguintes variables no seu esquema de proxy:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - O nome do host do sitio a través do proxy (por exemplo, www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - A ruta da páxina a través do proxy excluíndo a barra á esquerda (slash) (por exemplo, about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - A ruta do cartafol (por exemplo, about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - O nome do ficheiro (por exemplo, index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Calquera cadea">
 
-<!ENTITY zotero.preferences.prefpane.advanced "Avanzado">
-<!ENTITY zotero.preferences.advanced.filesAndFolders "Ficheiros e cartafoles">
-<!ENTITY zotero.preferences.advanced.keys "Atallos">
+<!ENTITY trellis.preferences.prefpane.advanced "Avanzado">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Ficheiros e cartafoles">
+<!ENTITY trellis.preferences.advanced.keys "Atallos">
 
-<!ENTITY zotero.preferences.advanced.advancedConfiguration "Configuración avanzada">
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Configuración avanzada">
 
-<!ENTITY zotero.preferences.prefpane.locate "Localizador">
-<!ENTITY zotero.preferences.locate.locateEngineManager "Xestor do motor de busca de artigos">
-<!ENTITY zotero.preferences.locate.description "Descrición">
-<!ENTITY zotero.preferences.locate.name "Nome">
-<!ENTITY zotero.preferences.locate.addDescription "Para engadir un motor de busca que non estea na lista, visita a páxina do motor de busca no navegador e prémelle a &quot;engadir&quot; no menú local de Zotero.">
-<!ENTITY zotero.preferences.locate.restoreDefaults "Restablecer os valores por defecto">
+<!ENTITY trellis.preferences.prefpane.locate "Localizador">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Xestor do motor de busca de artigos">
+<!ENTITY trellis.preferences.locate.description "Descrición">
+<!ENTITY trellis.preferences.locate.name "Nome">
+<!ENTITY trellis.preferences.locate.addDescription "Para engadir un motor de busca que non estea na lista, visita a páxina do motor de busca no navegador e prémelle a &quot;engadir&quot; no menú local de Trellis.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Restablecer os valores por defecto">
 
-<!ENTITY zotero.preferences.charset "Codificación de caracteres">
-<!ENTITY zotero.preferences.charset.importCharset "Importación a codificación de caracteres">
-<!ENTITY zotero.preferences.charset.displayExportOption "Mostrar a opción de codificación de caracteres na exportación">
+<!ENTITY trellis.preferences.charset "Codificación de caracteres">
+<!ENTITY trellis.preferences.charset.importCharset "Importación a codificación de caracteres">
+<!ENTITY trellis.preferences.charset.displayExportOption "Mostrar a opción de codificación de caracteres na exportación">
 
-<!ENTITY zotero.preferences.dataDir "Localización do cartafol de almacenamento">
-<!ENTITY zotero.preferences.dataDir.useProfile "Usar o cartafol de perfís">
-<!ENTITY zotero.preferences.dataDir.custom "Personalizado:">
-<!ENTITY zotero.preferences.dataDir.choose "Escoller...">
-<!ENTITY zotero.preferences.dataDir.viaCommandLine "(especificado coa liña de comandos)">
-<!ENTITY zotero.preferences.dataDir.reveal "Mostrar o cartafol de datos">
-<!ENTITY zotero.preferences.dataDir.migrate "Migrar ao novo aloxamento....">
+<!ENTITY trellis.preferences.dataDir "Localización do cartafol de almacenamento">
+<!ENTITY trellis.preferences.dataDir.useProfile "Usar o cartafol de perfís">
+<!ENTITY trellis.preferences.dataDir.custom "Personalizado:">
+<!ENTITY trellis.preferences.dataDir.choose "Escoller...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(especificado coa liña de comandos)">
+<!ENTITY trellis.preferences.dataDir.reveal "Mostrar o cartafol de datos">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrar ao novo aloxamento....">
 
-<!ENTITY zotero.preferences.attachmentBaseDir.caption "Cartafol principal de anexos ligados">
-<!ENTITY zotero.preferences.attachmentBaseDir.message "Zotero usará rutas relativas para os ficheiros anexos que foran ligados ao cartafol principal. Con isto faise que sexa posible acceder a ficheiros en diferentes computadores sempre e cando a estrutura de ficheiros dentro do cartafol principal se manteña igual.">
-<!ENTITY zotero.preferences.attachmentBaseDir.basePath "Cartafol principal:">
-<!ENTITY zotero.preferences.attachmentBaseDir.selectBasePath "Escoller...">
-<!ENTITY zotero.preferences.attachmentBaseDir.resetBasePath "Volver ás rutas absolutas...">
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Cartafol principal de anexos ligados">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis usará rutas relativas para os ficheiros anexos que foran ligados ao cartafol principal. Con isto faise que sexa posible acceder a ficheiros en diferentes computadores sempre e cando a estrutura de ficheiros dentro do cartafol principal se manteña igual.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Cartafol principal:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Escoller...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Volver ás rutas absolutas...">
 
-<!ENTITY zotero.preferences.dbMaintenance "Mantemento da base de datos">
-<!ENTITY zotero.preferences.dbMaintenance.integrityCheck "Comprobar a integridade da base de datos">
-<!ENTITY zotero.preferences.dbMaintenance.resetTranslatorsAndStyles "Recuperar tradutores e estilos">
-<!ENTITY zotero.preferences.dbMaintenance.resetTranslators "Recuperar tradutores...">
+<!ENTITY trellis.preferences.dbMaintenance "Mantemento da base de datos">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Comprobar a integridade da base de datos">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Recuperar tradutores e estilos">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Recuperar tradutores...">
 
-<!ENTITY zotero.preferences.configEditor "Editor de configuración">
+<!ENTITY trellis.preferences.configEditor "Editor de configuración">

@@ -3,38 +3,38 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-const { BluebirdShimPromise } = ChromeUtils.importESModule('chrome://zotero/content/xpcom/bluebirdShim.mjs');
-const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
+const { BluebirdShimPromise } = ChromeUtils.importESModule('chrome://trellis/content/xpcom/bluebirdShim.mjs');
+const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
 
 // Commonly used imports accessible anywhere
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);
-var { OS } = ChromeUtils.importESModule("chrome://zotero/content/osfile.mjs");
+var { OS } = ChromeUtils.importESModule("chrome://trellis/content/osfile.mjs");
 
 ChromeUtils.defineESModuleGetters(globalThis, {
 	AsyncShutdown: "resource://gre/modules/AsyncShutdown.sys.mjs",
 	AppConstants: "resource://gre/modules/AppConstants.sys.mjs",
 });
-const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/content/modules/commandLineOptions.mjs");
+const { CommandLineOptions } = ChromeUtils.importESModule("chrome://trellis/content/modules/commandLineOptions.mjs");
 
 /*
  * Core functions
@@ -46,7 +46,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	this.setFontSize = setFontSize;
 	this.flattenArguments = flattenArguments;
 	this.getAncestorByTagName = getAncestorByTagName;
-	this.reinit = reinit; // defined in zotero-service.js
+	this.reinit = reinit; // defined in trellis-service.js
 	
 	// Public properties
 	this.initialized = false;
@@ -90,24 +90,24 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		return windows;
 	};
 	
-	this.getActiveZoteroPane = function () {
+	this.getActiveTrellisPane = function () {
 		var win = Services.wm.getMostRecentWindow("navigator:browser");
-		return win ? win.ZoteroPane : null;
+		return win ? win.TrellisPane : null;
 	};
 	
-	this.getZoteroPanes = function () {
+	this.getTrellisPanes = function () {
 		var enumerator = Services.wm.getEnumerator("navigator:browser");
 		var zps = [];
 		while (enumerator.hasMoreElements()) {
 			let win = enumerator.getNext();
-			if (!win.ZoteroPane) continue;
-			zps.push(win.ZoteroPane);
+			if (!win.TrellisPane) continue;
+			zps.push(win.TrellisPane);
 		}
 		return zps;
 	};
 	
 	/**
-	 * @property	{Boolean}	locked		Whether all Zotero panes are locked
+	 * @property	{Boolean}	locked		Whether all Trellis panes are locked
 	 *										with an overlay
 	 */
 	Object.defineProperty(
@@ -120,11 +120,11 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 				_locked = lock;
 				
 				if (!wasLocked && lock) {
-					this.unlockDeferred = Zotero.Promise.defer();
+					this.unlockDeferred = Trellis.Promise.defer();
 					this.unlockPromise = this.unlockDeferred.promise;
 				}
 				else if (wasLocked && !lock) {
-					Zotero.debug("Running unlock callbacks");
+					Trellis.debug("Running unlock callbacks");
 					this.unlockDeferred.resolve();
 				}
 			},
@@ -160,17 +160,17 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	var _progressPopup;
 	var _lastPercentage;
 	
-	// whether we are waiting for another Zotero process to release its DB lock
+	// whether we are waiting for another Trellis process to release its DB lock
 	var _waitingForDBLock = false;
 	
 	/**
-	 * Maintains nsITimers to be used when Zotero.wait() completes (to reduce performance penalty
+	 * Maintains nsITimers to be used when Trellis.wait() completes (to reduce performance penalty
 	 * of initializing new objects)
 	 */
 	var _waitTimers = [];
 	
 	/**
-	 * Maintains nsITimerCallbacks to be used when Zotero.wait() completes
+	 * Maintains nsITimerCallbacks to be used when Trellis.wait() completes
 	 */
 	var _waitTimerCallbacks = [];
 	
@@ -198,14 +198,14 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		}
 		
 		this.locked = true;
-		this.initializationDeferred = Zotero.Promise.defer();
+		this.initializationDeferred = Trellis.Promise.defer();
 		this.initializationPromise = this.initializationDeferred.promise;
-		this.uiReadyDeferred = Zotero.Promise.defer();
+		this.uiReadyDeferred = Trellis.Promise.defer();
 		this.uiReadyPromise = this.uiReadyDeferred.promise;
 		this.uiReadyPromise.then(() => {
-			Zotero.debug("User interface ready in " + (new Date() - _startupTime) + " ms");
+			Trellis.debug("User interface ready in " + (new Date() - _startupTime) + " ms");
 		});
-		this.startupSyncDeferred = Zotero.Promise.defer();
+		this.startupSyncDeferred = Trellis.Promise.defer();
 		this.startupSyncPromise = this.startupSyncDeferred.promise;
 		
 		if (options) {
@@ -222,7 +222,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		
 		this.mainThread = Services.tm.mainThread;
 		
-		this.clientName = ZOTERO_CONFIG.CLIENT_NAME;
+		this.clientName = TRELLIS_CONFIG.CLIENT_NAME;
 		
 		this.platformVersion = Services.appinfo.platformVersion;
 		this.platformMajorVersion = parseInt(this.platformVersion.match(/^[0-9]+/)[0]);
@@ -231,9 +231,9 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		this.isStandalone = true;
 		
 		this.version = Services.appinfo.version;
-		this.isBetaBuild = Zotero.version.includes('-beta');
-		this.isDevBuild = Zotero.version.includes('-dev');
-		this.isSourceBuild = Zotero.version.includes('SOURCE');
+		this.isBetaBuild = Trellis.version.includes('-beta');
+		this.isDevBuild = Trellis.version.includes('-dev');
+		this.isSourceBuild = Trellis.version.includes('SOURCE');
 		
 		// OS platform
 		var os = Services.appinfo.OS;
@@ -245,7 +245,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		this.arch = Services.appinfo.XPCOMABI.split('-')[0];
 		
 		// Browser
-		Zotero.browser = "g";
+		Trellis.browser = "g";
 		
 		// TEMP: Disable automatic safe mode until we can figure out why some shutdowns are
 		// counting as crashes
@@ -254,107 +254,107 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			branch.clearUserPref('recent_crashes');
 		}
 		
-		Zotero.Intl.init();
+		Trellis.Intl.init();
 		if (this.restarting) return;
 		
-		await Zotero.Prefs.init();
-		Zotero.Debug.init(options && options.forceDebugLog);
+		await Trellis.Prefs.init();
+		Trellis.Debug.init(options && options.forceDebugLog);
 		
-		// Make sure that Zotero isn't running as root
-		if (!Zotero.isWin) _checkRoot();
+		// Make sure that Trellis isn't running as root
+		if (!Trellis.isWin) _checkRoot();
 		
 		if (!_checkExecutableLocation()) {
 			return;
 		}
 		
 		try {
-			await Zotero.DataDirectory.init();
+			await Trellis.DataDirectory.init();
 			if (this.restarting) {
 				return;
 			}
-			var dataDir = Zotero.DataDirectory.dir;
+			var dataDir = Trellis.DataDirectory.dir;
 		}
 		catch (e) {
-			// Zotero dir not found
+			// Trellis dir not found
 			if (e.name == 'NotFoundError') {
 				let foundInDefault = false;
 				try {
-					foundInDefault = (await OS.File.exists(Zotero.DataDirectory.defaultDir))
+					foundInDefault = (await OS.File.exists(Trellis.DataDirectory.defaultDir))
 						&& (await OS.File.exists(
 							OS.Path.join(
-								Zotero.DataDirectory.defaultDir,
-								Zotero.DataDirectory.getDatabaseFilename()
+								Trellis.DataDirectory.defaultDir,
+								Trellis.DataDirectory.getDatabaseFilename()
 							)
 						));
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 				
-				let previousDir = Zotero.Prefs.get('lastDataDir')
-					|| Zotero.Prefs.get('dataDir')
+				let previousDir = Trellis.Prefs.get('lastDataDir')
+					|| Trellis.Prefs.get('dataDir')
 					|| e.dataDir;
-				Zotero.startupError = foundInDefault
-					? Zotero.getString(
+				Trellis.startupError = foundInDefault
+					? Trellis.getString(
 						'dataDir.notFound.defaultFound',
 						[
-							Zotero.clientName,
+							Trellis.clientName,
 							previousDir,
-							Zotero.DataDirectory.defaultDir
+							Trellis.DataDirectory.defaultDir
 						]
 					)
-					: Zotero.getString('dataDir.notFound', Zotero.clientName);
+					: Trellis.getString('dataDir.notFound', Trellis.clientName);
 				_startupErrorHandler = async function () {
 					var ps = Services.prompt;
 					var buttonFlags = ps.BUTTON_POS_0 * ps.BUTTON_TITLE_IS_STRING
 						+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_IS_STRING
 						+ ps.BUTTON_POS_2 * ps.BUTTON_TITLE_IS_STRING;
 					// TEMP: lastDataDir can be removed once old persistent descriptors have been
-					// converted, which they are in getZoteroDirectory() in 5.0
+					// converted, which they are in getTrellisDirectory() in 5.0
 					if (foundInDefault) {
 						let index = ps.confirmEx(null,
-							Zotero.getString('general.error'),
-							Zotero.startupError,
+							Trellis.getString('general.error'),
+							Trellis.startupError,
 							buttonFlags,
-							Zotero.getString('dataDir.useNewLocation'),
-							Zotero.getString('general.quit'),
-							Zotero.getString('general.locate'),
+							Trellis.getString('dataDir.useNewLocation'),
+							Trellis.getString('general.quit'),
+							Trellis.getString('general.locate'),
 							null, {}
 						);
 						// Revert to home directory
 						if (index == 0) {
-							Zotero.DataDirectory.set(Zotero.DataDirectory.defaultDir);
-							Zotero.Utilities.Internal.quit(true);
+							Trellis.DataDirectory.set(Trellis.DataDirectory.defaultDir);
+							Trellis.Utilities.Internal.quit(true);
 							return;
 						}
 						// Locate data directory
 						else if (index == 2) {
-							await Zotero.DataDirectory.choose(true);
+							await Trellis.DataDirectory.choose(true);
 						}
 
 					}
 					else {
 						let index = ps.confirmEx(null,
-							Zotero.getString('general.error'),
-							Zotero.startupError
+							Trellis.getString('general.error'),
+							Trellis.startupError
 								+ (previousDir
-									? '\n\n' + Zotero.getString('dataDir.previousDir') + ' ' + previousDir
+									? '\n\n' + Trellis.getString('dataDir.previousDir') + ' ' + previousDir
 									: ''),
 							buttonFlags,
-							Zotero.getString('general.quit'),
-							Zotero.getString('dataDir.useDefaultLocation'),
-							Zotero.getString('general.locate'),
+							Trellis.getString('general.quit'),
+							Trellis.getString('dataDir.useDefaultLocation'),
+							Trellis.getString('general.locate'),
 							null, {}
 						);
 						// Revert to home directory
 						if (index == 1) {
-							Zotero.DataDirectory.set(Zotero.DataDirectory.defaultDir);
-							Zotero.Utilities.Internal.quit(true);
+							Trellis.DataDirectory.set(Trellis.DataDirectory.defaultDir);
+							Trellis.Utilities.Internal.quit(true);
 							return;
 						}
 						// Locate data directory
 						else if (index == 2) {
-							await Zotero.DataDirectory.choose(true);
+							await Trellis.DataDirectory.choose(true);
 						}
 					}
 				}
@@ -367,8 +367,8 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		}
 		
 		if (!this.forceDataDir) {
-			await Zotero.DataDirectory.checkForMigration(
-				dataDir, Zotero.DataDirectory.defaultDir
+			await Trellis.DataDirectory.checkForMigration(
+				dataDir, Trellis.DataDirectory.defaultDir
 			);
 			if (this.skipLoading) {
 				return;
@@ -376,16 +376,16 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		}
 		
 		// Make sure data directory isn't in Dropbox, etc.
-		await Zotero.DataDirectory.checkForUnsafeLocation(dataDir);
+		await Trellis.DataDirectory.checkForUnsafeLocation(dataDir);
 		
 		Services.obs.addObserver({
 			observe: function () {
-				Zotero.Session.save();
+				Trellis.Session.save();
 			}
 		}, "quit-application-granted", false);
 		
-		// Register shutdown handler to call Zotero.shutdown()
-		var _shutdownObserver = {observe:function () { Zotero.shutdown() }};
+		// Register shutdown handler to call Trellis.shutdown()
+		var _shutdownObserver = {observe:function () { Trellis.shutdown() }};
 		Services.obs.addObserver(_shutdownObserver, "quit-application", false);
 		
 		// Get startup errors
@@ -393,7 +393,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			let messages = Services.console.getMessageArray();
 			_startupErrors = messages.filter(msg => _shouldKeepError(msg));
 		} catch(e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		// Register error observer
 		Services.console.registerListener(ConsoleListener);
@@ -409,35 +409,35 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			return false;
 		}
 			
-		Zotero.Standalone.init();
-		await Zotero.initComplete();
+		Trellis.Standalone.init();
+		await Trellis.initComplete();
 		// Ingest command line arguments that were not handled due to late command line handler registration.
-		Zotero.CommandLineIngester.ingest();
+		Trellis.CommandLineIngester.ingest();
 	};
 	
 	/**
 	 * Triggers events when initialization finishes
 	 */
 	this.initComplete = async function () {
-		if(Zotero.initialized) return;
+		if(Trellis.initialized) return;
 		
-		Zotero.debug("Running initialization callbacks");
+		Trellis.debug("Running initialization callbacks");
 		delete this.startupError;
 		this.initialized = true;
 		this.initializationDeferred.resolve();
 		
-		if(!Zotero.isFirstLoadThisSession) {
-			// trigger zotero-reloaded event
-			Zotero.debug('Triggering "zotero-reloaded" event');
-			Services.obs.notifyObservers(Zotero, "zotero-reloaded", null);
+		if(!Trellis.isFirstLoadThisSession) {
+			// trigger trellis-reloaded event
+			Trellis.debug('Triggering "trellis-reloaded" event');
+			Services.obs.notifyObservers(Trellis, "trellis-reloaded", null);
 		}
 		
-		Zotero.debug('Triggering "zotero-loaded" event');
-		Services.obs.notifyObservers(Zotero, "zotero-loaded", null);
+		Trellis.debug('Triggering "trellis-loaded" event');
+		Services.obs.notifyObservers(Trellis, "trellis-loaded", null);
 		
-		Zotero.debug('Initializing Word Processor plugins');
-		Zotero.Integration.init();
-		await Zotero.Plugins.init();
+		Trellis.debug('Initializing Word Processor plugins');
+		Trellis.Integration.init();
+		await Trellis.Plugins.init();
 	}
 	
 	
@@ -447,25 +447,25 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	
 	
 	/**
-	 * Initialization function to be called only if Zotero is in full mode
+	 * Initialization function to be called only if Trellis is in full mode
 	 *
 	 * @return {Promise:Boolean}
 	 */
 	var _initFull = async function () {
 		if (!((await _initDB()))) return false;
 		
-		Zotero.VersionHeader.init();
+		Trellis.VersionHeader.init();
 		
 		// Check for data reset/restore
-		var dataDir = Zotero.DataDirectory.dir;
+		var dataDir = Trellis.DataDirectory.dir;
 		var restoreFile = OS.Path.join(dataDir, 'restore-from-server');
 		var resetDataDirFile = OS.Path.join(dataDir, 'reset-data-directory');
 		
 		var result = await Promise.all([OS.File.exists(restoreFile), OS.File.exists(resetDataDirFile)]);
 		if (result.some(r => r)) {
-			[Zotero.restoreFromServer, Zotero.resetDataDir] = result;
+			[Trellis.restoreFromServer, Trellis.resetDataDir] = result;
 			try {
-				await Zotero.DB.closeDatabase();
+				await Trellis.DB.closeDatabase();
 				
 				// TODO: better error handling
 				
@@ -475,36 +475,36 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 				
 				
 				
-				if (Zotero.restoreFromServer) {
-					let dbfile = Zotero.DataDirectory.getDatabase();
-					Zotero.debug("Deleting " + dbfile);
+				if (Trellis.restoreFromServer) {
+					let dbfile = Trellis.DataDirectory.getDatabase();
+					Trellis.debug("Deleting " + dbfile);
 					await OS.File.remove(dbfile, { ignoreAbsent: true });
 					let storageDir = OS.Path.join(dataDir, 'storage');
-					Zotero.debug("Deleting " + storageDir.path);
+					Trellis.debug("Deleting " + storageDir.path);
 					OS.File.removeDir(storageDir, { ignoreAbsent: true }),
 					await OS.File.remove(restoreFile);
-					Zotero.restoreFromServer = true;
+					Trellis.restoreFromServer = true;
 				}
-				else if (Zotero.resetDataDir) {
-					Zotero.initAutoSync = true;
+				else if (Trellis.resetDataDir) {
+					Trellis.initAutoSync = true;
 					
 					// Clear some user prefs
 					[
 						'sync.server.username',
 						'sync.storage.username'
-					].forEach(p => Zotero.Prefs.clear(p));
+					].forEach(p => Trellis.Prefs.clear(p));
 					
 					// Clear data directory
-					Zotero.debug("Deleting data directory files");
+					Trellis.debug("Deleting data directory files");
 					let lastError;
 					// Delete all files in directory rather than removing directory, in case it's
 					// a symlink
-					await Zotero.File.iterateDirectory(dataDir, async function (entry) {
+					await Trellis.File.iterateDirectory(dataDir, async function (entry) {
 						// Don't delete some files
 						if (entry.name == 'pipes') {
 							return;
 						}
-						Zotero.debug("Deleting " + entry.path);
+						Trellis.debug("Deleting " + entry.path);
 						try {
 							if (entry.isDir) {
 								await OS.File.removeDir(entry.path);
@@ -516,14 +516,14 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 						// Keep trying to delete as much as we can
 						catch (e) {
 							lastError = e;
-							Zotero.logError(e);
+							Trellis.logError(e);
 						}
 					});
 					if (lastError) {
 						throw lastError;
 					}
 				}
-				Zotero.debug("Done with reset");
+				Trellis.debug("Done with reset");
 				
 				if (!((await _initDB()))) return false;
 			}
@@ -534,22 +534,22 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			}
 		}
 		
-		Zotero.HTTP.triggerProxyAuth();
+		Trellis.HTTP.triggerProxyAuth();
 		
 		// Add notifier queue callbacks to the DB layer
-		Zotero.DB.addCallback('begin', id => Zotero.Notifier.begin(id));
-		Zotero.DB.addCallback('commit', id => Zotero.Notifier.commit(null, id));
-		Zotero.DB.addCallback('rollback', id => Zotero.Notifier.reset(id));
+		Trellis.DB.addCallback('begin', id => Trellis.Notifier.begin(id));
+		Trellis.DB.addCallback('commit', id => Trellis.Notifier.commit(null, id));
+		Trellis.DB.addCallback('rollback', id => Trellis.Notifier.reset(id));
 
 		// Initialize undo history and add its callbacks to the DB layer
-		Zotero.UndoHistory.init();
-		Zotero.DB.addCallback('begin', id => Zotero.UndoHistory._onTransactionBegin(id));
-		Zotero.DB.addCallback('commit', id => Zotero.UndoHistory._onTransactionCommit(id));
-		Zotero.DB.addCallback('rollback', id => Zotero.UndoHistory._onTransactionRollback(id));
+		Trellis.UndoHistory.init();
+		Trellis.DB.addCallback('begin', id => Trellis.UndoHistory._onTransactionBegin(id));
+		Trellis.DB.addCallback('commit', id => Trellis.UndoHistory._onTransactionCommit(id));
+		Trellis.DB.addCallback('rollback', id => Trellis.UndoHistory._onTransactionRollback(id));
 		
 		try {
 			// Require >=2.1b3 database to ensure proper locking
-			let dbSystemVersion = await Zotero.Schema.getDBVersion('system');
+			let dbSystemVersion = await Trellis.Schema.getDBVersion('system');
 			if (dbSystemVersion > 0 && dbSystemVersion < 31) {
 				let ps = Services.prompt;
 				var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING)
@@ -558,12 +558,12 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 					+ ps.BUTTON_POS_2_DEFAULT;
 				var index = ps.confirmEx(
 					null,
-					Zotero.getString('dataDir.incompatibleDbVersion.title'),
-					Zotero.getString('dataDir.incompatibleDbVersion.text', Zotero.appName),
+					Trellis.getString('dataDir.incompatibleDbVersion.title'),
+					Trellis.getString('dataDir.incompatibleDbVersion.text', Trellis.appName),
 					buttonFlags,
-					Zotero.getString('general.useDefault'),
-					Zotero.getString('dataDir.chooseNewDataDirectory'),
-					Zotero.getString('general.quit'),
+					Trellis.getString('general.useDefault'),
+					Trellis.getString('dataDir.chooseNewDataDirectory'),
+					Trellis.getString('general.quit'),
 					null,
 					{}
 				);
@@ -572,7 +572,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 				
 				// Default location
 				if (index == 0) {
-					Zotero.Prefs.set("useDataDir", false)
+					Trellis.Prefs.set("useDataDir", false)
 					
 					Services.startup.quit(
 						Components.interfaces.nsIAppStartup.eAttemptQuit
@@ -581,7 +581,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 				}
 				// Select new data directory
 				else if (index == 1) {
-					let dir = await Zotero.DataDirectory.choose(true);
+					let dir = await Trellis.DataDirectory.choose(true);
 					if (!dir) {
 						quit = true;
 					}
@@ -598,34 +598,34 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			}
 			
 			try {
-				var updated = await Zotero.Schema.updateSchema({
+				var updated = await Trellis.Schema.updateSchema({
 					onBeforeUpdate: (options = {}) => {
 						if (options.minor) return;
 						try {
-							Zotero.showZoteroPaneProgressMeter(
-								Zotero.getString('upgrade.status')
+							Trellis.showTrellisPaneProgressMeter(
+								Trellis.getString('upgrade.status')
 							)
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						}
 					}
 				});
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				
-				if (e instanceof Zotero.DB.IncompatibleVersionException) {
-					let kbURL = "https://www.zotero.org/support/kb/newer_db_version";
+				if (e instanceof Trellis.DB.IncompatibleVersionException) {
+					let kbURL = "https://www.trellis.org/support/kb/newer_db_version";
 					let msg = (e.dbClientVersion
-						? Zotero.getString('startupError.incompatibleDBVersion',
-							[Zotero.clientName, e.dbClientVersion])
-						: Zotero.getString('startupError.zoteroVersionIsOlder')) + "\n\n"
-						+ Zotero.getString('startupError.zoteroVersionIsOlder.current', Zotero.version)
+						? Trellis.getString('startupError.incompatibleDBVersion',
+							[Trellis.clientName, e.dbClientVersion])
+						: Trellis.getString('startupError.trellisVersionIsOlder')) + "\n\n"
+						+ Trellis.getString('startupError.trellisVersionIsOlder.current', Trellis.version)
 							+ "\n\n"
-						+ Zotero.getString('startupError.zoteroVersionIsOlder.upgrade',
-							ZOTERO_CONFIG.DOMAIN_NAME);
-					Zotero.startupError = msg;
+						+ Trellis.getString('startupError.trellisVersionIsOlder.upgrade',
+							TRELLIS_CONFIG.DOMAIN_NAME);
+					Trellis.startupError = msg;
 					_startupErrorHandler = function () {
 						var ps = Services.prompt;
 						var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING)
@@ -635,19 +635,19 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 						
 						var index = ps.confirmEx(
 							null,
-							Zotero.getString('general.error'),
-							Zotero.startupError,
+							Trellis.getString('general.error'),
+							Trellis.startupError,
 							buttonFlags,
-							Zotero.getString('general.checkForUpdates'),
+							Trellis.getString('general.checkForUpdates'),
 							null,
-							Zotero.getString('general.moreInformation'),
+							Trellis.getString('general.moreInformation'),
 							null,
 							{}
 						);
 						
 						// "Check for Update" button
 						if (index === 0) {
-							Zotero.openCheckForUpdatesWindow({ modal: true });
+							Trellis.openCheckForUpdatesWindow({ modal: true });
 						}
 						// Load More Info page
 						else if (index == 2) {
@@ -662,131 +662,131 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 					throw e;
 				}
 				
-				let stack = e.stack ? Zotero.Utilities.Internal.filterStack(e.stack) : null;
-				Zotero.startupError = Zotero.getString('startupError.databaseUpgradeError')
+				let stack = e.stack ? Trellis.Utilities.Internal.filterStack(e.stack) : null;
+				Trellis.startupError = Trellis.getString('startupError.databaseUpgradeError')
 					+ "\n\n"
 					+ (stack || e);
 				throw e;
 			}
 			
-			const { ZoteroProtocolHandler } = ChromeUtils.importESModule(
-				`chrome://zotero/content/ZoteroProtocolHandler.mjs`
+			const { TrellisProtocolHandler } = ChromeUtils.importESModule(
+				`chrome://trellis/content/TrellisProtocolHandler.mjs`
 			);
-			ZoteroProtocolHandler.init();
+			TrellisProtocolHandler.init();
 
-			const { ZoteroAutoComplete } = ChromeUtils.importESModule(
-				`chrome://zotero/content/zotero-autocomplete.mjs`
+			const { TrellisAutoComplete } = ChromeUtils.importESModule(
+				`chrome://trellis/content/trellis-autocomplete.mjs`
 			);
 			
-			ZoteroAutoComplete.init();
+			TrellisAutoComplete.init();
 
 			const { OptionsAutoComplete } = ChromeUtils.importESModule(
-				`chrome://zotero/content/modules/optionsAutoComplete.mjs`
+				`chrome://trellis/content/modules/optionsAutoComplete.mjs`
 			);
 			
 			OptionsAutoComplete.init();
 
-			await Zotero.Users.init();
-			await Zotero.Libraries.init();
+			await Trellis.Users.init();
+			await Trellis.Libraries.init();
 			
-			await Zotero.ID.init();
-			await Zotero.ItemTypes.init();
-			await Zotero.ItemFields.init();
-			await Zotero.CreatorTypes.init();
-			await Zotero.FileTypes.init();
-			await Zotero.CharacterSets.init();
-			await Zotero.RelationPredicates.init();
+			await Trellis.ID.init();
+			await Trellis.ItemTypes.init();
+			await Trellis.ItemFields.init();
+			await Trellis.CreatorTypes.init();
+			await Trellis.FileTypes.init();
+			await Trellis.CharacterSets.init();
+			await Trellis.RelationPredicates.init();
 			
-			await Zotero.Session.init();
+			await Trellis.Session.init();
 			
-			Zotero.locked = false;
+			Trellis.locked = false;
 			
 			// Initialize various services
-			if(Zotero.Prefs.get("httpServer.enabled")) {
-				Zotero.Server.init();
+			if(Trellis.Prefs.get("httpServer.enabled")) {
+				Trellis.Server.init();
 			}
 			
-			await Zotero.Fulltext.init();
+			await Trellis.Fulltext.init();
 			
-			Zotero.Notifier.registerObserver(Zotero.Tags, 'setting', 'tags');
+			Trellis.Notifier.registerObserver(Trellis.Tags, 'setting', 'tags');
 			
 			const { registerAutoRenameFileFromParent } = ChromeUtils.importESModule(
-				"chrome://zotero/content/renameFiles.mjs"
+				"chrome://trellis/content/renameFiles.mjs"
 			);
 			registerAutoRenameFileFromParent();
 			
-			await Zotero.Sync.Data.Local.init();
-			await Zotero.Sync.Data.Utilities.init();
-			Zotero.Sync.Storage.Local.init();
-			Zotero.Sync.Storage.FileChangeWatcher.init();
-			Zotero.Sync.Runner = new Zotero.Sync.Runner_Module;
-			Zotero.Sync.EventListeners.init();
-			Zotero.Streamer = new Zotero.Streamer_Module;
-			Zotero.Streamer.init();
+			await Trellis.Sync.Data.Local.init();
+			await Trellis.Sync.Data.Utilities.init();
+			Trellis.Sync.Storage.Local.init();
+			Trellis.Sync.Storage.FileChangeWatcher.init();
+			Trellis.Sync.Runner = new Trellis.Sync.Runner_Module;
+			Trellis.Sync.EventListeners.init();
+			Trellis.Streamer = new Trellis.Streamer_Module;
+			Trellis.Streamer.init();
 			
-			Zotero.MIMETypeHandler.init();
-			await Zotero.Proxies.init();
+			Trellis.MIMETypeHandler.init();
+			await Trellis.Proxies.init();
 			
 			// Initialize keyboard shortcuts
-			Zotero.Keys.init();
+			Trellis.Keys.init();
 			
-			Zotero.Date.init();
-			Zotero.LocateManager.init();
-			await Zotero.Collections.init();
-			await Zotero.Items.init();
-			await Zotero.Searches.init();
-			await Zotero.Tags.init();
-			await Zotero.Creators.init();
-			await Zotero.Groups.init();
-			await Zotero.Relations.init();
-			await Zotero.Retractions.init();
-			await Zotero.Dictionaries.init();
-			Zotero.Reader.init();
-			Zotero.AttachmentReadObserver.init();
+			Trellis.Date.init();
+			Trellis.LocateManager.init();
+			await Trellis.Collections.init();
+			await Trellis.Items.init();
+			await Trellis.Searches.init();
+			await Trellis.Tags.init();
+			await Trellis.Creators.init();
+			await Trellis.Groups.init();
+			await Trellis.Relations.init();
+			await Trellis.Retractions.init();
+			await Trellis.Dictionaries.init();
+			Trellis.Reader.init();
+			Trellis.AttachmentReadObserver.init();
 			
 			// Load all library data except for items, which are loaded when libraries are first
 			// clicked on or if otherwise necessary
-			await Array.fromAsync(Zotero.Libraries.getAll(), async (library) => {
-				await Zotero.SyncedSettings.loadAll(library.libraryID);
+			await Array.fromAsync(Trellis.Libraries.getAll(), async (library) => {
+				await Trellis.SyncedSettings.loadAll(library.libraryID);
 				if (library.libraryType != 'feed') {
-					await Zotero.Collections.loadAll(library.libraryID);
-					await Zotero.Searches.loadAll(library.libraryID);
+					await Trellis.Collections.loadAll(library.libraryID);
+					await Trellis.Searches.loadAll(library.libraryID);
 				}
 			});
 			
-			Zotero.Items.startEmptyTrashTimer();
+			Trellis.Items.startEmptyTrashTimer();
 			
-			Zotero.QuickCopy.init();
-			Zotero.addShutdownListener(() => Zotero.QuickCopy.uninit());
+			Trellis.QuickCopy.init();
+			Trellis.addShutdownListener(() => Trellis.QuickCopy.uninit());
 			
-			Zotero.Feeds.init();
-			Zotero.addShutdownListener(() => Zotero.Feeds.uninit());
+			Trellis.Feeds.init();
+			Trellis.addShutdownListener(() => Trellis.Feeds.uninit());
 			
-			Zotero.Schema.schemaUpdatePromise.then(Zotero.purgeDataObjects.bind(Zotero));
+			Trellis.Schema.schemaUpdatePromise.then(Trellis.purgeDataObjects.bind(Trellis));
 			
 			// Migrate fields from Extra that can be moved to item fields after a schema update
 			//
 			// By default this won't run until after the initial auto-sync, to allow the same
 			// changes from elsewhere to be synced down. To test migration after the online library
 			// has been updated by a previous run, disable auto-sync.
-			Zotero.startupSyncPromise.then(async () => {
+			Trellis.startupSyncPromise.then(async () => {
 				let progressWin;
 				let itemProgress;
 				// Feed updates (e.g., deleting old items) can interfere with this, so pause them
 				// until we're done
-				let feedPauser = await Zotero.Feeds.pause();
+				let feedPauser = await Trellis.Feeds.pause();
 				try {
-					await Zotero.Schema.migrateExtraFields({
+					await Trellis.Schema.migrateExtraFields({
 						onProgress: ({ progress, progressMax }) => {
 							if (!progressWin) {
-								progressWin = new Zotero.ProgressWindow({
+								progressWin = new Trellis.ProgressWindow({
 									closeOnClick: false
 								});
-								let title = Zotero.getString('upgrade.status');
+								let title = Trellis.getString('upgrade.status');
 								progressWin.changeHeadline(title);
 								itemProgress = new progressWin.ItemProgress(
 									'journalArticle',
-									Zotero.getString('migrate-extra-fields-progress-message')
+									Trellis.getString('migrate-extra-fields-progress-message')
 								);
 								progressWin.show();
 							}
@@ -796,7 +796,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 					});
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					itemProgress.setError();
 				}
 				finally {
@@ -810,10 +810,10 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			return true;
 		}
 		catch (e) {
-			Zotero.logError(e);
-			if (!Zotero.startupError) {
-				Zotero.startupError = Zotero.getString('startupError', Zotero.appName) + "\n\n"
-					+ Zotero.getString('db.integrityCheck.reportInForums') + "\n\n"
+			Trellis.logError(e);
+			if (!Trellis.startupError) {
+				Trellis.startupError = Trellis.getString('startupError', Trellis.appName) + "\n\n"
+					+ Trellis.getString('db.integrityCheck.reportInForums') + "\n\n"
 					+ e.message ? (e.message + "\n\n" + e.stack) : e;
 			}
 			return false;
@@ -825,20 +825,20 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 */
 	var _initDB = async function (haveReleasedLock) {
 		// Initialize main database connection
-		Zotero.DB = new Zotero.DBConnection('zotero');
+		Trellis.DB = new Trellis.DBConnection('trellis');
 		
 		try {
 			// Test read access
-			await Zotero.DB.test();
+			await Trellis.DB.test();
 			
-			let dbfile = Zotero.DataDirectory.getDatabase();
+			let dbfile = Trellis.DataDirectory.getDatabase();
 
-			// Test write access on Zotero data directory
-			if (!Zotero.File.pathToFile(PathUtils.parent(dbfile)).isWritable()) {
+			// Test write access on Trellis data directory
+			if (!Trellis.File.pathToFile(PathUtils.parent(dbfile)).isWritable()) {
 				var msg = 'Cannot write to ' + PathUtils.parent(dbfile) + '/';
 			}
-			// Test write access on Zotero database
-			else if (!Zotero.File.pathToFile(dbfile).isWritable()) {
+			// Test write access on Trellis database
+			else if (!Trellis.File.pathToFile(dbfile).isWritable()) {
 				var msg = 'Cannot write to ' + dbfile;
 			}
 			else {
@@ -859,18 +859,18 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			else if (_checkDataDirStorageIOError(e)) {}
 			// Storage busy
 			else if (e.message.includes('2153971713')) {
-				Zotero.startupError = Zotero.getString('startupError.databaseInUse');
+				Trellis.startupError = Trellis.getString('startupError.databaseInUse');
 			}
 			else {
-				let stack = e.stack ? Zotero.Utilities.Internal.filterStack(e.stack) : null;
-				Zotero.startupError = Zotero.getString('startupError', Zotero.appName) + "\n\n"
-					+ Zotero.getString('db.integrityCheck.reportInForums') + "\n\n"
+				let stack = e.stack ? Trellis.Utilities.Internal.filterStack(e.stack) : null;
+				Trellis.startupError = Trellis.getString('startupError', Trellis.appName) + "\n\n"
+					+ Trellis.getString('db.integrityCheck.reportInForums') + "\n\n"
 					+ (stack || e);
 			}
 			
-			Zotero.debug(e.toString(), 1);
+			Trellis.debug(e.toString(), 1);
 			Components.utils.reportError(e); // DEBUG: doesn't always work
-			Zotero.skipLoading = true;
+			Trellis.skipLoading = true;
 			return false;
 		}
 		
@@ -883,29 +883,29 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			return false;
 		}
 		
-		var msg = Zotero.getString('dataDir.databaseCannotBeOpened', Zotero.clientName)
+		var msg = Trellis.getString('dataDir.databaseCannotBeOpened', Trellis.clientName)
 			+ "\n\n"
-			+ Zotero.getString('dataDir.checkPermissions', Zotero.clientName);
+			+ Trellis.getString('dataDir.checkPermissions', Trellis.clientName);
 		// If already using default directory, just show it
-		if (Zotero.DataDirectory.dir == Zotero.DataDirectory.defaultDir) {
-			msg += "\n\n" + Zotero.getString('dataDir.location', Zotero.DataDirectory.dir);
+		if (Trellis.DataDirectory.dir == Trellis.DataDirectory.defaultDir) {
+			msg += "\n\n" + Trellis.getString('dataDir.location', Trellis.DataDirectory.dir);
 		}
 		// Otherwise suggest moving to default, since there's a good chance this is due to security
-		// software preventing Zotero from accessing the selected directory (particularly if it's
+		// software preventing Trellis from accessing the selected directory (particularly if it's
 		// a Firefox profile)
 		else {
 			msg += "\n\n"
-				+ Zotero.getString('dataDir.moveToDefaultLocation', Zotero.clientName)
+				+ Trellis.getString('dataDir.moveToDefaultLocation', Trellis.clientName)
 				+ "\n\n"
-				+ Zotero.getString(
-					'dataDir.migration.failure.full.current', Zotero.DataDirectory.dir
+				+ Trellis.getString(
+					'dataDir.migration.failure.full.current', Trellis.DataDirectory.dir
 				)
 				+ "\n"
-				+ Zotero.getString(
-					'dataDir.migration.failure.full.recommended', Zotero.DataDirectory.defaultDir
+				+ Trellis.getString(
+					'dataDir.migration.failure.full.recommended', Trellis.DataDirectory.defaultDir
 				);
 		}
-		Zotero.startupError = msg;
+		Trellis.startupError = msg;
 		return true;
 	}
 
@@ -924,27 +924,27 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		// Only handle the case where a custom data directory is in use -- in the default
 		// location, an I/O error is more likely something else (disk issue, antivirus, etc.)
 		// and swapping locations probably won't help.
-		if (Zotero.DataDirectory.dir == Zotero.DataDirectory.defaultDir) {
+		if (Trellis.DataDirectory.dir == Trellis.DataDirectory.defaultDir) {
 			return false;
 		}
 
-		Zotero.startupError = Zotero.getString('dataDir.databaseCannotBeOpened', Zotero.clientName)
+		Trellis.startupError = Trellis.getString('dataDir.databaseCannotBeOpened', Trellis.clientName)
 			+ "\n\n"
-			+ Zotero.getString('data-dir-unsupported-storage')
+			+ Trellis.getString('data-dir-unsupported-storage')
 			+ "\n\n"
-			+ Zotero.getString('dataDir.location', Zotero.DataDirectory.dir);
+			+ Trellis.getString('dataDir.location', Trellis.DataDirectory.dir);
 
 		_startupErrorHandler = async function () {
-			let index = Zotero.Prompt.confirm({
-				title: Zotero.getString('general.error'),
-				text: Zotero.startupError,
-				button0: Zotero.getString('dataDir.useDefaultLocation'),
-				button1: Zotero.getString('general.quit'),
+			let index = Trellis.Prompt.confirm({
+				title: Trellis.getString('general.error'),
+				text: Trellis.startupError,
+				button0: Trellis.getString('dataDir.useDefaultLocation'),
+				button1: Trellis.getString('general.quit'),
 			});
 			// Revert to default location
 			if (index == 0) {
-				Zotero.DataDirectory.set(Zotero.DataDirectory.defaultDir);
-				Zotero.Utilities.Internal.quit(true);
+				Trellis.DataDirectory.set(Trellis.DataDirectory.defaultDir);
+				Trellis.Utilities.Internal.quit(true);
 			}
 		};
 		return true;
@@ -952,11 +952,11 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 
 
 	this.shutdown = async function () {
-		Zotero.debug("Shutting down Zotero");
+		Trellis.debug("Shutting down Trellis");
 		
 		try {
 			// set closing to true
-			Zotero.closing = true;
+			Trellis.closing = true;
 			
 			// run shutdown listener
 			let shutdownPromises = [];
@@ -965,77 +965,77 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 					shutdownPromises.push(listener());
 				}
 				catch(e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			await Promise.all(shutdownPromises);
 			
-			if (Zotero.DB) {
+			if (Trellis.DB) {
 				// close DB
-				await Zotero.DB.closeDatabase(true)
+				await Trellis.DB.closeDatabase(true)
 			}
 		} catch(e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	};
 	
 	
 	this.getProfileDirectory = function () {
-		Zotero.warn("Zotero.getProfileDirectory() is deprecated -- use Zotero.Profile.dir");
-		return Zotero.File.pathToFile(Zotero.Profile.dir);
+		Trellis.warn("Trellis.getProfileDirectory() is deprecated -- use Trellis.Profile.dir");
+		return Trellis.File.pathToFile(Trellis.Profile.dir);
 	}
 	
-	this.getZoteroDirectory = function () {
-		Zotero.warn("Zotero.getZoteroDirectory() is deprecated -- use Zotero.DataDirectory.dir");
-		return Zotero.File.pathToFile(Zotero.DataDirectory.dir);
+	this.getTrellisDirectory = function () {
+		Trellis.warn("Trellis.getTrellisDirectory() is deprecated -- use Trellis.DataDirectory.dir");
+		return Trellis.File.pathToFile(Trellis.DataDirectory.dir);
 	}
 	
-	this.getZoteroDatabase = function (name, ext) {
-		Zotero.warn("Zotero.getZoteroDatabase() is deprecated -- use Zotero.DataDirectory.getDatabase()");
-		return Zotero.File.pathToFile(Zotero.DataDirectory.getDatabase(name, ext));
+	this.getTrellisDatabase = function (name, ext) {
+		Trellis.warn("Trellis.getTrellisDatabase() is deprecated -- use Trellis.DataDirectory.getDatabase()");
+		return Trellis.File.pathToFile(Trellis.DataDirectory.getDatabase(name, ext));
 	}
 	
 	function getStorageDirectory() {
-		return Zotero.File.pathToFile(Zotero.DataDirectory.getSubdirectory('storage', true));
+		return Trellis.File.pathToFile(Trellis.DataDirectory.getSubdirectory('storage', true));
 	}
 
 	this.getStylesDirectory = function () {
-		return Zotero.File.pathToFile(Zotero.DataDirectory.getSubdirectory('styles', true));
+		return Trellis.File.pathToFile(Trellis.DataDirectory.getSubdirectory('styles', true));
 	}
 	
 	this.getTranslatorsDirectory = function () {
-		return Zotero.File.pathToFile(Zotero.DataDirectory.getSubdirectory('translators', true));
+		return Trellis.File.pathToFile(Trellis.DataDirectory.getSubdirectory('translators', true));
 	}
 	
 	var _tmpDir;
 	this.getTempDirectory = function () {
 		if (_tmpDir) {
-			return Zotero.File.pathToFile(_tmpDir);
+			return Trellis.File.pathToFile(_tmpDir);
 		}
 		var dir;
 		try {
 			dir = Services.dirsvc.get("TmpD", Ci.nsIFile);
 			let relDir;
-			if (Zotero.isWin) {
-				relDir = 'Zotero';
+			if (Trellis.isWin) {
+				relDir = 'Trellis';
 			}
-			else if (Zotero.isMac) {
-				relDir = 'org.zotero.zotero';
+			else if (Trellis.isMac) {
+				relDir = 'org.trellis.trellis';
 			}
 			else {
-				relDir = 'zotero';
+				relDir = 'trellis';
 			}
 			dir.append(relDir);
-			Zotero.File.createDirectoryIfMissing(dir);
+			Trellis.File.createDirectoryIfMissing(dir);
 		}
 		// If we can't use the system temp dir, fall back to 'tmp' in the data dir
 		catch (e) {
-			Zotero.warn(e);
-			dir = Zotero.File.pathToFile(Zotero.DataDirectory.getSubdirectory('tmp', true));
+			Trellis.warn(e);
+			dir = Trellis.File.pathToFile(Trellis.DataDirectory.getSubdirectory('tmp', true));
 		}
 		
 		AsyncShutdown.profileBeforeChange.addBlocker(
-			"Zotero: Removing temp directory",
+			"Trellis: Removing temp directory",
 			() => this.removeTempDirectory()
 		);
 		
@@ -1046,11 +1046,11 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	this.removeTempDirectory = async function () {
 		if (!_tmpDir) return;
 		try {
-			Zotero.debug("Removing " + _tmpDir);
+			Trellis.debug("Removing " + _tmpDir);
 			return IOUtils.remove(_tmpDir, { recursive: true });
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 	
@@ -1074,7 +1074,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			if (modal) {
 				flags += ',modal';
 			}
-			Services.ww.openWindow(null, 'chrome://zotero/content/update/updates.xhtml',
+			Services.ww.openWindow(null, 'chrome://trellis/content/update/updates.xhtml',
 				'updateChecker', flags, null);
 		}
 	};
@@ -1084,38 +1084,38 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * Launch a file, the best way we can
 	 */
 	this.launchFile = function (file) {
-		file = Zotero.File.pathToFile(file);
+		file = Trellis.File.pathToFile(file);
 		
-		Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+		Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 		
 		try {
-			Zotero.debug("Launching " + file.path);
+			Trellis.debug("Launching " + file.path);
 			file.launch();
 		}
 		catch (e) {
 			// macOS only: if there's no associated application, launch() will throw, but
 			// the OS will show a dialog asking the user to choose an application. We don't
 			// want to show the Firefox dialog in that case.
-			if (Zotero.isMac && file.exists()) {
+			if (Trellis.isMac && file.exists()) {
 				return;
 			}
 			
-			Zotero.debug(e, 2);
-			Zotero.debug("launch() not supported -- trying fallback executable", 2);
+			Trellis.debug(e, 2);
+			Trellis.debug("launch() not supported -- trying fallback executable", 2);
 			
 			try {
-				if (Zotero.isWin) {
+				if (Trellis.isWin) {
 					var pref = "fallbackLauncher.windows";
 				}
 				else {
 					var pref = "fallbackLauncher.unix";
 				}
-				let launcher = Zotero.Prefs.get(pref);
+				let launcher = Trellis.Prefs.get(pref);
 				this.launchFileWithApplication(file.path, launcher);
 			}
 			catch (e) {
-				Zotero.debug(e);
-				Zotero.debug("Launching via executable failed -- passing to loadURI()");
+				Trellis.debug(e);
+				Trellis.debug("Launching via executable failed -- passing to loadURI()");
 				
 				// If nsIFile.launch() isn't available and the fallback
 				// executable doesn't exist, we just let the Firefox external
@@ -1137,16 +1137,16 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * Launch a file with the given application
 	 */
 	this.launchFileWithApplication = function (filePath, applicationPath) {
-		Zotero.debug(`Launching ${filePath} with ${applicationPath}`);
+		Trellis.debug(`Launching ${filePath} with ${applicationPath}`);
 		
-		var exec = Zotero.File.pathToFile(applicationPath);
+		var exec = Trellis.File.pathToFile(applicationPath);
 		if (!exec.exists()) {
 			throw new Error("'" + applicationPath + "' does not exist");
 		}
 		
 		var args;
 		// On macOS, if we only have an .app, launch it using 'open'
-		if (Zotero.isMac && applicationPath.endsWith('.app')) {
+		if (Trellis.isMac && applicationPath.endsWith('.app')) {
 			args = [filePath, '-a', applicationPath];
 			applicationPath = '/usr/bin/open';
 		}
@@ -1154,10 +1154,10 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			args = [filePath];
 		}
 		
-		Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+		Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 		
 		// Async, but we don't want to block
-		Zotero.Utilities.Internal.exec(applicationPath, args);
+		Trellis.Utilities.Internal.exec(applicationPath, args);
 	};
 	
 	
@@ -1165,8 +1165,8 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * Launch a URL externally, the best way we can
 	 */
 	this.launchURL = function (url) {
-		if (!Zotero.Utilities.isHTTPURL(url)) {
-			if (Zotero.Utilities.isHTTPURL(url, true)) {
+		if (!Trellis.Utilities.isHTTPURL(url)) {
+			if (Trellis.Utilities.isHTTPURL(url, true)) {
 				if (!url.startsWith('x-apple.systempreferences:')) {
 					url = 'http://' + url;
 				}
@@ -1189,8 +1189,8 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 				if (!found.value) {
 					throw new Error(`Handler not found for '${scheme}' URLs`);
 				}
-				if (!Zotero.isWin) {
-					Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+				if (!Trellis.isWin) {
+					Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 				}
 				
 				svc.loadURI(Services.io.newURI(url, null, null));
@@ -1199,8 +1199,8 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		}
 		
 		try {
-			if (!Zotero.isWin) {
-				Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+			if (!Trellis.isWin) {
+				Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 			}
 			
 			var uri = Services.io.newURI(url, null, null);
@@ -1211,23 +1211,23 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			handler.launchWithURI(uri, null);
 		}
 		catch (e) {
-			Zotero.debug("launchWithURI() not supported -- trying fallback executable");
+			Trellis.debug("launchWithURI() not supported -- trying fallback executable");
 			
-			if (Zotero.isWin) {
+			if (Trellis.isWin) {
 				var pref = "fallbackLauncher.windows";
 			}
 			else {
 				var pref = "fallbackLauncher.unix";
 			}
-			var path = Zotero.Prefs.get(pref);
+			var path = Trellis.Prefs.get(pref);
 			
-			let exec = Zotero.File.pathToFile(path);
+			let exec = Trellis.File.pathToFile(path);
 			if (!exec.exists()) {
 				throw new Error("Fallback executable not found -- "
-					+ "check extensions.zotero." + pref + " in about:config");
+					+ "check extensions.trellis." + pref + " in about:config");
 			}
 			
-			Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+			Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 			
 			var proc = Components.classes["@mozilla.org/process/util;1"]
 							.createInstance(Components.interfaces.nsIProcess);
@@ -1247,17 +1247,17 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * @param {Function} [options.onLoad] - Function to run once URI is loaded; passed the loaded document
 	 * @param {Boolean} [options.allowJavaScript] - Set to false to disable JavaScript
 	 * @param {Number} [options.userContextId] - To isolate the viewer's cookies
-	 *     into the same jar as a Zotero.HTTP.request or HiddenBrowser using the same ID
+	 *     into the same jar as a Trellis.HTTP.request or HiddenBrowser using the same ID
 	 * @param {String} [options.customUserAgent] - Override the User-Agent for all requests
 	 *     from this viewer's browsing context
 	 */
 	this.openInViewer = function (uri, options) {
 		if (options && !options.onLoad && typeof options === 'function') {
-			Zotero.debug("Zotero.openInViewer() now takes an 'options' object for its second parameter -- update your code");
+			Trellis.debug("Trellis.openInViewer() now takes an 'options' object for its second parameter -- update your code");
 			options = { onLoad: options };
 		}
 
-		var viewerWins = Services.wm.getEnumerator("zotero:basicViewer");
+		var viewerWins = Services.wm.getEnumerator("trellis:basicViewer");
 		for (let existingWin of viewerWins) {
 			if (existingWin.viewerOriginalURI === uri && existingWin.viewerUserContextId === options?.userContextId) {
 				existingWin.focus();
@@ -1274,7 +1274,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			}
 		};
 		arg.wrappedJSObject = arg;
-		let win = ww.openWindow(null, "chrome://zotero/content/standalone/basicViewer.xhtml",
+		let win = ww.openWindow(null, "chrome://trellis/content/standalone/basicViewer.xhtml",
 			null, "chrome,dialog=yes,resizable,centerscreen,menubar,scrollbars", arg);
 		if (options?.onLoad) {
 			let browser;
@@ -1317,7 +1317,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			stack++;
 		}
 		
-		Zotero.Debug.log(message, level, maxDepth, stack);
+		Trellis.Debug.log(message, level, maxDepth, stack);
 	}
 	
 	
@@ -1355,7 +1355,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * @param {Exception} err
 	 */
 	this.logError = function (err) {
-		Zotero.debug(err, 1);
+		Trellis.debug(err, 1);
 		this.log(err.message ? err.message : err.toString(), "error",
 			err.fileName ? err.fileName : (err.filename ? err.filename : null), null,
 			err.lineNumber ? err.lineNumber : null, null);
@@ -1363,7 +1363,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	
 	
 	this.warn = function (err) {
-		Zotero.debug(err + "\n\n" + Zotero.Utilities.Internal.filterStack(new Error().stack), 2);
+		Trellis.debug(err + "\n\n" + Trellis.Utilities.Internal.filterStack(new Error().stack), 2);
 		this.log(err.message ? err.message : err.toString(), "warning",
 			err.fileName ? err.fileName : (err.filename ? err.filename : null), null,
 			err.lineNumber ? err.lineNumber : null, null);
@@ -1384,7 +1384,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	
 	
 	/**
-	 * Display an error message saying that an error has occurred and Zotero needs to be restarted.
+	 * Display an error message saying that an error has occurred and Trellis needs to be restarted.
 	 *
 	 * If |popup| is TRUE, display in popup progress window; otherwise, display as items pane message
 	 */
@@ -1392,23 +1392,23 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		this.crashed = true;
 		
 		// Check the database after restart
-		Zotero.Schema.setIntegrityCheckRequired(true).catch(e => this.logError(e));
+		Trellis.Schema.setIntegrityCheckRequired(true).catch(e => this.logError(e));
 		
-		var reportErrorsStr = Zotero.getString('errorReport.reportErrors');
-		var reportInstructions = Zotero.getString('errorReport.reportInstructions', reportErrorsStr);
+		var reportErrorsStr = Trellis.getString('errorReport.reportErrors');
+		var reportInstructions = Trellis.getString('errorReport.reportInstructions', reportErrorsStr);
 		
 		var msg;
 		if (popup) {
-			msg = Zotero.getString('general.pleaseRestart', Zotero.appName) + ' '
+			msg = Trellis.getString('general.pleaseRestart', Trellis.appName) + ' '
 				+ reportInstructions;
 		}
 		else {
-			msg = Zotero.getString('general.errorHasOccurred') + ' '
-				+ Zotero.getString('general.pleaseRestart', Zotero.appName) + '\n\n'
+			msg = Trellis.getString('general.errorHasOccurred') + ' '
+				+ Trellis.getString('general.pleaseRestart', Trellis.appName) + '\n\n'
 				+ reportInstructions;
 		}
-		Zotero.logError(msg);
-		Zotero.logError(new Error().stack);
+		Trellis.logError(msg);
+		Trellis.logError(new Error().stack);
 		
 		this.startupError = msg;
 		this.startupErrorHandler = null;
@@ -1416,19 +1416,19 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		var enumerator = Services.wm.getEnumerator("navigator:browser");
 		while (enumerator.hasMoreElements()) {
 			let win = enumerator.getNext();
-			if (!win.ZoteroPane) continue;
+			if (!win.TrellisPane) continue;
 			
 			// Display as popup progress window
 			if (popup) {
-				var pw = new Zotero.ProgressWindow();
-				pw.changeHeadline(Zotero.getString('general.errorHasOccurred'));
+				var pw = new Trellis.ProgressWindow();
+				pw.changeHeadline(Trellis.getString('general.errorHasOccurred'));
 				pw.addDescription(msg);
 				pw.show();
 				pw.startCloseTimer(8000);
 			}
 			// Display as items pane message
 			else {
-				win.ZoteroPane.setItemsPaneMessage(msg, true);
+				win.TrellisPane.setItemsPaneMessage(msg, true);
 			}
 		}
 	};
@@ -1496,7 +1496,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			return !!(output.value & userEnabled);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 	}
@@ -1545,7 +1545,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			return ["aarch64", "arm64"].includes(machine.toLowerCase());
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 	};
@@ -1554,9 +1554,9 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * Get versions, platform, etc.
 	 */
 	this.getSystemInfo = async function () {
-		var version = Zotero.version + ' (';
+		var version = Trellis.version + ' (';
 		
-		var arch = Zotero.arch;
+		var arch = Trellis.arch;
 		if (arch == 'aarch64') {
 			arch = 'ARM64';
 		}
@@ -1565,7 +1565,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		}
 		version += arch;
 		
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			let info = await Services.sysinfo.processInfo;
 			if (info.isWowARM64 || this.isWin64EmulatedOnArm()) {
 				version += " on ARM64";
@@ -1580,14 +1580,14 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			appName: Services.appinfo.name,
 			version,
 			os: await this.getOSVersion(),
-			locale: Zotero.locale,
+			locale: Trellis.locale,
 		};
 		
 		if (Services.appinfo.inSafeMode) {
 			info.safeMode = true;
 		}
 		
-		var extensions = await Zotero.getInstalledExtensions();
+		var extensions = await Trellis.getInstalledExtensions();
 		info.extensions = extensions.join(', ');
 		
 		var str = '';
@@ -1610,20 +1610,20 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	 * @return {String}
 	 */
 	this.getOSVersion = async function () {
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			try {
 				return "macOS "
-					+ (await Zotero.Utilities.Internal.subprocess('/usr/bin/sw_vers', ['-productVersion'])).trim();
+					+ (await Trellis.Utilities.Internal.subprocess('/usr/bin/sw_vers', ['-productVersion'])).trim();
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		
 		var name = Services.sysinfo.getProperty("name");
 		var version = Services.sysinfo.getProperty("version");
 		var build = Services.sysinfo.getProperty("build");
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			name = "Windows";
 			// Builds above 22000 are Windows 11
 			if (build >= 22000) {
@@ -1662,40 +1662,40 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	};
 	
 	this.getString = function (name, params, num) {
-		return Zotero.Intl.getString(...arguments);
+		return Trellis.Intl.getString(...arguments);
 	}
 	
-	this.defineProperty = (...args) => Zotero.Utilities.Internal.defineProperty(...args);
+	this.defineProperty = (...args) => Trellis.Utilities.Internal.defineProperty(...args);
 
-	this.extendClass = (...args) => Zotero.Utilities.Internal.extendClass(...args);
+	this.extendClass = (...args) => Trellis.Utilities.Internal.extendClass(...args);
 
 	this.getLocaleCollation = function () {
-	  return Zotero.Intl.collation;
+	  return Trellis.Intl.collation;
 	}
 
 	this.localeCompare = function (...args) {
-		return Zotero.Intl.compare(...args);
+		return Trellis.Intl.compare(...args);
 	}
 	
 	function setFontSize(rootElement) {
-		return Zotero.Utilities.Internal.setFontSize(rootElement);
+		return Trellis.Utilities.Internal.setFontSize(rootElement);
 	}
 	
 	function flattenArguments(args){
-		return Zotero.Utilities.Internal.flattenArguments(args);
+		return Trellis.Utilities.Internal.flattenArguments(args);
 	}
 	
 	function getAncestorByTagName(elem, tagName){
-		return Zotero.Utilities.Internal.getAncestorByTagName(elem, tagName);
+		return Trellis.Utilities.Internal.getAncestorByTagName(elem, tagName);
 	}
 	
 	this.randomString = function (len, chars) {
-		return Zotero.Utilities.randomString(len, chars);
+		return Trellis.Utilities.randomString(len, chars);
 	}
 	
 	
 	this.moveToUnique = function (file, newFile) {
-		Zotero.debug("Zotero.moveToUnique() is deprecated -- use Zotero.File.moveToUnique()", 2);
+		Trellis.debug("Trellis.moveToUnique() is deprecated -- use Trellis.File.moveToUnique()", 2);
 		newFile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0o644);
 		var newName = newFile.leafName;
 		newFile.remove(null);
@@ -1706,22 +1706,22 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	}
 	
 	this.lazy = function (fn) {
-		return Zotero.Utilities.Internal.lazy(fn);
+		return Trellis.Utilities.Internal.lazy(fn);
 	}
 	
 	this.serial = function (fn) {
-		return Zotero.Utilities.Internal.serial(fn);
+		return Trellis.Utilities.Internal.serial(fn);
 	}
 	
 	/**
-	 * Show Zotero pane overlay and progress bar in all windows
+	 * Show Trellis pane overlay and progress bar in all windows
 	 *
 	 * @param {String} msg
 	 * @param {Boolean} [determinate=false]
-	 * @param {Boolean} [modalOnly=false] - Don't use popup if Zotero pane isn't showing
+	 * @param {Boolean} [modalOnly=false] - Don't use popup if Trellis pane isn't showing
 	 * @return	void
 	 */
-	this.showZoteroPaneProgressMeter = function (msg, determinate, icon, modalOnly) {
+	this.showTrellisPaneProgressMeter = function (msg, determinate, icon, modalOnly) {
 		// If msg is undefined, keep any existing message. If false/null/"", clear.
 		// The message is also cleared when the meters are hidden.
 		_progressMessage = msg = (msg === undefined ? _progressMessage : msg) || "";
@@ -1730,9 +1730,9 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		var progressMeters = [];
 		while (enumerator.hasMoreElements()) {
 			var win = enumerator.getNext();
-			if(!win.ZoteroPane) continue;
+			if(!win.TrellisPane) continue;
 			
-			var label = win.ZoteroPane.document.getElementById('zotero-pane-progress-label');
+			var label = win.TrellisPane.document.getElementById('trellis-pane-progress-label');
 			if (!label) {
 				Components.utils.reportError("label not found in " + win.document.location.href);
 			}
@@ -1744,16 +1744,16 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 				label.hidden = true;
 			}
 			// This is the craziest thing. In Firefox 52.6.0, the very presence of this line
-			// causes Zotero on Linux to burn 5% CPU at idle, even if everything below it in
+			// causes Trellis on Linux to burn 5% CPU at idle, even if everything below it in
 			// the block is commented out. Same if the progressmeter itself is hidden="true".
 			// For some reason it also doesn't seem to work to set the progressmeter to
 			// 'determined' when hiding, which we're doing in lookup.js. So instead, create a new
-			// progressmeter each time and delete it in _hideWindowZoteroPaneOverlay().
+			// progressmeter each time and delete it in _hideWindowTrellisPaneOverlay().
 			//
-			//let progressMeter = win.ZoteroPane.document.getElementById('zotero-pane-progressmeter');
-			let doc = win.ZoteroPane.document;
-			let container = doc.getElementById('zotero-pane-progressmeter-container');
-			let id = 'zotero-pane-progressmeter';
+			//let progressMeter = win.TrellisPane.document.getElementById('trellis-pane-progressmeter');
+			let doc = win.TrellisPane.document;
+			let container = doc.getElementById('trellis-pane-progressmeter-container');
+			let id = 'trellis-pane-progressmeter';
 			let progressMeter = doc.getElementById(id);
 			if (!progressMeter) {
 				progressMeter = doc.createElement('progress');
@@ -1768,8 +1768,8 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			}
 			container.appendChild(progressMeter);
 			
-			_showWindowZoteroPaneOverlay(win.ZoteroPane.document);
-			win.ZoteroPane.document.getElementById('zotero-pane-overlay-deck').selectedIndex = 0;
+			_showWindowTrellisPaneOverlay(win.TrellisPane.document);
+			win.TrellisPane.document.getElementById('trellis-pane-overlay-deck').selectedIndex = 0;
 			
 			progressMeters.push(progressMeter);
 		}
@@ -1781,10 +1781,10 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	/**
 	 * @param	{Number}	percentage		Percentage complete as integer or float
 	 */
-	this.updateZoteroPaneProgressMeter = function (percentage) {
+	this.updateTrellisPaneProgressMeter = function (percentage) {
 		if(percentage !== null) {
 			if (percentage < 0 || percentage > 100) {
-				Zotero.debug("Invalid percentage value '" + percentage + "' in Zotero.updateZoteroPaneProgressMeter()");
+				Trellis.debug("Invalid percentage value '" + percentage + "' in Trellis.updateTrellisPaneProgressMeter()");
 				return;
 			}
 			percentage = Math.round(percentage * 10);
@@ -1808,16 +1808,16 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	
 	
 	/**
-	 * Hide Zotero pane overlay in all windows
+	 * Hide Trellis pane overlay in all windows
 	 */
-	this.hideZoteroPaneOverlays = function () {
+	this.hideTrellisPaneOverlays = function () {
 		this.locked = false;
 		
 		var enumerator = Services.wm.getEnumerator("navigator:browser");
 		while (enumerator.hasMoreElements()) {
 			var win = enumerator.getNext();
-			if(win.ZoteroPane && win.ZoteroPane.document) {
-				_hideWindowZoteroPaneOverlay(win.ZoteroPane.document);
+			if(win.TrellisPane && win.TrellisPane.document) {
+				_hideWindowTrellisPaneOverlay(win.TrellisPane.document);
 			}
 		}
 		
@@ -1833,26 +1833,26 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	
 	
 	/**
-	 * Adds a listener to be called when Zotero shuts down (even if Firefox is not shut down)
+	 * Adds a listener to be called when Trellis shuts down (even if Firefox is not shut down)
 	 */
 	this.addShutdownListener = function (listener) {
 		_shutdownListeners.push(listener);
 	}
 	
-	function _showWindowZoteroPaneOverlay(doc) {
-		doc.getElementById('zotero-collections-tree').disabled = true;
-		doc.getElementById('zotero-items-tree').disabled = true;
-		doc.getElementById('zotero-pane-overlay').hidden = false;
+	function _showWindowTrellisPaneOverlay(doc) {
+		doc.getElementById('trellis-collections-tree').disabled = true;
+		doc.getElementById('trellis-items-tree').disabled = true;
+		doc.getElementById('trellis-pane-overlay').hidden = false;
 	}
 	
 	
-	function _hideWindowZoteroPaneOverlay(doc) {
-		doc.getElementById('zotero-collections-tree').disabled = false;
-		doc.getElementById('zotero-items-tree').disabled = false;
-		doc.getElementById('zotero-pane-overlay').hidden = true;
+	function _hideWindowTrellisPaneOverlay(doc) {
+		doc.getElementById('trellis-collections-tree').disabled = false;
+		doc.getElementById('trellis-items-tree').disabled = false;
+		doc.getElementById('trellis-pane-overlay').hidden = true;
 		
-		// See note in showZoteroPaneProgressMeter()
-		let pm = doc.getElementById('zotero-pane-progressmeter');
+		// See note in showTrellisPaneProgressMeter()
+		let pm = doc.getElementById('trellis-pane-progressmeter');
 		if (pm) {
 			pm.parentNode.removeChild(pm);
 		}
@@ -1860,7 +1860,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	
 	
 	this.updateQuickSearchBox = function (document) {
-		var searchBox = document.getElementById('zotero-tb-search');
+		var searchBox = document.getElementById('trellis-tb-search');
 		if (searchBox) {
 			searchBox.updateMode();
 		}
@@ -1873,38 +1873,38 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	this.purgeDataObjects = async function () {
 		var d = new Date();
 		
-		await Zotero.Creators.purge();
-		await Zotero.DB.executeTransaction(async function () {
-			return Zotero.Tags.purge();
+		await Trellis.Creators.purge();
+		await Trellis.DB.executeTransaction(async function () {
+			return Trellis.Tags.purge();
 		});
-		await Zotero.Fulltext.purgeUnusedWords();
-		await Zotero.Items.purge();
+		await Trellis.Fulltext.purgeUnusedWords();
+		await Trellis.Items.purge();
 		// DEBUG: this might not need to be permanent
-		//yield Zotero.DB.executeTransaction(async function () {
-		//	return Zotero.Relations.purge();
+		//yield Trellis.DB.executeTransaction(async function () {
+		//	return Trellis.Relations.purge();
 		//});
 		
-		Zotero.debug("Purged data tables in " + (new Date() - d) + " ms");
+		Trellis.debug("Purged data tables in " + (new Date() - d) + " ms");
 	};
 	
 	
 	this.reloadDataObjects = function () {
 		return Promise.all([
-			Zotero.Collections.reloadAll(),
-			Zotero.Creators.reloadAll(),
-			Zotero.Items.reloadAll()
+			Trellis.Collections.reloadAll(),
+			Trellis.Creators.reloadAll(),
+			Trellis.Items.reloadAll()
 		]);
 	}
 	
 	
 	/**
-	 * Brings Zotero Standalone to the foreground
+	 * Brings Trellis Standalone to the foreground
 	 */
 	this.activateStandalone = function () {
-		var uri = Services.io.newURI('zotero://select', null, null);
+		var uri = Services.io.newURI('trellis://select', null, null);
 		var handler = Components.classes['@mozilla.org/uriloader/external-protocol-service;1']
 					.getService(Components.interfaces.nsIExternalProtocolService)
-					.getProtocolHandlerInfo('zotero');
+					.getProtocolHandlerInfo('trellis');
 		handler.preferredAction = Components.interfaces.nsIHandlerInfo.useSystemDefault;
 		handler.launchWithURI(uri, null);
 	}
@@ -1915,10 +1915,10 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	function _shouldKeepError(msg) {
 		const skip = ['CSS Parser', 'content javascript'];
 		
-		//Zotero.debug(msg);
+		//Trellis.debug(msg);
 		try {
 			msg.QueryInterface(Components.interfaces.nsIScriptError);
-			//Zotero.debug(msg);
+			//Trellis.debug(msg);
 			if (skip.indexOf(msg.category) != -1 || msg.flags & msg.warningFlag) {
 				return false;
 			}
@@ -1955,7 +1955,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		
 		for (var i=0; i<blacklist.length; i++) {
 			if (msg.message.indexOf(blacklist[i]) != -1) {
-				//Zotero.debug("Skipping blacklisted error: " + msg.message);
+				//Trellis.debug("Skipping blacklisted error: " + msg.message);
 				return false;
 			}
 		}
@@ -1964,7 +1964,7 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	}
 
 	/**
-	 * Warn if Zotero Standalone is running as root and clobber the cache directory if it is
+	 * Warn if Trellis Standalone is running as root and clobber the cache directory if it is
 	 */
 	function _checkRoot() {
 		var env = Components.classes["@mozilla.org/process/environment;1"].
@@ -1972,20 +1972,20 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 		var user = env.get("USER") || env.get("USERNAME");
 		if(user === "root") {
 			// Show warning
-			if(Services.prompt.confirmEx(null, "", Zotero.getString("standalone.rootWarning"),
+			if(Services.prompt.confirmEx(null, "", Trellis.getString("standalone.rootWarning"),
 					Services.prompt.BUTTON_POS_0*Services.prompt.BUTTON_TITLE_IS_STRING |
 					Services.prompt.BUTTON_POS_1*Services.prompt.BUTTON_TITLE_IS_STRING,
-					Zotero.getString("standalone.rootWarning.exit"),
-					Zotero.getString("standalone.rootWarning.continue"),
+					Trellis.getString("standalone.rootWarning.exit"),
+					Trellis.getString("standalone.rootWarning.continue"),
 					null, null, {}) == 0) {
 				const { ctypes } = ChromeUtils.importESModule("resource://gre/modules/ctypes.sys.mjs");
-				var exit = Zotero.IPC.getLibc().declare("exit", ctypes.default_abi,
+				var exit = Trellis.IPC.getLibc().declare("exit", ctypes.default_abi,
 					                                    ctypes.void_t, ctypes.int);
 				// Zap cache files
 				try {
 					Services.dirsvc.get("ProfLD", Components.interfaces.nsIFile).remove(true);
 				} catch(e) {}
-				// Exit Zotero without giving XULRunner the opportunity to figure out the
+				// Exit Trellis without giving XULRunner the opportunity to figure out the
 				// cache is missing. Otherwise XULRunner will zap the prefs
 				exit(0);
 			}
@@ -1993,22 +1993,22 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 	}
 	
 	function _checkExecutableLocation() {
-		// Make sure Zotero wasn't started from a Mac disk image, which can cause bundled extensions
+		// Make sure Trellis wasn't started from a Mac disk image, which can cause bundled extensions
 		// not to load and possibly other problems
-		if (Zotero.isMac && OS.Constants.Path.libDir.includes('AppTranslocation')) {
+		if (Trellis.isMac && OS.Constants.Path.libDir.includes('AppTranslocation')) {
 			let ps = Services.prompt;
 			let buttonFlags = ps.BUTTON_POS_0 * ps.BUTTON_TITLE_IS_STRING;
 			ps.confirmEx(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString('startupError.startedFromDiskImage1', Zotero.clientName)
+				Trellis.getString('general.error'),
+				Trellis.getString('startupError.startedFromDiskImage1', Trellis.clientName)
 					+ '\n\n'
-					+ Zotero.getString('startupError.startedFromDiskImage2', Zotero.clientName),
+					+ Trellis.getString('startupError.startedFromDiskImage2', Trellis.clientName),
 				buttonFlags,
-				Zotero.getString('general.quitApp', Zotero.clientName),
+				Trellis.getString('general.quitApp', Trellis.clientName),
 				null, null, null, {}
 			);
-			Zotero.Utilities.Internal.quit();
+			Trellis.Utilities.Internal.quit();
 			return false;
 		}
 		
@@ -2028,16 +2028,16 @@ const { CommandLineOptions } = ChromeUtils.importESModule("chrome://zotero/conte
 			_recentErrors.push(msg);
 		}
 	};
-}).call(Zotero);
+}).call(Trellis);
 
 
 /*
  * Handles keyboard shortcut initialization from preferences, optionally
  * overriding existing global shortcuts
  *
- * Actions are configured in ZoteroPane.handleKeyPress()
+ * Actions are configured in TrellisPane.handleKeyPress()
  */
-Zotero.Keys = new function () {
+Trellis.Keys = new function () {
 	this.init = init;
 	this.windowInit = windowInit;
 	this.getCommand = getCommand;
@@ -2046,17 +2046,17 @@ Zotero.Keys = new function () {
 	
 	
 	/*
-	 * Called by Zotero.init()
+	 * Called by Trellis.init()
 	 */
 	function init() {
-		var cmds = Zotero.Prefs.rootBranch.getChildList(ZOTERO_CONFIG.PREF_BRANCH + 'keys', {}, {});
+		var cmds = Trellis.Prefs.rootBranch.getChildList(TRELLIS_CONFIG.PREF_BRANCH + 'keys', {}, {});
 		
 		// Get the key=>command mappings from the prefs
 		for (let cmd of cmds) {
-			cmd = cmd.replace(/^extensions\.zotero\.keys\./, '');
+			cmd = cmd.replace(/^extensions\.trellis\.keys\./, '');
 			// Remove old pref
 			if (cmd == 'overrideGlobal') {
-				Zotero.Prefs.clear('keys.overrideGlobal');
+				Trellis.Prefs.clear('keys.overrideGlobal');
 				continue;
 			}
 			_keys[this.getKeyForCommand(cmd)] = cmd;
@@ -2065,12 +2065,12 @@ Zotero.Keys = new function () {
 	
 	
 	/*
-	 * Called by ZoteroPane.onLoad()
+	 * Called by TrellisPane.onLoad()
 	 */
 	function windowInit(document) {
 		var globalKeys = [
 			{
-				name: 'saveToZotero',
+				name: 'saveToTrellis',
 				defaultKey: 'S'
 			}
 		];
@@ -2099,7 +2099,7 @@ Zotero.Keys = new function () {
 	
 	this.getKeyForCommand = function (cmd) {
 		try {
-			var key = Zotero.Prefs.get('keys.' + cmd);
+			var key = Trellis.Prefs.get('keys.' + cmd);
 		}
 		catch (e) {}
 		return key !== undefined ? key.toUpperCase() : false;
@@ -2112,14 +2112,14 @@ Zotero.Keys = new function () {
  *
  * @namespace
  */
-Zotero.VersionHeader = {
+Trellis.VersionHeader = {
 	_plainUAHosts: new Set(),
 	_uaAppSuffixRe: null,
 	_uaFirefoxComponent: null,
 
 	init: function () {
 		this.register();
-		Zotero.addShutdownListener(this.unregister);
+		Trellis.addShutdownListener(this.unregister);
 	},
 	
 	register: function () {
@@ -2130,15 +2130,15 @@ Zotero.VersionHeader = {
 		try {
 			let channel = subject.QueryInterface(Components.interfaces.nsIHttpChannel);
 			let domain = channel.URI.host;
-			// Add X-Zotero-Version header to HTTP requests to zotero.org
-			let isPrimaryDomain = domain == ZOTERO_CONFIG.DOMAIN_NAME
-				|| domain.endsWith('.' + ZOTERO_CONFIG.DOMAIN_NAME);
+			// Add X-Trellis-Version header to HTTP requests to trellis.org
+			let isPrimaryDomain = domain == TRELLIS_CONFIG.DOMAIN_NAME
+				|| domain.endsWith('.' + TRELLIS_CONFIG.DOMAIN_NAME);
 			if (isPrimaryDomain) {
-				channel.setRequestHeader("X-Zotero-Version", Zotero.version, false);
+				channel.setRequestHeader("X-Trellis-Version", Trellis.version, false);
 			}
 			else {
 				// Use "Firefox/[version]" in user agent if not a proxy check or file sync request
-				let s3RE = /(zoteroproxycheck|zoterofilestorage(test)?)\.s3\.(us-east-1\.)?amazonaws\.com|files\.zotero\.net/;
+				let s3RE = /(trellisproxycheck|trellisfilestorage(test)?)\.s3\.(us-east-1\.)?amazonaws\.com|files\.trellis\.net/;
 				let isAppNameDomain = s3RE.test(domain);
 				if (!isAppNameDomain) {
 					let ua = channel.getRequestHeader('User-Agent');
@@ -2150,15 +2150,15 @@ Zotero.VersionHeader = {
 			}
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 		}
 	},
 	
 	/**
-	 * Register a host that needs the "Zotero/[version]" component stripped
+	 * Register a host that needs the "Trellis/[version]" component stripped
 	 * from its requests' UA. Currently this is only used for hosts that we
 	 * handle Cloudflare Turnstile challenges on; Turnstile won't pass with
-	 * Zotero/ in the UA string, and future requests need the same UA as the
+	 * Trellis/ in the UA string, and future requests need the same UA as the
 	 * one that passed Turnstile, so we have to override for all requests to
 	 * the host.
 	 *
@@ -2171,7 +2171,7 @@ Zotero.VersionHeader = {
 	/**
 	 * @param {String} ua
 	 * @param {'full' | 'plain'} [mode='full'] If 'full', add Firefox/[version] to the default user agent. If 'plain', remove
-	 * 		Zotero/[version] instead.
+	 * 		Trellis/[version] instead.
 	 * @return {String}
 	 */
 	update: function (ua, { mode = 'full' } = {}) {
@@ -2197,7 +2197,7 @@ Zotero.VersionHeader = {
 	},
 
 	/**
-	 * Plain Firefox UA, without the "Zotero/[version]" suffix.
+	 * Plain Firefox UA, without the "Trellis/[version]" suffix.
 	 *
 	 * @return {String}
 	 */
@@ -2208,11 +2208,11 @@ Zotero.VersionHeader = {
 	},
 	
 	unregister: function () {
-		Services.obs.removeObserver(Zotero.VersionHeader, "http-on-modify-request");
+		Services.obs.removeObserver(Trellis.VersionHeader, "http-on-modify-request");
 	}
 }
 
-Zotero.DragDrop = {
+Trellis.DragDrop = {
 	currentEvent: null,
 	currentOrientation: 0,
 	
@@ -2227,19 +2227,19 @@ Zotero.DragDrop = {
 		
 		var len = firstOnly ? 1 : dt.mozItemCount;
 		
-		if (dt.types.includes('zotero/collection')) {
-			dragData.dataType = 'zotero/collection';
-			let ids = dt.getData('zotero/collection').split(",").map(id => parseInt(id));
+		if (dt.types.includes('trellis/collection')) {
+			dragData.dataType = 'trellis/collection';
+			let ids = dt.getData('trellis/collection').split(",").map(id => parseInt(id));
 			dragData.data = ids;
 		}
-		else if (dt.types.includes('zotero/item')) {
-			dragData.dataType = 'zotero/item';
-			let ids = dt.getData('zotero/item').split(",").map(id => parseInt(id));
+		else if (dt.types.includes('trellis/item')) {
+			dragData.dataType = 'trellis/item';
+			let ids = dt.getData('trellis/item').split(",").map(id => parseInt(id));
 			dragData.data = ids;
 		}
-		else if (dt.types.includes('zotero/search')) {
-			dragData.dataType = 'zotero/search';
-			let ids = dt.getData('zotero/search').split(",").map(id => parseInt(id));
+		else if (dt.types.includes('trellis/search')) {
+			dragData.dataType = 'trellis/search';
+			let ids = dt.getData('trellis/search').split(",").map(id => parseInt(id));
 			dragData.data = ids;
 		}
 		else {
@@ -2252,7 +2252,7 @@ Zotero.DragDrop = {
 						continue;
 					}
 					file.QueryInterface(Components.interfaces.nsIFile);
-					if (Zotero.isMac && /%[0-9A-F]{2}/.test(file.path) && !file.exists()) {
+					if (Trellis.isMac && /%[0-9A-F]{2}/.test(file.path) && !file.exists()) {
 						// On macOS, Firefox reads a file URL from `public.file-url`,
 						// constructs an NSURL from it, then gets its unescaped path using
 						// stringByReplacingPercentEscapesUsingEncoding:
@@ -2260,7 +2260,7 @@ Zotero.DragDrop = {
 						// But that function uses a strict URI parser that chokes on things
 						// like errant brackets in the file path, and when it chokes, the
 						// URI is left escaped. Unescape it ourselves.
-						file = Zotero.File.pathToFile(decodeURIComponent(file.path));
+						file = Trellis.File.pathToFile(decodeURIComponent(file.path));
 					}
 					// Don't allow folder drag
 					if (file.isDirectory()) {
@@ -2293,10 +2293,10 @@ Zotero.DragDrop = {
 		var target = event.target;
 		if (target.tagName == 'treechildren') {
 			var tree = target.parentNode;
-			if (tree.id == 'zotero-collections-tree') {
+			if (tree.id == 'trellis-collections-tree') {
 				let { row } = tree.getCellAt(event.clientX, event.clientY);
 				let win = tree.ownerDocument.defaultView;
-				return win.ZoteroPane.collectionsView.getRow(row);
+				return win.TrellisPane.collectionsView.getRow(row);
 			}
 		}
 		return false;
@@ -2307,7 +2307,7 @@ Zotero.DragDrop = {
 /*
  * Implements nsIWebProgressListener
  */
-Zotero.WebProgressFinishListener = function (onFinish) {
+Trellis.WebProgressFinishListener = function (onFinish) {
 	var _request;
 	var _finished = false;
 	
@@ -2316,7 +2316,7 @@ Zotero.WebProgressFinishListener = function (onFinish) {
 	};
 	
 	this.onStateChange = function (wp, req, stateFlags, status) {
-		//Zotero.debug('onStateChange: ' + stateFlags);
+		//Trellis.debug('onStateChange: ' + stateFlags);
 		if (stateFlags & Components.interfaces.nsIWebProgressListener.STATE_STOP
 				&& stateFlags & Components.interfaces.nsIWebProgressListener.STATE_IS_NETWORK
 				&& !(stateFlags & Components.interfaces.nsIWebProgressListener.STATE_IS_REQUEST)) {
@@ -2330,7 +2330,7 @@ Zotero.WebProgressFinishListener = function (onFinish) {
 			try {
 				let r = _request || req;
 				if (!r) {
-					Zotero.debug("WebProgressFinishListener: finished without a valid request")
+					Trellis.debug("WebProgressFinishListener: finished without a valid request")
 				} else {
 					r.QueryInterface(Components.interfaces.nsIHttpChannel);
 					status = r.responseStatus;
@@ -2338,7 +2338,7 @@ Zotero.WebProgressFinishListener = function (onFinish) {
 				}
 			}
 			catch (e) {
-				Zotero.debug(e, 2);
+				Trellis.debug(e, 2);
 			}
 			
 			_request = null;
@@ -2351,9 +2351,9 @@ Zotero.WebProgressFinishListener = function (onFinish) {
 	}
 	
 	this.onProgressChange = function (wp, req, curSelfProgress, maxSelfProgress, curTotalProgress, maxTotalProgress) {
-		//Zotero.debug('onProgressChange');
-		//Zotero.debug('Current: ' + curTotalProgress);
-		//Zotero.debug('Max: ' + maxTotalProgress);
+		//Trellis.debug('onProgressChange');
+		//Trellis.debug('Current: ' + curTotalProgress);
+		//Trellis.debug('Max: ' + maxTotalProgress);
 	}
 	
 	this.onLocationChange = function (wp, req, location) {}
@@ -2364,14 +2364,14 @@ Zotero.WebProgressFinishListener = function (onFinish) {
 /*
  * Saves or loads JSON objects.
  */
-Zotero.JSON = new function () {
+Trellis.JSON = new function () {
 	this.serialize = function (arg) {
-		Zotero.debug("WARNING: Zotero.JSON.serialize() is deprecated; use JSON.stringify()");
+		Trellis.debug("WARNING: Trellis.JSON.serialize() is deprecated; use JSON.stringify()");
 		return JSON.stringify(arg);
 	}
 	
 	this.unserialize = function (arg) {
-		Zotero.debug("WARNING: Zotero.JSON.unserialize() is deprecated; use JSON.parse()");
+		Trellis.debug("WARNING: Trellis.JSON.unserialize() is deprecated; use JSON.parse()");
 		return JSON.parse(arg);
 	}
 }

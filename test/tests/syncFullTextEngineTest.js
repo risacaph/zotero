@@ -1,8 +1,8 @@
 "use strict";
 
-describe("Zotero.Sync.Data.FullTextEngine", function () {
-	var apiKey = Zotero.Utilities.randomString(24);
-	var baseURL = "http://local.zotero/";
+describe("Trellis.Sync.Data.FullTextEngine", function () {
+	var apiKey = Trellis.Utilities.randomString(24);
+	var baseURL = "http://local.trellis/";
 	var engine, server, client, caller, stub, spy;
 	
 	var responses = {};
@@ -11,22 +11,22 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 		server = sinon.fakeServer.create();
 		server.autoRespond = true;
 		
-		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 		var caller = new ConcurrentCaller(1);
-		caller.setLogger(msg => Zotero.debug(msg));
+		caller.setLogger(msg => Trellis.debug(msg));
 		caller.stopOnError = true;
 		
-		var client = new Zotero.Sync.APIClient({
+		var client = new Trellis.Sync.APIClient({
 			baseURL,
-			apiVersion: options.apiVersion || ZOTERO_CONFIG.API_VERSION,
+			apiVersion: options.apiVersion || TRELLIS_CONFIG.API_VERSION,
 			apiKey,
 			caller,
 			background: options.background || true
 		});
 		
-		var engine = new Zotero.Sync.Data.FullTextEngine({
+		var engine = new Trellis.Sync.Data.FullTextEngine({
 			apiClient: client,
-			libraryID: options.libraryID || Zotero.Libraries.userLibraryID,
+			libraryID: options.libraryID || Trellis.Libraries.userLibraryID,
 			stopOnError: true
 		});
 		
@@ -38,7 +38,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 	}
 	
 	function generateContent() {
-		return new Array(10).fill("").map(x => Zotero.Utilities.randomString()).join(" ");
+		return new Array(10).fill("").map(x => Trellis.Utilities.randomString()).join(" ");
 	}
 	
 	//
@@ -47,19 +47,19 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 	beforeEach(function* () {
 		yield resetData();
 		
-		Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+		Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 		
-		yield Zotero.Users.setCurrentUserID(1);
-		yield Zotero.Users.setCurrentUsername("testuser");
+		yield Trellis.Users.setCurrentUserID(1);
+		yield Trellis.Users.setCurrentUsername("testuser");
 	})
 	
 	describe("Full-Text Syncing", function () {
 		it("should skip full-text download if main library version is the same", async function () {
 			({ engine, client, caller } = await setup());
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 10;
 			await library.saveTx();
-			await Zotero.Fulltext.setLibraryVersion(library.id, 10);
+			await Trellis.Fulltext.setLibraryVersion(library.id, 10);
 			await engine.start();
 		});
 		
@@ -67,7 +67,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			({ engine, client, caller } = await setup());
 			
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item('attachment');
+			var attachment = new Trellis.Item('attachment');
 			attachment.parentItemID = item.id;
 			attachment.attachmentLinkMode = 'imported_file';
 			attachment.attachmentContentType = 'application/pdf';
@@ -75,13 +75,13 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			await attachment.saveTx();
 			
 			var content = generateContent()
-			var spy = sinon.spy(Zotero.Fulltext, "registerContentProcessor")
+			var spy = sinon.spy(Trellis.Fulltext, "registerContentProcessor")
 			
 			var itemFullTextVersion = 10;
 			var libraryVersion = 15;
 			
 			// Set main library version to new version
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = libraryVersion;
 			await library.saveTx();
 			
@@ -111,16 +111,16 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			});
 			await engine.start();
 			
-			var dir = Zotero.Attachments.getStorageDirectory(attachment).path;
-			var unprocessed = OS.Path.join(dir, '.zotero-ft-unprocessed');
+			var dir = Trellis.Attachments.getStorageDirectory(attachment).path;
+			var unprocessed = OS.Path.join(dir, '.trellis-ft-unprocessed');
 			assert.isTrue(await OS.File.exists(unprocessed));
-			var data = JSON.parse(await Zotero.File.getContentsAsync(unprocessed));
+			var data = JSON.parse(await Trellis.File.getContentsAsync(unprocessed));
 			assert.propertyVal(data, 'text', content);
 			assert.propertyVal(data, 'indexedPages', 1);
 			assert.propertyVal(data, 'totalPages', 1);
 			assert.propertyVal(data, 'version', itemFullTextVersion);
 			assert.equal(
-				await Zotero.FullText.getLibraryVersion(item.libraryID),
+				await Trellis.FullText.getLibraryVersion(item.libraryID),
 				libraryVersion
 			);
 			
@@ -133,7 +133,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			({ engine, client, caller } = await setup());
 			
 			item = await createDataObject('item');
-			attachment = new Zotero.Item('attachment');
+			attachment = new Trellis.Item('attachment');
 			attachment.parentItemID = item.id;
 			attachment.attachmentLinkMode = 'imported_file';
 			attachment.attachmentContentType = 'application/pdf';
@@ -141,7 +141,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			await attachment.saveTx();
 			
 			content = generateContent()
-			spy = sinon.spy(Zotero.Fulltext, "registerContentProcessor")
+			spy = sinon.spy(Trellis.Fulltext, "registerContentProcessor")
 			
 			itemFullTextVersion = 17;
 			var lastLibraryVersion = libraryVersion;
@@ -177,16 +177,16 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			});
 			await engine.start();
 			
-			var dir = Zotero.Attachments.getStorageDirectory(attachment).path;
-			var unprocessed = OS.Path.join(dir, '.zotero-ft-unprocessed');
+			var dir = Trellis.Attachments.getStorageDirectory(attachment).path;
+			var unprocessed = OS.Path.join(dir, '.trellis-ft-unprocessed');
 			assert.isTrue(await OS.File.exists(unprocessed));
-			var data = JSON.parse(await Zotero.File.getContentsAsync(unprocessed));
+			var data = JSON.parse(await Trellis.File.getContentsAsync(unprocessed));
 			assert.propertyVal(data, 'text', content);
 			assert.propertyVal(data, 'indexedPages', 1);
 			assert.propertyVal(data, 'totalPages', 1);
 			assert.propertyVal(data, 'version', itemFullTextVersion);
 			assert.equal(
-				await Zotero.FullText.getLibraryVersion(item.libraryID),
+				await Trellis.FullText.getLibraryVersion(item.libraryID),
 				libraryVersion
 			);
 			
@@ -198,7 +198,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			({ engine, client, caller } = await setup());
 			
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item('attachment');
+			var attachment = new Trellis.Item('attachment');
 			attachment.parentItemID = item.id;
 			attachment.attachmentLinkMode = 'imported_file';
 			attachment.attachmentContentType = 'application/pdf';
@@ -234,7 +234,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			// https://github.com/cjohansen/Sinon.JS/issues/607
 			var fixSinonBug = ";charset=utf-8";
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			var libraryID = library.id;
 			library.libraryVersion = 5;
 			await library.saveTx();
@@ -243,7 +243,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			
 			var item = await createDataObject('item');
 			
-			var attachment1 = new Zotero.Item('attachment');
+			var attachment1 = new Trellis.Item('attachment');
 			attachment1.parentItemID = item.id;
 			attachment1.attachmentLinkMode = 'imported_file';
 			attachment1.attachmentContentType = 'text/html';
@@ -251,12 +251,12 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			attachment1.attachmentCharset = 'utf-8';
 			attachment1.synced = true;
 			await attachment1.saveTx();
-			await Zotero.Attachments.createDirectoryForItem(attachment1);
+			await Trellis.Attachments.createDirectoryForItem(attachment1);
 			var path = attachment1.getFilePath();
 			var content1 = "A" + generateContent()
-			await Zotero.File.putContentsAsync(path, content1);
+			await Trellis.File.putContentsAsync(path, content1);
 			
-			var attachment2 = new Zotero.Item('attachment');
+			var attachment2 = new Trellis.Item('attachment');
 			attachment2.parentItemID = item.id;
 			attachment2.attachmentLinkMode = 'imported_file';
 			attachment2.attachmentContentType = 'text/html';
@@ -264,12 +264,12 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			attachment2.attachmentCharset = 'utf-8';
 			attachment2.synced = true;
 			await attachment2.saveTx();
-			await Zotero.Attachments.createDirectoryForItem(attachment2);
+			await Trellis.Attachments.createDirectoryForItem(attachment2);
 			path = attachment2.getFilePath();
 			var content2 = "B" + generateContent()
-			await Zotero.File.putContentsAsync(path, content2);
+			await Trellis.File.putContentsAsync(path, content2);
 			
-			await Zotero.Fulltext.indexItems([attachment1.id, attachment2.id]);
+			await Trellis.Fulltext.indexItems([attachment1.id, attachment2.id]);
 			
 			var libraryVersion = 15;
 			
@@ -335,10 +335,10 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			
 			await engine.start();
 			assert.equal(count, 0);
-			assert.equal(await Zotero.FullText.getItemVersion(attachment1.id), libraryVersion);
-			assert.equal(await Zotero.FullText.getItemVersion(attachment2.id), libraryVersion);
-			assert.equal(await Zotero.Fulltext.getLibraryVersion(libraryID), libraryVersion);
-			assert.equal(Zotero.Libraries.userLibrary.libraryVersion, libraryVersion);
+			assert.equal(await Trellis.FullText.getItemVersion(attachment1.id), libraryVersion);
+			assert.equal(await Trellis.FullText.getItemVersion(attachment2.id), libraryVersion);
+			assert.equal(await Trellis.Fulltext.getLibraryVersion(libraryID), libraryVersion);
+			assert.equal(Trellis.Libraries.userLibrary.libraryVersion, libraryVersion);
 			
 			//
 			// Upload new content
@@ -347,7 +347,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			library.libraryVersion = libraryVersion;
 			await library.saveTx();
 			
-			var attachment3 = new Zotero.Item('attachment');
+			var attachment3 = new Trellis.Item('attachment');
 			attachment3.parentItemID = item.id;
 			attachment3.attachmentLinkMode = 'imported_file';
 			attachment3.attachmentContentType = 'text/html';
@@ -355,12 +355,12 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			attachment3.attachmentCharset = 'utf-8';
 			attachment3.synced = true;
 			await attachment3.saveTx();
-			await Zotero.Attachments.createDirectoryForItem(attachment3);
+			await Trellis.Attachments.createDirectoryForItem(attachment3);
 			
 			path = attachment3.getFilePath();
 			var content3 = generateContent()
-			await Zotero.File.putContentsAsync(path, content3);
-			await Zotero.Fulltext.indexItems([attachment3.id]);
+			await Trellis.File.putContentsAsync(path, content3);
+			await Trellis.Fulltext.indexItems([attachment3.id]);
 			
 			count = 1;
 			setResponse({
@@ -375,7 +375,7 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			server.respond(function (req) {
 				if (req.method == "POST") {
 					if (req.url == `${baseURL}users/1/fulltext`) {
-						assert.propertyVal(req.requestHeaders, 'Zotero-API-Key', apiKey);
+						assert.propertyVal(req.requestHeaders, 'Trellis-API-Key', apiKey);
 						assert.propertyVal(
 							req.requestHeaders,
 							'Content-Type',
@@ -415,9 +415,9 @@ describe("Zotero.Sync.Data.FullTextEngine", function () {
 			
 			await engine.start();
 			assert.equal(count, 0);
-			assert.equal(await Zotero.FullText.getItemVersion(attachment3.id), libraryVersion);
-			assert.equal(await Zotero.Fulltext.getLibraryVersion(libraryID), libraryVersion);
-			assert.equal(Zotero.Libraries.userLibrary.libraryVersion, libraryVersion);
+			assert.equal(await Trellis.FullText.getItemVersion(attachment3.id), libraryVersion);
+			assert.equal(await Trellis.Fulltext.getLibraryVersion(libraryID), libraryVersion);
+			assert.equal(Trellis.Libraries.userLibrary.libraryVersion, libraryVersion);
 		})
 	});
 })

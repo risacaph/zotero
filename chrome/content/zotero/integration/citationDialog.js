@@ -3,30 +3,30 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 
-const CollectionViewItemTree = require('zotero/collectionViewItemTree');
+const CollectionViewItemTree = require('trellis/collectionViewItemTree');
 const { getCSSIcon } = require('components/icons');
-const { COLUMNS } = require('zotero/itemTreeColumns');
+const { COLUMNS } = require('trellis/itemTreeColumns');
 var doc, io, ioReadyPromise, ioIsReady, accepted;
 
 var currentLayout, libraryLayout, listLayout;
@@ -37,10 +37,10 @@ const ITEM_LIST_MAX_ITEMS = 50;
 const SEARCH_TIMEOUT = 250;
 var NUMERIC_LOCATOR_TIMEOUT = 500; // exposed to tests
 
-var { CitationDialogHelpers } = ChromeUtils.importESModule('chrome://zotero/content/integration/citationDialog/helpers.mjs');
-var { CitationDialogSearchHandler } = ChromeUtils.importESModule('chrome://zotero/content/integration/citationDialog/searchHandler.mjs');
-var { CitationDialogPopupsHandler } = ChromeUtils.importESModule('chrome://zotero/content/integration/citationDialog/popupHandler.mjs');
-var { CitationDialogKeyboardHandler } = ChromeUtils.importESModule('chrome://zotero/content/integration/citationDialog/keyboardHandler.mjs');
+var { CitationDialogHelpers } = ChromeUtils.importESModule('chrome://trellis/content/integration/citationDialog/helpers.mjs');
+var { CitationDialogSearchHandler } = ChromeUtils.importESModule('chrome://trellis/content/integration/citationDialog/searchHandler.mjs');
+var { CitationDialogPopupsHandler } = ChromeUtils.importESModule('chrome://trellis/content/integration/citationDialog/popupHandler.mjs');
+var { CitationDialogKeyboardHandler } = ChromeUtils.importESModule('chrome://trellis/content/integration/citationDialog/keyboardHandler.mjs');
 
 
 // window.DIALOG_STATE exposed to tests
@@ -64,15 +64,15 @@ async function onLoad() {
 	// if io did not send the promise indiciating when io.sort() and io.getItems() will be ready to run,
 	// use an immediately resolved promise
 	if (!ioReadyPromise) {
-		ioReadyPromise = Zotero.Promise.resolve();
+		ioReadyPromise = Trellis.Promise.resolve();
 	}
 	ioReadyPromise.then(() => ioIsReady = true);
 	window.isPristine = true;
 	// set the font-size and density
-	Zotero.UIProperties.set(document.querySelector("body"));
+	Trellis.UIProperties.set(document.querySelector("body"));
 
-	Zotero.debug("Citation Dialog: initializing");
-	let timer = new Zotero.Integration.Timer();
+	Trellis.debug("Citation Dialog: initializing");
+	let timer = new Trellis.Integration.Timer();
 	timer.start();
 
 	Helpers = new CitationDialogHelpers({ doc, io });
@@ -100,7 +100,7 @@ async function onLoad() {
 	window.resizeTo(restoredWidth, restoredHeight);
 	// On windows, after initial window size is set, make sure we don't resize list
 	// mode when search results are ready for a moment to avoid blinking
-	if (Zotero.isWin && initialMode == "list") {
+	if (Trellis.isWin && initialMode == "list") {
 		Helpers.delayNextSmoothResize(250);
 	}
 
@@ -138,7 +138,7 @@ async function onLoad() {
 	// wait to call functions that rely on io.getItems() or io.sort() till all cited data is loaded
 	ioReadyPromise.then(async () => {
 		if (accepted) return;
-		Zotero.debug("Citation Dialog: io loaded cited data");
+		Trellis.debug("Citation Dialog: io loaded cited data");
 		await SearchHandler.refreshCitedItems();
 		currentLayout.refreshItemsList({ retainItemsState: true });
 		if (_id("keepSorted").checked) {
@@ -148,14 +148,14 @@ async function onLoad() {
 
 	DIALOG_STATE.loaded = true;
 	let initTime = timer.stop();
-	Zotero.debug(`Citation Dialog: initialized in ${initTime} s`);
+	Trellis.debug(`Citation Dialog: initialized in ${initTime} s`);
 }
 
 
 async function accept() {
 	if (accepted || SearchHandler.searching || !CitationDataManager.items.length) return;
 	accepted = true;
-	Zotero.debug("Citation Dialog: accepted");
+	Trellis.debug("Citation Dialog: accepted");
 
 	cleanupBeforeDialogClosing();
 	_id("library-layout").hidden = true;
@@ -209,13 +209,13 @@ function cleanupBeforeDialogClosing() {
 	// Remember the width of collectionTree, so it can be restored on next open
 	allParams.library = allParams.library || {};
 	allParams.library.collectionTreeWidth = libraryLayout.collectionTreeWidth;
-	Zotero.Prefs.set("integration.citationDialog.windowParams", JSON.stringify(allParams));
+	Trellis.Prefs.set("integration.citationDialog.windowParams", JSON.stringify(allParams));
 
 	// Only library mode in annotations dialog
 	if (!DIALOG_STATE.isAddingAnnotations()) {
-		Zotero.Prefs.set("integration.citationDialogLastUsedMode", currentLayout.type);
+		Trellis.Prefs.set("integration.citationDialogLastUsedMode", currentLayout.type);
 		if (currentLayout.type == "library") {
-			Zotero.Prefs.set("integration.citationDialogCollectionLastSelected", libraryLayout.collectionsView.selectedTreeRow.id);
+			Trellis.Prefs.set("integration.citationDialogCollectionLastSelected", libraryLayout.collectionsView.selectedTreeRow.id);
 		}
 	}
 	libraryLayout.collectionsView.unregister();
@@ -278,7 +278,7 @@ async function setDialogType(type) {
 		if (currentLayout) {
 			await IOManager.toggleDialogMode("library");
 		}
-		_id("includeComments").checked = Zotero.Prefs.get("integration.annotationDialogIncludeComments");
+		_id("includeComments").checked = Trellis.Prefs.get("integration.annotationDialogIncludeComments");
 	}
 
 	// hide the settings button if there are no settings to show
@@ -295,7 +295,7 @@ async function setDialogType(type) {
 	if (DIALOG_STATE.loaded) {
 		// Completely reset itemTree to have right dragAndDrop, regularOnly, multiselect behavior
 		libraryLayout.itemsView.unregister();
-		_id("zotero-items-tree").replaceChildren();
+		_id("trellis-items-tree").replaceChildren();
 		libraryLayout.itemsView = null;
 		await libraryLayout._initItemTree();
 		libraryLayout._onCollectionSelection();
@@ -318,7 +318,7 @@ class Layout {
 	// Re-render the items based on search results
 	// @param {Boolean} options.retainItemsState: try to restore focused and selected status of item nodes.
 	async refreshItemsList({ retainItemsState } = {}) {
-		Zotero.debug("Citation Dialog: refreshing items list");
+		Trellis.debug("Citation Dialog: refreshing items list");
 		let sections = [];
 
 		// Tell SearchHandler which currently cited items are so they are not included in results
@@ -332,7 +332,7 @@ class Layout {
 			// Construct each section and items
 			let sectionHeader = "";
 			if (isLibrary) {
-				sectionHeader = Zotero.Libraries.get(key).name;
+				sectionHeader = Trellis.Libraries.get(key).name;
 			}
 			// special handling for selected items to display how many total selected items there are
 			else if (key == "selected") {
@@ -417,9 +417,9 @@ class Layout {
 	// Run search and refresh items list
 	async search(value, { skipDebounce = false } = {}) {
 		if (accepted) return;
-		let timer = new Zotero.Integration.Timer();
+		let timer = new Trellis.Integration.Timer();
 		timer.start();
-		Zotero.debug("Citation Dialog: searching");
+		Trellis.debug("Citation Dialog: searching");
 		IOManager._showLoadingSpinner();
 		SearchHandler.searching = true;
 		// search for selected/opened items
@@ -440,7 +440,7 @@ class Layout {
 			this._lastSearchTime = searchStartTime;
 			
 			// wait a moment
-			await Zotero.Promise.delay(SEARCH_TIMEOUT);
+			await Trellis.Promise.delay(SEARCH_TIMEOUT);
 			
 			// stop if another search started during the delay
 			if (this._lastSearchTime !== searchStartTime) return;
@@ -455,7 +455,7 @@ class Layout {
 			// Make sure the collectionTreeRow is defined to
 			// avoid errors thrown when filter is set on first load
 			while (!this.itemsView.collectionTreeRows) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			await this.refreshItemsList();
 			await this.itemsView.setFilter('citation-search', SearchHandler.searchValue);
@@ -464,7 +464,7 @@ class Layout {
 		SearchHandler.searching = false;
 		IOManager._hideLoadingSpinner();
 		let searchTime = timer.stop();
-		Zotero.debug(`Citation Dialog: searching done in ${searchTime}`);
+		Trellis.debug(`Citation Dialog: searching done in ${searchTime}`);
 		if (this.forceUpdateTablesAfterRefresh && this.type == "library") {
 			this.forceUpdateTablesAfterRefresh = false;
 			setTimeout(() => {
@@ -539,8 +539,8 @@ class LibraryLayout extends Layout {
 		itemNode.append(title, description);
 
 		if (DIALOG_STATE.isAddingAnnotations() && item.isAnnotation()) {
-			let attachment = Zotero.Items.get(item.parentItemID);
-			let topLevelItem = attachment.parentItemID ? Zotero.Items.get(attachment.parentItemID) : attachment;
+			let attachment = Trellis.Items.get(item.parentItemID);
+			let topLevelItem = attachment.parentItemID ? Trellis.Items.get(attachment.parentItemID) : attachment;
 			let topLevelItemTitle = Helpers.buildItemTitle(topLevelItem);
 			topLevelItemTitle.classList.add("description");
 			itemNode.prepend(topLevelItemTitle);
@@ -652,13 +652,13 @@ class LibraryLayout extends Layout {
 	}
 
 	async _initItemTree() {
-		var itemsTree = _id('zotero-items-tree');
+		var itemsTree = _id('trellis-items-tree');
 		let itemColumns = COLUMNS.map((column) => {
 			column = Object.assign({}, column);
 			column.hidden = !['title', 'firstCreator', 'date'].includes(column.dataKey);
 			return column;
 		});
-		let columnLabel = Zotero.getString('integration-citationDialog-add-to-citation');
+		let columnLabel = Trellis.getString('integration-citationDialog-add-to-citation');
 		// Add + column to add an item to the citation on click
 		itemColumns.push({
 			dataKey: 'addToCitation',
@@ -735,7 +735,7 @@ class LibraryLayout extends Layout {
 					}, 5);
 				});
 			},
-			emptyMessage: Zotero.getString('pane.items.loading'),
+			emptyMessage: Trellis.getString('pane.items.loading'),
 			columns: itemColumns,
 			// Skip irrelevant child rows (e.g. no notes in annotations mode)
 			filterChildItems: (item) => {
@@ -751,7 +751,7 @@ class LibraryLayout extends Layout {
 			// not a part of actual item properties
 			getExtraField: (item, key) => {
 				if (key == "addToCitation") {
-					if (!(item instanceof Zotero.Item)) return null;
+					if (!(item instanceof Trellis.Item)) return null;
 					if (DIALOG_STATE.isAddingNote() && !item.isNote()) return null;
 					if (DIALOG_STATE.isCitingItems() && !item.isRegularItem()) return null;
 					if (DIALOG_STATE.isAddingAnnotations() && !item.isAnnotation()) return null;
@@ -778,18 +778,18 @@ class LibraryLayout extends Layout {
 	}
 	
 	async _initCollectionTree() {
-		const CollectionTree = require('zotero/collectionTree');
-		this.collectionsView = await CollectionTree.init(_id('zotero-collections-tree'), {
+		const CollectionTree = require('trellis/collectionTree');
+		this.collectionsView = await CollectionTree.init(_id('trellis-collections-tree'), {
 			onSelectionChange: this._onCollectionSelection.bind(this),
 			hideSources: ['duplicates', 'trash', 'feeds'],
-			initialFolder: Zotero.Prefs.get("integration.citationDialogCollectionLastSelected"),
+			initialFolder: Trellis.Prefs.get("integration.citationDialogCollectionLastSelected"),
 			onActivate: () => {},
 			filterLibraryIDs: io.filterLibraryIDs,
 			multiSelect: true
 		});
 		// Add aria-description with instructions on what this collection tree is for
 		// Voiceover announces the description placed on the actual tree when focus enters it
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			doc.l10n.setAttributes(_id("collection-tree"), "integration-citationDialog-collections-table");
 		}
 		// JAWS does not. It will announce the description and label of the parent with role=group
@@ -804,15 +804,15 @@ class LibraryLayout extends Layout {
 	_initSidepane() {
 		// Click on the + icon of annotion-row will bubbleize the annotation
 		_id("annotations-list").addEventListener("click", (event) => {
-			if (!event.target.classList.contains("zotero-clicky-plus")) return;
+			if (!event.target.classList.contains("trellis-clicky-plus")) return;
 			let annotationRow = event.target.closest("annotation-row");
-			let item = Zotero.Items.get(annotationRow.annotation.id);
+			let item = Trellis.Items.get(annotationRow.annotation.id);
 			IOManager.addItemsToCitation(item);
 		});
 		// Space/Enter on annotation row is the same as clicking on the + icon
 		_id("annotations-list").addEventListener("keydown", (event) => {
 			if ([" ", "Enter"].includes(event.key) && event.target.tagName == "annotation-row") {
-				let item = Zotero.Items.get(event.target.annotation.id);
+				let item = Trellis.Items.get(event.target.annotation.id);
 				IOManager.addItemsToCitation(item);
 				event.preventDefault();
 				event.stopPropagation();
@@ -852,7 +852,7 @@ class LibraryLayout extends Layout {
 		let startWidth = 0;
 		let onPointerMove = (event) => {
 			let delta = event.clientX - startX;
-			if (Zotero.rtl) delta = -delta;
+			if (Trellis.rtl) delta = -delta;
 			setCollectionTreeWidth(startWidth + delta);
 		};
 		let onPointerUp = () => {
@@ -886,7 +886,7 @@ class LibraryLayout extends Layout {
 			.map(index => this.collectionsView.getRow(index));
 		// Collection selection not changed
 		if (this.itemsView
-				&& Zotero.Utilities.arrayEquals(
+				&& Trellis.Utilities.arrayEquals(
 					selectedRows.map(row => row.id).sort(),
 					this.itemsView.collectionTreeRows.map(row => row.id).sort()
 				)) {
@@ -896,13 +896,13 @@ class LibraryLayout extends Layout {
 		// to load for large libraries. If we are in list mode during initial load, do nothing.
 		if (currentLayout?.type !== "library") return;
 
-		this.itemsView.setItemsPaneMessage(Zotero.getString('pane.items.loading'));
+		this.itemsView.setItemsPaneMessage(Trellis.getString('pane.items.loading'));
 
 		// Load item data for each selected library if necessary
 		for (let libraryID of new Set(selectedRows.map(row => row.ref.libraryID))) {
-			let library = Zotero.Libraries.get(libraryID);
+			let library = Trellis.Libraries.get(libraryID);
 			if (!library.getDataLoaded('item')) {
-				Zotero.debug("Waiting for items to load for library " + library.libraryID);
+				Trellis.debug("Waiting for items to load for library " + library.libraryID);
 				await library.waitForDataLoad('item');
 			}
 		}
@@ -913,7 +913,7 @@ class LibraryLayout extends Layout {
 			if (DIALOG_STATE.isAddingNote()) {
 				let regularItems = items.filter(item => SearchHandler.isItemWithNotes(item));
 				if (regularItems.length) {
-					await Zotero.Items.loadDataTypes(regularItems, ['childItems']);
+					await Trellis.Items.loadDataTypes(regularItems, ['childItems']);
 				}
 				// when citing notes, only keep notes or note parents
 				items = items.filter(item => item.isNote() || item.getNotes().length);
@@ -941,7 +941,7 @@ class LibraryLayout extends Layout {
 
 	// backspace/delete in itemsView deletes items from the citation
 	_handleItemsViewKeyPress(event) {
-		if (event.key == "Delete" || Zotero.isMac && event.key == "Backspace") {
+		if (event.key == "Delete" || Trellis.isMac && event.key == "Backspace") {
 			let itemsToRemove = this.itemsView.getSelectedItems();
 			for (let item of itemsToRemove) {
 				let items = CitationDataManager.getItems({ itemID: item.id });
@@ -1000,7 +1000,7 @@ class LibraryLayout extends Layout {
 		let selectedIDs = CitationDataManager.getCitedLibraryItemIDs();
 		// Wait for the tree to fully load to avoid a logged error that the tree is undefined
 		while (!this.itemsView.tree) {
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 		}
 		this.itemsView.setHighlightedRows([...selectedIDs]);
 	}
@@ -1030,7 +1030,7 @@ class LibraryLayout extends Layout {
 		let rowIndex = rowID.split("-")[4];
 		if (rowIndex === 0) return;
 		this.itemsView.ensureRowIsVisible(rowIndex);
-		let rowAfterRefresh = doc.querySelector(`#zotero-items-tree #${rowID}`);
+		let rowAfterRefresh = doc.querySelector(`#trellis-items-tree #${rowID}`);
 		let rowTopAfterRefresh = rowAfterRefresh.getBoundingClientRect().top;
 		let delta = rowTopAfterRefresh - rowTopBeforeRefresh;
 		if (delta > 0.1) {
@@ -1074,10 +1074,10 @@ class ListLayout extends Layout {
 		let title = Helpers.buildItemTitle(item);
 		let titleContent = Helpers.createNode("span", {}, "");
 		let description = Helpers.buildItemDescription(item);
-		Zotero.Utilities.Internal.renderItemTitle(item.getDisplayTitle(), titleContent);
+		Trellis.Utilities.Internal.renderItemTitle(item.getDisplayTitle(), titleContent);
 		title.prepend(icon);
 		itemNode.append(title, description);
-		if (Zotero.Retractions.isRetracted(item)) {
+		if (Trellis.Retractions.isRetracted(item)) {
 			let retractedIcon = getCSSIcon("cross");
 			retractedIcon.classList.add("retracted");
 			icon.after(retractedIcon);
@@ -1131,7 +1131,7 @@ class ListLayout extends Layout {
 		if (sectionsHeight > 0) {
 			sectionsWrapperPadding = parseInt(sectionsWrapperStyle.paddingTop) + parseInt(sectionsWrapperStyle.paddingBottom);
 			// margin of error to ensure that the scrollbar does not appear unless really necessary
-			marginOfError = Zotero.isWin ? 6 : 2;
+			marginOfError = Trellis.isWin ? 6 : 2;
 		}
 
 		// height of citation preview (0 when hidden) and the bottom section
@@ -1144,7 +1144,7 @@ class ListLayout extends Layout {
 		// innerHeight and outerHeight are the same. On linux, the outerHeight > innerHeight, perhaps
 		// outerHeight there includes chrome, borders, etc. This difference is accounted for below, so that the dialog
 		// itself (not the outer window) ends up with the desired height.
-		if (Zotero.isLinux) {
+		if (Trellis.isLinux) {
 			autoHeight += (window.outerHeight - window.innerHeight);
 		}
 		let minHeight = bubbleInputHeight + citationPreview + bottomHeight;
@@ -1363,7 +1363,7 @@ const IOManager = {
 	},
 
 	async addItemsToCitation(items, { noInputRefocus, index } = { index: null }) {
-		Zotero.debug(`Citation Dialog: adding ${items.length} items to the citation`);
+		Trellis.debug(`Citation Dialog: adding ${items.length} items to the citation`);
 		if (accepted || SearchHandler.searching) return;
 		if (!Array.isArray(items)) {
 			items = [items];
@@ -1382,7 +1382,7 @@ const IOManager = {
 		}
 		// Warn about retracted items, if any are present
 		for (let item of items) {
-			if (!Zotero.Retractions.shouldShowCitationWarning(item)) continue;
+			if (!Trellis.Retractions.shouldShowCitationWarning(item)) continue;
 			let canProceed = PopupsHandler.showRetractedWarning(item);
 			// User did not select "Continue", so just stop
 			if (!canProceed) return;
@@ -1435,7 +1435,7 @@ const IOManager = {
 		this.updateBubbleInput();
 
 		// Show guidance panel on the first run
-		if (DIALOG_STATE.isCitingItems() && !Zotero.Prefs.get("firstRunGuidanceShown.citationDialog")) {
+		if (DIALOG_STATE.isCitingItems() && !Trellis.Prefs.get("firstRunGuidanceShown.citationDialog")) {
 			doc.querySelector(".bubble").id = "first-bubble";
 			// Center the panel on the first bubble
 			let width = doc.querySelector(".bubble").getBoundingClientRect().width;
@@ -1454,7 +1454,7 @@ const IOManager = {
 	},
 
 	focusItemTree({ selectIfEmpty = false } = {}) {
-		let focusable = _id("zotero-items-tree").querySelector("[tabindex]");
+		let focusable = _id("trellis-items-tree").querySelector("[tabindex]");
 		if (!focusable) return false;
 		focusable.focus();
 		if (selectIfEmpty && libraryLayout?.itemsView?.selection?.count == 0) {
@@ -1517,7 +1517,7 @@ const IOManager = {
 		IOManager._lastClickTime = (new Date()).getTime();
 
 		// Cmd/Ctrl + mouseclick toggles selected item node
-		if (multiselectable && (Zotero.isMac && event.metaKey) || (!Zotero.isMac && event.ctrlKey)) {
+		if (multiselectable && (Trellis.isMac && event.metaKey) || (!Trellis.isMac && event.ctrlKey)) {
 			IOManager.toggleItemNodeSelect(targetItem);
 			return;
 		}
@@ -1546,7 +1546,7 @@ const IOManager = {
 				await libraryLayout.collectionsView.selectLibrary(itemsToAdd[0].libraryID);
 				libraryLayout.itemsView.selectItems([...itemIDs].map(id => parseInt(id)));
 			}
-			_id("zotero-items-tree").querySelector("[tabindex]").focus();
+			_id("trellis-items-tree").querySelector("[tabindex]").focus();
 			return;
 		}
 		IOManager.addItemsToCitation(itemsToAdd);
@@ -1628,9 +1628,9 @@ const IOManager = {
 
 	// Get the initial dialog mode per user's preference
 	getInitialDialogMode() {
-		let desiredMode = Zotero.Prefs.get("integration.citationDialogMode");
+		let desiredMode = Trellis.Prefs.get("integration.citationDialogMode");
 		if (desiredMode == "last-used") {
-			desiredMode = Zotero.Prefs.get("integration.citationDialogLastUsedMode");
+			desiredMode = Trellis.Prefs.get("integration.citationDialogLastUsedMode");
 		}
 		// When the dialog is opened for the very first time, default to list mode
 		if (!desiredMode) {
@@ -1644,7 +1644,7 @@ const IOManager = {
 	},
 
 	showFirstRunDialog() {
-		let locatorString = Zotero.Cite.getLocatorString("page", "short").toLowerCase()
+		let locatorString = Trellis.Cite.getLocatorString("page", "short").toLowerCase()
 			// Strip trailing period ("p." → "p")
 			.replace(/\.$/, '')
 			+ "10";
@@ -1666,9 +1666,9 @@ const IOManager = {
 		let offsetX = event.clientX - rect.left;
 		let offsetY = event.clientY - rect.top;
 		event.dataTransfer.setDragImage(wrapper, offsetX, offsetY);
-		// Same format as with drag-drop of items in itemTree via Zotero.Utilities.Internal.onDragItems
+		// Same format as with drag-drop of items in itemTree via Trellis.Utilities.Internal.onDragItems
 		let draggedItemIDs = selectedItems.map(node => node.getAttribute("itemID")).join(",");
-		event.dataTransfer.setData("zotero/item", draggedItemIDs);
+		event.dataTransfer.setData("trellis/item", draggedItemIDs);
 		setTimeout(() => {
 			itemNode.parentNode.removeChild(wrapper);
 		});
@@ -1678,8 +1678,8 @@ const IOManager = {
 	_handleItemDrop(itemIDs, index) {
 		// fetch items based on their IDs. Check SearchHandler for cited items and
 		// search results. Items dragged from itemTree would not be in SearchHandler.results,
-		// so check Zotero.Items as a fallback
-		let items = itemIDs.map(id => SearchHandler.getItem(id) || Zotero.Items.get(id));
+		// so check Trellis.Items as a fallback
+		let items = itemIDs.map(id => SearchHandler.getItem(id) || Trellis.Items.get(id));
 		this.addItemsToCitation(items, { index });
 	},
 
@@ -1716,7 +1716,7 @@ const IOManager = {
 				this.updateBubbleInput();
 				// The typed-locator shortcut has been used, so stop showing the tip
 				// about it in the item details popup
-				Zotero.Prefs.set("integration.citationDialogShowLocatorTip", false);
+				Trellis.Prefs.set("integration.citationDialogShowLocatorTip", false);
 				return;
 			}
 		}
@@ -1729,7 +1729,7 @@ const IOManager = {
 		// in library mode, if there are no selected/open/cited items but there is a single match in itemTree, add that one matching item
 		else if (currentLayout.type == "library" && libraryLayout.itemsView.rowCount === 1 && input.value.length) {
 			let firstRowID = libraryLayout.itemsView.getRow(0).ref.id;
-			IOManager.addItemsToCitation(Zotero.Items.get(firstRowID));
+			IOManager.addItemsToCitation(Trellis.Items.get(firstRowID));
 		}
 		// Enter on an empty input accepts the dialog
 		else if (!input.value.length && Date.now() > this._skipInputAcceptOnEnterUntil) {
@@ -1740,7 +1740,7 @@ const IOManager = {
 	// Handle cmd/ctrl-z pressed from the input to undo added locator to a just-added bubble
 	_handleInputUndo(event) {
 		if (!event.target.classList.contains("input")) return;
-		if (!(event.key == "z" && (event.ctrlKey || (Zotero.isMac && event.metaKey)))) return;
+		if (!(event.key == "z" && (event.ctrlKey || (Trellis.isMac && event.metaKey)))) return;
 		if (!this._justAddedBubbles) return;
 		event.preventDefault();
 		let locatorValue = "";
@@ -1869,7 +1869,7 @@ const IOManager = {
 		IOManager.updateBubbleInput();
 		// The typed-locator shortcut has been used, so stop showing the tip
 		// about it in the item details popup
-		Zotero.Prefs.set("integration.citationDialogShowLocatorTip", false);
+		Trellis.Prefs.set("integration.citationDialogShowLocatorTip", false);
 		// Disable Enter on input from accepting the dialog for the next 500ms;
 		// If one intends to confirmed the numeric locator by pressing Enter (via _handleInputEnter),
 		// we ensure that the Enter keypress won't happen right after when the locator is added to
@@ -1877,7 +1877,7 @@ const IOManager = {
 		this._skipInputAcceptOnEnterUntil = Date.now() + 500;
 	},
 
-	_processNumericLocatorInputDebounced: Zotero.Utilities.debounce(() => IOManager._processNumericLocatorInput(), NUMERIC_LOCATOR_TIMEOUT),
+	_processNumericLocatorInputDebounced: Trellis.Utilities.debounce(() => IOManager._processNumericLocatorInput(), NUMERIC_LOCATOR_TIMEOUT),
 
 	// Clear the record of which bubbles were just added. If a locator is typed
 	// and Enter is presses, just-added bubbles get that locator.
@@ -1895,7 +1895,7 @@ const IOManager = {
 	},
 
 	_handleMenuBarAppearance() {
-		if (Zotero.isMac) return;
+		if (Trellis.isMac) return;
 		let bottomAreaBox = _id("bottom-area-wrapper").getBoundingClientRect();
 		// if the bottom-area was pushed outside of the bounds of the window by itemTree's menubar
 		// increase the window's width a bit so it is still accessible.
@@ -1926,12 +1926,12 @@ const IOManager = {
 
 	_toggleIncludeComments() {
 		let includeComments = _id("includeComments").checked;
-		Zotero.Prefs.set("integration.annotationDialogIncludeComments", includeComments);
+		Trellis.Prefs.set("integration.annotationDialogIncludeComments", includeComments);
 	},
 
 	async _toggleDisplayPreview() {
-		let newShown = !Zotero.Prefs.get("integration.citationPreviewShown");
-		Zotero.Prefs.set("integration.citationPreviewShown", newShown);
+		let newShown = !Trellis.Prefs.get("integration.citationPreviewShown");
+		Trellis.Prefs.set("integration.citationPreviewShown", newShown);
 		// Reflect the pressed state right away, since revealing the preview is deferred until resize
 		_id("display-preview-button").setAttribute("aria-pressed", newShown ? "true" : "false");
 		let preview = _id("citation-preview");
@@ -2036,14 +2036,14 @@ const CitationPreview = {
 	// Lazily create _renderDebounced on first use
 	get _renderDebounced() {
 		delete CitationPreview._renderDebounced;
-		CitationPreview._renderDebounced = Zotero.Utilities.debounce(() => CitationPreview.render(), 250);
+		CitationPreview._renderDebounced = Trellis.Utilities.debounce(() => CitationPreview.render(), 250);
 		return CitationPreview._renderDebounced;
 	},
 
 	// The rendered text is kept in sync with the cited items even while the preview is hidden,
 	// so it can be measured and revealed instantly when toggled on.
 	update() {
-		let prefShown = Zotero.Prefs.get("integration.citationPreviewShown");
+		let prefShown = Trellis.Prefs.get("integration.citationPreviewShown");
 		let isCitingItems = DIALOG_STATE.isCitingItems();
 		let hasPreview = !!io.preview;
 		let shouldShow = isCitingItems && prefShown && hasPreview;
@@ -2079,7 +2079,7 @@ const CitationPreview = {
 
 // Representation of a single entry in the citation.
 class BubbleItem {
-	// Can be created from either Zotero.Item or citation item from io.citation.citationItems
+	// Can be created from either Trellis.Item or citation item from io.citation.citationItems
 	static fromItem(item) {
 		let citationItem = {};
 		return new BubbleItem({ item, citationItem });
@@ -2091,14 +2091,14 @@ class BubbleItem {
 			item = io.customGetItem(citationItem);
 		}
 		if (!item) {
-			item = Zotero.Cite.getItem(citationItem.id);
+			item = Trellis.Cite.getItem(citationItem.id);
 		}
 		return new BubbleItem({ item, citationItem });
 	}
 
 	constructor({ item, citationItem }) {
 		if (!item || !citationItem) {
-			throw new Error("Both Zotero.Item and citation item must be provided");
+			throw new Error("Both Trellis.Item and citation item must be provided");
 		}
 		this.item = item;
 		this.cslItemID = item.cslItemID;
@@ -2115,7 +2115,7 @@ class BubbleItem {
 		this.selected = false;
 		// Add a new ID to our citation item and set the same ID on the bubble
 		// so we have a reliable way to identify which bubble refers to which citationItem.
-		this.dialogReferenceID = Zotero.Utilities.randomString(5);
+		this.dialogReferenceID = Trellis.Utilities.randomString(5);
 		this.updateBubbleString();
 	}
 
@@ -2261,7 +2261,7 @@ const CitationDataManager = {
 		// all data necessary to run io.sort().
 		// Do nothing if io.sort() is not yet ready to run.
 		if (!ioIsReady) return;
-		Zotero.debug("Citation Dialog: sorting items");
+		Trellis.debug("Citation Dialog: sorting items");
 		this.updateCitationObject();
 		await io.sort();
 		// sync the order of this.items with io.citation.sortedItems
@@ -2314,7 +2314,7 @@ window.addEventListener("focus", async () => {
 	// Without this, clicking accept button when the dialog is not focused
 	// would refocus the dialog, run the search below,
 	// which replaces accept button with the spinner and interrupts the click event.
-	await Zotero.Promise.delay(100);
+	await Trellis.Promise.delay(100);
 	if (accepted) return;
 	if (SearchHandler.searching) return;
 	SearchHandler.clearNonLibraryItemsCache();

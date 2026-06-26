@@ -3,22 +3,22 @@
 	
 	Copyright © 2017 Center for History and New Media
 					George Mason University, Fairfax, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -32,26 +32,26 @@
  * another response with the next request, until it receives 'Document.complete'
  * at which point the integration transaction is considered complete.
  */
-Zotero.Server.Endpoints['/connector/document/execCommand'] = function() {};
-Zotero.Server.Endpoints['/connector/document/execCommand'].prototype = {
+Trellis.Server.Endpoints['/connector/document/execCommand'] = function() {};
+Trellis.Server.Endpoints['/connector/document/execCommand'].prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
 	init: function(data, sendResponse) {
-		if (Zotero.HTTPIntegrationClient.inProgress) {
+		if (Trellis.HTTPIntegrationClient.inProgress) {
 			// This will focus the last integration window if present
-			Zotero.Integration.execCommand('http', data.command, data.docId);
+			Trellis.Integration.execCommand('http', data.command, data.docId);
 			sendResponse(503, 'text/plain', 'Integration transaction is already in progress')
 			return;
 		}
-		Zotero.HTTPIntegrationClient.inProgress = true;
-		Zotero.HTTPIntegrationClient.sendResponse = sendResponse;
-		Zotero.Integration.execCommand('http', data.command, data.docId);
+		Trellis.HTTPIntegrationClient.inProgress = true;
+		Trellis.HTTPIntegrationClient.sendResponse = sendResponse;
+		Trellis.Integration.execCommand('http', data.command, data.docId);
 	},
 };
 
-Zotero.Server.Endpoints['/connector/document/respond'] = function() {};
-Zotero.Server.Endpoints['/connector/document/respond'].prototype = {
+Trellis.Server.Endpoints['/connector/document/respond'] = function() {};
+Trellis.Server.Endpoints['/connector/document/respond'].prototype = {
 	supportedMethods: ["POST"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -69,30 +69,30 @@ Zotero.Server.Endpoints['/connector/document/respond'].prototype = {
 				data.stack = JSON.stringify(data.stack);
 			}
 			if (data.error == 'Alert') {
-				error = new Zotero.Exception.Alert(data.message);
+				error = new Trellis.Exception.Alert(data.message);
 				error.stack = data.stack;
 			}
 			else if (data.error == 'Tab Not Available Error') {
-				let client = Zotero.Integration.currentDoc.processorName || 'Google Docs';
-				error = new Zotero.Exception.Alert(Zotero.getString('integration.error.tabUnavailable', client));
+				let client = Trellis.Integration.currentDoc.processorName || 'Google Docs';
+				error = new Trellis.Exception.Alert(Trellis.getString('integration.error.tabUnavailable', client));
 				error.stack = data.stack;
 			}
-			Zotero.HTTPIntegrationClient.deferredResponse.reject(error);
+			Trellis.HTTPIntegrationClient.deferredResponse.reject(error);
 		} else {
-			Zotero.HTTPIntegrationClient.deferredResponse.resolve(data);
+			Trellis.HTTPIntegrationClient.deferredResponse.resolve(data);
 		}
-		Zotero.HTTPIntegrationClient.sendResponse = sendResponse;
+		Trellis.HTTPIntegrationClient.sendResponse = sendResponse;
 	}
 };
 
 // For managing macOS integration and progress window focus
-Zotero.Server.Endpoints['/connector/sendToBack'] = function() {};
-Zotero.Server.Endpoints['/connector/sendToBack'].prototype = {
+Trellis.Server.Endpoints['/connector/sendToBack'] = function() {};
+Trellis.Server.Endpoints['/connector/sendToBack'].prototype = {
 	supportedMethods: ["POST", "GET"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
 	init: function (requestData) {
-		Zotero.Utilities.Internal.sendToBack();
+		Trellis.Utilities.Internal.sendToBack();
 		return 200;
 	},
 };

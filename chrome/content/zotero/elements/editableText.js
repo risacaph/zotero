@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -436,7 +436,7 @@
 				// If all we have is 'auto' but the input has no text, use the
 				// app locale
 				if (this.dir === 'auto' && !this._input.value) {
-					this._input.dir = Zotero.dir;
+					this._input.dir = Trellis.dir;
 				}
 				// Otherwise, use the direction we guessed/were given
 				else {
@@ -480,7 +480,7 @@
 				this.select();
 			}
 			// Fix the cursor position if value or text alignment changed on mouse focus
-			else if (valueBeforeFocus !== valueAfterFocus || getComputedStyle(this._input).direction !== Zotero.dir) {
+			else if (valueBeforeFocus !== valueAfterFocus || getComputedStyle(this._input).direction !== Trellis.dir) {
 				let pos = document.caretPositionFromPoint(this._focusMousedownEvent.clientX, this._focusMousedownEvent.clientY);
 				if (pos.offsetNode === this._input) {
 					this._input.selectionStart = this._input.selectionEnd = pos.offset;
@@ -510,7 +510,7 @@
 			if (this.multipleValues) {
 				if (this.cancelled || (this._input.value === '' && !this._clearValue)) {
 					this.value = '';
-					this.placeholder = Zotero.getString('item-pane-batch-editing-multiple-values-placeholder');
+					this.placeholder = Trellis.getString('item-pane-batch-editing-multiple-values-placeholder');
 					this.cancelled = true;
 				}
 			}
@@ -667,10 +667,10 @@
 		event.preventDefault();
 		
 		let editableText = event.target.closest('editable-text');
-		let menupopup = document.getElementById('zotero-editable-text-menu');
+		let menupopup = document.getElementById('trellis-editable-text-menu');
 		if (!menupopup) {
 			menupopup = document.createXULElement('menupopup');
-			menupopup.id = 'zotero-editable-text-menu';
+			menupopup.id = 'trellis-editable-text-menu';
 			
 			let popupset = document.querySelector('popupset');
 			if (!popupset) {
@@ -681,7 +681,7 @@
 		}
 
 		menupopup.addEventListener('popupshowing', () => {
-			Zotero.Utilities.Internal.updateEditContextMenu(menupopup, editableText);
+			Trellis.Utilities.Internal.updateEditContextMenu(menupopup, editableText);
 		}, { once: true });
 		menupopup.openPopupAtScreen(event.screenX + 1, event.screenY + 1, true);
 	});

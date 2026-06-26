@@ -3,28 +3,28 @@
     
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Plugins = new function () {
+Trellis.Plugins = new function () {
 	var { AddonManager } = ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs");
 	var lazy = {};
 	ChromeUtils.defineESModuleGetters(lazy, {
@@ -45,8 +45,8 @@ Zotero.Plugins = new function () {
 	// solver never has to choose between competing per-plugin sources.
 	// Miscompiles can happen when a plugin uses `{optional: true}` because the tester
 	// can't distinguish "source has content" from "source is an optional-miss".
-	const PLUGIN_L10N_SOURCE_NAME = "zotero-plugins";
-	const PLUGIN_L10N_PRE_PATH = "zotero-plugins:{locale}/";
+	const PLUGIN_L10N_SOURCE_NAME = "trellis-plugins";
+	const PLUGIN_L10N_PRE_PATH = "trellis-plugins:{locale}/";
 	// addon.id -> Map<full_path, ftl_content>
 	var addonL10nContents = new Map();
 	
@@ -83,7 +83,7 @@ Zotero.Plugins = new function () {
 			await _callMethod(addon, 'startup', REASONS.APP_STARTUP);
 		}
 		
-		Zotero.addShutdownListener(async () => {
+		Trellis.addShutdownListener(async () => {
 			var { addons } = await AddonManager.getActiveAddons(["extension"]);
 			for (let addon of addons) {
 				await _callMethod(addon, 'shutdown', REASONS.APP_SHUTDOWN);
@@ -97,7 +97,7 @@ Zotero.Plugins = new function () {
 					domWindow.removeEventListener("load", onload, false);
 					if (
 						domWindow.location.href
-						!== "chrome://zotero/content/zoteroPane.xhtml"
+						!== "chrome://trellis/content/trellisPane.xhtml"
 					) {
 						return;
 					}
@@ -111,7 +111,7 @@ Zotero.Plugins = new function () {
 			onCloseWindow: async function (xulWindow) {
 				let domWindow = xulWindow.docShell.domWindow;
 				if (
-					domWindow.location.href !== "chrome://zotero/content/zoteroPane.xhtml"
+					domWindow.location.href !== "chrome://trellis/content/trellisPane.xhtml"
 				) {
 					return;
 				}
@@ -163,7 +163,7 @@ Zotero.Plugins = new function () {
 		Object.assign(
 			scope,
 			{
-				Zotero,
+				Trellis,
 				ChromeWorker,
 				IOUtils,
 				Localization,
@@ -188,8 +188,8 @@ Zotero.Plugins = new function () {
 			get(target, property, receiver) {
 				if (property === 'import') {
 					return function (uri) {
-						let esmURI = uri.replace('.jsm', uri.includes('/zotero/') ? '.mjs' : '.sys.mjs');
-						Zotero.warn('ChromeUtils.import() has been removed. Use importESModule():\n'
+						let esmURI = uri.replace('.jsm', uri.includes('/trellis/') ? '.mjs' : '.sys.mjs');
+						Trellis.warn('ChromeUtils.import() has been removed. Use importESModule():\n'
 							+ `  ChromeUtils.importESModule("${esmURI}");`);
 						return receiver.importESModule(esmURI);
 					};
@@ -211,7 +211,7 @@ Zotero.Plugins = new function () {
 			);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 	
@@ -224,11 +224,11 @@ Zotero.Plugins = new function () {
 	async function _callMethod(addon, method, reason, extraParams) {
 		try {
 			let id = addon.id;
-			Zotero.debug(`Calling bootstrap method '${method}' for plugin ${id} `
+			Trellis.debug(`Calling bootstrap method '${method}' for plugin ${id} `
 				+ `version ${addon.version} with reason ${_getReasonName(reason)}`);
 
 			if (addon.softDisabled) {
-				Zotero.debug(`Skipping bootstrap method '${method}' for disabled plugin ${id}`);
+				Trellis.debug(`Skipping bootstrap method '${method}' for disabled plugin ${id}`);
 				return;
 			}
 			
@@ -241,7 +241,7 @@ Zotero.Plugins = new function () {
 			catch (e) {}
 			
 			if (!func) {
-				Zotero.warn(`Plugin ${id} is missing bootstrap method '${method}'`);
+				Trellis.warn(`Plugin ${id} is missing bootstrap method '${method}'`);
 				return;
 			}
 			
@@ -262,8 +262,8 @@ Zotero.Plugins = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(`Error running bootstrap method '${method}' on ${id}`);
-				Zotero.logError(e);
+				Trellis.logError(`Error running bootstrap method '${method}' on ${id}`);
+				Trellis.logError(e);
 			}
 
 			for (let observer of observers) {
@@ -275,7 +275,7 @@ Zotero.Plugins = new function () {
 						}
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 			}
@@ -287,7 +287,7 @@ Zotero.Plugins = new function () {
 			}*/
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 	
@@ -354,7 +354,7 @@ Zotero.Plugins = new function () {
 			// whether to get the hiDPI icon.
 			// Use the main window (which we always have on non-macOS),
 			// falling back to the hidden window (which we always have on macOS).
-			Zotero.getMainWindow() || Services.appShell.hiddenDOMWindow
+			Trellis.getMainWindow() || Services.appShell.hiddenDOMWindow
 		);
 	};
 	
@@ -374,7 +374,7 @@ Zotero.Plugins = new function () {
 						branch.setIntPref(pref, value);
 						break;
 					default:
-						Zotero.logError(`Invalid type '${typeof value}' for pref '${pref}'`);
+						Trellis.logError(`Invalid type '${typeof value}' for pref '${pref}'`);
 				}
 			}
 		};
@@ -389,7 +389,7 @@ Zotero.Plugins = new function () {
 		}
 		catch (e) {
 			if (!e.toString().startsWith('Error opening input stream')) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	}
@@ -415,7 +415,7 @@ Zotero.Plugins = new function () {
 		}
 		catch (e) {
 			if (!e.toString().startsWith('Error opening input stream')) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	}
@@ -429,16 +429,16 @@ Zotero.Plugins = new function () {
 	 * could be included in an XHTML file as
 	 *   <link rel="localization" href="make-it-red.ftl"/>
 	 *
-	 * For each Zotero locale the plugin doesn't ship translations for, the
+	 * For each Trellis locale the plugin doesn't ship translations for, the
 	 * plugin's closest-locale content (exact -> same-language -> en-US ->
-	 * first available) is used, so every Zotero locale has a valid bundle.
+	 * first available) is used, so every Trellis locale has a valid bundle.
 	 *
 	 * @param addon
 	 * @returns {Promise<void>}
 	 */
 	async function registerLocales(addon) {
 		let rootURI = addon.getResourceURI();
-		let zoteroLocales = Services.locale.availableLocales;
+		let trellisLocales = Services.locale.availableLocales;
 		let pluginLocales;
 		try {
 			pluginLocales = await readDirectory(rootURI, 'locale', true);
@@ -447,7 +447,7 @@ Zotero.Plugins = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return;
 		}
 
@@ -459,7 +459,7 @@ Zotero.Plugins = new function () {
 				files = await readDirectory(rootURI, `locale/${pluginLocale}`);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				continue;
 			}
 			let contents = new Map();
@@ -467,10 +467,10 @@ Zotero.Plugins = new function () {
 				if (!file.endsWith('.ftl')) continue;
 				let url = rootURI.spec + `locale/${pluginLocale}/${file}`;
 				try {
-					contents.set(file, await Zotero.File.getResourceAsync(url));
+					contents.set(file, await Trellis.File.getResourceAsync(url));
 				}
 				catch (e) {
-					Zotero.logError(new Error(`${addon.id}: failed to read ${url}: ${e}`));
+					Trellis.logError(new Error(`${addon.id}: failed to read ${url}: ${e}`));
 				}
 			}
 			pluginFilesByLocale.set(pluginLocale, contents);
@@ -488,11 +488,11 @@ Zotero.Plugins = new function () {
 		}
 
 		let contributions = new Map();
-		for (let zoteroLocale of zoteroLocales) {
-			let prefix = PLUGIN_L10N_PRE_PATH.replace('{locale}', zoteroLocale);
+		for (let trellisLocale of trellisLocales) {
+			let prefix = PLUGIN_L10N_PRE_PATH.replace('{locale}', trellisLocale);
 			for (let [filename, available] of localesPerFile) {
-				let pick = Zotero.Utilities.Internal.resolveLocale(
-					zoteroLocale, available, { silent: true }
+				let pick = Trellis.Utilities.Internal.resolveLocale(
+					trellisLocale, available, { silent: true }
 				);
 				if (!pick) {
 					pick = available.find(l => l.startsWith('en')) || available[0];
@@ -504,7 +504,7 @@ Zotero.Plugins = new function () {
 			}
 		}
 		addonL10nContents.set(addon.id, contributions);
-		rebuildUnifiedPluginSource(zoteroLocales);
+		rebuildUnifiedPluginSource(trellisLocales);
 	}
 
 
@@ -512,7 +512,7 @@ Zotero.Plugins = new function () {
 	 * Rebuild the unified plugin L10nFileSource from all active plugins'
 	 * contributions and register (or update) it in L10nRegistry.
 	 */
-	function rebuildUnifiedPluginSource(zoteroLocales) {
+	function rebuildUnifiedPluginSource(trellisLocales) {
 		let fs = [];
 		for (let contributions of addonL10nContents.values()) {
 			for (let [path, source] of contributions) {
@@ -529,7 +529,7 @@ Zotero.Plugins = new function () {
 		let source = L10nFileSource.createMock(
 			PLUGIN_L10N_SOURCE_NAME,
 			'app',
-			zoteroLocales,
+			trellisLocales,
 			PLUGIN_L10N_PRE_PATH,
 			fs
 		);
@@ -606,7 +606,7 @@ Zotero.Plugins = new function () {
 	
 	
 	function getVersionChangeReason(oldVersion, newVersion) {
-		return Zotero.Utilities.semverCompare(oldVersion, newVersion) <= 0
+		return Trellis.Utilities.semverCompare(oldVersion, newVersion) <= 0
 			? REASONS.ADDON_UPGRADE
 			: REASONS.ADDON_DOWNGRADE;
 	}
@@ -618,13 +618,13 @@ Zotero.Plugins = new function () {
 			versionRanges: [{
 				maxVersion: "8.999"
 			}],
-			reason: "Versions of this plugin prior to version 9.0 prevent Zotero from closing properly and cannot be automatically updated.",
+			reason: "Versions of this plugin prior to version 9.0 prevent Trellis from closing properly and cannot be automatically updated.",
 		},
-		"zoterostyle@polygon.org": {
+		"trellisstyle@polygon.org": {
 			versionRanges: [{
 				maxVersion: "4.5.99"
 			}],
-			reason: "Versions of this plugin prior to version 4.6.0 break the Zotero user interface.",
+			reason: "Versions of this plugin prior to version 4.6.0 break the Trellis user interface.",
 		}
 	};
 	function getBlockedPlugins() {
@@ -648,8 +648,8 @@ Zotero.Plugins = new function () {
 				}
 				else {
 					let { minVersion, maxVersion } = blockedVersion;
-					if ((!minVersion || Zotero.Utilities.semverCompare(version, minVersion) >= 0)
-						&& (!maxVersion || Zotero.Utilities.semverCompare(version, maxVersion) <= 0)) {
+					if ((!minVersion || Trellis.Utilities.semverCompare(version, minVersion) >= 0)
+						&& (!maxVersion || Trellis.Utilities.semverCompare(version, maxVersion) <= 0)) {
 						blockedReason = blockedPlugins[id].reason;
 						break;
 					}
@@ -657,7 +657,7 @@ Zotero.Plugins = new function () {
 			}
 		}
 		if (blockedReason) {
-			Zotero.warn(`Blocking plugin ${addon.id}: ${blockedReason}`);
+			Trellis.warn(`Blocking plugin ${addon.id}: ${blockedReason}`);
 		}
 		setPluginBlocked(addon, !!blockedReason);
 		return blockedReason;
@@ -707,7 +707,7 @@ Zotero.Plugins = new function () {
 		},
 		
 		async onInstalling(addon) {
-			Zotero.debug("Installing plugin " + addon.id);
+			Trellis.debug("Installing plugin " + addon.id);
 			
 			var currentVersion = addonVersions.get(addon.id);
 			if (currentVersion) {
@@ -729,7 +729,7 @@ Zotero.Plugins = new function () {
 			if (addon.type !== "extension") {
 				return;
 			}
-			Zotero.debug("Installed plugin " + addon.id);
+			Trellis.debug("Installed plugin " + addon.id);
 
 			// Determine if this is a new install, an upgrade, or a downgrade
 			let previousVersion = addonVersions.get(addon.id);
@@ -756,7 +756,7 @@ Zotero.Plugins = new function () {
 			if (addon.type !== "extension") {
 				return;
 			}
-			Zotero.debug("Enabling plugin " + addon.id);
+			Trellis.debug("Enabling plugin " + addon.id);
 			_loadScope(addon);
 			setDefaultPrefs(addon);
 			await registerLocales(addon);
@@ -767,14 +767,14 @@ Zotero.Plugins = new function () {
 			if (addon.type !== "extension") {
 				return;
 			}
-			Zotero.debug("Disabling plugin " + addon.id);
+			Trellis.debug("Disabling plugin " + addon.id);
 			await _callMethod(addon, 'shutdown', REASONS.ADDON_DISABLE);
 			unregisterLocales(addon);
 			clearDefaultPrefs(addon);
 		},
 		
 		async onUninstalling(addon) {
-			Zotero.debug("Uninstalling plugin " + addon.id);
+			Trellis.debug("Uninstalling plugin " + addon.id);
 			this.uninstalling.add(addon.id);
 			if (addon.isActive) {
 				await _callMethod(addon, 'shutdown', REASONS.ADDON_UNINSTALL);
@@ -786,7 +786,7 @@ Zotero.Plugins = new function () {
 		},
 		
 		async onUninstalled(addon) {
-			Zotero.debug("Uninstalled plugin " + addon.id);
+			Trellis.debug("Uninstalled plugin " + addon.id);
 			_unloadScope(addon.id);
 			addonVersions.delete(addon.id);
 		},
@@ -795,7 +795,7 @@ Zotero.Plugins = new function () {
 			if (!this.uninstalling.has(addon.id) || addon.type !== "extension") {
 				return;
 			}
-			Zotero.debug("Cancelled uninstallation of plugin " + addon.id);
+			Trellis.debug("Cancelled uninstallation of plugin " + addon.id);
 			this.uninstalling.delete(addon.id);
 
 			let blockedReason = shouldBlockPlugin(addon);

@@ -3,32 +3,32 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-if (!Zotero.Sync.Storage.Mode) {
-	Zotero.Sync.Storage.Mode = {};
+if (!Trellis.Sync.Storage.Mode) {
+	Trellis.Sync.Storage.Mode = {};
 }
 
-Zotero.Sync.Storage.Mode.WebDAV = function (options) {
+Trellis.Sync.Storage.Mode.WebDAV = function (options) {
 	this.options = options;
 	
 	this.VerificationError = function (error, url) {
@@ -38,7 +38,7 @@ Zotero.Sync.Storage.Mode.WebDAV = function (options) {
 	}
 	this.VerificationError.prototype = Object.create(Error.prototype);
 }
-Zotero.Sync.Storage.Mode.WebDAV.prototype = {
+Trellis.Sync.Storage.Mode.WebDAV.prototype = {
 	mode: "webdav",
 	name: "WebDAV",
 	
@@ -46,10 +46,10 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	ERROR_DELAY_MAX: 3000,
 	
 	get verified() {
-		return Zotero.Prefs.get("sync.storage.verified");
+		return Trellis.Prefs.get("sync.storage.verified");
 	},
 	set verified(val) {
-		Zotero.Prefs.set("sync.storage.verified", !!val)
+		Trellis.Prefs.set("sync.storage.verified", !!val)
 	},
 	
 	_parentURI: null,
@@ -120,16 +120,16 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	 * Compute a Digest Authorization header for the given method and URI.
 	 *
 	 * @param {String} method - HTTP method
-	 * @param {String} path - Request URI path (e.g., "/zotero/file.zip")
+	 * @param {String} path - Request URI path (e.g., "/trellis/file.zip")
 	 * @return {String|null} - Complete Digest Authorization header or null
 	 */
 	_computeDigestAuth(method, path) {
 		let p = this._digestParams;
 		if (!p) return null;
 
-		let md5 = Zotero.Utilities.Internal.md5;
+		let md5 = Trellis.Utilities.Internal.md5;
 		let nc = (++p.nc).toString(16).padStart(8, '0');
-		let cnonce = Zotero.Utilities.randomString(16);
+		let cnonce = Trellis.Utilities.randomString(16);
 
 		let ha1;
 		if (p.algorithm && p.algorithm.toLowerCase() === 'md5-sess') {
@@ -181,7 +181,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 
 		if (authorization.startsWith('Basic ')) {
 			this._basicAuthHeader = authorization;
-			Zotero.debug("Cached Basic auth header");
+			Trellis.debug("Cached Basic auth header");
 		}
 		else if (authorization.startsWith('Digest ')) {
 			let parsed = this._parseDigestParams(authorization);
@@ -198,7 +198,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 					algorithm: parsed.algorithm || null,
 					nc: 0,
 				};
-				Zotero.debug("Cached Digest auth parameters");
+				Trellis.debug("Cached Digest auth parameters");
 			}
 		}
 	},
@@ -207,38 +207,38 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	 * Clear cached credentials when auth fails (e.g., password changed on server)
 	 */
 	_onAuthError() {
-		Zotero.debug("Clearing cached WebDAV credentials due to auth error");
+		Trellis.debug("Clearing cached WebDAV credentials due to auth error");
 		this._basicAuthHeader = false;
 		this._digestParams = null;
 		this.verified = false;
 	},
 
-	_loginManagerHost: 'chrome://zotero',
-	_loginManagerRealm: 'Zotero Storage Server (encrypted)',
-	_loginManagerRealmLegacy: 'Zotero Storage Server',
+	_loginManagerHost: 'chrome://trellis',
+	_loginManagerRealm: 'Trellis Storage Server (encrypted)',
+	_loginManagerRealmLegacy: 'Trellis Storage Server',
 	
 	
 	get defaultError() {
-		return Zotero.getString('sync.storage.error.webdav.default');
+		return Trellis.getString('sync.storage.error.webdav.default');
 	},
 	
 	get defaultErrorRestart() {
-		return Zotero.getString('sync.storage.error.webdav.defaultRestart', Zotero.appName);
+		return Trellis.getString('sync.storage.error.webdav.defaultRestart', Trellis.appName);
 	},
 	
 	get username() {
-		return Zotero.Prefs.get('sync.storage.username');
+		return Trellis.Prefs.get('sync.storage.username');
 	},
 	
 	async getPassword() {
 		var username = this.username;
 		
 		if (!username) {
-			Zotero.debug('Username not set before calling Zotero.Sync.Storage.WebDAV.getPassword()');
+			Trellis.debug('Username not set before calling Trellis.Sync.Storage.WebDAV.getPassword()');
 			return '';
 		}
 		
-		Zotero.debug('Getting WebDAV password');
+		Trellis.debug('Getting WebDAV password');
 		
 		// Prefer the legacy realm during the transition window: an older version
 		// may have written a fresh value there after we migrated. Mirror it to
@@ -254,13 +254,13 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				let password = legacyLogins[i].password;
 				if (!this._mirroredPassword) {
 					try {
-						Zotero.debug("Mirroring plaintext WebDAV password to encrypted storage");
+						Trellis.debug("Mirroring plaintext WebDAV password to encrypted storage");
 						await this._writeEncryptedPassword(username, password);
 						this._mirroredPassword = true;
 					}
 					catch (e) {
-						Zotero.logError(e);
-						Zotero.OSKeyStore.alertMigrateFailed();
+						Trellis.logError(e);
+						Trellis.OSKeyStore.alertMigrateFailed();
 					}
 				}
 				return password;
@@ -273,17 +273,17 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		});
 		for (var i = 0; i < logins.length; i++) {
 			if (logins[i].username == username) {
-				return Zotero.OSKeyStore.decrypt(logins[i].password);
+				return Trellis.OSKeyStore.decrypt(logins[i].password);
 			}
 		}
 		
 		// Pre-4.0.28.5 format, broken for findLogins and removeLogin in Fx41
 		logins = await Services.logins.searchLoginsAsync({
-			origin: "chrome://zotero"
+			origin: "chrome://trellis"
 		});
 		for (var i = 0; i < logins.length; i++) {
 			if (logins[i].username == username
-					&& logins[i].formSubmitURL == "Zotero Storage Server") {
+					&& logins[i].formSubmitURL == "Trellis Storage Server") {
 				return logins[i].password;
 			}
 		}
@@ -294,7 +294,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	async setPassword(password) {
 		var username = this.username;
 		if (!username) {
-			Zotero.debug('WebDAV username not set before setting password');
+			Trellis.debug('WebDAV username not set before setting password');
 			return;
 		}
 		
@@ -303,12 +303,12 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		// (e.g. keychain locked), proceed with the write anyway.
 		try {
 			if (password == (await this.getPassword())) {
-				Zotero.debug("WebDAV password hasn't changed");
+				Trellis.debug("WebDAV password hasn't changed");
 				return;
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		this._basicAuthHeader = false;
@@ -320,15 +320,15 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		catch (e) {
 			// If the write failed because the key database was unusable, reset the login
 			// manager and retry
-			if (!Zotero.Sync.Data.Local.repairLoginManager()) {
-				Zotero.OSKeyStore.alertSaveFailed();
+			if (!Trellis.Sync.Data.Local.repairLoginManager()) {
+				Trellis.OSKeyStore.alertSaveFailed();
 				throw e;
 			}
 			try {
 				await this._writeEncryptedPassword(username, password);
 			}
 			catch (e) {
-				Zotero.OSKeyStore.alertSaveFailed();
+				Trellis.OSKeyStore.alertSaveFailed();
 				throw e;
 			}
 		}
@@ -344,7 +344,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 					Services.logins.removeLogin(logins[i]);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			break;
@@ -355,13 +355,13 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			origin: this._loginManagerHost
 		});
 		for (var i = 0; i < logins.length; i++) {
-			Zotero.debug('Clearing old WebDAV passwords');
-			if (logins[i].formSubmitURL == "Zotero Storage Server") {
+			Trellis.debug('Clearing old WebDAV passwords');
+			if (logins[i].formSubmitURL == "Trellis Storage Server") {
 				try {
 					Services.logins.removeLogin(logins[i]);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			break;
@@ -381,7 +381,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		}
 		
 		if (password) {
-			let storedValue = await Zotero.OSKeyStore.encrypt(password);
+			let storedValue = await Trellis.OSKeyStore.encrypt(password);
 			let nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
 				Components.interfaces.nsILoginInfo, "init");
 			let loginInfo = new nsLoginInfo(this._loginManagerHost, null,
@@ -412,7 +412,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		this._rootURI = false;
 		this._parentURI = false;
 		
-		var scheme = Zotero.Prefs.get('sync.storage.scheme');
+		var scheme = Trellis.Prefs.get('sync.storage.scheme');
 		switch (scheme) {
 			case 'http':
 			case 'https':
@@ -422,7 +422,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				throw new Error("Invalid WebDAV scheme '" + scheme + "'");
 		}
 		
-		var url = Zotero.Prefs.get('sync.storage.url');
+		var url = Trellis.Prefs.get('sync.storage.url');
 		if (!url) {
 			throw new this.VerificationError("NO_URL");
 		}
@@ -452,8 +452,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			}
 			throw e;
 		}
-		this._rootURI = io.newURI(spec + "zotero/", null, null);
-		Zotero.HTTP.CookieBlocker.addURL(this._rootURI.spec);
+		this._rootURI = io.newURI(spec + "trellis/", null, null);
+		Trellis.HTTP.CookieBlocker.addURL(this._rootURI.spec);
 	},
 	
 	
@@ -461,17 +461,17 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		await this._init();
 		
 		if (this._basicAuthHeader || this._digestParams) {
-			Zotero.debug("WebDAV credentials are already cached");
+			Trellis.debug("WebDAV credentials are already cached");
 			return;
 		}
 		
-		Zotero.debug("Caching WebDAV credentials");
+		Trellis.debug("Caching WebDAV credentials");
 		
 		let xmlstr = "<propfind xmlns='DAV:'><prop>"
 			+ "<getcontentlength/>"
 			+ "</prop></propfind>";
 		try {
-			await Zotero.HTTP.request(
+			await Trellis.HTTP.request(
 				"PROPFIND",
 				this.rootURI,
 				{
@@ -489,17 +489,17 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				}
 			);
 			if (this._basicAuthHeader || this._digestParams) {
-				Zotero.debug("Authorization header cached");
+				Trellis.debug("Authorization header cached");
 			}
 			else {
-				Zotero.debug("No Authorization header to cache");
+				Trellis.debug("No Authorization header to cache");
 			}
 		}
 		catch (e) {
-			if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+			if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 				let msg = "HTTP " + e.status + " error from WebDAV server "
 					+ "for PROPFIND request";
-				Zotero.logError(msg);
+				Trellis.logError(msg);
 				throw new Error(this.defaultErrorRestart);
 			}
 			throw e;
@@ -508,9 +508,9 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	
 	
 	clearCachedCredentials: function () {
-		Zotero.debug("WebDAV: Clearing cached credentials");
+		Trellis.debug("WebDAV: Clearing cached credentials");
 		if (this._rootURI) {
-			Zotero.HTTP.CookieBlocker.removeURL(this._rootURI.spec);
+			Trellis.HTTP.CookieBlocker.removeURL(this._rootURI.spec);
 		}
 		this._rootURI = this._parentURI = undefined;
 		this._basicAuthHeader = false;
@@ -521,13 +521,13 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	/**
 	 * Begin download process for individual file
 	 *
-	 * @param {Zotero.Sync.Storage.Request} request
-	 * @return {Promise<Zotero.Sync.Storage.Result>}
+	 * @param {Trellis.Sync.Storage.Request} request
+	 * @return {Promise<Trellis.Sync.Storage.Result>}
 	 */
 	downloadFile: async function (request) {
 		await this._init();
 		
-		var item = Zotero.Sync.Storage.Utilities.getItemFromRequest(request);
+		var item = Trellis.Sync.Storage.Utilities.getItemFromRequest(request);
 		if (!item) {
 			throw new Error("Item '" + request.name + "' not found");
 		}
@@ -535,29 +535,29 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		// Skip download if local file exists and matches mod time
 		var path = item.getFilePath();
 		if (!path) {
-			Zotero.debug(`Cannot download file for attachment ${item.libraryKey} with no path`);
-			return new Zotero.Sync.Storage.Result;
+			Trellis.debug(`Cannot download file for attachment ${item.libraryKey} with no path`);
+			return new Trellis.Sync.Storage.Result;
 		}
 		
 		// Retrieve modification time from server
 		var metadata = await this._getStorageFileMetadata(item, request);
 		
 		if (!request.isRunning()) {
-			Zotero.debug("Download request '" + request.name
+			Trellis.debug("Download request '" + request.name
 				+ "' is no longer running after getting mod time");
-			return new Zotero.Sync.Storage.Result;
+			return new Trellis.Sync.Storage.Result;
 		}
 		
 		if (!metadata) {
-			Zotero.debug("Remote file not found for item " + item.libraryKey);
+			Trellis.debug("Remote file not found for item " + item.libraryKey);
 			item.attachmentSyncState = "in_sync";
 			await item.saveTx({ skipAll: true });
-			return new Zotero.Sync.Storage.Result;
+			return new Trellis.Sync.Storage.Result;
 		}
 		
 		var fileModTime = await item.attachmentModificationTime;
 		if (metadata.mtime == fileModTime) {
-			Zotero.debug("File mod time matches remote file -- skipping download of "
+			Trellis.debug("File mod time matches remote file -- skipping download of "
 				+ item.libraryKey);
 			
 			var updateItem = item.attachmentSyncState != 1
@@ -569,15 +569,15 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				await item.updateSynced(false);
 			}
 			
-			return new Zotero.Sync.Storage.Result({
+			return new Trellis.Sync.Storage.Result({
 				localChanges: true, // ?
 			});
 		}
 		
 		var uri = this._getItemURI(item);
 		
-		var destPath = OS.Path.join(Zotero.getTempDirectory().path, item.key + '.tmp');
-		await Zotero.File.removeIfExists(destPath);
+		var destPath = OS.Path.join(Trellis.getTempDirectory().path, item.key + '.tmp');
+		await Trellis.File.removeIfExists(destPath);
 		
 		var requestData = {
 			item,
@@ -588,7 +588,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		return new Promise(async (resolve, reject) => {
 			try {
-				let req = await Zotero.HTTP.download(
+				let req = await Trellis.HTTP.download(
 					uri,
 					destPath,
 					{
@@ -604,7 +604,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				
 				if (req.status == 404) {
 					let msg = "Remote ZIP file not found for item " + item.libraryKey;
-					Zotero.debug(msg, 2);
+					Trellis.debug(msg, 2);
 					Cu.reportError(msg);
 					
 					// Delete the orphaned prop file
@@ -612,33 +612,33 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 						await this._deleteStorageFiles([item.key + ".prop"]);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 
 					item.attachmentSyncState = "in_sync";
 					await item.saveTx({ skipAll: true });
-					resolve(new Zotero.Sync.Storage.Result);
+					resolve(new Trellis.Sync.Storage.Result);
 					return;
 				}
 				
 				// Don't try to process if the request has been cancelled
 				if (request.isFinished()) {
-					Zotero.debug("Download request " + request.name
+					Trellis.debug("Download request " + request.name
 						+ " is no longer running after file download");
-					resolve(new Zotero.Sync.Storage.Result);
+					resolve(new Trellis.Sync.Storage.Result);
 					return;
 				}
 				
-				Zotero.debug("Finished download of " + destPath);
+				Trellis.debug("Finished download of " + destPath);
 				
 				resolve(
-					Zotero.Sync.Storage.Local.processDownload(requestData)
+					Trellis.Sync.Storage.Local.processDownload(requestData)
 				);
 			}
 			catch (e) {
-				if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+				if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 					try {
-						let dispURL = Zotero.HTTP.getDisplayURI(uri).spec;
+						let dispURL = Trellis.HTTP.getDisplayURI(uri).spec;
 						this._handleUnexpectedStatus("GET", dispURL, e.xmlhttp.status);
 					}
 					catch (e) {
@@ -646,8 +646,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 					}
 					return;
 				}
-				Zotero.logError(e);
-				reject(new Error(Zotero.Sync.Storage.defaultError));
+				Trellis.logError(e);
+				reject(new Error(Trellis.Sync.Storage.defaultError));
 			}
 		});
 	},
@@ -656,7 +656,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	uploadFile: async function (request) {
 		await this._init();
 		
-		var item = Zotero.Sync.Storage.Utilities.getItemFromRequest(request);
+		var item = Trellis.Sync.Storage.Utilities.getItemFromRequest(request);
 		var params = {
 			mtime: await item.attachmentModificationTime,
 			md5: await item.attachmentHash
@@ -665,21 +665,21 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		var metadata = await this._getStorageFileMetadata(item, request);
 		
 		if (!request.isRunning()) {
-			Zotero.debug("Upload request '" + request.name
+			Trellis.debug("Upload request '" + request.name
 				+ "' is no longer running after getting metadata");
-			return new Zotero.Sync.Storage.Result;
+			return new Trellis.Sync.Storage.Result;
 		}
 		
 		// Check if file already exists on WebDAV server
 		if (item.attachmentSyncState
-				!= Zotero.Sync.Storage.Local.SYNC_STATE_FORCE_UPLOAD) {
+				!= Trellis.Sync.Storage.Local.SYNC_STATE_FORCE_UPLOAD) {
 			if (metadata.mtime) {
 				// Local file time
 				let fmtime = await item.attachmentModificationTime;
 				// Remote prop time
 				let mtime = metadata.mtime;
 				
-				var changed = Zotero.Sync.Storage.Local.checkFileModTime(item, fmtime, mtime);
+				var changed = Trellis.Sync.Storage.Local.checkFileModTime(item, fmtime, mtime);
 				if (!changed) {
 					// Remote hash
 					let hash = metadata.md5;
@@ -701,7 +701,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 						await item.saveTx({ skipAll: true });
 						// skipAll doesn't mark as unsynced, so do that separately
 						await item.updateSynced(false);
-						return new Zotero.Sync.Storage.Result({
+						return new Trellis.Sync.Storage.Result({
 							localChanges: true,
 							syncRequired: true
 						});
@@ -721,7 +721,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				if (smtime != mtime) {
 					let shash = item.attachmentSyncedHash;
 					if (shash && metadata.md5 && shash == metadata.md5) {
-						Zotero.debug(`Last synced mod time for item ${item.libraryKey} doesn't `
+						Trellis.debug(`Last synced mod time for item ${item.libraryKey} doesn't `
 							+ "match time on storage server but hash does -- using local file mtime");
 						
 						await this._setStorageFileMetadata(item);
@@ -731,13 +731,13 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 						// skipAll doesn't mark as unsynced, so do that separately
 						await item.updateSynced(false);
 						
-						return new Zotero.Sync.Storage.Result({
+						return new Trellis.Sync.Storage.Result({
 							localChanges: true,
 							syncRequired: true
 						});
 					}
 					
-					Zotero.logError("Conflict -- last synced file mod time for item "
+					Trellis.logError("Conflict -- last synced file mod time for item "
 						+ item.libraryKey + " does not match time on storage server"
 						+ " (" + smtime + " != " + mtime + ")");
 					
@@ -747,24 +747,24 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 					item.attachmentSyncState = "in_conflict";
 					await item.saveTx({ skipAll: true });
 					
-					return new Zotero.Sync.Storage.Result({
+					return new Trellis.Sync.Storage.Result({
 						fileSyncRequired: true
 					});
 				}
 			}
 			else {
-				Zotero.debug("Remote file not found for item " + item.id);
+				Trellis.debug("Remote file not found for item " + item.id);
 			}
 		}
 		
-		var created = await Zotero.Sync.Storage.Utilities.createUploadFile(request);
+		var created = await Trellis.Sync.Storage.Utilities.createUploadFile(request);
 		if (!created) {
-			return new Zotero.Sync.Storage.Result;
+			return new Trellis.Sync.Storage.Result;
 		}
 		
 		/*
 		updateSizeMultiplier(
-			(100 - Zotero.Sync.Storage.compressionTracker.ratio) / 100
+			(100 - Trellis.Sync.Storage.compressionTracker.ratio) / 100
 		);
 		*/
 		
@@ -772,7 +772,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		if (metadata) {
 			var propURI = this._getItemPropertyURI(item);
 			try {
-				await Zotero.HTTP.request(
+				await Trellis.HTTP.request(
 					"DELETE",
 					propURI,
 					{
@@ -786,14 +786,14 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				);
 			}
 			catch (e) {
-				if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
-					this._handleUnexpectedStatus("DELETE", Zotero.HTTP.getDisplayURI(propURI).spec, e.status);
+				if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
+					this._handleUnexpectedStatus("DELETE", Trellis.HTTP.getDisplayURI(propURI).spec, e.status);
 				}
 				throw e;
 			}
 		}
 		
-		var file = Zotero.getTempDirectory();
+		var file = Trellis.getTempDirectory();
 		file.append(item.key + '.zip');
 		Components.utils.importGlobalProperties(["File"]);
 		file = File.createFromFileName ? File.createFromFileName(file.path) : new File(file);
@@ -805,7 +805,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		var uri = this._getItemURI(item);
 		
 		try {
-			var req = await Zotero.HTTP.request(
+			var req = await Trellis.HTTP.request(
 				"PUT",
 				uri,
 				{
@@ -832,14 +832,14 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			);
 		}
 		catch (e) {
-			if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+			if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 				if (e.status == 507) {
 					throw new Error(
-						Zotero.getString('sync.storage.error.webdav.insufficientSpace')
+						Trellis.getString('sync.storage.error.webdav.insufficientSpace')
 					);
 				}
 				
-				this._handleUnexpectedStatus("PUT", Zotero.HTTP.getDisplayURI(uri).spec, e.status);
+				this._handleUnexpectedStatus("PUT", Trellis.HTTP.getDisplayURI(uri).spec, e.status);
 			}
 			throw e;
 			
@@ -855,7 +855,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	
 	/**
 	 * @return {Promise}
-	 * @throws {Zotero.Sync.Storage.Mode.WebDAV.VerificationError|Error}
+	 * @throws {Trellis.Sync.Storage.Mode.WebDAV.VerificationError|Error}
 	 */
 	checkServer: async function (options = {}) {
 		// Clear URIs
@@ -876,7 +876,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		}
 		
 		// Test whether URL is WebDAV-enabled
-		var req = await Zotero.HTTP.request(
+		var req = await Trellis.HTTP.request(
 			"OPTIONS",
 			uri,
 			{
@@ -887,11 +887,11 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			}
 		);
 
-		Zotero.debug(req.getAllResponseHeaders());
+		Trellis.debug(req.getAllResponseHeaders());
 
 		var dav = req.getResponseHeader("DAV");
 		if (dav == null) {
-			throw new this.VerificationError("NOT_DAV", Zotero.HTTP.getDisplayURI(uri, true).spec);
+			throw new this.VerificationError("NOT_DAV", Trellis.HTTP.getDisplayURI(uri, true).spec);
 		}
 
 		var propfindHeaders = {
@@ -899,8 +899,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			"Content-Type": "text/xml; charset=utf-8"
 		};
 
-		// Test whether Zotero directory exists
-		req = await Zotero.HTTP.request("PROPFIND", uri, {
+		// Test whether Trellis directory exists
+		req = await Trellis.HTTP.request("PROPFIND", uri, {
 			body: xmlstr,
 			headers: propfindHeaders,
 			successCodes: [207, 404],
@@ -916,7 +916,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			// Test if missing files return 404s
 			let missingFileURI = uri.mutate().setSpec(uri.spec + "nonexistent.prop").finalize();
 			try {
-				req = await Zotero.HTTP.request(
+				req = await Trellis.HTTP.request(
 					"GET",
 					missingFileURI,
 					{
@@ -930,20 +930,20 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				)
 			}
 			catch (e) {
-				if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+				if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 					if (e.status >= 200 && e.status < 300) {
 						throw new this.VerificationError(
 							"NONEXISTENT_FILE_NOT_MISSING",
-							Zotero.HTTP.getDisplayURI(uri, true).spec
+							Trellis.HTTP.getDisplayURI(uri, true).spec
 						);
 					}
 				}
 				throw e;
 			}
 
-			// Test if Zotero directory is writable
-			let testFileURI = uri.mutate().setSpec(uri.spec + "zotero-test-file.prop").finalize();
-			req = await Zotero.HTTP.request("PUT", testFileURI, {
+			// Test if Trellis directory is writable
+			let testFileURI = uri.mutate().setSpec(uri.spec + "trellis-test-file.prop").finalize();
+			req = await Trellis.HTTP.request("PUT", testFileURI, {
 				headers: this._getAuthorizationHeaders("PUT", testFileURI),
 				body: " ",
 				successCodes: [200, 201, 204],
@@ -952,7 +952,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				debug: true
 			});
 
-			req = await Zotero.HTTP.request(
+			req = await Trellis.HTTP.request(
 				"GET",
 				testFileURI,
 				{
@@ -967,7 +967,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 
 			if (req.status == 200) {
 				// Delete test file
-				await Zotero.HTTP.request(
+				await Trellis.HTTP.request(
 					"DELETE",
 					testFileURI,
 					{
@@ -987,14 +987,14 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			else if (req.status == 404) {
 				throw new this.VerificationError(
 					"FILE_MISSING_AFTER_UPLOAD",
-					Zotero.HTTP.getDisplayURI(uri, true).spec
+					Trellis.HTTP.getDisplayURI(uri, true).spec
 				);
 			}
 		}
 		else if (req.status == 404) {
-			// Zotero directory wasn't found, so see if at least
+			// Trellis directory wasn't found, so see if at least
 			// the parent directory exists
-			req = await Zotero.HTTP.request("PROPFIND", parentURI, {
+			req = await Trellis.HTTP.request("PROPFIND", parentURI, {
 				headers: Object.assign(
 					{},
 					this._getAuthorizationHeaders("PROPFIND", parentURI),
@@ -1008,20 +1008,20 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			
 			if (req.status == 207) {
 				throw new this.VerificationError(
-					"ZOTERO_DIR_NOT_FOUND",
-					Zotero.HTTP.getDisplayURI(uri, true).spec
+					"TRELLIS_DIR_NOT_FOUND",
+					Trellis.HTTP.getDisplayURI(uri, true).spec
 				);
 			}
 			else if (req.status == 404) {
 				throw new this.VerificationError(
 					"PARENT_DIR_NOT_FOUND",
-					Zotero.HTTP.getDisplayURI(uri, true).spec
+					Trellis.HTTP.getDisplayURI(uri, true).spec
 				);
 			}
 		}
 		
 		this.verified = true;
-		Zotero.debug(this.name + " file sync is successfully set up");
+		Trellis.debug(this.name + " file sync is successfully set up");
 	},
 	
 	
@@ -1035,34 +1035,34 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		var errorTitle, errorMsg;
 		
-		if (err instanceof Zotero.HTTP.UnexpectedStatusException) {
+		if (err instanceof Trellis.HTTP.UnexpectedStatusException) {
 			switch (err.status) {
 			case 0:
-				errorMsg = Zotero.getString('sync.storage.error.serverCouldNotBeReached', err.url.host);
+				errorMsg = Trellis.getString('sync.storage.error.serverCouldNotBeReached', err.url.host);
 				break;
 				
 			case 401:
 				this._onAuthError();
-				errorTitle = Zotero.getString('general.permissionDenied');
-				errorMsg = Zotero.getString('sync.storage.error.webdav.invalidLogin') + "\n\n"
-					+ Zotero.getString('sync.storage.error.checkFileSyncSettings');
+				errorTitle = Trellis.getString('general.permissionDenied');
+				errorMsg = Trellis.getString('sync.storage.error.webdav.invalidLogin') + "\n\n"
+					+ Trellis.getString('sync.storage.error.checkFileSyncSettings');
 				break;
 			
 			case 403:
-				errorTitle = Zotero.getString('general.permissionDenied');
-				errorMsg = Zotero.getString('sync.storage.error.webdav.permissionDenied', err.channel.URI.pathQueryRef)
-					+ "\n\n" + Zotero.getString('sync.storage.error.checkFileSyncSettings');
+				errorTitle = Trellis.getString('general.permissionDenied');
+				errorMsg = Trellis.getString('sync.storage.error.webdav.permissionDenied', err.channel.URI.pathQueryRef)
+					+ "\n\n" + Trellis.getString('sync.storage.error.checkFileSyncSettings');
 				break;
 			
 			case 500:
-				errorTitle = Zotero.getString('sync.storage.error.webdav.serverConfig.title');
-				errorMsg = Zotero.getString('sync.storage.error.webdav.serverConfig')
-					+ "\n\n" + Zotero.getString('sync.storage.error.checkFileSyncSettings');
+				errorTitle = Trellis.getString('sync.storage.error.webdav.serverConfig.title');
+				errorMsg = Trellis.getString('sync.storage.error.webdav.serverConfig')
+					+ "\n\n" + Trellis.getString('sync.storage.error.checkFileSyncSettings');
 				break;
 			
 			default:
-				errorMsg = Zotero.getString('general.unknownErrorOccurred') + "\n\n"
-					+ Zotero.getString('sync.storage.error.checkFileSyncSettings') + "\n\n"
+				errorMsg = Trellis.getString('general.unknownErrorOccurred') + "\n\n"
+					+ Trellis.getString('sync.storage.error.checkFileSyncSettings') + "\n\n"
 					+ "HTTP " + err.status;
 				break;
 			}
@@ -1070,39 +1070,39 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		else if (err instanceof this.VerificationError) {
 			switch (err.error) {
 				case "NO_URL":
-					errorMsg = Zotero.getString('sync.storage.error.webdav.enterURL');
+					errorMsg = Trellis.getString('sync.storage.error.webdav.enterURL');
 					break;
 				
 				case "NO_USERNAME":
-					errorMsg = Zotero.getString('sync.error.usernameNotSet');
+					errorMsg = Trellis.getString('sync.error.usernameNotSet');
 					break;
 				
 				case "NO_PASSWORD":
-					errorMsg = Zotero.getString('sync.error.enterPassword');
+					errorMsg = Trellis.getString('sync.error.enterPassword');
 					break;
 				
 				case "INVALID_URL":
 				case "NOT_DAV":
-					errorMsg = Zotero.getString('sync.storage.error.webdav.invalidURL', err.url);
+					errorMsg = Trellis.getString('sync.storage.error.webdav.invalidURL', err.url);
 					break;
 				
 				case "PARENT_DIR_NOT_FOUND":
-					errorTitle = Zotero.getString('sync.storage.error.directoryNotFound');
-					var parentURL = err.url.replace(/zotero\/$/, "");
-					errorMsg = Zotero.getString('sync.storage.error.doesNotExist', parentURL);
+					errorTitle = Trellis.getString('sync.storage.error.directoryNotFound');
+					var parentURL = err.url.replace(/trellis\/$/, "");
+					errorMsg = Trellis.getString('sync.storage.error.doesNotExist', parentURL);
 					break;
 				
-				case "ZOTERO_DIR_NOT_FOUND":
+				case "TRELLIS_DIR_NOT_FOUND":
 					var create = promptService.confirmEx(
 						window,
-						Zotero.getString('sync.storage.error.directoryNotFound'),
-						Zotero.getString('sync.storage.error.doesNotExist', err.url) + "\n\n"
-							+ Zotero.getString('sync.storage.error.createNow'),
+						Trellis.getString('sync.storage.error.directoryNotFound'),
+						Trellis.getString('sync.storage.error.doesNotExist', err.url) + "\n\n"
+							+ Trellis.getString('sync.storage.error.createNow'),
 						promptService.BUTTON_POS_0
 							* promptService.BUTTON_TITLE_IS_STRING
 						+ promptService.BUTTON_POS_1
 							* promptService.BUTTON_TITLE_CANCEL,
-						Zotero.getString('general.create'),
+						Trellis.getString('general.create'),
 						null, null, null, {}
 					);
 					
@@ -1114,14 +1114,14 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 						await this._createServerDirectory();
 					}
 					catch (e) {
-						if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+						if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 							if (e.status == 403) {
-								errorTitle = Zotero.getString('general.permissionDenied');
+								errorTitle = Trellis.getString('general.permissionDenied');
 								let rootURI = this.rootURI;
 								let rootSpec = rootURI.scheme + '://' + rootURI.hostPort + rootURI.pathQueryRef
-								errorMsg = Zotero.getString('sync.storage.error.permissionDeniedAtAddress')
+								errorMsg = Trellis.getString('sync.storage.error.permissionDeniedAtAddress')
 									+ "\n\n" + rootSpec + "\n\n"
-									+ Zotero.getString('sync.storage.error.checkFileSyncSettings');
+									+ Trellis.getString('sync.storage.error.checkFileSyncSettings');
 								break;
 							}
 						}
@@ -1139,19 +1139,19 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 					break;
 				
 				case "FILE_MISSING_AFTER_UPLOAD":
-					errorTitle = Zotero.getString("general.warning");
-					errorMsg = Zotero.getString('sync.storage.error.webdav.fileMissingAfterUpload');
-					Zotero.Prefs.set("sync.storage.verified", true);
+					errorTitle = Trellis.getString("general.warning");
+					errorMsg = Trellis.getString('sync.storage.error.webdav.fileMissingAfterUpload');
+					Trellis.Prefs.set("sync.storage.verified", true);
 					break;
 				
 				case "NONEXISTENT_FILE_NOT_MISSING":
-					errorTitle = Zotero.getString('sync.storage.error.webdav.serverConfig.title');
-					errorMsg = Zotero.getString('sync.storage.error.webdav.nonexistentFileNotMissing');
+					errorTitle = Trellis.getString('sync.storage.error.webdav.serverConfig.title');
+					errorMsg = Trellis.getString('sync.storage.error.webdav.nonexistentFileNotMissing');
 					break;
 				
 				default:
-					errorMsg = Zotero.getString('general.unknownErrorOccurred') + "\n\n"
-						Zotero.getString('sync.storage.error.checkFileSyncSettings');
+					errorMsg = Trellis.getString('general.unknownErrorOccurred') + "\n\n"
+						Trellis.getString('sync.storage.error.checkFileSyncSettings');
 					break;
 			}
 		}
@@ -1163,18 +1163,18 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				// Prevent Report Errors button for known errors
 				dialogButtonText: null
 			};
-			Zotero.logError(errorMsg);
+			Trellis.logError(errorMsg);
 		}
 		else {
 			e = err;
-			Zotero.logError(err);
+			Trellis.logError(err);
 		}
 		
 		if (!skipSuccessMessage) {
 			if (!errorTitle) {
-				errorTitle = Zotero.getString("general.error");
+				errorTitle = Trellis.getString("general.error");
 			}
-			Zotero.Utilities.Internal.errorPrompt(errorTitle, e);
+			Trellis.Utilities.Internal.errorPrompt(errorTitle, e);
 		}
 		return false;
 	},
@@ -1190,10 +1190,10 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		var d = new Date();
 		
-		Zotero.debug("Purging deleted storage files");
-		var files = await Zotero.Sync.Storage.Local.getDeletedFiles(libraryID);
+		Trellis.debug("Purging deleted storage files");
+		var files = await Trellis.Sync.Storage.Local.getDeletedFiles(libraryID);
 		if (!files.length) {
-			Zotero.debug("No files to delete remotely");
+			Trellis.debug("No files to delete remotely");
 			return false;
 		}
 		
@@ -1203,27 +1203,27 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		var results = await this._deleteStorageFiles(files)
 		
 		// Remove deleted and nonexistent files from storage delete log
-		var toPurge = Zotero.Utilities.arrayUnique(
+		var toPurge = Trellis.Utilities.arrayUnique(
 			results.deleted.concat(results.missing)
 			// Strip file extension so we just have keys
 			.map(val => val.replace(/\.(prop|zip)$/, ""))
 		);
 		if (toPurge.length > 0) {
-			await Zotero.Utilities.Internal.forEachChunkAsync(
+			await Trellis.Utilities.Internal.forEachChunkAsync(
 				toPurge,
-				Zotero.DB.MAX_BOUND_PARAMETERS - 1,
+				Trellis.DB.MAX_BOUND_PARAMETERS - 1,
 				function (chunk) {
-					return Zotero.DB.executeTransaction(async function () {
+					return Trellis.DB.executeTransaction(async function () {
 						var sql = "DELETE FROM storageDeleteLog WHERE libraryID=? AND key IN ("
 							+ chunk.map(() => '?').join() + ")";
-						return Zotero.DB.queryAsync(sql, [libraryID].concat(chunk));
+						return Trellis.DB.queryAsync(sql, [libraryID].concat(chunk));
 					});
 				}
 			);
 		}
 		
-		Zotero.debug(`Purged deleted storage files in ${new Date() - d} ms`);
-		Zotero.debug(results);
+		Trellis.debug(`Purged deleted storage files in ${new Date() - d} ms`);
+		Trellis.debug(results);
 		
 		return results;
 	},
@@ -1236,12 +1236,12 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		await this._init();
 		
 		var d = new Date();
-		const libraryID = Zotero.Libraries.userLibraryID;
-		const library = Zotero.Libraries.get(libraryID);
+		const libraryID = Trellis.Libraries.userLibraryID;
+		const library = Trellis.Libraries.get(libraryID);
 		const daysBeforeSyncTime = 7;
 		
 		// If recently purged, skip
-		var lastPurge = Zotero.Prefs.get('lastWebDAVOrphanPurge');
+		var lastPurge = Trellis.Prefs.get('lastWebDAVOrphanPurge');
 		if (lastPurge) {
 			try {
 				let purgeAfter = lastPurge + (daysBeforeSyncTime * 24 * 60 * 60);
@@ -1250,11 +1250,11 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				}
 			}
 			catch (e) {
-				Zotero.Prefs.clear('lastWebDAVOrphanPurge');
+				Trellis.Prefs.clear('lastWebDAVOrphanPurge');
 			}
 		}
 		
-		Zotero.debug("Purging orphaned storage files");
+		Trellis.debug("Purging orphaned storage files");
 		
 		await this.cacheCredentials();
 		
@@ -1268,11 +1268,11 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		var lastSyncDate = library.lastSync;
 		if (!lastSyncDate) {
-			Zotero.debug(`No last sync date for library ${libraryID} -- not purging orphaned files`);
+			Trellis.debug(`No last sync date for library ${libraryID} -- not purging orphaned files`);
 			return false;
 		}
 		
-		var req = await Zotero.HTTP.request(
+		var req = await Trellis.HTTP.request(
 			"PROPFIND",
 			uri,
 			{
@@ -1291,19 +1291,19 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		var responseNode = req.responseXML.documentElement;
 		responseNode.xpath = function (path) {
-			return Zotero.Utilities.xpath(this, path, { D: 'DAV:' });
+			return Trellis.Utilities.xpath(this, path, { D: 'DAV:' });
 		};
 		
 		var syncQueueKeys = new Set(
-			await Zotero.Sync.Data.Local.getObjectsFromSyncQueue('item', libraryID)
+			await Trellis.Sync.Data.Local.getObjectsFromSyncQueue('item', libraryID)
 		);
 		var deleteFiles = [];
 		var trailingSlash = !!path.match(/\/$/);
 		for (let response of responseNode.xpath("D:response")) {
-			var href = Zotero.Utilities.xpathText(
+			var href = Trellis.Utilities.xpathText(
 				response, "D:href", { D: 'DAV:' }
 			) || "";
-			Zotero.debug("Checking response entry " + href);
+			Trellis.debug("Checking response entry " + href);
 			
 			// Strip trailing slash if there isn't one on the root path
 			if (!trailingSlash) {
@@ -1322,8 +1322,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			
 			// Skip root URI
 			if (decodedHref == decodedPath
-					// Some Apache servers respond with a "/zotero" href
-					// even for a "/zotero/" request
+					// Some Apache servers respond with a "/trellis" href
+					// even for a "/trellis/" request
 					|| (trailingSlash && decodedHref + '/' == decodedPath)) {
 				continue;
 			}
@@ -1339,39 +1339,39 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			var file = matches[0];
 			
 			if (file.startsWith('.')) {
-				Zotero.debug("Skipping hidden file " + file);
+				Trellis.debug("Skipping hidden file " + file);
 				continue;
 			}
 			
 			var isLastSyncFile = file == 'lastsync.txt' || file == 'lastsync';
 			if (!isLastSyncFile) {
 				if (!file.endsWith('.zip') && !file.endsWith('.prop')) {
-					Zotero.debug("Skipping file " + file);
+					Trellis.debug("Skipping file " + file);
 					continue;
 				}
 				
 				let key = file.replace(/\.(zip|prop)$/, '');
-				let item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, key);
+				let item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, key);
 				if (item) {
-					Zotero.debug("Skipping existing file " + file);
+					Trellis.debug("Skipping existing file " + file);
 					continue;
 				}
 				
 				if (syncQueueKeys.has(key)) {
-					Zotero.debug(`Skipping file for item ${key} in sync queue`);
+					Trellis.debug(`Skipping file for item ${key} in sync queue`);
 					continue;
 				}
 			}
 			
-			Zotero.debug("Checking orphaned file " + file);
+			Trellis.debug("Checking orphaned file " + file);
 			
 			// TODO: Parse HTTP date properly
-			Zotero.debug(response.innerHTML);
-			var lastModified = Zotero.Utilities.xpathText(
+			Trellis.debug(response.innerHTML);
+			var lastModified = Trellis.Utilities.xpathText(
 				response, ".//D:getlastmodified", { D: 'DAV:' }
 			);
-			lastModified = Zotero.Date.strToISO(lastModified);
-			lastModified = Zotero.Date.sqlToDate(lastModified, true);
+			lastModified = Trellis.Date.strToISO(lastModified);
+			lastModified = Trellis.Date.sqlToDate(lastModified, true);
 			
 			// Delete files older than a week before last sync time
 			var days = (lastSyncDate - lastModified) / 1000 / 60 / 60 / 24;
@@ -1382,10 +1382,10 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		}
 		
 		var results = await this._deleteStorageFiles(deleteFiles);
-		Zotero.Prefs.set("lastWebDAVOrphanPurge", Math.round(new Date().getTime() / 1000));
+		Trellis.Prefs.set("lastWebDAVOrphanPurge", Math.round(new Date().getTime() / 1000));
 		
-		Zotero.debug(`Purged orphaned storage files in ${new Date() - d} ms`);
-		Zotero.debug(results);
+		Trellis.debug(`Purged orphaned storage files in ${new Date() - d} ms`);
+		Trellis.debug(results);
 		
 		return results;
 	},
@@ -1397,15 +1397,15 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	/**
 	 * Get mod time and hash of file on storage server
 	 *
-	 * @param {Zotero.Item} item
-	 * @param {Zotero.Sync.Storage.Request} request
+	 * @param {Trellis.Item} item
+	 * @param {Trellis.Sync.Storage.Request} request
 	 * @return {Object} - Object with 'mtime' and 'md5'
 	 */
 	_getStorageFileMetadata: async function (item, request) {
 		var uri = this._getItemPropertyURI(item);
 		
 		try {
-			var req = await Zotero.HTTP.request(
+			var req = await Trellis.HTTP.request(
 				"GET",
 				uri,
 				{
@@ -1421,8 +1421,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			);
 		}
 		catch (e) {
-			if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
-				this._handleUnexpectedStatus("GET", Zotero.HTTP.getDisplayURI(uri).spec, e.status);
+			if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
+				this._handleUnexpectedStatus("GET", Trellis.HTTP.getDisplayURI(uri).spec, e.status);
 			}
 			throw e;
 		}
@@ -1443,7 +1443,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			var xml = parser.parseFromString(req.responseText, "text/xml");
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		var mtime = false;
@@ -1471,7 +1471,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		// Unix timestamps need to be converted to ms-based timestamps
 		if (seconds) {
 			if (mtime.match(/^[0-9]{1,10}$/)) {
-				Zotero.debug("Converting Unix timestamp '" + mtime + "' to milliseconds");
+				Trellis.debug("Converting Unix timestamp '" + mtime + "' to milliseconds");
 				mtime = mtime * 1000;
 			}
 			else {
@@ -1484,13 +1484,13 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		// Delete invalid .prop files
 		if (invalid) {
-			let msg = "Invalid mod date '" + Zotero.Utilities.ellipsize(mtime, 20)
+			let msg = "Invalid mod date '" + Trellis.Utilities.ellipsize(mtime, 20)
 				+ "' for item " + item.libraryKey;
-			Zotero.logError(msg);
+			Trellis.logError(msg);
 			await this._deleteStorageFiles([item.key + ".prop"]).catch(function (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			});
-			throw new Error(Zotero.Sync.Storage.Mode.WebDAV.defaultError);
+			throw new Error(Trellis.Sync.Storage.Mode.WebDAV.defaultError);
 		}
 		
 		return {
@@ -1503,7 +1503,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	/**
 	 * Set mod time and hash of file on storage server
 	 *
-	 * @param	{Zotero.Item}	item
+	 * @param	{Trellis.Item}	item
 	 */
 	_setStorageFileMetadata: async function (item) {
 		var uri = this._getItemPropertyURI(item);
@@ -1517,7 +1517,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			+ '</properties>';
 		
 		try {
-			await Zotero.HTTP.request(
+			await Trellis.HTTP.request(
 				"PUT",
 				uri,
 				{
@@ -1536,8 +1536,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			)
 		}
 		catch (e) {
-			if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
-				this._handleUnexpectedStatus("PUT", Zotero.HTTP.getDisplayURI(uri).spec, e.status);
+			if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
+				this._handleUnexpectedStatus("PUT", Trellis.HTTP.getDisplayURI(uri).spec, e.status);
 			}
 			throw e;
 		}
@@ -1545,8 +1545,8 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	
 	
 	_onUploadComplete: async function (req, request, item, params) {
-		Zotero.debug("Upload of attachment " + item.key + " finished with status code " + req.status);
-		Zotero.debug(req.responseText);
+		Trellis.debug("Upload of attachment " + item.key + " finished with status code " + req.status);
+		Trellis.debug(req.responseText);
 		
 		// Update .prop file on WebDAV server
 		await this._setStorageFileMetadata(item);
@@ -1560,14 +1560,14 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		
 		try {
 			await OS.File.remove(
-				OS.Path.join(Zotero.getTempDirectory().path, item.key + '.zip')
+				OS.Path.join(Trellis.getTempDirectory().path, item.key + '.zip')
 			);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
-		return new Zotero.Sync.Storage.Result({
+		return new Trellis.Sync.Storage.Result({
 			localChanges: true,
 			remoteChanges: true,
 			syncRequired: true
@@ -1579,10 +1579,10 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 		var request = data.request;
 		var item = data.item;
 		
-		Zotero.debug("Upload of attachment " + item.key + " cancelled with status code " + status);
+		Trellis.debug("Upload of attachment " + item.key + " cancelled with status code " + status);
 		
 		try {
-			var file = Zotero.getTempDirectory();
+			var file = Trellis.getTempDirectory();
 			file.append(item.key + '.zip');
 			file.remove(false);
 		}
@@ -1593,10 +1593,10 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	
 	
 	/**
-	 * Create a Zotero directory on the storage server
+	 * Create a Trellis directory on the storage server
 	 */
 	_createServerDirectory: function () {
-		return Zotero.HTTP.request(
+		return Trellis.HTTP.request(
 			"MKCOL",
 			this.rootURI,
 			{
@@ -1612,7 +1612,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	 * Get the storage URI for an item
 	 *
 	 * @inner
-	 * @param	{Zotero.Item}
+	 * @param	{Trellis.Item}
 	 * @return	{nsIURI}					URI of file on storage server
 	 */
 	_getItemURI: function (item) {
@@ -1624,7 +1624,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 	 * Get the storage property file URI for an item
 	 *
 	 * @inner
-	 * @param	{Zotero.Item}
+	 * @param	{Trellis.Item}
 	 * @return	{nsIURI}					URI of property file on storage server
 	 */
 	_getItemPropertyURI: function (item) {
@@ -1682,7 +1682,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			funcs.push(async function () {
 				var deleteURI = this.rootURI.mutate().setSpec(this.rootURI.spec + fileName).finalize();
 				try {
-					var req = await Zotero.HTTP.request(
+					var req = await Trellis.HTTP.request(
 						"DELETE",
 						deleteURI,
 						{
@@ -1725,7 +1725,7 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 				}
 				
 				// Delete property file
-				var req = await Zotero.HTTP.request(
+				var req = await Trellis.HTTP.request(
 					"DELETE",
 					deletePropURI,
 					{
@@ -1749,12 +1749,12 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			}.bind(this));
 		}
 		
-		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 		var caller = new ConcurrentCaller({
 			numConcurrent: 4,
 			stopOnError: true,
-			logger: msg => Zotero.debug(msg),
-			onError: e => Zotero.logError(e)
+			logger: msg => Trellis.debug(msg),
+			onError: e => Trellis.logError(e)
 		});
 		await caller.start(funcs);
 		
@@ -1771,11 +1771,11 @@ Zotero.Sync.Storage.Mode.WebDAV.prototype = {
 			this._onAuthError();
 		}
 		throw new Error(
-			Zotero.getString('sync.storage.error.webdav.requestError', [status, method])
+			Trellis.getString('sync.storage.error.webdav.requestError', [status, method])
 			+ "\n\n"
-			+ Zotero.getString('sync.storage.error.webdav.checkSettingsOrContactAdmin')
+			+ Trellis.getString('sync.storage.error.webdav.checkSettingsOrContactAdmin')
 			+ "\n\n"
-			+ Zotero.getString('sync.storage.error.webdav.url', url)
+			+ Trellis.getString('sync.storage.error.webdav.url', url)
 		);
 	}
 }

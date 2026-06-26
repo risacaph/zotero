@@ -3,35 +3,35 @@
     
     Copyright © 2008–2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
+const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var VirtualizedTable = require('components/virtualized-table');
 var { renderCell } = VirtualizedTable;
 
-Zotero_Preferences.Sync = {
+Trellis_Preferences.Sync = {
 	checkmarkChar: '\u2705',
 	noChar: '\uD83D\uDEAB',
 	
@@ -46,34 +46,34 @@ Zotero_Preferences.Sync = {
 		this.updateStorageSettingsUI();
 		this.updateStorageSettingsGroupsUI();
 
-		var username = Zotero.Users.getCurrentUsername() || Zotero.Prefs.get('sync.server.username') || " ";
-		var apiKey = await Zotero.Sync.Data.Local.getAPIKey();
-		let emails = apiKey ? Zotero.Users.getCurrentEmails() : undefined;
+		var username = Trellis.Users.getCurrentUsername() || Trellis.Prefs.get('sync.server.username') || " ";
+		var apiKey = await Trellis.Sync.Data.Local.getAPIKey();
+		let emails = apiKey ? Trellis.Users.getCurrentEmails() : undefined;
 		this.displayFields(apiKey ? username : "", { emails });
 		
-		var pass = await Zotero.Sync.Runner.getStorageController('webdav').getPassword();
+		var pass = await Trellis.Sync.Runner.getStorageController('webdav').getPassword();
 		if (pass) {
 			document.getElementById('storage-password').value = pass;
 		}
 		
 		if (apiKey) {
 			try {
-				var keyInfo = await Zotero.Sync.Runner.checkAccess(
-					Zotero.Sync.Runner.getAPIClient({apiKey}),
+				var keyInfo = await Trellis.Sync.Runner.checkAccess(
+					Trellis.Sync.Runner.getAPIClient({apiKey}),
 					{timeout: 5000, includeEmails: true}
 				);
 				this.displayFields(keyInfo.username, { emails: keyInfo.emails });
 				if (keyInfo.emails) {
-					await Zotero.Users.setCurrentEmails(keyInfo.emails);
+					await Trellis.Users.setCurrentEmails(keyInfo.emails);
 				}
 			}
 			catch (e) {
 				// API key wrong/invalid
-				if (e instanceof Zotero.Error && e.error == Zotero.Error.ERROR_API_KEY_INVALID) {
-					Zotero.alert(
+				if (e instanceof Trellis.Error && e.error == Trellis.Error.ERROR_API_KEY_INVALID) {
+					Trellis.alert(
 						window,
-						Zotero.getString('general.error'),
-						Zotero.getString('sync.error.apiKeyInvalid', Zotero.clientName)
+						Trellis.getString('general.error'),
+						Trellis.getString('sync.error.apiKeyInvalid', Trellis.clientName)
 					);
 					this.unlinkAccount(false);
 				}
@@ -89,7 +89,7 @@ Zotero_Preferences.Sync = {
 			}
 		});
 
-		document.getElementById('zotero-prefpane-account').addEventListener('action', () => {
+		document.getElementById('trellis-prefpane-account').addEventListener('action', () => {
 			this._handlePendingAction();
 		});
 		// Auto-trigger login if opened with the 'logIn' action.
@@ -103,18 +103,18 @@ Zotero_Preferences.Sync = {
 	},
 	
 	_handlePendingAction: async function () {
-		let action = Zotero_Preferences.consumePendingAction();
+		let action = Trellis_Preferences.consumePendingAction();
 		if (action == 'logIn'
 				&& !this._pendingSessionToken
-				&& !(await Zotero.Sync.Data.Local.getAPIKey())) {
+				&& !(await Trellis.Sync.Data.Local.getAPIKey())) {
 			setTimeout(() => this.linkAccount(), 0);
 		}
 	},
 
 	displayFields: function (username, { emails } = {}) {
-		let linkedUserID = Zotero.Users.getCurrentUserID();
-		let linkedUsername = Zotero.Users.getCurrentUsername()
-			|| Zotero.Prefs.get('sync.server.username')
+		let linkedUserID = Trellis.Users.getCurrentUserID();
+		let linkedUsername = Trellis.Users.getCurrentUsername()
+			|| Trellis.Prefs.get('sync.server.username')
 			|| "";
 		let loggedIn = !!username;
 		let loggedOutLinked = !loggedIn && !!linkedUserID;
@@ -134,7 +134,7 @@ Zotero_Preferences.Sync = {
 		document.getElementById('account-username').value = displayUsername;
 
 		if (!loggedIn && loggedOutLinked && emails === undefined) {
-			emails = Zotero.Users.getCurrentEmails();
+			emails = Trellis.Users.getCurrentEmails();
 		}
 		this._updateEmails(emails);
 
@@ -172,11 +172,11 @@ Zotero_Preferences.Sync = {
 
 		let session;
 		try {
-			session = await Zotero.Sync.Runner.startLoginSession();
+			session = await Trellis.Sync.Runner.startLoginSession();
 		}
 		catch (e) {
 			setTimeout(function () {
-				Zotero.Sync.Runner.alert(e);
+				Trellis.Sync.Runner.alert(e);
 			});
 			throw e;
 		}
@@ -184,7 +184,7 @@ Zotero_Preferences.Sync = {
 		let sessionToken = session.sessionToken;
 		this._pendingSessionToken = sessionToken;
 		this._showLoginPending();
-		Zotero.launchURL(session.loginURL);
+		Trellis.launchURL(session.loginURL);
 
 		let result;
 		try {
@@ -206,15 +206,15 @@ Zotero_Preferences.Sync = {
 			this._showLoginDefault();
 			// Session expired
 			if (e.expired) {
-				Zotero.alert(
+				Trellis.alert(
 					window,
-					Zotero.getString('general.error'),
-					Zotero.ftl.formatValueSync('account-error-login-session-expired')
+					Trellis.getString('general.error'),
+					Trellis.ftl.formatValueSync('account-error-login-session-expired')
 				);
 				return;
 			}
 			setTimeout(function () {
-				Zotero.Sync.Runner.alert(e);
+				Trellis.Sync.Runner.alert(e);
 			});
 			throw e;
 		}
@@ -233,41 +233,41 @@ Zotero_Preferences.Sync = {
 		}
 
 		// Validate and store the API key
-		await Zotero.Sync.Runner.checkLoginSession(sessionToken, result);
+		await Trellis.Sync.Runner.checkLoginSession(sessionToken, result);
 
 		// Handle secmod.db issue when storing the API key
 		// This can happen when people have a very old profile directory (e.g., from 2013)
 		try {
 			// Force a read to verify the key was stored
-			await Zotero.Sync.Data.Local.getAPIKey();
+			await Trellis.Sync.Data.Local.getAPIKey();
 		}
 		catch (e) {
 			if (e.message.includes("User canceled primary password entry")) {
-				Zotero.logError(e);
-				let profileDir = Zotero.Profile.dir;
+				Trellis.logError(e);
+				let profileDir = Trellis.Profile.dir;
 				let secmodPath = PathUtils.join(profileDir, 'secmod.db');
 				if (!this._secmodDeleted && !((await IOUtils.exists(secmodPath)))) {
-					Zotero.debug("secmod.db doesn't exist");
+					Trellis.debug("secmod.db doesn't exist");
 					setTimeout(function () {
-						Zotero.Sync.Runner.alert(e);
+						Trellis.Sync.Runner.alert(e);
 					});
 					throw e;
 				}
-				Zotero.debug("Deleting secmod.db", 2);
+				Trellis.debug("Deleting secmod.db", 2);
 				await IOUtils.remove(secmodPath);
 				// Once we've deleted, keep showing the restart message
 				this._secmodDeleted = true;
 				
-				let index = Zotero.Prompt.confirm({
-					title: Zotero.getString('general.restartRequired'),
+				let index = Trellis.Prompt.confirm({
+					title: Trellis.getString('general.restartRequired'),
 					text: "Login information could not be saved.\n\n"
-						+ Zotero.getString('general.pleaseRestartAndTryAgain', Zotero.appName),
-					button0: Zotero.getString('general.restartNow'),
+						+ Trellis.getString('general.pleaseRestartAndTryAgain', Trellis.appName),
+					button0: Trellis.getString('general.restartNow'),
 					button1: Services.prompt.BUTTON_TITLE_CANCEL
 				});
 
 				if (index == 0) {
-					Zotero.Utilities.Internal.quit(true);
+					Trellis.Utilities.Internal.quit(true);
 					return;
 				}
 				this._pendingSessionToken = null;
@@ -277,7 +277,7 @@ Zotero_Preferences.Sync = {
 			throw e;
 		}
 
-		let ok = await Zotero.Sync.Data.Local.checkUser(
+		let ok = await Trellis.Sync.Data.Local.checkUser(
 			window,
 			result.userID,
 			result.username,
@@ -286,22 +286,22 @@ Zotero_Preferences.Sync = {
 		);
 		if (!ok) {
 			// Session created an API key, but user decided not to use it
-			Zotero.Sync.Runner.deleteAPIKey();
+			Trellis.Sync.Runner.deleteAPIKey();
 			this._pendingSessionToken = null;
 			this._showLoginDefault();
 			return;
 		}
 
-		Zotero.Prefs.set('sync.server.username', result.username);
+		Trellis.Prefs.set('sync.server.username', result.username);
 
 		// It shouldn't be possible for a sync to be in progress if the user wasn't logged in,
 		// but check to be sure
-		if (!Zotero.Sync.Runner.syncInProgress) {
+		if (!Trellis.Sync.Runner.syncInProgress) {
 			// Clear any displayed sync errors
-			Zotero.Sync.Runner.updateIcons([]);
+			Trellis.Sync.Runner.updateIcons([]);
 		}
 		window.addEventListener('beforeunload', () => {
-			Zotero.Sync.Runner.setSyncTimeout(1);
+			Trellis.Sync.Runner.setSyncTimeout(1);
 		});
 
 		this._pendingSessionToken = null;
@@ -311,7 +311,7 @@ Zotero_Preferences.Sync = {
 
 	_subscribeToLoginSession: function (sessionToken) {
 		let topic = "login-session:" + sessionToken;
-		Zotero.Streamer.subscribe([topic], (data) => {
+		Trellis.Streamer.subscribe([topic], (data) => {
 			if (this._loginResolve) {
 				if (data.event == "loginComplete") {
 					this._loginResolve(data);
@@ -326,14 +326,14 @@ Zotero_Preferences.Sync = {
 
 	_unsubscribeFromLoginSession: function (sessionToken) {
 		let topic = "login-session:" + sessionToken;
-		Zotero.Streamer.unsubscribe([topic]);
+		Trellis.Streamer.unsubscribe([topic]);
 	},
 
 
 	_startPolling: async function (sessionToken) {
 		let timeout = 10 * 60 * 1000; // 10 minutes
 		let startTime = Date.now();
-		let client = Zotero.Sync.Runner.getAPIClient();
+		let client = Trellis.Sync.Runner.getAPIClient();
 
 		while (true) {
 			// Wait before polling
@@ -402,7 +402,7 @@ Zotero_Preferences.Sync = {
 		if (token) {
 			// Don't unsubscribe here -- the finally block in linkAccount() handles it
 			// Fire-and-forget
-			Zotero.Sync.Runner.cancelLoginSession(token);
+			Trellis.Sync.Runner.cancelLoginSession(token);
 		}
 	},
 
@@ -441,21 +441,21 @@ Zotero_Preferences.Sync = {
 				(ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL);
 			var index = ps.confirmEx(
 				null,
-				Zotero.getString('general.warning'),
-				Zotero.getString('account.unlinkWarning', Zotero.clientName),
+				Trellis.getString('general.warning'),
+				Trellis.getString('account.unlinkWarning', Trellis.clientName),
 				buttonFlags,
-				Zotero.getString('account.unlinkWarning.button'), null, null,
-				Zotero.getString('account.unlinkWarning.removeData', Zotero.clientName),
+				Trellis.getString('account.unlinkWarning.button'), null, null,
+				Trellis.getString('account.unlinkWarning.removeData', Trellis.clientName),
 				check
 			);
 			if (index == 0) {
 				if (check.value) {
-					var resetDataDirFile = PathUtils.join(Zotero.DataDirectory.dir, 'reset-data-directory');
-					await Zotero.File.putContentsAsync(resetDataDirFile, '');
+					var resetDataDirFile = PathUtils.join(Trellis.DataDirectory.dir, 'reset-data-directory');
+					await Trellis.File.putContentsAsync(resetDataDirFile, '');
 
-					await Zotero.Sync.Runner.deleteAPIKey();
-					Zotero.Prefs.clear('sync.server.username');
-					return Zotero.Utilities.Internal.quitZotero(true);
+					await Trellis.Sync.Runner.deleteAPIKey();
+					Trellis.Prefs.clear('sync.server.username');
+					return Trellis.Utilities.Internal.quitTrellis(true);
 				}
 			} else {
 				return;
@@ -463,15 +463,15 @@ Zotero_Preferences.Sync = {
 		}
 
 		this.displayFields();
-		Zotero.Prefs.clear('sync.librariesToSync');
-		Zotero.Prefs.clear('reader.readAloudVoices');
-		await Zotero.Sync.Runner.deleteAPIKey();
+		Trellis.Prefs.clear('sync.librariesToSync');
+		Trellis.Prefs.clear('reader.readAloudVoices');
+		await Trellis.Sync.Runner.deleteAPIKey();
 	},
 
 
 	switchAccounts: async function () {
-		let username = Zotero.Users.getCurrentUsername()
-			|| Zotero.Prefs.get('sync.server.username')
+		let username = Trellis.Users.getCurrentUsername()
+			|| Trellis.Prefs.get('sync.server.username')
 			|| "";
 		let confirmationText = await document.l10n.formatValue(
 			'preferences-account-switch-confirmation-text',
@@ -493,11 +493,11 @@ Zotero_Preferences.Sync = {
 			confirmationText,
 			extra2Label: moreInfo,
 		};
-		window.openDialog("chrome://zotero/content/hardConfirmationDialog.xhtml", "",
+		window.openDialog("chrome://trellis/content/hardConfirmationDialog.xhtml", "",
 			"chrome,dialog,dependent,modal,centerscreen", io);
 
 		if (io.extra2) {
-			Zotero.launchURL("https://www.zotero.org/support/kb/switching_accounts");
+			Trellis.launchURL("https://www.trellis.org/support/kb/switching_accounts");
 			return;
 		}
 
@@ -505,18 +505,18 @@ Zotero_Preferences.Sync = {
 			return;
 		}
 
-		let resetDataDirFile = PathUtils.join(Zotero.DataDirectory.dir, 'reset-data-directory');
-		await Zotero.File.putContentsAsync(resetDataDirFile, '');
-		Zotero.Prefs.set('reopenAccountPrefsOnRestart', true);
-		Zotero.Prefs.clear('sync.server.username');
-		Zotero.Utilities.Internal.quit(true);
+		let resetDataDirFile = PathUtils.join(Trellis.DataDirectory.dir, 'reset-data-directory');
+		await Trellis.File.putContentsAsync(resetDataDirFile, '');
+		Trellis.Prefs.set('reopenAccountPrefsOnRestart', true);
+		Trellis.Prefs.clear('sync.server.username');
+		Trellis.Utilities.Internal.quit(true);
 	},
 
 
 	showLibrariesToSyncDialog: function() {
 		var io = {};
-		window.openDialog('chrome://zotero/content/preferences/librariesToSync.xhtml',
-			"zotero-preferences-librariesToSyncDialog", "chrome,modal,centerscreen", io);
+		window.openDialog('chrome://trellis/content/preferences/librariesToSync.xhtml',
+			"trellis-preferences-librariesToSyncDialog", "chrome,modal,centerscreen", io);
 	},
 	
 	
@@ -529,7 +529,7 @@ Zotero_Preferences.Sync = {
 		this._rows[index].checked = !this._rows[index].checked;
 		this._tree.invalidateRow(index);
 		
-		var librariesToSkip = JSON.parse(Zotero.Prefs.get('sync.librariesToSkip') || '[]');
+		var librariesToSkip = JSON.parse(Trellis.Prefs.get('sync.librariesToSkip') || '[]');
 		var indexOfId = librariesToSkip.indexOf(row.id);
 		if (indexOfId == -1) {
 			librariesToSkip.push(row.id);
@@ -537,7 +537,7 @@ Zotero_Preferences.Sync = {
 		else {
 			librariesToSkip.splice(indexOfId, 1);
 		}
-		Zotero.Prefs.set('sync.librariesToSkip', JSON.stringify(librariesToSkip));
+		Trellis.Prefs.set('sync.librariesToSkip', JSON.stringify(librariesToSkip));
 	},
 	
 	
@@ -545,14 +545,14 @@ Zotero_Preferences.Sync = {
 		const columns = [
 			{
 				dataKey: "checked",
-				label: "zotero.preferences.sync.librariesToSync.sync",
+				label: "trellis.preferences.sync.librariesToSync.sync",
 				fixedWidth: true,
 				// TODO: Specify in ems?
 				width: '50'
 			},
 			{
 				dataKey: "name",
-				label: "zotero.preferences.sync.librariesToSync.library"
+				label: "trellis.preferences.sync.librariesToSync.library"
 			}
 		];
 		this._rows = [];
@@ -629,26 +629,26 @@ Zotero_Preferences.Sync = {
 		}.bind(this);
 		
 		// Add loading row while we're loading a group list
-		var loadingLabel = Zotero.getString("zotero.preferences.sync.librariesToSync.loadingLibraries");
+		var loadingLabel = Trellis.getString("trellis.preferences.sync.librariesToSync.loadingLibraries");
 		addRow(loadingLabel, "loading", false, false);
 
-		var apiKey = await Zotero.Sync.Data.Local.getAPIKey();
-		var client = Zotero.Sync.Runner.getAPIClient({ apiKey });
+		var apiKey = await Trellis.Sync.Data.Local.getAPIKey();
+		var client = Trellis.Sync.Runner.getAPIClient({ apiKey });
 		var groups = [];
 		try {
 			// Load up remote groups
-			var keyInfo = await Zotero.Sync.Runner.checkAccess(client, {timeout: 5000});
+			var keyInfo = await Trellis.Sync.Runner.checkAccess(client, {timeout: 5000});
 			groups = await client.getGroups(keyInfo.userID);
 		}
 		catch (e) {
 			// Connection problems
-			if ((e instanceof Zotero.HTTP.UnexpectedStatusException)
-					|| (e instanceof Zotero.HTTP.TimeoutException)
-					|| (e instanceof Zotero.HTTP.BrowserOfflineException)) {
-				Zotero.alert(
+			if ((e instanceof Trellis.HTTP.UnexpectedStatusException)
+					|| (e instanceof Trellis.HTTP.TimeoutException)
+					|| (e instanceof Trellis.HTTP.BrowserOfflineException)) {
+				Trellis.alert(
 					window,
-					Zotero.getString('general.error'),
-					Zotero.getString('sync.error.checkConnection', Zotero.clientName)
+					Trellis.getString('general.error'),
+					Trellis.getString('sync.error.checkConnection', Trellis.clientName)
 				);
 			}
 			else {
@@ -661,13 +661,13 @@ Zotero_Preferences.Sync = {
 		this._rows = [];
 		this._tree.invalidate();
 
-		var librariesToSkip = JSON.parse(Zotero.Prefs.get('sync.librariesToSkip') || '[]');
+		var librariesToSkip = JSON.parse(Trellis.Prefs.get('sync.librariesToSkip') || '[]');
 		// Add default rows
-		addRow(Zotero.getString("pane.collections.libraryAndFeeds"), "L" + Zotero.Libraries.userLibraryID,
-			librariesToSkip.indexOf("L" + Zotero.Libraries.userLibraryID) == -1);
+		addRow(Trellis.getString("pane.collections.libraryAndFeeds"), "L" + Trellis.Libraries.userLibraryID,
+			librariesToSkip.indexOf("L" + Trellis.Libraries.userLibraryID) == -1);
 		
 		// Sort groups
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		groups.sort((a, b) => collation.compareString(1, a.data.name, b.data.name));
 		// Add group rows
 		for (let group of groups) {
@@ -680,23 +680,23 @@ Zotero_Preferences.Sync = {
 	_lastStorageURL: null,
 	
 	storeLastStorageSettings: function () {
-		this._lastStorageProtocol = Zotero.Prefs.get('sync.storage.protocol');
-		this._lastStorageURL = Zotero.Prefs.get('sync.storage.url');
+		this._lastStorageProtocol = Trellis.Prefs.get('sync.storage.protocol');
+		this._lastStorageURL = Trellis.Prefs.get('sync.storage.url');
 	},
 	
 	
 	updateStorageSettingsUI: async function() {
 		this.unverifyStorageServer();
 		
-		var protocol = Zotero.Prefs.get('sync.storage.protocol');
-		var enabled = Zotero.Prefs.get('sync.storage.enabled');
+		var protocol = Trellis.Prefs.get('sync.storage.protocol');
+		var enabled = Trellis.Prefs.get('sync.storage.enabled');
 		
 		var storageSettings = document.getElementById('storage-settings');
 		var protocolMenu = document.getElementById('storage-protocol');
 		var settings = document.getElementById('storage-webdav-settings');
 		var sep = document.getElementById('storage-separator');
 		
-		if (!enabled || protocol == 'zotero') {
+		if (!enabled || protocol == 'trellis') {
 			settings.hidden = true;
 			sep.hidden = false;
 		}
@@ -712,7 +712,7 @@ Zotero_Preferences.Sync = {
 	
 	updateStorageSettingsGroupsUI: function () {
 		setTimeout(() => {
-			var enabled = Zotero.Prefs.get('sync.storage.groups.enabled');
+			var enabled = Trellis.Prefs.get('sync.storage.groups.enabled');
 			document.getElementById('storage-groups-download-mode').disabled = !enabled;
 			this.updateStorageTerms();
 		});
@@ -722,11 +722,11 @@ Zotero_Preferences.Sync = {
 	updateStorageTerms: function () {
 		var terms = document.getElementById('storage-terms');
 		
-		var libraryEnabled = Zotero.Prefs.get('sync.storage.enabled');
-		var storageProtocol = Zotero.Prefs.get('sync.storage.protocol');
-		var groupsEnabled = Zotero.Prefs.get('sync.storage.groups.enabled');
+		var libraryEnabled = Trellis.Prefs.get('sync.storage.enabled');
+		var storageProtocol = Trellis.Prefs.get('sync.storage.protocol');
+		var groupsEnabled = Trellis.Prefs.get('sync.storage.groups.enabled');
 		
-		terms.hidden = !((libraryEnabled && storageProtocol == 'zotero') || groupsEnabled);
+		terms.hidden = !((libraryEnabled && storageProtocol == 'trellis') || groupsEnabled);
 	},
 	
 	
@@ -742,63 +742,63 @@ Zotero_Preferences.Sync = {
 		var oldURL = this._lastStorageURL;
 		
 		// Necessary for pref to update
-		await Zotero.Promise.delay(1);
-		var newProtocol = Zotero.Prefs.get('sync.storage.protocol');
+		await Trellis.Promise.delay(1);
+		var newProtocol = Trellis.Prefs.get('sync.storage.protocol');
 		
-		var newURL = Zotero.Prefs.get('sync.storage.url').trim()
-			// Strip scheme, leading '://' or '//' (#3483), and trailing '/zotero'
-			.replace(/(^https?:\/\/|^:?\/\/|\/zotero\/?$|\/$)/g, '')
-		Zotero.Prefs.set('sync.storage.url', newURL);
+		var newURL = Trellis.Prefs.get('sync.storage.url').trim()
+			// Strip scheme, leading '://' or '//' (#3483), and trailing '/trellis'
+			.replace(/(^https?:\/\/|^:?\/\/|\/trellis\/?$|\/$)/g, '')
+		Trellis.Prefs.set('sync.storage.url', newURL);
 		
 		if (oldProtocol != newProtocol || oldURL != newURL) {
-			await Zotero.Sync.Storage.Local.resetAllSyncStates(Zotero.Libraries.userLibraryID);
+			await Trellis.Sync.Storage.Local.resetAllSyncStates(Trellis.Libraries.userLibraryID);
 		}
 		
 		if (oldProtocol == 'webdav') {
 			this.unverifyStorageServer();
 			// The controller is getting replaced anyway, but this removes the WebDAV URL from
-			// Zotero.HTTP.CookieBlocker
-			Zotero.Sync.Runner.getStorageController('webdav').clearCachedCredentials();
-			Zotero.Sync.Runner.resetStorageController(oldProtocol);
+			// Trellis.HTTP.CookieBlocker
+			Trellis.Sync.Runner.getStorageController('webdav').clearCachedCredentials();
+			Trellis.Sync.Runner.resetStorageController(oldProtocol);
 			
 			var username = document.getElementById('storage-username').value;
 			var password = document.getElementById('storage-password').value;
 			if (username) {
 				// Get a new controller
-				await Zotero.Sync.Runner.getStorageController('webdav').setPassword(password);
+				await Trellis.Sync.Runner.getStorageController('webdav').setPassword(password);
 			}
 		}
 		
-		if (oldProtocol == 'zotero' && newProtocol == 'webdav') {
+		if (oldProtocol == 'trellis' && newProtocol == 'webdav') {
 			var sql = "SELECT COUNT(*) FROM settings "
 				+ "WHERE setting='storage' AND key='zfsPurge' AND value='user'";
-			if (!Zotero.DB.valueQueryAsync(sql)) {
-				var account = Zotero.Sync.Server.username;
-				var index = Zotero.Prompt.confirm({
-					title: Zotero.getString('zotero.preferences.sync.purgeStorage.title'),
-					text: Zotero.getString('zotero.preferences.sync.purgeStorage.desc'),
-					button0: Zotero.getString('zotero.preferences.sync.purgeStorage.confirmButton'),
-					button1: Zotero.getString('zotero.preferences.sync.purgeStorage.cancelButton'),
+			if (!Trellis.DB.valueQueryAsync(sql)) {
+				var account = Trellis.Sync.Server.username;
+				var index = Trellis.Prompt.confirm({
+					title: Trellis.getString('trellis.preferences.sync.purgeStorage.title'),
+					text: Trellis.getString('trellis.preferences.sync.purgeStorage.desc'),
+					button0: Trellis.getString('trellis.preferences.sync.purgeStorage.confirmButton'),
+					button1: Trellis.getString('trellis.preferences.sync.purgeStorage.cancelButton'),
 					buttonDelay: true,
 				});
 				
 				if (index == 0) {
 					var sql = "INSERT OR IGNORE INTO settings VALUES (?,?,?)";
-					await Zotero.DB.queryAsync(sql, ['storage', 'zfsPurge', 'user']);
+					await Trellis.DB.queryAsync(sql, ['storage', 'zfsPurge', 'user']);
 					
 					try {
-						await Zotero.Sync.Storage.ZFS.purgeDeletedStorageFiles();
+						await Trellis.Sync.Storage.ZFS.purgeDeletedStorageFiles();
 						Services.prompt.alert(
 							null,
-							Zotero.getString("general.success"),
-							"Attachment files from your personal library have been removed from the Zotero servers."
+							Trellis.getString("general.success"),
+							"Attachment files from your personal library have been removed from the Trellis servers."
 						);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 						Services.prompt.alert(
 							null,
-							Zotero.getString("general.error"),
+							Trellis.getString("general.error"),
 							"An error occurred. Please try again later."
 						);
 					}
@@ -817,7 +817,7 @@ Zotero_Preferences.Sync = {
 		// onStorageSettingsKeyPress()).
 		await this.onStorageSettingsChange();
 		
-		Zotero.debug("Verifying storage");
+		Trellis.debug("Verifying storage");
 		
 		var verifyButton = document.getElementById("storage-verify");
 		var abortButton = document.getElementById("storage-abort");
@@ -828,8 +828,8 @@ Zotero_Preferences.Sync = {
 		
 		// These don't get set until window close on Windows/Linux (no instantApply),
 		// so set them explicitly when verifying
-		Zotero.Prefs.set('sync.storage.url', urlField.value);
-		Zotero.Prefs.set('sync.storage.username', usernameField.value);
+		Trellis.Prefs.set('sync.storage.url', urlField.value);
+		Trellis.Prefs.set('sync.storage.username', usernameField.value);
 		
 		verifyButton.hidden = true;
 		abortButton.hidden = false;
@@ -838,7 +838,7 @@ Zotero_Preferences.Sync = {
 		var success = false;
 		var request = null;
 		
-		var controller = Zotero.Sync.Runner.getStorageController('webdav');
+		var controller = Trellis.Sync.Runner.getStorageController('webdav');
 		
 		try {
 			await controller.checkServer({
@@ -874,21 +874,21 @@ Zotero_Preferences.Sync = {
 		}
 		
 		if (success) {
-			Zotero.debug("WebDAV verification succeeded");
+			Trellis.debug("WebDAV verification succeeded");
 			
-			Zotero.alert(
+			Trellis.alert(
 				window,
-				Zotero.getString('sync.storage.serverConfigurationVerified'),
-				Zotero.getString('sync.storage.fileSyncSetUp')
+				Trellis.getString('sync.storage.serverConfigurationVerified'),
+				Trellis.getString('sync.storage.fileSyncSetUp')
 			);
 		}
 		else {
-			Zotero.logError("WebDAV verification failed");
+			Trellis.logError("WebDAV verification failed");
 		}
 		
 		abortButton.onclick = function () {
 			if (request) {
-				Zotero.debug("Cancelling verification request");
+				Trellis.debug("Cancelling verification request");
 				request.onreadystatechange = undefined;
 				request.abort();
 				verifyButton.hidden = false;
@@ -900,8 +900,8 @@ Zotero_Preferences.Sync = {
 	
 	
 	unverifyStorageServer: function () {
-		Zotero.debug("Unverifying storage");
-		Zotero.Prefs.set('sync.storage.verified', false);
+		Trellis.debug("Unverifying storage");
+		Trellis.Prefs.set('sync.storage.verified', false);
 	},
 	
 	
@@ -917,12 +917,12 @@ Zotero_Preferences.Sync = {
 		libraryMenu.addEventListener('command', () => {
 			this.onResetLibraryChange(parseInt(libraryMenu.value));
 		});
-		this.onResetLibraryChange(Zotero.Libraries.userLibraryID);
+		this.onResetLibraryChange(Trellis.Libraries.userLibraryID);
 		document.querySelectorAll('#sync-reset-radiogroup radio')
 			.forEach(radio => radio.removeAttribute('selected'));
-		var libraries = Zotero.Libraries.getAll()
+		var libraries = Trellis.Libraries.getAll()
 			.filter(x => x.libraryType == 'user' || x.libraryType == 'group');
-		Zotero.Utilities.Internal.buildLibraryMenu(libraryMenu, libraries);
+		Trellis.Utilities.Internal.buildLibraryMenu(libraryMenu, libraries);
 		
 		for (let row of document.querySelectorAll('#sync-reset-radiogroup > *')) {
 			row.addEventListener('click', function (event) {
@@ -938,7 +938,7 @@ Zotero_Preferences.Sync = {
 	
 	
 	onResetLibraryChange: function (libraryID) {
-		var library = Zotero.Libraries.get(libraryID);
+		var library = Trellis.Libraries.get(libraryID);
 		this.toggleResetOption('reset-file-sync-history', true);
 		this.toggleResetOption('restore-to-server', library.editable);
 	},
@@ -971,19 +971,19 @@ Zotero_Preferences.Sync = {
 	reset: async function () {
 		var ps = Services.prompt;
 		
-		if (Zotero.Sync.Runner.syncInProgress) {
-			Zotero.alert(
+		if (Trellis.Sync.Runner.syncInProgress) {
+			Trellis.alert(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString('sync.error.syncInProgress')
+				Trellis.getString('general.error'),
+				Trellis.getString('sync.error.syncInProgress')
 					+ "\n\n"
-					+ Zotero.getString('general.operationInProgress.waitUntilFinishedAndTryAgain')
+					+ Trellis.getString('general.operationInProgress.waitUntilFinishedAndTryAgain')
 			);
 			return;
 		}
 		
 		var libraryID = document.getElementById('sync-reset-library-menu').value;
-		var library = Zotero.Libraries.get(libraryID);
+		var library = Trellis.Libraries.get(libraryID);
 		var action = Array.from(document.querySelectorAll('#sync-reset-radiogroup radio'))
 			.filter(x => x.selected)[0]
 			.getAttribute('value');
@@ -995,22 +995,22 @@ Zotero_Preferences.Sync = {
 					+ ps.BUTTON_POS_1_DEFAULT;
 				var index = ps.confirmEx(
 					null,
-					Zotero.getString('general.warning'),
+					Trellis.getString('general.warning'),
 					// TODO: localize
-					"On the next sync, Zotero will compare all local and remote data and merge any "
+					"On the next sync, Trellis will compare all local and remote data and merge any "
 						+ "data that does not exist in both locations.\n\n"
 						+ "This option is not necessary during normal usage and should "
 						+ "generally be used only to troubleshoot specific issues as recommended "
-						+ "by Zotero support staff.",
+						+ "by Trellis support staff.",
 					buttonFlags,
-					Zotero.getString('general.reset'),
+					Trellis.getString('general.reset'),
 					null, null, null, {}
 				);
 				
 				switch (index) {
 				case 0:
-					let libraries = Zotero.Libraries.getAll().filter(library => library.syncable);
-					await Zotero.DB.executeTransaction(async function () {
+					let libraries = Trellis.Libraries.getAll().filter(library => library.syncable);
+					await Trellis.DB.executeTransaction(async function () {
 						for (let library of libraries) {
 							library.libraryVersion = -1;
 							await library.save();
@@ -1031,10 +1031,10 @@ Zotero_Preferences.Sync = {
 									+ ps.BUTTON_POS_1_DEFAULT;
 				var index = ps.confirmEx(
 					null,
-					Zotero.getString('general.warning'),
-					Zotero.getString('zotero.preferences.sync.reset.restoreFromServer', account),
+					Trellis.getString('general.warning'),
+					Trellis.getString('trellis.preferences.sync.reset.restoreFromServer', account),
 					buttonFlags,
-					Zotero.getString('zotero.preferences.sync.reset.replaceLocalData'),
+					Trellis.getString('trellis.preferences.sync.reset.replaceLocalData'),
 					null, null, null, {}
 				);
 				
@@ -1044,23 +1044,23 @@ Zotero_Preferences.Sync = {
 						
 						// Verify username and password
 						var callback = async function () {
-							Zotero.Schema.stopRepositoryTimer();
-							Zotero.Sync.Runner.clearSyncTimeout();
+							Trellis.Schema.stopRepositoryTimer();
+							Trellis.Sync.Runner.clearSyncTimeout();
 							
-							Zotero.DB.skipBackup = true;
+							Trellis.DB.skipBackup = true;
 							
-							await Zotero.File.putContentsAsync(
-								PathUtils.join(Zotero.DataDirectory.dir, 'restore-from-server'),
+							await Trellis.File.putContentsAsync(
+								PathUtils.join(Trellis.DataDirectory.dir, 'restore-from-server'),
 								''
 							);
 							
 							var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING);
 							var index = ps.confirmEx(
 								null,
-								Zotero.getString('general.restartRequired'),
-								Zotero.getString('zotero.preferences.sync.reset.restartToComplete'),
+								Trellis.getString('general.restartRequired'),
+								Trellis.getString('trellis.preferences.sync.reset.restartToComplete'),
 								buttonFlags,
-								Zotero.getString('general.restartNow'),
+								Trellis.getString('general.restartNow'),
 								null, null, null, {}
 							);
 							
@@ -1070,8 +1070,8 @@ Zotero_Preferences.Sync = {
 						};
 						
 						// TODO: better way of checking for an active session?
-						if (Zotero.Sync.Server.sessionIDComponent == 'sessionid=') {
-							Zotero.Sync.Server.login()
+						if (Trellis.Sync.Server.sessionIDComponent == 'sessionid=') {
+							Trellis.Sync.Server.login()
 							.then(callback)
 							.done();
 						}
@@ -1090,12 +1090,12 @@ Zotero_Preferences.Sync = {
 				const CHECKBOX_THRESHOLD = 10;
 				const CONFIRMATION_TEXT_MAX_ITEMS = 5;
 				
-				let apiKey = await Zotero.Sync.Data.Local.getAPIKey();
-				let client = Zotero.Sync.Runner.getAPIClient({ apiKey });
-				var keyInfo = await Zotero.Sync.Runner.checkAccess(client, { timeout: 5000 });
+				let apiKey = await Trellis.Sync.Data.Local.getAPIKey();
+				let client = Trellis.Sync.Runner.getAPIClient({ apiKey });
+				var keyInfo = await Trellis.Sync.Runner.checkAccess(client, { timeout: 5000 });
 				let { keys: remoteKeysArray } = await client.getKeys('user', keyInfo.userID, { target: 'items', itemType: '-annotation' });
 				let remoteKeys = new Set(remoteKeysArray);
-				let localItems = await Zotero.Items.getAll(Zotero.Libraries.userLibraryID, false, false, false);
+				let localItems = await Trellis.Items.getAll(Trellis.Libraries.userLibraryID, false, false, false);
 				let localItemsCount = localItems.length;
 				let localKeys = new Set(localItems
 					.filter(item => item.isRegularItem() || item.isNote() || item.isAttachment())
@@ -1105,7 +1105,7 @@ Zotero_Preferences.Sync = {
 				
 				let [title, text, warning1, warning2, checkboxLabel, yes] = await document.l10n.formatValues([
 					'general-warning',
-					{ id: 'preferences-sync-reset-restore-to-server-body', args: { libraryName: library.name, domain: ZOTERO_CONFIG.DOMAIN_NAME } },
+					{ id: 'preferences-sync-reset-restore-to-server-body', args: { libraryName: library.name, domain: TRELLIS_CONFIG.DOMAIN_NAME } },
 					{ id: 'preferences-sync-reset-restore-to-server-deleted-items-text', args: { remoteItemsDeletedCount } },
 					{ id: 'preferences-sync-reset-restore-to-server-remaining-items-text', args: { localItemsCount } },
 					{ id: 'preferences-sync-reset-restore-to-server-checkbox-label', args: { remoteItemsDeletedCount } },
@@ -1136,16 +1136,16 @@ Zotero_Preferences.Sync = {
 					checkboxLabel,
 					confirmationText
 				};
-				window.openDialog("chrome://zotero/content/hardConfirmationDialog.xhtml", "",
+				window.openDialog("chrome://trellis/content/hardConfirmationDialog.xhtml", "",
 					"chrome,dialog,dependent,modal,centerscreen", io);
 				
 				if (io.accept) {
 					let resetButton = document.getElementById('sync-reset-button');
 					resetButton.disabled = true;
 					try {
-						await Zotero.Sync.Runner.sync({
+						await Trellis.Sync.Runner.sync({
 							libraries: [libraryID],
-							resetMode: Zotero.Sync.Runner.RESET_MODE_TO_SERVER
+							resetMode: Trellis.Sync.Runner.RESET_MODE_TO_SERVER
 						});
 					}
 					finally {
@@ -1161,24 +1161,24 @@ Zotero_Preferences.Sync = {
 					+ ps.BUTTON_POS_1_DEFAULT;
 				var index = ps.confirmEx(
 					null,
-					Zotero.getString('general.warning'),
-					Zotero.getString(
-						'zotero.preferences.sync.reset.fileSyncHistory',
-						[Zotero.clientName, library.name]
+					Trellis.getString('general.warning'),
+					Trellis.getString(
+						'trellis.preferences.sync.reset.fileSyncHistory',
+						[Trellis.clientName, library.name]
 					),
 					buttonFlags,
-					Zotero.getString('general.reset'),
+					Trellis.getString('general.reset'),
 					null, null, null, {}
 				);
 				
 				switch (index) {
 					case 0:
-						await Zotero.Sync.Storage.Local.resetAllSyncStates(libraryID);
+						await Trellis.Sync.Storage.Local.resetAllSyncStates(libraryID);
 						ps.alert(
 							null,
-							Zotero.getString('general.success'),
-							Zotero.getString(
-								'zotero.preferences.sync.reset.fileSyncHistory.cleared',
+							Trellis.getString('general.success'),
+							Trellis.getString(
+								'trellis.preferences.sync.reset.fileSyncHistory.cleared',
 								library.name
 							)
 						);

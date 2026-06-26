@@ -3,92 +3,92 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 
 /**
- * @namespace Zotero
+ * @namespace Trellis
  */
 
 
 /**
  * Manages preference panes.
  *
- * @memberof Zotero
+ * @memberof Trellis
  */
-Zotero.PreferencePanes = {
+Trellis.PreferencePanes = {
 	builtInPanes: Object.freeze([
 		{
-			id: 'zotero-prefpane-general',
-			label: 'zotero.preferences.prefpane.general',
-			image: 'chrome://zotero/skin/20/universal/cog.svg',
-			src: 'chrome://zotero/content/preferences/preferences_general.xhtml',
-			scripts: ['chrome://zotero/content/preferences/preferences_general.js'],
+			id: 'trellis-prefpane-general',
+			label: 'trellis.preferences.prefpane.general',
+			image: 'chrome://trellis/skin/20/universal/cog.svg',
+			src: 'chrome://trellis/content/preferences/preferences_general.xhtml',
+			scripts: ['chrome://trellis/content/preferences/preferences_general.js'],
 			defaultXUL: true,
-			helpURL: 'https://www.zotero.org/support/preferences/general',
+			helpURL: 'https://www.trellis.org/support/preferences/general',
 		},
 		{
-			id: 'zotero-prefpane-account',
+			id: 'trellis-prefpane-account',
 			label: 'preferences-pane-account',
-			image: 'chrome://zotero/skin/20/universal/account.svg',
-			src: 'chrome://zotero/content/preferences/preferences_account.xhtml',
-			scripts: ['chrome://zotero/content/preferences/preferences_account.js'],
+			image: 'chrome://trellis/skin/20/universal/account.svg',
+			src: 'chrome://trellis/content/preferences/preferences_account.xhtml',
+			scripts: ['chrome://trellis/content/preferences/preferences_account.js'],
 			defaultXUL: true,
-			helpURL: 'https://www.zotero.org/support/preferences/sync',
+			helpURL: 'https://www.trellis.org/support/preferences/sync',
 		},
 		{
-			id: 'zotero-prefpane-export',
-			label: 'zotero.preferences.prefpane.export',
-			image: 'chrome://zotero/skin/20/universal/export.svg',
-			src: 'chrome://zotero/content/preferences/preferences_export.xhtml',
-			scripts: ['chrome://zotero/content/preferences/preferences_export.js'],
+			id: 'trellis-prefpane-export',
+			label: 'trellis.preferences.prefpane.export',
+			image: 'chrome://trellis/skin/20/universal/export.svg',
+			src: 'chrome://trellis/content/preferences/preferences_export.xhtml',
+			scripts: ['chrome://trellis/content/preferences/preferences_export.js'],
 			defaultXUL: true,
-			helpURL: 'https://www.zotero.org/support/preferences/export',
+			helpURL: 'https://www.trellis.org/support/preferences/export',
 		},
 		{
-			id: 'zotero-prefpane-cite',
-			label: 'zotero.preferences.prefpane.cite',
-			image: 'chrome://zotero/skin/20/universal/cite.svg',
-			src: 'chrome://zotero/content/preferences/preferences_cite.xhtml',
-			scripts: ['chrome://zotero/content/preferences/preferences_cite.js'],
+			id: 'trellis-prefpane-cite',
+			label: 'trellis.preferences.prefpane.cite',
+			image: 'chrome://trellis/skin/20/universal/cite.svg',
+			src: 'chrome://trellis/content/preferences/preferences_cite.xhtml',
+			scripts: ['chrome://trellis/content/preferences/preferences_cite.js'],
 			defaultXUL: true,
-			helpURL: 'https://www.zotero.org/support/preferences/cite',
+			helpURL: 'https://www.trellis.org/support/preferences/cite',
 		},
 		{
-			id: 'zotero-prefpane-advanced',
-			label: 'zotero.preferences.prefpane.advanced',
-			image: 'chrome://zotero/skin/20/universal/wrench-screwdriver.svg',
-			src: 'chrome://zotero/content/preferences/preferences_advanced.xhtml',
-			scripts: ['chrome://zotero/content/preferences/preferences_advanced.js'],
+			id: 'trellis-prefpane-advanced',
+			label: 'trellis.preferences.prefpane.advanced',
+			image: 'chrome://trellis/skin/20/universal/wrench-screwdriver.svg',
+			src: 'chrome://trellis/content/preferences/preferences_advanced.xhtml',
+			scripts: ['chrome://trellis/content/preferences/preferences_advanced.js'],
 			defaultXUL: true,
-			helpURL: 'https://www.zotero.org/support/preferences/advanced',
+			helpURL: 'https://www.trellis.org/support/preferences/advanced',
 		},
 		{
-			id: 'zotero-subpane-reset-sync',
-			parent: 'zotero-prefpane-account',
-			label: 'zotero.preferences.subpane.resetSync',
-			src: 'chrome://zotero/content/preferences/preferences_sync_reset.xhtml',
-			scripts: ['chrome://zotero/content/preferences/preferences_account.js'],
+			id: 'trellis-subpane-reset-sync',
+			parent: 'trellis-prefpane-account',
+			label: 'trellis.preferences.subpane.resetSync',
+			src: 'chrome://trellis/content/preferences/preferences_sync_reset.xhtml',
+			scripts: ['chrome://trellis/content/preferences/preferences_account.js'],
 			defaultXUL: true,
-			helpURL: 'https://www.zotero.org/support/preferences/sync#reset',
+			helpURL: 'https://www.trellis.org/support/preferences/sync#reset',
 		}
 	]),
 
@@ -122,7 +122,7 @@ Zotero.PreferencePanes = {
 	 * @example
 	 * Register a pane with a script and stylesheet:
 	 * ```javascript
-	 * Zotero.PreferencePanes.register({
+	 * Trellis.PreferencePanes.register({
 	 * 	pluginID: 'my-plugin@my-namespace.com',
 	 * 	src: rootURI + 'my-pane.xhtml',
 	 * 	id: 'my-plugin-pane',
@@ -144,21 +144,21 @@ Zotero.PreferencePanes = {
 		options.stylesheets ||= [];
 
 		let addPaneOptions = {
-			id: options.id || `plugin-pane-${Zotero.Utilities.randomString()}-${options.pluginID}`,
+			id: options.id || `plugin-pane-${Trellis.Utilities.randomString()}-${options.pluginID}`,
 			pluginID: options.pluginID,
 			parent: options.parent,
-			rawLabel: options.label || (await Zotero.Plugins.getName(options.pluginID)),
-			image: options.image && (await Zotero.Plugins.resolveURI(options.pluginID, options.image))
-				|| (await Zotero.Plugins.getIconURI(options.pluginID, 24)),
-			src: await Zotero.Plugins.resolveURI(options.pluginID, options.src),
-			scripts: await Promise.all(options.scripts.map(uri => Zotero.Plugins.resolveURI(options.pluginID, uri))),
-			stylesheets: await Promise.all(options.stylesheets.map(uri => Zotero.Plugins.resolveURI(options.pluginID, uri))),
+			rawLabel: options.label || (await Trellis.Plugins.getName(options.pluginID)),
+			image: options.image && (await Trellis.Plugins.resolveURI(options.pluginID, options.image))
+				|| (await Trellis.Plugins.getIconURI(options.pluginID, 24)),
+			src: await Trellis.Plugins.resolveURI(options.pluginID, options.src),
+			scripts: await Promise.all(options.scripts.map(uri => Trellis.Plugins.resolveURI(options.pluginID, uri))),
+			stylesheets: await Promise.all(options.stylesheets.map(uri => Trellis.Plugins.resolveURI(options.pluginID, uri))),
 			helpURL: options.helpURL,
 			defaultXUL: true,
 		};
 
 		this.pluginPanes.push(addPaneOptions);
-		Zotero.debug(`Plugin ${addPaneOptions.pluginID} registered preference pane ${addPaneOptions.id} ("${addPaneOptions.rawLabel}")`);
+		Trellis.debug(`Plugin ${addPaneOptions.pluginID} registered preference pane ${addPaneOptions.id} ("${addPaneOptions.rawLabel}")`);
 		this._refreshPreferences();
 		this._ensureObserverAdded();
 		return addPaneOptions.id;
@@ -167,7 +167,7 @@ Zotero.PreferencePanes = {
 	/**
 	 * Called automatically on plugin shutdown.
 	 *
-	 * @param {string} id - ID of the pane to unregister, as returned by `Zotero.PreferencePanes.register()`
+	 * @param {string} id - ID of the pane to unregister, as returned by `Trellis.PreferencePanes.register()`
 	 */
 	unregister: function (id) {
 		this.pluginPanes = this.pluginPanes.filter(p => p.id !== id);
@@ -175,7 +175,7 @@ Zotero.PreferencePanes = {
 	},
 	
 	_refreshPreferences() {
-		for (let win of Services.wm.getEnumerator("zotero:pref")) {
+		for (let win of Services.wm.getEnumerator("trellis:pref")) {
 			win.location.reload();
 		}
 	},
@@ -185,12 +185,12 @@ Zotero.PreferencePanes = {
 			return;
 		}
 		
-		Zotero.Plugins.addObserver({
+		Trellis.Plugins.addObserver({
 			shutdown: ({ id: pluginID }) => {
 				let beforeLength = this.pluginPanes.length;
 				this.pluginPanes = this.pluginPanes.filter(pane => pane.pluginID !== pluginID);
 				if (this.pluginPanes.length !== beforeLength) {
-					Zotero.debug(`Preference panes registered by plugin ${pluginID} unregistered due to shutdown`);
+					Trellis.debug(`Preference panes registered by plugin ${pluginID} unregistered due to shutdown`);
 					this._refreshPreferences();
 				}
 			}

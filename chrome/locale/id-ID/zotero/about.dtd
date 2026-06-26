@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "versi">
-<!ENTITY zotero.whatsNew "Yang baru">
-<!ENTITY zotero.createdby "Dibuat oleh:">
-<!ENTITY zotero.director "Direktur:">
-<!ENTITY zotero.directors "Direktur-direktur:">
-<!ENTITY zotero.developers "Pengembang:">
-<!ENTITY zotero.alumni "Alumni:">
-<!ENTITY zotero.about.localizations "Lokalisasi:">
-<!ENTITY zotero.about.additionalSoftware "Perangkat lunak pihak ketiga:">
-<!ENTITY zotero.thanks "Ucapan Terima kasih khusus:">
-<!ENTITY zotero.about.close "Tutup">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Pengakuan &amp; Penghargaan lain">
-<!ENTITY zotero.citationProcessing "Proses sitasi &amp; bibliografi">
+<!ENTITY trellis.version "versi">
+<!ENTITY trellis.whatsNew "Yang baru">
+<!ENTITY trellis.createdby "Dibuat oleh:">
+<!ENTITY trellis.director "Direktur:">
+<!ENTITY trellis.directors "Direktur-direktur:">
+<!ENTITY trellis.developers "Pengembang:">
+<!ENTITY trellis.alumni "Alumni:">
+<!ENTITY trellis.about.localizations "Lokalisasi:">
+<!ENTITY trellis.about.additionalSoftware "Perangkat lunak pihak ketiga:">
+<!ENTITY trellis.thanks "Ucapan Terima kasih khusus:">
+<!ENTITY trellis.about.close "Tutup">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Pengakuan &amp; Penghargaan lain">
+<!ENTITY trellis.citationProcessing "Proses sitasi &amp; bibliografi">

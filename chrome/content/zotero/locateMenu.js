@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -28,7 +28,7 @@ var { XPCOMUtils } = ChromeUtils.importESModule("resource://gre/modules/XPCOMUti
 /*
  * This object contains the various functions for the interface
  */
-var Zotero_LocateMenu = new function () {
+var Trellis_LocateMenu = new function () {
 	XPCOMUtils.defineLazyServiceGetter(this, "ios", "@mozilla.org/network/io-service;1", "nsIIOService");
 	
   	/**
@@ -50,7 +50,7 @@ var Zotero_LocateMenu = new function () {
 			var availableEngines = _getAvailableLocateEngines(selectedItems);
 			// add engines that are available for selected items
 			if(availableEngines.length) {
-				Zotero_LocateMenu.addLocateEngines(locateMenu, availableEngines, null, true);
+				Trellis_LocateMenu.addLocateEngines(locateMenu, availableEngines, null, true);
 			}
 		}
 		else {
@@ -67,7 +67,7 @@ var Zotero_LocateMenu = new function () {
 		}
 		
 		// add installable locate menus, if there are any
-		if(window.Zotero_Browser) {
+		if(window.Trellis_Browser) {
 			var installableLocateEngines = _getInstallableLocateEngines();
 		} else {
 			var installableLocateEngines = [];
@@ -79,14 +79,14 @@ var Zotero_LocateMenu = new function () {
 				menuitem.setAttribute("label", locateEngine.label);
 				menuitem.setAttribute("class", "menuitem-iconic");
 				menuitem.setAttribute("image", locateEngine.image);
-				menuitem.zoteroLocateInfo = locateEngine;
+				menuitem.trellisLocateInfo = locateEngine;
 				menuitem.addEventListener("command", _addLocateEngine, false);
 				
 				locateMenu.appendChild(menuitem);
 			}
 		}
 		
-		menuitem = _createMenuItem(Zotero.getString("locate.manageLocateEngines"), "zotero-manage-locate-menu");
+		menuitem = _createMenuItem(Trellis.getString("locate.manageLocateEngines"), "trellis-manage-locate-menu");
 		menuitem.addEventListener("command", _openLocateEngineManager, false);
 		locateMenu.appendChild(menuitem);
 		
@@ -114,8 +114,8 @@ var Zotero_LocateMenu = new function () {
 		if(availableEngines.length) {
 			// if locate engines are available, make a new submenu
 			var submenu = document.createXULElement("menu");
-			submenu.setAttribute("zotero-locate", "true");
-			submenu.setAttribute("label", Zotero.getString("locate.locateEngines"));
+			submenu.setAttribute("trellis-locate", "true");
+			submenu.setAttribute("label", Trellis.getString("locate.locateEngines"));
 			
 			// add locate engines to the submenu
 			_addLocateEngines(submenuPopup, availableEngines, true);
@@ -138,13 +138,13 @@ var Zotero_LocateMenu = new function () {
 			}
 		}
 		else {
-			menuitem = _createMenuItem(optionObject.label || Zotero.getString(`locate.${optionName}.label`),
+			menuitem = _createMenuItem(optionObject.label || Trellis.getString(`locate.${optionName}.label`),
 				null, null);
 		}
 		if (optionObject.className && showIcons) {
 			menuitem.setAttribute("class", `menuitem-iconic ${optionObject.className}`);
 		}
-		menuitem.setAttribute("zotero-locate", "true");
+		menuitem.setAttribute("trellis-locate", "true");
 		
 		menuitem.addEventListener("command", function (event) {
 			optionObject.handleItems(selectedItems, event);
@@ -155,7 +155,7 @@ var Zotero_LocateMenu = new function () {
 	/**
 	 * Add view options to a menu
 	 * @param {menupopup} locateMenu The menu to add menu items to
-	 * @param {Zotero.Item[]} selectedItems The items to create view options based upon
+	 * @param {Trellis.Item[]} selectedItems The items to create view options based upon
 	 * @param {Boolean} showIcons Whether menu items should have associated icons
 	 * @param {Boolean} addExtraOptions Whether to add options that start with "_" below the separator
 	 * @param {Boolean} isToolbarMenu Whether the menu being populated is displayed in the toolbar
@@ -193,7 +193,7 @@ var Zotero_LocateMenu = new function () {
 		
 		if(haveOptions) {
 			var sep = document.createXULElement("menuseparator");
-			sep.setAttribute("zotero-locate", "true");
+			sep.setAttribute("trellis-locate", "true");
 			locateMenu.insertBefore(sep, lastNode);
 		}
 		
@@ -208,13 +208,13 @@ var Zotero_LocateMenu = new function () {
 	
 	/**
 	 * Get available locate engines that can handle a set of items 
-	 * @param {Zotero.Item[]} selectedItems The items to look or locate engines for
-	 * @return {Zotero.LocateManater.LocateEngine[]} An array of locate engines capable of handling
+	 * @param {Trellis.Item[]} selectedItems The items to look or locate engines for
+	 * @return {Trellis.LocateManater.LocateEngine[]} An array of locate engines capable of handling
 	 *	the given items
 	 */
 	function _getAvailableLocateEngines(selectedItems) {
 		// check for custom locate engines
-		var customEngines = Zotero.LocateManager.getVisibleEngines();
+		var customEngines = Trellis.LocateManager.getVisibleEngines();
 		var availableEngines = [];
 		
 		// check which engines can translate an item
@@ -234,7 +234,7 @@ var Zotero_LocateMenu = new function () {
 	/**
 	 * Add locate engine options to a menu
 	 * @param {menupopup} menu The menu to add menu items to
-	 * @param {Zotero.LocateManager.LocateEngine[]} engines The list of engines to add to the menu
+	 * @param {Trellis.LocateManager.LocateEngine[]} engines The list of engines to add to the menu
 	 * @param {Function|null} items Function to call to locate items
 	 * @param {Boolean} showIcons Whether menu items should have associated icons
 	 */
@@ -269,9 +269,9 @@ var Zotero_LocateMenu = new function () {
 	 */
 	function _getInstallableLocateEngines() {
 		var locateEngines = [];
-		if(!window.Zotero_Browser || !window.Zotero_Browser.tabbrowser) return locateEngines;
+		if(!window.Trellis_Browser || !window.Trellis_Browser.tabbrowser) return locateEngines;
 		
-		var links = Zotero_Browser.tabbrowser.selectedBrowser.contentDocument.getElementsByTagName("link");
+		var links = Trellis_Browser.tabbrowser.selectedBrowser.contentDocument.getElementsByTagName("link");
 		for (let link of links) {
 			if(!link.getAttribute) continue;
 			var rel = link.getAttribute("rel");
@@ -280,7 +280,7 @@ var Zotero_LocateMenu = new function () {
 				if(type && type === "application/x-openurl-opensearchdescription+xml") {
 					var label = link.getAttribute("title");
 					if(label) {
-						if(Zotero.LocateManager.getEngineByName(label)) {
+						if(Trellis.LocateManager.getEngineByName(label)) {
 							label = 'Update "'+label+'"';
 						} else {
 							label = 'Add "'+label+'"';
@@ -291,7 +291,7 @@ var Zotero_LocateMenu = new function () {
 					
 					locateEngines.push({'label':label,
 						'href':link.getAttribute("href"),
-						'image':Zotero_Browser.tabbrowser.selectedTab.image});
+						'image':Trellis_Browser.tabbrowser.selectedTab.image});
 				}
 			}
 		}
@@ -308,7 +308,7 @@ var Zotero_LocateMenu = new function () {
 		}
 		
 		// find selected engine
-		var selectedEngine = Zotero.LocateManager.getEngineByName(event.target.label);
+		var selectedEngine = Trellis.LocateManager.getEngineByName(event.target.label);
 		if(!selectedEngine) throw "Selected locate engine not found";
 		
 		var urls = [];
@@ -321,26 +321,26 @@ var Zotero_LocateMenu = new function () {
 			}
 		}
 		
-		Zotero.debug("Loading using "+selectedEngine.name);
-		Zotero.debug(urls);
-		ZoteroPane_Local.loadURI(urls, event, postDatas);
+		Trellis.debug("Loading using "+selectedEngine.name);
+		Trellis.debug(urls);
+		TrellisPane_Local.loadURI(urls, event, postDatas);
 	}
 	
   	/**
   	 * Add a new locate engine
   	 */
 	function _addLocateEngine(event) {
-		Zotero.LocateManager.addEngine(event.target.zoteroLocateInfo.href,
+		Trellis.LocateManager.addEngine(event.target.trellisLocateInfo.href,
 			Components.interfaces.nsISearchEngine.TYPE_OPENSEARCH,
-			event.target.zoteroLocateInfo.image, false);
+			event.target.trellisLocateInfo.image, false);
 	}
 	
   	/**
   	 * Open the locate manager
   	 */
 	function _openLocateEngineManager(event) {
-		window.openDialog('chrome://zotero/content/locateManager.xhtml',
-			'Zotero Locate Engine Manager',
+		window.openDialog('chrome://trellis/content/locateManager.xhtml',
+			'Trellis Locate Engine Manager',
 			'chrome,centerscreen'
 		);
 	}
@@ -349,7 +349,7 @@ var Zotero_LocateMenu = new function () {
 	 * Get the first 50 selected items
 	 */
 	async function _getSelectedItems() {
-		var allSelectedItems = ZoteroPane.getSelectedItems();
+		var allSelectedItems = TrellisPane.getSelectedItems();
 		var selectedItems = [];
 		while (selectedItems.length < 50 && allSelectedItems.length) {
 			var item = allSelectedItems.shift();
@@ -381,19 +381,19 @@ var Zotero_LocateMenu = new function () {
 			get() {
 				switch (this._viewItemType) {
 					case "pdf":
-						return "zotero-menuitem-attachments-pdf";
+						return "trellis-menuitem-attachments-pdf";
 					case "epub":
-						return "zotero-menuitem-attachments-epub";
+						return "trellis-menuitem-attachments-epub";
 					case "snapshot":
-						return "zotero-menuitem-attachments-snapshot";
+						return "trellis-menuitem-attachments-snapshot";
 					case "note":
-						return "zotero-menuitem-attach-note";
+						return "trellis-menuitem-attach-note";
 					default: {
-						let openInNewWindow = Zotero.Prefs.get("openReaderInNewWindow");
+						let openInNewWindow = Trellis.Prefs.get("openReaderInNewWindow");
 						if (alternateWindowBehavior) {
 							openInNewWindow = !openInNewWindow;
 						}
-						return openInNewWindow ? "zotero-menuitem-new-window" : "zotero-menuitem-new-tab";
+						return openInNewWindow ? "trellis-menuitem-new-window" : "trellis-menuitem-new-tab";
 					}
 				}
 			},
@@ -403,11 +403,11 @@ var Zotero_LocateMenu = new function () {
 		Object.defineProperty(this, "l10nArgs", {
 			get: () => {
 				let openIn;
-				if (this._viewItemType !== "mixed" && Zotero.Prefs.get(`fileHandler.${this._viewItemType}`)) {
+				if (this._viewItemType !== "mixed" && Trellis.Prefs.get(`fileHandler.${this._viewItemType}`)) {
 					openIn = "external";
 				}
 				else {
-					let openInNewWindow = Zotero.Prefs.get("openReaderInNewWindow");
+					let openInNewWindow = Trellis.Prefs.get("openReaderInNewWindow");
 					if (alternateWindowBehavior) {
 						openInNewWindow = !openInNewWindow;
 					}
@@ -428,7 +428,7 @@ var Zotero_LocateMenu = new function () {
 			}
 			// Don't show alternate-behavior option when using an external PDF viewer
 			if (!item.isNote()
-				&& Zotero.Prefs.get(`fileHandler.${usableItem.attachmentReaderType}`)
+				&& Trellis.Prefs.get(`fileHandler.${usableItem.attachmentReaderType}`)
 				&& alternateWindowBehavior) {
 				return false;
 			}
@@ -473,7 +473,7 @@ var Zotero_LocateMenu = new function () {
 				if (usableItem) usableItems.push(usableItem);
 			}
 			
-			ZoteroPane.viewItems(usableItems, event,
+			TrellisPane.viewItems(usableItems, event,
 				{
 					noLocateOnMissing: false,
 					forceAlternateWindowBehavior: alternateWindowBehavior
@@ -488,7 +488,7 @@ var Zotero_LocateMenu = new function () {
 			for (let i = 0; i < attachments.length; i++) {
 				let attachment = attachments[i];
 				if (attachment.attachmentReaderType
-						&& attachment.attachmentLinkMode !== Zotero.Attachments.LINK_MODE_LINKED_URL) {
+						&& attachment.attachmentLinkMode !== Trellis.Attachments.LINK_MODE_LINKED_URL) {
 					return attachment;
 				}
 			}
@@ -505,14 +505,14 @@ var Zotero_LocateMenu = new function () {
 	 * Should appear only when an item or an attachment has a URL
 	 */
 	ViewOptions.online = new function () {
-		this.className = "zotero-menuitem-view-online";
+		this.className = "trellis-menuitem-view-online";
 		
 		this.canHandleItem = function (item) {
 			return _getURL(item).then((val) => val !== false);
 		}
 		this.handleItems = async function (items, event) {
 			var urls = await Promise.all(items.map(item => _getURL(item)));
-			ZoteroPane_Local.loadURI(urls.filter(url => !!url), event);
+			TrellisPane_Local.loadURI(urls.filter(url => !!url), event);
 		};
 		
 		var _getURL = async function (item) {
@@ -521,7 +521,7 @@ var Zotero_LocateMenu = new function () {
 			if (itemURL) {
 				var uri;
 				try {
-					uri = Zotero_LocateMenu.ios.newURI(itemURL, null, null);
+					uri = Trellis_LocateMenu.ios.newURI(itemURL, null, null);
 					if (uri && uri.host && uri.scheme !== 'file') {
 						return itemURL;
 					}
@@ -533,7 +533,7 @@ var Zotero_LocateMenu = new function () {
 			// if no url field, try DOI field
 			var doi = item.getField('DOI');
 			if (doi) {
-				doi = Zotero.Utilities.cleanDOI(doi);
+				doi = Trellis.Utilities.cleanDOI(doi);
 				if (doi) {
 					return "https://doi.org/" + encodeURIComponent(doi);
 				}
@@ -541,7 +541,7 @@ var Zotero_LocateMenu = new function () {
 			
 			// Try attachment url fields
 			if (item.isRegularItem()) {
-				for (let attachment of Zotero.Items.get(item.getAttachments())) {
+				for (let attachment of Trellis.Items.get(item.getAttachments())) {
 					let attachmentURL = attachment.getField('url');
 					if (attachmentURL) {
 						return attachmentURL;
@@ -560,11 +560,11 @@ var Zotero_LocateMenu = new function () {
 	 * viewed by an internal non-native handler and "launchNonNativeFiles" pref is disabled
 	 */
 	ViewOptions.externalViewer = new function () {
-		this.className = "zotero-menuitem-view-external";
+		this.className = "trellis-menuitem-view-external";
 		this.useExternalViewer = true;
 		
 		this.canHandleItem = async function (item) {
-			//return (this.useExternalViewer ^ Zotero.Prefs.get('launchNonNativeFiles'))
+			//return (this.useExternalViewer ^ Trellis.Prefs.get('launchNonNativeFiles'))
 			//	&& (yield _getBestNonNativeAttachment(item));
 			return false;
 		};
@@ -576,25 +576,25 @@ var Zotero_LocateMenu = new function () {
 				if(attachment) attachments.push(attachment.id);
 			}
 			
-			ZoteroPane_Local.viewAttachment(attachments, event, false, this.useExternalViewer);
+			TrellisPane_Local.viewAttachment(attachments, event, false, this.useExternalViewer);
 		};
 		
 		var _getBestNonNativeAttachment = async function (item) {
 			var attachments = item.isAttachment() ? [item] : ((await item.getBestAttachments()));
 			for (let i = 0; i < attachments.length; i++) {
 				let attachment = attachments[i];
-				if(attachment.attachmentLinkMode !== Zotero.Attachments.LINK_MODE_LINKED_URL) {
+				if(attachment.attachmentLinkMode !== Trellis.Attachments.LINK_MODE_LINKED_URL) {
 					var path = await attachment.getFilePathAsync();
 					if (path) {
 						try {
-							var ext = Zotero.File.getExtension(Zotero.File.pathToFile(path));
+							var ext = Trellis.File.getExtension(Trellis.File.pathToFile(path));
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 							return false;
 						}
 						if(!attachment.attachmentContentType ||
-								Zotero.MIME.hasNativeHandler(attachment.attachmentContentType, ext)) {
+								Trellis.MIME.hasNativeHandler(attachment.attachmentContentType, ext)) {
 							return false;
 						}
 						return attachment;
@@ -612,7 +612,7 @@ var Zotero_LocateMenu = new function () {
 	 * viewed by an internal non-native handler and "launchNonNativeFiles" pref is enabled
 	 */
 	ViewOptions.internalViewer = new function () {
-		this.icon = "chrome://zotero/skin/locate-internal-viewer.png";
+		this.icon = "chrome://trellis/skin/locate-internal-viewer.png";
 		this.useExternalViewer = false;
 		this.canHandleItem = ViewOptions.externalViewer.canHandleItem;
 		this.handleItems = ViewOptions.externalViewer.handleItems;
@@ -625,26 +625,26 @@ var Zotero_LocateMenu = new function () {
 	 * file or web attachment
 	 */
 	ViewOptions.showFile = new function () {
-		this.className = "zotero-menuitem-show-file";
+		this.className = "trellis-menuitem-show-file";
 		this.hideInToolbar = true;
 		
 		this.canHandleItem = function (item) {
-			return ZoteroPane.canShowItemInFilesystem(item);
+			return TrellisPane.canShowItemInFilesystem(item);
 		};
 		
 		this.updateMenuItem = function (items) {
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				this.l10nId = 'menu-file-show-in-finder';
 			}
 			else {
 				// We only care about showing 1 or many
-				let count = Zotero.Items.numDistinctFileAttachmentsForLabel(items) > 1 ? 2 : 1;
+				let count = Trellis.Items.numDistinctFileAttachmentsForLabel(items) > 1 ? 2 : 1;
 				this.l10nId = count > 1 ? 'menu-file-show-files' : 'menu-file-show-file';
 			}
 		};
 		
 		this.handleItems = async function (items) {
-			await ZoteroPane.showItemsInFilesystem(items);
+			await TrellisPane.showItemsInFilesystem(items);
 		};
 	};
 	
@@ -654,12 +654,12 @@ var Zotero_LocateMenu = new function () {
 	 * Should appear only for regular items
 	 */
 	ViewOptions._libraryLookup = new function () {
-		this.className = "zotero-menuitem-library-lookup";
+		this.className = "trellis-menuitem-library-lookup";
 		this.canHandleItem = function (item) { return Promise.resolve(item.isRegularItem()); };
 		this.handleItems = async function (items, event) {
 			// If no resolver configured, show error
-			if (!Zotero.Prefs.get('openURL.resolver')) {
-				let paneName = Zotero.Intl.strings['zotero.preferences.prefpane.general'];
+			if (!Trellis.Prefs.get('openURL.resolver')) {
+				let paneName = Trellis.Intl.strings['trellis.preferences.prefpane.general'];
 				let [noResolverStr, openSettingsStr] = await document.l10n.formatValues(
 					[
 						{ id: 'locate-library-lookup-no-resolver', args: { pane: paneName } },
@@ -671,15 +671,15 @@ var Zotero_LocateMenu = new function () {
 					+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL);
 				let index = ps.confirmEx(
 					null,
-					Zotero.getString('locate.libraryLookup.noResolver.title'),
+					Trellis.getString('locate.libraryLookup.noResolver.title'),
 					noResolverStr,
 					buttonFlags,
 					openSettingsStr,
 					null, null, null, {}
 				);
 				if (index == 0) {
-					Zotero.Utilities.Internal.openPreferences('zotero-prefpane-general', {
-						scrollTo: '#zotero-prefpane-locate-groupbox'
+					Trellis.Utilities.Internal.openPreferences('trellis-prefpane-general', {
+						scrollTo: '#trellis-prefpane-locate-groupbox'
 					});
 				}
 				return;
@@ -687,10 +687,10 @@ var Zotero_LocateMenu = new function () {
 			var urls = [];
 			for (let item of items) {
 				if(!item.isRegularItem()) continue;
-				var url = Zotero.Utilities.Internal.OpenURL.resolve(item);
+				var url = Trellis.Utilities.Internal.OpenURL.resolve(item);
 				if(url) urls.push(url);
 			}
-			ZoteroPane_Local.loadURI(urls, event);
+			TrellisPane_Local.loadURI(urls, event);
 		};
 	};
 }

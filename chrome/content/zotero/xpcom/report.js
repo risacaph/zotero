@@ -3,30 +3,30 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Report = {};
+Trellis.Report = {};
 
-Zotero.Report.HTML = new function () {
+Trellis.Report.HTML = new function () {
 	let domParser = new DOMParser();
 	
 	this.listGenerator = function* (items, combineChildItems, libraryID) {
@@ -35,7 +35,7 @@ Zotero.Report.HTML = new function () {
 			+ '	<head>\n'
 			+ '		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n'
 			+ '		<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src data:; style-src \'unsafe-inline\' data:" />\n'
-			+ '		<title>' + Zotero.getString('report.title.default') + '</title>\n'
+			+ '		<title>' + Trellis.getString('report.title.default') + '</title>\n'
 			+ '		<link rel="stylesheet" type="text/css" href="' + _getCSSDataURI('detail') + '"/>\n'
 			+ '		<link rel="stylesheet" type="text/css" media="screen,projection" href="' + _getCSSDataURI('detail_screen') + '"/>\n'
 			+ '		<link rel="stylesheet" type="text/css" media="print" href="' + _getCSSDataURI('detail_print') + '"/>\n'
@@ -55,7 +55,7 @@ Zotero.Report.HTML = new function () {
 				}
 				// Non-matching parent, so display "Parent Item: [Title]"
 				else {
-					content += '\t\t\t<h2 class="parentItem">' + escapeXML(Zotero.getString('report.parentItem'))
+					content += '\t\t\t<h2 class="parentItem">' + escapeXML(Trellis.getString('report.parentItem'))
 						+ ' <span class="title">' + escapeXML(obj.title) + '</span></h2>\n';
 				}
 			}
@@ -79,7 +79,7 @@ Zotero.Report.HTML = new function () {
 				if (obj.reportChildren.notes.length) {
 					// Only display "Notes:" header if parent matches search
 					if (obj.reportSearchMatch) {
-						content += '\t\t\t\t<h3 class="notes">' + escapeXML(Zotero.getString('report.notes')) + '</h3>\n';
+						content += '\t\t\t\t<h3 class="notes">' + escapeXML(Trellis.getString('report.notes')) + '</h3>\n';
 					}
 					content += '\t\t\t\t<ul class="notes">\n';
 					for (let note of obj.reportChildren.notes) {
@@ -100,17 +100,17 @@ Zotero.Report.HTML = new function () {
 			}
 			
 			// Related items
-			if (obj.reportSearchMatch && Zotero.Relations.relatedItemPredicate in obj.relations) {
-				content += '\t\t\t\t<h3 class="related">' + escapeXML(Zotero.getString('itemFields.related')) + '</h3>\n';
+			if (obj.reportSearchMatch && Trellis.Relations.relatedItemPredicate in obj.relations) {
+				content += '\t\t\t\t<h3 class="related">' + escapeXML(Trellis.getString('itemFields.related')) + '</h3>\n';
 				content += '\t\t\t\t<ul class="related">\n';
-				var rels = obj.relations[Zotero.Relations.relatedItemPredicate];
+				var rels = obj.relations[Trellis.Relations.relatedItemPredicate];
 				// TEMP
 				if (!Array.isArray(rels)) {
 					rels = [rels];
 				}
 				for (let i=0; i<rels.length; i++) {
 					let rel = rels[i];
-					let relItem = yield Zotero.URI.getURIItem(rel);
+					let relItem = yield Trellis.URI.getURIItem(rel);
 					if (relItem) {
 						content += '\t\t\t\t\t<li id="item_' + relItem.key + '">';
 						content += escapeXML(relItem.getDisplayTitle());
@@ -132,8 +132,8 @@ Zotero.Report.HTML = new function () {
 	
 	function _getCSSDataURI(file) {
 		return 'data:text/css;base64,'
-			+ Zotero.Utilities.Internal.Base64.encode(
-				Zotero.File.getResource(`chrome://zotero/skin/report/${file}.css`)
+			+ Trellis.Utilities.Internal.Base64.encode(
+				Trellis.File.getResource(`chrome://trellis/skin/report/${file}.css`)
 			);
 	}
 	
@@ -145,9 +145,9 @@ Zotero.Report.HTML = new function () {
 		// Item type
 		content += '\t\t\t\t\t<tr>\n';
 		content += '\t\t\t\t\t\t<th>'
-			+ escapeXML(Zotero.getString('itemFields.itemType'))
+			+ escapeXML(Trellis.getString('itemFields.itemType'))
 			+ '</th>\n';
-		content += '\t\t\t\t\t\t<td>' + escapeXML(Zotero.ItemTypes.getLocalizedString(obj.itemType)) + '</td>\n';
+		content += '\t\t\t\t\t\t<td>' + escapeXML(Trellis.ItemTypes.getLocalizedString(obj.itemType)) + '</td>\n';
 		content += '\t\t\t\t\t</tr>\n';
 		
 		// Creators
@@ -167,7 +167,7 @@ Zotero.Report.HTML = new function () {
 				
 				content += '\t\t\t\t\t<tr>\n';
 				content += '\t\t\t\t\t\t<th class="' + creator.creatorType + '">'
-					+ escapeXML(Zotero.CreatorTypes.getLocalizedString(creator.creatorType))
+					+ escapeXML(Trellis.CreatorTypes.getLocalizedString(creator.creatorType))
 					+ '</th>\n';
 				content += '\t\t\t\t\t\t<td>' + escapeXML(displayText) + '</td>\n';
 				content += '\t\t\t\t\t</tr>\n';
@@ -209,11 +209,11 @@ Zotero.Report.HTML = new function () {
 			}
 			
 			try {
-				var localizedFieldName = Zotero.ItemFields.getLocalizedString(i);
+				var localizedFieldName = Trellis.ItemFields.getLocalizedString(i);
 			}
 			// Skip fields we don't have a localized string for
 			catch (e) {
-				Zotero.debug('Localized string not available for ' + 'itemFields.' + i, 2);
+				Trellis.debug('Localized string not available for ' + 'itemFields.' + i, 2);
 				continue;
 			}
 			
@@ -238,11 +238,11 @@ Zotero.Report.HTML = new function () {
 			// Remove SQL date from multipart dates
 			// (e.g. '2006-00-00 Summer 2006' becomes 'Summer 2006')
 			else if (i=='date') {
-				fieldText = escapeXML(Zotero.Date.multipartToStr(obj[i]));
+				fieldText = escapeXML(Trellis.Date.multipartToStr(obj[i]));
 			}
 			// Convert dates to local format
 			else if (i=='accessDate' || i=='dateAdded' || i=='dateModified') {
-				var date = Zotero.Date.isoToDate(obj[i], true)
+				var date = Trellis.Date.isoToDate(obj[i], true)
 				fieldText = escapeXML(date.toLocaleString());
 			}
 			else {
@@ -262,7 +262,7 @@ Zotero.Report.HTML = new function () {
 	function _generateTagsList(obj) {
 		var content = '';
 		if (obj.tags && obj.tags.length) {
-			var str = Zotero.getString('report.tags');
+			var str = Trellis.getString('report.tags');
 			content += '\t\t\t\t<h3 class="tags">' + escapeXML(str) + '</h3>\n';
 			content += '\t\t\t\t<ul class="tags">\n';
 			for (let i=0; i<obj.tags.length; i++) {
@@ -277,7 +277,7 @@ Zotero.Report.HTML = new function () {
 	async function _generateAttachmentsList(libraryID, obj) {
 		var content = '';
 		if (obj.attachments && obj.attachments.length) {
-			content += '\t\t\t\t<h3 class="attachments">' + escapeXML(Zotero.getString('itemFields.attachments')) + '</h3>\n';
+			content += '\t\t\t\t<h3 class="attachments">' + escapeXML(Trellis.getString('itemFields.attachments')) + '</h3>\n';
 			content += '\t\t\t\t<ul class="attachments">\n';
 			for (let i=0; i<obj.attachments.length; i++) {
 				let attachment = obj.attachments[i];
@@ -308,9 +308,9 @@ Zotero.Report.HTML = new function () {
 	async function getNoteHTML(libraryID, jsonItem) {
 		var note = jsonItem.note;
 		if (libraryID) {
-			var item = Zotero.Items.getByLibraryAndKey(libraryID, jsonItem.key);
+			var item = Trellis.Items.getByLibraryAndKey(libraryID, jsonItem.key);
 			if (item.isNote()) {
-				note = await Zotero.Notes.getExportableNote(item);
+				note = await Trellis.Notes.getExportableNote(item);
 			}
 		}
 		// If HTML tag or entity, parse as HTML
@@ -330,6 +330,6 @@ Zotero.Report.HTML = new function () {
 	
 	var escapeXML = function (str) {
 		str = str.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\ud800-\udfff\ufffe\uffff]/gu, '\u2B1A');
-		return Zotero.Utilities.htmlSpecialChars(str);
+		return Trellis.Utilities.htmlSpecialChars(str);
 	}
 }

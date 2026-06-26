@@ -3,29 +3,29 @@
 	
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -50,9 +50,9 @@
 
 			this._item = null;
 			this._reader = null;
-			this._initializePromise = Zotero.Promise.defer();
-			this._previewInitializePromise = Zotero.Promise.defer();
-			this._nextPreviewInitializePromise = Zotero.Promise.defer();
+			this._initializePromise = Trellis.Promise.defer();
+			this._previewInitializePromise = Trellis.Promise.defer();
+			this._nextPreviewInitializePromise = Trellis.Promise.defer();
 
 			/**
 			 * The most recent task to be processed
@@ -101,7 +101,7 @@
 			this._isDiscarding = false;
 
 			/**
-			 * Whether the current preview reader is initialized by `Zotero.Reader.openPreview`.
+			 * Whether the current preview reader is initialized by `Trellis.Reader.openPreview`.
 			 * When the previous reader rendering task is aborted before initialization,
 			 * reuse the reader; otherwise must discard the old reader first.
 			 */
@@ -123,14 +123,14 @@
 				type="content"
 				primary="true"
 				transparent="transparent"
-				src="resource://zotero/reader/reader.html"
+				src="resource://trellis/reader/reader.html"
 				flex="1"/>
 			<browser id="next-preview"
 				tooltip="iframeTooltip"
 				type="content"
 				primary="true"
 				transparent="transparent"
-				src="resource://zotero/reader/reader.html"
+				src="resource://trellis/reader/reader.html"
 				flex="1"/>
 			<html:img id="image-preview" class="media-preview"></html:img>
 			<html:span class="icon"></html:span>
@@ -150,7 +150,7 @@
 					type="content"
 					primary="true"
 					transparent="transparent"
-					src="resource://zotero/reader/reader.html"
+					src="resource://trellis/reader/reader.html"
 					flex="1"/>
 			`);
 		}
@@ -160,7 +160,7 @@
 		}
 
 		set item(val) {
-			this._item = (val instanceof Zotero.Item && val.isFileAttachment()) ? val : null;
+			this._item = (val instanceof Trellis.Item && val.isFileAttachment()) ? val : null;
 		}
 
 		get previewType() {
@@ -231,7 +231,7 @@
 			this.addEventListener("focusin", this._handleFocusIn);
 			this.addEventListener("keypress", this._handleKeypress);
 			this.setAttribute("data-preview-type", "unknown");
-			this._notifierID = Zotero.Notifier.registerObserver(this, ["item"], "attachmentPreview");
+			this._notifierID = Trellis.Notifier.registerObserver(this, ["item"], "attachmentPreview");
 
 			// Lazy load content
 			if (this.innerHTML === "") {
@@ -262,14 +262,14 @@
 			this.removeEventListener("click", this._handleFocusIn);
 			this.removeEventListener("focusin", this._handleFocusIn);
 			this.removeEventListener("keypress", this._handleKeypress);
-			Zotero.Notifier.unregisterObserver(this._notifierID);
-			Zotero.Prefs.unregisterObserver(this._prefObserver);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Prefs.unregisterObserver(this._prefObserver);
 		}
 
 		notify(event, type, ids, extraData) {
 			if (!this.item) return;
 			if (this.isReaderType && this._reader && this._reader._internalReader) {
-				// Following chrome/content/zotero/xpcom/reader.js
+				// Following chrome/content/trellis/xpcom/reader.js
 				if (event === "delete") {
 					let disappearedIDs = this._reader.annotationItemIDs.filter(x => ids.includes(x));
 					if (disappearedIDs.length) {
@@ -396,7 +396,7 @@
 			// Wait for the current render/discard to finish
 			let i = 0;
 			while (i < 300 && (this._isRendering || this._isDiscarding || this._isProcessingTask)) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 				i++;
 			}
 
@@ -426,10 +426,10 @@
 			try {
 				switch (task.type) {
 					case "render":
-						await Promise.race([this._processRender(task.data), Zotero.Promise.delay(3000)]);
+						await Promise.race([this._processRender(task.data), Trellis.Promise.delay(3000)]);
 						break;
 					case "discard":
-						await Promise.race([this._processDiscard(task.data), Zotero.Promise.delay(3000)]);
+						await Promise.race([this._processDiscard(task.data), Trellis.Promise.delay(3000)]);
 						break;
 				}
 			}
@@ -476,7 +476,7 @@
 	
 				this._tryAbortRender(itemID);
 	
-				let item = Zotero.Items.get(itemID);
+				let item = Trellis.Items.get(itemID);
 				if (previewType !== "file" && await item.fileExists()) {
 					if (this.isReaderType) {
 						success = await this._renderReader(itemID);
@@ -565,7 +565,7 @@
 
 			// Preload a new next-preview
 			await this._nextPreviewInitializePromise.promise;
-			this._nextPreviewInitializePromise = Zotero.Promise.defer();
+			this._nextPreviewInitializePromise = Trellis.Promise.defer();
 
 			this._debug("Next preview initialized");
 
@@ -591,7 +591,7 @@
 				let state = await this._reader?._internalReader?._state;
 				options.location = state?.primaryViewStats;
 			}
-			ZoteroPane.viewAttachment(this._item.id, event, false, options);
+			TrellisPane.viewAttachment(this._item.id, event, false, options);
 		}
 
 		/**
@@ -635,8 +635,8 @@
 			}
 			else if (this.isPaginatedType && ["ArrowLeft", "ArrowRight"].includes(e.key)) {
 				let gotoType = {
-					[Zotero.arrowPreviousKey]: "prev",
-					[Zotero.arrowNextKey]: "next"
+					[Trellis.arrowPreviousKey]: "prev",
+					[Trellis.arrowNextKey]: "next"
 				};
 				this.goto(gotoType[e.key]);
 				stopEvent = true;
@@ -674,7 +674,7 @@
 			// The reader will be initialized if the operation is not aborted before this point
 			// and we'll need to discard the reader even if the operation is not finished
 			this._isReaderInitialized = true;
-			this._reader = await Zotero.Reader.openPreview(itemID, preview);
+			this._reader = await Trellis.Reader.openPreview(itemID, preview);
 
 			this._tryAbortRender(itemID);
 
@@ -687,7 +687,7 @@
 
 		async _renderMedia() {
 			this.setPreviewStatus("loading");
-			let mediaLoadPromise = Zotero.Promise.defer();
+			let mediaLoadPromise = Trellis.Promise.defer();
 			let mediaID = `${this.previewType}-preview`;
 			let media = this._id(mediaID);
 			// Create media element when needed to avoid unnecessarily loading libs like libavcodec, libvpx, etc.
@@ -705,7 +705,7 @@
 			media.onload = () => {
 				mediaLoadPromise.resolve();
 			};
-			media.src = `zotero://attachment/${Zotero.API.getLibraryPrefix(this._item.libraryID)}/items/${this._item.key}/`;
+			media.src = `trellis://attachment/${Trellis.API.getLibraryPrefix(this._item.libraryID)}/items/${this._item.key}/`;
 			await mediaLoadPromise.promise;
 			return true;
 		}
@@ -734,7 +734,7 @@
 
 		_handleDragStart(event) {
 			this._updateDragImage();
-			Zotero.Utilities.Internal.onDragItems(event, [this.item.id], this._dragImageContainer);
+			Trellis.Utilities.Internal.onDragItems(event, [this.item.id], this._dragImageContainer);
 		}
 
 		_handleDragEnd() {
@@ -773,8 +773,8 @@
 		}
 
 		_debug(message, ...args) {
-			if (!Zotero.test) return;
-			Zotero.debug(`[AttachmentPreview] ${message}`, ...args);
+			if (!Trellis.test) return;
+			Trellis.debug(`[AttachmentPreview] ${message}`, ...args);
 		}
 	}
 

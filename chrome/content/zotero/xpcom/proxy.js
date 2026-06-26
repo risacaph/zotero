@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -29,10 +29,10 @@ Components.utils.importGlobalProperties(["URL"]);
  * A singleton to handle URL rewriting proxies
  * @namespace
  * @property transparent {Boolean} Whether transparent proxy functionality is enabled
- * @property proxies {Zotero.Proxy[]} All loaded proxies
- * @property hosts {Zotero.Proxy{}} Object mapping hosts to proxies
+ * @property proxies {Trellis.Proxy[]} All loaded proxies
+ * @property hosts {Trellis.Proxy{}} Object mapping hosts to proxies
  */
-Zotero.Proxies = new function () {
+Trellis.Proxies = new function () {
 	this.proxies = false;
 	this.transparent = false;
 	this.hosts = {};
@@ -43,38 +43,38 @@ Zotero.Proxies = new function () {
 	 */
 	this.init = async function () {
 		if(!this.proxies) {
-			var rows = await Zotero.DB.queryAsync("SELECT * FROM proxies");
-			Zotero.Proxies.proxies = await Promise.all(
+			var rows = await Trellis.DB.queryAsync("SELECT * FROM proxies");
+			Trellis.Proxies.proxies = await Promise.all(
 				rows.map(row => this.newProxyFromRow(row))
 			);
 			
-			for (let proxy of Zotero.Proxies.proxies) {
+			for (let proxy of Trellis.Proxies.proxies) {
 				for (let host of proxy.hosts) {
-					Zotero.Proxies.hosts[host] = proxy;
+					Trellis.Proxies.hosts[host] = proxy;
 				}
 			}
 		}
 		
-		Zotero.Proxies.transparent = Zotero.Prefs.get("proxies.transparent");
-		Zotero.Proxies.autoRecognize = Zotero.Proxies.transparent && Zotero.Prefs.get("proxies.autoRecognize");
+		Trellis.Proxies.transparent = Trellis.Prefs.get("proxies.transparent");
+		Trellis.Proxies.autoRecognize = Trellis.Proxies.transparent && Trellis.Prefs.get("proxies.autoRecognize");
 		
-		var disableByDomainPref = Zotero.Prefs.get("proxies.disableByDomain");
-		Zotero.Proxies.disableByDomain = (Zotero.Proxies.transparent && disableByDomainPref ? Zotero.Prefs.get("proxies.disableByDomainString") : null);
+		var disableByDomainPref = Trellis.Prefs.get("proxies.disableByDomain");
+		Trellis.Proxies.disableByDomain = (Trellis.Proxies.transparent && disableByDomainPref ? Trellis.Prefs.get("proxies.disableByDomainString") : null);
 		
-		Zotero.Proxies.lastIPCheck = 0;
-		Zotero.Proxies.lastIPs = "";
-		Zotero.Proxies.disabledByDomain = false;
+		Trellis.Proxies.lastIPCheck = 0;
+		Trellis.Proxies.lastIPs = "";
+		Trellis.Proxies.disabledByDomain = false;
 		
-		Zotero.Proxies.showRedirectNotification = Zotero.Prefs.get("proxies.showRedirectNotification");
+		Trellis.Proxies.showRedirectNotification = Trellis.Prefs.get("proxies.showRedirectNotification");
 	};
 	
 	
 	/**
 	 * @param {Object} row - Database row with proxy data
-	 * @return {Promise<Zotero.Proxy>}
+	 * @return {Promise<Trellis.Proxy>}
 	 */
 	this.newProxyFromRow = async function (row) {
-		var proxy = new Zotero.Proxy(row);
+		var proxy = new Trellis.Proxy(row);
 		await proxy.loadHosts();
 		return proxy;
 	};
@@ -85,14 +85,14 @@ Zotero.Proxies = new function () {
 	 * @returns {Boolean} True if the proxy was in the list, false if it was not
 	 */
 	this.remove = function (proxy) {
-		var index = Zotero.Proxies.proxies.indexOf(proxy);
+		var index = Trellis.Proxies.proxies.indexOf(proxy);
 		if(index == -1) return false;
 		// remove proxy from proxy list
-		Zotero.Proxies.proxies.splice(index, 1);
+		Trellis.Proxies.proxies.splice(index, 1);
 		// remove hosts from host list
-		for(var host in Zotero.Proxies.hosts) {
-			if(Zotero.Proxies.hosts[host] == proxy) {
-				delete Zotero.Proxies.hosts[host];
+		for(var host in Trellis.Proxies.hosts) {
+			if(Trellis.Proxies.hosts[host] == proxy) {
+				delete Trellis.Proxies.hosts[host];
 			}
 		}
 		return true;
@@ -103,13 +103,13 @@ Zotero.Proxies = new function () {
 	 */
 	this.save = function (proxy) {
 		// add to list of proxies
-		if(Zotero.Proxies.proxies.indexOf(proxy) == -1) Zotero.Proxies.proxies.push(proxy);
+		if(Trellis.Proxies.proxies.indexOf(proxy) == -1) Trellis.Proxies.proxies.push(proxy);
 		
 		// if there is a proxy ID (i.e., if this is a persisting, transparent proxy), add to host
 		// list to do reverse mapping
 		if(proxy.proxyID) {
 			for (let host of proxy.hosts) {
-				Zotero.Proxies.hosts[host] = proxy;
+				Trellis.Proxies.hosts[host] = proxy;
 			}
 		}
 	}
@@ -122,13 +122,13 @@ Zotero.Proxies = new function () {
 		if(!proxy.proxyID) return;
 		
 		// delete hosts that point to this proxy if they no longer exist
-		for(var host in Zotero.Proxies.hosts) {
-			if(Zotero.Proxies.hosts[host] == proxy && proxy.hosts.indexOf(host) == -1) {
-				delete Zotero.Proxies.hosts[host];
+		for(var host in Trellis.Proxies.hosts) {
+			if(Trellis.Proxies.hosts[host] == proxy && proxy.hosts.indexOf(host) == -1) {
+				delete Trellis.Proxies.hosts[host];
 			}
 		}
 		// add new hosts for this proxy
-		Zotero.Proxies.save(proxy);
+		Trellis.Proxies.save(proxy);
 	}
 	
 	/**
@@ -142,12 +142,12 @@ Zotero.Proxies = new function () {
 	this.proxyToProper = function (url, onlyReturnIfProxied) {
 		// make sure url has a trailing slash
 		url = new URL(url).href;
-		for (let proxy of Zotero.Proxies.proxies) {
+		for (let proxy of Trellis.Proxies.proxies) {
 			if(proxy.regexp) {
 				var m = proxy.regexp.exec(url);
 				if(m) {
 					var toProper = proxy.toProper(m);
-					Zotero.debug("Proxies.proxyToProper: "+url+" to "+toProper);
+					Trellis.debug("Proxies.proxyToProper: "+url+" to "+toProper);
 					return toProper;
 				}
 			}
@@ -165,9 +165,9 @@ Zotero.Proxies = new function () {
 	 */
 	this.properToProxy = function (url, onlyReturnIfProxied) {
 		var uri = Services.io.newURI(url, null, null);
-		if(Zotero.Proxies.hosts[uri.hostPort] && Zotero.Proxies.hosts[uri.hostPort].proxyID) {
-			var toProxy = Zotero.Proxies.hosts[uri.hostPort].toProxy(uri);
-			Zotero.debug("Proxies.properToProxy: "+url+" to "+toProxy);
+		if(Trellis.Proxies.hosts[uri.hostPort] && Trellis.Proxies.hosts[uri.hostPort].proxyID) {
+			var toProxy = Trellis.Proxies.hosts[uri.hostPort].toProxy(uri);
+			Trellis.debug("Proxies.properToProxy: "+url+" to "+toProxy);
 			return toProxy;
 		}
 		return (onlyReturnIfProxied ? false : url);
@@ -185,8 +185,8 @@ Zotero.Proxies = new function () {
 		url = new URL(url).href;
 		var urlToProxy = {};
 		// If it's a known proxied URL just return it
-		if (Zotero.Proxies.transparent) {
-			for (var proxy of Zotero.Proxies.proxies) {
+		if (Trellis.Proxies.transparent) {
+			for (var proxy of Trellis.Proxies.proxies) {
 				if (proxy.regexp) {
 					var m = proxy.regexp.exec(url);
 					if (m) {
@@ -235,12 +235,12 @@ Zotero.Proxies = new function () {
 }
 
 /**
- * Creates a Zotero.Proxy object from a DB row 
+ * Creates a Trellis.Proxy object from a DB row 
  *
  * @constructor
  * @class Represents an individual proxy server
  */
-Zotero.Proxy = function (row) {
+Trellis.Proxy = function (row) {
 	this.hosts = [];
 	this._loadFromRow(row);
 }
@@ -249,7 +249,7 @@ Zotero.Proxy = function (row) {
  * Loads a proxy object from a DB row
  * @private
  */
-Zotero.Proxy.prototype._loadFromRow = function (row) {
+Trellis.Proxy.prototype._loadFromRow = function (row) {
 	this.proxyID = row.proxyID;
 	this.multiHost = row.scheme && row.scheme.indexOf('%h') != -1 || !!row.multiHost;
 	this.autoAssociate = !!row.autoAssociate;
@@ -260,7 +260,7 @@ Zotero.Proxy.prototype._loadFromRow = function (row) {
 	}
 };
 
-Zotero.Proxy.prototype.toJSON = function () {
+Trellis.Proxy.prototype.toJSON = function () {
 	if (!this.scheme) {
 		throw Error('Cannot convert proxy to JSON - no scheme');
 	}
@@ -271,7 +271,7 @@ Zotero.Proxy.prototype.toJSON = function () {
  * Regexps to match the URL contents corresponding to proxy scheme parameters
  * @const
  */
-const Zotero_Proxy_schemeParameters = {
+const Trellis_Proxy_schemeParameters = {
 	"%p":"(.*?)",	// path
 	"%d":"(.*?)",	// directory
 	"%f":"(.*?)",	// filename
@@ -282,7 +282,7 @@ const Zotero_Proxy_schemeParameters = {
  * Regexps to match proxy scheme parameters in the proxy scheme URL
  * @const
  */
-const Zotero_Proxy_schemeParameterRegexps = {
+const Trellis_Proxy_schemeParameterRegexps = {
 	"%p":/([^%])%p/,
 	"%d":/([^%])%d/,
 	"%f":/([^%])%f/,
@@ -294,9 +294,9 @@ const Zotero_Proxy_schemeParameterRegexps = {
  * Compiles the regular expression against which we match URLs to determine if this proxy is in use
  * and saves it in this.regexp
  */
-Zotero.Proxy.prototype.compileRegexp = function () {
+Trellis.Proxy.prototype.compileRegexp = function () {
 	// take host only if flagged as multiHost
-	var parametersToCheck = Zotero_Proxy_schemeParameters;
+	var parametersToCheck = Trellis_Proxy_schemeParameters;
 	if(this.multiHost) parametersToCheck["%h"] = "([a-zA-Z0-9]+[.\\-][a-zA-Z0-9.\\-]+)";
 	
 	var indices = this.indices = {};
@@ -323,13 +323,13 @@ Zotero.Proxy.prototype.compileRegexp = function () {
 	
 	// now replace with regexp fragment in reverse order
 	if (this.scheme.includes('://')) {
-		re = "^"+Zotero.Utilities.quotemeta(this.scheme)+"$";
+		re = "^"+Trellis.Utilities.quotemeta(this.scheme)+"$";
 	} else {
-		re = "^https?"+Zotero.Utilities.quotemeta('://'+this.scheme)+"$";
+		re = "^https?"+Trellis.Utilities.quotemeta('://'+this.scheme)+"$";
 	}
 	for(var i=this.parameters.length-1; i>=0; i--) {
 		var param = this.parameters[i];
-		re = re.replace(Zotero_Proxy_schemeParameterRegexps[param], "$1"+parametersToCheck[param]);
+		re = re.replace(Trellis_Proxy_schemeParameterRegexps[param], "$1"+parametersToCheck[param]);
 	}
 	
 	this.regexp = new RegExp(re);
@@ -341,20 +341,20 @@ Zotero.Proxy.prototype.compileRegexp = function () {
  * @returns {String|Boolean} An error type if a validation error occurred, or "false" if there was
  *	no error.
  */
-Zotero.Proxy.prototype.validate = function () {
+Trellis.Proxy.prototype.validate = function () {
 	if(this.scheme.length < 8 || (this.scheme.substr(0, 7) != "http://" && this.scheme.substr(0, 8) != "https://")) {
 		return ["scheme.noHTTP"];
 	}
 	
 	if(!this.multiHost && (!this.hosts.length || !this.hosts[0])) {
 		return ["host.invalid"];
-	} else if(this.multiHost && !Zotero_Proxy_schemeParameterRegexps["%h"].test(this.scheme)) {
+	} else if(this.multiHost && !Trellis_Proxy_schemeParameterRegexps["%h"].test(this.scheme)) {
 		return ["scheme.noHost"];
 	}
 	
-	if(!Zotero_Proxy_schemeParameterRegexps["%p"].test(this.scheme) && 
-			(!Zotero_Proxy_schemeParameterRegexps["%d"].test(this.scheme) ||
-			!Zotero_Proxy_schemeParameterRegexps["%f"].test(this.scheme))) {
+	if(!Trellis_Proxy_schemeParameterRegexps["%p"].test(this.scheme) && 
+			(!Trellis_Proxy_schemeParameterRegexps["%d"].test(this.scheme) ||
+			!Trellis_Proxy_schemeParameterRegexps["%f"].test(this.scheme))) {
 		return ["scheme.noPath"];
 	}
 	
@@ -363,7 +363,7 @@ Zotero.Proxy.prototype.validate = function () {
 	}
 	
 	for (let host of this.hosts) {
-		var oldHost = Zotero.Proxies.hosts[host];
+		var oldHost = Trellis.Proxies.hosts[host];
 		if(oldHost && oldHost.proxyID && oldHost != this) {
 			return ["host.proxyExists", host];
 		}
@@ -377,7 +377,7 @@ Zotero.Proxy.prototype.validate = function () {
  *
  * @param {Boolean} transparent True if proxy should be saved as a persisting, transparent proxy
  */
-Zotero.Proxy.prototype.save = async function (transparent) {
+Trellis.Proxy.prototype.save = async function (transparent) {
 	// ensure this proxy is valid
 	var hasErrors = this.validate();
 	if(hasErrors) throw new Error("Proxy: could not be saved because it is invalid: error "+hasErrors[0]);
@@ -389,16 +389,16 @@ Zotero.Proxy.prototype.save = async function (transparent) {
 	this.compileRegexp();
 	
 	if(transparent) {
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			if(this.proxyID) {
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					"UPDATE proxies SET multiHost = ?, autoAssociate = ?, scheme = ? WHERE proxyID = ?",
 					[this.multiHost ? 1 : 0, this.autoAssociate ? 1 : 0, this.scheme, this.proxyID]
 				);
-				await Zotero.DB.queryAsync("DELETE FROM proxyHosts WHERE proxyID = ?", [this.proxyID]);
+				await Trellis.DB.queryAsync("DELETE FROM proxyHosts WHERE proxyID = ?", [this.proxyID]);
 			} else {
-				let id = Zotero.ID.get('proxies');
-				await Zotero.DB.queryAsync(
+				let id = Trellis.ID.get('proxies');
+				await Trellis.DB.queryAsync(
 					"INSERT INTO proxies (proxyID, multiHost, autoAssociate, scheme) VALUES (?, ?, ?, ?)",
 					[id, this.multiHost ? 1 : 0, this.autoAssociate ? 1 : 0, this.scheme]
 				);
@@ -409,7 +409,7 @@ Zotero.Proxy.prototype.save = async function (transparent) {
 			var host;
 			for(var i in this.hosts) {
 				host = this.hosts[i] = this.hosts[i].toLowerCase();
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					"INSERT INTO proxyHosts (proxyID, hostname) VALUES (?, ?)",
 					[this.proxyID, host]
 				);
@@ -418,9 +418,9 @@ Zotero.Proxy.prototype.save = async function (transparent) {
 	}
 	
 	if(newProxy) {
-		Zotero.Proxies.save(this);
+		Trellis.Proxies.save(this);
 	} else {
-		Zotero.Proxies.refreshHostMap(this);
+		Trellis.Proxies.refreshHostMap(this);
 		if(!transparent) throw new Error("Proxy: cannot save transparent proxy without transparent param");
 	}
 };
@@ -428,9 +428,9 @@ Zotero.Proxy.prototype.save = async function (transparent) {
 /**
  * Reverts to the previously saved version of this proxy
  */
-Zotero.Proxy.prototype.revert = async function () {
+Trellis.Proxy.prototype.revert = async function () {
 	if (!this.proxyID) throw new Error("Cannot revert an unsaved proxy");
-	var row = await Zotero.DB.rowQueryAsync("SELECT * FROM proxies WHERE proxyID = ?", [this.proxyID]);
+	var row = await Trellis.DB.rowQueryAsync("SELECT * FROM proxies WHERE proxyID = ?", [this.proxyID]);
 	this._loadFromRow(row);
 	await this.loadHosts();
 };
@@ -438,13 +438,13 @@ Zotero.Proxy.prototype.revert = async function () {
 /**
  * Deletes this proxy
  */
-Zotero.Proxy.prototype.erase = async function () {
-	Zotero.Proxies.remove(this);
+Trellis.Proxy.prototype.erase = async function () {
+	Trellis.Proxies.remove(this);
 	
 	if(this.proxyID) {
-		await Zotero.DB.executeTransaction(async function () {
-			await Zotero.DB.queryAsync("DELETE FROM proxyHosts WHERE proxyID = ?", [this.proxyID]);
-			await Zotero.DB.queryAsync("DELETE FROM proxies WHERE proxyID = ?", [this.proxyID]);
+		await Trellis.DB.executeTransaction(async function () {
+			await Trellis.DB.queryAsync("DELETE FROM proxyHosts WHERE proxyID = ?", [this.proxyID]);
+			await Trellis.DB.queryAsync("DELETE FROM proxies WHERE proxyID = ?", [this.proxyID]);
 		}.bind(this));
 	}
 };
@@ -455,7 +455,7 @@ Zotero.Proxy.prototype.erase = async function () {
  * @param m {String|Array} The URL or the match from running this proxy's regexp against a URL spec
  * @return {String} The unproxified URL if was proxified or the unchanged URL
  */
-Zotero.Proxy.prototype.toProper = function (m) {
+Trellis.Proxy.prototype.toProper = function (m) {
 	if (!Array.isArray(m)) {
 		// make sure url has a trailing slash
 		m = new URL(m).href;
@@ -497,7 +497,7 @@ Zotero.Proxy.prototype.toProper = function (m) {
  * @param {String|nsIURI} uri The URL as a string or the nsIURI corresponding to the unproxied URL
  * @return {String} The proxified URL if was unproxified or the unchanged url
  */
-Zotero.Proxy.prototype.toProxy = function (uri) {
+Trellis.Proxy.prototype.toProxy = function (uri) {
 	if (typeof uri == "string") {
 		uri = Services.io.newURI(uri, null, null);
 	}
@@ -525,30 +525,30 @@ Zotero.Proxy.prototype.toProxy = function (uri) {
 	return proxyURL;
 }
 
-Zotero.Proxy.prototype.loadHosts = async function () {
+Trellis.Proxy.prototype.loadHosts = async function () {
 	if (!this.proxyID) {
 		throw Error("Cannot load hosts without a proxyID")
 	}
-	this.hosts = await Zotero.DB.columnQueryAsync(
+	this.hosts = await Trellis.DB.columnQueryAsync(
 		"SELECT hostname FROM proxyHosts WHERE proxyID = ? ORDER BY hostname", this.proxyID
 	);
 };
 
-Zotero.Proxies.DNS = new function () {
+Trellis.Proxies.DNS = new function () {
 	this.getHostnames = function () {
-		if (!Zotero.isWin && !Zotero.isMac && !Zotero.isLinux) return Promise.resolve([]);
-		var deferred = Zotero.Promise.defer();
-		var worker = new ChromeWorker("chrome://zotero/content/xpcom/dns_worker.js");
-		Zotero.debug("Proxies.DNS: Performing reverse lookup");
+		if (!Trellis.isWin && !Trellis.isMac && !Trellis.isLinux) return Promise.resolve([]);
+		var deferred = Trellis.Promise.defer();
+		var worker = new ChromeWorker("chrome://trellis/content/xpcom/dns_worker.js");
+		Trellis.debug("Proxies.DNS: Performing reverse lookup");
 		worker.onmessage = function (e) {
-			Zotero.debug("Proxies.DNS: Got hostnames "+e.data);
+			Trellis.debug("Proxies.DNS: Got hostnames "+e.data);
 			deferred.resolve(e.data);
 		};
 		worker.onerror = function (e) {
-			Zotero.debug("Proxies.DNS: Reverse lookup failed");
+			Trellis.debug("Proxies.DNS: Reverse lookup failed");
 			deferred.reject(e.message);
 		};
-		worker.postMessage(Zotero.isWin ? "win" : Zotero.isMac ? "mac" : Zotero.isLinux ? "linux" : "unix");
+		worker.postMessage(Trellis.isWin ? "win" : Trellis.isMac ? "mac" : Trellis.isLinux ? "linux" : "unix");
 		return deferred.promise;
 	}
 };

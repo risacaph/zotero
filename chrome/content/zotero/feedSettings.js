@@ -3,46 +3,46 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// Zotero_Feed_Settings
+// Trellis_Feed_Settings
 //
 //////////////////////////////////////////////////////////////////////////////
 
-var Zotero_Feed_Settings = new function () {
+var Trellis_Feed_Settings = new function () {
 	let urlIsValid = true,
 		data = null,
 		feedReader = null,
 		urlTainted = false;
 	
 	let cleanURL = function (url) {
-		let cleanURL = Zotero.Utilities.cleanURL(url, true);
+		let cleanURL = Trellis.Utilities.cleanURL(url, true);
 
 		if (cleanURL) {
 			if (/^https?:\/\/[^\/\s]+\/\S/.test(cleanURL)) {
 				return cleanURL;
 			} else {
-				Zotero.debug(url + " has an unsupported protocol for feeds");
+				Trellis.debug(url + " has an unsupported protocol for feeds");
 			}
 		}
 	};
@@ -71,16 +71,16 @@ var Zotero_Feed_Settings = new function () {
 		if (data.ttl !== undefined) {
 			ttl = Math.floor(data.ttl / 60);
 		} else {
-			ttl = Zotero.Prefs.get('feeds.defaultTTL');
+			ttl = Trellis.Prefs.get('feeds.defaultTTL');
 		}
 		document.getElementById('feed-ttl').value = ttl;
 		
 		let cleanupReadAfter = data.cleanupReadAfter;
-		if (cleanupReadAfter === undefined) cleanupReadAfter = Zotero.Prefs.get('feeds.defaultCleanupReadAfter');
+		if (cleanupReadAfter === undefined) cleanupReadAfter = Trellis.Prefs.get('feeds.defaultCleanupReadAfter');
 		document.getElementById('feed-cleanupReadAfter').value = cleanupReadAfter;
 		
 		let cleanupUnreadAfter = data.cleanupUnreadAfter;
-		if (cleanupUnreadAfter === undefined) cleanupUnreadAfter = Zotero.Prefs.get('feeds.defaultCleanupUnreadAfter');
+		if (cleanupUnreadAfter === undefined) cleanupUnreadAfter = Trellis.Prefs.get('feeds.defaultCleanupUnreadAfter');
 		document.getElementById('feed-cleanupUnreadAfter').value = cleanupUnreadAfter;
 		
 		if (data.url && !data.urlIsValid) {
@@ -116,7 +116,7 @@ var Zotero_Feed_Settings = new function () {
 		if (!url) return;
 		
 		try {
-			var fr = feedReader = new Zotero.FeedReader(url);
+			var fr = feedReader = new Trellis.FeedReader(url);
 			await fr.process();
 			let feed = fr.feedProperties;
 			// Prevent progress if textbox changes triggered another call to
@@ -143,7 +143,7 @@ var Zotero_Feed_Settings = new function () {
 			document.querySelector('dialog').getButton('accept').disabled = false;
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 		}
 		finally {
 			if (feedReader === fr) feedReader = null;
@@ -154,11 +154,11 @@ var Zotero_Feed_Settings = new function () {
 		data.url = document.getElementById('feed-url').value;
 		data.title = document.getElementById('feed-title').value;
 		data.ttl = parseInt(document.getElementById('feed-ttl').value);
-		data.ttl = (isNaN(data.ttl) ? Zotero.Prefs.get('feeds.defaultTTL') : data.ttl) * 60;
+		data.ttl = (isNaN(data.ttl) ? Trellis.Prefs.get('feeds.defaultTTL') : data.ttl) * 60;
 		data.cleanupReadAfter = parseInt(document.getElementById('feed-cleanupReadAfter').value);
-		data.cleanupReadAfter = isNaN(data.cleanupReadAfter) ? Zotero.Prefs.get('feeds.defaultCleanupReadAfter') : data.cleanupReadAfter;
+		data.cleanupReadAfter = isNaN(data.cleanupReadAfter) ? Trellis.Prefs.get('feeds.defaultCleanupReadAfter') : data.cleanupReadAfter;
 		data.cleanupUnreadAfter = parseInt(document.getElementById('feed-cleanupUnreadAfter').value);
-		data.cleanupUnreadAfter = isNaN(data.cleanupUnreadAfter) ? Zotero.Prefs.get('feeds.defaultCleanupUnreadAfter') : data.cleanupUnreadAfter;
+		data.cleanupUnreadAfter = isNaN(data.cleanupUnreadAfter) ? Trellis.Prefs.get('feeds.defaultCleanupUnreadAfter') : data.cleanupUnreadAfter;
 		return true;
 	};
 	

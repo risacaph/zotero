@@ -3,27 +3,27 @@
     
     Copyright © 2018 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.RecognizeDocument = new function () {
+Trellis.RecognizeDocument = new function () {
 	const OFFLINE_RECHECK_DELAY = 60 * 1000;
 	const MAX_PAGES = 5;
 	const UNRECOGNIZE_TIMEOUT = 86400 * 1000;
@@ -36,7 +36,7 @@ Zotero.RecognizeDocument = new function () {
 	let _queueProcessing = false;
 	let _processingItemID = null;
 	
-	let _progressQueue = Zotero.ProgressQueues.create({
+	let _progressQueue = Trellis.ProgressQueues.create({
 		id: 'recognize',
 		title: 'recognizePDF.title',
 		columns: [
@@ -56,16 +56,16 @@ Zotero.RecognizeDocument = new function () {
 	 * @return {Promise}
 	 */
 	async function _processQueue() {
-		await Zotero.Schema.schemaUpdatePromise;
+		await Trellis.Schema.schemaUpdatePromise;
 		
 		if (_queueProcessing) return _queueProcessing.promise;
-		_queueProcessing = Zotero.Promise.defer();
+		_queueProcessing = Trellis.Promise.defer();
 		
 		while (1) {
 			// While all current progress queue usages are related with
 			// online APIs, check internet connectivity here
-			if (Zotero.HTTP.browserIsOffline()) {
-				await Zotero.Promise.delay(OFFLINE_RECHECK_DELAY);
+			if (Trellis.HTTP.browserIsOffline()) {
+				await Trellis.Promise.delay(OFFLINE_RECHECK_DELAY);
 				continue;
 			}
 			
@@ -74,27 +74,27 @@ Zotero.RecognizeDocument = new function () {
 			
 			_processingItemID = itemID;
 			
-			_progressQueue.updateRow(itemID, Zotero.ProgressQueue.ROW_PROCESSING, Zotero.getString('general.processing'));
+			_progressQueue.updateRow(itemID, Trellis.ProgressQueue.ROW_PROCESSING, Trellis.getString('general.processing'));
 			
 			try {
-				let item = await Zotero.Items.getAsync(itemID);
+				let item = await Trellis.Items.getAsync(itemID);
 				
 				if (!item) {
 					throw new Error();
 				}
 				
 				let parentItem = await _processItem(item);
-				_progressQueue.updateRow(itemID, Zotero.ProgressQueue.ROW_SUCCEEDED, parentItem.getField('title'));
+				_progressQueue.updateRow(itemID, Trellis.ProgressQueue.ROW_SUCCEEDED, parentItem.getField('title'));
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				
 				_progressQueue.updateRow(
 					itemID,
-					Zotero.ProgressQueue.ROW_FAILED,
-					e instanceof Zotero.Exception.Alert
+					Trellis.ProgressQueue.ROW_FAILED,
+					e instanceof Trellis.Exception.Alert
 						? e.message
-						: Zotero.getString('general.error')
+						: Trellis.getString('general.error')
 				);
 			}
 		}
@@ -107,7 +107,7 @@ Zotero.RecognizeDocument = new function () {
 	
 	/**
 	 * Adds items to the queue and triggers processing
-	 * @param {Zotero.Item[]} items
+	 * @param {Trellis.Item[]} items
 	 */
 	this.recognizeItems = async function (items) {
 		for (let item of items) {
@@ -127,7 +127,7 @@ Zotero.RecognizeDocument = new function () {
 	
 	/**
 	 * Checks whether a given attachment could theoretically be recognized
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @return {Boolean} True if the PDF can be recognized, false if it cannot be
 	 */
 	this.canRecognize = function (item) {
@@ -139,7 +139,7 @@ Zotero.RecognizeDocument = new function () {
 	
 	
 	this.autoRecognizeItems = async function (items) {
-		if (!Zotero.Prefs.get('autoRecognizeFiles')) return;
+		if (!Trellis.Prefs.get('autoRecognizeFiles')) return;
 		
 		var docs = items.filter((item) => {
 			return item && this.canRecognize(item);
@@ -147,7 +147,7 @@ Zotero.RecognizeDocument = new function () {
 		if (!docs.length) {
 			return;
 		}
-		var queue = Zotero.ProgressQueues.get('recognize');
+		var queue = Trellis.ProgressQueues.get('recognize');
 		var dialog = queue.getDialog();
 		var numInQueue = queue.getTotal();
 		var promise = this.recognizeItems(docs);
@@ -170,7 +170,7 @@ Zotero.RecognizeDocument = new function () {
 		// Item must have been recognized recently, must not have been modified since it was
 		// created, and must have only one attachment and no other children
 		if (!dateModified
-				|| Zotero.Date.sqlToDate(dateModified, true) < new Date() - UNRECOGNIZE_TIMEOUT
+				|| Trellis.Date.sqlToDate(dateModified, true) < new Date() - UNRECOGNIZE_TIMEOUT
 				|| item.dateModified != dateModified
 				|| item.numAttachments(true) != 1) {
 			_newItems.delete(item);
@@ -178,14 +178,14 @@ Zotero.RecognizeDocument = new function () {
 		}
 		
 		// Child attachment must be not be in trash and must be a PDF or EPUB
-		var attachments = Zotero.Items.get(item.getAttachments());
+		var attachments = Trellis.Items.get(item.getAttachments());
 		if (!attachments.length || (!attachments[0].isPDFAttachment() && !attachments[0].isEPUBAttachment())) {
 			_newItems.delete(item);
 			return false;
 		}
 		
 		// Notes must have been modified within one second of the item
-		var notes = Zotero.Items.get(item.getNotes());
+		var notes = Trellis.Items.get(item.getNotes());
 		if (notes.some(note => note.dateModified > dateModified + NOTE_EDIT_THRESHOLD)) {
 			_newItems.delete(item);
 			return false;
@@ -197,7 +197,7 @@ Zotero.RecognizeDocument = new function () {
 	
 	this.unrecognize = async function (item) {
 		var { originalTitle, originalFilename } = _newItems.get(item);
-		var attachment = Zotero.Items.get(item.getAttachments()[0]);
+		var attachment = Trellis.Items.get(item.getAttachments()[0]);
 		
 		try {
 			let currentFilename = attachment.attachmentFilename;
@@ -207,10 +207,10 @@ Zotero.RecognizeDocument = new function () {
 			attachment.setField('title', originalTitle);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
-		return Zotero.DB.executeTransaction(async function () {
+		return Trellis.DB.executeTransaction(async function () {
 			let collections = item.getCollections();
 			attachment.parentItemID = null
 			attachment.setCollections(collections);
@@ -222,19 +222,19 @@ Zotero.RecognizeDocument = new function () {
 	
 	
 	this.report = async function (item, description) {
-		var attachment = Zotero.Items.get(item.getAttachments()[0]);
+		var attachment = Trellis.Items.get(item.getAttachments()[0]);
 		var filePath = attachment.getFilePath();
 		if (!filePath || !(await OS.File.exists(filePath))) {
 			throw new Error("File not found when reporting metadata");
 		}
 		
-		var version = Zotero.version;
+		var version = Trellis.version;
 		var json = await extractPDFJSON(attachment.id);
 		var metadata = item.toJSON();
 		
 		var data = { description, version, json, metadata };
 		var url = _getBaseURL() + 'report';
-		return Zotero.HTTP.request(
+		return Trellis.HTTP.request(
 			"POST",
 			url,
 			{
@@ -254,13 +254,13 @@ Zotero.RecognizeDocument = new function () {
 	 * @return {Promise} A promise that resolves to a newly created, recognized parent item
 	 */
 	async function _processItem(attachment) {
-		Zotero.debug(`RecognizeDocument: Recognizing attachment ${attachment.getDisplayTitle()}`);
+		Trellis.debug(`RecognizeDocument: Recognizing attachment ${attachment.getDisplayTitle()}`);
 		// Make sure the attachment still doesn't have a parent
 		if (attachment.parentItemID) {
 			throw new Error('Already has parent');
 		}
 		
-		var zp = Zotero.getActiveZoteroPane();
+		var zp = Trellis.getActiveTrellisPane();
 		var selectParent = false;
 		if (zp) {
 			let selected = zp.getSelectedItems();
@@ -270,16 +270,16 @@ Zotero.RecognizeDocument = new function () {
 			}
 		}
 		
-		let parentItem = await Zotero.RecognizeDocument._recognize(attachment);
+		let parentItem = await Trellis.RecognizeDocument._recognize(attachment);
 		if (!parentItem) {
-			Zotero.debug(`RecognizeDocument: No matches for attachment ${attachment.getDisplayTitle()}`);
-			throw new Zotero.Exception.Alert("recognizePDF.noMatches");
+			Trellis.debug(`RecognizeDocument: No matches for attachment ${attachment.getDisplayTitle()}`);
+			throw new Trellis.Exception.Alert("recognizePDF.noMatches");
 		}
-		Zotero.debug(`RecognizeDocument: Recognized attachment ${attachment.getDisplayTitle()}`);
+		Trellis.debug(`RecognizeDocument: Recognized attachment ${attachment.getDisplayTitle()}`);
 		
 		// Put new item in same collections as the old one
 		let collections = attachment.getCollections();
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			if (collections.length) {
 				for (let collectionID of collections) {
 					parentItem.addToCollection(collectionID);
@@ -297,9 +297,9 @@ Zotero.RecognizeDocument = new function () {
 		var originalFilename = PathUtils.filename(path);
 		
 		// Rename attachment file to match new metadata
-		if (Zotero.Attachments.shouldAutoRenameAttachment(attachment)) {
-			let fileBaseName = Zotero.Attachments.getFileBaseNameFromItem(parentItem, { attachmentTitle: originalTitle });
-			let ext = Zotero.Attachments.getCorrectFileExtension(attachment);
+		if (Trellis.Attachments.shouldAutoRenameAttachment(attachment)) {
+			let fileBaseName = Trellis.Attachments.getFileBaseNameFromItem(parentItem, { attachmentTitle: originalTitle });
+			let ext = Trellis.Attachments.getCorrectFileExtension(attachment);
 			let newName = fileBaseName + (ext ? '.' + ext : '');
 			let result = await attachment.renameAttachmentFile(newName, { overwrite: false, unique: true });
 			if (result !== true) {
@@ -310,13 +310,13 @@ Zotero.RecognizeDocument = new function () {
 		}
 
 		try {
-			let win = Zotero.getMainWindow();
-			if (selectParent && win && win.Zotero_Tabs.selectedID == 'zotero-pane') {
-				await win.ZoteroPane.selectItem(parentItem.id);
+			let win = Trellis.getMainWindow();
+			if (selectParent && win && win.Trellis_Tabs.selectedID == 'trellis-pane') {
+				await win.TrellisPane.selectItem(parentItem.id);
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		_newItems.set(
@@ -337,16 +337,16 @@ Zotero.RecognizeDocument = new function () {
 	 */
 	async function extractPDFJSON(itemID) {
 		try {
-			return await Zotero.PDFWorker.getRecognizerData(itemID, true);
+			return await Trellis.PDFWorker.getRecognizerData(itemID, true);
 		}
 		catch (e) {
-			Zotero.logError(e);
-			throw new Zotero.Exception.Alert("recognizePDF.couldNotRead");
+			Trellis.logError(e);
+			throw new Trellis.Exception.Alert("recognizePDF.couldNotRead");
 		}
 	}
 	
 	/**
-	 * Attach appropriate handlers to a Zotero.Translate instance and begin translation
+	 * Attach appropriate handlers to a Trellis.Translate instance and begin translation
 	 * @return {Promise}
 	 */
 	async function _promiseTranslate(translate, libraryID) {
@@ -371,7 +371,7 @@ Zotero.RecognizeDocument = new function () {
 	
 	async function _query(json) {
 		var uri = _getBaseURL() + 'recognize';
-		let client = Zotero.Sync.Runner.getAPIClient();
+		let client = Trellis.Sync.Runner.getAPIClient();
 		let req = await client.makeRequest(
 			'POST',
 			uri,
@@ -389,13 +389,13 @@ Zotero.RecognizeDocument = new function () {
 	
 	/**
 	 * Retrieves metadata for a PDF or EPUB and saves it as an item
-	 * @param {Zotero.Item} item
-	 * @return {Promise<Zotero.Item>} - New item
+	 * @param {Trellis.Item} item
+	 * @return {Promise<Trellis.Item>} - New item
 	 */
 	this._recognize = async function (item) {
 		let filePath = await item.getFilePath();
 		
-		if (!filePath || !(await OS.File.exists(filePath))) throw new Zotero.Exception.Alert('recognizePDF.fileNotFound');
+		if (!filePath || !(await OS.File.exists(filePath))) throw new Trellis.Exception.Alert('recognizePDF.fileNotFound');
 
 		if (item.isPDFAttachment()) {
 			return _recognizePDF(item, filePath);
@@ -421,7 +421,7 @@ Zotero.RecognizeDocument = new function () {
 		}
 		
 		if(!containingTextPages) {
-			throw new Zotero.Exception.Alert('recognizePDF.noOCR');
+			throw new Trellis.Exception.Alert('recognizePDF.noOCR');
 		}
 		
 		let libraryID = item.libraryID;
@@ -430,8 +430,8 @@ Zotero.RecognizeDocument = new function () {
 		if (!res) return null;
 		
 		if (res.arxiv) {
-			Zotero.debug(`RecognizeDocument: Getting metadata for arXiv ID ${res.arxiv}`);
-			let translate = new Zotero.Translate.Search();
+			Trellis.debug(`RecognizeDocument: Getting metadata for arXiv ID ${res.arxiv}`);
+			let translate = new Trellis.Translate.Search();
 			translate.setIdentifier({arXiv: res.arxiv});
 			let translators = await translate.getTranslators();
 			translate.setTranslator(translators);
@@ -448,13 +448,13 @@ Zotero.RecognizeDocument = new function () {
 				return newItem;
 			}
 			catch (e) {
-				Zotero.debug('RecognizeDocument: ' + e);
+				Trellis.debug('RecognizeDocument: ' + e);
 			}
 		}
 		
 		if (res.doi) {
-			Zotero.debug(`RecognizeDocument: Getting metadata for DOI (${res.doi})`);
-			let translate = new Zotero.Translate.Search();
+			Trellis.debug(`RecognizeDocument: Getting metadata for DOI (${res.doi})`);
+			let translate = new Trellis.Translate.Search();
 			translate.setIdentifier({
 				DOI: res.doi
 			});
@@ -473,32 +473,32 @@ Zotero.RecognizeDocument = new function () {
 					return newItem;
 				}
 				catch (e) {
-					Zotero.debug('RecognizeDocument: ' + e);
+					Trellis.debug('RecognizeDocument: ' + e);
 				}
 			}
 			else {
-				Zotero.debug("RecognizeDocument: No translators found");
+				Trellis.debug("RecognizeDocument: No translators found");
 			}
 		}
 		
 		if (res.isbn) {
-			Zotero.debug(`RecognizeDocument: Getting metadata by ISBN ${res.isbn}`);
-			let translate = new Zotero.Translate.Search();
+			Trellis.debug(`RecognizeDocument: Getting metadata by ISBN ${res.isbn}`);
+			let translate = new Trellis.Translate.Search();
 			translate.setSearch({'itemType': 'book', 'ISBN': res.isbn});
 			try {
 				let translatedItems = await translate.translate({
 					libraryID: false,
 					saveAttachments: false
 				});
-				Zotero.debug('RecognizeDocument: Translated items:');
-				Zotero.debug(translatedItems);
+				Trellis.debug('RecognizeDocument: Translated items:');
+				Trellis.debug(translatedItems);
 				if (translatedItems.length) {
-					let newItem = new Zotero.Item;
+					let newItem = new Trellis.Item;
 					newItem.libraryID = libraryID;
 					// Convert tags to automatic. For other items this is done automatically in
 					// translate.js, but for ISBNs we just get the data (libraryID=false) and do the
 					// saving manually.
-					if (Zotero.Prefs.get('automaticTags')) {
+					if (Trellis.Prefs.get('automaticTags')) {
 						translatedItems[0].tags = translatedItems[0].tags.map(tag => {
 							if (typeof tag == 'string') {
 								return {
@@ -525,7 +525,7 @@ Zotero.RecognizeDocument = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.debug('RecognizeDocument: ' + e);
+				Trellis.debug('RecognizeDocument: ' + e);
 			}
 		}
 		
@@ -536,7 +536,7 @@ Zotero.RecognizeDocument = new function () {
 				type = 'bookSection';
 			}
 			
-			let newItem = new Zotero.Item(type);
+			let newItem = new Trellis.Item(type);
 			newItem.libraryID = libraryID;
 			newItem.setField('title', res.title);
 			
@@ -568,7 +568,7 @@ Zotero.RecognizeDocument = new function () {
 				if (res.publisher) newItem.setField('publisher', res.publisher);
 			}
 			
-			newItem.setField('libraryCatalog', 'Zotero');
+			newItem.setField('libraryCatalog', 'Trellis');
 			
 			await newItem.saveTx();
 			return newItem;
@@ -578,7 +578,7 @@ Zotero.RecognizeDocument = new function () {
 	}
 	
 	async function _recognizeEPUB(item, filePath) {
-		const { EPUB } = ChromeUtils.importESModule("chrome://zotero/content/EPUB.mjs");
+		const { EPUB } = ChromeUtils.importESModule("chrome://trellis/content/EPUB.mjs");
 		
 		let epub = new EPUB(filePath);
 		try {
@@ -587,10 +587,10 @@ Zotero.RecognizeDocument = new function () {
 			let rdfItemJSON = await _translateEPUBMetadata(epub);
 			if (rdfItemJSON && rdfItemJSON.ISBN) {
 				let clean = rdfItemJSON.ISBN.split(' ')
-					.map(isbn => Zotero.Utilities.cleanISBN(isbn))
+					.map(isbn => Trellis.Utilities.cleanISBN(isbn))
 					.filter(Boolean);
 				if (clean.length) {
-					Zotero.debug('RecognizeEPUB: Found ISBN in RDF metadata');
+					Trellis.debug('RecognizeEPUB: Found ISBN in RDF metadata');
 					search.ISBN = clean.join(' ');
 				}
 			}
@@ -600,14 +600,14 @@ Zotero.RecognizeDocument = new function () {
 				if (!search.DOI) {
 					let dois = _getDOIsFromDocument(doc);
 					if (dois.length) {
-						Zotero.debug('RecognizeEPUB: Found DOI in section document');
+						Trellis.debug('RecognizeEPUB: Found DOI in section document');
 						search.DOI = dois[0];
 					}
 				}
 				if (!search.ISBN) {
 					let isbn = _getISBNFromDocument(doc);
 					if (isbn) {
-						Zotero.debug('RecognizeEPUB: Found ISBN in section document');
+						Trellis.debug('RecognizeEPUB: Found ISBN in section document');
 						search.ISBN = isbn;
 					}
 				}
@@ -616,9 +616,9 @@ Zotero.RecognizeDocument = new function () {
 			let itemJSON;
 			if (search.ISBN || search.DOI) {
 				try {
-					Zotero.debug('RecognizeEPUB: Searching by ' + Object.keys(search)
+					Trellis.debug('RecognizeEPUB: Searching by ' + Object.keys(search)
 						.join(', '));
-					let translate = new Zotero.Translate.Search();
+					let translate = new Trellis.Translate.Search();
 					translate.setSearch(search);
 					let [searchItemJSON] = await translate.translate({
 						libraryID: false,
@@ -627,29 +627,29 @@ Zotero.RecognizeDocument = new function () {
 					if (searchItemJSON) {
 						itemJSON = searchItemJSON;
 						if (search.ISBN && searchItemJSON.ISBN && !searchItemJSON.ISBN.split(' ')
-								.map(resolvedISBN => Zotero.Utilities.cleanISBN(resolvedISBN))
+								.map(resolvedISBN => Trellis.Utilities.cleanISBN(resolvedISBN))
 								.includes(search.ISBN)) {
-							Zotero.debug(`RecognizeDocument: ISBN mismatch (was ${search.ISBN}, got ${searchItemJSON.ISBN})`);
+							Trellis.debug(`RecognizeDocument: ISBN mismatch (was ${search.ISBN}, got ${searchItemJSON.ISBN})`);
 							itemJSON = null;
 						}
 						else {
-							Zotero.debug('RecognizeDocument: Using search result');
+							Trellis.debug('RecognizeDocument: Using search result');
 						}
 					}
 				}
 				catch (e) {
-					Zotero.debug('RecognizeDocument: Error while resolving ISBN: ' + e);
+					Trellis.debug('RecognizeDocument: Error while resolving ISBN: ' + e);
 				}
 			}
 			if (!itemJSON) {
-				Zotero.debug('RecognizeEPUB: Falling back to RDF metadata');
+				Trellis.debug('RecognizeEPUB: Falling back to RDF metadata');
 				itemJSON = rdfItemJSON;
 			}
 			if (!itemJSON) {
-				throw new Zotero.Exception.Alert("recognizePDF.couldNotRead");
+				throw new Trellis.Exception.Alert("recognizePDF.couldNotRead");
 			}
 
-			if (Zotero.Prefs.get('automaticTags')) {
+			if (Trellis.Prefs.get('automaticTags')) {
 				itemJSON.tags = itemJSON.tags.map((tag) => {
 					if (typeof tag == 'string') {
 						return {
@@ -665,7 +665,7 @@ Zotero.RecognizeDocument = new function () {
 				itemJSON.tags = [];
 			}
 
-			let translatedItem = new Zotero.Item();
+			let translatedItem = new Trellis.Item();
 			translatedItem.libraryID = item.libraryID;
 			translatedItem.fromJSON(itemJSON);
 			await translatedItem.saveTx();
@@ -682,8 +682,8 @@ Zotero.RecognizeDocument = new function () {
 			return null;
 		}
 
-		let translate = new Zotero.Translate.Import();
-		translate.setTranslator(Zotero.Translators.TRANSLATOR_ID_RDF);
+		let translate = new Trellis.Translate.Import();
+		translate.setTranslator(Trellis.Translators.TRANSLATOR_ID_RDF);
 		translate.setString(metadata);
 
 		try {
@@ -694,7 +694,7 @@ Zotero.RecognizeDocument = new function () {
 			return itemJSON;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return null;
 		}
 	}
@@ -763,7 +763,7 @@ Zotero.RecognizeDocument = new function () {
 		if (!doc.body) {
 			return null;
 		}
-		return Zotero.Utilities.cleanISBN(doc.body.innerText) || null;
+		return Trellis.Utilities.cleanISBN(doc.body.innerText) || null;
 	}
 	
 	/**
@@ -771,14 +771,14 @@ Zotero.RecognizeDocument = new function () {
 	 * or services.url (used with a 'recognizer/' suffix).
 	 */
 	function _getBaseURL() {
-		var url = Zotero.Prefs.get("recognize.url");
+		var url = Trellis.Prefs.get("recognize.url");
 		if (url) {
 			if (!url.endsWith('/')) {
 				url += '/';
 			}
 			return url;
 		}
-		url = Zotero.Prefs.get("services.url") || ZOTERO_CONFIG.SERVICES_URL;
+		url = Trellis.Prefs.get("services.url") || TRELLIS_CONFIG.SERVICES_URL;
 		if (!url.endsWith('/')) {
 			url += '/';
 		}

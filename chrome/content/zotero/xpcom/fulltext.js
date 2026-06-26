@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Fulltext = Zotero.FullText = new function () {
-	this.__defineGetter__("fulltextCacheFile", function () { return '.zotero-ft-cache'; });
+Trellis.Fulltext = Trellis.FullText = new function () {
+	this.__defineGetter__("fulltextCacheFile", function () { return '.trellis-ft-cache'; });
 
 	this.INDEX_STATE_UNAVAILABLE = 0;
 	this.INDEX_STATE_UNINDEXED = 1;
@@ -38,7 +38,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	this.SYNC_STATE_TO_DOWNLOAD = 3;
 	this.SYNC_STATE_MISSING = 4;
 	
-	const _processorCacheFile = '.zotero-ft-unprocessed';
+	const _processorCacheFile = '.trellis-ft-unprocessed';
 	
 	const kWbClassSpace =            0;
 	const kWbClassAlphaLetter =      1;
@@ -62,18 +62,18 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	this.init = async function () {
 		let setUpIndexingDB = async () => {
-			await Zotero.DB.queryAsync("ATTACH ':memory:' AS 'indexing'");
-			await Zotero.DB.queryAsync('CREATE TABLE indexing.fulltextWords (word NOT NULL)');
+			await Trellis.DB.queryAsync("ATTACH ':memory:' AS 'indexing'");
+			await Trellis.DB.queryAsync('CREATE TABLE indexing.fulltextWords (word NOT NULL)');
 		};
 		await setUpIndexingDB();
 		// ATTACHed databases don't survive a connection reopen (e.g., after vacuum), so
 		// re-run the setup on every reconnect
-		Zotero.DB.onConnect(setUpIndexingDB);
+		Trellis.DB.onConnect(setUpIndexingDB);
 
 		let pdfConverterFileName = "pdftotext";
 		let pdfInfoFileName = "pdfinfo";
 		
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			pdfConverterFileName += '.exe';
 			pdfInfoFileName += '.exe';
 		}
@@ -88,7 +88,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		_pdfConverter = dir.clone();
 		_pdfInfo = dir.clone();
 		
-		if(Zotero.isMac) {
+		if(Trellis.isMac) {
 			_pdfConverter = _pdfConverter.parent;
 			_pdfConverter.append('MacOS');
 			
@@ -99,14 +99,14 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		_pdfConverter.append(pdfConverterFileName);
 		_pdfInfo.append(pdfInfoFileName);
 		
-		Zotero.uiReadyPromise.then(async () => {
-			await Zotero.Promise.delay(30000);
+		Trellis.uiReadyPromise.then(async () => {
+			await Trellis.Promise.delay(30000);
 			
 			this.registerContentProcessor();
-			Zotero.addShutdownListener(this.unregisterContentProcessor.bind(this));
+			Trellis.addShutdownListener(this.unregisterContentProcessor.bind(this));
 			
 			// Start/stop content processor with full-text content syncing pref
-			Zotero.Prefs.registerObserver('sync.fulltext.enabled', (enabled) => {
+			Trellis.Prefs.registerObserver('sync.fulltext.enabled', (enabled) => {
 				if (enabled) {
 					this.registerContentProcessor();
 				}
@@ -116,7 +116,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			});
 			
 			// Stop content processor during syncs
-			Zotero.Notifier.registerObserver(
+			Trellis.Notifier.registerObserver(
 				{
 					notify: function (event, type, ids, extraData) {
 						if (event == 'start') {
@@ -135,12 +135,12 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	
 	this.setPDFConverterPath = function (path) {
-		_pdfConverter = Zotero.File.pathToFile(path);
+		_pdfConverter = Trellis.File.pathToFile(path);
 	};
 	
 	
 	this.setPDFInfoPath = function (path) {
-		_pdfInfo = Zotero.File.pathToFile(path);
+		_pdfInfo = Trellis.File.pathToFile(path);
 		
 	};
 	
@@ -152,7 +152,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	this.getLibraryVersion = function (libraryID) {
 		if (!libraryID) throw new Error("libraryID not provided");
-		return Zotero.DB.valueQueryAsync(
+		return Trellis.DB.valueQueryAsync(
 			"SELECT version FROM version WHERE schema=?", "fulltext_" + libraryID
 		)
 	};
@@ -160,26 +160,26 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	this.setLibraryVersion = async function (libraryID, version) {
 		if (!libraryID) throw new Error("libraryID not provided");
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			"REPLACE INTO version VALUES (?, ?)", ["fulltext_" + libraryID, version]
 		);
 	};
 	
 	
 	this.clearLibraryVersion = function (libraryID) {
-		return Zotero.DB.queryAsync("DELETE FROM version WHERE schema=?", "fulltext_" + libraryID);
+		return Trellis.DB.queryAsync("DELETE FROM version WHERE schema=?", "fulltext_" + libraryID);
 	};
 	
 	
 	this.getItemVersion = async function (itemID) {
-		return Zotero.DB.valueQueryAsync(
+		return Trellis.DB.valueQueryAsync(
 			"SELECT version FROM fulltextItems WHERE itemID=?", itemID
 		)
 	};
 	
 	
 	this.setItemSynced = function (itemID, version) {
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			"UPDATE fulltextItems SET synced=?, version=? WHERE itemID=?",
 			[this.SYNC_STATE_IN_SYNC, version, itemID]
 		);
@@ -245,22 +245,22 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @return {Promise}
 	 */
 	var indexWords = async function (itemID, words, stats, version, synced) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		let chunk;
-		await Zotero.DB.queryAsync("DELETE FROM indexing.fulltextWords");
+		await Trellis.DB.queryAsync("DELETE FROM indexing.fulltextWords");
 		while (words.length > 0) {
 			chunk = words.splice(0, 100);
-			await Zotero.DB.queryAsync('INSERT INTO indexing.fulltextWords (word) ' + chunk.map(x => 'SELECT ?').join(' UNION '), chunk);
+			await Trellis.DB.queryAsync('INSERT INTO indexing.fulltextWords (word) ' + chunk.map(x => 'SELECT ?').join(' UNION '), chunk);
 		}
-		await Zotero.DB.queryAsync('INSERT OR IGNORE INTO fulltextWords (word) SELECT word FROM indexing.fulltextWords');
-		await Zotero.DB.queryAsync('DELETE FROM fulltextItemWords WHERE itemID = ?', [itemID]);
-		await Zotero.DB.queryAsync('INSERT OR IGNORE INTO fulltextItemWords (wordID, itemID) SELECT wordID, ? FROM fulltextWords JOIN indexing.fulltextWords USING(word)', [itemID]);
+		await Trellis.DB.queryAsync('INSERT OR IGNORE INTO fulltextWords (word) SELECT word FROM indexing.fulltextWords');
+		await Trellis.DB.queryAsync('DELETE FROM fulltextItemWords WHERE itemID = ?', [itemID]);
+		await Trellis.DB.queryAsync('INSERT OR IGNORE INTO fulltextItemWords (wordID, itemID) SELECT wordID, ? FROM fulltextWords JOIN indexing.fulltextWords USING(word)', [itemID]);
 		
 		var cols = ['itemID', 'version', 'synced'];
 		var params = [
 			itemID,
 			version ? parseInt(version) : 0,
-			synced ? parseInt(synced) : Zotero.FullText.SYNC_STATE_UNSYNCED
+			synced ? parseInt(synced) : Trellis.FullText.SYNC_STATE_UNSYNCED
 		];
 		if (stats) {
 			for (let stat in stats) {
@@ -270,9 +270,9 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		}
 		var sql = `REPLACE INTO fulltextItems (${cols.join(', ')}) `
 			+ `VALUES (${cols.map(_ => '?').join(', ')})`;
-		await Zotero.DB.queryAsync(sql, params);
+		await Trellis.DB.queryAsync(sql, params);
 		
-		await Zotero.DB.queryAsync("DELETE FROM indexing.fulltextWords");
+		await Trellis.DB.queryAsync("DELETE FROM indexing.fulltextWords");
 	};
 	
 	
@@ -286,25 +286,25 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		
 		var words = this.semanticSplitter(text);
 		
-		while (Zotero.DB.inTransaction()) {
-			await Zotero.DB.waitForTransaction('indexString()');
+		while (Trellis.DB.inTransaction()) {
+			await Trellis.DB.waitForTransaction('indexString()');
 		}
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			this.clearItemWords(itemID, true);
 			await indexWords(itemID, words, stats, version, synced);
 			
 			/*
 			var sql = "REPLACE INTO fulltextContent (itemID, textContent) VALUES (?,?)";
-			Zotero.DB.query(sql, [itemID, {string:text}]);
+			Trellis.DB.query(sql, [itemID, {string:text}]);
 			*/
 			
-			Zotero.Notifier.queue('index', 'item', itemID);
-			Zotero.Notifier.queue('refresh', 'item', itemID);
+			Trellis.Notifier.queue('index', 'item', itemID);
+			Trellis.Notifier.queue('refresh', 'item', itemID);
 		}.bind(this));
 		
 		// If there's a processor cache file, delete it (whether or not we just used it)
-		var item = await Zotero.Items.getAsync(itemID);
+		var item = await Trellis.Items.getAsync(itemID);
 		var cacheFile = this.getItemProcessorCacheFile(item);
 		if (cacheFile.exists()) {
 			cacheFile.remove(false);
@@ -322,36 +322,36 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			throw ('Item ID not provided to indexDocument()');
 		}
 		
-		Zotero.debug("Indexing document '" + document.title + "'");
+		Trellis.debug("Indexing document '" + document.title + "'");
 		
-		if (!Zotero.MIME.isTextType(document.contentType)) {
-			Zotero.debug(document.contentType + " document is not text", 2);
+		if (!Trellis.MIME.isTextType(document.contentType)) {
+			Trellis.debug(document.contentType + " document is not text", 2);
 			return false;
 		}
 		
 		if (!document.body) {
-			Zotero.debug("Cannot index " + document.contentType + " file", 2);
+			Trellis.debug("Cannot index " + document.contentType + " file", 2);
 			return false;
 		}
 		
 		if (!document.characterSet){
-			Zotero.debug("Text file didn't have charset", 2);
+			Trellis.debug("Text file didn't have charset", 2);
 			return false;
 		}
 		
-		var maxLength = Zotero.Prefs.get('fulltext.textMaxLength');
+		var maxLength = Trellis.Prefs.get('fulltext.textMaxLength');
 		if (!maxLength) {
 			return false;
 		}
 		var text = document.documentElement.innerText;
 		var totalChars = text.length;
-		var item = Zotero.Items.get(itemID);
+		var item = Trellis.Items.get(itemID);
 		if (document.contentType == 'text/html') {
 			await writeCacheFile(item, text, maxLength);
 		}
 		
 		if (totalChars > maxLength) {
-			Zotero.debug('Only indexing first ' + maxLength + ' characters of item '
+			Trellis.debug('Only indexing first ' + maxLength + ' characters of item '
 				+ itemID + ' in indexDocument()');
 		}
 		
@@ -372,23 +372,23 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @return {Promise}
 	 */
 	this.indexPDF = async function (filePath, itemID, allPages) {
-		var maxPages = Zotero.Prefs.get('fulltext.pdfMaxPages');
+		var maxPages = Trellis.Prefs.get('fulltext.pdfMaxPages');
 		if (maxPages == 0) {
 			return false;
 		}
-		var item = await Zotero.Items.getAsync(itemID);
+		var item = await Trellis.Items.getAsync(itemID);
 		var linkMode = item.attachmentLinkMode;
-		// If the file is stored outside of Zotero, the cache file is saved in
+		// If the file is stored outside of Trellis, the cache file is saved in
 		// the item's storage directory
-		var parentDirPath = linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE
-			? Zotero.Attachments.getStorageDirectory(item).path
+		var parentDirPath = linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE
+			? Trellis.Attachments.getStorageDirectory(item).path
 			: PathUtils.parent(filePath);
 		var cacheFilePath = OS.Path.join(parentDirPath, this.fulltextCacheFile);
-		if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
+		if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
 			// Create only if missing -- don't use createDirectoryForItem(),
 			// which deletes and recreates the directory and would destroy
 			// other files stored there (e.g., the SDT cache)
-			await Zotero.File.createDirectoryIfMissingAsync(parentDirPath);
+			await Trellis.File.createDirectoryIfMissingAsync(parentDirPath);
 			// Remove any previous cache file, which createDirectoryForItem()
 			// did implicitly, so that a failed re-extraction below can't
 			// leave a replaced file's old text in place
@@ -399,16 +399,16 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 				text,
 				extractedPages,
 				totalPages
-			} = await Zotero.PDFWorker.getFullText(itemID, allPages ? null : maxPages);
+			} = await Trellis.PDFWorker.getFullText(itemID, allPages ? null : maxPages);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		if (!text || !extractedPages) {
 			return false;
 		}
-		await Zotero.File.putContentsAsync(cacheFilePath, text);
+		await Trellis.File.putContentsAsync(cacheFilePath, text);
 		var stats = { indexedPages: extractedPages, totalPages };
 		await indexString(text, itemID, stats);
 		return true;
@@ -424,13 +424,13 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @return {Promise}
 	 */
 	this.indexEPUB = async function (filePath, itemID, allText) {
-		const { EPUB } = ChromeUtils.importESModule("chrome://zotero/content/EPUB.mjs");
+		const { EPUB } = ChromeUtils.importESModule("chrome://trellis/content/EPUB.mjs");
 		
-		let maxLength = Zotero.Prefs.get('fulltext.textMaxLength');
+		let maxLength = Trellis.Prefs.get('fulltext.textMaxLength');
 		if (maxLength === 0) {
 			return false;
 		}
-		let item = await Zotero.Items.getAsync(itemID);
+		let item = await Trellis.Items.getAsync(itemID);
 		let epub = new EPUB(filePath);
 		
 		try {
@@ -438,7 +438,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			let totalChars = 0;
 			for await (let { href, doc } of epub.getSectionDocuments(filePath)) {
 				if (!doc.body) {
-					Zotero.debug(`Skipping EPUB entry '${href}' with no body`);
+					Trellis.debug(`Skipping EPUB entry '${href}' with no body`);
 					continue;
 				}
 				
@@ -455,7 +455,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			return true;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		finally {
@@ -474,7 +474,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		var complete;
 		var ignoreErrors;
 		if (typeof options == 'boolean') {
-			Zotero.logError("indexItems() now takes an 'options' object -- please update your code");
+			Trellis.logError("indexItems() now takes an 'options' object -- please update your code");
 			complete = options;
 			ignoreErrors = arguments[2];
 		}
@@ -486,19 +486,19 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		if (!Array.isArray(itemIDs)) {
 			itemIDs = [itemIDs];
 		}
-		var items = await Zotero.Items.getAsync(itemIDs);
+		var items = await Trellis.Items.getAsync(itemIDs);
 		for (let item of items) {
 			if (!item.isAttachment()) {
 				continue;
 			}
 			
-			Zotero.debug("Indexing item " + item.libraryKey);
+			Trellis.debug("Indexing item " + item.libraryKey);
 			let itemID = item.id;
 			
 			// If there's a processor cache file from syncing, use it
 			let processorCacheFile = this.getItemProcessorCacheFile(item).path;
 			if (await OS.File.exists(processorCacheFile)) {
-				let indexed = await Zotero.Fulltext.indexFromProcessorCache(itemID);
+				let indexed = await Trellis.Fulltext.indexFromProcessorCache(itemID);
 				if (indexed) {
 					continue;
 				}
@@ -506,7 +506,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			
 			var path = await item.getFilePathAsync();
 			if (!path) {
-				Zotero.debug("No file to index for item " + item.libraryKey);
+				Trellis.debug("No file to index for item " + item.libraryKey);
 				continue;
 			}
 			
@@ -515,8 +515,8 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			}
 			catch (e) {
 				if (ignoreErrors) {
-					Zotero.logError("Error indexing " + path);
-					Zotero.logError(e);
+					Trellis.logError("Error indexing " + path);
+					Trellis.logError(e);
 					continue;
 				}
 				throw e;
@@ -527,7 +527,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	var indexItem = async function (item, path, complete) {
 		if (!(await OS.File.exists(path))) {
-			Zotero.debug(`${path} does not exist in indexItem()`, 2);
+			Trellis.debug(`${path} does not exist in indexItem()`, 2);
 			return false;
 		}
 		
@@ -535,13 +535,13 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		var charset = item.attachmentCharset;
 		
 		if (!contentType) {
-			Zotero.debug("No content type in indexItem()", 2);
+			Trellis.debug("No content type in indexItem()", 2);
 			return false;
 		}
 		
-		var maxLength = Zotero.Prefs.get('fulltext.textMaxLength');
+		var maxLength = Trellis.Prefs.get('fulltext.textMaxLength');
 		if (!maxLength) {
-			Zotero.debug('fulltext.textMaxLength is 0 -- skipping indexing');
+			Trellis.debug('fulltext.textMaxLength is 0 -- skipping indexing');
 			return false;
 		}
 		
@@ -553,18 +553,18 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			return this.indexEPUB(path, item.id, complete);
 		}
 
-		if (!Zotero.MIME.isTextType(contentType)) {
-			Zotero.debug('File is not text in indexItem()', 2);
+		if (!Trellis.MIME.isTextType(contentType)) {
+			Trellis.debug('File is not text in indexItem()', 2);
 			return false;
 		}
 		
-		Zotero.debug('Indexing file ' + path);
+		Trellis.debug('Indexing file ' + path);
 		
 		var text;
 		
 		// If it's a plain-text file and we know the charset, just get the contents
 		if (contentType == 'text/plain' && charset) {
-			text = await Zotero.File.getContentsAsync(path, charset);
+			text = await Trellis.File.getContentsAsync(path, charset);
 		}
 		// Otherwise load it in a hidden browser
 		else {
@@ -585,13 +585,13 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			
 			// If the item didn't have a charset assigned and the library is editable, update it now
 			if (charset && !item.attachmentCharset && item.library.editable) {
-				let canonical = Zotero.CharacterSets.toCanonical(charset);
+				let canonical = Trellis.CharacterSets.toCanonical(charset);
 				let msg = `Character set is ${canonical}`;
 				if (charset != canonical) {
 					msg += ` (detected: ${charset})`;
 					charset = canonical;
 				}
-				Zotero.debug(msg);
+				Trellis.debug(msg);
 				
 				if (charset) {
 					item.attachmentCharset = charset;
@@ -602,7 +602,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			}
 			
 			if (!charset) {
-				Zotero.debug(`Couldn't detect character set for ${item.libraryKey} -- using UTF-8`);
+				Trellis.debug(`Couldn't detect character set for ${item.libraryKey} -- using UTF-8`);
 				charset = 'utf-8';
 			}
 		}
@@ -628,7 +628,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	this.queueItem = async function (item) {
 		// Index files immediately during tests that enable it
-		if (Zotero.test) {
+		if (Trellis.test) {
 			if (_indexNextInTest) {
 				_indexNextInTest = false;
 				await this.indexItems([item.id]);
@@ -656,7 +656,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		_indexing = true;
 		var itemID = _queue.shift();
 		try {
-			await Zotero.FullText.indexItems([itemID], { ignoreErrors: true });
+			await Trellis.FullText.indexItems([itemID], { ignoreErrors: true });
 		}
 		finally {
 			_indexing = false;
@@ -691,61 +691,61 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			params.push(options.lastItemID);
 		}
 		sql += "ORDER BY itemID";
-		var rows = await Zotero.DB.queryAsync(sql, params);
+		var rows = await Trellis.DB.queryAsync(sql, params);
 		var contentSize = 0;
 		for (let i = 0; i < rows.length; i++) {
 			let row = rows[i];
 			let content;
 			let itemID = row.itemID;
-			let item = await Zotero.Items.getAsync(itemID);
+			let item = await Trellis.Items.getAsync(itemID);
 			let libraryKey = item.libraryKey;
 			let contentType = item.attachmentContentType;
-			if (contentType && (this.isCachedMIMEType(contentType) || Zotero.MIME.isTextType(contentType))) {
+			if (contentType && (this.isCachedMIMEType(contentType) || Trellis.MIME.isTextType(contentType))) {
 				try {
 					let cacheFile = this.getItemCacheFile(item).path;
 					if (await OS.File.exists(cacheFile)) {
-						Zotero.debug("Getting full-text content from cache "
+						Trellis.debug("Getting full-text content from cache "
 							+ "file for item " + libraryKey);
-						content = await Zotero.File.getContentsAsync(cacheFile);
+						content = await Trellis.File.getContentsAsync(cacheFile);
 					}
 					else {
 						// If a cache file is required, mark the full text as missing
 						if (this.isCachedMIMEType(contentType)) {
-							Zotero.debug("Full-text content cache file doesn't exist for item "
+							Trellis.debug("Full-text content cache file doesn't exist for item "
 								+ libraryKey, 2);
 							let sql = "UPDATE fulltextItems SET synced=? WHERE itemID=?";
-							await Zotero.DB.queryAsync(sql, [this.SYNC_STATE_MISSING, item.id]);
+							await Trellis.DB.queryAsync(sql, [this.SYNC_STATE_MISSING, item.id]);
 							continue;
 						}
 						
 						// Same for missing attachments
 						let path = await item.getFilePathAsync();
 						if (!path) {
-							Zotero.debug("File doesn't exist getting full-text content for item "
+							Trellis.debug("File doesn't exist getting full-text content for item "
 								+ libraryKey, 2);
 							let sql = "UPDATE fulltextItems SET synced=? WHERE itemID=?";
-							await Zotero.DB.queryAsync(sql, [this.SYNC_STATE_MISSING, item.id]);
+							await Trellis.DB.queryAsync(sql, [this.SYNC_STATE_MISSING, item.id]);
 							continue;
 						}
 						
-						Zotero.debug("Getting full-text content from file for item " + libraryKey);
-						content = await Zotero.File.getContentsAsync(path, item.attachmentCharset);
+						Trellis.debug("Getting full-text content from file for item " + libraryKey);
+						content = await Trellis.File.getContentsAsync(path, item.attachmentCharset);
 						
 						// Include only as many characters as we've indexed
 						content = content.substr(0, row.indexedChars);
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					continue;
 				}
 			}
 			else {
-				Zotero.debug("Skipping non-text file getting full-text content for item "
+				Trellis.debug("Skipping non-text file getting full-text content for item "
 					+ `${libraryKey} (contentType: ${contentType})`, 2);
 				
 				// Delete rows for items that weren't supposed to be indexed
-				await Zotero.DB.executeTransaction(async function () {
+				await Trellis.DB.executeTransaction(async function () {
 					await this.clearItemWords(itemID);
 				}.bind(this));
 				continue;
@@ -783,19 +783,19 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		
 		// On upgrade, get all content
 		var sql = "SELECT value FROM settings WHERE setting='fulltext' AND key='downloadAll'";
-		if (await Zotero.DB.valueQueryAsync(sql)) {
+		if (await Trellis.DB.valueQueryAsync(sql)) {
 			return "&ftkeys=all";
 		}
 		
 		var sql = "SELECT itemID FROM fulltextItems WHERE synced=" + this.SYNC_STATE_TO_DOWNLOAD;
-		var itemIDs = await Zotero.DB.columnQueryAsync(sql);
+		var itemIDs = await Trellis.DB.columnQueryAsync(sql);
 		if (!itemIDs) {
 			return "";
 		}
 		var undownloaded = {};
 		for (let i=0; i<itemIDs.length; i++) {
 			let itemID = itemIDs[i];
-			let item = await Zotero.Items.getAsync(itemID);
+			let item = await Trellis.Items.getAsync(itemID);
 			let libraryID = item.libraryID
 			if (!undownloaded[libraryID]) {
 				undownloaded[libraryID] = [];
@@ -829,40 +829,40 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 */
 	this.setItemContent = async function (libraryID, key, data, version) {
 		var libraryKey = libraryID + "/" + key;
-		var item = Zotero.Items.getByLibraryAndKey(libraryID, key);
+		var item = Trellis.Items.getByLibraryAndKey(libraryID, key);
 		if (!item) {
 			let msg = "Item " + libraryKey + " not found setting full-text content";
-			Zotero.logError(msg);
+			Trellis.logError(msg);
 			return;
 		}
 		var itemID = item.id;
 		var currentVersion = await this.getItemVersion(itemID)
 		
-		var processorCacheFile = this.getItemProcessorCacheFile(item).path; // .zotero-ft-unprocessed
-		var itemCacheFile = this.getItemCacheFile(item).path; // .zotero-ft-cache
+		var processorCacheFile = this.getItemProcessorCacheFile(item).path; // .trellis-ft-unprocessed
+		var itemCacheFile = this.getItemCacheFile(item).path; // .trellis-ft-cache
 		
 		// If a storage directory doesn't exist, create it
 		if (!((await OS.File.exists(PathUtils.parent(processorCacheFile))))) {
-			await Zotero.Attachments.createDirectoryForItem(item);
+			await Trellis.Attachments.createDirectoryForItem(item);
 		}
 		
 		// If indexed previously and the existing extracted text matches the new text,
 		// just update the version
 		if (currentVersion !== false
 				&& ((await OS.File.exists(itemCacheFile)))
-				&& ((await Zotero.File.getContentsAsync(itemCacheFile))) == data.content) {
-			Zotero.debug("Current full-text content matches remote for item "
+				&& ((await Trellis.File.getContentsAsync(itemCacheFile))) == data.content) {
+			Trellis.debug("Current full-text content matches remote for item "
 				+ libraryKey + " -- updating version");
-			return Zotero.DB.queryAsync(
+			return Trellis.DB.queryAsync(
 				"UPDATE fulltextItems SET version=?, synced=? WHERE itemID=?",
 				[version, this.SYNC_STATE_IN_SYNC, itemID]
 			);
 		}
 		
 		// Otherwise save data to -unprocessed file
-		Zotero.debug("Writing full-text content and data for item " + libraryKey
+		Trellis.debug("Writing full-text content and data for item " + libraryKey
 			+ " to " + processorCacheFile);
-		await Zotero.File.putContentsAsync(processorCacheFile, JSON.stringify({
+		await Trellis.File.putContentsAsync(processorCacheFile, JSON.stringify({
 			indexedChars: data.indexedChars,
 			totalChars: data.totalChars,
 			indexedPages: data.indexedPages,
@@ -873,11 +873,11 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		var synced = this.SYNC_STATE_TO_PROCESS;
 		// If indexed previously, update the sync state
 		if (currentVersion !== false) {
-			await Zotero.DB.queryAsync("UPDATE fulltextItems SET synced=? WHERE itemID=?", [synced, itemID]);
+			await Trellis.DB.queryAsync("UPDATE fulltextItems SET synced=? WHERE itemID=?", [synced, itemID]);
 		}
 		// If not yet indexed, add an empty row
 		else {
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"REPLACE INTO fulltextItems (itemID, version, synced) VALUES (?, 0, ?)",
 				[itemID, synced]
 			);
@@ -892,11 +892,11 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 */
 	this.registerContentProcessor = function () {
 		// Don't start idle observer during tests
-		if (Zotero.test) return;
-		if (!Zotero.Prefs.get('sync.fulltext.enabled')) return;
+		if (Trellis.test) return;
+		if (!Trellis.Prefs.get('sync.fulltext.enabled')) return;
 		
 		if (!_idleObserverIsRegistered) {
-			Zotero.debug("Starting full-text content processor");
+			Trellis.debug("Starting full-text content processor");
 			var idleService = Components.classes["@mozilla.org/widget/useridleservice;1"]
 					.getService(Components.interfaces.nsIUserIdleService);
 			idleService.addIdleObserver(this.idleObserver, _idleObserverDelay);
@@ -907,7 +907,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	this.unregisterContentProcessor = function () {
 		if (_idleObserverIsRegistered) {
-			Zotero.debug("Unregistering full-text content processor idle observer");
+			Trellis.debug("Unregistering full-text content processor idle observer");
 			var idleService = Components.classes["@mozilla.org/widget/useridleservice;1"]
 				.getService(Components.interfaces.nsIUserIdleService);
 			idleService.removeIdleObserver(this.idleObserver, _idleObserverDelay);
@@ -922,7 +922,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * Stop the idle observer and a running timer, if there is one
 	 */
 	this.stopContentProcessor = function () {
-		Zotero.debug("Stopping full-text content processor");
+		Trellis.debug("Stopping full-text content processor");
 		if (_processorTimeoutID) {
 			clearTimeout(_processorTimeoutID);
 			_processorTimeoutID = null;
@@ -948,9 +948,9 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		}
 		
 		if (!itemIDs) {
-			Zotero.debug("Checking for unprocessed full-text content");
+			Trellis.debug("Checking for unprocessed full-text content");
 			let sql = "SELECT itemID FROM fulltextItems WHERE synced=" + this.SYNC_STATE_TO_PROCESS;
-			itemIDs = await Zotero.DB.columnQueryAsync(sql);
+			itemIDs = await Trellis.DB.columnQueryAsync(sql);
 		}
 		
 		var origLen = itemIDs.length;
@@ -959,23 +959,23 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		});
 		if (itemIDs.length < origLen) {
 			let skipped = (origLen - itemIDs.length);
-			Zotero.debug("Skipping large full-text content for " + skipped
+			Trellis.debug("Skipping large full-text content for " + skipped
 				+ " item" + (skipped == 1 ? '' : 's'));
 		}
 		
 		// If there's no more unprocessed content, stop the idle observer
 		if (!itemIDs.length) {
-			Zotero.debug("No unprocessed full-text content found");
+			Trellis.debug("No unprocessed full-text content found");
 			this.unregisterContentProcessor();
 			return;
 		}
 		
 		let itemID = itemIDs.shift();
-		let item = await Zotero.Items.getAsync(itemID);
+		let item = await Trellis.Items.getAsync(itemID);
 		
-		Zotero.debug("Processing full-text content for item " + item.libraryKey);
+		Trellis.debug("Processing full-text content for item " + item.libraryKey);
 		
-		await Zotero.Fulltext.indexFromProcessorCache(itemID);
+		await Trellis.Fulltext.indexFromProcessorCache(itemID);
 		
 		if (!itemIDs.length || idleService.idleTime < _idleObserverDelay * 1000) {
 			return;
@@ -983,7 +983,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		
 		// If there are remaining items, call self again after a short delay. The delay allows
 		// for processing to be interrupted if the user returns from idle. At least on macOS,
-		// when Zotero is in the background this can be throttled to 10 seconds.
+		// when Trellis is in the background this can be throttled to 10 seconds.
 		_processorTimeoutID = setTimeout(() => this.processUnprocessedContent(itemIDs), 200);
 	};
 	
@@ -1007,25 +1007,25 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 */
 	this.indexFromProcessorCache = async function (itemID) {
 		try {
-			var item = await Zotero.Items.getAsync(itemID);
+			var item = await Trellis.Items.getAsync(itemID);
 			var cacheFile = this.getItemProcessorCacheFile(item).path;
 			if (!((await OS.File.exists(cacheFile))))  {
-				Zotero.debug("Full-text content processor cache file doesn't exist for item " + itemID);
-				await Zotero.DB.queryAsync(
+				Trellis.debug("Full-text content processor cache file doesn't exist for item " + itemID);
+				await Trellis.DB.queryAsync(
 					"UPDATE fulltextItems SET synced=? WHERE itemID=?",
 					[this.SYNC_STATE_UNSYNCED, itemID]
 				);
 				return false;
 			}
 			
-			var json = await Zotero.File.getContentsAsync(cacheFile);
+			var json = await Trellis.File.getContentsAsync(cacheFile);
 			var data = JSON.parse(json);
 			
 			// Write the text content to the regular cache file
-			var item = await Zotero.Items.getAsync(itemID);
+			var item = await Trellis.Items.getAsync(itemID);
 			cacheFile = this.getItemCacheFile(item).path;
-			Zotero.debug("Writing full-text content to " + cacheFile);
-			await Zotero.File.putContentsAsync(cacheFile, data.text);
+			Trellis.debug("Writing full-text content to " + cacheFile);
+			await Trellis.File.putContentsAsync(cacheFile, data.text);
 			
 			await indexString(
 				data.text,
@@ -1043,7 +1043,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			return true;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		};
 	};
@@ -1088,11 +1088,11 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 					var matches = re.exec(content);
 				}
 				catch (e) {
-					Zotero.debug(e, 1);
+					Trellis.debug(e, 1);
 					Components.utils.reportError(e);
 				}
 				if (matches){
-					Zotero.debug("Text found");
+					Trellis.debug("Text found");
 					return content.substr(matches.index, 50);
 				}
 				
@@ -1105,7 +1105,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 				
 				var pos = content.indexOf(searchText);
 				if (pos!=-1){
-					Zotero.debug('Text found');
+					Trellis.debug('Text found');
 					return content.substr(pos, 50);
 				}
 		}
@@ -1135,7 +1135,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			return [];
 		}
 		
-		var items = await Zotero.Items.getAsync(items);
+		var items = await Trellis.Items.getAsync(items);
 		var found = [];
 		
 		for (let i=0; i<items.length; i++) {
@@ -1147,26 +1147,26 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			let itemID = item.id;
 			let content;
 			let mimeType = item.attachmentContentType;
-			let maxLength = Zotero.Prefs.get('fulltext.textMaxLength');
+			let maxLength = Trellis.Prefs.get('fulltext.textMaxLength');
 			let binaryMode = mode && mode.indexOf('Binary') != -1;
 			
 			if (this.isCachedMIMEType(mimeType)) {
 				let file = this.getItemCacheFile(item).path;
 				if (!((await OS.File.exists(file)))) {
-					Zotero.debug("No cache file at " + file, 2);
+					Trellis.debug("No cache file at " + file, 2);
 					// TODO: Index on-demand?
 					// What about a cleared full-text index?
 					continue;
 				}
 				
-				Zotero.debug("Searching for text '" + searchText + "' in " + file);
-				content = await Zotero.File.getContentsAsync(file, 'utf-8', maxLength);
+				Trellis.debug("Searching for text '" + searchText + "' in " + file);
+				content = await Trellis.File.getContentsAsync(file, 'utf-8', maxLength);
 			}
 			else {
 				// If not binary mode, only scan plaintext files
 				if (!binaryMode) {
-					if (!Zotero.MIME.isTextType(mimeType)) {
-						Zotero.debug('Not scanning MIME type ' + mimeType, 4);
+					if (!Trellis.MIME.isTextType(mimeType)) {
+						Trellis.debug('Not scanning MIME type ' + mimeType, 4);
 						continue;
 					}
 				}
@@ -1176,8 +1176,8 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 					continue;
 				}
 				
-				Zotero.debug("Searching for text '" + searchText + "' in " + path);
-				content = await Zotero.File.getContentsAsync(path, item.attachmentCharset, maxLength);
+				Trellis.debug("Searching for text '" + searchText + "' in " + path);
+				content = await Trellis.File.getContentsAsync(path, item.attachmentCharset, maxLength);
 			}
 			
 			let match = findTextInString(content, searchText, mode);
@@ -1203,25 +1203,25 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 				await OS.File.move(cacheFile, this.getItemCacheFile(toItem).path);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				return;
 			}
 		}
 		
 		// Update database with new item id
-		await Zotero.DB.queryAsync("PRAGMA foreign_keys = false");
+		await Trellis.DB.queryAsync("PRAGMA foreign_keys = false");
 		try {
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE fulltextItems SET itemID=? WHERE itemID=?",
 				[toItem.id, fromItem.id]
 			);
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE fulltextItemWords SET itemID=? WHERE itemID=?",
 				[toItem.id, fromItem.id]
 			);
 		}
 		catch (e) {
-			await Zotero.DB.queryAsync("PRAGMA foreign_keys = true");
+			await Trellis.DB.queryAsync("PRAGMA foreign_keys = true");
 		}
 	};
 	
@@ -1230,17 +1230,17 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @requireTransaction
 	 */
 	this.clearItemWords = async function (itemID, skipCacheClear) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		var sql = "SELECT rowid FROM fulltextItems WHERE itemID=? LIMIT 1";
-		var indexed = await Zotero.DB.valueQueryAsync(sql, itemID);
+		var indexed = await Trellis.DB.valueQueryAsync(sql, itemID);
 		if (indexed) {
-			await Zotero.DB.queryAsync("DELETE FROM fulltextItemWords WHERE itemID=?", itemID);
-			await Zotero.DB.queryAsync("DELETE FROM fulltextItems WHERE itemID=?", itemID);
+			await Trellis.DB.queryAsync("DELETE FROM fulltextItemWords WHERE itemID=?", itemID);
+			await Trellis.DB.queryAsync("DELETE FROM fulltextItems WHERE itemID=?", itemID);
 		}
 		
 		if (indexed) {
-			Zotero.Prefs.set('purge.fulltext', true);
+			Trellis.Prefs.set('purge.fulltext', true);
 		}
 		
 		if (!skipCacheClear) {
@@ -1256,7 +1256,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	this.getPages = function (itemID) {
 		var sql = "SELECT indexedPages, totalPages AS total "
 			+ "FROM fulltextItems WHERE itemID=?";
-		return Zotero.DB.rowQueryAsync(sql, itemID);
+		return Trellis.DB.rowQueryAsync(sql, itemID);
 	}
 
 
@@ -1266,7 +1266,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	function getChars(itemID) {
 		var sql = "SELECT indexedChars, totalChars AS total "
 			+ "FROM fulltextItems WHERE itemID=?";
-		return Zotero.DB.rowQueryAsync(sql, itemID);
+		return Trellis.DB.rowQueryAsync(sql, itemID);
 	}
 	
 	
@@ -1276,11 +1276,11 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @return {Promise}
 	 */
 	var getTotalCharsFromFile = async function (itemID) {
-		var item = await Zotero.Items.getAsync(itemID);
+		var item = await Trellis.Items.getAsync(itemID);
 		switch (item.attachmentContentType) {
 			case 'application/pdf':
 				var file = OS.Path.join(
-					Zotero.Attachments.getStorageDirectory(item).path,
+					Trellis.Attachments.getStorageDirectory(item).path,
 					this.fulltextCacheFile
 				);
 				if (!((await OS.File.exists(file)))) {
@@ -1295,7 +1295,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 				}
 		}
 		
-		var contents = await Zotero.File.getContentsAsync(file);
+		var contents = await Trellis.File.getContentsAsync(file);
 		return contents.length;
 	};
 	
@@ -1305,7 +1305,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 */
 	function setPages(itemID, obj) {
 		var sql = "UPDATE fulltextItems SET indexedPages=?, totalPages=? WHERE itemID=?";
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			sql,
 			[
 				obj.indexed ? parseInt(obj.indexed) : null,
@@ -1323,7 +1323,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 */
 	function setChars(itemID, obj) {
 		var sql = "UPDATE fulltextItems SET indexedChars=?, totalChars=? WHERE itemID=?";
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			sql,
 			[
 				obj.indexed ? parseInt(obj.indexed) : null,
@@ -1343,7 +1343,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		}
 		
 		// If the file or cache file wasn't available during syncing, mark as unindexed
-		var synced = await Zotero.DB.valueQueryAsync(
+		var synced = await Trellis.DB.valueQueryAsync(
 			"SELECT synced FROM fulltextItems WHERE itemID=?", item.id
 		);
 		if (synced === false || synced == this.SYNC_STATE_MISSING) {
@@ -1381,7 +1381,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 					queued = await OS.File.exists(this.getItemProcessorCacheFile(item).path);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 				state = queued ? this.INDEX_STATE_QUEUED : this.INDEX_STATE_UNAVAILABLE;
 			}
@@ -1411,34 +1411,34 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		var sql = "SELECT COUNT(*) FROM fulltextItems WHERE synced != ? AND "
 			+ "((indexedPages IS NOT NULL AND indexedPages=totalPages) OR "
 			+ "(indexedChars IS NOT NULL AND indexedChars=totalChars))"
-		var indexed = await Zotero.DB.valueQueryAsync(sql, this.SYNC_STATE_MISSING);
+		var indexed = await Trellis.DB.valueQueryAsync(sql, this.SYNC_STATE_MISSING);
 		
 		var sql = "SELECT COUNT(*) FROM fulltextItems WHERE "
 			+ "(indexedPages IS NOT NULL AND indexedPages<totalPages) OR "
 			+ "(indexedChars IS NOT NULL AND indexedChars<totalChars)"
-		var partial = await Zotero.DB.valueQueryAsync(sql);
+		var partial = await Trellis.DB.valueQueryAsync(sql);
 		
 		var sql = "SELECT COUNT(*) FROM itemAttachments WHERE itemID NOT IN "
 			+ "(SELECT itemID FROM fulltextItems WHERE synced != ? AND "
 			+ "(indexedPages IS NOT NULL OR indexedChars IS NOT NULL))";
-		var unindexed = await Zotero.DB.valueQueryAsync(sql, this.SYNC_STATE_MISSING);
+		var unindexed = await Trellis.DB.valueQueryAsync(sql, this.SYNC_STATE_MISSING);
 		
 		var sql = "SELECT COUNT(*) FROM fulltextWords";
-		var words = await Zotero.DB.valueQueryAsync(sql);
+		var words = await Trellis.DB.valueQueryAsync(sql);
 		
 		return { indexed, partial, unindexed, words };
 	};
 	
 	
 	this.getItemCacheFile = function (item) {
-		var cacheFile = Zotero.Attachments.getStorageDirectory(item);
+		var cacheFile = Trellis.Attachments.getStorageDirectory(item);
 		cacheFile.append(this.fulltextCacheFile);
 		return cacheFile;
 	}
 	
 	
 	this.getItemProcessorCacheFile = function (item) {
-		var cacheFile = Zotero.Attachments.getStorageDirectory(item);
+		var cacheFile = Trellis.Attachments.getStorageDirectory(item);
 		cacheFile.append(_processorCacheFile);
 		return cacheFile;
 	}
@@ -1446,14 +1446,14 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	this.canIndex = function (item) {
 		if (!item.isAttachment()
-				|| item.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+				|| item.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 			return false;
 		}
 		var contentType = item.attachmentContentType;
 		return contentType
 			&& (contentType == 'application/pdf'
 				|| contentType == 'application/epub+zip'
-				|| Zotero.MIME.isTextType(contentType));
+				|| Trellis.MIME.isTextType(contentType));
 	};
 	
 	
@@ -1485,16 +1485,16 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	this.rebuildIndex = async function (unindexedOnly) {
 		// Get all attachments other than web links
 		var sql = "SELECT itemID FROM itemAttachments WHERE linkMode!="
-			+ Zotero.Attachments.LINK_MODE_LINKED_URL;
+			+ Trellis.Attachments.LINK_MODE_LINKED_URL;
 		var params = [];
 		if (unindexedOnly) {
 			sql += " AND itemID NOT IN (SELECT itemID FROM fulltextItems "
 				+ "WHERE synced != ? AND (indexedChars IS NOT NULL OR indexedPages IS NOT NULL))";
 			params.push(this.SYNC_STATE_MISSING);
 		}
-		var itemIDs = await Zotero.DB.columnQueryAsync(sql, params);
+		var itemIDs = await Trellis.DB.columnQueryAsync(sql, params);
 		if (!itemIDs.length) {
-			Zotero.debug("No items to index");
+			Trellis.debug("No items to index");
 			return;
 		}
 		
@@ -1503,13 +1503,13 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 		// without waiting for idle processing.
 		if (!unindexedOnly) {
 			for (let itemID of itemIDs) {
-				let item = await Zotero.Items.getAsync(itemID);
+				let item = await Trellis.Items.getAsync(itemID);
 				let cacheFile = this.getItemProcessorCacheFile(item).path;
 				try {
 					await OS.File.remove(cacheFile, { ignoreAbsent: true });
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}
@@ -1524,32 +1524,32 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @return {Promise}
 	 */
 	this.clearIndex = async function (skipLinkedURLs) {
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			var sql = "DELETE FROM fulltextItems";
 			if (skipLinkedURLs) {
 				var linkSQL = "SELECT itemID FROM itemAttachments WHERE linkMode ="
-					+ Zotero.Attachments.LINK_MODE_LINKED_URL;
+					+ Trellis.Attachments.LINK_MODE_LINKED_URL;
 				
 				sql += " WHERE itemID NOT IN (" + linkSQL + ")";
 			}
-			await Zotero.DB.queryAsync(sql);
+			await Trellis.DB.queryAsync(sql);
 			
 			sql = "DELETE FROM fulltextItemWords";
 			if (skipLinkedURLs) {
 				sql += " WHERE itemID NOT IN (" + linkSQL + ")";
 			}
-			await Zotero.DB.queryAsync(sql);
+			await Trellis.DB.queryAsync(sql);
 		});
 		
 		if (skipLinkedURLs) {
 			await this.purgeUnusedWords();
 		}
 		else {
-			await Zotero.DB.queryAsync("DELETE FROM fulltextWords");
+			await Trellis.DB.queryAsync("DELETE FROM fulltextWords");
 		}
 		
 		await clearCacheFiles();
-		await Zotero.DB.queryAsync('VACUUM');
+		await Trellis.DB.queryAsync('VACUUM');
 	}
 	
 	
@@ -1557,24 +1557,24 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * Clears cache file for an item
 	 */
 	var clearCacheFile = async function (itemID) {
-		var item = await Zotero.Items.getAsync(itemID);
+		var item = await Trellis.Items.getAsync(itemID);
 		if (!item) {
 			return;
 		}
 		
 		if (!item.isAttachment()) {
-			Zotero.debug("Item " + itemID + " is not an attachment in Zotero.Fulltext.clearCacheFile()");
+			Trellis.debug("Item " + itemID + " is not an attachment in Trellis.Fulltext.clearCacheFile()");
 			return;
 		}
 		
-		Zotero.debug('Clearing full-text cache file for item ' + itemID);
-		var cacheFile = Zotero.Fulltext.getItemCacheFile(item);
+		Trellis.debug('Clearing full-text cache file for item ' + itemID);
+		var cacheFile = Trellis.Fulltext.getItemCacheFile(item);
 		if (cacheFile.exists()) {
 			try {
 				cacheFile.remove(false);
 			}
 			catch (e) {
-				Zotero.File.checkFileAccessError(e, cacheFile, 'delete');
+				Trellis.File.checkFileAccessError(e, cacheFile, 'delete');
 			}
 		}
 	};
@@ -1586,9 +1586,9 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	var clearCacheFiles = async function (skipLinkedURLs) {
 		var sql = "SELECT itemID FROM itemAttachments";
 		if (skipLinkedURLs) {
-			sql += " WHERE linkMode != " + Zotero.Attachments.LINK_MODE_LINKED_URL;
+			sql += " WHERE linkMode != " + Trellis.Attachments.LINK_MODE_LINKED_URL;
 		}
-		var items = await Zotero.DB.columnQueryAsync(sql);
+		var items = await Trellis.DB.columnQueryAsync(sql);
 		for (var i=0; i<items.length; i++) {
 			await clearCacheFile(items[i]);
 		}
@@ -1597,7 +1597,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	
 	/*
 	function clearItemContent(itemID){
-		Zotero.DB.query("DELETE FROM fulltextContent WHERE itemID=" + itemID);
+		Trellis.DB.query("DELETE FROM fulltextContent WHERE itemID=" + itemID);
 	}
 	*/
 	
@@ -1606,26 +1606,26 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 * @return {Promise}
 	 */
 	this.purgeUnusedWords = async function () {
-		if (!Zotero.Prefs.get('purge.fulltext')) {
+		if (!Trellis.Prefs.get('purge.fulltext')) {
 			return;
 		}
 		
 		var sql = "DELETE FROM fulltextWords WHERE wordID NOT IN "
 					+ "(SELECT wordID FROM fulltextItemWords)";
-		await Zotero.DB.queryAsync(sql);
+		await Trellis.DB.queryAsync(sql);
 		
-		Zotero.Prefs.set('purge.fulltext', false)
+		Trellis.Prefs.set('purge.fulltext', false)
 	};
 	
 	
 	async function getPageData(path, contentType) {
-		const { HiddenBrowser } = ChromeUtils.importESModule("chrome://zotero/content/HiddenBrowser.mjs");
+		const { HiddenBrowser } = ChromeUtils.importESModule("chrome://trellis/content/HiddenBrowser.mjs");
 		var blobURL;
 		var browser;
 		var pageData;
 		try {
 			// Wrap the file in a blob to set its content type
-			let arrayBuffer = await (await fetch(Zotero.File.pathToFileURI(path))).arrayBuffer();
+			let arrayBuffer = await (await fetch(Trellis.File.pathToFileURI(path))).arrayBuffer();
 			let blob = new Blob([arrayBuffer], { type: contentType });
 			blobURL = URL.createObjectURL(blob);
 			browser = new HiddenBrowser({ blockRemoteResources: true });
@@ -1655,15 +1655,15 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 			text = text.substr(0, maxLength);
 		}
 		var cacheFile = this.getItemCacheFile(item).path;
-		Zotero.debug("Writing converted full-text content to " + cacheFile);
+		Trellis.debug("Writing converted full-text content to " + cacheFile);
 		if (!(await OS.File.exists(PathUtils.parent(cacheFile)))) {
-			await Zotero.Attachments.createDirectoryForItem(item);
+			await Trellis.Attachments.createDirectoryForItem(item);
 		}
 		try {
-			await Zotero.File.putContentsAsync(cacheFile, text);
+			await Trellis.File.putContentsAsync(cacheFile, text);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}.bind(this);
 	
@@ -1675,7 +1675,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	 */
 	this.semanticSplitter = function (text, charset) {
 		if (!text){
-			Zotero.debug('No text to index');
+			Trellis.debug('No text to index');
 			return [];
 		}
 		
@@ -1744,7 +1744,7 @@ Zotero.Fulltext = Zotero.FullText = new function () {
 	}
 	
 	function _getScriptExtension() {
-		return Zotero.isWin ? 'vbs' : 'sh';
+		return Trellis.isWin ? 'vbs' : 'sh';
 	}
 
 }

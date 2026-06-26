@@ -5,27 +5,27 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-const WORKER_URL = 'resource://zotero/document-worker/worker.js';
-const ASSETS_URL = 'resource://zotero/document-worker/';
-const READER_PDF_ASSETS_URL = 'resource://zotero/reader/pdf/web/';
+const WORKER_URL = 'resource://trellis/document-worker/worker.js';
+const ASSETS_URL = 'resource://trellis/document-worker/';
+const READER_PDF_ASSETS_URL = 'resource://trellis/reader/pdf/web/';
 
 function getAssetURL(path) {
 	if (path.startsWith('cmaps/') || path.startsWith('standard_fonts/')) {
@@ -97,9 +97,9 @@ class PDFWorker {
 			error.name = JSON.parse(e.message).name;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
-		Zotero.logError(error);
+		Trellis.logError(error);
 		throw error;
 	}
 
@@ -111,7 +111,7 @@ class PDFWorker {
 			if ('responseID' in message) {
 				let promise = this._waitingPromises[message.responseID];
 				if (!promise) {
-					Zotero.debug(`Received response from PDF worker for unknown request ${message.responseID}`);
+					Trellis.debug(`Received response from PDF worker for unknown request ${message.responseID}`);
 					return;
 				}
 				delete this._waitingPromises[message.responseID];
@@ -128,7 +128,7 @@ class PDFWorker {
 				let respData = null;
 				try {
 					if (message.action === 'FetchData') {
-						let response = await Zotero.HTTP.request(
+						let response = await Trellis.HTTP.request(
 							'GET',
 							getAssetURL(message.data),
 							{ responseType: 'arraybuffer' }
@@ -137,23 +137,23 @@ class PDFWorker {
 					}
 				}
 				catch (e) {
-					Zotero.debug(`Failed to fetch data (${message.data}):`);
-					Zotero.debug(e);
+					Trellis.debug(`Failed to fetch data (${message.data}):`);
+					Trellis.debug(e);
 				}
 				try {
 					if (message.action === 'SaveRenderedAnnotation') {
 						let { libraryID, annotationKey, buf } = message.data;
-						let annotationItem = Zotero.Items.getByLibraryAndKey(libraryID, annotationKey);
-						let win = Zotero.getMainWindow();
+						let annotationItem = Trellis.Items.getByLibraryAndKey(libraryID, annotationKey);
+						let win = Trellis.getMainWindow();
 						let blob = new win.Blob([new Uint8Array(buf)]);
-						await Zotero.Annotations.saveCacheImage(annotationItem, blob);
-						await Zotero.Notifier.trigger('modify', 'item', [annotationItem.id]);
+						await Trellis.Annotations.saveCacheImage(annotationItem, blob);
+						await Trellis.Notifier.trigger('modify', 'item', [annotationItem.id]);
 						respData = true;
 					}
 				}
 				catch (e) {
-					Zotero.debug('Failed to save rendered annotation:');
-					Zotero.logError(e);
+					Trellis.debug('Failed to save rendered annotation:');
+					Trellis.logError(e);
 				}
 				this._worker.postMessage(
 					{ responseID: event.data.id, data: respData },
@@ -162,7 +162,7 @@ class PDFWorker {
 			}
 		});
 		this._worker.addEventListener('error', (event) => {
-			Zotero.logError(`Document worker error (${event.filename}:${event.lineno}): ${event.message}`);
+			Trellis.logError(`Document worker error (${event.filename}:${event.lineno}): ${event.message}`);
 		});
 	}
 	
@@ -173,7 +173,7 @@ class PDFWorker {
 		else if (item.isRegularItem()) {
 			let ids = item.getAttachments();
 			for (let id of ids) {
-				let attachment = Zotero.Items.get(id);
+				let attachment = Trellis.Items.get(id);
 				if (attachment.isPDFAttachment()) {
 					return true;
 				}
@@ -192,12 +192,12 @@ class PDFWorker {
 	 */
 	async export(itemID, path, isPriority, password, transfer) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 			if (!attachment.isPDFAttachment()) {
 				throw new Error('Item must be a PDF attachment');
 			}
 			let t = new Date();
-			Zotero.debug(`Exporting PDF for item ${attachment.libraryKey}`);
+			Trellis.debug(`Exporting PDF for item ${attachment.libraryKey}`);
 			let items = attachment.getAnnotations();
 			items = items.filter(x => !x.annotationIsExternal);
 			let annotations = [];
@@ -208,21 +208,21 @@ class PDFWorker {
 					// Author name is only set when the PDF file is 1) in a group library,
 					// 2) was moved back to a private library or 3) was imported from a PDF file
 					// that was previously exported in 1) or 2) case
-					authorName: item.annotationAuthorName || Zotero.Users.getName(item.createdByUserID) || '',
+					authorName: item.annotationAuthorName || Trellis.Users.getName(item.createdByUserID) || '',
 					comment: (item.annotationComment || '').replace(/<\/?(i|b|sub|sup)>/g, ''),
 					color: item.annotationColor,
 					position: JSON.parse(item.annotationPosition),
-					dateModified: Zotero.Date.sqlToISO8601(item.dateModified),
+					dateModified: Trellis.Date.sqlToISO8601(item.dateModified),
 					tags: item.getTags().map(x => x.tag)
 				});
 			}
 			let attachmentPath = await attachment.getFilePathAsync();
 			if (!attachmentPath) {
-				Zotero.warn("Not exporting missing file " + attachment.getFilePath());
+				Trellis.warn("Not exporting missing file " + attachment.getFilePath());
 				return 0;
 			}
 			if (!annotations.length) {
-				await Zotero.File.copyFile(attachmentPath, path);
+				await Trellis.File.copyFile(attachmentPath, path);
 				return 0;
 			}
 			let buf = await IOUtils.read(attachmentPath);
@@ -240,10 +240,10 @@ class PDFWorker {
 			await IOUtils.write(path, new Uint8Array(res.buf));
 			
 			if (transfer) {
-				await Zotero.Items.erase(items.map(x => x.id));
+				await Trellis.Items.erase(items.map(x => x.id));
 			}
 			
-			Zotero.debug(`Exported PDF with ${annotations.length} annotation(s) in ${new Date() - t} ms`);
+			Trellis.debug(`Exported PDF with ${annotations.length} annotation(s) in ${new Date() - t} ms`);
 			
 			return annotations.length;
 		}, isPriority);
@@ -252,7 +252,7 @@ class PDFWorker {
 	/**
 	 * Export children PDF attachments with annotations
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {String} directory
 	 * @param {Boolean} [isPriority]
 	 */
@@ -266,7 +266,7 @@ class PDFWorker {
 		let promises = [];
 		let ids = item.getAttachments();
 		for (let id of ids) {
-			let attachment = Zotero.Items.get(id);
+			let attachment = Trellis.Items.get(id);
 			if (attachment.isPDFAttachment()) {
 				let path = OS.Path.join(directory, attachment.attachmentFilename);
 				promises.push(this.export(id, path, isPriority));
@@ -286,9 +286,9 @@ class PDFWorker {
 	 */
 	async import(itemID, isPriority, password, transfer) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 			
-			Zotero.debug("Importing annotations for item " + attachment.libraryKey);
+			Trellis.debug("Importing annotations for item " + attachment.libraryKey);
 			let t = new Date();
 			
 			if (!attachment.isPDFAttachment()) {
@@ -297,7 +297,7 @@ class PDFWorker {
 
 			let mtime = Math.floor((await attachment.attachmentModificationTime) / 1000);
 			if (!transfer && attachment.attachmentLastProcessedModificationTime === mtime) {
-				Zotero.debug("File hasn't changed since last-processed time -- skipping annotations import");
+				Trellis.debug("File hasn't changed since last-processed time -- skipping annotations import");
 				return false;
 			}
 
@@ -330,28 +330,28 @@ class PDFWorker {
 			
 			let ids = [];
 			for (let key of deleted) {
-				let annotation = Zotero.Items.getByLibraryAndKey(attachment.libraryID, key);
+				let annotation = Trellis.Items.getByLibraryAndKey(attachment.libraryID, key);
 				if (annotation) {
 					ids.push(annotation.id);
 				}
 			}
 			if (ids.length) {
-				await Zotero.Items.erase(ids);
+				await Trellis.Items.erase(ids);
 			}
 			
-			let notifierQueue = new Zotero.Notifier.Queue();
+			let notifierQueue = new Trellis.Notifier.Queue();
 			try {
 				for (let annotation of imported) {
-					annotation.key = Zotero.DataObjectUtilities.generateKey();
+					annotation.key = Trellis.DataObjectUtilities.generateKey();
 					annotation.isExternal = !(transfer && annotation.transferable);
 					annotation.tags = annotation.tags.map(x => ({ name: x }));
-					await Zotero.Annotations.saveFromJSON(attachment, annotation, {
+					await Trellis.Annotations.saveFromJSON(attachment, annotation, {
 						notifierQueue
 					});
 				}
 			}
 			finally {
-				await Zotero.Notifier.commit(notifierQueue);
+				await Trellis.Notifier.commit(notifierQueue);
 			}
 			
 			if (transfer) {
@@ -366,7 +366,7 @@ class PDFWorker {
 				skipAll: true
 			});
 			
-			Zotero.debug(`Imported ${imported.length} annotation(s) for item ${attachment.libraryKey} `
+			Trellis.debug(`Imported ${imported.length} annotation(s) for item ${attachment.libraryKey} `
 				+ `in ${new Date() - t} ms`);
 			
 			return !!(imported.length || deleted.length);
@@ -425,7 +425,7 @@ class PDFWorker {
 	/**
 	 * Import annotations for each PDF attachment of parent item
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {Boolean} [isPriority]
 	 */
 	async importParent(item, isPriority) {
@@ -435,7 +435,7 @@ class PDFWorker {
 		let promises = [];
 		let ids = item.getAttachments();
 		for (let id of ids) {
-			let attachment = Zotero.Items.get(id);
+			let attachment = Trellis.Items.get(id);
 			if (attachment.isPDFAttachment()) {
 				promises.push(this.import(id, isPriority));
 			}
@@ -454,9 +454,9 @@ class PDFWorker {
 	 */
 	async deletePages(itemID, pageIndexes, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 
-			Zotero.debug(`Deleting [${pageIndexes.join(', ')}] pages for item ${attachment.libraryKey}`);
+			Trellis.debug(`Deleting [${pageIndexes.join(', ')}] pages for item ${attachment.libraryKey}`);
 			let t = new Date();
 
 			if (!attachment.isPDFAttachment()) {
@@ -493,19 +493,19 @@ class PDFWorker {
 				}
 			}
 			if (ids.length) {
-				await Zotero.Items.erase(ids);
+				await Trellis.Items.erase(ids);
 			}
 
 			// Shift page index for other annotations
 			ids = [];
-			await Zotero.DB.executeTransaction(async function () {
-				let rows = await Zotero.DB.queryAsync('SELECT itemID, position FROM itemAnnotations WHERE parentItemID=?', itemID);
+			await Trellis.DB.executeTransaction(async function () {
+				let rows = await Trellis.DB.queryAsync('SELECT itemID, position FROM itemAnnotations WHERE parentItemID=?', itemID);
 				for (let { itemID, position } of rows) {
 					try {
 						position = JSON.parse(position);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 						continue;
 					}
 					// Find the count of deleted pages before the current annotation page
@@ -513,20 +513,20 @@ class PDFWorker {
 					if (shift > 0) {
 						position.pageIndex -= shift;
 						position = JSON.stringify(position);
-						await Zotero.DB.queryAsync('UPDATE itemAnnotations SET position=? WHERE itemID=?', [position, itemID]);
+						await Trellis.DB.queryAsync('UPDATE itemAnnotations SET position=? WHERE itemID=?', [position, itemID]);
 						ids.push(itemID);
 					}
 				}
 			});
-			let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType('item');
+			let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType('item');
 			let loadedObjects = objectsClass.getLoaded();
 			for (let object of loadedObjects) {
 				if (ids.includes(object.id)) {
 					await object.reload(null, true);
 				}
 			}
-			await Zotero.Items.updateSynced(ids, false);
-			await Zotero.Notifier.trigger('modify', 'item', ids, {});
+			await Trellis.Items.updateSynced(ids, false);
+			await Trellis.Notifier.trigger('modify', 'item', ids, {});
 
 			await IOUtils.write(path, new Uint8Array(modifiedBuf));
 			let mtime = Math.floor((await attachment.attachmentModificationTime) / 1000);
@@ -535,7 +535,7 @@ class PDFWorker {
 				skipAll: true
 			});
 
-			Zotero.debug(`Deleted pages for item ${attachment.libraryKey} in ${new Date() - t} ms`);
+			Trellis.debug(`Deleted pages for item ${attachment.libraryKey} in ${new Date() - t} ms`);
 		}, isPriority);
 	}
 
@@ -551,9 +551,9 @@ class PDFWorker {
 	 */
 	async rotatePages(itemID, pageIndexes, degrees, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 
-			Zotero.debug(`Rotating [${pageIndexes.join(', ')}] pages for item ${attachment.libraryKey}`);
+			Trellis.debug(`Rotating [${pageIndexes.join(', ')}] pages for item ${attachment.libraryKey}`);
 			let t = new Date();
 
 			if (!attachment.isPDFAttachment()) {
@@ -580,7 +580,7 @@ class PDFWorker {
 				skipAll: true
 			});
 
-			Zotero.debug(`Rotated pages for item ${attachment.libraryKey} in ${new Date() - t} ms`);
+			Trellis.debug(`Rotated pages for item ${attachment.libraryKey} in ${new Date() - t} ms`);
 		}, isPriority);
 	}
 
@@ -595,9 +595,9 @@ class PDFWorker {
 	 */
 	async getFullText(itemID, maxPages, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 
-			Zotero.debug(`Getting fulltext content from item ${attachment.libraryKey}`);
+			Trellis.debug(`Getting fulltext content from item ${attachment.libraryKey}`);
 			let t = new Date();
 
 			if (!attachment.isPDFAttachment()) {
@@ -617,7 +617,7 @@ class PDFWorker {
 				this._throwWorkerError('pdf.getFulltext', e);
 			}
 
-			Zotero.debug(`Extracted full text for item ${attachment.libraryKey} in ${new Date() - t} ms`);
+			Trellis.debug(`Extracted full text for item ${attachment.libraryKey} in ${new Date() - t} ms`);
 
 			return result;
 		}, isPriority);
@@ -633,7 +633,7 @@ class PDFWorker {
 	 */
 	async getStructuredDocumentText(itemID, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 			if (!(attachment.isPDFAttachment()
 					|| attachment.isEPUBAttachment()
 					|| attachment.isSnapshotAttachment())) {
@@ -650,7 +650,7 @@ class PDFWorker {
 				throw new Error('Attachment is missing an MD5 hash');
 			}
 
-			Zotero.debug(`Getting structured document text from item ${attachment.libraryKey}`);
+			Trellis.debug(`Getting structured document text from item ${attachment.libraryKey}`);
 			let t = new Date();
 			let buf = await IOUtils.read(path);
 			buf = new Uint8Array(buf).buffer;
@@ -667,7 +667,7 @@ class PDFWorker {
 				this._throwWorkerError('getStructuredDocumentText', e);
 			}
 
-			Zotero.debug(`Extracted structured document text for item ${attachment.libraryKey} in ${new Date() - t} ms`);
+			Trellis.debug(`Extracted structured document text for item ${attachment.libraryKey} in ${new Date() - t} ms`);
 
 			return result;
 		}, isPriority);
@@ -683,9 +683,9 @@ class PDFWorker {
 	 */
 	async getRecognizerData(itemID, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 
-			Zotero.debug(`Getting PDF recognizer data from item ${attachment.libraryKey}`);
+			Trellis.debug(`Getting PDF recognizer data from item ${attachment.libraryKey}`);
 			let t = new Date();
 
 			if (!attachment.isPDFAttachment()) {
@@ -703,7 +703,7 @@ class PDFWorker {
 				this._throwWorkerError('pdf.getRecognizerData', e);
 			}
 
-			Zotero.debug(`Extracted PDF recognizer data for item ${attachment.libraryKey} in ${new Date() - t} ms`);
+			Trellis.debug(`Extracted PDF recognizer data for item ${attachment.libraryKey} in ${new Date() - t} ms`);
 
 			return result;
 		}, isPriority);
@@ -711,7 +711,7 @@ class PDFWorker {
 
 	async renderAttachmentAnnotations(itemID, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 			let t = new Date();
 
 			if (!attachment.isPDFAttachment()) {
@@ -721,7 +721,7 @@ class PDFWorker {
 			let annotations = [];
 			for (let annotation of attachment.getAnnotations()) {
 				if (['image', 'ink'].includes(annotation.annotationType)
-					&& !(await Zotero.Annotations.hasCacheImage(annotation))) {
+					&& !(await Trellis.Annotations.hasCacheImage(annotation))) {
 					annotations.push({
 						id: annotation.key,
 						color: annotation.annotationColor,
@@ -733,7 +733,7 @@ class PDFWorker {
 				return 0;
 			}
 
-			Zotero.debug(`Rendering ${annotations.length} annotation(s) for attachment ${attachment.key}`);
+			Trellis.debug(`Rendering ${annotations.length} annotation(s) for attachment ${attachment.key}`);
 
 			let path = await attachment.getFilePathAsync();
 			if (!path) {
@@ -751,7 +751,7 @@ class PDFWorker {
 				this._throwWorkerError('pdf.renderAnnotations', e);
 			}
 
-			Zotero.debug(`Rendered ${annotations.length} PDF annotation(s) ${attachment.libraryKey} in ${new Date() - t} ms`);
+			Trellis.debug(`Rendered ${annotations.length} PDF annotation(s) ${attachment.libraryKey} in ${new Date() - t} ms`);
 
 			return result;
 		}, isPriority);
@@ -767,9 +767,9 @@ class PDFWorker {
 	 */
 	async hasAnnotations(itemID, isPriority, password) {
 		return this._enqueue(async () => {
-			let attachment = await Zotero.Items.getAsync(itemID);
+			let attachment = await Trellis.Items.getAsync(itemID);
 
-			Zotero.debug(`Detecting embedded annotations in item ${attachment.libraryKey}`);
+			Trellis.debug(`Detecting embedded annotations in item ${attachment.libraryKey}`);
 
 			if (!attachment.isPDFAttachment()) {
 				throw new Error('Item must be a PDF attachment');
@@ -791,4 +791,4 @@ class PDFWorker {
 	}
 }
 
-Zotero.PDFWorker = new PDFWorker();
+Trellis.PDFWorker = new PDFWorker();

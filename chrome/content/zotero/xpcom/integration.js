@@ -4,22 +4,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -56,12 +56,12 @@ const DELAY_CITATIONS_PROMPT_TIMEOUT = 15/*seconds*/;
 const DELAYED_CITATION_RTF_STYLING = "\\uldash";
 const DELAYED_CITATION_RTF_STYLING_CLEAR = "\\ulclear";
 
-const DELAYED_CITATION_HTML_STYLING = "<div class='delayed-zotero-citation-updates'>"
+const DELAYED_CITATION_HTML_STYLING = "<div class='delayed-trellis-citation-updates'>"
 const DELAYED_CITATION_HTML_STYLING_END = "</div>"
 
-const EXPORTED_DOCUMENT_MARKER = "ZOTERO_TRANSFER_DOCUMENT";
+const EXPORTED_DOCUMENT_MARKER = "TRELLIS_TRANSFER_DOCUMENT";
 
-const NOTE_CITATION_PLACEHOLDER_LINK = 'https://www.zotero.org/?';
+const NOTE_CITATION_PLACEHOLDER_LINK = 'https://www.trellis.org/?';
 
 const TEMPLATE_VERSIONS = {
 	MacWord16: 2,
@@ -72,13 +72,13 @@ const TEMPLATE_VERSIONS = {
 const MENDELEY_URI_RE = /^http:\/\/www\.mendeley\.com\/documents\/\?uuid=(.*)/;
 
 const PLUGIN_PATHS = {
-	LibreOffice: 'chrome://zotero-libreoffice-integration-components/content/zoteroLibreOfficeIntegration.mjs',
-	WinWord: 'chrome://zotero-winword-integration/content/zoteroWinWordIntegration.mjs',
-	MacWord: 'chrome://zotero-macword-integration/content/zoteroMacWordIntegration.mjs'
+	LibreOffice: 'chrome://trellis-libreoffice-integration-components/content/trellisLibreOfficeIntegration.mjs',
+	WinWord: 'chrome://trellis-winword-integration/content/trellisWinWordIntegration.mjs',
+	MacWord: 'chrome://trellis-macword-integration/content/trellisMacWordIntegration.mjs'
 };
 
 
-Zotero.Integration = new function () {
+Trellis.Integration = new function () {
 	// TODO: fx140: Does this cause a side effect that we need?
 	// AddonManager is not used in this file
 	ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs");
@@ -92,12 +92,12 @@ Zotero.Integration = new function () {
 	 * Initialize LibreOffice, Word for Mac and Word for Windows plugin components.
 	 */
 	this.init = function () {
-		if (Zotero.test) return;
+		if (Trellis.test) return;
 		let entryPoints = [PLUGIN_PATHS.LibreOffice];
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			entryPoints.push(PLUGIN_PATHS.MacWord);
 		}
-		else if (Zotero.isWin) {
+		else if (Trellis.isWin) {
 			entryPoints.push(PLUGIN_PATHS.WinWord);
 		}
 		for (let entryPoint of entryPoints) {
@@ -106,7 +106,7 @@ Zotero.Integration = new function () {
 				init();
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ Zotero.Integration = new function () {
 	 * @param {Function} callback The callback to call on pipe read
 	 */
 	this.initPipe = function (pipe, callback) {
-		Zotero.IPC.Pipe.initPipeListener(pipe, function (string) {
+		Trellis.IPC.Pipe.initPipeListener(pipe, function (string) {
 			if(string != "") {
 				if (typeof callback == 'function') callback(string);
 				// exec command if possible
@@ -127,9 +127,9 @@ Zotero.Integration = new function () {
 					var cmd = parts[2].toString();
 					var document = parts[3].toString();
 					var templateVersion = parts[4] ? parseInt(parts[4].toString()) : 0;
-					Zotero.Integration.execCommand(agent, cmd, document, templateVersion);
+					Trellis.Integration.execCommand(agent, cmd, document, templateVersion);
 				} else {
-					Components.utils.reportError("Zotero: Invalid integration input received: "+string);
+					Components.utils.reportError("Trellis: Invalid integration input received: "+string);
 				}
 			}
 		});
@@ -146,24 +146,24 @@ Zotero.Integration = new function () {
 			return true;
 		} catch (e) {
 			// if pipe can't be deleted, log an error
-			Zotero.debug("Error removing old integration pipe "+pipe.path, 1);
-			Zotero.logError(e);
+			Trellis.debug("Error removing old integration pipe "+pipe.path, 1);
+			Trellis.logError(e);
 			Components.utils.reportError(
-				"Zotero word processor integration initialization failed. "
-					+ "See http://forums.zotero.org/discussion/12054/#Item_10 "
+				"Trellis word processor integration initialization failed. "
+					+ "See http://forums.trellis.org/discussion/12054/#Item_10 "
 					+ "for instructions on correcting this problem."
 			);
 			
 			// can attempt to delete on OS X
 			try {
 				let promptService = Services.prompt;
-				var deletePipe = promptService.confirm(null, Zotero.getString("integration.error.title"), Zotero.getString("integration.error.deletePipe"));
+				var deletePipe = promptService.confirm(null, Trellis.getString("integration.error.title"), Trellis.getString("integration.error.deletePipe"));
 				if(!deletePipe) return false;
 				let escapedFifoFile = pipe.path.replace("'", "'\\''");
-				Zotero.Utilities.Internal.executeAppleScript("do shell script \"rmdir '"+escapedFifoFile+"'; rm -f '"+escapedFifoFile+"'\" with administrator privileges", true);
+				Trellis.Utilities.Internal.executeAppleScript("do shell script \"rmdir '"+escapedFifoFile+"'; rm -f '"+escapedFifoFile+"'\" with administrator privileges", true);
 				if(pipe.exists()) return false;
 			} catch(e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				return false;
 			}
 		}
@@ -179,16 +179,16 @@ Zotero.Integration = new function () {
 		if (typeof expectedTemplateVersion == 'undefined' || templateVersion >= expectedTemplateVersion) return false;
 		const daysToIgnore = 30;
 		const now = Math.floor(Date.now() / 1000);
-		const updateTemplateDelayedOn = Zotero.Prefs.get('integration.updateTemplateDelayedOn');
+		const updateTemplateDelayedOn = Trellis.Prefs.get('integration.updateTemplateDelayedOn');
 		if (updateTemplateDelayedOn + (daysToIgnore * 86400) > now || upgradeTemplateNotNowTime + 86400 > now) {
 			return false;
 		}
-		Zotero.debug(`Integration: ${agent} command invoked with outdated template.`);
+		Trellis.debug(`Integration: ${agent} command invoked with outdated template.`);
 		
 		var ps = Services.prompt;
-		var title = Zotero.getString('general.warning');
+		var title = Trellis.getString('general.warning');
 		var client = agent == "OpenOffice" ? "LibreOffice" : "Microsoft Word";
-		var message = Zotero.getString('integration.upgradeTemplate', [Zotero.appName, client]);
+		var message = Trellis.getString('integration.upgradeTemplate', [Trellis.appName, client]);
 		var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING)
 			+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_IS_STRING);
 		var checkbox = {};
@@ -197,10 +197,10 @@ Zotero.Integration = new function () {
 			title,
 			message,
 			buttonFlags,
-			Zotero.getString('general.openPreferences'),
-			Zotero.getString('general.notNow'),
+			Trellis.getString('general.openPreferences'),
+			Trellis.getString('general.notNow'),
 			null,
-			Zotero.getString(
+			Trellis.getString(
 				'general.dontShowAgainFor',
 				daysToIgnore,
 				daysToIgnore
@@ -209,7 +209,7 @@ Zotero.Integration = new function () {
 		);
 
 		if (index == 0) {
-			Zotero.Utilities.Internal.openPreferences('zotero-prefpane-cite', {
+			Trellis.Utilities.Internal.openPreferences('trellis-prefpane-cite', {
 				scrollTo: '#wordProcessors'
 			});
 			return true;
@@ -217,26 +217,26 @@ Zotero.Integration = new function () {
 
 		upgradeTemplateNotNowTime = now;
 		if (checkbox.value) {
-			Zotero.Prefs.set('integration.upgradeTemplateDelayedOn', now);
+			Trellis.Prefs.set('integration.upgradeTemplateDelayedOn', now);
 		}
 		return false;
 	};
 	
 	this.resetSessionStyles = async function () {
-		for (let sessionID in Zotero.Integration.sessions) {
-			let session = Zotero.Integration.sessions[sessionID];
+		for (let sessionID in Trellis.Integration.sessions) {
+			let session = Trellis.Integration.sessions[sessionID];
 			await session.setData(session.data, true);
 		}
 	};
 	
 	this.getApplication = function (agent, command, docId) {
 		if (agent == 'http') {
-			return new Zotero.HTTPIntegrationClient.Application();
+			return new Trellis.HTTPIntegrationClient.Application();
 		}
 		// Replace MacWord2016 and MacWord16 with just MacWord.
 		agent = agent.startsWith('MacWord') ? 'MacWord' : agent;
 		var entryPoint = PLUGIN_PATHS[agent];
-		Zotero.debug("Integration: Instantiating "+agent+" plugin handler for command "+command+(docId ? " with doc "+docId : ""));
+		Trellis.debug("Integration: Instantiating "+agent+" plugin handler for command "+command+(docId ? " with doc "+docId : ""));
 		const { Application } = ChromeUtils.importESModule(entryPoint);
 		return new Application();
 	};
@@ -246,17 +246,17 @@ Zotero.Integration = new function () {
 	 */
 	this.execCommand = async function (agent, command, docId, templateVersion=0) {
 		var document, session, documentImported;
-		Zotero.debug(`Integration: ${agent}-${command}${docId ? `:'${docId}'` : ''} invoked`)
-		if (Zotero.Integration.warnOutdatedTemplate(agent, templateVersion)) return;
+		Trellis.debug(`Integration: ${agent}-${command}${docId ? `:'${docId}'` : ''} invoked`)
+		if (Trellis.Integration.warnOutdatedTemplate(agent, templateVersion)) return;
 
 		let shouldAbort = await this.shouldAbortCommand();
 		if (shouldAbort) {
-			Zotero.debug("Integration: Request already in progress; not executing "+agent+" "+command);
+			Trellis.debug("Integration: Request already in progress; not executing "+agent+" "+command);
 			return;
 		}
-		let deferred = Zotero.Promise.defer();
-		Zotero.Integration.currentCommandPromise = deferred.promise;
-		Zotero.Integration.currentDoc = true;
+		let deferred = Trellis.Promise.defer();
+		Trellis.Integration.currentCommandPromise = deferred.promise;
+		Trellis.Integration.currentDoc = true;
 
 		var startTime = (new Date()).getTime();
 
@@ -265,31 +265,31 @@ Zotero.Integration = new function () {
 		try {
 			// Word for windows throws RPC_E_CANTCALLOUT_ININPUTSYNCCALL if we invoke an OLE call in the
 			// current event loop (which.. who would have guessed would be the case?)
-			await Zotero.Promise.delay();
-			var application = Zotero.Integration.getApplication(agent, command, docId);
+			await Trellis.Promise.delay();
+			var application = Trellis.Integration.getApplication(agent, command, docId);
 			
 			var documentPromise = (application.getDocument && docId ? application.getDocument(docId) : application.getActiveDocument());
 			if (!documentPromise.then) {
-				Zotero.debug('Synchronous integration plugin functions are deprecated -- ' +
+				Trellis.debug('Synchronous integration plugin functions are deprecated -- ' +
 					'update to asynchronous methods');
-				application = Zotero.Integration.LegacyPluginWrapper(application);
-				documentPromise = new Zotero.Promise(resolve =>
-					resolve(Zotero.Integration.LegacyPluginWrapper.wrapDocument(documentPromise)));
+				application = Trellis.Integration.LegacyPluginWrapper(application);
+				documentPromise = new Trellis.Promise(resolve =>
+					resolve(Trellis.Integration.LegacyPluginWrapper.wrapDocument(documentPromise)));
 			}
-			Zotero.Integration.currentDoc = document = await documentPromise;
+			Trellis.Integration.currentDoc = document = await documentPromise;
 			
-			[session, documentImported] = await Zotero.Integration.getSession(application, document, agent, command);
-			Zotero.Integration.currentSession = session;
+			[session, documentImported] = await Trellis.Integration.getSession(application, document, agent, command);
+			Trellis.Integration.currentSession = session;
 			// TODO: figure this out
-			// Zotero.Notifier.trigger('delete', 'collection', 'document');
+			// Trellis.Notifier.trigger('delete', 'collection', 'document');
 			if (!documentImported) {
-				await (new Zotero.Integration.Interface(application, document, session))[command]();
+				await (new Trellis.Integration.Interface(application, document, session))[command]();
 			}
 			await document.setDocumentData(session.data.serialize());
 		}
 		catch (e) {
-			if (!(e instanceof Zotero.Exception.UserCancelled)) {
-				await Zotero.Integration._handleCommandError(document, session, e);
+			if (!(e instanceof Trellis.Exception.UserCancelled)) {
+				await Trellis.Integration._handleCommandError(document, session, e);
 			}
 			else {
 				if (session) {
@@ -307,23 +307,23 @@ Zotero.Integration = new function () {
 		}
 		finally {
 			var diff = ((new Date()).getTime() - startTime)/1000;
-			Zotero.debug(`Integration: ${agent}-${command}${docId ? `:'${docId}'` : ''} complete in ${diff}s`)
+			Trellis.debug(`Integration: ${agent}-${command}${docId ? `:'${docId}'` : ''} complete in ${diff}s`)
 		
-			if (Zotero.Integration.currentWindow && !Zotero.Integration.currentWindow.closed) {
-				var oldWindow = Zotero.Integration.currentWindow;
+			if (Trellis.Integration.currentWindow && !Trellis.Integration.currentWindow.closed) {
+				var oldWindow = Trellis.Integration.currentWindow;
 				oldWindow.close();
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 
-			if (Zotero.Integration.currentSession && Zotero.Integration.currentSession.progressBar) {
-				Zotero.Integration.currentSession.progressBar.hide();
-				await Zotero.Promise.delay(50);
+			if (Trellis.Integration.currentSession && Trellis.Integration.currentSession.progressBar) {
+				Trellis.Integration.currentSession.progressBar.hide();
+				await Trellis.Promise.delay(50);
 			}
 			
 			if (document) {
 				try {
 					await document.cleanup();
-					if (!Zotero.Integration.currentSession?._dontActivateDocument) {
+					if (!Trellis.Integration.currentSession?._dontActivateDocument) {
 						await document.activate();
 					}
 					
@@ -332,18 +332,18 @@ Zotero.Integration = new function () {
 						await document.complete();
 					}
 				} catch(e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			
 			// This technically shouldn't be necessary since we call document.activate(),
 			// but http integration plugins may not have OS level access to windows to be
 			// able to activate themselves. E.g. Google Docs on Safari.
-			if (Zotero.isMac && agent == 'http') {
-				Zotero.Utilities.Internal.sendToBack();
+			if (Trellis.isMac && agent == 'http') {
+				Trellis.Utilities.Internal.sendToBack();
 			}
 			
-			Zotero.Integration.currentDoc = Zotero.Integration.currentWindow = false;
+			Trellis.Integration.currentDoc = Trellis.Integration.currentWindow = false;
 			deferred.resolve();
 		}
 	};
@@ -353,31 +353,31 @@ Zotero.Integration = new function () {
 	 */
 	this.shouldAbortCommand = async function () {
 		const ps = Services.prompt;
-		if (!Zotero.Integration.currentDoc) return false;
+		if (!Trellis.Integration.currentDoc) return false;
 		
-		if (Zotero.Integration.currentWindow) {
-			if (!Zotero.Integration.currentWindow.isPristine) {
-				Zotero.Utilities.Internal.activate();
-				Zotero.Integration.currentWindow.focus();
+		if (Trellis.Integration.currentWindow) {
+			if (!Trellis.Integration.currentWindow.isPristine) {
+				Trellis.Utilities.Internal.activate();
+				Trellis.Integration.currentWindow.focus();
 				// Prompt user that changes will be lost in the existing dialog
-				let result = Zotero.Prompt.confirm({
-					title: Zotero.getString('general.warning'),
-					text: Zotero.getString(`integration-warning-${Zotero.Integration.currentWindowType}-changes-will-be-lost`),
-					button0: Zotero.getString('integration-warning-discard-changes'),
-					button1: Zotero.Prompt.BUTTON_TITLE_CANCEL
+				let result = Trellis.Prompt.confirm({
+					title: Trellis.getString('general.warning'),
+					text: Trellis.getString(`integration-warning-${Trellis.Integration.currentWindowType}-changes-will-be-lost`),
+					button0: Trellis.getString('integration-warning-discard-changes'),
+					button1: Trellis.Prompt.BUTTON_TITLE_CANCEL
 				});
 				if (result == 1) {
 					return true;
 				}
 			}
-			Zotero.Integration.currentWindow.cancel();
-			await Zotero.Integration.currentCommandPromise;
+			Trellis.Integration.currentWindow.cancel();
+			await Trellis.Integration.currentCommandPromise;
 		}
 		else {
 			// Prompt the user that an integration command is already running
 			let ps = Services.prompt;
-			ps.alert(null, Zotero.getString('general.warning'),
-				Zotero.getString('integration-warning-command-is-running'));
+			ps.alert(null, Trellis.getString('general.warning'),
+				Trellis.getString('integration-warning-command-is-running'));
 			return true;
 		}
 		return false;
@@ -385,32 +385,32 @@ Zotero.Integration = new function () {
 	
 	this._handleCommandError = async function (document, session, e) {
 		try {
-			let supportURL = "https://www.zotero.org/support/kb/debugging_broken_documents";
+			let supportURL = "https://www.trellis.org/support/kb/debugging_broken_documents";
 			var displayError;
-			if (e instanceof Zotero.Exception.Alert) {
+			if (e instanceof Trellis.Exception.Alert) {
 				displayError = e.message;
 			}
 			else {
 				if (e.toString().includes("Could not find a running Word instance.")) {
-					displayError = Zotero.getString('integration-error-unable-to-find-winword')
-						+ "\n\n" + Zotero.getString("integration.error.viewTroubleshootingInfo");
-					supportURL = "https://www.zotero.org/support/kb/could_not_find_a_running_word_instance";
+					displayError = Trellis.getString('integration-error-unable-to-find-winword')
+						+ "\n\n" + Trellis.getString("integration.error.viewTroubleshootingInfo");
+					supportURL = "https://www.trellis.org/support/kb/could_not_find_a_running_word_instance";
 				}
 				else if (e.toString().indexOf("ExceptionAlreadyDisplayed") === -1) {
-					displayError = Zotero.getString("integration.error.generic")
-						+ "\n\n" + Zotero.getString("integration.error.viewTroubleshootingInfo");
+					displayError = Trellis.getString("integration.error.generic")
+						+ "\n\n" + Trellis.getString("integration.error.viewTroubleshootingInfo");
 				}
 				else {
 					return;
 				}
 				if (e.stack) {
-					Zotero.debug(e.stack);
+					Trellis.debug(e.stack);
 				}
 			}
 			
-			if (Zotero.Integration.currentSession && Zotero.Integration.currentSession.progressBar) {
-				Zotero.Promise.delay(5).then(() =>
-					Zotero.Integration.currentSession.progressBar.hide());
+			if (Trellis.Integration.currentSession && Trellis.Integration.currentSession.progressBar) {
+				Trellis.Promise.delay(5).then(() =>
+					Trellis.Integration.currentSession.progressBar.hide());
 			}
 			
 			
@@ -418,45 +418,45 @@ Zotero.Integration = new function () {
 			if (document) {
 				try {
 					await document.activate();
-					if (e instanceof Zotero.Exception.Alert) {
+					if (e instanceof Trellis.Exception.Alert) {
 						await document.displayAlert(displayError, DIALOG_ICON_STOP, DIALOG_BUTTONS_OK);
 					} else {
 						let index = await document.displayAlert(displayError, DIALOG_ICON_STOP, DIALOG_BUTTONS_YES_NO);
 						if (index == 1) {
-							Zotero.launchURL(supportURL);
+							Trellis.launchURL(supportURL);
 						}
 					}
 					return;
 				}
 				catch (e) {
-					Zotero.debug("Integration: An error occurred while trying to display an alert. Falling back to Zotero");
-					Zotero.logError(e);
+					Trellis.debug("Integration: An error occurred while trying to display an alert. Falling back to Trellis");
+					Trellis.logError(e);
 				}
 			}
 			
-			Zotero.Utilities.Internal.activate(Zotero.Integration.currentWindow);
+			Trellis.Utilities.Internal.activate(Trellis.Integration.currentWindow);
 			let ps = Services.prompt;
-			if (e instanceof Zotero.Exception.Alert) {
-				ps.alert(null, Zotero.getString('integration.error.title'), displayError);
+			if (e instanceof Trellis.Exception.Alert) {
+				ps.alert(null, Trellis.getString('integration.error.title'), displayError);
 			}
 			else {
-				let index = ps.confirm(null, Zotero.getString('integration.error.title'), displayError);
+				let index = ps.confirm(null, Trellis.getString('integration.error.title'), displayError);
 				if (index == 1) {
-					Zotero.launchURL(supportURL);
+					Trellis.launchURL(supportURL);
 				}
 			}
 			
 			// CiteprocRsDriverError available only if citeproc-rs is enabled
 			try {
 				// If the driver panicked we cannot reuse it
-				if (e instanceof Zotero.CiteprocRs.CiteprocRsDriverError) {
+				if (e instanceof Trellis.CiteprocRs.CiteprocRsDriverError) {
 					session.style.free(true);
-					delete Zotero.Integration.sessions[session.id];
+					delete Trellis.Integration.sessions[session.id];
 				}
 			} catch (e) {}
 		}
 		finally {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	};
 	
@@ -468,7 +468,7 @@ Zotero.Integration = new function () {
 	 * @return {Promise} Promise resolved when the window is closed
 	 */
 	this.displayDialog = async function displayDialog(url, options, io, windowType) {
-		Zotero.debug(`Integration: Displaying dialog ${url}`);
+		Trellis.debug(`Integration: Displaying dialog ${url}`);
 		// On macOS (and potentially in the future with Word JS)
 		// we can only run request sequentially (native async field fetching was dropped
 		// with fx102 due to ctypes crashing when passing a callback function) which means
@@ -478,55 +478,55 @@ Zotero.Integration = new function () {
 		// the display of the dialog is blocked until fields are fetched and it is able to run.
 		// So we make sure cleanup is finished before the dialog is closed, but otherwise
 		// we should not delay the dialog display
-		let cleanupPromise = Zotero.Integration.currentDoc.cleanup();
-		await Zotero.Integration.currentSession?.progressBar.hide(true);
-		Zotero.Integration.currentWindowType = windowType;
+		let cleanupPromise = Trellis.Integration.currentDoc.cleanup();
+		await Trellis.Integration.currentSession?.progressBar.hide(true);
+		Trellis.Integration.currentWindowType = windowType;
 		
 		var allOptions = 'chrome,centerscreen';
 		// without this, Firefox gets raised with our windows under Compiz
-		if(Zotero.isLinux) allOptions += ',dialog=no';
+		if(Trellis.isLinux) allOptions += ',dialog=no';
 		if(options) allOptions += ','+options;
 		
 		var window = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 			.getService(Components.interfaces.nsIWindowWatcher)
 			.openWindow(null, url, '', allOptions, (io ? io : null));
-		Zotero.Integration.currentWindow = window;
-		Zotero.Utilities.Internal.activate(window);
+		Trellis.Integration.currentWindow = window;
+		Trellis.Utilities.Internal.activate(window);
 		
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		var listener = function () {
 			if(window.location.toString() === "about:blank") return;
 			
 			if(window.newWindow) {
 				window = window.newWindow;
-				Zotero.Integration.currentWindow = window;
+				Trellis.Integration.currentWindow = window;
 				window.addEventListener("unload", listener, false);
 				return;
 			}
 			
-			Zotero.Integration.currentWindow = false;
+			Trellis.Integration.currentWindow = false;
 			deferred.resolve();
 		}
 		window.addEventListener("unload", listener, false);
 
 		await deferred.promise;
-		Zotero.Integration.currentSession?.progressBar.show();
+		Trellis.Integration.currentSession?.progressBar.show();
 		await cleanupPromise;
 	};
 	
 	/**
 	 * Gets a session for a given doc.
 	 * Either loads a cached session if doc communicated since restart or creates a new one
-	 * @return {Zotero.Integration.Session} Promise
+	 * @return {Trellis.Integration.Session} Promise
 	 */
 	this.getSession = async function (app, doc, agent, command) {
 		let documentImported = false;
 		try {
-			var progressBar = new Zotero.Integration.Progress(4, command == "addNote");
+			var progressBar = new Trellis.Integration.Progress(4, command == "addNote");
 			// Avoid showing the progress bar on macOS when initiating commands that
-			// display an UI interface, otherwise the Zotero window is brought to the front
+			// display an UI interface, otherwise the Trellis window is brought to the front
 			// along with the UI when the progress bar is closed.
-			if (!Zotero.isMac || ["refresh", "removeCodes", "addEditBibliography"].includes(command)) {
+			if (!Trellis.isMac || ["refresh", "removeCodes", "addEditBibliography"].includes(command)) {
 				progressBar.show();
 			}
 			
@@ -534,9 +534,9 @@ Zotero.Integration = new function () {
 				data, session;
 			
 			try {
-				data = new Zotero.Integration.DocumentData(dataString);
+				data = new Trellis.Integration.DocumentData(dataString);
 			} catch(e) {
-				data = new Zotero.Integration.DocumentData();
+				data = new Trellis.Integration.DocumentData();
 			}
 			
 			if (dataString != EXPORTED_DOCUMENT_MARKER && data.prefs.fieldType) {
@@ -548,29 +548,29 @@ Zotero.Integration = new function () {
 						data.prefs.fieldType = "ReferenceMark";
 					}
 					
-					var warning = await doc.displayAlert(Zotero.getString("integration.upgradeWarning", [Zotero.clientName, '5.0']),
+					var warning = await doc.displayAlert(Trellis.getString("integration.upgradeWarning", [Trellis.clientName, '5.0']),
 						DIALOG_ICON_WARNING, DIALOG_BUTTONS_OK_CANCEL);
 					if (!warning) {
-						throw new Zotero.Exception.UserCancelled("document upgrade");
+						throw new Trellis.Exception.UserCancelled("document upgrade");
 					}
 				// Don't throw for version 4(JSON) during the transition from 4.0 to 5.0
 				} else if ((data.dataVersion > DATA_VERSION) && data.dataVersion != 4) {
-					throw new Zotero.Exception.Alert("integration.error.newerDocumentVersion",
-							[data.zoteroVersion, Zotero.version], "integration.error.title");
+					throw new Trellis.Exception.Alert("integration.error.newerDocumentVersion",
+							[data.trellisVersion, Trellis.version], "integration.error.title");
 				}
 				
 				if (data.prefs.fieldType !== app.primaryFieldType
 						&& data.prefs.fieldType !== app.secondaryFieldType) {
-					throw new Zotero.Exception.Alert("integration.error.fieldTypeMismatch",
+					throw new Trellis.Exception.Alert("integration.error.fieldTypeMismatch",
 							[], "integration.error.title");
 				}
 
-				session = Zotero.Integration.sessions[data.sessionID];
+				session = Trellis.Integration.sessions[data.sessionID];
 			}
 			// Make sure we don't maintain the session if agent changes (i.e. LO -> Word)
 			// and display wrong field types in doc preferences.
 			if (!session || session.agent != agent) {
-				session = new Zotero.Integration.Session(doc, app);
+				session = new Trellis.Integration.Session(doc, app);
 				session.rebuildCiteprocState = true;
 			}
 			session.agent = agent;
@@ -586,7 +586,7 @@ Zotero.Integration = new function () {
 			session._transactionUpToDate = false;
 
 			if (dataString == EXPORTED_DOCUMENT_MARKER) {
-				Zotero.Integration.currentSession = session;
+				Trellis.Integration.currentSession = session;
 				data = await session.importDocument();
 				documentImported = true;
 				// We're slightly abusing the system here, but importing a document should cancel
@@ -597,17 +597,17 @@ Zotero.Integration = new function () {
 					await session.setData(data);
 				} catch(e) {
 					// make sure style is defined
-					if (e instanceof Zotero.Exception.Alert && e.name === "integration.error.invalidStyle") {
+					if (e instanceof Trellis.Exception.Alert && e.name === "integration.error.invalidStyle") {
 						if (data.style.styleID) {
 							let trustedSource =
-								/^https?:\/\/(www\.)?(zotero\.org|citationstyles\.org)/.test(data.style.styleID);
-							let errorString = Zotero.getString("integration.error.styleMissing", data.style.styleID);
+								/^https?:\/\/(www\.)?(trellis\.org|citationstyles\.org)/.test(data.style.styleID);
+							let errorString = Trellis.getString("integration.error.styleMissing", data.style.styleID);
 							if (trustedSource ||
 								(await doc.displayAlert(errorString, DIALOG_ICON_WARNING, DIALOG_BUTTONS_YES_NO))) {
 
 								let installed = false;
 								try {
-									let { styleTitle, styleID } = await Zotero.Styles.install(
+									let { styleTitle, styleID } = await Trellis.Styles.install(
 										{url: data.style.styleID}, data.style.styleID, true
 									);
 									data.style.styleID = styleID;
@@ -615,7 +615,7 @@ Zotero.Integration = new function () {
 								}
 								catch (e) {
 									await doc.displayAlert(
-										Zotero.getString(
+										Trellis.getString(
 											'integration.error.styleNotFound', data.style.styleID
 										),
 										DIALOG_ICON_WARNING,
@@ -651,27 +651,27 @@ Zotero.Integration = new function () {
 	
 }
 
-Zotero.Integration.confirmExportDocument = function () {
-	const documentationURL = "https://www.zotero.org/support/kb/moving_documents_between_word_processors";
+Trellis.Integration.confirmExportDocument = function () {
+	const documentationURL = "https://www.trellis.org/support/kb/moving_documents_between_word_processors";
 	
 	var ps = Services.prompt;
 	var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING)
 		+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL)
 		+ (ps.BUTTON_POS_2) * (ps.BUTTON_TITLE_IS_STRING);
 	var result = ps.confirmEx(null,
-		Zotero.getString('integration.exportDocument.title'),
-		Zotero.getString('integration.exportDocument.description1')
+		Trellis.getString('integration.exportDocument.title'),
+		Trellis.getString('integration.exportDocument.description1')
 			+ "\n\n"
-			+ Zotero.getString('integration.exportDocument.description2'),
+			+ Trellis.getString('integration.exportDocument.description2'),
 		buttonFlags,
-		Zotero.getString('general.continue'),
+		Trellis.getString('general.continue'),
 		null,
-		Zotero.getString('general.moreInformation'), null, {});
+		Trellis.getString('general.moreInformation'), null, {});
 	if (result == 0) {
 		return true;
 	}
 	else if (result == 2) {
-		Zotero.launchURL(documentationURL);
+		Trellis.launchURL(documentationURL);
 	}
 	return false;
 }
@@ -679,23 +679,23 @@ Zotero.Integration.confirmExportDocument = function () {
 /**
  * An exception thrown when a document contains an item that no longer exists in the current document.
  */
-Zotero.Integration.MissingItemException = function (item) {this.item = item;};
-Zotero.Integration.MissingItemException.prototype = {
+Trellis.Integration.MissingItemException = function (item) {this.item = item;};
+Trellis.Integration.MissingItemException.prototype = {
 	"name":"MissingItemException",
-	"message":`An item in this document is missing from your Zotero library.}`,
+	"message":`An item in this document is missing from your Trellis library.}`,
 	"toString":function () { return this.message + `\n ${JSON.stringify(this.item)}` }
 };
 
-Zotero.Integration.NO_ACTION = 0;
-Zotero.Integration.UPDATE = 1;
-Zotero.Integration.DELETE = 2;
-Zotero.Integration.REMOVE_CODE = 3;
+Trellis.Integration.NO_ACTION = 0;
+Trellis.Integration.UPDATE = 1;
+Trellis.Integration.DELETE = 2;
+Trellis.Integration.REMOVE_CODE = 3;
 
 /**
  * All methods for interacting with a document
  * @constructor
  */
-Zotero.Integration.Interface = function (app, doc, session) {
+Trellis.Integration.Interface = function (app, doc, session) {
 	this._app = app;
 	this._doc = doc;
 	this._session = session;
@@ -705,7 +705,7 @@ Zotero.Integration.Interface = function (app, doc, session) {
  * Adds a citation to the current document.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.addCitation = async function () {
+Trellis.Integration.Interface.prototype.addCitation = async function () {
 	await this._session.init(false, false);
 	
 	let citations = await this._session.cite(null);
@@ -723,11 +723,11 @@ Zotero.Integration.Interface.prototype.addCitation = async function () {
  * Edits the citation at the cursor position.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.editCitation = async function () {
+Trellis.Integration.Interface.prototype.editCitation = async function () {
 	await this._session.init(true, false);
 	var docField = await this._doc.cursorInField(this._session.data.prefs['fieldType']);
 	if(!docField) {
-		throw new Zotero.Exception.Alert("integration.error.notInCitation", [],
+		throw new Trellis.Exception.Alert("integration.error.notInCitation", [],
 			"integration.error.title");
 	}
 	return this.addEditCitation(docField);
@@ -737,7 +737,7 @@ Zotero.Integration.Interface.prototype.editCitation = async function () {
  * Edits the citation at the cursor position if one exists, or else adds a new one.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.addEditCitation = async function (docField) {
+Trellis.Integration.Interface.prototype.addEditCitation = async function (docField) {
 	await this._session.init(false, false);
 	docField = docField || (await this._doc.cursorInField(this._session.data.prefs['fieldType']));
 
@@ -755,11 +755,11 @@ Zotero.Integration.Interface.prototype.addEditCitation = async function (docFiel
  * Adds a note to the current document.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.addNote = async function () {
+Trellis.Integration.Interface.prototype.addNote = async function () {
 	await this._session.init(false, false);
 
 	if ((!(await this._doc.canInsertField(this._session.data.prefs['fieldType'])))) {
-		throw new Zotero.Exception.Alert("integration.error.cannotInsertHere", [],
+		throw new Trellis.Exception.Alert("integration.error.cannotInsertHere", [],
 			"integration.error.title");
 	}
 
@@ -778,11 +778,11 @@ Zotero.Integration.Interface.prototype.addNote = async function () {
  * Insert annotations combined into one note into the current document.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.addAnnotation = async function () {
+Trellis.Integration.Interface.prototype.addAnnotation = async function () {
 	await this._session.init(false, false);
 
 	if ((!await this._doc.canInsertField(this._session.data.prefs.fieldType))) {
-		throw new Zotero.Exception.Alert("integration.error.cannotInsertHere", [],
+		throw new Trellis.Exception.Alert("integration.error.cannotInsertHere", [],
 			"integration.error.title");
 	}
 
@@ -801,16 +801,16 @@ Zotero.Integration.Interface.prototype.addAnnotation = async function () {
  * Adds a bibliography to the current document.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.addBibliography = async function () {
+Trellis.Integration.Interface.prototype.addBibliography = async function () {
 	var me = this;
 	await this._session.init(true, false);
 	// Make sure we can have a bibliography
 	if(!me._session.data.style.hasBibliography) {
-		throw new Zotero.Exception.Alert("integration.error.noBibliography", [],
+		throw new Trellis.Exception.Alert("integration.error.noBibliography", [],
 			"integration.error.title");
 	}
 	
-	let field = new Zotero.Integration.BibliographyField(await this._session.addField());
+	let field = new Trellis.Integration.BibliographyField(await this._session.addField());
 	var citationsMode = FORCE_CITATIONS_FALSE;
 	await field.clearCode();
 	if(this._session.data.prefs.delayCitationUpdates) {
@@ -826,14 +826,14 @@ Zotero.Integration.Interface.prototype.addBibliography = async function () {
  * Edits bibliography metadata.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.editBibliography = async function () {
+Trellis.Integration.Interface.prototype.editBibliography = async function () {
 	// Make sure we have a bibliography
 	await this._session.init(true, false);
 	var fields = await this._session.getFields();
 	
 	var bibliographyField;
 	for (let i = fields.length-1; i >= 0; i--) {
-		let field = await Zotero.Integration.Field.loadExisting(fields[i]);
+		let field = await Trellis.Integration.Field.loadExisting(fields[i]);
 		if (field.type == INTEGRATION_TYPE_BIBLIOGRAPHY) {
 			bibliographyField = field;
 			break;
@@ -841,10 +841,10 @@ Zotero.Integration.Interface.prototype.editBibliography = async function () {
 	}
 	
 	if(!bibliographyField) {
-		throw new Zotero.Exception.Alert("integration.error.mustInsertBibliography",
+		throw new Trellis.Exception.Alert("integration.error.mustInsertBibliography",
 			[], "integration.error.title");
 	}
-	let bibliography = new Zotero.Integration.Bibliography(bibliographyField, await bibliographyField.unserialize());
+	let bibliography = new Trellis.Integration.Bibliography(bibliographyField, await bibliographyField.unserialize());
 	var citationsMode = FORCE_CITATIONS_FALSE;
 	if(this._session.data.prefs.delayCitationUpdates) {
 		// Refreshes citeproc state before proceeding
@@ -857,12 +857,12 @@ Zotero.Integration.Interface.prototype.editBibliography = async function () {
 };
 
 
-Zotero.Integration.Interface.prototype.addEditBibliography = async function () {
+Trellis.Integration.Interface.prototype.addEditBibliography = async function () {
 	// Check if we have a bibliography
 	await this._session.init(true, false);
 	
 	if (!this._session.data.style.hasBibliography) {
-		throw new Zotero.Exception.Alert("integration.error.noBibliography", [],
+		throw new Trellis.Exception.Alert("integration.error.noBibliography", [],
 			"integration.error.title");
 	}
 	
@@ -870,7 +870,7 @@ Zotero.Integration.Interface.prototype.addEditBibliography = async function () {
 	
 	var bibliographyField;
 	for (let i = fields.length-1; i >= 0; i--) {
-		let field = await Zotero.Integration.Field.loadExisting(fields[i]);
+		let field = await Trellis.Integration.Field.loadExisting(fields[i]);
 		if (field.type == INTEGRATION_TYPE_BIBLIOGRAPHY) {
 			bibliographyField = field;
 			break;
@@ -879,11 +879,11 @@ Zotero.Integration.Interface.prototype.addEditBibliography = async function () {
 	
 	var newBibliography = !bibliographyField;
 	if (!bibliographyField) {
-		bibliographyField = new Zotero.Integration.BibliographyField(await this._session.addField());
+		bibliographyField = new Trellis.Integration.BibliographyField(await this._session.addField());
 		await bibliographyField.clearCode();
 	}
 	
-	let bibliography = new Zotero.Integration.Bibliography(bibliographyField, await bibliographyField.unserialize());
+	let bibliography = new Trellis.Integration.Bibliography(bibliographyField, await bibliographyField.unserialize());
 	var citationsMode = FORCE_CITATIONS_FALSE;
 	if(this._session.data.prefs.delayCitationUpdates) {
 		// Refreshes citeproc state before proceeding
@@ -897,7 +897,7 @@ Zotero.Integration.Interface.prototype.addEditBibliography = async function () {
 	await this._session.updateDocument(citationsMode, true, false);
 };
 
-Zotero.Integration.Interface.prototype.citationExplorer = async function () {
+Trellis.Integration.Interface.prototype.citationExplorer = async function () {
 	await this._session.init(true, false);
 	
 	var citationsMode = FORCE_CITATIONS_FALSE;
@@ -916,7 +916,7 @@ Zotero.Integration.Interface.prototype.citationExplorer = async function () {
  * Updates the citation data for all citations and bibliography entries.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.refresh = async function () {
+Trellis.Integration.Interface.prototype.refresh = async function () {
 	await this._session.init(true, false);
 	this._session._shouldMerge = true;
 	
@@ -929,10 +929,10 @@ Zotero.Integration.Interface.prototype.refresh = async function () {
  * Deletes field codes.
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.removeCodes = async function () {
+Trellis.Integration.Interface.prototype.removeCodes = async function () {
 	await this._session.init(true, false)
 	let fields = await this._session.getFields()
-	var result = await this._doc.displayAlert(Zotero.getString("integration.removeCodesWarning"),
+	var result = await this._doc.displayAlert(Trellis.getString("integration.removeCodesWarning"),
 				DIALOG_ICON_WARNING, DIALOG_BUTTONS_OK_CANCEL);
 	if (result) {
 		for(var i=fields.length-1; i>=0; i--) {
@@ -945,7 +945,7 @@ Zotero.Integration.Interface.prototype.removeCodes = async function () {
  * Displays a dialog to set document preferences (style, footnotes/endnotes, etc.)
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.setDocPrefs = async function () {
+Trellis.Integration.Interface.prototype.setDocPrefs = async function () {
 	var oldData;
 	let haveSession = await this._session.init(false, true);
 	
@@ -974,7 +974,7 @@ Zotero.Integration.Interface.prototype.setDocPrefs = async function () {
 	var fieldsToConvert = new Array();
 	var fieldNoteTypes = new Array();
 	for (var i=0, n=fields.length; i<n; i++) {
-		let field = await Zotero.Integration.Field.loadExisting(fields[i]);
+		let field = await Trellis.Integration.Field.loadExisting(fields[i]);
 		
 		if (convertItems && field.type === INTEGRATION_TYPE_ITEM) {
 			var citation = await field.unserialize();
@@ -1010,9 +1010,9 @@ Zotero.Integration.Interface.prototype.setDocPrefs = async function () {
  * Exports the citations in the document to a format importable in other word processors
  * @return {Promise}
  */
-Zotero.Integration.Interface.prototype.exportDocument = async function () {
+Trellis.Integration.Interface.prototype.exportDocument = async function () {
 	await this._session.init(true, false);
-	if (Zotero.Integration.confirmExportDocument()) {
+	if (Trellis.Integration.confirmExportDocument()) {
 		await this._session.exportDocument();
 	}
 }
@@ -1020,22 +1020,22 @@ Zotero.Integration.Interface.prototype.exportDocument = async function () {
 /**
  * An exceedingly simple nsISimpleEnumerator implementation
  */
-Zotero.Integration.JSEnumerator = function (objArray) {
+Trellis.Integration.JSEnumerator = function (objArray) {
 	this.objArray = objArray;
 }
-Zotero.Integration.JSEnumerator.prototype.hasMoreElements = function () {
+Trellis.Integration.JSEnumerator.prototype.hasMoreElements = function () {
 	return this.objArray.length;
 }
-Zotero.Integration.JSEnumerator.prototype.getNext = function () {
+Trellis.Integration.JSEnumerator.prototype.getNext = function () {
 	return this.objArray.shift();
 }
 
 /**
  * Keeps track of all session-specific variables
  */
-Zotero.Integration.Session = function (doc, app) {
+Trellis.Integration.Session = function (doc, app) {
 	this.embeddedItems = {};
-	this.embeddedZoteroItems = {};
+	this.embeddedTrellisItems = {};
 	this.embeddedItemsByURI = {};
 	this.citationsByIndex = {};
 	this.resetRequest(doc);
@@ -1066,27 +1066,27 @@ Zotero.Integration.Session = function (doc, app) {
 	this._deleteFields = {};
 	this._bibliographyFields = [];
 
-	this.sessionID = Zotero.randomString();
-	Zotero.Integration.sessions[this.sessionID] = this;
+	this.sessionID = Trellis.randomString();
+	Trellis.Integration.sessions[this.sessionID] = this;
 }
 
 /**
  * Checks that it is appropriate to add fields to the current document at the current
  * position, then adds one.
  */
-Zotero.Integration.Session.prototype.addField = async function (note, fieldIndex=-1) {
+Trellis.Integration.Session.prototype.addField = async function (note, fieldIndex=-1) {
 	// Get citation types if necessary
 	if (!(await this._doc.canInsertField(this.data.prefs['fieldType']))) {
-		return Promise.reject(new Zotero.Exception.Alert("integration.error.cannotInsertHere",
+		return Promise.reject(new Trellis.Exception.Alert("integration.error.cannotInsertHere",
 		[], "integration.error.title"));
 	}
 	
 	var field = await this._doc.cursorInField(this.data.prefs['fieldType']);
 	if (field) {
-		if (!(await this.displayAlert(Zotero.getString("integration.replace"),
+		if (!(await this.displayAlert(Trellis.getString("integration.replace"),
 				DIALOG_ICON_STOP,
 				DIALOG_BUTTONS_OK_CANCEL))) {
-			return Promise.reject(new Zotero.Exception.UserCancelled("inserting citation"));
+			return Promise.reject(new Trellis.Exception.UserCancelled("inserting citation"));
 		}
 	}
 	
@@ -1115,7 +1115,7 @@ Zotero.Integration.Session.prototype.addField = async function (note, fieldIndex
  * Gets all fields for a document
  * @return {Promise} Promise resolved with field list.
  */
-Zotero.Integration.Session.prototype.getFields = new function () {
+Trellis.Integration.Session.prototype.getFields = new function () {
 	var deferred;
 	return async function (force=false) {
 		// If we already have fields, just return them
@@ -1126,11 +1126,11 @@ Zotero.Integration.Session.prototype.getFields = new function () {
 		if (deferred) {
 			return deferred.promise;
 		}
-		deferred = Zotero.Promise.defer();
+		deferred = Trellis.Promise.defer();
 		var promise = deferred.promise;
 		
 		// Otherwise, start getting fields
-		var timer = new Zotero.Integration.Timer();
+		var timer = new Trellis.Integration.Timer();
 		timer.start();
 		this.progressBar.start();
 		try {
@@ -1138,7 +1138,7 @@ Zotero.Integration.Session.prototype.getFields = new function () {
 			
 			var retrieveTime = timer.stop();
 			this.progressBar.finishSegment();
-			Zotero.debug("Integration: Retrieved " + fields.length + " fields in " +
+			Trellis.debug("Integration: Retrieved " + fields.length + " fields in " +
 				retrieveTime + "; " + fields.length/retrieveTime + " fields/second");
 			deferred.resolve(fields);
 		} catch(e) {
@@ -1151,9 +1151,9 @@ Zotero.Integration.Session.prototype.getFields = new function () {
 }
 
 /**
- * Updates Zotero.Integration.Session citations from the session document
+ * Updates Trellis.Integration.Session citations from the session document
  */
-Zotero.Integration.Session.prototype.updateFromDocument = async function (forceUpdateAllCitations) {
+Trellis.Integration.Session.prototype.updateFromDocument = async function (forceUpdateAllCitations) {
 	if (this._transactionUpToDate) {
 		return;
 	}
@@ -1164,13 +1164,13 @@ Zotero.Integration.Session.prototype.updateFromDocument = async function (forceU
 	this._deleteFields = {};
 	this._bibliographyFields = [];
 	
-	var timer = new Zotero.Integration.Timer();
+	var timer = new Trellis.Integration.Timer();
 	timer.start();
 	this.progressBar.start();
 	if (forceUpdateAllCitations) {
 		this.forceUpdateAllCitations = true;
 		// See Session.restoreProcessorState() for a comment
-		if (!Zotero.Prefs.get('cite.useCiteprocRs')) {
+		if (!Trellis.Prefs.get('cite.useCiteprocRs')) {
 			this.rebuildCiteprocState = true;
 		}
 	}
@@ -1179,14 +1179,14 @@ Zotero.Integration.Session.prototype.updateFromDocument = async function (forceU
 		await this.handleRetractedItems();
 	}
 	catch (e) {
-		Zotero.debug('Retracted item handling failed', 2);
-		Zotero.logError(e);
+		Trellis.debug('Retracted item handling failed', 2);
+		Trellis.logError(e);
 	}
 	this.forceUpdateAllCitations = false;
 
 	var updateTime = timer.stop();
 	this.progressBar.finishSegment();
-	Zotero.debug("Integration: Updated session data for " + this._fields.length + " fields in "
+	Trellis.debug("Integration: Updated session data for " + this._fields.length + " fields in "
 		+ updateTime + "; " + this._fields.length/updateTime + " fields/second");
 	
 	if (this.rebuildCiteprocState) {
@@ -1199,18 +1199,18 @@ Zotero.Integration.Session.prototype.updateFromDocument = async function (forceU
 /**
  * Keep processing fields until all have been processed
  */
-Zotero.Integration.Session.prototype._processFields = async function () {
+Trellis.Integration.Session.prototype._processFields = async function () {
 	if (!this._fields) {
 		throw new Error("_processFields called without fetching fields first");
 	}
 
 	let adjacentCitations = [];
 	for (var i = 0; i < this._fields.length; i++) {
-		let field = await Zotero.Integration.Field.loadExisting(this._fields[i]);
+		let field = await Trellis.Integration.Field.loadExisting(this._fields[i]);
 		if (field.type === INTEGRATION_TYPE_ITEM) {
 			var noteIndex = await field.getNoteIndex(),
 				data = await field.unserialize(),
-				citation = new Zotero.Integration.Citation(field, data, noteIndex);
+				citation = new Trellis.Integration.Citation(field, data, noteIndex);
 				citation.fieldIndex = i;
 
 			if (this._shouldMerge && typeof field.isAdjacentToNextField === 'function' && (await field.isAdjacentToNextField())) {
@@ -1233,13 +1233,13 @@ Zotero.Integration.Session.prototype._processFields = async function () {
 	}
 	if (this._bibliographyFields.length) {
 		var data = await this._bibliographyFields[0].unserialize()
-		this.bibliography = new Zotero.Integration.Bibliography(this._bibliographyFields[0], data);
+		this.bibliography = new Trellis.Integration.Bibliography(this._bibliographyFields[0], data);
 		await this.bibliography.loadItemData();
 	} else {
 		delete this.bibliography;
 	}
 	// TODO: figure this out
-	// Zotero.Notifier.trigger('add', 'collection', 'document');
+	// Trellis.Notifier.trigger('add', 'collection', 'document');
 };
 
 /**
@@ -1250,8 +1250,8 @@ Zotero.Integration.Session.prototype._processFields = async function () {
  *	   modified since they were created, instead of showing a warning
  * @return {Promise} A promise resolved when the document is updated
  */
-Zotero.Integration.Session.prototype.updateDocument = async function (forceCitations, forceBibliography, ignoreCitationChanges) {
-	this.timer = new Zotero.Integration.Timer();
+Trellis.Integration.Session.prototype.updateDocument = async function (forceCitations, forceBibliography, ignoreCitationChanges) {
+	this.timer = new Trellis.Integration.Timer();
 	this.timer.start();
 	
 	this.progressBar.start();
@@ -1263,7 +1263,7 @@ Zotero.Integration.Session.prototype.updateDocument = async function (forceCitat
 
 	var diff = this.timer.stop();
 	this.timer = null;
-	Zotero.debug(`Integration: updateDocument complete in ${diff}s`)
+	Trellis.debug(`Integration: updateDocument complete in ${diff}s`)
 	// If the update takes longer than 5s suggest delaying citation updates
 	if (diff > DELAY_CITATIONS_PROMPT_TIMEOUT && !this.data.prefs.dontAskDelayCitationUpdates && !this.data.prefs.delayCitationUpdates) {
 		await this._doc.activate();
@@ -1274,11 +1274,11 @@ Zotero.Integration.Session.prototype.updateDocument = async function (forceCitat
 		}
 		
 		var result = await this.displayAlert(
-				Zotero.getString('integration.delayCitationUpdates.alert.text1')
+				Trellis.getString('integration.delayCitationUpdates.alert.text1')
 					+ "\n\n"
-					+ Zotero.getString(`integration.delayCitationUpdates.alert.text2.${interfaceType}`)
+					+ Trellis.getString(`integration.delayCitationUpdates.alert.text2.${interfaceType}`)
 					+ "\n\n"
-					+ Zotero.getString('integration.delayCitationUpdates.alert.text3'),
+					+ Trellis.getString('integration.delayCitationUpdates.alert.text3'),
 				DIALOG_ICON_WARNING,
 				DIALOG_BUTTONS_YES_NO_CANCEL
 		);
@@ -1299,7 +1299,7 @@ Zotero.Integration.Session.prototype.updateDocument = async function (forceCitat
  * @param {Boolean} [ignoreCitationChanges] Whether to ignore changes to citations that have been 
  *	modified since they were created, instead of showing a warning
  */
-Zotero.Integration.Session.prototype._updateDocument = async function (forceCitations, forceBibliography,
+Trellis.Integration.Session.prototype._updateDocument = async function (forceCitations, forceBibliography,
 		ignoreCitationChanges) {
 	if(this.progressCallback) {
 		var nFieldUpdates = Object.keys(this.processIndices).length;
@@ -1318,7 +1318,7 @@ Zotero.Integration.Session.prototype._updateDocument = async function (forceCita
 	// it allows nested field codes, and creating an automatic index
 	// on author names produces exactly the sorts of nested field codes
 	// in styles like full footnote chicago. Upon text update on such citation
-	// Zotero removes the automatically added index fields, effectively changing
+	// Trellis removes the automatically added index fields, effectively changing
 	// the order of appearance of all following fields, and since
 	// fields are hard-tied to their index in the document for MacWord subsequent
 	// field updates start failing.
@@ -1352,11 +1352,11 @@ Zotero.Integration.Session.prototype._updateDocument = async function (forceCita
 			try {
 				this.progressCallback(75+(nUpdated/nFieldUpdates)*25);
 			} catch(e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		// Jump to next event loop step for UI updates
-		await Zotero.Promise.delay();
+		await Trellis.Promise.delay();
 		
 		var citation = this.citationsByIndex[i];
 		if (citation) {
@@ -1372,16 +1372,16 @@ Zotero.Integration.Session.prototype._updateDocument = async function (forceCita
 									
 				if (!ignoreCitationChanges && plaintextChanged) {
 					// Citation manually modified; ask user if they want to save changes
-					Zotero.debug("[_updateDocument] Attempting to update manually modified citation.\n"
+					Trellis.debug("[_updateDocument] Attempting to update manually modified citation.\n"
 						+ "Original: " + citation.properties.plainCitation + "\n"
 						+ "Current:  " + plainCitation
 					);
 					await citationField.select();
 					var result = await this.displayAlert(
-						Zotero.getString("integration.citationChanged")+"\n\n"
-							+ Zotero.getString("integration.citationChanged.description")+"\n\n"
-							+ Zotero.getString("integration.citationChanged.original", citation.properties.plainCitation)+"\n"
-							+ Zotero.getString("integration.citationChanged.modified", plainCitation)+"\n", 
+						Trellis.getString("integration.citationChanged")+"\n\n"
+							+ Trellis.getString("integration.citationChanged.description")+"\n\n"
+							+ Trellis.getString("integration.citationChanged.original", citation.properties.plainCitation)+"\n"
+							+ Trellis.getString("integration.citationChanged.modified", plainCitation)+"\n", 
 						DIALOG_ICON_CAUTION, DIALOG_BUTTONS_YES_NO);
 					if (result) {
 						citation.properties.dontUpdate = true;
@@ -1455,7 +1455,7 @@ Zotero.Integration.Session.prototype._updateDocument = async function (forceCita
 				// Only set the bibliography style once so that customizations
 				// to Bibliography style in word processors are maintained
 				if(!this.data.style.bibliographyStyleHasBeenSet) {
-					var bibStyle = Zotero.Cite.getBibliographyFormatParameters(bib);
+					var bibStyle = Trellis.Cite.getBibliographyFormatParameters(bib);
 					
 					// set bibliography style
 					await this._doc.setBibliographyStyle(bibStyle.firstLineIndent, bibStyle.indent,
@@ -1472,11 +1472,11 @@ Zotero.Integration.Session.prototype._updateDocument = async function (forceCita
 					this.progressCallback(75+(nUpdated/nFieldUpdates)*25);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			// Jump to next event loop step for UI updates
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			
 			if (bibliographyText) {
 				await bibliographyField.setText(bibliographyText);
@@ -1506,35 +1506,35 @@ Zotero.Integration.Session.prototype._updateDocument = async function (forceCita
  * display the citation dialog and perform any field/text inserts after
  * the dialog edits are accepted
  */
-Zotero.Integration.Session.prototype.cite = async function (field, addNote=false, addAnnotations = false) {
+Trellis.Integration.Session.prototype.cite = async function (field, addNote=false, addAnnotations = false) {
 	var newField;
 	var citation;
 	
 	if (field) {
-		field = await Zotero.Integration.Field.loadExisting(field);
+		field = await Trellis.Integration.Field.loadExisting(field);
 
 		if (field.type === INTEGRATION_TYPE_ITEM) {
-			citation = new Zotero.Integration.Citation(field, await field.unserialize(), await field.getNoteIndex());
+			citation = new Trellis.Integration.Citation(field, await field.unserialize(), await field.getNoteIndex());
 		}
 		else if (field.type === INTEGRATION_TYPE_BIBLIOGRAPHY) {
 			let commandName = this._app.processorName == 'Google Docs'
 				? '“Add/edit bibliography”'
 				: 'Add/Edit Bibliography';
-			throw new Zotero.Exception.Alert("integration.error.inBibliography", [commandName]);
+			throw new Trellis.Exception.Alert("integration.error.inBibliography", [commandName]);
 		}
 		else {
 			// Treat any non-item and non-bibliograph field as a TEMP placeholder, that is likely
-			// there because previous integration command stopped prematurely (e.g. by closing Zotero).
+			// there because previous integration command stopped prematurely (e.g. by closing Trellis).
 			// This could also be something else, but since the integration plugin on the word processor
-			// side decided to return what it thought to be a Zotero field, we should treat it as such.
+			// side decided to return what it thought to be a Trellis field, we should treat it as such.
 			newField = true;
-			field = new Zotero.Integration.CitationField(field._field);
-			citation = new Zotero.Integration.Citation(field);
+			field = new Trellis.Integration.CitationField(field._field);
+			citation = new Trellis.Integration.Citation(field);
 		}
 	} else {
 		newField = true;
-		field = new Zotero.Integration.CitationField(await this.addField(true));
-		citation = new Zotero.Integration.Citation(field);
+		field = new Trellis.Integration.CitationField(await this.addField(true));
+		citation = new Trellis.Integration.Citation(field);
 	}
 	
 	await citation.prepareForEditing();
@@ -1554,7 +1554,7 @@ Zotero.Integration.Session.prototype.cite = async function (field, addNote=false
 				if (await fields[i].equals(field._field)) {
 					// This is needed, because LibreOffice integration plugin caches the field code instead of asking
 					// the document every time when calling #getCode().
-					field = new Zotero.Integration.CitationField(fields[i]);
+					field = new Trellis.Integration.CitationField(fields[i]);
 					return i;
 				}
 			}
@@ -1591,24 +1591,24 @@ Zotero.Integration.Session.prototype.cite = async function (field, addNote=false
 		return result;
 	}.bind(this);
 		
-	var io = new Zotero.Integration.CitationEditInterface(
+	var io = new Trellis.Integration.CitationEditInterface(
 		citation, this.style.opt.sort_citations,
 		fieldIndexPromise, citationsByItemIDPromise, previewFn
 	);
 	io.isCitingNotes = addNote;
 	io.isAddingAnnotations = addAnnotations;
-	Zotero.debug(`Editing citation:`);
-	Zotero.debug(JSON.stringify(citation.toJSON()));
+	Trellis.debug(`Editing citation:`);
+	Trellis.debug(JSON.stringify(citation.toJSON()));
 
 	var mode = "chrome,centerscreen,resizable=true";
-	if (!Zotero.isMac && Zotero.Prefs.get('integration.keepAddCitationDialogRaised')) {
+	if (!Trellis.isMac && Trellis.Prefs.get('integration.keepAddCitationDialogRaised')) {
 		mode += ",popup";
 	}
 	else {
 		mode += ",alwaysRaised";
 	}
 
-	Zotero.Integration.displayDialog('chrome://zotero/content/integration/citationDialog.xhtml', mode, io, "citation");
+	Trellis.Integration.displayDialog('chrome://trellis/content/integration/citationDialog.xhtml', mode, io, "citation");
 
 	// -------------------
 	// io.promise resolves when the citation dialog is closed
@@ -1621,7 +1621,7 @@ Zotero.Integration.Session.prototype.cite = async function (field, addNote=false
 				await field.delete();
 			} catch(e) {}
 		}
-		throw new Zotero.Exception.UserCancelled("inserting citation");
+		throw new Trellis.Exception.UserCancelled("inserting citation");
 	}
 
 	var fieldIndex = await fieldIndexPromise;
@@ -1633,7 +1633,7 @@ Zotero.Integration.Session.prototype.cite = async function (field, addNote=false
 		citations = await this._insertCitingResult(fieldIndex, field, io.citation);
 	}
 	catch (e) {
-		if (e instanceof Zotero.Exception.UserCancelled) {
+		if (e instanceof Trellis.Exception.UserCancelled) {
 			if (newField) {
 				try {
 					await field.delete();
@@ -1654,7 +1654,7 @@ Zotero.Integration.Session.prototype.cite = async function (field, addNote=false
 	}
 	for (let citation of citations) {
 		if (fields) {
-			citation.field = new Zotero.Integration.CitationField(fields[citation.fieldIndex]);
+			citation.field = new Trellis.Integration.CitationField(fields[citation.fieldIndex]);
 		}
 		await this.addCitation(citation.fieldIndex, await citation.field.getNoteIndex(), citation);
 	}
@@ -1675,23 +1675,23 @@ Zotero.Integration.Session.prototype.cite = async function (field, addNote=false
  * @returns {Promise<[]>}
  * @private
  */
-Zotero.Integration.Session.prototype._insertCitingResult = async function (fieldIndex, field, citation) {
+Trellis.Integration.Session.prototype._insertCitingResult = async function (fieldIndex, field, citation) {
 	await citation.loadItemData();
 	
-	let allItems = citation.citationItems.map(item => Zotero.Cite.getItem(item.id));
+	let allItems = citation.citationItems.map(item => Trellis.Cite.getItem(item.id));
 	// Handle adding selected annotations as a mock note
 	if (allItems.some(item => item.isAnnotation())) {
 		if (!allItems.every(item => item.isAnnotation())) {
 			throw new Error("Citing result with annotations must not include other item types");
 		}
-		let includeComments = Zotero.Prefs.get("integration.annotationDialogIncludeComments");
+		let includeComments = Trellis.Prefs.get("integration.annotationDialogIncludeComments");
 		// Note is created with embedded data to be inserted but nothing is saved to DB
-		let mockNote = await Zotero.EditorInstance.createNoteFromAnnotations(
+		let mockNote = await Trellis.EditorInstance.createNoteFromAnnotations(
 			allItems, { noSave: true, noHeader: true, noComments: !includeComments }
 		);
 		return this._insertNoteIntoDocument(fieldIndex, field, mockNote);
 	}
-	let firstItem = Zotero.Cite.getItem(citation.citationItems[0].id);
+	let firstItem = Trellis.Cite.getItem(citation.citationItems[0].id);
 	if (firstItem && firstItem.isNote()) {
 		return this._insertNoteIntoDocument(fieldIndex, field, firstItem);
 	}
@@ -1705,10 +1705,10 @@ Zotero.Integration.Session.prototype._insertCitingResult = async function (field
  *
  * Returns the modified note text and an array of citation objects and their corresponding
  * placeholder IDs
- * @param item {Zotero.Item}
+ * @param item {Trellis.Item}
  */
-Zotero.Integration.Session.prototype._processNote = async function (item) {
-	let text = await Zotero.Notes.getExportableNote(item);
+Trellis.Integration.Session.prototype._processNote = async function (item) {
+	let text = await Trellis.Notes.getExportableNote(item);
 	let parser = new DOMParser();
 	let doc = parser.parseFromString(text, "text/html");
 	let citationsElems = doc.querySelectorAll('.citation[data-citation]');
@@ -1720,7 +1720,7 @@ Zotero.Integration.Session.prototype._processNote = async function (item) {
 			let citation = JSON.parse(decodeURIComponent(citationElem.dataset.citation));
 			delete citation.properties;
 			citations.push(citation);
-			let placeholderID = Zotero.Utilities.randomString(6);
+			let placeholderID = Trellis.Utilities.randomString(6);
 			// Add the placeholder we'll be using for the link to placeholder array
 			placeholderIDs.push(placeholderID);
 			let placeholderURL = NOTE_CITATION_PLACEHOLDER_LINK + placeholderID;
@@ -1733,8 +1733,8 @@ Zotero.Integration.Session.prototype._processNote = async function (item) {
 		}
 		catch (e) {
 			e.message = `Failed to parse a citation from a note: ${decodeURIComponent(citationElem.dataset.citation)}`;
-			Zotero.debug(e, 1);
-			Zotero.logError(e);
+			Trellis.debug(e, 1);
+			Trellis.logError(e);
 		}
 	}
 	// Encode unicode chars
@@ -1746,7 +1746,7 @@ Zotero.Integration.Session.prototype._processNote = async function (item) {
 	text = value.trim();
 	
 	if (text.length == 0) {
-		throw new Zotero.Exception.UserCancelled("inserted empty note, cancelling");
+		throw new Trellis.Exception.UserCancelled("inserted empty note, cancelling");
 	}
 	
 	if (!text.startsWith('<html>')) {
@@ -1755,7 +1755,7 @@ Zotero.Integration.Session.prototype._processNote = async function (item) {
 	return [text, citations, placeholderIDs];
 };
 
-Zotero.Integration.Session.prototype._insertNoteIntoDocument = async function (fieldIndex, field, noteItem) {
+Trellis.Integration.Session.prototype._insertNoteIntoDocument = async function (fieldIndex, field, noteItem) {
 	let [text, citations, placeholderIDs] = await this._processNote(noteItem);
 	await field.delete();
 	await this._doc.insertText(text);
@@ -1767,7 +1767,7 @@ Zotero.Integration.Session.prototype._insertNoteIntoDocument = async function (f
 	let fields = await this._doc.convertPlaceholdersToFields(placeholderIDs, this.data.prefs.noteType, this.data.prefs.fieldType);
 	
 	let insertedCitations = await Promise.all(fields.map(async (field, index) => {
-		let citation = new Zotero.Integration.Citation(new Zotero.Integration.CitationField(field, 'TEMP'),
+		let citation = new Trellis.Integration.Citation(new Trellis.Integration.CitationField(field, 'TEMP'),
 			citations[index]);
 		citation.fieldIndex = fieldIndex + fields.length - 1 - index;
 		return citation;
@@ -1775,9 +1775,9 @@ Zotero.Integration.Session.prototype._insertNoteIntoDocument = async function (f
 	return insertedCitations;
 };
 
-Zotero.Integration.Session.prototype._insertItemsIntoDocument = async function (fieldIndex, field, citation) {
+Trellis.Integration.Session.prototype._insertItemsIntoDocument = async function (fieldIndex, field, citation) {
 	if (!field) {
-		field = new Zotero.Integration.CitationField(await this.addField(true, fieldIndex));
+		field = new Trellis.Integration.CitationField(await this.addField(true, fieldIndex));
 	}
 	citation.field = field;
 	citation.fieldIndex = fieldIndex;
@@ -1787,7 +1787,7 @@ Zotero.Integration.Session.prototype._insertItemsIntoDocument = async function (
 /**
  * Citation editing functions and propertiesaccessible to citationDialog.js
  */
-Zotero.Integration.CitationEditInterface = function (items, sortable, fieldIndexPromise,
+Trellis.Integration.CitationEditInterface = function (items, sortable, fieldIndexPromise,
 		citationsByItemIDPromise, previewFn){
 	this.citation = items;
 	this.sortable = sortable;
@@ -1798,7 +1798,7 @@ Zotero.Integration.CitationEditInterface = function (items, sortable, fieldIndex
 	// Not available in citationDialog.js if this unspecified
 	this.wrappedJSObject = this;
 
-	this._acceptDeferred = Zotero.Promise.defer();
+	this._acceptDeferred = Trellis.Promise.defer();
 	this._isAccepted = false;
 	this.promise = this._acceptDeferred.promise;
 
@@ -1808,7 +1808,7 @@ Zotero.Integration.CitationEditInterface = function (items, sortable, fieldIndex
 	this.allCitedDataLoadedPromise.then(() => this.isAllCitedDataLoaded = true);
 }
 
-Zotero.Integration.CitationEditInterface.prototype = {
+Trellis.Integration.CitationEditInterface.prototype = {
 	/**
 	 * Execute a callback with a preview of the given citation
 	 * @param {String} [format] Override the default output format (e.g. "html" for use in citation dialog)
@@ -1858,13 +1858,13 @@ Zotero.Integration.CitationEditInterface.prototype = {
 				&& citationsByItemID[itemID].length
 				// Exclude the present item
 				&& (citationsByItemID[itemID].length > 1
-					|| citationsByItemID[itemID][0].properties.zoteroIndex !== fieldIndex);
+					|| citationsByItemID[itemID][0].properties.trellisIndex !== fieldIndex);
 		});
 		
 		// Sort all previously cited items at top, and all items cited later at bottom
 		ids.sort(function (a, b) {
-			var indexA = citationsByItemID[a][0].properties.zoteroIndex,
-				indexB = citationsByItemID[b][0].properties.zoteroIndex;
+			var indexA = citationsByItemID[a][0].properties.trellisIndex,
+				indexB = citationsByItemID[b][0].properties.trellisIndex;
 			
 			if (indexA >= fieldIndex){
 				if(indexB < fieldIndex) return 1;
@@ -1875,15 +1875,15 @@ Zotero.Integration.CitationEditInterface.prototype = {
 			return indexB - indexA;
 		});
 		
-		return Zotero.Cite.getItem(ids);
+		return Trellis.Cite.getItem(ids);
 	},
 }
 
 /**
  * Resets per-request variables in the CitationSet
  */
-Zotero.Integration.Session.prototype.resetRequest = function (doc) {
-	this.uriMap = new Zotero.Integration.URIMap(this);
+Trellis.Integration.Session.prototype.resetRequest = function (doc) {
+	this.uriMap = new Trellis.Integration.URIMap(this);
 	
 	this.bibliographyHasChanged = false;
 	this.bibliographyDataHasChanged = false;
@@ -1928,7 +1928,7 @@ Zotero.Integration.Session.prototype.resetRequest = function (doc) {
  * @param dontRunSetDocPrefs {Boolean} Whether to show the Document Preferences window if no preferences exist
  * @return {Promise{Boolean}} true if session ready to, false if preferences dialog needs to be displayed first
  */
-Zotero.Integration.Session.prototype.init = async function (require, dontRunSetDocPrefs) {
+Trellis.Integration.Session.prototype.init = async function (require, dontRunSetDocPrefs) {
 	var data = this.data;
 	var haveFields = false;
 	
@@ -1951,7 +1951,7 @@ Zotero.Integration.Session.prototype.init = async function (require, dontRunSetD
 		
 	if (require && !haveFields) {
 		// If required but no fields throw an error
-		return Promise.reject(new Zotero.Exception.Alert(
+		return Promise.reject(new Trellis.Exception.Alert(
 			"integration.error.mustInsertCitation",
 			[], "integration.error.title"));
 	}
@@ -1966,7 +1966,7 @@ Zotero.Integration.Session.prototype.init = async function (require, dontRunSetD
 	return true;
 };
 
-Zotero.Integration.Session.prototype.displayAlert = async function () {
+Trellis.Integration.Session.prototype.displayAlert = async function () {
 	if (this.timer) {
 		this.timer.pause();
 	}
@@ -1979,19 +1979,19 @@ Zotero.Integration.Session.prototype.displayAlert = async function () {
 
 /**
  * Changes the Session style and data
- * @param data {Zotero.Integration.DocumentData}
+ * @param data {Trellis.Integration.DocumentData}
  * @param resetStyle {Boolean} Whether to force the style to be reset
  *     regardless of whether it has changed. This is desirable if the
  *     automaticJournalAbbreviations or locale has changed.
  */
-Zotero.Integration.Session.prototype.setData = async function (data, resetStyle) {
+Trellis.Integration.Session.prototype.setData = async function (data, resetStyle) {
 	var oldStyle = (this.data && this.data.style ? this.data.style : false);
 	this.data = data;
 	this.data.sessionID = this.sessionID;
 	if (data.style.styleID && (!oldStyle || oldStyle.styleID != data.style.styleID || resetStyle)) {
 		try {
-			await Zotero.Styles.init();
-			var getStyle = Zotero.Styles.get(data.style.styleID);
+			await Trellis.Styles.init();
+			var getStyle = Trellis.Styles.get(data.style.styleID);
 			data.style.hasBibliography = getStyle.hasBibliography;
 			if (this.style && this.style.free) {
 				this.style.free();
@@ -2000,15 +2000,15 @@ Zotero.Integration.Session.prototype.setData = async function (data, resetStyle)
 				automaticJournalAbbreviations: data.prefs.automaticJournalAbbreviations,
 			});
 			// Disable wrap_url_and_doi to prevent double-encoding of special characters in DOIs
-			// https://github.com/zotero/zotero/issues/5557
+			// https://github.com/trellis/trellis/issues/5557
 			this.style.opt.development_extensions.wrap_url_and_doi = false;
 			this.styleClass = getStyle.class;
 			// We're changing the citeproc instance, so we'll have to reinsert all citations into the registry
 			this.rebuildCiteprocState = true;
 			this.styleID = data.style.styleID;
 		} catch (e) {
-			Zotero.logError(e);
-			throw new Zotero.Exception.Alert("integration.error.invalidStyle");
+			Trellis.logError(e);
+			throw new Trellis.Exception.Alert("integration.error.invalidStyle");
 		}
 		
 		return true;
@@ -2021,10 +2021,10 @@ Zotero.Integration.Session.prototype.setData = async function (data, resetStyle)
 /**
  * Displays a dialog to set document preferences
  * @return {Promise} A promise resolved with old document data, if there was any or null,
- *    if there wasn't, or rejected with Zotero.Exception.UserCancelled if the dialog was
+ *    if there wasn't, or rejected with Trellis.Exception.UserCancelled if the dialog was
  *    cancelled.
  */
-Zotero.Integration.Session.prototype.setDocPrefs = async function (showImportExport=false) {
+Trellis.Integration.Session.prototype.setDocPrefs = async function (showImportExport=false) {
 	var io = new function () { this.wrappedJSObject = this; };
 	io.primaryFieldType = this.primaryFieldType;
 	io.secondaryFieldType = this.secondaryFieldType;
@@ -2039,13 +2039,13 @@ Zotero.Integration.Session.prototype.setDocPrefs = async function (showImportExp
 		io.delayCitationUpdates = this.data.prefs.delayCitationUpdates;
 		io.dontAskDelayCitationUpdates = this.data.prefs.dontAskDelayCitationUpdates;
 		io.automaticJournalAbbreviations = this.data.prefs.automaticJournalAbbreviations;
-		io.requireStoreReferences = !Zotero.Utilities.isEmpty(this.embeddedItems);
+		io.requireStoreReferences = !Trellis.Utilities.isEmpty(this.embeddedItems);
 		io.showImportExport = showImportExport && this.data.prefs.fieldType && this._app.supportsImportExport;
 	}
 	
 	// Make sure styles are initialized for new docs
-	await Zotero.Styles.init();
-	await Zotero.Integration.displayDialog('chrome://zotero/content/integration/integrationDocPrefs.xhtml', '', io, "documentPreferences");
+	await Trellis.Styles.init();
+	await Trellis.Integration.displayDialog('chrome://trellis/content/integration/integrationDocPrefs.xhtml', '', io, "documentPreferences");
 
 	if (io.exportDocument) {
 		return this.exportDocument();
@@ -2053,12 +2053,12 @@ Zotero.Integration.Session.prototype.setDocPrefs = async function (showImportExp
 	
 	if (!io.style || !io.fieldType) {
 		this._dontActivateDocument = io.dontActivateDocument;
-		throw new Zotero.Exception.UserCancelled("document preferences window");
+		throw new Trellis.Exception.UserCancelled("document preferences window");
 	}
 	
 	// set data
 	var oldData = this.data;
-	var data = new Zotero.Integration.DocumentData();
+	var data = new Trellis.Integration.DocumentData();
 	data.dataVersion = oldData.dataVersion;
 	data.sessionID = oldData.sessionID;
 	data.style.styleID = io.style;
@@ -2091,32 +2091,32 @@ Zotero.Integration.Session.prototype.setDocPrefs = async function (showImportExp
 	return oldData || null;
 }
 
-Zotero.Integration.Session.prototype.exportDocument = async function () {
-	Zotero.debug("Integration: Exporting the document");
-	var timer = new Zotero.Integration.Timer();
+Trellis.Integration.Session.prototype.exportDocument = async function () {
+	Trellis.debug("Integration: Exporting the document");
+	var timer = new Trellis.Integration.Timer();
 	timer.start();
 	try {
 		this.data.style.bibliographyStyleHasBeenSet = false;
 		await this._doc.setDocumentData(this.data.serialize());
 		await this._doc.exportDocument(this.data.prefs.fieldType,
-			Zotero.getString('integration.importInstructions'));
+			Trellis.getString('integration.importInstructions'));
 	} finally {
-		Zotero.debug(`Integration: Export finished in ${timer.stop()}`);
+		Trellis.debug(`Integration: Export finished in ${timer.stop()}`);
 	}
 }
 
 
-Zotero.Integration.Session.prototype.importDocument = async function () {
-	const documentationURL = "https://www.zotero.org/support/kb/moving_documents_between_word_processors";
+Trellis.Integration.Session.prototype.importDocument = async function () {
+	const documentationURL = "https://www.trellis.org/support/kb/moving_documents_between_word_processors";
 	
 	var ps = Services.prompt;
 
 	if (!this._app.supportsImportExport) {
 		// Technically you will only reach this part in the code if getDocumentData returns
-		// ZOTERO_TRANSFER_DOCUMENT, which is only viable for Word.
+		// TRELLIS_TRANSFER_DOCUMENT, which is only viable for Word.
 		// Let's add a parameter this changes later.
-		ps.alert(null, Zotero.getString('integration.importDocument.title'),
-			Zotero.getString('integration.importDocument.notAvailable', "Word"));
+		ps.alert(null, Trellis.getString('integration.importDocument.title'),
+			Trellis.getString('integration.importDocument.notAvailable', "Word"));
 		return;
 	}
 
@@ -2124,29 +2124,29 @@ Zotero.Integration.Session.prototype.importDocument = async function () {
 		+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL)
 		+ (ps.BUTTON_POS_2) * (ps.BUTTON_TITLE_IS_STRING);
 	var result = ps.confirmEx(null,
-		Zotero.getString('integration.importDocument.title'),
-		Zotero.getString('integration.importDocument.description', [Zotero.clientName, this._app.processorName]),
+		Trellis.getString('integration.importDocument.title'),
+		Trellis.getString('integration.importDocument.description', [Trellis.clientName, this._app.processorName]),
 		buttonFlags,
-		Zotero.getString('integration.importDocument.button'),
+		Trellis.getString('integration.importDocument.button'),
 		null,
-		Zotero.getString('general.moreInformation'), null, {});
+		Trellis.getString('general.moreInformation'), null, {});
 	if (result == 1) {
-		throw new Zotero.Exception.UserCancelled("the document import");
+		throw new Trellis.Exception.UserCancelled("the document import");
 	}
 	if (result == 2) {
-		Zotero.launchURL(documentationURL);
-		throw new Zotero.Exception.UserCancelled("the document import");
+		Trellis.launchURL(documentationURL);
+		throw new Trellis.Exception.UserCancelled("the document import");
 	}
-	Zotero.debug("Integration: Importing the document");
-	var timer = new Zotero.Integration.Timer();
+	Trellis.debug("Integration: Importing the document");
+	var timer = new Trellis.Integration.Timer();
 	timer.start();
 	try {
 		var importSuccessful = await this._doc.importDocument(this._app.primaryFieldType);
 		if (!importSuccessful) {
-			Zotero.debug("Integration: No importable data found in the document");
+			Trellis.debug("Integration: No importable data found in the document");
 			return this.displayAlert("No importable data found", DIALOG_ICON_WARNING, DIALOG_BUTTONS_OK);
 		}
-		var data = new Zotero.Integration.DocumentData(await this._doc.getDocumentData());
+		var data = new Trellis.Integration.DocumentData(await this._doc.getDocumentData());
 		data.prefs.fieldType = this._app.primaryFieldType;
 		await this.setData(data, true);
 		await this.getFields(true);
@@ -2157,7 +2157,7 @@ Zotero.Integration.Session.prototype.importDocument = async function () {
 		}
 		await this.updateDocument(FORCE_CITATIONS_RESET_TEXT, true, true);
 	} finally {
-		Zotero.debug(`Integration: Import finished in ${timer.stop()}`);
+		Trellis.debug(`Integration: Import finished in ${timer.stop()}`);
 	}
 	return data;
 }
@@ -2165,11 +2165,11 @@ Zotero.Integration.Session.prototype.importDocument = async function () {
 /**
  * Adds a citation to the arrays representing the document
  */
-Zotero.Integration.Session.prototype.addCitation = async function (index, noteIndex, citation, adjacentCitations=[]) {
+Trellis.Integration.Session.prototype.addCitation = async function (index, noteIndex, citation, adjacentCitations=[]) {
 	index = parseInt(index, 10);
 	
 	if (adjacentCitations.length) {
-		Zotero.debug(`Merging adjacent citations ${adjacentCitations.map(c => c.citationID)} to citation ${citation.citationID}`);
+		Trellis.debug(`Merging adjacent citations ${adjacentCitations.map(c => c.citationID)} to citation ${citation.citationID}`);
 		for (let adjacentCitation of adjacentCitations) {
 			citation.mergeCitation(adjacentCitation);
 		}
@@ -2178,22 +2178,22 @@ Zotero.Integration.Session.prototype.addCitation = async function (index, noteIn
 	
 	var action = await citation.loadItemData();
 	
-	if (action == Zotero.Integration.REMOVE_CODE) {
+	if (action == Trellis.Integration.REMOVE_CODE) {
 		// Mark for removal and return
 		this._removeCodeFields[index] = true;
 		return;
-	} else if (action == Zotero.Integration.DELETE) {
+	} else if (action == Trellis.Integration.DELETE) {
 		// Mark for deletion and return
 		this._deleteFields[index] = true;
 		return;
-	} else if (action == Zotero.Integration.UPDATE) {
+	} else if (action == Trellis.Integration.UPDATE) {
 		this.updateIndices[index] = true;
 	}
 	// All new fields will initially be marked for deletion because they contain no
 	// citationItems
 	delete this._deleteFields[index];
 
-	citation.properties.zoteroIndex = index;
+	citation.properties.trellisIndex = index;
 	citation.properties.noteIndex = noteIndex;
 	this.citationsByIndex[index] = citation;
 	
@@ -2205,12 +2205,12 @@ Zotero.Integration.Session.prototype.addCitation = async function (index, noteIn
 			this.bibliographyHasChanged = true;
 		} else {
 			var byItemID = this.citationsByItemID[citationItem.id];
-			if (byItemID[byItemID.length-1].properties.zoteroIndex < index) {
+			if (byItemID[byItemID.length-1].properties.trellisIndex < index) {
 				// if index is greater than the last index, add to end
 				byItemID.push(citation);
 			} else {
 				// otherwise, splice in at appropriate location
-				for (var j=0; byItemID[j].properties.zoteroIndex < index && j<byItemID.length-1; j++) {}
+				for (var j=0; byItemID[j].properties.trellisIndex < index && j<byItemID.length-1; j++) {}
 				byItemID.splice(j++, 0, citation);
 			}
 		}
@@ -2226,8 +2226,8 @@ Zotero.Integration.Session.prototype.addCitation = async function (index, noteIn
 			// and either one may need to be updated
 			this.newIndices[duplicateIndex] = true;
 		}
-		Zotero.debug("Integration: "+citation.citationID+" ("+index+") needs new citationID");
-		citation.citationID = Zotero.Utilities.randomString();
+		Trellis.debug("Integration: "+citation.citationID+" ("+index+") needs new citationID");
+		citation.citationID = Trellis.Utilities.randomString();
 		this.newIndices[index] = true;
 	}
 	// Deal with citations that are copied into the document from somewhere else
@@ -2238,11 +2238,11 @@ Zotero.Integration.Session.prototype.addCitation = async function (index, noteIn
 	if (this.forceUpdateAllCitations && !this.newIndices[index]) {
 		this.updateIndices[index] = true;
 	}
-	Zotero.debug("Integration: Adding citationID "+citation.citationID);
+	Trellis.debug("Integration: Adding citationID "+citation.citationID);
 	this.documentCitationIDs[citation.citationID] = index;
 };
 
-Zotero.Integration.Session.prototype.getCiteprocLists = function () {
+Trellis.Integration.Session.prototype.getCiteprocLists = function () {
 	var citations = [];
 	var fieldToCitationIdxMapping = {};
 	var citationToFieldIdxMapping = {};
@@ -2263,14 +2263,14 @@ Zotero.Integration.Session.prototype.getCiteprocLists = function () {
 /**
  * Updates the list of citations to be serialized to the document
  */
-Zotero.Integration.Session.prototype._updateCitations = async function () {
-	if (Zotero.Prefs.get('cite.useCiteprocRs')) {
+Trellis.Integration.Session.prototype._updateCitations = async function () {
+	if (Trellis.Prefs.get('cite.useCiteprocRs')) {
 		return this._updateCitationsCiteprocRs();
 	}
-	Zotero.debug("Integration: Indices of new citations");
-	Zotero.debug(Object.keys(this.newIndices));
-	Zotero.debug("Integration: Indices of updated citations");
-	Zotero.debug(Object.keys(this.updateIndices));
+	Trellis.debug("Integration: Indices of new citations");
+	Trellis.debug(Object.keys(this.newIndices));
+	Trellis.debug("Integration: Indices of updated citations");
+	Trellis.debug(Object.keys(this.updateIndices));
 	
 	let citations, fieldToCitationIdxMapping, citationToFieldIdxMapping;
 	for (let indexList of [this.newIndices, this.updateIndices]) {
@@ -2283,7 +2283,7 @@ Zotero.Integration.Session.prototype._updateCitations = async function () {
 			}
 		
 			// Jump to next event loop step for UI updates
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			index = parseInt(index);
 			
 			var citation = this.citationsByIndex[index];
@@ -2293,7 +2293,7 @@ Zotero.Integration.Session.prototype._updateCitations = async function () {
 			let citationsPre = citations.slice(0, citationToFieldIdxMapping[index]);
 			var citationsPost = citations.slice(citationToFieldIdxMapping[index]+1);
 			
-			Zotero.debug("Integration: style.processCitationCluster("+citation.toSource()+", "+citationsPre.toSource()+", "+citationsPost.toSource());
+			Trellis.debug("Integration: style.processCitationCluster("+citation.toSource()+", "+citationsPre.toSource()+", "+citationsPost.toSource());
 			let [info, newCitations] = this.style.processCitationCluster(citation, citationsPre, citationsPost);
 			
 			this.bibliographyHasChanged |= info.bibchange;
@@ -2313,11 +2313,11 @@ Zotero.Integration.Session.prototype._updateCitations = async function () {
 /**
  * Updates the list of citations to be serialized to the document with citeproc-rs
  */
-Zotero.Integration.Session.prototype._updateCitationsCiteprocRs = async function () {
-	Zotero.debug("Integration: Indices of new citations");
-	Zotero.debug(Object.keys(this.newIndices));
-	Zotero.debug("Integration: Indices of updated citations");
-	Zotero.debug(Object.keys(this.updateIndices));
+Trellis.Integration.Session.prototype._updateCitationsCiteprocRs = async function () {
+	Trellis.debug("Integration: Indices of new citations");
+	Trellis.debug(Object.keys(this.newIndices));
+	Trellis.debug("Integration: Indices of updated citations");
+	Trellis.debug(Object.keys(this.updateIndices));
 
 	for (let indexList of [this.newIndices, this.updateIndices]) {
 		for (let index in indexList) {
@@ -2329,7 +2329,7 @@ Zotero.Integration.Session.prototype._updateCitationsCiteprocRs = async function
 			var citation = this.citationsByIndex[index];
 			citation = citation.toJSON();
 
-			Zotero.debug(`Integration: citeprocRs.insertCluster(${citation.toSource()})`);
+			Trellis.debug(`Integration: citeprocRs.insertCluster(${citation.toSource()})`);
 			this.style.insertCluster(citation);
 		}
 	}
@@ -2340,11 +2340,11 @@ Zotero.Integration.Session.prototype._updateCitationsCiteprocRs = async function
 	}
 
 	const citations = this.getCiteprocLists()[0];
-	Zotero.debug("Integration: citeprocRs.setClusterOrder()");
+	Trellis.debug("Integration: citeprocRs.setClusterOrder()");
 	this.style.setClusterOrder(citations);
-	Zotero.debug("Integration: citeprocRs.getBatchedUpdates()");
+	Trellis.debug("Integration: citeprocRs.getBatchedUpdates()");
 	const updateSummary = this.style.getBatchedUpdates();
-	Zotero.debug("Integration: got UpdateSummary from citeprocRs");
+	Trellis.debug("Integration: got UpdateSummary from citeprocRs");
 	for (const [citationID, text] of updateSummary.clusters) {
 		const index = citationIDToIndex[citationID];
 		this.citationsByIndex[index].text = text;
@@ -2358,7 +2358,7 @@ Zotero.Integration.Session.prototype._updateCitationsCiteprocRs = async function
 /**
  * Restores processor state from document, without requesting citation updates
  */
-Zotero.Integration.Session.prototype.restoreProcessorState = function () {
+Trellis.Integration.Session.prototype.restoreProcessorState = function () {
 	if (this._bibliographyFields.length && !this.bibliography) {
 		throw new Error ("Attempting to restore processor state without loading bibliography");
 	}
@@ -2373,7 +2373,7 @@ Zotero.Integration.Session.prototype.restoreProcessorState = function () {
 			citations.push(this.citationsByIndex[i]);
 		}
 	}
-	if (!Zotero.Prefs.get('cite.useCiteprocRs')) {
+	if (!Trellis.Prefs.get('cite.useCiteprocRs')) {
 		// rebuildProcessorState() doesn't reset the disambiguation cache when
 		// passed a non-empty citation list. This causes items to be disambiguated
 		// even after being modified so they're no longer ambiguous. Work around
@@ -2384,7 +2384,7 @@ Zotero.Integration.Session.prototype.restoreProcessorState = function () {
 }
 
 
-Zotero.Integration.Session.prototype.writeDelayedCitation = async function (field, citation) {
+Trellis.Integration.Session.prototype.writeDelayedCitation = async function (field, citation) {
 	try {
 		var text = citation.properties.custom || this.style.previewCitationCluster(citation, [], [], this.outputFormat);
 	}
@@ -2424,14 +2424,14 @@ Zotero.Integration.Session.prototype.writeDelayedCitation = async function (fiel
 	if (this._sessionUpToDate) {
 		var fields = await this.getFields();
 		for (let i = fields.length - 1; i >= 0; i--) {
-			let field = await Zotero.Integration.Field.loadExisting(fields[i]);
+			let field = await Trellis.Integration.Field.loadExisting(fields[i]);
 			if (field.type == INTEGRATION_TYPE_BIBLIOGRAPHY) {
 				var interfaceType = 'tab';
 				if (['MacWord2008', 'OpenOffice'].includes(this.agent)) {
 					interfaceType = 'toolbar';
 				}
 			
-				await field.setText(Zotero.getString(`integration.delayCitationUpdates.bibliography.${interfaceType}`), false);
+				await field.setText(Trellis.getString(`integration.delayCitationUpdates.bibliography.${interfaceType}`), false);
 				break;
 			}
 		}
@@ -2440,17 +2440,17 @@ Zotero.Integration.Session.prototype.writeDelayedCitation = async function (fiel
 };
 
 
-Zotero.Integration.Session.prototype.getItems = function (itemIDs) {
+Trellis.Integration.Session.prototype.getItems = function (itemIDs) {
 	itemIDs = itemIDs || Object.keys(this.citationsByItemID);
-	return Zotero.Cite.getItem(itemIDs);
+	return Trellis.Cite.getItem(itemIDs);
 }
 
-Zotero.Integration.Session.prototype.handleRetractedItems = async function () {
+Trellis.Integration.Session.prototype.handleRetractedItems = async function () {
 	const dealWithRetracted = (citedItem, inLibrary) => {
 		let dontPromptAgain = this.promptForRetraction(citedItem, inLibrary);
 		if (dontPromptAgain) {
 			if (citedItem.id) {
-				Zotero.Retractions.disableCitationWarningsForItem(citedItem);
+				Trellis.Retractions.disableCitationWarningsForItem(citedItem);
 			}
 			let itemID = citedItem.id || citedItem.cslItemID;
 			for (let citation of this.citationsByItemID[itemID]) {
@@ -2463,30 +2463,30 @@ Zotero.Integration.Session.prototype.handleRetractedItems = async function () {
 			}
 		}
 	};
-	let zoteroItems = this.getItems();
-	let embeddedZoteroItems = [];
-	for (let zoteroItem of zoteroItems) {
-		let itemID = zoteroItem.id || zoteroItem.cslItemID;
+	let trellisItems = this.getItems();
+	let embeddedTrellisItems = [];
+	for (let trellisItem of trellisItems) {
+		let itemID = trellisItem.id || trellisItem.cslItemID;
 		let citation = this.citationsByItemID[itemID][0];
 		let citationItem = citation.citationItems.find(i => i.id == itemID);
 		if (!citationItem.ignoreRetraction) {
-			if (zoteroItem.cslItemID) {
-				embeddedZoteroItems.push(zoteroItem);
+			if (trellisItem.cslItemID) {
+				embeddedTrellisItems.push(trellisItem);
 			}
-			else if (Zotero.Retractions.shouldShowCitationWarning(zoteroItem)) {
-				dealWithRetracted(zoteroItem, true);
+			else if (Trellis.Retractions.shouldShowCitationWarning(trellisItem)) {
+				dealWithRetracted(trellisItem, true);
 			}
 		}
 	}
-	var retractedIndices = await Promise.race([Zotero.Retractions.getRetractionsFromJSON(
-		embeddedZoteroItems.map(item => item.toJSON())
-	), Zotero.Promise.delay(1000).then(() => [])]);
+	var retractedIndices = await Promise.race([Trellis.Retractions.getRetractionsFromJSON(
+		embeddedTrellisItems.map(item => item.toJSON())
+	), Trellis.Promise.delay(1000).then(() => [])]);
 	for (let index of retractedIndices) {
-		dealWithRetracted(embeddedZoteroItems[index]);
+		dealWithRetracted(embeddedTrellisItems[index]);
 	}
 };
 
-Zotero.Integration.Session.prototype.promptForRetraction = function (citedItem, inLibrary) {
+Trellis.Integration.Session.prototype.promptForRetraction = function (citedItem, inLibrary) {
 	let ps = Services.prompt;
 	let buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_OK);
 	// Cannot use citedItem.firstCreator since embedded items do not have that
@@ -2495,19 +2495,19 @@ Zotero.Integration.Session.prototype.promptForRetraction = function (citedItem, 
 	let itemString = (creator ? creator.lastName + ", " : "")
 		+ (year ? year + ", " : "")
 		+ citedItem.getDisplayTitle();
-	let promptText = Zotero.getString('retraction.citationWarning')
+	let promptText = Trellis.getString('retraction.citationWarning')
 		+ "\n\n"
 		+ itemString;
 	if (inLibrary) {
-		promptText += "\n\n" + Zotero.getString('retraction.citeWarning.text2');
+		promptText += "\n\n" + Trellis.getString('retraction.citeWarning.text2');
 	}
 	let checkbox = { value: false };
 	ps.confirmEx(null,
-		Zotero.getString('general.warning'),
+		Trellis.getString('general.warning'),
 		promptText,
 		buttonFlags,
 		null, null, null,
-		Zotero.getString('retraction.citationWarning.dontWarn'), checkbox);
+		Trellis.getString('retraction.citationWarning.dontWarn'), checkbox);
 	
 	return checkbox.value;
 }
@@ -2515,7 +2515,7 @@ Zotero.Integration.Session.prototype.promptForRetraction = function (citedItem, 
 /**
  * Opens the citation explorer
  */
-Zotero.Integration.Session.prototype.openCitationExplorer = async function () {
+Trellis.Integration.Session.prototype.openCitationExplorer = async function () {
 	if (!Object.keys(this.citationsByIndex).length) {
 		throw new Error('Integration.Session.openCitationExplorer: called without loaded citations');
 	}
@@ -2529,14 +2529,14 @@ Zotero.Integration.Session.prototype.openCitationExplorer = async function () {
 		cursorInCitation: async (citation) => {
 			const field = await this._doc.cursorInField(this.data.prefs['fieldType']);
 			if (!field) return false;
-			const citationField = await Zotero.Integration.Field.loadExisting(field);
+			const citationField = await Trellis.Integration.Field.loadExisting(field);
 			const data = await citationField.unserialize();
 			return data.citationID === citation.citationID;
 		},
 		updateIndex: index => this.updateIndices[index] = true
 	};
 	
-	await Zotero.Integration.displayDialog('chrome://zotero/content/integration/citationExplorer.xhtml', 'resizable', io);
+	await Trellis.Integration.displayDialog('chrome://trellis/content/integration/citationExplorer.xhtml', 'resizable', io);
 	
 	if (io.openCitationDialog) {
 		let citations = await this.cite(io.openCitationDialog);
@@ -2553,9 +2553,9 @@ Zotero.Integration.Session.prototype.openCitationExplorer = async function () {
 
 /**
  * Edits integration bibliography
- * @param {Zotero.Integration.Bibliography} bibliography
+ * @param {Trellis.Integration.Bibliography} bibliography
  */
-Zotero.Integration.Session.prototype.editBibliography = async function (bibliography) {
+Trellis.Integration.Session.prototype.editBibliography = async function (bibliography) {
 	if (!Object.keys(this.citationsByIndex).length) {
 		throw new Error('Integration.Session.editBibliography: called without loaded citations');
 	}
@@ -2564,10 +2564,10 @@ Zotero.Integration.Session.prototype.editBibliography = async function (bibliogr
 	await bibliography.loadItemData();
 	await bibliography.getCiteprocBibliography(this.style);
 	
-	var bibliographyEditor = new Zotero.Integration.BibliographyEditInterface(bibliography, this.citationsByItemID, this.style);
+	var bibliographyEditor = new Trellis.Integration.BibliographyEditInterface(bibliography, this.citationsByItemID, this.style);
 	
-	await Zotero.Integration.displayDialog('chrome://zotero/content/integration/editBibliographyDialog.xhtml', 'resizable', bibliographyEditor, "bibliography");
-	if (bibliographyEditor.cancelled) throw new Zotero.Exception.UserCancelled("bibliography editing");
+	await Trellis.Integration.displayDialog('chrome://trellis/content/integration/editBibliographyDialog.xhtml', 'resizable', bibliographyEditor, "bibliography");
+	if (bibliographyEditor.cancelled) throw new Trellis.Exception.UserCancelled("bibliography editing");
 	
 	this.bibliographyDataHasChanged = this.bibliographyHasChanged = true;
 	this.bibliography = bibliographyEditor.bibliography;
@@ -2577,9 +2577,9 @@ Zotero.Integration.Session.prototype.editBibliography = async function (bibliogr
  * @class Interface for bibliography editor to alter document bibliography
  * @constructor
  * Creates a new bibliography editor interface
- * @param bibliography {Zotero.Integration.Bibliography}
+ * @param bibliography {Trellis.Integration.Bibliography}
  */
-Zotero.Integration.BibliographyEditInterface = function (bibliography, citationsByItemID, citeproc) {
+Trellis.Integration.BibliographyEditInterface = function (bibliography, citationsByItemID, citeproc) {
 	this.bibliography = bibliography;
 	this.citeproc = citeproc;
 	this.wrappedJSObject = this;
@@ -2588,14 +2588,14 @@ Zotero.Integration.BibliographyEditInterface = function (bibliography, citations
 }
 
 
-Zotero.Integration.BibliographyEditInterface.prototype._update = function () {
+Trellis.Integration.BibliographyEditInterface.prototype._update = function () {
 	this.bib = this.bibliography.getCiteprocBibliography(this.citeproc);
 };
 
 /**
  * Reverts the text of an individual bibliography entry
  */
-Zotero.Integration.BibliographyEditInterface.prototype.revert = function (itemID) {
+Trellis.Integration.BibliographyEditInterface.prototype.revert = function (itemID) {
 	delete this.bibliography.customEntryText[itemID];
 	return this._update();
 }
@@ -2603,7 +2603,7 @@ Zotero.Integration.BibliographyEditInterface.prototype.revert = function (itemID
 /**
  * Reverts bibliography to condition in which no edits have been made
  */
-Zotero.Integration.BibliographyEditInterface.prototype.revertAll = function () {
+Trellis.Integration.BibliographyEditInterface.prototype.revertAll = function () {
 	this.bibliography.customEntryText = {};
 	this.bibliography.uncitedItemIDs.clear();
 	this.bibliography.omittedItemIDs.clear();
@@ -2613,28 +2613,28 @@ Zotero.Integration.BibliographyEditInterface.prototype.revertAll = function () {
 /**
  * Reverts bibliography to condition before BibliographyEditInterface was opened
  */
-Zotero.Integration.BibliographyEditInterface.prototype.cancel = function () { 
+Trellis.Integration.BibliographyEditInterface.prototype.cancel = function () { 
 	this.cancelled = true;
 };
 
 /**
  * Checks whether a given reference is cited within the main document text
  */
-Zotero.Integration.BibliographyEditInterface.prototype.isCited = function (item) {
+Trellis.Integration.BibliographyEditInterface.prototype.isCited = function (item) {
 	return this._citationsByItemID[item];
 }
 
 /**
  * Checks whether an item ID is cited in the bibliography being edited
  */
-Zotero.Integration.BibliographyEditInterface.prototype.isEdited = function (itemID) {
+Trellis.Integration.BibliographyEditInterface.prototype.isEdited = function (itemID) {
 	return itemID in this.bibliography.customEntryText;
 }
 
 /**
  * Checks whether any citations in the bibliography have been edited
  */
-Zotero.Integration.BibliographyEditInterface.prototype.isAnyEdited = function () {
+Trellis.Integration.BibliographyEditInterface.prototype.isAnyEdited = function () {
 	return Object.keys(this.bibliography.customEntryText).length ||
 		this.bibliography.uncitedItemIDs.size ||
 		this.bibliography.omittedItemIDs.size;
@@ -2643,7 +2643,7 @@ Zotero.Integration.BibliographyEditInterface.prototype.isAnyEdited = function ()
 /**
  * Adds an item to the bibliography
  */
-Zotero.Integration.BibliographyEditInterface.prototype.add = function (itemID) {
+Trellis.Integration.BibliographyEditInterface.prototype.add = function (itemID) {
 	if (this.bibliography.omittedItemIDs.has(`${itemID}`)) {
 		this.bibliography.omittedItemIDs.delete(`${itemID}`);
 	} else {
@@ -2655,7 +2655,7 @@ Zotero.Integration.BibliographyEditInterface.prototype.add = function (itemID) {
 /**
  * Removes an item from the bibliography being edited
  */
-Zotero.Integration.BibliographyEditInterface.prototype.remove = function (itemID) {
+Trellis.Integration.BibliographyEditInterface.prototype.remove = function (itemID) {
 	if (this.bibliography.uncitedItemIDs.has(`${itemID}`)) {
 		this.bibliography.uncitedItemIDs.delete(`${itemID}`);
 	} else {
@@ -2667,7 +2667,7 @@ Zotero.Integration.BibliographyEditInterface.prototype.remove = function (itemID
 /**
  * Sets custom bibliography text for a given item
  */
-Zotero.Integration.BibliographyEditInterface.prototype.setCustomText = function (itemID, text) {
+Trellis.Integration.BibliographyEditInterface.prototype.setCustomText = function (itemID, text) {
 	this.bibliography.customEntryText[itemID] = text;
 	return this._update();
 }
@@ -2675,7 +2675,7 @@ Zotero.Integration.BibliographyEditInterface.prototype.setCustomText = function 
 /**
  * A class for parsing and passing around document-specific data
  */
-Zotero.Integration.DocumentData = function (string) {
+Trellis.Integration.DocumentData = function (string) {
 	this.style = {};
 	this.prefs = {};
 	this.sessionID = null;
@@ -2687,7 +2687,7 @@ Zotero.Integration.DocumentData = function (string) {
 /**
  * Serializes document-specific data as JSON
  */
-Zotero.Integration.DocumentData.prototype.serialize = function () {
+Trellis.Integration.DocumentData.prototype.serialize = function () {
 	// If we've retrieved data with version 4 (JSON), serialize back to JSON
 	if (this.dataVersion == 4) {
 		// Filter style properties
@@ -2699,7 +2699,7 @@ Zotero.Integration.DocumentData.prototype.serialize = function () {
 			style,
 			prefs: this.prefs,
 			sessionID: this.sessionID,
-			zoteroVersion: Zotero.version,
+			trellisVersion: Trellis.version,
 			dataVersion: 4
 		});
 	}
@@ -2707,15 +2707,15 @@ Zotero.Integration.DocumentData.prototype.serialize = function () {
 	var prefs = "";
 	for (var pref in this.prefs) {
 		if (!this.prefs[pref]) continue;
-		prefs += `<pref name="${Zotero.Utilities.htmlSpecialChars(pref)}" `+
-			`value="${Zotero.Utilities.htmlSpecialChars(this.prefs[pref].toString())}"/>`;
+		prefs += `<pref name="${Trellis.Utilities.htmlSpecialChars(pref)}" `+
+			`value="${Trellis.Utilities.htmlSpecialChars(this.prefs[pref].toString())}"/>`;
 	}
 	
-	return '<data data-version="'+Zotero.Utilities.htmlSpecialChars(`${DATA_VERSION}`)+'" '+
-		'zotero-version="'+Zotero.Utilities.htmlSpecialChars(Zotero.version)+'">'+
-			'<session id="'+Zotero.Utilities.htmlSpecialChars(this.sessionID)+'"/>'+
-		'<style id="'+Zotero.Utilities.htmlSpecialChars(this.style.styleID)+'" '+
-			(this.style.locale ? 'locale="' + Zotero.Utilities.htmlSpecialChars(this.style.locale) + '" ': '') +
+	return '<data data-version="'+Trellis.Utilities.htmlSpecialChars(`${DATA_VERSION}`)+'" '+
+		'trellis-version="'+Trellis.Utilities.htmlSpecialChars(Trellis.version)+'">'+
+			'<session id="'+Trellis.Utilities.htmlSpecialChars(this.sessionID)+'"/>'+
+		'<style id="'+Trellis.Utilities.htmlSpecialChars(this.style.styleID)+'" '+
+			(this.style.locale ? 'locale="' + Trellis.Utilities.htmlSpecialChars(this.style.locale) + '" ': '') +
 			'hasBibliography="'+(this.style.hasBibliography ? "1" : "0")+'" '+
 			'bibliographyStyleHasBeenSet="'+(this.style.bibliographyStyleHasBeenSet ? "1" : "0")+'"/>'+
 		(prefs ? '<prefs>'+prefs+'</prefs>' : '<prefs/>')+'</data>';
@@ -2724,17 +2724,17 @@ Zotero.Integration.DocumentData.prototype.serialize = function () {
 /**
  * Unserializes document-specific XML
  */
-Zotero.Integration.DocumentData.prototype.unserializeXML = function (xmlData) {
+Trellis.Integration.DocumentData.prototype.unserializeXML = function (xmlData) {
 	var parser = new DOMParser(),
 		doc = parser.parseFromString(xmlData, "application/xml");
 	
-	this.sessionID = Zotero.Utilities.xpathText(doc, '/data/session[1]/@id');
-	this.style = {"styleID":Zotero.Utilities.xpathText(doc, '/data/style[1]/@id'),
-		"locale":Zotero.Utilities.xpathText(doc, '/data/style[1]/@locale'),
-		"hasBibliography":(Zotero.Utilities.xpathText(doc, '/data/style[1]/@hasBibliography') == 1),
-		"bibliographyStyleHasBeenSet":(Zotero.Utilities.xpathText(doc, '/data/style[1]/@bibliographyStyleHasBeenSet') == 1)};
+	this.sessionID = Trellis.Utilities.xpathText(doc, '/data/session[1]/@id');
+	this.style = {"styleID":Trellis.Utilities.xpathText(doc, '/data/style[1]/@id'),
+		"locale":Trellis.Utilities.xpathText(doc, '/data/style[1]/@locale'),
+		"hasBibliography":(Trellis.Utilities.xpathText(doc, '/data/style[1]/@hasBibliography') == 1),
+		"bibliographyStyleHasBeenSet":(Trellis.Utilities.xpathText(doc, '/data/style[1]/@bibliographyStyleHasBeenSet') == 1)};
 	this.prefs = {};
-	for (let pref of Zotero.Utilities.xpath(doc, '/data/prefs[1]/pref')) {
+	for (let pref of Trellis.Utilities.xpath(doc, '/data/prefs[1]/pref')) {
 		var name = pref.getAttribute("name");
 		var value = pref.getAttribute("value");
 		if(value === "true") {
@@ -2748,8 +2748,8 @@ Zotero.Integration.DocumentData.prototype.unserializeXML = function (xmlData) {
 	
 	this.prefs.noteType = parseInt(this.prefs.noteType) || 0;
 	if (this.prefs["automaticJournalAbbreviations"] === undefined) this.prefs["automaticJournalAbbreviations"] = false;
-	this.zoteroVersion = doc.documentElement.getAttribute("zotero-version");
-	if (!this.zoteroVersion) this.zoteroVersion = "2.0";
+	this.trellisVersion = doc.documentElement.getAttribute("trellis-version");
+	if (!this.trellisVersion) this.trellisVersion = "2.0";
 	this.dataVersion = doc.documentElement.getAttribute("data-version");
 	if (!this.dataVersion) this.dataVersion = 2;
 };
@@ -2757,7 +2757,7 @@ Zotero.Integration.DocumentData.prototype.unserializeXML = function (xmlData) {
 /**
  * Unserializes document-specific data, either as XML or as the string form used previously
  */
-Zotero.Integration.DocumentData.prototype.unserialize = function (input) {
+Trellis.Integration.DocumentData.prototype.unserialize = function (input) {
 	try {
 		return Object.assign(this, JSON.parse(input))
 	} catch (e) {
@@ -2791,7 +2791,7 @@ Zotero.Integration.DocumentData.prototype.unserialize = function (input) {
 			this.prefs.noteType = 0;
 		}
 		
-		this.zoteroVersion = "2.0b6 or earlier";
+		this.trellisVersion = "2.0b6 or earlier";
 		this.dataVersion = 1;
 	}
 }
@@ -2799,7 +2799,7 @@ Zotero.Integration.DocumentData.prototype.unserialize = function (input) {
 /**
  * Handles mapping of item IDs to URIs
  */
-Zotero.Integration.URIMap = function (session) {
+Trellis.Integration.URIMap = function (session) {
 	this.itemIDURIs = {};
 	this.session = session;
 }
@@ -2807,30 +2807,30 @@ Zotero.Integration.URIMap = function (session) {
 /**
  * Adds a given mapping to the URI map
  */
-Zotero.Integration.URIMap.prototype.add = function (id, uris) {
+Trellis.Integration.URIMap.prototype.add = function (id, uris) {
 	this.itemIDURIs[id] = uris;
 }
 
 /**
  * Gets URIs for a given item ID, and adds to map
  */
-Zotero.Integration.URIMap.prototype.getURIsForItemID = function (id) {
+Trellis.Integration.URIMap.prototype.getURIsForItemID = function (id) {
 	if(typeof id === "string" && id.indexOf("/") !== -1) {
-		return Zotero.Cite.getItem(id).cslURIs;
+		return Trellis.Cite.getItem(id).cslURIs;
 	}
 	
 	if(!this.itemIDURIs[id]) {
-		this.itemIDURIs[id] = [Zotero.URI.getItemURI(Zotero.Items.get(id))];
+		this.itemIDURIs[id] = [Trellis.URI.getItemURI(Trellis.Items.get(id))];
 	}
 	
 	return this.itemIDURIs[id];
 }
 
 /**
- * Gets Zotero item for a given set of URIs
+ * Gets Trellis item for a given set of URIs
  */
-Zotero.Integration.URIMap.prototype.getZoteroItemForURIs = async function (uris) {
-	var zoteroItem = false;
+Trellis.Integration.URIMap.prototype.getTrellisItemForURIs = async function (uris) {
+	var trellisItem = false;
 	var needUpdate = false;
 	var embeddedItem = false;;
 	
@@ -2844,31 +2844,31 @@ Zotero.Integration.URIMap.prototype.getZoteroItemForURIs = async function (uris)
 		
 		// Next try getting URI directly
 		try {
-			var replacer = await Zotero.URI.getURIItem(uri);
+			var replacer = await Trellis.URI.getURIItem(uri);
 			if (replacer && !replacer.deleted) {
-				zoteroItem = replacer;
+				trellisItem = replacer;
 				break;
 			}
 		} catch(e) {}
 		
 		// Try merged item mapping
-		var replacer = await Zotero.Relations.getByPredicateAndObject(
-			'item', Zotero.Relations.replacedItemPredicate, uri
+		var replacer = await Trellis.Relations.getByPredicateAndObject(
+			'item', Trellis.Relations.replacedItemPredicate, uri
 		);
 		if (replacer.length && !replacer[0].deleted) {
-			zoteroItem = replacer[0];
+			trellisItem = replacer[0];
 			break;
 		}
 		
 		// Check if it's a mendeley URI and if we have imported the item
 		let m = MENDELEY_URI_RE.exec(uri);
 		if (m) {
-			replacer = await Zotero.Relations.getByPredicateAndObject(
+			replacer = await Trellis.Relations.getByPredicateAndObject(
 				'item', 'mendeleyDB:documentUUID', m[1]
 			);
 			if (replacer.length) {
 				if (!replacer[0].deleted) {
-					zoteroItem = replacer[0];
+					trellisItem = replacer[0];
 					break;
 				}
 			}
@@ -2876,65 +2876,65 @@ Zotero.Integration.URIMap.prototype.getZoteroItemForURIs = async function (uris)
 			// or user having checked the checkbox to not be prompted about this,
 			// or user having imported their library with the new version of importer
 			else if (!(this.session.dontPromptForMendeley
-				|| Zotero.Prefs.get('integration.dontPromptMendeleyImport')
-				|| (await Zotero.DB.valueQueryAsync("SELECT value FROM settings WHERE setting='mendeleyImport' AND key='version'"))
+				|| Trellis.Prefs.get('integration.dontPromptMendeleyImport')
+				|| (await Trellis.DB.valueQueryAsync("SELECT value FROM settings WHERE setting='mendeleyImport' AND key='version'"))
 			)) {
 				// Prompt user to (re)import their mendeley database which might make us recognize
 				// these items
 				let checkbox = {};
-				let result = Zotero.Prompt.confirm({
-					title: Zotero.getString('integration.mendeleyImport.title'),
-					text: Zotero.getString('integration.mendeleyImport.description', [Zotero.appName]),
-					button0: Zotero.getString('integration.mendeleyImport.openImporter'),
-					button1: Zotero.getString('general.skip'),
-					checkLabel: Zotero.getString('general.dontAskAgain'),
+				let result = Trellis.Prompt.confirm({
+					title: Trellis.getString('integration.mendeleyImport.title'),
+					text: Trellis.getString('integration.mendeleyImport.description', [Trellis.appName]),
+					button0: Trellis.getString('integration.mendeleyImport.openImporter'),
+					button1: Trellis.getString('general.skip'),
+					checkLabel: Trellis.getString('general.dontAskAgain'),
 					checkbox
 				});
 				if (result === 0) {
 					setTimeout(
-						() => Zotero.getMainWindow().Zotero_File_Interface.showImportWizard(
+						() => Trellis.getMainWindow().Trellis_File_Interface.showImportWizard(
 							{
 								pageID: 'page-mendeley-online-intro',
 								relinkOnly: true
 							}
 						)
 					);
-					throw new Zotero.Exception.UserCancelled("Importing mendeley citations");
+					throw new Trellis.Exception.UserCancelled("Importing mendeley citations");
 				}
 				else {
 					this.session.dontPromptForMendeley = true;
 				}
 				if (checkbox.value) {
-					Zotero.Prefs.set('integration.dontPromptMendeleyImport', true);
+					Trellis.Prefs.set('integration.dontPromptMendeleyImport', true);
 				}
 			}
 		};
 		
 	}
 	
-	if (zoteroItem) {
+	if (trellisItem) {
 		// make sure URI is up to date (in case user just began syncing)
-		var newURI = Zotero.URI.getItemURI(zoteroItem);
+		var newURI = Trellis.URI.getItemURI(trellisItem);
 		if (!uris.includes(newURI)) {
 			uris.push(newURI);
 			needUpdate = true;
 		}
 		// cache uris
-		this.add(zoteroItem.id, uris)
+		this.add(trellisItem.id, uris)
 	}
 	else if (embeddedItem) {
 		return [embeddedItem, false];
 	}
 	
-	return [zoteroItem, needUpdate];
+	return [trellisItem, needUpdate];
 };
 
-Zotero.Integration.Field = class {
+Trellis.Integration.Field = class {
 	constructor(field, rawCode) {
-		if (field instanceof Zotero.Integration.Field) {
+		if (field instanceof Trellis.Integration.Field) {
 			throw new Error("Trying to instantiate Integration.Field with Integration.Field, not doc field");
 		}
-		for (let func of Zotero.Integration.Field.INTERFACE) {
+		for (let func of Trellis.Integration.Field.INTERFACE) {
 			if (!(func in this) && (func in field)) {
 				this[func] = field[func].bind(field);
 			}
@@ -2983,7 +2983,7 @@ Zotero.Integration.Field = class {
 		this._text = null;
 		var isRich = false;
 		// If RTF wrap with RTF tags
-		if (Zotero.Integration.currentSession.outputFormat == "rtf" && text.includes("\\")) {
+		if (Trellis.Integration.currentSession.outputFormat == "rtf" && text.includes("\\")) {
 			if (text.substr(0,5) != "{\\rtf") {
 				text = "{\\rtf "+text+"}";
 			}
@@ -2993,7 +2993,7 @@ Zotero.Integration.Field = class {
 		return isRich;
 	}
 };
-Zotero.Integration.Field.INTERFACE = ['delete', 'removeCode', 'select', 'setText',
+Trellis.Integration.Field.INTERFACE = ['delete', 'removeCode', 'select', 'setText',
 	'getText', 'setCode', 'getCode', 'equals', 'getNoteIndex', 'isAdjacentToNextField'];
 
 /**
@@ -3001,27 +3001,27 @@ Zotero.Integration.Field.INTERFACE = ['delete', 'removeCode', 'select', 'setText
  * @param docField
  * @param rawCode
  * @param idx
- * @returns {Zotero.Integration.Field|Zotero.Integration.CitationField|Zotero.Integration.BibliographyField}
+ * @returns {Trellis.Integration.Field|Trellis.Integration.CitationField|Trellis.Integration.BibliographyField}
  */
-Zotero.Integration.Field.loadExisting = async function (docField) {
+Trellis.Integration.Field.loadExisting = async function (docField) {
 	var field;
 	// Already loaded
-	if (docField instanceof Zotero.Integration.Field) return docField;
+	if (docField instanceof Trellis.Integration.Field) return docField;
 	let rawCode = await docField.getCode();
 	
 	// ITEM/CITATION CSL_ITEM {json: 'data'} 
 	for (let type of ["ITEM", "CITATION"]) {
 		if (rawCode.substr(0, type.length) === type) {
-			field = new Zotero.Integration.CitationField(docField, rawCode);
+			field = new Trellis.Integration.CitationField(docField, rawCode);
 		}
 	}
 	// BIBL {json: 'data'} CSL_BIBLIOGRAPHY
 	if (rawCode.substr(0, 4) === "BIBL") {
-		field = new Zotero.Integration.BibliographyField(docField, rawCode);
+		field = new Trellis.Integration.BibliographyField(docField, rawCode);
 	}
 	
 	if (!field) {
-		field = new Zotero.Integration.Field(docField, rawCode);
+		field = new Trellis.Integration.Field(docField, rawCode);
 	}
 	
 	return field;
@@ -3030,14 +3030,14 @@ Zotero.Integration.Field.loadExisting = async function (docField) {
 /**
  * Adds a citation based on a serialized Word field
  */
-Zotero.Integration._oldCitationLocatorMap = {
+Trellis.Integration._oldCitationLocatorMap = {
 	p:"page",
 	g:"paragraph",
 	l:"line"
 };
 
 
-Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
+Trellis.Integration.CitationField = class extends Trellis.Integration.Field {
 	constructor(field, rawCode) {
 		super(field, rawCode);
 		this.type = INTEGRATION_TYPE_ITEM;
@@ -3047,7 +3047,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 	 * Don't be fooled, this should be as simple as JSON.parse().
 	 * The schema for the code is defined @ https://raw.githubusercontent.com/citation-style-language/schema/master/csl-citation.json
 	 *
-	 * However, over the years and different versions of Zotero there's been changes to the schema,
+	 * However, over the years and different versions of Trellis there's been changes to the schema,
 	 * incorrect serialization, etc. Therefore this function is cruft-full and we can't get rid of it.
 	 *
 	 * @returns {{citationItems: Object[], properties: Object}}
@@ -3089,9 +3089,9 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 			// All text including JSON keys and string values gets uppercased,
 			// but numbers/booleans are unaffected. We recover items via their
 			// integer ID and discard corrupted URIs/itemData.
-			// Distinct from old Zotero 2.x uppercase which only affected CITATIONITEMS.
+			// Distinct from old Trellis 2.x uppercase which only affected CITATIONITEMS.
 			if (citation.CITATIONID) {
-				Zotero.debug("Integration: Recovering citation field corrupted by All Caps formatting");
+				Trellis.debug("Integration: Recovering citation field corrupted by All Caps formatting");
 				citation.citationID = citation.CITATIONID;
 				delete citation.CITATIONID;
 				
@@ -3112,7 +3112,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 				}
 				
 				// Delete corrupted URIs and itemData from citation items.
-				// loadItemData() will fall through to Zotero.Items.get(citationItem.id)
+				// loadItemData() will fall through to Trellis.Items.get(citationItem.id)
 				// for resolution, or handleMissingItem() if the item isn't found.
 				for (let citationItem of citation.citationItems) {
 					delete citationItem.uris;
@@ -3127,7 +3127,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 			if(!citation.properties) citation.properties = {};
 
 			for (let citationItem of citation.citationItems) {
-				// for upgrade from Zotero 2.0 or earlier
+				// for upgrade from Trellis 2.0 or earlier
 				if(citationItem.locatorType) {
 					citationItem.label = citationItem.locatorType;
 					delete citationItem.locatorType;
@@ -3136,7 +3136,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 					delete citationItem.suppressAuthor;
 				}
 
-				// fix for improper upgrade from Zotero 2.1 in <2.1.5
+				// fix for improper upgrade from Trellis 2.1 in <2.1.5
 				if(parseInt(citationItem.label) == citationItem.label) {
 					const locatorTypeTerms = ["page", "book", "chapter", "column", "figure", "folio",
 						"issue", "line", "note", "opus", "paragraph", "part", "section", "sub verbo",
@@ -3144,7 +3144,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 					citationItem.label = locatorTypeTerms[parseInt(citationItem.label)];
 				}
 
-				// for update from Zotero 2.1 or earlier
+				// for update from Trellis 2.1 or earlier
 				if (citationItem.uri) {
 					if (Array.isArray(citationItem.uris)) {
 						citationItem.uris = Array.from(new Set(citationItem.uris.concat(citationItem.uri)));
@@ -3156,7 +3156,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 				}
 			}
 
-			// for upgrade from Zotero 2.0 or earlier
+			// for upgrade from Trellis 2.0 or earlier
 			if(citation.sort) {
 				citation.properties.unsorted = !citation.sort;
 				delete citation.sort;
@@ -3170,7 +3170,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 			return citation;
 		}
 		
-		function unserializePreZotero1_0(code) {
+		function unserializePreTrellis1_0(code) {
 			var underscoreIndex = code.indexOf("_");
 			var itemIDs = code.substr(0, underscoreIndex).split("|");
 
@@ -3185,7 +3185,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 				var citationItem = {id:itemIDs[i]};
 				if(locators) {
 					citationItem.locator = locators[i].substr(1);
-					citationItem.label = Zotero.Integration._oldCitationLocatorMap[locators[i][0]];
+					citationItem.label = Trellis.Integration._oldCitationLocatorMap[locators[i][0]];
 				}
 				citationItems.push(citationItem);
 			}
@@ -3199,7 +3199,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 			if (code[0] == '{') {		// JSON field
 				return upgradeCruft(unserialize(code), code);
 			} else {				// ye olde style field
-				return unserializePreZotero1_0(code);
+				return unserializePreTrellis1_0(code);
 			}
 		} catch (e) {
 			return this.resolveCorrupt(code);
@@ -3211,14 +3211,14 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 	}
 		
 	async resolveCorrupt(code) {
-		Zotero.debug(`Integration: handling corrupt citation field ${code}`);
-		var msg = Zotero.getString("integration.corruptField")+'\n\n'+
-				  Zotero.getString('integration.corruptField.description');
+		Trellis.debug(`Integration: handling corrupt citation field ${code}`);
+		var msg = Trellis.getString("integration.corruptField")+'\n\n'+
+				  Trellis.getString('integration.corruptField.description');
 		await this.select();
-		Zotero.Integration.currentDoc.activate();
-		var result = await Zotero.Integration.currentSession.displayAlert(msg, DIALOG_ICON_CAUTION, DIALOG_BUTTONS_YES_NO_CANCEL);
+		Trellis.Integration.currentDoc.activate();
+		var result = await Trellis.Integration.currentSession.displayAlert(msg, DIALOG_ICON_CAUTION, DIALOG_BUTTONS_YES_NO_CANCEL);
 		if (result == 0) { // Cancel
-			throw new Zotero.Exception.UserCancelled("corrupt citation resolution");
+			throw new Trellis.Exception.UserCancelled("corrupt citation resolution");
 		} else if (result == 1) {		// No
 			return false;
 		} else { // Yes
@@ -3230,7 +3230,7 @@ Zotero.Integration.CitationField = class extends Zotero.Integration.Field {
 };
 
 
-Zotero.Integration.BibliographyField = class extends Zotero.Integration.Field {
+Trellis.Integration.BibliographyField = class extends Trellis.Integration.Field {
 	constructor(field, rawCode) {
 		super(field, rawCode);
 		this.type = INTEGRATION_TYPE_BIBLIOGRAPHY;
@@ -3245,12 +3245,12 @@ Zotero.Integration.BibliographyField = class extends Zotero.Integration.Field {
 		}
 	}
 	async resolveCorrupt(code) {
-		Zotero.debug(`Integration: handling corrupt bibliography field ${code}`);
-		var msg = Zotero.getString("integration.corruptBibliography")+'\n\n'+
-				  Zotero.getString('integration.corruptBibliography.description');
-		var result = await Zotero.Integration.currentSession.displayAlert(msg, DIALOG_ICON_CAUTION, DIALOG_BUTTONS_OK_CANCEL);
+		Trellis.debug(`Integration: handling corrupt bibliography field ${code}`);
+		var msg = Trellis.getString("integration.corruptBibliography")+'\n\n'+
+				  Trellis.getString('integration.corruptBibliography.description');
+		var result = await Trellis.Integration.currentSession.displayAlert(msg, DIALOG_ICON_CAUTION, DIALOG_BUTTONS_OK_CANCEL);
 		if (result == 0) {
-			throw new Zotero.Exception.UserCancelled("corrupt bibliography resolution");
+			throw new Trellis.Exception.UserCancelled("corrupt bibliography resolution");
 		} else {
 			await this.clearCode();
 			return this.unserialize();
@@ -3258,7 +3258,7 @@ Zotero.Integration.BibliographyField = class extends Zotero.Integration.Field {
 	}
 };
 
-Zotero.Integration.Citation = class {
+Trellis.Integration.Citation = class {
 	static refreshEmbeddedData(itemData) {
 		if (itemData.shortTitle) {
 			itemData['title-short'] = itemData.shortTitle;
@@ -3281,7 +3281,7 @@ Zotero.Integration.Citation = class {
 	 * @deprecated
 	 */
 	get _field() {
-		Zotero.debug('Citation._field is deprecated. Use Citation.field');
+		Trellis.debug('Citation._field is deprecated. Use Citation.field');
 		return this.field;
 	}
 
@@ -3306,34 +3306,34 @@ Zotero.Integration.Citation = class {
 	 * Load citation item data
 	 * @param {Boolean} [promptToReselect=true] - will throw a MissingItemException if false
 	 * @returns {Promise{Number}}
-	 * 	- Zotero.Integration.NO_ACTION
-	 * 	- Zotero.Integration.UPDATE
-	 * 	- Zotero.Integration.REMOVE_CODE
-	 * 	- Zotero.Integration.DELETE
+	 * 	- Trellis.Integration.NO_ACTION
+	 * 	- Trellis.Integration.UPDATE
+	 * 	- Trellis.Integration.REMOVE_CODE
+	 * 	- Trellis.Integration.DELETE
 	 */
 	async loadItemData(promptToReselect=true) {
 		let items = [];
 		var needUpdate = false;
 		
 		if (!this.citationItems.length) {
-			return Zotero.Integration.DELETE;
+			return Trellis.Integration.DELETE;
 		}
 		for (var i=0, n=this.citationItems.length; i<n; i++) {
 			var citationItem = this.citationItems[i];
 			
-			// get Zotero item
-			var zoteroItem = false;
+			// get Trellis item
+			var trellisItem = false;
 			if ('uri' in citationItem && !('uris' in citationItem)) {
 				citationItem.uris = [citationItem.uri];
 			}
 			if (citationItem.uris) {
 				let itemNeedsUpdate;
-				[zoteroItem, itemNeedsUpdate] = await Zotero.Integration.currentSession.uriMap.getZoteroItemForURIs(citationItem.uris);
+				[trellisItem, itemNeedsUpdate] = await Trellis.Integration.currentSession.uriMap.getTrellisItemForURIs(citationItem.uris);
 				needUpdate = needUpdate || itemNeedsUpdate;
 				
 				// Unfortunately, people do weird things with their documents. One weird thing people
-				// apparently like to do (http://forums.zotero.org/discussion/22262/) is to copy and
-				// paste citations from other documents created with earlier versions of Zotero into
+				// apparently like to do (http://forums.trellis.org/discussion/22262/) is to copy and
+				// paste citations from other documents created with earlier versions of Trellis into
 				// their documents and then not refresh the document. Usually, this isn't a problem. If
 				// document is edited by the same user, it will work without incident. If the first
 				// citation of a given item doesn't contain itemData, the user will get a
@@ -3341,63 +3341,63 @@ Zotero.Integration.Citation = class {
 				// itemData, but later citations don't, because the user inserted the item properly and
 				// then copied and pasted the same citation from another document. We check for that
 				// possibility here.
-				if (zoteroItem.cslItemData && !citationItem.itemData) {
-					citationItem.itemData = zoteroItem.cslItemData;
+				if (trellisItem.cslItemData && !citationItem.itemData) {
+					citationItem.itemData = trellisItem.cslItemData;
 					needUpdate = true;
 				}
 			} else {
 				if (citationItem.key && citationItem.libraryID) {
 					// DEBUG: why no library id?
-					zoteroItem = Zotero.Items.getByLibraryAndKey(citationItem.libraryID, citationItem.key);
+					trellisItem = Trellis.Items.getByLibraryAndKey(citationItem.libraryID, citationItem.key);
 				} else if (citationItem.itemID) {
-					zoteroItem = Zotero.Items.get(citationItem.itemID);
+					trellisItem = Trellis.Items.get(citationItem.itemID);
 				} else if (citationItem.id) {
-					zoteroItem = Zotero.Items.get(citationItem.id);
+					trellisItem = Trellis.Items.get(citationItem.id);
 				}
-				if (zoteroItem) needUpdate = true;
+				if (trellisItem) needUpdate = true;
 			}
 			
 			// Item no longer in library
-			if (!zoteroItem) {
+			if (!trellisItem) {
 				// Use embedded item
 				if (citationItem.itemData) {
-					Zotero.debug(`Item ${JSON.stringify(citationItem.uris)} not in library. Using embedded data`);
-					citationItem.itemData = Zotero.Integration.Citation.refreshEmbeddedData(citationItem.itemData);
+					Trellis.debug(`Item ${JSON.stringify(citationItem.uris)} not in library. Using embedded data`);
+					citationItem.itemData = Trellis.Integration.Citation.refreshEmbeddedData(citationItem.itemData);
 					// add new embedded item
-					var itemData = Zotero.Utilities.deepCopy(citationItem.itemData);
+					var itemData = Trellis.Utilities.deepCopy(citationItem.itemData);
 					
 					// assign a random string as an item ID
-					var anonymousID = Zotero.randomString();
-					var globalID = itemData.id = citationItem.id = Zotero.Integration.currentSession.data.sessionID+"/"+anonymousID;
-					Zotero.Integration.currentSession.embeddedItems[anonymousID] = itemData;
+					var anonymousID = Trellis.randomString();
+					var globalID = itemData.id = citationItem.id = Trellis.Integration.currentSession.data.sessionID+"/"+anonymousID;
+					Trellis.Integration.currentSession.embeddedItems[anonymousID] = itemData;
 					
-					// assign a Zotero item
-					var surrogateItem = Zotero.Integration.currentSession.embeddedZoteroItems[anonymousID] = new Zotero.Item();
-					Zotero.Utilities.itemFromCSLJSON(surrogateItem, itemData);
+					// assign a Trellis item
+					var surrogateItem = Trellis.Integration.currentSession.embeddedTrellisItems[anonymousID] = new Trellis.Item();
+					Trellis.Utilities.itemFromCSLJSON(surrogateItem, itemData);
 					surrogateItem.cslItemID = globalID;
 					surrogateItem.cslURIs = citationItem.uris;
 					surrogateItem.cslItemData = itemData;
 					
 					for(var j=0, m=citationItem.uris.length; j<m; j++) {
-						Zotero.Integration.currentSession.embeddedItemsByURI[citationItem.uris[j]] = surrogateItem;
+						Trellis.Integration.currentSession.embeddedItemsByURI[citationItem.uris[j]] = surrogateItem;
 					}
 				} else if (promptToReselect) {
-					zoteroItem = await this.handleMissingItem(i);
-					if (zoteroItem) needUpdate = true;
-					else return Zotero.Integration.REMOVE_CODE;
+					trellisItem = await this.handleMissingItem(i);
+					if (trellisItem) needUpdate = true;
+					else return Trellis.Integration.REMOVE_CODE;
 				} else {
 					// throw a MissingItemException
-					throw (new Zotero.Integration.MissingItemException(this, this.citationItems[i]));
+					throw (new Trellis.Integration.MissingItemException(this, this.citationItems[i]));
 				}
 			}
 			
-			if (zoteroItem) {
-				if (zoteroItem.cslItemID) {
-					citationItem.id = zoteroItem.cslItemID;
+			if (trellisItem) {
+				if (trellisItem.cslItemID) {
+					citationItem.id = trellisItem.cslItemID;
 				}
 				else {
-					citationItem.id = zoteroItem.id;
-					items.push(zoteroItem);
+					citationItem.id = trellisItem.id;
+					items.push(trellisItem);
 				}
 			}
 		}
@@ -3406,25 +3406,25 @@ Zotero.Integration.Citation = class {
 		// all data (as required by toJSON(), which is used by itemToExportFormat(), which is used by
 		// itemToCSLJSON()) now
 		if (items.length) {
-			await Zotero.Items.loadDataTypes(items);
+			await Trellis.Items.loadDataTypes(items);
 		}
-		return needUpdate ? Zotero.Integration.UPDATE : Zotero.Integration.NO_ACTION;
+		return needUpdate ? Trellis.Integration.UPDATE : Trellis.Integration.NO_ACTION;
 	}
 		
 	async handleMissingItem(idx) {
 		// Ask user what to do with this item
 		if (this.citationItems.length == 1) {
-			var msg = Zotero.getString("integration.missingItem.single");
+			var msg = Trellis.getString("integration.missingItem.single");
 		} else {
-			var msg = Zotero.getString("integration.missingItem.multiple", (idx).toString());
+			var msg = Trellis.getString("integration.missingItem.multiple", (idx).toString());
 		}
-		msg += '\n\n'+Zotero.getString('integration.missingItem.description');
+		msg += '\n\n'+Trellis.getString('integration.missingItem.description');
 		await this.field.select();
-		await Zotero.Integration.currentDoc.activate();
-		var result = await Zotero.Integration.currentSession.displayAlert(msg,
+		await Trellis.Integration.currentDoc.activate();
+		var result = await Trellis.Integration.currentSession.displayAlert(msg,
 			DIALOG_ICON_WARNING, DIALOG_BUTTONS_YES_NO_CANCEL);
 		if (result == 0) {			// Cancel
-			throw new Zotero.Exception.UserCancelled("document update");
+			throw new Trellis.Exception.UserCancelled("document update");
 		} else if(result == 1) {	// No
 			return false;
 		}
@@ -3432,14 +3432,14 @@ Zotero.Integration.Citation = class {
 		// Yes - prompt to reselect
 		var io = new function () { this.wrappedJSObject = this; };
 		
-		io.addBorder = Zotero.isWin;
+		io.addBorder = Trellis.isWin;
 		io.singleSelection = true;
 		io.itemTreeID = "handle-missing-item-select-item-dialog";
 		
-		await Zotero.Integration.displayDialog('chrome://zotero/content/selectItemsDialog.xhtml', 'resizable', io);
+		await Trellis.Integration.displayDialog('chrome://trellis/content/selectItemsDialog.xhtml', 'resizable', io);
 			
 		if (io.dataOut && io.dataOut.length) {
-			return Zotero.Items.get(io.dataOut[0]);
+			return Trellis.Items.get(io.dataOut[0]);
 		}
 	}
 
@@ -3448,19 +3448,19 @@ Zotero.Integration.Citation = class {
 		if (this.properties.dontUpdate
 				|| (this.properties.plainCitation
 					&& (await this.field.getText()) !== this.properties.plainCitation)) {
-			await Zotero.Integration.currentDoc.activate();
+			await Trellis.Integration.currentDoc.activate();
 			var fieldText = await this.field.getText();
-			Zotero.debug("[addEditCitation] Attempting to update manually modified citation.\n"
+			Trellis.debug("[addEditCitation] Attempting to update manually modified citation.\n"
 				+ "citaion.properties.dontUpdate: " + this.properties.dontUpdate + "\n"
 				+ "Original: " + this.properties.plainCitation + "\n"
 				+ "Current:  " + fieldText
 			);
-			if (!(await Zotero.Integration.currentDoc.displayAlert(
-					Zotero.getString("integration.citationChanged.edit")+"\n\n"
-					+ Zotero.getString("integration.citationChanged.original", this.properties.plainCitation)+"\n"
-					+ Zotero.getString("integration.citationChanged.modified", fieldText)+"\n",
+			if (!(await Trellis.Integration.currentDoc.displayAlert(
+					Trellis.getString("integration.citationChanged.edit")+"\n\n"
+					+ Trellis.getString("integration.citationChanged.original", this.properties.plainCitation)+"\n"
+					+ Trellis.getString("integration.citationChanged.modified", fieldText)+"\n",
 					DIALOG_ICON_WARNING, DIALOG_BUTTONS_OK_CANCEL))) {
-				throw new Zotero.Exception.UserCancelled("editing citation");
+				throw new Trellis.Exception.UserCancelled("editing citation");
 			}
 		}
 		
@@ -3503,9 +3503,9 @@ Zotero.Integration.Citation = class {
 				serializeCitationItem.itemData = citationItem.itemData;
 			} else {
 				serializeCitationItem.id = citationItem.id;
-				serializeCitationItem.uris = Zotero.Integration.currentSession.uriMap.getURIsForItemID(citationItem.id);
+				serializeCitationItem.uris = Trellis.Integration.currentSession.uriMap.getURIsForItemID(citationItem.id);
 			
-				serializeCitationItem.itemData = Zotero.Integration.currentSession.style.sys.retrieveItem(citationItem.id);
+				serializeCitationItem.itemData = Trellis.Integration.currentSession.style.sys.retrieveItem(citationItem.id);
 			}
 			
 			for (let key of saveCitationItemKeys) {
@@ -3528,7 +3528,7 @@ Zotero.Integration.Citation = class {
 	}
 };
 
-Zotero.Integration.Bibliography = class {
+Trellis.Integration.Bibliography = class {
 	constructor(bibliographyField, data) {
 		this.field = bibliographyField;
 		this.data = data;
@@ -3546,11 +3546,11 @@ Zotero.Integration.Bibliography = class {
 			if (this.data.uncited) {
 				if (this.data.uncited[0]) {
 					// new style array of arrays with URIs
-					let zoteroItem, itemNeedsUpdate;
+					let trellisItem, itemNeedsUpdate;
 					for (let uris of this.data.uncited) {
-						[zoteroItem, itemNeedsUpdate] = await Zotero.Integration.currentSession.uriMap.getZoteroItemForURIs(uris);
-						var id = zoteroItem.cslItemID ? zoteroItem.cslItemID : zoteroItem.id;
-						if(zoteroItem && !Zotero.Integration.currentSession.citationsByItemID[id]) {
+						[trellisItem, itemNeedsUpdate] = await Trellis.Integration.currentSession.uriMap.getTrellisItemForURIs(uris);
+						var id = trellisItem.cslItemID ? trellisItem.cslItemID : trellisItem.id;
+						if(trellisItem && !Trellis.Integration.currentSession.citationsByItemID[id]) {
 							this.uncitedItemIDs.add(`${id}`);
 						} else {
 							needUpdate = true;
@@ -3561,9 +3561,9 @@ Zotero.Integration.Bibliography = class {
 					for(var itemID in this.data.uncited) {
 						// if not yet in item set, add to item set
 						// DEBUG: why no libraryID?
-						var zoteroItem = Zotero.Items.getByLibraryAndKey(0, itemID);
-						if (!zoteroItem) zoteroItem = Zotero.Items.get(itemID);
-						if (zoteroItem) this.uncitedItemIDs.add(`${id}`);
+						var trellisItem = Trellis.Items.getByLibraryAndKey(0, itemID);
+						if (!trellisItem) trellisItem = Trellis.Items.get(itemID);
+						if (trellisItem) this.uncitedItemIDs.add(`${id}`);
 					}
 					needUpdate = true;
 				}
@@ -3573,26 +3573,26 @@ Zotero.Integration.Bibliography = class {
 			if(this.data.custom) {
 				if(this.data.custom[0]) {
 					// new style array of arrays with URIs
-					var zoteroItem, itemNeedsUpdate;
+					var trellisItem, itemNeedsUpdate;
 					for (let custom of this.data.custom) {
-						[zoteroItem, itemNeedsUpdate] = await Zotero.Integration.currentSession.uriMap.getZoteroItemForURIs(custom[0]);
-						if (!zoteroItem) continue;
+						[trellisItem, itemNeedsUpdate] = await Trellis.Integration.currentSession.uriMap.getTrellisItemForURIs(custom[0]);
+						if (!trellisItem) continue;
 						if (needUpdate) needUpdate = true;
 						
-						var id = zoteroItem.cslItemID ? zoteroItem.cslItemID : zoteroItem.id;
-						if (Zotero.Integration.currentSession.citationsByItemID[id] || id in this.uncitedItemIDs) {
+						var id = trellisItem.cslItemID ? trellisItem.cslItemID : trellisItem.id;
+						if (Trellis.Integration.currentSession.citationsByItemID[id] || id in this.uncitedItemIDs) {
 							this.customEntryText[id] = custom[1];
 						}
 					}
 				} else {
 					// old style hash
 					for(var itemID in this.data.custom) {
-						var zoteroItem = Zotero.Items.getByLibraryAndKey(0, itemID);
-						if (!zoteroItem) zoteroItem = Zotero.Items.get(itemID);
-						if (!zoteroItem) continue;
+						var trellisItem = Trellis.Items.getByLibraryAndKey(0, itemID);
+						if (!trellisItem) trellisItem = Trellis.Items.get(itemID);
+						if (!trellisItem) continue;
 						
-						if(Zotero.Integration.currentSession.citationsByItemID[zoteroItem.id] || zoteroItem.id in this.uncitedItemIDs) {
-							this.customEntryText[zoteroItem.id] = this.data.custom[itemID];
+						if(Trellis.Integration.currentSession.citationsByItemID[trellisItem.id] || trellisItem.id in this.uncitedItemIDs) {
+							this.customEntryText[trellisItem.id] = this.data.custom[itemID];
 						}
 					}
 					needUpdate = true;
@@ -3601,11 +3601,11 @@ Zotero.Integration.Bibliography = class {
 			
 			// set entries to be omitted from bibliography
 			if (this.data.omitted) {
-				let zoteroItem, itemNeedsUpdate;
+				let trellisItem, itemNeedsUpdate;
 				for (let uris of this.data.omitted) {
-					[zoteroItem, itemNeedsUpdate] = await Zotero.Integration.currentSession.uriMap.getZoteroItemForURIs(uris);
-					var id = zoteroItem.cslItemID ? zoteroItem.cslItemID : zoteroItem.id;
-					if (zoteroItem && Zotero.Integration.currentSession.citationsByItemID[id]) {
+					[trellisItem, itemNeedsUpdate] = await Trellis.Integration.currentSession.uriMap.getTrellisItemForURIs(uris);
+					var id = trellisItem.cslItemID ? trellisItem.cslItemID : trellisItem.id;
+					if (trellisItem && Trellis.Integration.currentSession.citationsByItemID[id]) {
 						this.omittedItemIDs.add(`${id}`);
 					} else {
 						needUpdate = true;
@@ -3619,17 +3619,17 @@ Zotero.Integration.Bibliography = class {
 	}
 
 	getCiteprocBibliography(citeproc) {
-		if (Zotero.Utilities.isEmpty(Zotero.Integration.currentSession.citationsByItemID)) {
+		if (Trellis.Utilities.isEmpty(Trellis.Integration.currentSession.citationsByItemID)) {
 			throw new Error("Attempting to generate bibliography without having updated processor items");
 		};
 		if (!this.dataLoaded) {
 			throw new Error("Attempting to generate bibliography without having loaded item data");
 		}
 
-		Zotero.debug(`Integration: style.updateUncitedItems ${Array.from(this.uncitedItemIDs.values()).toSource()}`);
+		Trellis.debug(`Integration: style.updateUncitedItems ${Array.from(this.uncitedItemIDs.values()).toSource()}`);
 		citeproc.updateUncitedItems(Array.from(this.uncitedItemIDs.values()));
 		let bibliography = citeproc.makeBibliography();
-		Zotero.Cite.removeFromBibliography(bibliography, this.omittedItemIDs);
+		Trellis.Cite.removeFromBibliography(bibliography, this.omittedItemIDs);
 	
 		for (let i in bibliography[0].entry_ids) {
 			if (bibliography[0].entry_ids[i].length != 1) continue;
@@ -3653,14 +3653,14 @@ Zotero.Integration.Bibliography = class {
 		
 		// add uncited if there is anything
 		for (let itemID of this.uncitedItemIDs.values()) {
-			bibliography.uncited.push(Zotero.Integration.currentSession.uriMap.getURIsForItemID(itemID));
+			bibliography.uncited.push(Trellis.Integration.currentSession.uriMap.getURIsForItemID(itemID));
 		}
 		for (let itemID of this.omittedItemIDs.values()) {
-			bibliography.omitted.push(Zotero.Integration.currentSession.uriMap.getURIsForItemID(itemID));
+			bibliography.omitted.push(Trellis.Integration.currentSession.uriMap.getURIsForItemID(itemID));
 		}
 		
 		bibliography.custom = Object.keys(this.customEntryText)
-			.map(id => [Zotero.Integration.currentSession.uriMap.getURIsForItemID(id), this.customEntryText[id]]);
+			.map(id => [Trellis.Integration.currentSession.uriMap.getURIsForItemID(id), this.customEntryText[id]]);
 		
 		
 		return JSON.stringify(bibliography);
@@ -3668,7 +3668,7 @@ Zotero.Integration.Bibliography = class {
 }
 
 // perhaps not the best place for a timer
-Zotero.Integration.Timer = class {
+Trellis.Integration.Timer = class {
 	start() {
 		this.startTime = (new Date()).getTime();
 	}
@@ -3699,13 +3699,13 @@ Zotero.Integration.Timer = class {
 	}
 }
 
-Zotero.Integration.Progress = class {
+Trellis.Integration.Progress = class {
 	/**
 	 * @param {Number} segmentCount
 	 */
 	constructor(segmentCount=4, isNote=false) {
 		this.segments = Array.from({length: segmentCount}, () => undefined);
-		this.timer = new Zotero.Integration.Timer();
+		this.timer = new Trellis.Integration.Timer();
 		this.segmentIdx = 0;
 		this.isNote = isNote;
 	}
@@ -3739,7 +3739,7 @@ Zotero.Integration.Progress = class {
 		if (this.dontDisplay) return;
 		var options = 'chrome,centerscreen,resizable=false';
 		// without this, Firefox gets raised with our windows under Compiz
-		if (Zotero.isLinux) options += ',dialog=no';
+		if (Trellis.isLinux) options += ',dialog=no';
 		
 		var io = {onLoad: function (onProgress) {
 			this.onProgress = onProgress;
@@ -3749,30 +3749,30 @@ Zotero.Integration.Progress = class {
 		io.isNote = this.isNote;
 		this.window = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 			.getService(Components.interfaces.nsIWindowWatcher)
-			.openWindow(null, 'chrome://zotero/content/integration/progressBar.xhtml', '', options, io);
-		Zotero.Utilities.Internal.activate(this.window);
+			.openWindow(null, 'chrome://trellis/content/integration/progressBar.xhtml', '', options, io);
+		Trellis.Utilities.Internal.activate(this.window);
 	}
 	async hide(fast=false) {
 		if (!this.window) return;
 		if (!fast) {
 			this.onProgress && this.onProgress(100);
 			this.onProgress = null;
-			await Zotero.Promise.delay(300);
+			await Trellis.Promise.delay(300);
 		}
 		this.window.close();
 	}
 }
 
-Zotero.Integration.LegacyPluginWrapper = function (application) {
+Trellis.Integration.LegacyPluginWrapper = function (application) {
 	return {
 		getDocument:
 			async function () {
-				return Zotero.Integration.LegacyPluginWrapper.wrapDocument(
+				return Trellis.Integration.LegacyPluginWrapper.wrapDocument(
 					application.getDocument.apply(application, arguments))
 			},
 		getActiveDocument:
 			async function () {
-				return Zotero.Integration.LegacyPluginWrapper.wrapDocument(
+				return Trellis.Integration.LegacyPluginWrapper.wrapDocument(
 					application.getActiveDocument.apply(application, arguments))
 			},
 		primaryFieldType: application.primaryFieldType,
@@ -3782,7 +3782,7 @@ Zotero.Integration.LegacyPluginWrapper = function (application) {
 		processorName: ''
 	}
 }
-Zotero.Integration.LegacyPluginWrapper.wrapField = function (field) {
+Trellis.Integration.LegacyPluginWrapper.wrapField = function (field) {
 	var wrapped = {rawField: field};
 	var fns = ['getNoteIndex', 'setCode', 'getCode', 'setText',
 		'getText', 'removeCode', 'delete', 'select'];
@@ -3796,7 +3796,7 @@ Zotero.Integration.LegacyPluginWrapper.wrapField = function (field) {
 	}
 	return wrapped;
 }
-Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc) {
+Trellis.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc) {
 	var wrapped = {};
 	var fns = ['complete', 'cleanup', 'setBibliographyStyle', 'setDocumentData',
 		'getDocumentData', 'canInsertField', 'activate', 'displayAlert'];
@@ -3808,7 +3808,7 @@ Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc)
 	// Should return an async array
 	wrapped.getFields = async function (fieldType, progressCallback) {
 		if ('getFieldsAsync' in doc) {
-			var deferred = Zotero.Promise.defer();
+			var deferred = Trellis.Promise.defer();
 			var promise = deferred.promise;
 			
 			var me = this;
@@ -3819,7 +3819,7 @@ Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc)
 						try {
 							progressCallback(75);
 						} catch(e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						};
 					}
 					
@@ -3830,10 +3830,10 @@ Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc)
 						while (fieldsEnumerator.hasMoreElements()) {
 							let field = fieldsEnumerator.getNext();
 							try {
-								fields.push(Zotero.Integration.LegacyPluginWrapper.wrapField(
-									field.QueryInterface(Components.interfaces.zoteroIntegrationField)));
+								fields.push(Trellis.Integration.LegacyPluginWrapper.wrapField(
+									field.QueryInterface(Components.interfaces.trellisIntegrationField)));
 							} catch (e) {
-								fields.push(Zotero.Integration.LegacyPluginWrapper.wrapField(field));
+								fields.push(Trellis.Integration.LegacyPluginWrapper.wrapField(field));
 							}
 						}
 					} catch(e) {
@@ -3849,7 +3849,7 @@ Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc)
 						try {
 							progressCallback((data ? parseInt(data, 10)*(3/4) : null));
 						} catch(e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						};
 					}
 				} else if(topic === "fields-error") {
@@ -3863,8 +3863,8 @@ Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc)
 			var fields = [];
 			if (result.hasMoreElements) {
 				while (result.hasMoreElements()) {
-					fields.push(Zotero.Integration.LegacyPluginWrapper.wrapField(result.getNext()));
-					await Zotero.Promise.delay();
+					fields.push(Trellis.Integration.LegacyPluginWrapper.wrapField(result.getNext()));
+					await Trellis.Promise.delay();
 				}
 			} else {
 				fields = result;
@@ -3873,15 +3873,15 @@ Zotero.Integration.LegacyPluginWrapper.wrapDocument = function wrapDocument(doc)
 		}
 	}
 	wrapped.insertField = async function () {
-		return Zotero.Integration.LegacyPluginWrapper.wrapField(doc.insertField.apply(doc, arguments));
+		return Trellis.Integration.LegacyPluginWrapper.wrapField(doc.insertField.apply(doc, arguments));
 	}
 	wrapped.cursorInField = async function () {
 		var result = doc.cursorInField.apply(doc, arguments);
-		return !result ? result : Zotero.Integration.LegacyPluginWrapper.wrapField(result);
+		return !result ? result : Trellis.Integration.LegacyPluginWrapper.wrapField(result);
 	}
 	// Should take an arrayOfFields instead of an enumerator
 	wrapped.convert = async function (arrayOfFields) {
-		arguments[0] = new Zotero.Integration.JSEnumerator(arrayOfFields.map(f => f.rawField));
+		arguments[0] = new Trellis.Integration.JSEnumerator(arrayOfFields.map(f => f.rawField));
 		return doc.convert.apply(doc, arguments);
 	}
 	return wrapped;

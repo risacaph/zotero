@@ -4,7 +4,7 @@
  * Utility functions for dealing with citations
  * @namespace
  */
-Zotero.Cite = {
+Trellis.Cite = {
 	/**
 	 * Locator labels
 	 */
@@ -48,10 +48,10 @@ Zotero.Cite = {
 	 * @return {String} - Localized string (e.g., 'Livre')
 	 */
 	getLocatorString: function (locator, form = null) {
-		// Get the best CSL locale for the current Zotero locale
-		var cslLocale = Zotero.Utilities.Internal.resolveLocale(
-			Zotero.locale,
-			Object.keys(Zotero.Styles.locales)
+		// Get the best CSL locale for the current Trellis locale
+		var cslLocale = Trellis.Utilities.Internal.resolveLocale(
+			Trellis.locale,
+			Object.keys(Trellis.Styles.locales)
 		);
 		
 		// If locator strings are already cached for the current locale, use that
@@ -66,9 +66,9 @@ Zotero.Cite = {
 		var map = new Map();
 		this._locatorStrings.set(cslLocale, map);
 		
-		var localeXML = Zotero.Cite.Locale.get(cslLocale);
+		var localeXML = Trellis.Cite.Locale.get(cslLocale);
 		var parser;
-		if (Zotero.platformMajorVersion > 60) {
+		if (Trellis.platformMajorVersion > 60) {
 			parser = new DOMParser();
 		}
 		else {
@@ -81,7 +81,7 @@ Zotero.Cite = {
 		for (let locator of this.labels) {
 			// 'timestamp' not included in CSL locales
 			if (locator == 'timestamp') {
-				map.set(locator, Zotero.getString('citation.locator.timestamp'));
+				map.set(locator, Trellis.getString('citation.locator.timestamp'));
 				continue;
 			}
 			
@@ -90,21 +90,21 @@ Zotero.Cite = {
 			if (!terms.length) {
 				// If locator not found, get from the U.S. English locale
 				if (cslLocale != 'en-US') {
-					Zotero.logError(`Locator '${locator}' not found in ${cslLocale} locale -- trying en-US`);
+					Trellis.logError(`Locator '${locator}' not found in ${cslLocale} locale -- trying en-US`);
 					if (!englishDoc) {
-						englishDoc = parser.parseFromString(Zotero.Cite.Locale.get('en-US'), 'text/xml');
+						englishDoc = parser.parseFromString(Trellis.Cite.Locale.get('en-US'), 'text/xml');
 					}
 					terms = englishDoc.querySelectorAll(`term[name="${locator}"]}`);
 					if (!terms.length) {
-						Zotero.logError(`Locator '${locator}' not found in en-US locale -- using name`);
+						Trellis.logError(`Locator '${locator}' not found in en-US locale -- using name`);
 					}
 				}
 				else {
-					Zotero.logError(`Locator '${locator}' not found in en-US locale -- using name`);
+					Trellis.logError(`Locator '${locator}' not found in en-US locale -- using name`);
 				}
 				// If still not found, use the locator name directly
 				if (!terms.length) {
-					map.set(locator, Zotero.Utilities.capitalize(locator));
+					map.set(locator, Trellis.Utilities.capitalize(locator));
 					continue;
 				}
 			}
@@ -118,12 +118,12 @@ Zotero.Cite = {
 				}
 				let str = single.textContent;
 				if (!str) {
-					Zotero.logError(`Locator '${locator}' is empty in ${cslLocale} locale -- using name`);
-					map.set(locator, Zotero.Utilities.capitalize(locator));
+					Trellis.logError(`Locator '${locator}' is empty in ${cslLocale} locale -- using name`);
+					map.set(locator, Trellis.Utilities.capitalize(locator));
 					continue;
 				}
 				let form = elem.getAttribute('form');
-				map.set(locator + (form ? `_${form}` : ''), Zotero.Utilities.capitalize(str));
+				map.set(locator + (form ? `_${form}` : ''), Trellis.Utilities.capitalize(str));
 			}
 		}
 
@@ -184,8 +184,8 @@ Zotero.Cite = {
 	/**
 	 * Makes a formatted bibliography, if the style defines one; otherwise makes a
 	 * formatted list of citations for the items.
-	 * @param {Zotero.Style} style The style to use
-	 * @param {Zotero.Item[]} items An array of items
+	 * @param {Trellis.Style} style The style to use
+	 * @param {Trellis.Item[]} items An array of items
 	 * @param {String} format The format of the output (html, text, or rtf)
 	 * @param {boolean} [asCitationList]
 	 * @return {String} Bibliography or citation list in specified format
@@ -195,7 +195,7 @@ Zotero.Cite = {
 		cslEngine.updateItems(items.map(item => item.id));
 		 		
 		if(!asCitationList) {
-			var bibliography = Zotero.Cite.makeFormattedBibliography(cslEngine, format);
+			var bibliography = Trellis.Cite.makeFormattedBibliography(cslEngine, format);
 			if(bibliography) return bibliography;
 		}
 		
@@ -247,7 +247,7 @@ Zotero.Cite = {
 	
 	/**
 	 * Makes a formatted bibliography
-	 * @param {Zotero.Style} style The style
+	 * @param {Trellis.Style} style The style
 	 * @param {String} format The format of the output (html, text, or rtf)
 	 * @return {String} Bibliography in specified format
 	 */
@@ -263,13 +263,13 @@ Zotero.Cite = {
 				// add COinS
 				for (let itemID of bib[0].entry_ids[i]) {
 					try {
-						var co = Zotero.OpenURL.createContextObject(Zotero.Items.get(itemID), "1.0");
+						var co = Trellis.OpenURL.createContextObject(Trellis.Items.get(itemID), "1.0");
 						if(!co) continue;
 						output.push('  <span class="Z3988" title="'+
 							co.replace("&", "&amp;", "g").replace("<", "&lt;", "g").replace(">", "&gt;", "g")+
 							'"></span>\n');
 					} catch(e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 			}
@@ -281,11 +281,11 @@ Zotero.Cite = {
 				return html;
 			}
 			
-			//Zotero.debug("maxoffset: " + bib[0].maxoffset);
-			//Zotero.debug("entryspacing: " + bib[0].entryspacing);
-			//Zotero.debug("linespacing: " + bib[0].linespacing);
-			//Zotero.debug("hangingindent: " + bib[0].hangingindent);
-			//Zotero.debug("second-field-align: " + bib[0]["second-field-align"]);
+			//Trellis.debug("maxoffset: " + bib[0].maxoffset);
+			//Trellis.debug("entryspacing: " + bib[0].entryspacing);
+			//Trellis.debug("linespacing: " + bib[0].linespacing);
+			//Trellis.debug("hangingindent: " + bib[0].hangingindent);
+			//Trellis.debug("second-field-align: " + bib[0]["second-field-align"]);
 			
 			var maxOffset = parseInt(bib[0].maxoffset);
 			var entrySpacing = parseInt(bib[0].entryspacing);
@@ -303,7 +303,7 @@ Zotero.Cite = {
 				doc = parser.parseFromString("<!DOCTYPE html><html><body></body></html>", "text/html");
 			doc.body.insertAdjacentHTML("afterbegin", html);
 			var div = doc.body.firstChild,
-				leftMarginDivs = Zotero.Utilities.xpath(doc, '//div[@class="csl-left-margin"]'),
+				leftMarginDivs = Trellis.Utilities.xpath(doc, '//div[@class="csl-left-margin"]'),
 				multiField = !!leftMarginDivs.length,
 				clearEntries = multiField;
 			
@@ -330,7 +330,7 @@ Zotero.Cite = {
 			if(style) div.setAttribute("style", style);
 			
 			// csl-entry
-			var divs = Zotero.Utilities.xpath(doc, '//div[@class="csl-entry"]');
+			var divs = Trellis.Utilities.xpath(doc, '//div[@class="csl-entry"]');
 			for(var i=0, n=divs.length; i<n; i++) {
 				var div = divs[i],
 					divStyle = div.getAttribute("style");
@@ -369,7 +369,7 @@ Zotero.Cite = {
 			}
 			
 			// div.csl-right-inline
-			for (let div of Zotero.Utilities.xpath(doc, '//div[@class="csl-right-inline"]')) {
+			for (let div of Trellis.Utilities.xpath(doc, '//div[@class="csl-right-inline"]')) {
 				var divStyle = div.getAttribute("style");
 				if(!divStyle) divStyle = "";
 				
@@ -383,7 +383,7 @@ Zotero.Cite = {
 			}
 			
 			// div.csl-indent
-			for (let div of Zotero.Utilities.xpath(doc, '//div[@class="csl-indent"]')) {
+			for (let div of Trellis.Utilities.xpath(doc, '//div[@class="csl-indent"]')) {
 				div.setAttribute("style", "margin: .5em 0 0 2em; padding: 0 0 .2em .5em; border-left: 5px solid #ccc;");
 			}
 			
@@ -391,7 +391,7 @@ Zotero.Cite = {
 		} else if(format == "text") {
 			return bib[0].bibstart+bib[1].join("")+bib[0].bibend;
 		} else if(format == "rtf") {
-			var bibStyle = Zotero.Cite.getBibliographyFormatParameters(bib);
+			var bibStyle = Trellis.Cite.getBibliographyFormatParameters(bib);
 			
 			var preamble = (bibStyle.tabStops.length ? "\\tx"+bibStyle.tabStops.join(" \\tx")+" " : "");
 			preamble += "\\li"+bibStyle.indent+" \\fi"+bibStyle.firstLineIndent+" "
@@ -408,42 +408,42 @@ Zotero.Cite = {
 	 * Get an item by ID, either by retrieving it from the library or looking for the document it
 	 * belongs to.
 	 * @param {String|Number|Array} id
-	 * @return {Zotero.Item} item
+	 * @return {Trellis.Item} item
 	 */
 	"getItem":function getItem(id) {
 		var slashIndex;
 		
 		if(id instanceof Array) {
-			return id.map(anId => Zotero.Cite.getItem(anId));
+			return id.map(anId => Trellis.Cite.getItem(anId));
 		} else if(typeof id === "string" && (slashIndex = id.indexOf("/")) !== -1) {		
 			var sessionID = id.substr(0, slashIndex),
-				session = Zotero.Integration.sessions[sessionID],
+				session = Trellis.Integration.sessions[sessionID],
 				item;
 			if (session) {
-				item = session.embeddedZoteroItems[id.substr(slashIndex+1)];
+				item = session.embeddedTrellisItems[id.substr(slashIndex+1)];
 			}
 			
 			if(!item) {
-				item = new Zotero.Item("document");
+				item = new Trellis.Item("document");
 				item.setField("title", "Missing Item");
-				Zotero.log("CSL item "+id+" not found");
+				Trellis.log("CSL item "+id+" not found");
 			}
 			return item;
 		} else {
-			return Zotero.Items.get(id);
+			return Trellis.Items.get(id);
 		}
 	},
 	
 	extraToCSL: function (extra) {
-		Zotero.debug(`Zotero.Cite.extraToCSL() is deprecated -- use Zotero.Utilities.Item.extraToCSL() instead`);
-		return Zotero.Utilities.Item.extraToCSL(extra);
+		Trellis.debug(`Trellis.Cite.extraToCSL() is deprecated -- use Trellis.Utilities.Item.extraToCSL() instead`);
+		return Trellis.Utilities.Item.extraToCSL(extra);
 	}
 };
 
 /**
  * Get a CSL abbreviation in the format expected by citeproc-js
  */
-Zotero.Cite.getAbbreviation = new function () {
+Trellis.Cite.getAbbreviation = new function () {
 	var abbreviations,
 		abbreviationCategories;
 
@@ -455,27 +455,27 @@ Zotero.Cite.getAbbreviation = new function () {
 	}
 
 	function loadAbbreviations() {
-		var file = Zotero.File.pathToFile(Zotero.DataDirectory.dir);
+		var file = Trellis.File.pathToFile(Trellis.DataDirectory.dir);
 		file.append("abbreviations.json");
 
 		var json, origin;
 		if(file.exists()) {
-			json = Zotero.File.getContents(file);
+			json = Trellis.File.getContents(file);
 			origin = file.path;
 		} else {
-			json = Zotero.File.getContentsFromURL("resource://zotero/schema/abbreviations.json");
-			origin = "resource://zotero/schema/abbreviations.json";
+			json = Trellis.File.getContentsFromURL("resource://trellis/schema/abbreviations.json");
+			origin = "resource://trellis/schema/abbreviations.json";
 		}
 
 		try {
 			abbreviations = JSON.parse(json);
 		} catch(e) {
-			throw new Zotero.Exception.Alert("styles.abbreviations.parseError", origin,
+			throw new Trellis.Exception.Alert("styles.abbreviations.parseError", origin,
 				"styles.abbreviations.title", e);
 		}
 
 		if(!abbreviations.info || !abbreviations.info.name || !abbreviations.info.URI) {
-			throw new Zotero.Exception.Alert("styles.abbreviations.missingInfo", origin,
+			throw new Trellis.Exception.Alert("styles.abbreviations.missingInfo", origin,
 				"styles.abbreviations.title");
 		}
 
@@ -596,11 +596,11 @@ Zotero.Cite.getAbbreviation = new function () {
 
 		if(!abbreviation) abbreviation = key; //this should never happen, but just in case
 		
-		Zotero.debug("Abbreviated "+key+" as "+abbreviation);
+		Trellis.debug("Abbreviated "+key+" as "+abbreviation);
 		
 		// Add to jurisdiction object
 		if(!obj[jurisdiction]) {
-			obj[jurisdiction] = new Zotero.CiteProc.CSL.AbbreviationSegments();
+			obj[jurisdiction] = new Trellis.CiteProc.CSL.AbbreviationSegments();
 		}
 		obj[jurisdiction][category][key] = abbreviation;
 	}
@@ -614,16 +614,16 @@ Zotero.Cite.getAbbreviation = new function () {
  * @param {Boolean} [options.automaticJournalAbbreviations]
  * @param {Boolean} [options.uppercaseSubtitles]
  */
-Zotero.Cite.System = function ({ automaticJournalAbbreviations, uppercaseSubtitles }) {
+Trellis.Cite.System = function ({ automaticJournalAbbreviations, uppercaseSubtitles }) {
 	if (automaticJournalAbbreviations) {
-		this.getAbbreviation = Zotero.Cite.getAbbreviation;
+		this.getAbbreviation = Trellis.Cite.getAbbreviation;
 	}
 	if (uppercaseSubtitles) {
 		this.uppercase_subtitles = true;  
 	}
 };
 
-Zotero.Cite.System.prototype = {
+Trellis.Cite.System.prototype = {
 	/**
 	 * citeproc-js system function for getting items
 	 * See http://gsl-nagoya-u.net/http/pub/citeproc-doc.html#retrieveitem
@@ -631,14 +631,14 @@ Zotero.Cite.System.prototype = {
 	 * @return {Object} citeproc-js item
 	 */
 	"retrieveItem":function retrieveItem(item) {
-		var zoteroItem, slashIndex;
-		if(typeof item === "object" && item !== null &&  item instanceof Zotero.Item) {
+		var trellisItem, slashIndex;
+		if(typeof item === "object" && item !== null &&  item instanceof Trellis.Item) {
 			//if(this._cache[item.id]) return this._cache[item.id];
-			zoteroItem = item;
+			trellisItem = item;
 		} else if(typeof item === "string" && (slashIndex = item.indexOf("/")) !== -1) {
 			// is an embedded item
 			var sessionID = item.substr(0, slashIndex);
-			var session = Zotero.Integration.sessions[sessionID];
+			var session = Trellis.Integration.sessions[sessionID];
 			if(session) {
 				var embeddedCitation = session.embeddedItems[item.substr(slashIndex+1)];
 				if (embeddedCitation) {
@@ -650,25 +650,25 @@ Zotero.Cite.System.prototype = {
 			// is an item ID
 			//if(this._cache[item]) return this._cache[item];
 			try {
-				zoteroItem = Zotero.Items.get(item);
+				trellisItem = Trellis.Items.get(item);
 			} catch(e) {}
 		}
 
-		if(!zoteroItem) {
-			throw new Error("Zotero.Cite.System.retrieveItem called on non-item "+item);
+		if(!trellisItem) {
+			throw new Error("Trellis.Cite.System.retrieveItem called on non-item "+item);
 		}
 		
-		var cslItem = Zotero.Utilities.Item.itemToCSLJSON(zoteroItem);
+		var cslItem = Trellis.Utilities.Item.itemToCSLJSON(trellisItem);
 		
 		// TEMP: citeproc-js currently expects the id property to be the item DB id
-		cslItem.id = zoteroItem.id;
+		cslItem.id = trellisItem.id;
 		
-		if (!Zotero.Prefs.get("export.citePaperJournalArticleURL")) {
-			var itemType = Zotero.ItemTypes.getName(zoteroItem.itemTypeID);
+		if (!Trellis.Prefs.get("export.citePaperJournalArticleURL")) {
+			var itemType = Trellis.ItemTypes.getName(trellisItem.itemTypeID);
 			// don't return URL or accessed information for journal articles if a
 			// pages field exists
 			if (["journalArticle", "newspaperArticle", "magazineArticle"].indexOf(itemType) !== -1
-				&& zoteroItem.getField("pages")
+				&& trellisItem.getField("pages")
 			) {
 				delete cslItem.URL;
 				delete cslItem.accessed;
@@ -686,7 +686,7 @@ Zotero.Cite.System.prototype = {
 	 */
 	"retrieveLocale":function retrieveLocale(lang) {
 		switch (lang) {
-			// citeproc-js limitation -- see https://github.com/zotero/zotero/issues/5741
+			// citeproc-js limitation -- see https://github.com/trellis/trellis/issues/5741
 			case 'sr-CYRL':
 				lang = 'sr-Cyrl-RS';
 				break;
@@ -695,11 +695,11 @@ Zotero.Cite.System.prototype = {
 				lang = 'sr-Latn-RS';
 				break;
 		}
-		return Zotero.Cite.Locale.get(lang);
+		return Trellis.Cite.Locale.get(lang);
 	}
 };
 
-Zotero.Cite.Locale = {
+Trellis.Cite.Locale = {
 	_cache: new Map(),
 	
 	get: function (locale) {
@@ -708,17 +708,17 @@ Zotero.Cite.Locale = {
 			return str;
 		}
 		try {
-			str = Zotero.File.getResource(`chrome://zotero/content/locale/csl/locales-${locale}.xml`);
+			str = Trellis.File.getResource(`chrome://trellis/content/locale/csl/locales-${locale}.xml`);
 			this._cache.set(locale, str);
 			return str;
 		}
 		catch (e) {
-			//Zotero.debug(e);
+			//Trellis.debug(e);
 			return false;
 		}
 	}
 };
 
 if (typeof process === 'object' && process + '' === '[object process]'){
-    module.exports = Zotero.Cite;
+    module.exports = Trellis.Cite;
 }

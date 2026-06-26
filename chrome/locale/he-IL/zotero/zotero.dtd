@@ -1,329 +1,329 @@
-<!ENTITY zotero.general.yes "כן">
-<!ENTITY zotero.general.no "לא">
-<!ENTITY zotero.general.optional "(רשות)">
-<!ENTITY zotero.general.note "הערה:">
-<!ENTITY zotero.general.selectAll "לבחור בהכול">
-<!ENTITY zotero.general.deselectAll "לבטל את הבחירה">
-<!ENTITY zotero.general.edit "עריכה">
-<!ENTITY zotero.general.delete "מחיקה">
-<!ENTITY zotero.general.moveToTrash "העברה לאשפה">
-<!ENTITY zotero.general.ok "אישור">
-<!ENTITY zotero.general.cancel "ביטול">
-<!ENTITY zotero.general.refresh "רענון">
-<!ENTITY zotero.general.saveAs "שמירה בשם…">
-<!ENTITY zotero.general.options "אפשרויות">
-<!ENTITY zotero.general.advancedOptions.label "אפשרויות מתקדמות">
-<!ENTITY zotero.general.tools "כלים">
-<!ENTITY zotero.general.more "עוד">
-<!ENTITY zotero.general.moreInformation "פרטים נוספים">
-<!ENTITY zotero.general.loading "בטעינה…">
-<!ENTITY zotero.general.close "סגירה">
-<!ENTITY zotero.general.minimize "מזעור">
-<!ENTITY zotero.general.other "אחר…">
-<!ENTITY zotero.general.bigger "גדול יותר">
-<!ENTITY zotero.general.smaller "קטן יותר">
-<!ENTITY zotero.general.reset "איפוס">
+<!ENTITY trellis.general.yes "כן">
+<!ENTITY trellis.general.no "לא">
+<!ENTITY trellis.general.optional "(רשות)">
+<!ENTITY trellis.general.note "הערה:">
+<!ENTITY trellis.general.selectAll "לבחור בהכול">
+<!ENTITY trellis.general.deselectAll "לבטל את הבחירה">
+<!ENTITY trellis.general.edit "עריכה">
+<!ENTITY trellis.general.delete "מחיקה">
+<!ENTITY trellis.general.moveToTrash "העברה לאשפה">
+<!ENTITY trellis.general.ok "אישור">
+<!ENTITY trellis.general.cancel "ביטול">
+<!ENTITY trellis.general.refresh "רענון">
+<!ENTITY trellis.general.saveAs "שמירה בשם…">
+<!ENTITY trellis.general.options "אפשרויות">
+<!ENTITY trellis.general.advancedOptions.label "אפשרויות מתקדמות">
+<!ENTITY trellis.general.tools "כלים">
+<!ENTITY trellis.general.more "עוד">
+<!ENTITY trellis.general.moreInformation "פרטים נוספים">
+<!ENTITY trellis.general.loading "בטעינה…">
+<!ENTITY trellis.general.close "סגירה">
+<!ENTITY trellis.general.minimize "מזעור">
+<!ENTITY trellis.general.other "אחר…">
+<!ENTITY trellis.general.bigger "גדול יותר">
+<!ENTITY trellis.general.smaller "קטן יותר">
+<!ENTITY trellis.general.reset "איפוס">
 
 
-<!ENTITY zotero.errorReport.title "דוח שגיאה של Zotero">
-<!ENTITY zotero.errorReport.submissionInProgress "נא להמתין להגשת דוח השגיאה.">
-<!ENTITY zotero.errorReport.submitted "דוח השגיאה שלך הוגש.">
-<!ENTITY zotero.errorReport.reportID "מס׳ הדוח:">
-<!ENTITY zotero.errorReport.postToForums "נא לפרסם הודעה בפורומים של Zotero‏ (forums.zotero.org) עם מספר השגיאה הזה, תיאור של התקלה והצעדים הנחוצים לשחזורה.">
-<!ENTITY zotero.errorReport.notReviewed "דוחות שגיאה בדרך כלל לא זוכים לטיפול אלא אם כן דנים עליהם בפורום.">
+<!ENTITY trellis.errorReport.title "דוח שגיאה של Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "נא להמתין להגשת דוח השגיאה.">
+<!ENTITY trellis.errorReport.submitted "דוח השגיאה שלך הוגש.">
+<!ENTITY trellis.errorReport.reportID "מס׳ הדוח:">
+<!ENTITY trellis.errorReport.postToForums "נא לפרסם הודעה בפורומים של Trellis‏ (forums.trellis.org) עם מספר השגיאה הזה, תיאור של התקלה והצעדים הנחוצים לשחזורה.">
+<!ENTITY trellis.errorReport.notReviewed "דוחות שגיאה בדרך כלל לא זוכים לטיפול אלא אם כן דנים עליהם בפורום.">
 
-<!ENTITY zotero.upgrade.title "אשף השדרוג של Zotero">
-<!ENTITY zotero.upgrade.newVersionInstalled "התקנת גירסה חדשה של Zotero.">
-<!ENTITY zotero.upgrade.upgradeRequired "יש לשדרג את מסד הנתונים של ה־Zotero שלך כדי שיעבוד עם הגירסה החדשה.">
-<!ENTITY zotero.upgrade.autoBackup "מסד הנתונים הנוכחי שלך יגובה אוטומטית בטרם ביצוע שינויים כלשהם.">
-<!ENTITY zotero.upgrade.majorUpgrade "זה עדכון משמעותי.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "נא לוודא שעברת על">
-<!ENTITY zotero.upgrade.majorUpgradeLink "הנחיות ההתקנה">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "בטרם המשך התהליך.">
-<!ENTITY zotero.upgrade.upgradeInProgress "נא להמתין לסיום תהליך השדרוג. עשוי לארוך מספר דקות.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "מסד הנתונים של ה־Zotero שלך שודרג בהצלחה.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "נא לעיין">
-<!ENTITY zotero.upgrade.changeLogLink "ביומן השינויים">
-<!ENTITY zotero.upgrade.changeLogAfterLink "כדי ללמוד מה חדש">
+<!ENTITY trellis.upgrade.title "אשף השדרוג של Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "התקנת גירסה חדשה של Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "יש לשדרג את מסד הנתונים של ה־Trellis שלך כדי שיעבוד עם הגירסה החדשה.">
+<!ENTITY trellis.upgrade.autoBackup "מסד הנתונים הנוכחי שלך יגובה אוטומטית בטרם ביצוע שינויים כלשהם.">
+<!ENTITY trellis.upgrade.majorUpgrade "זה עדכון משמעותי.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "נא לוודא שעברת על">
+<!ENTITY trellis.upgrade.majorUpgradeLink "הנחיות ההתקנה">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "בטרם המשך התהליך.">
+<!ENTITY trellis.upgrade.upgradeInProgress "נא להמתין לסיום תהליך השדרוג. עשוי לארוך מספר דקות.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "מסד הנתונים של ה־Trellis שלך שודרג בהצלחה.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "נא לעיין">
+<!ENTITY trellis.upgrade.changeLogLink "ביומן השינויים">
+<!ENTITY trellis.upgrade.changeLogAfterLink "כדי ללמוד מה חדש">
 
-<!ENTITY zotero.tabs.notes.label "הערות">
-<!ENTITY zotero.tabs.attachments.label "צרופות">
+<!ENTITY trellis.tabs.notes.label "הערות">
+<!ENTITY trellis.tabs.attachments.label "צרופות">
 
-<!ENTITY zotero.toolbar.duplicate.label "הצגת כפילויות">
-<!ENTITY zotero.collections.showUnfiledItems "הצגת פריטים שלא תויקו">
-<!ENTITY zotero.collections.showRetractedItems "הצגת פריטים שנסוגו">
+<!ENTITY trellis.toolbar.duplicate.label "הצגת כפילויות">
+<!ENTITY trellis.collections.showUnfiledItems "הצגת פריטים שלא תויקו">
+<!ENTITY trellis.collections.showRetractedItems "הצגת פריטים שנסוגו">
 
-<!ENTITY zotero.items.itemType "סוג פריט">
-<!ENTITY zotero.items.creator_column "יוצר">
-<!ENTITY zotero.items.year_column "שנה">
-<!ENTITY zotero.items.dateModified_column "תאריך שינוי">
-<!ENTITY zotero.items.moreColumns.label "עמודות נוספות">
-<!ENTITY zotero.items.restoreColumnOrder.label "שחזור סדר העמודות">
+<!ENTITY trellis.items.itemType "סוג פריט">
+<!ENTITY trellis.items.creator_column "יוצר">
+<!ENTITY trellis.items.year_column "שנה">
+<!ENTITY trellis.items.dateModified_column "תאריך שינוי">
+<!ENTITY trellis.items.moreColumns.label "עמודות נוספות">
+<!ENTITY trellis.items.restoreColumnOrder.label "שחזור סדר העמודות">
 
-<!ENTITY zotero.items.menu.showInLibrary "הצגה בספרייה">
-<!ENTITY zotero.items.menu.attach.note "הוספת הערה">
-<!ENTITY zotero.items.menu.attach "צירוף קובץ">
-<!ENTITY zotero.items.menu.attach.link.uri "צירוף קישור לכתובת…">
-<!ENTITY zotero.items.menu.attach.file "צירוף עותק מאוחסן של קובץ…">
-<!ENTITY zotero.items.menu.attach.fileLink "צירוף קישור לקובץ…">
+<!ENTITY trellis.items.menu.showInLibrary "הצגה בספרייה">
+<!ENTITY trellis.items.menu.attach.note "הוספת הערה">
+<!ENTITY trellis.items.menu.attach "צירוף קובץ">
+<!ENTITY trellis.items.menu.attach.link.uri "צירוף קישור לכתובת…">
+<!ENTITY trellis.items.menu.attach.file "צירוף עותק מאוחסן של קובץ…">
+<!ENTITY trellis.items.menu.attach.fileLink "צירוף קישור לקובץ…">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "שחזור לספרייה">
-<!ENTITY zotero.items.menu.duplicateItem "שכפול פריט">
-<!ENTITY zotero.items.menu.mergeItems "מיזוג פריטים…">
-<!ENTITY zotero.items.menu.unrecognize "ביטול משיכת נתוני־על">
+<!ENTITY trellis.items.menu.restoreToLibrary "שחזור לספרייה">
+<!ENTITY trellis.items.menu.duplicateItem "שכפול פריט">
+<!ENTITY trellis.items.menu.mergeItems "מיזוג פריטים…">
+<!ENTITY trellis.items.menu.unrecognize "ביטול משיכת נתוני־על">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "נא לבחור את מספר הפריט שישמש בתור פריט ההורה:">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "נא לבחור שדות לשמירה מגירסאות אחרות של הפריט:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "נא לבחור את מספר הפריט שישמש בתור פריט ההורה:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "נא לבחור שדות לשמירה מגירסאות אחרות של הפריט:">
 
-<!ENTITY zotero.toolbar.newItem.label "פריט חדש">
-<!ENTITY zotero.toolbar.moreItemTypes.label "עוד">
-<!ENTITY zotero.toolbar.lookup.label "הוספת פריטים לפי מזהה">
-<!ENTITY zotero.toolbar.removeItem.label "הסרת פריט…">
-<!ENTITY zotero.toolbar.newGroup "קבוצה חדשה…">
-<!ENTITY zotero.toolbar.newSubcollection.label "תת־אוסף חדש…">
-<!ENTITY zotero.toolbar.newSavedSearch.label "חיפוש שמור חדש…">
-<!ENTITY zotero.toolbar.emptyTrash.label "פינוי האשפה">
-<!ENTITY zotero.toolbar.tagSelector.label "הצגת/הסתרת בורר התגיות">
-<!ENTITY zotero.toolbar.actions.label "פעולות">
-<!ENTITY zotero.toolbar.import.label "ייבוא…">
-<!ENTITY zotero.toolbar.importFromClipboard "ייבוא מלוח הגזירים">
-<!ENTITY zotero.toolbar.export.label "ייצוא ספרייה…">
-<!ENTITY zotero.toolbar.rtfScan.label "סריקת RTF">
-<!ENTITY zotero.toolbar.preferences.label "העדפות…">
-<!ENTITY zotero.toolbar.supportAndDocumentation "תמיכה ותיעוד">
-<!ENTITY zotero.toolbar.about.label "על Zotero">
-<!ENTITY zotero.toolbar.advancedSearch "חיפוש מתקדם">
-<!ENTITY zotero.toolbar.openURL.label "חיפוש">
-<!ENTITY zotero.toolbar.openURL.tooltip "חיפוש בספרייה המקומית שלך">
+<!ENTITY trellis.toolbar.newItem.label "פריט חדש">
+<!ENTITY trellis.toolbar.moreItemTypes.label "עוד">
+<!ENTITY trellis.toolbar.lookup.label "הוספת פריטים לפי מזהה">
+<!ENTITY trellis.toolbar.removeItem.label "הסרת פריט…">
+<!ENTITY trellis.toolbar.newGroup "קבוצה חדשה…">
+<!ENTITY trellis.toolbar.newSubcollection.label "תת־אוסף חדש…">
+<!ENTITY trellis.toolbar.newSavedSearch.label "חיפוש שמור חדש…">
+<!ENTITY trellis.toolbar.emptyTrash.label "פינוי האשפה">
+<!ENTITY trellis.toolbar.tagSelector.label "הצגת/הסתרת בורר התגיות">
+<!ENTITY trellis.toolbar.actions.label "פעולות">
+<!ENTITY trellis.toolbar.import.label "ייבוא…">
+<!ENTITY trellis.toolbar.importFromClipboard "ייבוא מלוח הגזירים">
+<!ENTITY trellis.toolbar.export.label "ייצוא ספרייה…">
+<!ENTITY trellis.toolbar.rtfScan.label "סריקת RTF">
+<!ENTITY trellis.toolbar.preferences.label "העדפות…">
+<!ENTITY trellis.toolbar.supportAndDocumentation "תמיכה ותיעוד">
+<!ENTITY trellis.toolbar.about.label "על Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "חיפוש מתקדם">
+<!ENTITY trellis.toolbar.openURL.label "חיפוש">
+<!ENTITY trellis.toolbar.openURL.tooltip "חיפוש בספרייה המקומית שלך">
 
-<!ENTITY zotero.toolbar.feeds.new "ערוץ עדכונים חדש">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "מכתובת…">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "מ־OPML…">
-<!ENTITY zotero.toolbar.feeds.edit "עריכת ערוץ העדכונים…">
+<!ENTITY trellis.toolbar.feeds.new "ערוץ עדכונים חדש">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "מכתובת…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "מ־OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "עריכת ערוץ העדכונים…">
 
-<!ENTITY zotero.item.add "הוספה">
-<!ENTITY zotero.item.attachment.file.show "הצגת קובץ">
-<!ENTITY zotero.item.textTransform "התמרת טקסט">
-<!ENTITY zotero.item.textTransform.titlecase "מצב רישיות כותרת">
-<!ENTITY zotero.item.textTransform.sentencecase "מצב רישיות משפט">
-<!ENTITY zotero.item.creatorTransform.nameSwap "החלפת ראשון/אחרון">
-<!ENTITY zotero.item.creatorTransform.fixCase "תיקון מצב רישיות">
-<!ENTITY zotero.item.copyAsURL "העתקה ככתובת">
-<!ENTITY zotero.item.deletePermanently "מחיקה לצמיתות…">
+<!ENTITY trellis.item.add "הוספה">
+<!ENTITY trellis.item.attachment.file.show "הצגת קובץ">
+<!ENTITY trellis.item.textTransform "התמרת טקסט">
+<!ENTITY trellis.item.textTransform.titlecase "מצב רישיות כותרת">
+<!ENTITY trellis.item.textTransform.sentencecase "מצב רישיות משפט">
+<!ENTITY trellis.item.creatorTransform.nameSwap "החלפת ראשון/אחרון">
+<!ENTITY trellis.item.creatorTransform.fixCase "תיקון מצב רישיות">
+<!ENTITY trellis.item.copyAsURL "העתקה ככתובת">
+<!ENTITY trellis.item.deletePermanently "מחיקה לצמיתות…">
 
-<!ENTITY zotero.item.tags.removeAll "הסרת כל התגיות…">
+<!ENTITY trellis.item.tags.removeAll "הסרת כל התגיות…">
 
-<!ENTITY zotero.toolbar.newNote "הערה חדשה">
-<!ENTITY zotero.toolbar.note.standalone "הערה עצמאית חדשה">
-<!ENTITY zotero.toolbar.note.child "הוספת הערת צאצא">
-<!ENTITY zotero.toolbar.lookup "חיפוש לפי מזהה…">
-<!ENTITY zotero.toolbar.attachment.linked "קישור לקובץ…">
-<!ENTITY zotero.toolbar.attachment.add "אחסון עותק של קובץ…">
-<!ENTITY zotero.toolbar.attachment.weblink "שמירת קישור לעמוד נוכחי">
-<!ENTITY zotero.toolbar.attachment.snapshot "לכידת תמונת מצב של העמוד הנוכחי">
-<!ENTITY zotero.toolbar.context.item "פריט">
-<!ENTITY zotero.toolbar.context.notes "הערות">
+<!ENTITY trellis.toolbar.newNote "הערה חדשה">
+<!ENTITY trellis.toolbar.note.standalone "הערה עצמאית חדשה">
+<!ENTITY trellis.toolbar.note.child "הוספת הערת צאצא">
+<!ENTITY trellis.toolbar.lookup "חיפוש לפי מזהה…">
+<!ENTITY trellis.toolbar.attachment.linked "קישור לקובץ…">
+<!ENTITY trellis.toolbar.attachment.add "אחסון עותק של קובץ…">
+<!ENTITY trellis.toolbar.attachment.weblink "שמירת קישור לעמוד נוכחי">
+<!ENTITY trellis.toolbar.attachment.snapshot "לכידת תמונת מצב של העמוד הנוכחי">
+<!ENTITY trellis.toolbar.context.item "פריט">
+<!ENTITY trellis.toolbar.context.notes "הערות">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "אין תגיות להצגה">
-<!ENTITY zotero.tagSelector.loadingTags "התגיות נטענות…">
-<!ENTITY zotero.tagSelector.showAutomatic "להציג אוטומטית">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "הצגת כל התגיות בספרייה הזאת">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "מחיקת תגיות אוטומטית בספרייה הזאת…">
-<!ENTITY zotero.tagSelector.clearAll "ביטול בחירה">
-<!ENTITY zotero.tagSelector.assignColor "הקצאת צבע…">
-<!ENTITY zotero.tagSelector.renameTag "שינוי שם תגית…">
-<!ENTITY zotero.tagSelector.deleteTag "מחיקת תגית…">
-<!ENTITY zotero.tagSelector.splitTag "פיצול…">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "אין תגיות להצגה">
+<!ENTITY trellis.tagSelector.loadingTags "התגיות נטענות…">
+<!ENTITY trellis.tagSelector.showAutomatic "להציג אוטומטית">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "הצגת כל התגיות בספרייה הזאת">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "מחיקת תגיות אוטומטית בספרייה הזאת…">
+<!ENTITY trellis.tagSelector.clearAll "ביטול בחירה">
+<!ENTITY trellis.tagSelector.assignColor "הקצאת צבע…">
+<!ENTITY trellis.tagSelector.renameTag "שינוי שם תגית…">
+<!ENTITY trellis.tagSelector.deleteTag "מחיקת תגית…">
+<!ENTITY trellis.tagSelector.splitTag "פיצול…">
 
-<!ENTITY zotero.tagColorChooser.title "בחירת צבע ומיקום תגית">
-<!ENTITY zotero.tagColorChooser.color "צבע:">
-<!ENTITY zotero.tagColorChooser.position "מיקום:">
-<!ENTITY zotero.tagColorChooser.setColor "הגדרת צבע">
-<!ENTITY zotero.tagColorChooser.removeColor "הסרת צבע">
+<!ENTITY trellis.tagColorChooser.title "בחירת צבע ומיקום תגית">
+<!ENTITY trellis.tagColorChooser.color "צבע:">
+<!ENTITY trellis.tagColorChooser.position "מיקום:">
+<!ENTITY trellis.tagColorChooser.setColor "הגדרת צבע">
+<!ENTITY trellis.tagColorChooser.removeColor "הסרת צבע">
 
-<!ENTITY zotero.lookup.description "נא למלא מסת״ב, מזהה עצם דיגיטלי (DOI), מזהה ב־arXiv או ADS Bibcodes להוספה לספרייה שלך:">
-<!ENTITY zotero.lookup.button.search "חיפוש">
+<!ENTITY trellis.lookup.description "נא למלא מסת״ב, מזהה עצם דיגיטלי (DOI), מזהה ב־arXiv או ADS Bibcodes להוספה לספרייה שלך:">
+<!ENTITY trellis.lookup.button.search "חיפוש">
 
-<!ENTITY zotero.createParent.title "יצירת פריט הורה">
-<!ENTITY zotero.createParent.button.manual "מילוי ידני">
+<!ENTITY trellis.createParent.title "יצירת פריט הורה">
+<!ENTITY trellis.createParent.button.manual "מילוי ידני">
 
-<!ENTITY zotero.selectitems.title "בחירת פריטים">
-<!ENTITY zotero.selectitems.intro.label "נא לבחור את הפריטים שברצונך להוסיף לספרייה שלך">
-<!ENTITY zotero.selectitems.cancel.label "ביטול">
-<!ENTITY zotero.selectitems.select.label "אישור">
+<!ENTITY trellis.selectitems.title "בחירת פריטים">
+<!ENTITY trellis.selectitems.intro.label "נא לבחור את הפריטים שברצונך להוסיף לספרייה שלך">
+<!ENTITY trellis.selectitems.cancel.label "ביטול">
+<!ENTITY trellis.selectitems.select.label "אישור">
 
-<!ENTITY zotero.bibliography.title "יצירת ציטוט/ביבליוגרפיה">
-<!ENTITY zotero.bibliography.style.label "סגנון ציטוט:">
-<!ENTITY zotero.bibliography.manageStyles "ניהול סגנונות…">
-<!ENTITY zotero.bibliography.locale.label "שפה:">
-<!ENTITY zotero.bibliography.outputMode "שיטת פלט:">
-<!ENTITY zotero.bibliography.bibliography "ביבליוגרפיה">
-<!ENTITY zotero.bibliography.outputMethod "שיטת פלט:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "שמירה כ־RTF">
-<!ENTITY zotero.bibliography.saveAsHTML.label "שמירה כ־HTML">
-<!ENTITY zotero.bibliography.copyToClipboard.label "העתקה ללוח הגזירים">
-<!ENTITY zotero.bibliography.print.label "הדפסה">
+<!ENTITY trellis.bibliography.title "יצירת ציטוט/ביבליוגרפיה">
+<!ENTITY trellis.bibliography.style.label "סגנון ציטוט:">
+<!ENTITY trellis.bibliography.manageStyles "ניהול סגנונות…">
+<!ENTITY trellis.bibliography.locale.label "שפה:">
+<!ENTITY trellis.bibliography.outputMode "שיטת פלט:">
+<!ENTITY trellis.bibliography.bibliography "ביבליוגרפיה">
+<!ENTITY trellis.bibliography.outputMethod "שיטת פלט:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "שמירה כ־RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "שמירה כ־HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "העתקה ללוח הגזירים">
+<!ENTITY trellis.bibliography.print.label "הדפסה">
 
-<!ENTITY zotero.integration.docPrefs.title "העדפות מסמך">
-<!ENTITY zotero.integration.addEditCitation.title "הוספת/עריכת ציטוט">
-<!ENTITY zotero.integration.editBibliography.title "עריכת ביבליוגרפיה">
+<!ENTITY trellis.integration.docPrefs.title "העדפות מסמך">
+<!ENTITY trellis.integration.addEditCitation.title "הוספת/עריכת ציטוט">
+<!ENTITY trellis.integration.editBibliography.title "עריכת ביבליוגרפיה">
 
-<!ENTITY zotero.progress.title "תהליך">
+<!ENTITY trellis.progress.title "תהליך">
 
-<!ENTITY zotero.import "ייבוא">
-<!ENTITY zotero.import.whereToImportFrom "מאיפה לייבא?">
-<!ENTITY zotero.import.source.file "קובץ (BibTeX,‏ RIS,‏ Zotero RDF וכו׳)">
-<!ENTITY zotero.import.source.folder "תיקיית PDFים וקבצים אחרים">
-<!ENTITY zotero.import.onlineImport "ייבוא מקוון">
-<!ENTITY zotero.import.importing "מתבצע ייבוא…">
-<!ENTITY zotero.import.database "מסד נתונים">
-<!ENTITY zotero.import.lastModified "שינוי אחרון">
-<!ENTITY zotero.import.size "גודל">
-<!ENTITY zotero.import.createCollection "העברת האוספים והפריטים המיובאים לאוסף חדש">
-<!ENTITY zotero.import.fileHandling "טיפול בקבצים">
-<!ENTITY zotero.import.online.newItemsOnly "הורדת פריטים חדשים בלבד, לא לעדכן את הפריטים שיובאו קודם לכן">
+<!ENTITY trellis.import "ייבוא">
+<!ENTITY trellis.import.whereToImportFrom "מאיפה לייבא?">
+<!ENTITY trellis.import.source.file "קובץ (BibTeX,‏ RIS,‏ Trellis RDF וכו׳)">
+<!ENTITY trellis.import.source.folder "תיקיית PDFים וקבצים אחרים">
+<!ENTITY trellis.import.onlineImport "ייבוא מקוון">
+<!ENTITY trellis.import.importing "מתבצע ייבוא…">
+<!ENTITY trellis.import.database "מסד נתונים">
+<!ENTITY trellis.import.lastModified "שינוי אחרון">
+<!ENTITY trellis.import.size "גודל">
+<!ENTITY trellis.import.createCollection "העברת האוספים והפריטים המיובאים לאוסף חדש">
+<!ENTITY trellis.import.fileHandling "טיפול בקבצים">
+<!ENTITY trellis.import.online.newItemsOnly "הורדת פריטים חדשים בלבד, לא לעדכן את הפריטים שיובאו קודם לכן">
 
-<!ENTITY zotero.exportOptions.title "ייצוא…">
-<!ENTITY zotero.exportOptions.format.label "עיצוב:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "אפשרויות תרגום">
+<!ENTITY trellis.exportOptions.title "ייצוא…">
+<!ENTITY trellis.exportOptions.format.label "עיצוב:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "אפשרויות תרגום">
 
-<!ENTITY zotero.charset.label "קידוד תווים">
-<!ENTITY zotero.moreEncodings.label "קידודים נוספים">
+<!ENTITY trellis.charset.label "קידוד תווים">
+<!ENTITY trellis.moreEncodings.label "קידודים נוספים">
 
-<!ENTITY zotero.citation.keepSorted.label "לשמור על המקורות מסודרים">
+<!ENTITY trellis.citation.keepSorted.label "לשמור על המקורות מסודרים">
 
-<!ENTITY zotero.citation.suppressAuthor.label "השמטת המחבר">
-<!ENTITY zotero.citation.prefix.label "קידומת:">
-<!ENTITY zotero.citation.suffix.label "סיומת:">
-<!ENTITY zotero.citation.editorWarning.label "אזהרה: עריכת ציטוט בעורך תוביל לכך שהוא לא יתעדכן עוד בשינויים במסד הנתונים או בסגנון הציטוטים.">
+<!ENTITY trellis.citation.suppressAuthor.label "השמטת המחבר">
+<!ENTITY trellis.citation.prefix.label "קידומת:">
+<!ENTITY trellis.citation.suffix.label "סיומת:">
+<!ENTITY trellis.citation.editorWarning.label "אזהרה: עריכת ציטוט בעורך תוביל לכך שהוא לא יתעדכן עוד בשינויים במסד הנתונים או בסגנון הציטוטים.">
 
-<!ENTITY zotero.richText.italic.label "נטוי">
-<!ENTITY zotero.richText.bold.label "מודגש">
-<!ENTITY zotero.richText.underline.label "קו תחתי">
-<!ENTITY zotero.richText.superscript.label "כתב עילי">
-<!ENTITY zotero.richText.subscript.label "כתב תחתי">
+<!ENTITY trellis.richText.italic.label "נטוי">
+<!ENTITY trellis.richText.bold.label "מודגש">
+<!ENTITY trellis.richText.underline.label "קו תחתי">
+<!ENTITY trellis.richText.superscript.label "כתב עילי">
+<!ENTITY trellis.richText.subscript.label "כתב תחתי">
 
-<!ENTITY zotero.annotate.toolbar.add.label "הוספת הסבר">
-<!ENTITY zotero.annotate.toolbar.collapse.label "צמצום כל ההסברים">
-<!ENTITY zotero.annotate.toolbar.expand.label "הרחבת כל ההסברים">
-<!ENTITY zotero.annotate.toolbar.highlight.label "הדגשת טקסט">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "ביטול הדגשת טקסט">
+<!ENTITY trellis.annotate.toolbar.add.label "הוספת הסבר">
+<!ENTITY trellis.annotate.toolbar.collapse.label "צמצום כל ההסברים">
+<!ENTITY trellis.annotate.toolbar.expand.label "הרחבת כל ההסברים">
+<!ENTITY trellis.annotate.toolbar.highlight.label "הדגשת טקסט">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "ביטול הדגשת טקסט">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "הצגת ציטוטים בתור:">
-<!ENTITY zotero.integration.prefs.footnotes.label "הערות שוליים">
-<!ENTITY zotero.integration.prefs.endnotes.label "הערות סיום">
+<!ENTITY trellis.integration.prefs.displayAs.label "הצגת ציטוטים בתור:">
+<!ENTITY trellis.integration.prefs.footnotes.label "הערות שוליים">
+<!ENTITY trellis.integration.prefs.endnotes.label "הערות סיום">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "אחסון ציטוטים בתור:">
-<!ENTITY zotero.integration.prefs.bookmarks.label "סימניות">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "אפשר לשתף סימניות בין Word ו־LibreOffice אך עשויות להתעורר תקלות אם הן נערכו ואי אפשר להכניס אותן להערות שוליים.">
+<!ENTITY trellis.integration.prefs.formatUsing.label "אחסון ציטוטים בתור:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "סימניות">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "אפשר לשתף סימניות בין Word ו־LibreOffice אך עשויות להתעורר תקלות אם הן נערכו ואי אפשר להכניס אותן להערות שוליים.">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "לעדכן ציטוטים אוטומטית">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "ציטוטים עם עדכונים ממתינים יודגשו במסמך">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "השבתת עדכונים יכולה להאיץ את הוספת הציטוטים במסמכים גדולים. לחיצה על רענון תעדכן את הציטוטים ידנית.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "לעדכן ציטוטים אוטומטית">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "ציטוטים עם עדכונים ממתינים יודגשו במסמך">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "השבתת עדכונים יכולה להאיץ את הוספת הציטוטים במסמכים גדולים. לחיצה על רענון תעדכן את הציטוטים ידנית.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "להשתמש בקיצורי יומן MEDLINE">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "השדה „Journal Abbr” (קיצורי יומן) לא יעבור עיבוד.">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "להשתמש בקיצורי יומן MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "השדה „Journal Abbr” (קיצורי יומן) לא יעבור עיבוד.">
 
-<!ENTITY zotero.integration.prefs.exportDocument "מעבר למעבד תמלילים אחר…">
+<!ENTITY trellis.integration.prefs.exportDocument "מעבר למעבד תמלילים אחר…">
 
-<!ENTITY zotero.integration.showEditor.label "הצגת עורך">
-<!ENTITY zotero.integration.classicView.label "תצוגה קלסית">
+<!ENTITY trellis.integration.showEditor.label "הצגת עורך">
+<!ENTITY trellis.integration.classicView.label "תצוגה קלסית">
 
-<!ENTITY zotero.integration.references.label "סימוכין בביבליוגרפיה">
+<!ENTITY trellis.integration.references.label "סימוכין בביבליוגרפיה">
 
-<!ENTITY zotero.sync.stop "עצירת סנכרון">
-<!ENTITY zotero.sync.error "שגיאת סנכרון">
-<!ENTITY zotero.sync.storage.progress "התקדמות:">
-<!ENTITY zotero.sync.storage.downloads "הורדות:">
-<!ENTITY zotero.sync.storage.uploads "העלאות:">
+<!ENTITY trellis.sync.stop "עצירת סנכרון">
+<!ENTITY trellis.sync.error "שגיאת סנכרון">
+<!ENTITY trellis.sync.storage.progress "התקדמות:">
+<!ENTITY trellis.sync.storage.downloads "הורדות:">
+<!ENTITY trellis.sync.storage.uploads "העלאות:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "התגית הבאה בספריית ה־Zotero שלך ארוכה מכדי להסתנכרן מול השרת:">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "על התגיות המסונכרנות לא לעלות על 256 תווים.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "אפשר לפצל את התגית למספר תגיות, לערוך את התגית ידנית ולקצר אותה או למחוק אותה.">
-<!ENTITY zotero.sync.longTagFixer.split "פיצול">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "פיצול ב־">
-<!ENTITY zotero.sync.longTagFixer.character "תו">
-<!ENTITY zotero.sync.longTagFixer.characters "תווים">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "תגיות שלא סומנו לא יישמרו.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "התגית תימחק מכל הפריטים.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "התגית הבאה בספריית ה־Trellis שלך ארוכה מכדי להסתנכרן מול השרת:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "על התגיות המסונכרנות לא לעלות על 256 תווים.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "אפשר לפצל את התגית למספר תגיות, לערוך את התגית ידנית ולקצר אותה או למחוק אותה.">
+<!ENTITY trellis.sync.longTagFixer.split "פיצול">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "פיצול ב־">
+<!ENTITY trellis.sync.longTagFixer.character "תו">
+<!ENTITY trellis.sync.longTagFixer.characters "תווים">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "תגיות שלא סומנו לא יישמרו.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "התגית תימחק מכל הפריטים.">
 
-<!ENTITY zotero.merge.title "פתרון סתירות">
-<!ENTITY zotero.merge.of "מתוך">
-<!ENTITY zotero.merge.deleted "נמחק">
+<!ENTITY trellis.merge.title "פתרון סתירות">
+<!ENTITY trellis.merge.of "מתוך">
+<!ENTITY trellis.merge.deleted "נמחק">
 
-<!ENTITY zotero.proxy.recognized.title "המתווך זוהה">
-<!ENTITY zotero.proxy.recognized.warning "יש להוסיף מתווכים שמקושרים מאתרי הספרייה, בית הספר או החברה שלך בלבד">
-<!ENTITY zotero.proxy.recognized.warning.secondary "הוספת מתווכים נוספים מאפשרת לאתרים זדוניים להתחזות לאתרים מהימנים.">
-<!ENTITY zotero.proxy.recognized.disable.label "לא להפנות אוטומטית בקשות דרך מתווכים שזוהו בעבר">
-<!ENTITY zotero.proxy.recognized.ignore.label "התעלמות">
+<!ENTITY trellis.proxy.recognized.title "המתווך זוהה">
+<!ENTITY trellis.proxy.recognized.warning "יש להוסיף מתווכים שמקושרים מאתרי הספרייה, בית הספר או החברה שלך בלבד">
+<!ENTITY trellis.proxy.recognized.warning.secondary "הוספת מתווכים נוספים מאפשרת לאתרים זדוניים להתחזות לאתרים מהימנים.">
+<!ENTITY trellis.proxy.recognized.disable.label "לא להפנות אוטומטית בקשות דרך מתווכים שזוהו בעבר">
+<!ENTITY trellis.proxy.recognized.ignore.label "התעלמות">
 
-<!ENTITY zotero.feedSettings.title "הגדרות ערוץ עדכונים">
-<!ENTITY zotero.feedSettings.saveButton.label "שמירה">
-<!ENTITY zotero.feedSettings.url.label "כתובת:">
-<!ENTITY zotero.feedSettings.title.label "כותרת:">
-<!ENTITY zotero.feedSettings.refresh.label1 "לעדכן את ערוץ העדכונים כל">
-<!ENTITY zotero.feedSettings.refresh.label2 "שעות">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "להסיר פריטים שלא נקראו מערוץ העדכונים לאחר">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "ימים">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "להסיר פריטים שנקראו מערוץ העדכונים לאחר">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "ימים">
+<!ENTITY trellis.feedSettings.title "הגדרות ערוץ עדכונים">
+<!ENTITY trellis.feedSettings.saveButton.label "שמירה">
+<!ENTITY trellis.feedSettings.url.label "כתובת:">
+<!ENTITY trellis.feedSettings.title.label "כותרת:">
+<!ENTITY trellis.feedSettings.refresh.label1 "לעדכן את ערוץ העדכונים כל">
+<!ENTITY trellis.feedSettings.refresh.label2 "שעות">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "להסיר פריטים שלא נקראו מערוץ העדכונים לאחר">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "ימים">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "להסיר פריטים שנקראו מערוץ העדכונים לאחר">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "ימים">
 
-<!ENTITY zotero.rtfScan.title "סריקת RTF">
-<!ENTITY zotero.rtfScan.cancel.label "ביטול">
-<!ENTITY zotero.rtfScan.citation.label "ציטוט">
-<!ENTITY zotero.rtfScan.itemName.label "שם פריט">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "ציטוטים לא ממופים">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "ציטוטים מעורפלים">
-<!ENTITY zotero.rtfScan.mappedCitations.label "ציטוטים ממופים">
-<!ENTITY zotero.rtfScan.introPage.label "היכרות">
-<!ENTITY zotero.rtfScan.introPage.description "Zotero יכול לחלץ ולעצב ציטוטים מחדש ולהוסיף ביבליוגרפיה לקובצי RTF. יכולת סריקת ה־RTF תומכת בציטוטים כרגע עם הגוונים לפי התצורות הבאות:">
-<!ENTITY zotero.rtfScan.introPage.description2 "כדי להתחיל, יש לבחור קובץ קלט RTF וקובץ פלט להלן:">
-<!ENTITY zotero.rtfScan.scanPage.label "סורק אחר ציטוטים">
-<!ENTITY zotero.rtfScan.scanPage.description "Zotero מחפש ציטוטים במסמך שלך. נא להתאזר בסבלנות.">
-<!ENTITY zotero.rtfScan.citationsPage.label "אימות פריטים מצוטטים">
-<!ENTITY zotero.rtfScan.citationsPage.description "נא לסקור את רשימת הציטוטים המזוהים להלן כדי לוודא ש־Zotero בחר את הפריטים המתאימים כראוי. ציטוטים בלתי ממופים או מעורפלים יש לפתור בטרם מעבר לשלב הבא.">
-<!ENTITY zotero.rtfScan.stylePage.label "עיצוב מסמך">
-<!ENTITY zotero.rtfScan.formatPage.label "עיצוב ציטוטים">
-<!ENTITY zotero.rtfScan.formatPage.description "Zotero מעבד ומעצב את קובץ ה־RTF שלך. נא להתאזר בסבלנות.">
-<!ENTITY zotero.rtfScan.completePage.label "סקירת ה־RTF הושלמה">
-<!ENTITY zotero.rtfScan.completePage.description "המסמך שלך נסרק ועבר עיבוד כעת. נא לוודא שהוא מעוצב כראוי.">
-<!ENTITY zotero.rtfScan.inputFile.label "קובץ קלט">
-<!ENTITY zotero.rtfScan.outputFile.label "קובץ פלט">
+<!ENTITY trellis.rtfScan.title "סריקת RTF">
+<!ENTITY trellis.rtfScan.cancel.label "ביטול">
+<!ENTITY trellis.rtfScan.citation.label "ציטוט">
+<!ENTITY trellis.rtfScan.itemName.label "שם פריט">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "ציטוטים לא ממופים">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "ציטוטים מעורפלים">
+<!ENTITY trellis.rtfScan.mappedCitations.label "ציטוטים ממופים">
+<!ENTITY trellis.rtfScan.introPage.label "היכרות">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis יכול לחלץ ולעצב ציטוטים מחדש ולהוסיף ביבליוגרפיה לקובצי RTF. יכולת סריקת ה־RTF תומכת בציטוטים כרגע עם הגוונים לפי התצורות הבאות:">
+<!ENTITY trellis.rtfScan.introPage.description2 "כדי להתחיל, יש לבחור קובץ קלט RTF וקובץ פלט להלן:">
+<!ENTITY trellis.rtfScan.scanPage.label "סורק אחר ציטוטים">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis מחפש ציטוטים במסמך שלך. נא להתאזר בסבלנות.">
+<!ENTITY trellis.rtfScan.citationsPage.label "אימות פריטים מצוטטים">
+<!ENTITY trellis.rtfScan.citationsPage.description "נא לסקור את רשימת הציטוטים המזוהים להלן כדי לוודא ש־Trellis בחר את הפריטים המתאימים כראוי. ציטוטים בלתי ממופים או מעורפלים יש לפתור בטרם מעבר לשלב הבא.">
+<!ENTITY trellis.rtfScan.stylePage.label "עיצוב מסמך">
+<!ENTITY trellis.rtfScan.formatPage.label "עיצוב ציטוטים">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis מעבד ומעצב את קובץ ה־RTF שלך. נא להתאזר בסבלנות.">
+<!ENTITY trellis.rtfScan.completePage.label "סקירת ה־RTF הושלמה">
+<!ENTITY trellis.rtfScan.completePage.description "המסמך שלך נסרק ועבר עיבוד כעת. נא לוודא שהוא מעוצב כראוי.">
+<!ENTITY trellis.rtfScan.inputFile.label "קובץ קלט">
+<!ENTITY trellis.rtfScan.outputFile.label "קובץ פלט">
 
-<!ENTITY zotero.file.choose.label "בחירת קובץ…">
-<!ENTITY zotero.file.noneSelected.label "לא נבחר קובץ">
+<!ENTITY trellis.file.choose.label "בחירת קובץ…">
+<!ENTITY trellis.file.noneSelected.label "לא נבחר קובץ">
 
-<!ENTITY zotero.attachLink.title "צירוף קישור לכתובת">
-<!ENTITY zotero.attachLink.label.link "קישור:">
-<!ENTITY zotero.attachLink.label.title "כותרת:">
+<!ENTITY trellis.attachLink.title "צירוף קישור לכתובת">
+<!ENTITY trellis.attachLink.label.link "קישור:">
+<!ENTITY trellis.attachLink.label.title "כותרת:">
 
-<!ENTITY zotero.context.addChildNote "הוספת הערה לפריט">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "הוספת הערת פריט מההסברים">
-<!ENTITY zotero.context.addStandaloneNote "הוספת הערה בודדת">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "הוספת הערה בודדת מההסברים">
-<!ENTITY zotero.context.editInWindow "עריכה בחלון נפרד">
+<!ENTITY trellis.context.addChildNote "הוספת הערה לפריט">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "הוספת הערת פריט מההסברים">
+<!ENTITY trellis.context.addStandaloneNote "הוספת הערה בודדת">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "הוספת הערה בודדת מההסברים">
+<!ENTITY trellis.context.editInWindow "עריכה בחלון נפרד">
 
-<!ENTITY zotero.pdfReader.firstPage "עמוד ראשון">
-<!ENTITY zotero.pdfReader.lastPage "עמוד אחרון">
-<!ENTITY zotero.pdfReader.back "אחורה">
-<!ENTITY zotero.pdfReader.forward "קדימה">
-<!ENTITY zotero.pdfReader.handTool "כלי יד">
-<!ENTITY zotero.pdfReader.verticalScrolling "גלילה אנכית">
-<!ENTITY zotero.pdfReader.horizontalScrolling "גלילה אופקית">
-<!ENTITY zotero.pdfReader.wrappedScrolling "גלילה גולשת">
-<!ENTITY zotero.pdfReader.noSpreads "ללא התפשטות">
-<!ENTITY zotero.pdfReader.oddSpreads "התפשטות אי־זוגיים">
-<!ENTITY zotero.pdfReader.evenSpreads "התפשטות זוגיים">
-<!ENTITY zotero.pdfReader.scrolled "נגלל">
-<!ENTITY zotero.pdfReader.paginated "חלוקה לעמודים">
-<!ENTITY zotero.pdfReader.zoomIn "התקרבות">
-<!ENTITY zotero.pdfReader.zoomOut "התרחקות">
-<!ENTITY zotero.pdfReader.zoomReset "איפוס תקריב">
-<!ENTITY zotero.pdfReader.zoomAuto "שינוי גודל אוטומטי">
-<!ENTITY zotero.pdfReader.zoomPageWidth "התאמת התקריב לרוחב העמוד">
-<!ENTITY zotero.pdfReader.zoomPageHeight "התאמת התקריב לגובה העמוד">
-<!ENTITY zotero.pdfReader.splitVertically "פיצול אנכי">
-<!ENTITY zotero.pdfReader.splitHorizontally "פיצול אופקי">
-<!ENTITY zotero.pdfReader.transferFromPDF "ייבוא הסברים…">
-<!ENTITY zotero.pdfReader.rotatePageLeft "סיבוב העמוד שמאלה">
-<!ENTITY zotero.pdfReader.rotatePageRight "סיבוב העמוד ימינה">
+<!ENTITY trellis.pdfReader.firstPage "עמוד ראשון">
+<!ENTITY trellis.pdfReader.lastPage "עמוד אחרון">
+<!ENTITY trellis.pdfReader.back "אחורה">
+<!ENTITY trellis.pdfReader.forward "קדימה">
+<!ENTITY trellis.pdfReader.handTool "כלי יד">
+<!ENTITY trellis.pdfReader.verticalScrolling "גלילה אנכית">
+<!ENTITY trellis.pdfReader.horizontalScrolling "גלילה אופקית">
+<!ENTITY trellis.pdfReader.wrappedScrolling "גלילה גולשת">
+<!ENTITY trellis.pdfReader.noSpreads "ללא התפשטות">
+<!ENTITY trellis.pdfReader.oddSpreads "התפשטות אי־זוגיים">
+<!ENTITY trellis.pdfReader.evenSpreads "התפשטות זוגיים">
+<!ENTITY trellis.pdfReader.scrolled "נגלל">
+<!ENTITY trellis.pdfReader.paginated "חלוקה לעמודים">
+<!ENTITY trellis.pdfReader.zoomIn "התקרבות">
+<!ENTITY trellis.pdfReader.zoomOut "התרחקות">
+<!ENTITY trellis.pdfReader.zoomReset "איפוס תקריב">
+<!ENTITY trellis.pdfReader.zoomAuto "שינוי גודל אוטומטי">
+<!ENTITY trellis.pdfReader.zoomPageWidth "התאמת התקריב לרוחב העמוד">
+<!ENTITY trellis.pdfReader.zoomPageHeight "התאמת התקריב לגובה העמוד">
+<!ENTITY trellis.pdfReader.splitVertically "פיצול אנכי">
+<!ENTITY trellis.pdfReader.splitHorizontally "פיצול אופקי">
+<!ENTITY trellis.pdfReader.transferFromPDF "ייבוא הסברים…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "סיבוב העמוד שמאלה">
+<!ENTITY trellis.pdfReader.rotatePageRight "סיבוב העמוד ימינה">

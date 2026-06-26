@@ -6,11 +6,11 @@ import { ftlFileBaseNames as sourceFileBaseNames } from './config.js';
 import { onError, onProgress, onSuccess } from './utils.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const TRANSIFEX_FILE_NAME = 'zotero.json';
+const TRANSIFEX_FILE_NAME = 'trellis.json';
 
 async function getJSON() {
 	const t1 = performance.now();
-	const sourceDir = join(ROOT, 'chrome', 'locale', 'en-US', 'zotero');
+	const sourceDir = join(ROOT, 'chrome', 'locale', 'en-US', 'trellis');
 	const destFile = join(sourceDir, TRANSIFEX_FILE_NAME);
 	let messagesMap = new Map();
 	

@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -32,12 +32,12 @@ var tree;
 var engines;
 const columns = [
 	{ dataKey: 'visible', type: 'checkbox', fixedWidth: true, width: 28 },
-	{ dataKey: 'name', label: "zotero.preferences.locate.name" },
-	{ dataKey: 'description', label: "zotero.preferences.locate.description" },
+	{ dataKey: 'name', label: "trellis.preferences.locate.name" },
+	{ dataKey: 'description', label: "trellis.preferences.locate.description" },
 ];
 
 function init() {
-	engines = Zotero.LocateManager.getEngines();
+	engines = Trellis.LocateManager.getEngines();
 	const domEl = document.querySelector('#locateManager-tree');
 	return new Promise((resolve) => {
 		ReactDOM.createRoot(domEl).render(
@@ -101,9 +101,9 @@ function handleActivate(event, indices) {
  **/
 /*
 function addLocateEngine() {
-	// alert(Zotero.LocateManager.activeLocateEngines.join(" || "));
+	// alert(Trellis.LocateManager.activeLocateEngines.join(" || "));
 	var textbox = document.getElementById('locate-add-textbox');
-	Zotero.LocateManager.addLocateEngine(textbox.value);
+	Trellis.LocateManager.addLocateEngine(textbox.value);
 
 	refreshLocateEnginesList();
 }
@@ -134,11 +134,11 @@ function toggleLocateEngines() {
 function deleteLocateEngine() {
 	engines.forEach((engine, index) => {
 		if (tree.selection.isSelected(index)) {
-			Zotero.LocateManager.removeEngine(engine);
+			Trellis.LocateManager.removeEngine(engine);
 		}
 	});
 	tree.selection.clearSelection();
-	engines = Zotero.LocateManager.getEngines();
+	engines = Trellis.LocateManager.getEngines();
 	updateTree();
 }
 
@@ -146,7 +146,7 @@ function deleteLocateEngine() {
  * Restores Default Locate Engines
  **/
 async function restoreDefaultLocateEngines() {
-	await Zotero.LocateManager.restoreDefaultEngines();
-	engines = Zotero.LocateManager.getEngines();
+	await Trellis.LocateManager.restoreDefaultEngines();
+	engines = Trellis.LocateManager.getEngines();
 	updateTree();
 }

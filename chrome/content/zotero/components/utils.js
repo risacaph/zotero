@@ -5,20 +5,20 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -95,7 +95,7 @@ const scrollIntoViewIfNeeded = (element, container, opts = {}) => {
 
 const stopPropagation = ev => ev.stopPropagation();
 
-// pick and omit from https://github.com/zotero/web-common/blob/master/utils/immutable.js
+// pick and omit from https://github.com/trellis/web-common/blob/master/utils/immutable.js
 const omit = (object, deleteKeys) => {
 	if (typeof (deleteKeys) !== 'function') {
 		if (!Array.isArray(deleteKeys)) {

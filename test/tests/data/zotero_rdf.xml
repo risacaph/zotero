@@ -1,6 +1,6 @@
 <rdf:RDF
  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
- xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:z="http://www.trellis.org/namespaces/export#"
  xmlns:dcterms="http://purl.org/dc/terms/"
  xmlns:dc="http://purl.org/dc/elements/1.1/"
  xmlns:bib="http://purl.org/net/biblio#">

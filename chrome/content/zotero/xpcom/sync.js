@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Sync = new function () {
+Trellis.Sync = new function () {
 	// Keep in sync with syncObjectTypes table
 	this.__defineGetter__('syncObjects', function () {
 		return {
@@ -66,9 +66,9 @@ Zotero.Sync = new function () {
 
 
 /**
- * Methods for syncing with the Zotero Server
+ * Methods for syncing with the Trellis Server
  */
-Zotero.Sync.Server = new function () {
+Trellis.Sync.Server = new function () {
 	this.canAutoResetClient = true;
 	this.manualSyncRequired = false;
 	this.upgradeRequired = false;
@@ -76,10 +76,10 @@ Zotero.Sync.Server = new function () {
 	
 	function clear(callback) {
 		if (!_sessionID) {
-			Zotero.debug("Session ID not available -- logging in");
-			Zotero.Sync.Server.login()
+			Trellis.debug("Session ID not available -- logging in");
+			Trellis.Sync.Server.login()
 			.then(function () {
-				Zotero.Sync.Server.clear(callback);
+				Trellis.Sync.Server.clear(callback);
 			})
 			.done();
 			return;
@@ -87,15 +87,15 @@ Zotero.Sync.Server = new function () {
 		
 		var url = _serverURL + "clear";
 		var body = _apiVersionComponent
-					+ '&' + Zotero.Sync.Server.sessionIDComponent;
+					+ '&' + Trellis.Sync.Server.sessionIDComponent;
 		
-		Zotero.HTTP.doPost(url, body, function (xmlhttp) {
+		Trellis.HTTP.doPost(url, body, function (xmlhttp) {
 			if (_invalidSession(xmlhttp)) {
-				Zotero.debug("Invalid session ID -- logging in");
+				Trellis.debug("Invalid session ID -- logging in");
 				_sessionID = false;
-				Zotero.Sync.Server.login()
+				Trellis.Sync.Server.login()
 				.then(function () {
-					Zotero.Sync.Server.clear(callback);
+					Trellis.Sync.Server.clear(callback);
 				})
 				.done();
 				return;
@@ -113,7 +113,7 @@ Zotero.Sync.Server = new function () {
 				_error('Invalid response from server', xmlhttp.responseText);
 			}
 			
-			Zotero.Sync.Server.resetClient();
+			Trellis.Sync.Server.resetClient();
 			
 			if (callback) {
 				callback();
@@ -123,28 +123,28 @@ Zotero.Sync.Server = new function () {
 	
 	
 	function resetClient() {
-		Zotero.debug("Resetting client");
+		Trellis.debug("Resetting client");
 		
-		Zotero.DB.beginTransaction();
-		
-		var sql = "DELETE FROM version WHERE schema IN "
-			+ "('lastlocalsync', 'lastremotesync', 'syncdeletelog')";
-		Zotero.DB.query(sql);
+		Trellis.DB.beginTransaction();
 		
 		var sql = "DELETE FROM version WHERE schema IN "
 			+ "('lastlocalsync', 'lastremotesync', 'syncdeletelog')";
-		Zotero.DB.query(sql);
+		Trellis.DB.query(sql);
 		
-		Zotero.DB.query("DELETE FROM syncDeleteLog");
-		Zotero.DB.query("DELETE FROM storageDeleteLog");
+		var sql = "DELETE FROM version WHERE schema IN "
+			+ "('lastlocalsync', 'lastremotesync', 'syncdeletelog')";
+		Trellis.DB.query(sql);
+		
+		Trellis.DB.query("DELETE FROM syncDeleteLog");
+		Trellis.DB.query("DELETE FROM storageDeleteLog");
 		
 		sql = "INSERT INTO version VALUES ('syncdeletelog', ?)";
-		Zotero.DB.query(sql, Zotero.Date.getUnixTimestamp());
+		Trellis.DB.query(sql, Trellis.Date.getUnixTimestamp());
 		
 		var sql = "UPDATE syncedSettings SET synced=0";
-		Zotero.DB.query(sql);
+		Trellis.DB.query(sql);
 		
-		Zotero.DB.commitTransaction();
+		Trellis.DB.commitTransaction();
 	}
 	
 	
@@ -154,8 +154,8 @@ Zotero.Sync.Server = new function () {
 		if (!xmlhttp.responseXML || !xmlhttp.responseXML.childNodes[0] ||
 				xmlhttp.responseXML.childNodes[0].tagName != 'response' ||
 				!xmlhttp.responseXML.childNodes[0].firstChild) {
-			Zotero.debug(xmlhttp.responseText);
-			_error(Zotero.getString('general.invalidResponseServer') + Zotero.getString('general.tryAgainLater'),
+			Trellis.debug(xmlhttp.responseText);
+			_error(Trellis.getString('general.invalidResponseServer') + Trellis.getString('general.tryAgainLater'),
 				xmlhttp.responseText, noReloadOnFailure);
 		}
 		
@@ -164,11 +164,11 @@ Zotero.Sync.Server = new function () {
 		if (firstChild.localName == 'error') {
 			// Don't automatically retry 400 errors
 			if (xmlhttp.status >= 400 && xmlhttp.status < 500 && !_invalidSession(xmlhttp)) {
-				Zotero.debug("Server returned " + xmlhttp.status + " -- manual sync required", 2);
-				Zotero.Sync.Server.manualSyncRequired = true;
+				Trellis.debug("Server returned " + xmlhttp.status + " -- manual sync required", 2);
+				Trellis.Sync.Server.manualSyncRequired = true;
 			}
 			else {
-				Zotero.debug("Server returned " + xmlhttp.status, 3);
+				Trellis.debug("Server returned " + xmlhttp.status, 3);
 			}
 			
 			switch (firstChild.getAttribute('code')) {
@@ -177,9 +177,9 @@ Zotero.Sync.Server = new function () {
 					// in a filename, check them all (since getting a more specific
 					// error from the server would be difficult)
 					var sql = "SELECT itemID FROM itemAttachments WHERE linkMode IN (?,?)";
-					var ids = Zotero.DB.columnQuery(sql, [Zotero.Attachments.LINK_MODE_IMPORTED_FILE, Zotero.Attachments.LINK_MODE_IMPORTED_URL]);
+					var ids = Trellis.DB.columnQuery(sql, [Trellis.Attachments.LINK_MODE_IMPORTED_FILE, Trellis.Attachments.LINK_MODE_IMPORTED_URL]);
 					if (ids) {
-						var items = Zotero.Items.get(ids);
+						var items = Trellis.Items.get(ids);
 						var rolledBack = false;
 						for (let item of items) {
 							var file = item.getFile();
@@ -192,14 +192,14 @@ Zotero.Sync.Server = new function () {
 								var xmlfn = file.leafName.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\ud800-\udfff\ufffe\uffff]/g, '');
 								if (fn != xmlfn) {
 									if (!rolledBack) {
-										Zotero.DB.rollbackAllTransactions();
+										Trellis.DB.rollbackAllTransactions();
 									}
-									Zotero.debug("Changing invalid filename to " + xmlfn);
+									Trellis.debug("Changing invalid filename to " + xmlfn);
 									item.renameAttachmentFile(xmlfn);
 								}
 							}
 							catch (e) {
-								Zotero.debug(e);
+								Trellis.debug(e);
 								Components.utils.reportError(e);
 							}
 						}
@@ -210,70 +210,70 @@ Zotero.Sync.Server = new function () {
 					// TEMP: This can be removed once a DB upgrade step is added
 					try {
 						var sql = "SELECT libraryID FROM relations WHERE libraryID LIKE 'local/%' LIMIT 1";
-						var repl = Zotero.DB.valueQuery(sql);
+						var repl = Trellis.DB.valueQuery(sql);
 						if (repl) {
-							Zotero.Relations.updateUser(repl, repl, Zotero.userID, Zotero.libraryID);
+							Trellis.Relations.updateUser(repl, repl, Trellis.userID, Trellis.libraryID);
 						}
 					}
 					catch (e) {
 						Components.utils.reportError(e);
-						Zotero.debug(e);
+						Trellis.debug(e);
 					}
 					break;
 				
 				case 'FULL_SYNC_REQUIRED':
 					// Let current sync fail, and then do a full sync
-					var background = Zotero.Sync.Runner.background;
+					var background = Trellis.Sync.Runner.background;
 					setTimeout(function () {
-						if (Zotero.Prefs.get('sync.debugNoAutoResetClient')) {
+						if (Trellis.Prefs.get('sync.debugNoAutoResetClient')) {
 							Components.utils.reportError("Skipping automatic client reset due to debug pref");
 							return;
 						}
-						if (!Zotero.Sync.Server.canAutoResetClient) {
-							Components.utils.reportError("Client has already been auto-reset in Zotero.Sync.Server._checkResponse()");
+						if (!Trellis.Sync.Server.canAutoResetClient) {
+							Components.utils.reportError("Client has already been auto-reset in Trellis.Sync.Server._checkResponse()");
 							return;
 						}
 						
-						Zotero.Sync.Server.resetClient();
-						Zotero.Sync.Server.canAutoResetClient = false;
-						Zotero.Sync.Runner.sync({
+						Trellis.Sync.Server.resetClient();
+						Trellis.Sync.Server.canAutoResetClient = false;
+						Trellis.Sync.Runner.sync({
 							background: background
 						});
 					}, 1);
 					break;
 				
 				case 'LIBRARY_ACCESS_DENIED':
-					var background = Zotero.Sync.Runner.background;
+					var background = Trellis.Sync.Runner.background;
 					setTimeout(function () {
 						var libraryID = parseInt(firstChild.getAttribute('libraryID'));
 						
 						try {
-							var group = Zotero.Groups.getByLibraryID(libraryID);
+							var group = Trellis.Groups.getByLibraryID(libraryID);
 						}
 						catch (e) {
 							// Not sure how this is possible, but it's affecting some people
 							// TODO: Clean up in schema updates with FK check
-							if (!Zotero.Libraries.exists(libraryID)) {
+							if (!Trellis.Libraries.exists(libraryID)) {
 								let sql = "DELETE FROM syncedSettings WHERE libraryID=?";
-								Zotero.DB.query(sql, libraryID);
+								Trellis.DB.query(sql, libraryID);
 								return;
 							}
 						}
 						
-						var index = Zotero.Prompt.confirm({
-							title: Zotero.getString('general.warning'),
-							text: Zotero.getString('sync.error.writeAccessLost', group.name) + "\n\n"
-								+ Zotero.getString('sync.error.groupWillBeReset') + "\n\n"
-								+ Zotero.getString('sync.error.copyChangedItems'),
-							button0: Zotero.getString('sync.resetGroupAndSync'),
-							button1: Zotero.Prompt.BUTTON_TITLE_CANCEL,
+						var index = Trellis.Prompt.confirm({
+							title: Trellis.getString('general.warning'),
+							text: Trellis.getString('sync.error.writeAccessLost', group.name) + "\n\n"
+								+ Trellis.getString('sync.error.groupWillBeReset') + "\n\n"
+								+ Trellis.getString('sync.error.copyChangedItems'),
+							button0: Trellis.getString('sync.resetGroupAndSync'),
+							button1: Trellis.Prompt.BUTTON_TITLE_CANCEL,
 							buttonDelay: true
 						});
 						if (index == 0) {
 							group.erase();
-							Zotero.Sync.Server.resetClient();
-							Zotero.Sync.Storage.resetAllSyncStates();
-							Zotero.Sync.Runner.sync();
+							Trellis.Sync.Server.resetClient();
+							Trellis.Sync.Storage.resetAllSyncStates();
+							Trellis.Sync.Runner.sync();
 							return;
 						}
 					}, 1);
@@ -282,7 +282,7 @@ Zotero.Sync.Server = new function () {
 				
 				// We can't reproduce it, but we can fix it
 				case 'WRONG_LIBRARY_TAG_ITEM':
-					var background = Zotero.Sync.Runner.background;
+					var background = Trellis.Sync.Runner.background;
 					setTimeout(function () {
 						var sql = "CREATE TEMPORARY TABLE tmpWrongLibraryTags AS "
 							+ "SELECT itemTags.ROWID AS tagRowID, tagID, name, itemID, "
@@ -290,67 +290,67 @@ Zotero.Sync.Server = new function () {
 							+ "IFNULL(items.libraryID,0) AS itemLibraryID FROM tags "
 							+ "NATURAL JOIN itemTags JOIN items USING (itemID) "
 							+ "WHERE IFNULL(tags.libraryID, 0)!=IFNULL(items.libraryID,0)";
-						Zotero.DB.query(sql);
+						Trellis.DB.query(sql);
 						
 						sql = "SELECT COUNT(*) FROM tmpWrongLibraryTags";
-						var badTags = !!Zotero.DB.valueQuery(sql);
+						var badTags = !!Trellis.DB.valueQuery(sql);
 						
 						if (badTags) {
 							sql = "DELETE FROM itemTags WHERE ROWID IN (SELECT tagRowID FROM tmpWrongLibraryTags)";
-							Zotero.DB.query(sql);
+							Trellis.DB.query(sql);
 						}
 						
-						Zotero.DB.query("DROP TABLE tmpWrongLibraryTags");
+						Trellis.DB.query("DROP TABLE tmpWrongLibraryTags");
 						
 						// If error was actually due to a missing item, do a Full Sync
 						if (!badTags) {
-							if (Zotero.Prefs.get('sync.debugNoAutoResetClient')) {
+							if (Trellis.Prefs.get('sync.debugNoAutoResetClient')) {
 								Components.utils.reportError("Skipping automatic client reset due to debug pref");
 								return;
 							}
-							if (!Zotero.Sync.Server.canAutoResetClient) {
-								Components.utils.reportError("Client has already been auto-reset in Zotero.Sync.Server._checkResponse()");
+							if (!Trellis.Sync.Server.canAutoResetClient) {
+								Components.utils.reportError("Client has already been auto-reset in Trellis.Sync.Server._checkResponse()");
 								return;
 							}
 							
-							Zotero.Sync.Server.resetClient();
-							Zotero.Sync.Server.canAutoResetClient = false;
+							Trellis.Sync.Server.resetClient();
+							Trellis.Sync.Server.canAutoResetClient = false;
 						}
 						
-						Zotero.Sync.Runner.sync({
+						Trellis.Sync.Runner.sync({
 							background: background
 						});
 					}, 1);
 					break;
 				
 				case 'INVALID_TIMESTAMP':
-					var validClock = Zotero.DB.valueQuery("SELECT CURRENT_TIMESTAMP BETWEEN '1970-01-01 00:00:01' AND '2038-01-19 03:14:07'");
+					var validClock = Trellis.DB.valueQuery("SELECT CURRENT_TIMESTAMP BETWEEN '1970-01-01 00:00:01' AND '2038-01-19 03:14:07'");
 					if (!validClock) {
-						_error(Zotero.getString('sync.error.invalidClock'));
+						_error(Trellis.getString('sync.error.invalidClock'));
 					}
 					
 					setTimeout(function () {
-						Zotero.DB.beginTransaction();
+						Trellis.DB.beginTransaction();
 						
 						var types = ['collections', 'creators', 'items', 'savedSearches', 'tags'];
 						for (let type of types) {
 							var sql = "UPDATE " + type + " SET dateAdded=CURRENT_TIMESTAMP "
 									+ "WHERE dateAdded NOT BETWEEN '1970-01-01 00:00:01' AND '2038-01-19 03:14:07'";
-							Zotero.DB.query(sql);
+							Trellis.DB.query(sql);
 							var sql = "UPDATE " + type + " SET dateModified=CURRENT_TIMESTAMP "
 									+ "WHERE dateModified NOT BETWEEN '1970-01-01 00:00:01' AND '2038-01-19 03:14:07'";
-							Zotero.DB.query(sql);
+							Trellis.DB.query(sql);
 							var sql = "UPDATE " + type + " SET clientDateModified=CURRENT_TIMESTAMP "
 									+ "WHERE clientDateModified NOT BETWEEN '1970-01-01 00:00:01' AND '2038-01-19 03:14:07'";
-							Zotero.DB.query(sql);
+							Trellis.DB.query(sql);
 						}
 						
-						Zotero.DB.commitTransaction();
+						Trellis.DB.commitTransaction();
 					}, 1);
 					break;
 				
 				case 'UPGRADE_REQUIRED':
-					Zotero.Sync.Server.upgradeRequired = true;
+					Trellis.Sync.Server.upgradeRequired = true;
 					break;
 			}
 		}
@@ -391,14 +391,14 @@ Zotero.Sync.Server = new function () {
 		if (!wait || isNaN(wait)) {
 			wait = 5000;
 		}
-		Zotero.debug(msg + " -- waiting " + wait + "ms before next check");
+		Trellis.debug(msg + " -- waiting " + wait + "ms before next check");
 		_checkTimer = setTimeout(function () { callback(mode); }, wait);
 		return true;
 	}
 }
 
 
-Zotero.Sync.Server.Data = new function () {
+Trellis.Sync.Server.Data = new function () {
 	/**
 	 * @param	{String}	itemTypes
 	 * @param	{String}	localName
@@ -413,18 +413,18 @@ Zotero.Sync.Server.Data = new function () {
 			var remoteDelete = true;
 		}
 		
-		var msg = Zotero.getString('sync.conflict.autoChange.alert', itemTypes) + " ";
+		var msg = Trellis.getString('sync.conflict.autoChange.alert', itemTypes) + " ";
 		if (localDelete) {
-			msg += Zotero.getString('sync.conflict.remoteVersionsKept');
+			msg += Trellis.getString('sync.conflict.remoteVersionsKept');
 		}
 		else if (remoteDelete) {
-			msg += Zotero.getString('sync.conflict.localVersionsKept');
+			msg += Trellis.getString('sync.conflict.localVersionsKept');
 		}
 		else {
-			msg += Zotero.getString('sync.conflict.recentVersionsKept');
+			msg += Trellis.getString('sync.conflict.recentVersionsKept');
 		}
-		msg += "\n\n" + Zotero.getString('sync.conflict.viewErrorConsole',
-				(Zotero.isStandalone ? "" : "Firefox")).replace(/\s+/, " ");
+		msg += "\n\n" + Trellis.getString('sync.conflict.viewErrorConsole',
+				(Trellis.isStandalone ? "" : "Firefox")).replace(/\s+/, " ");
 		return msg;
 	}
 	
@@ -437,36 +437,36 @@ Zotero.Sync.Server.Data = new function () {
 	 */
 	function _generateAutoChangeLogMessage(itemType, localName, remoteName, remoteMoreRecent) {
 		if (localName === null) {
-			localName = Zotero.getString('sync.conflict.deleted');
+			localName = Trellis.getString('sync.conflict.deleted');
 			var localDelete = true;
 		}
 		else if (remoteName === null) {
-			remoteName = Zotero.getString('sync.conflict.deleted');
+			remoteName = Trellis.getString('sync.conflict.deleted');
 			var remoteDelete = true;
 		}
 		
-		var msg = Zotero.getString('sync.conflict.autoChange.log', itemType) + "\n\n";
-		msg += Zotero.getString('sync.conflict.localVersion', localName) + "\n";
-		msg += Zotero.getString('sync.conflict.remoteVersion', remoteName);
+		var msg = Trellis.getString('sync.conflict.autoChange.log', itemType) + "\n\n";
+		msg += Trellis.getString('sync.conflict.localVersion', localName) + "\n";
+		msg += Trellis.getString('sync.conflict.remoteVersion', remoteName);
 		msg += "\n\n";
 		if (localDelete) {
-			msg += Zotero.getString('sync.conflict.remoteVersionKept');
+			msg += Trellis.getString('sync.conflict.remoteVersionKept');
 		}
 		else if (remoteDelete) {
-			msg += Zotero.getString('sync.conflict.localVersionKept');
+			msg += Trellis.getString('sync.conflict.localVersionKept');
 		}
 		else {
 			var moreRecent = remoteMoreRecent ? remoteName : localName;
-			msg += Zotero.getString('sync.conflict.recentVersionKept', moreRecent);
+			msg += Trellis.getString('sync.conflict.recentVersionKept', moreRecent);
 		}
 		return msg;
 	}
 	
 	
 	function _generateCollectionItemMergeAlertMessage() {
-		var msg = Zotero.getString('sync.conflict.collectionItemMerge.alert') + "\n\n"
-			+ Zotero.getString('sync.conflict.viewErrorConsole',
-				(Zotero.isStandalone ? "" : "Firefox")).replace(/\s+/, " ");
+		var msg = Trellis.getString('sync.conflict.collectionItemMerge.alert') + "\n\n"
+			+ Trellis.getString('sync.conflict.viewErrorConsole',
+				(Trellis.isStandalone ? "" : "Firefox")).replace(/\s+/, " ");
 		return msg;
 	}
 	
@@ -476,12 +476,12 @@ Zotero.Sync.Server.Data = new function () {
 	 * @param	{Integer[]}		addedItemIDs
 	 */
 	function _generateCollectionItemMergeLogMessage(collectionName, addedItemIDs) {
-		var introMsg = Zotero.getString('sync.conflict.collectionItemMerge.log', collectionName);
+		var introMsg = Trellis.getString('sync.conflict.collectionItemMerge.log', collectionName);
 		var itemText = [];
 		var max = addedItemIDs.length;
 		for (var i=0; i<max; i++) {
 			var id = addedItemIDs[i];
-			var item = Zotero.Items.get(id);
+			var item = Trellis.Items.get(id);
 			var title = item.getDisplayTitle();
 			var text = " \u2022 " + title;
 			var firstCreator = item.getField('firstCreator');
@@ -500,9 +500,9 @@ Zotero.Sync.Server.Data = new function () {
 	
 	
 	function _generateTagItemMergeAlertMessage() {
-		var msg = Zotero.getString('sync.conflict.tagItemMerge.alert') + "\n\n"
-			+ Zotero.getString('sync.conflict.viewErrorConsole',
-				(Zotero.isStandalone ? "" : "Firefox")).replace(/\s+/, " ");
+		var msg = Trellis.getString('sync.conflict.tagItemMerge.alert') + "\n\n"
+			+ Trellis.getString('sync.conflict.viewErrorConsole',
+				(Trellis.isStandalone ? "" : "Firefox")).replace(/\s+/, " ");
 		return msg;
 	}
 	
@@ -513,17 +513,17 @@ Zotero.Sync.Server.Data = new function () {
 	 * @param	{Boolean}		remoteIsTarget
 	 */
 	function _generateTagItemMergeLogMessage(tagName, addedItemIDs, remoteIsTarget) {
-		var introMsg = Zotero.getString('sync.conflict.tagItemMerge.log', tagName) + " ";
+		var introMsg = Trellis.getString('sync.conflict.tagItemMerge.log', tagName) + " ";
 		
 		if (remoteIsTarget) {
-			introMsg += Zotero.getString('sync.conflict.tag.addedToRemote');
+			introMsg += Trellis.getString('sync.conflict.tag.addedToRemote');
 		}
 		else {
-			introMsg += Zotero.getString('sync.conflict.tag.addedToLocal');
+			introMsg += Trellis.getString('sync.conflict.tag.addedToLocal');
 		}
 		var itemText = [];
 		for (let id of addedItemIDs) {
-			var item = Zotero.Items.get(id);
+			var item = Trellis.Items.get(id);
 			var title = item.getField('title');
 			var text = " - " + title;
 			var firstCreator = item.getField('firstCreator');

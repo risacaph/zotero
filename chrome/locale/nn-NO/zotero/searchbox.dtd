@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Namn:">
+<!ENTITY trellis.search.name "Namn:">
 
-<!ENTITY zotero.search.searchInLibrary "Search in library:">
+<!ENTITY trellis.search.searchInLibrary "Search in library:">
 
-<!ENTITY zotero.search.joinMode.prefix "Finn">
-<!ENTITY zotero.search.joinMode.any "minst ein">
-<!ENTITY zotero.search.joinMode.all "alle">
-<!ENTITY zotero.search.joinMode.suffix "av følgjande:">
+<!ENTITY trellis.search.joinMode.prefix "Finn">
+<!ENTITY trellis.search.joinMode.any "minst ein">
+<!ENTITY trellis.search.joinMode.all "alle">
+<!ENTITY trellis.search.joinMode.suffix "av følgjande:">
 
-<!ENTITY zotero.search.recursive.label "Søk i undermapper">
-<!ENTITY zotero.search.noChildren "Vis berre overordna element">
-<!ENTITY zotero.search.includeParentsAndChildren "Inkluder under- og overordna element">
+<!ENTITY trellis.search.recursive.label "Søk i undermapper">
+<!ENTITY trellis.search.noChildren "Vis berre overordna element">
+<!ENTITY trellis.search.includeParentsAndChildren "Inkluder under- og overordna element">
 
-<!ENTITY zotero.search.textModes.phrase "Frasa">
-<!ENTITY zotero.search.textModes.phraseBinary "Frasa (inkl. binærfiler)">
-<!ENTITY zotero.search.textModes.regexp "Regexp">
-<!ENTITY zotero.search.textModes.regexpCS "Regexp (versalsensitiv)">
+<!ENTITY trellis.search.textModes.phrase "Frasa">
+<!ENTITY trellis.search.textModes.phraseBinary "Frasa (inkl. binærfiler)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (versalsensitiv)">
 
-<!ENTITY zotero.search.date.units.days "dagar">
-<!ENTITY zotero.search.date.units.months "månader">
-<!ENTITY zotero.search.date.units.years "år">
+<!ENTITY trellis.search.date.units.days "dagar">
+<!ENTITY trellis.search.date.units.months "månader">
+<!ENTITY trellis.search.date.units.years "år">
 
-<!ENTITY zotero.search.search "Søk">
-<!ENTITY zotero.search.clear "Fjern">
-<!ENTITY zotero.search.saveSearch "Lagra søk">
+<!ENTITY trellis.search.search "Søk">
+<!ENTITY trellis.search.clear "Fjern">
+<!ENTITY trellis.search.saveSearch "Lagra søk">

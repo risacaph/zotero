@@ -1,4 +1,4 @@
-import { getTargetElement, createContextMenuEvent } from "chrome://zotero/content/contextMenuUtils.sys.mjs";
+import { getTargetElement, createContextMenuEvent } from "chrome://trellis/content/contextMenuUtils.sys.mjs";
 
 /**
  * Child-frame implementation of macOS Sequoia Ctrl-Enter context menu behavior.

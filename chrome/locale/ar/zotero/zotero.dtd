@@ -1,331 +1,331 @@
-<!ENTITY zotero.general.yes "نعم">
-<!ENTITY zotero.general.no "لا">
-<!ENTITY zotero.general.optional "(اختياري)">
-<!ENTITY zotero.general.note "ملاحظة:">
-<!ENTITY zotero.general.selectAll "تحديد الكل">
-<!ENTITY zotero.general.deselectAll "إلغاء تحديد الكل">
-<!ENTITY zotero.general.edit "تحرير">
-<!ENTITY zotero.general.delete "حذف">
-<!ENTITY zotero.general.moveToTrash "نقل لسلة المحذوفات">
-<!ENTITY zotero.general.ok "موافق">
-<!ENTITY zotero.general.cancel "الغاء">
-<!ENTITY zotero.general.refresh "اعادة تحميل">
-<!ENTITY zotero.general.saveAs "حفظ باسم...">
-<!ENTITY zotero.general.options "خيارات">
-<!ENTITY zotero.general.advancedOptions.label "خيارات متقدمة">
-<!ENTITY zotero.general.tools "أدوات">
-<!ENTITY zotero.general.more "المزيد">
-<!ENTITY zotero.general.moreInformation "المزيد من المعلومات">
-<!ENTITY zotero.general.loading "التحميل">
-<!ENTITY zotero.general.close "أغلق">
-<!ENTITY zotero.general.minimize "تصغير">
-<!ENTITY zotero.general.other "غير ذلك...">
-<!ENTITY zotero.general.bigger "أكبر">
-<!ENTITY zotero.general.smaller "أصغر">
-<!ENTITY zotero.general.reset "اعادة ضبط">
+<!ENTITY trellis.general.yes "نعم">
+<!ENTITY trellis.general.no "لا">
+<!ENTITY trellis.general.optional "(اختياري)">
+<!ENTITY trellis.general.note "ملاحظة:">
+<!ENTITY trellis.general.selectAll "تحديد الكل">
+<!ENTITY trellis.general.deselectAll "إلغاء تحديد الكل">
+<!ENTITY trellis.general.edit "تحرير">
+<!ENTITY trellis.general.delete "حذف">
+<!ENTITY trellis.general.moveToTrash "نقل لسلة المحذوفات">
+<!ENTITY trellis.general.ok "موافق">
+<!ENTITY trellis.general.cancel "الغاء">
+<!ENTITY trellis.general.refresh "اعادة تحميل">
+<!ENTITY trellis.general.saveAs "حفظ باسم...">
+<!ENTITY trellis.general.options "خيارات">
+<!ENTITY trellis.general.advancedOptions.label "خيارات متقدمة">
+<!ENTITY trellis.general.tools "أدوات">
+<!ENTITY trellis.general.more "المزيد">
+<!ENTITY trellis.general.moreInformation "المزيد من المعلومات">
+<!ENTITY trellis.general.loading "التحميل">
+<!ENTITY trellis.general.close "أغلق">
+<!ENTITY trellis.general.minimize "تصغير">
+<!ENTITY trellis.general.other "غير ذلك...">
+<!ENTITY trellis.general.bigger "أكبر">
+<!ENTITY trellis.general.smaller "أصغر">
+<!ENTITY trellis.general.reset "اعادة ضبط">
 
 
-<!ENTITY zotero.errorReport.title "تقرير خطأ لزوتيرو">
-<!ENTITY zotero.errorReport.submissionInProgress "برجاء الانتظار لحين الانتهاء من ارسال التقرير عن الخطأ.">
-<!ENTITY zotero.errorReport.submitted "تم ارسال التقرير عن الخطأ.">
-<!ENTITY zotero.errorReport.reportID "رقم التقرير:">
-<!ENTITY zotero.errorReport.postToForums "برجاء كتابة رسالة في منتديات زوتيرو (forums.zotero.org) تتضمن رقم التقرير، ووصف للمشكلة، والخطوات التي تؤدي لظهورها.">
-<!ENTITY zotero.errorReport.notReviewed "لن يتم مراجعة تقارير الخطأ ما لم يكن مشار إليها في المنتديات.">
+<!ENTITY trellis.errorReport.title "تقرير خطأ لزوتيرو">
+<!ENTITY trellis.errorReport.submissionInProgress "برجاء الانتظار لحين الانتهاء من ارسال التقرير عن الخطأ.">
+<!ENTITY trellis.errorReport.submitted "تم ارسال التقرير عن الخطأ.">
+<!ENTITY trellis.errorReport.reportID "رقم التقرير:">
+<!ENTITY trellis.errorReport.postToForums "برجاء كتابة رسالة في منتديات زوتيرو (forums.trellis.org) تتضمن رقم التقرير، ووصف للمشكلة، والخطوات التي تؤدي لظهورها.">
+<!ENTITY trellis.errorReport.notReviewed "لن يتم مراجعة تقارير الخطأ ما لم يكن مشار إليها في المنتديات.">
 
-<!ENTITY zotero.upgrade.title "معالج تحديث زوتيرو">
-<!ENTITY zotero.upgrade.newVersionInstalled "لقد قمتَ بتنصيب نسخة جديدة من زوتيرو.">
-<!ENTITY zotero.upgrade.upgradeRequired "يجب ترقية قاعدة بيانات زوتيرو لكي تعمل مع النسخة الجديدة.">
-<!ENTITY zotero.upgrade.autoBackup "سيتم عمل نسخة احتياطية من قاعدة البيانات قبل إجراء أي تغييرات.">
-<!ENTITY zotero.upgrade.majorUpgrade "هذه عملية تحديث كلي للبرنامج.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "تأكد من أنك قمت بمراجعة">
-<!ENTITY zotero.upgrade.majorUpgradeLink "إرشادات الترقية">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "قبل المتابعة.">
-<!ENTITY zotero.upgrade.upgradeInProgress "فضلاً انتظر حتى تنتهي عملية الترقية. قد يستغرق ذلك عدة دقائق.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "تم ترقية قاعدة البيانات بنجاح.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "برجاء مراجعة">
-<!ENTITY zotero.upgrade.changeLogLink "سجل التغييرات">
-<!ENTITY zotero.upgrade.changeLogAfterLink "لمعرفة الجديد.">
+<!ENTITY trellis.upgrade.title "معالج تحديث زوتيرو">
+<!ENTITY trellis.upgrade.newVersionInstalled "لقد قمتَ بتنصيب نسخة جديدة من زوتيرو.">
+<!ENTITY trellis.upgrade.upgradeRequired "يجب ترقية قاعدة بيانات زوتيرو لكي تعمل مع النسخة الجديدة.">
+<!ENTITY trellis.upgrade.autoBackup "سيتم عمل نسخة احتياطية من قاعدة البيانات قبل إجراء أي تغييرات.">
+<!ENTITY trellis.upgrade.majorUpgrade "هذه عملية تحديث كلي للبرنامج.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "تأكد من أنك قمت بمراجعة">
+<!ENTITY trellis.upgrade.majorUpgradeLink "إرشادات الترقية">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "قبل المتابعة.">
+<!ENTITY trellis.upgrade.upgradeInProgress "فضلاً انتظر حتى تنتهي عملية الترقية. قد يستغرق ذلك عدة دقائق.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "تم ترقية قاعدة البيانات بنجاح.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "برجاء مراجعة">
+<!ENTITY trellis.upgrade.changeLogLink "سجل التغييرات">
+<!ENTITY trellis.upgrade.changeLogAfterLink "لمعرفة الجديد.">
 
-<!ENTITY zotero.tabs.notes.label "ملاحظات">
-<!ENTITY zotero.tabs.attachments.label "مرفقات">
+<!ENTITY trellis.tabs.notes.label "ملاحظات">
+<!ENTITY trellis.tabs.attachments.label "مرفقات">
 
-<!ENTITY zotero.toolbar.duplicate.label "عرض التكرارات">
-<!ENTITY zotero.collections.showUnfiledItems "عرض العناصر غير المصنفة">
-<!ENTITY zotero.collections.showRetractedItems "إظهار العناصر المستردة">
+<!ENTITY trellis.toolbar.duplicate.label "عرض التكرارات">
+<!ENTITY trellis.collections.showUnfiledItems "عرض العناصر غير المصنفة">
+<!ENTITY trellis.collections.showRetractedItems "إظهار العناصر المستردة">
 
-<!ENTITY zotero.items.itemType "نوع العنصر">
-<!ENTITY zotero.items.creator_column "المؤلف">
-<!ENTITY zotero.items.year_column "السنة">
-<!ENTITY zotero.items.dateModified_column "تاريخ التعديل">
-<!ENTITY zotero.items.moreColumns.label "المزيد من الاعمدة">
-<!ENTITY zotero.items.restoreColumnOrder.label "استعادة ترتيب الاعمدة">
+<!ENTITY trellis.items.itemType "نوع العنصر">
+<!ENTITY trellis.items.creator_column "المؤلف">
+<!ENTITY trellis.items.year_column "السنة">
+<!ENTITY trellis.items.dateModified_column "تاريخ التعديل">
+<!ENTITY trellis.items.moreColumns.label "المزيد من الاعمدة">
+<!ENTITY trellis.items.restoreColumnOrder.label "استعادة ترتيب الاعمدة">
 
-<!ENTITY zotero.items.menu.showInLibrary "عرض في المكتبة">
-<!ENTITY zotero.items.menu.attach.note "اضافة ملاحظة">
-<!ENTITY zotero.items.menu.attach "اضافة مرفق">
-<!ENTITY zotero.items.menu.attach.link.uri "ربط الرابط بالمسار...">
-<!ENTITY zotero.items.menu.attach.file "إرفاق نسخة من ملف مخزن...">
-<!ENTITY zotero.items.menu.attach.fileLink "إرفاق ارتباط لملف...">
+<!ENTITY trellis.items.menu.showInLibrary "عرض في المكتبة">
+<!ENTITY trellis.items.menu.attach.note "اضافة ملاحظة">
+<!ENTITY trellis.items.menu.attach "اضافة مرفق">
+<!ENTITY trellis.items.menu.attach.link.uri "ربط الرابط بالمسار...">
+<!ENTITY trellis.items.menu.attach.file "إرفاق نسخة من ملف مخزن...">
+<!ENTITY trellis.items.menu.attach.fileLink "إرفاق ارتباط لملف...">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "استعادة المكتبة">
-<!ENTITY zotero.items.menu.duplicateItem "تكرار العنصر المحدد">
-<!ENTITY zotero.items.menu.mergeItems "دمج العناصر...">
-<!ENTITY zotero.items.menu.unrecognize "تراجع عن استيراد البيانات الوصفية">
+<!ENTITY trellis.items.menu.restoreToLibrary "استعادة المكتبة">
+<!ENTITY trellis.items.menu.duplicateItem "تكرار العنصر المحدد">
+<!ENTITY trellis.items.menu.mergeItems "دمج العناصر...">
+<!ENTITY trellis.items.menu.unrecognize "تراجع عن استيراد البيانات الوصفية">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "اختار اصدارة العنصر المناسبة لاستخدامه كعنصر رئيسي:">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "اختار الحقول المراد الابقاء عليها من الاصدارات الاخرى للعنصر:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "اختار اصدارة العنصر المناسبة لاستخدامه كعنصر رئيسي:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "اختار الحقول المراد الابقاء عليها من الاصدارات الاخرى للعنصر:">
 
-<!ENTITY zotero.toolbar.newItem.label "عنصر جديد">
-<!ENTITY zotero.toolbar.moreItemTypes.label "المزيد">
-<!ENTITY zotero.toolbar.lookup.label "إضافة العنصر بواسطة معرف">
-<!ENTITY zotero.toolbar.removeItem.label "ازالة العنصر...">
-<!ENTITY zotero.toolbar.newGroup "مجموعة مشاركة جديدة...">
-<!ENTITY zotero.toolbar.newSubcollection.label "مجموعة عناصر فرعية جديدة...">
-<!ENTITY zotero.toolbar.newSavedSearch.label "بحث محفوظ جديد...">
-<!ENTITY zotero.toolbar.emptyTrash.label "افراغ سلة المحذوفات">
-<!ENTITY zotero.toolbar.tagSelector.label "عرض/اخفاء محدد الأوسمة">
-<!ENTITY zotero.toolbar.actions.label "عمليات">
-<!ENTITY zotero.toolbar.import.label "استيراد...">
-<!ENTITY zotero.toolbar.importFromClipboard "استيراد من الحافظة">
-<!ENTITY zotero.toolbar.export.label "تصدير المكتبة...">
-<!ENTITY zotero.toolbar.rtfScan.label "فحص ملف RTF">
-<!ENTITY zotero.toolbar.preferences.label "التفضيلات...">
-<!ENTITY zotero.toolbar.supportAndDocumentation "الدعم و الوثائق">
-<!ENTITY zotero.toolbar.about.label "حول زوتيرو">
-<!ENTITY zotero.toolbar.advancedSearch "البحث المتقدم">
-<!ENTITY zotero.toolbar.openURL.label "تحديد موقع العنصر">
-<!ENTITY zotero.toolbar.openURL.tooltip "البحث في مكتبتك المحلية">
+<!ENTITY trellis.toolbar.newItem.label "عنصر جديد">
+<!ENTITY trellis.toolbar.moreItemTypes.label "المزيد">
+<!ENTITY trellis.toolbar.lookup.label "إضافة العنصر بواسطة معرف">
+<!ENTITY trellis.toolbar.removeItem.label "ازالة العنصر...">
+<!ENTITY trellis.toolbar.newGroup "مجموعة مشاركة جديدة...">
+<!ENTITY trellis.toolbar.newSubcollection.label "مجموعة عناصر فرعية جديدة...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "بحث محفوظ جديد...">
+<!ENTITY trellis.toolbar.emptyTrash.label "افراغ سلة المحذوفات">
+<!ENTITY trellis.toolbar.tagSelector.label "عرض/اخفاء محدد الأوسمة">
+<!ENTITY trellis.toolbar.actions.label "عمليات">
+<!ENTITY trellis.toolbar.import.label "استيراد...">
+<!ENTITY trellis.toolbar.importFromClipboard "استيراد من الحافظة">
+<!ENTITY trellis.toolbar.export.label "تصدير المكتبة...">
+<!ENTITY trellis.toolbar.rtfScan.label "فحص ملف RTF">
+<!ENTITY trellis.toolbar.preferences.label "التفضيلات...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "الدعم و الوثائق">
+<!ENTITY trellis.toolbar.about.label "حول زوتيرو">
+<!ENTITY trellis.toolbar.advancedSearch "البحث المتقدم">
+<!ENTITY trellis.toolbar.openURL.label "تحديد موقع العنصر">
+<!ENTITY trellis.toolbar.openURL.tooltip "البحث في مكتبتك المحلية">
 
-<!ENTITY zotero.toolbar.feeds.new "خلاصة جديدة">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "من رابط...">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "من OPML...">
-<!ENTITY zotero.toolbar.feeds.edit "تحرير الخلاصة...">
+<!ENTITY trellis.toolbar.feeds.new "خلاصة جديدة">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "من رابط...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "من OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "تحرير الخلاصة...">
 
-<!ENTITY zotero.item.add "اضافة">
-<!ENTITY zotero.item.attachment.file.show "عرض الملف">
-<!ENTITY zotero.item.textTransform "تغيير حالة النص">
-<!ENTITY zotero.item.textTransform.titlecase "حرف كبير في بداية كل كلمة">
-<!ENTITY zotero.item.textTransform.sentencecase "حالة الجملة">
-<!ENTITY zotero.item.creatorTransform.nameSwap "مبادلة الأول/الأخير">
-<!ENTITY zotero.item.creatorTransform.fixCase "تصحيح حالة الأحرف">
-<!ENTITY zotero.item.copyAsURL "نسخ كمسار انترنت">
-<!ENTITY zotero.item.deletePermanently "حذف نهائي...">
+<!ENTITY trellis.item.add "اضافة">
+<!ENTITY trellis.item.attachment.file.show "عرض الملف">
+<!ENTITY trellis.item.textTransform "تغيير حالة النص">
+<!ENTITY trellis.item.textTransform.titlecase "حرف كبير في بداية كل كلمة">
+<!ENTITY trellis.item.textTransform.sentencecase "حالة الجملة">
+<!ENTITY trellis.item.creatorTransform.nameSwap "مبادلة الأول/الأخير">
+<!ENTITY trellis.item.creatorTransform.fixCase "تصحيح حالة الأحرف">
+<!ENTITY trellis.item.copyAsURL "نسخ كمسار انترنت">
+<!ENTITY trellis.item.deletePermanently "حذف نهائي...">
 
-<!ENTITY zotero.item.tags.removeAll "أزل جميع الوسوم">
+<!ENTITY trellis.item.tags.removeAll "أزل جميع الوسوم">
 
-<!ENTITY zotero.toolbar.newNote "ملاحظة جديدة">
-<!ENTITY zotero.toolbar.note.standalone "ملاحظة جديدة مستقلة بذاتها">
-<!ENTITY zotero.toolbar.note.child "إضافة ملاحظة تابعة">
-<!ENTITY zotero.toolbar.lookup "بحث بواسطة معرف العنصر...">
-<!ENTITY zotero.toolbar.attachment.linked "ارتباط تشعبي لملف...">
-<!ENTITY zotero.toolbar.attachment.add "تخزين نسخة من ملف...">
-<!ENTITY zotero.toolbar.attachment.weblink "حفظ رابط للصفحة الحالية">
-<!ENTITY zotero.toolbar.attachment.snapshot "اخذ لقطة من الصفحة الحالية">
-<!ENTITY zotero.toolbar.context.item "العنصر">
-<!ENTITY zotero.toolbar.context.notes "ملاحظات">
+<!ENTITY trellis.toolbar.newNote "ملاحظة جديدة">
+<!ENTITY trellis.toolbar.note.standalone "ملاحظة جديدة مستقلة بذاتها">
+<!ENTITY trellis.toolbar.note.child "إضافة ملاحظة تابعة">
+<!ENTITY trellis.toolbar.lookup "بحث بواسطة معرف العنصر...">
+<!ENTITY trellis.toolbar.attachment.linked "ارتباط تشعبي لملف...">
+<!ENTITY trellis.toolbar.attachment.add "تخزين نسخة من ملف...">
+<!ENTITY trellis.toolbar.attachment.weblink "حفظ رابط للصفحة الحالية">
+<!ENTITY trellis.toolbar.attachment.snapshot "اخذ لقطة من الصفحة الحالية">
+<!ENTITY trellis.toolbar.context.item "العنصر">
+<!ENTITY trellis.toolbar.context.notes "ملاحظات">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "لاتوجد اوسمة لعرضها">
-<!ENTITY zotero.tagSelector.loadingTags "تحميل الوسوم...">
-<!ENTITY zotero.tagSelector.showAutomatic "عرض تلقائي">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "عرض جميع الاوسمة في هذه المكتبة">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "احذف الوسوم الآلية في هذه المكتبة...">
-<!ENTITY zotero.tagSelector.clearAll "إلغاء تحديد الكل">
-<!ENTITY zotero.tagSelector.assignColor "تخصيص اللون...">
-<!ENTITY zotero.tagSelector.renameTag "تغيير اسم الوسم...">
-<!ENTITY zotero.tagSelector.deleteTag "حذف الوسم...">
-<!ENTITY zotero.tagSelector.splitTag "تقسيم...">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "لاتوجد اوسمة لعرضها">
+<!ENTITY trellis.tagSelector.loadingTags "تحميل الوسوم...">
+<!ENTITY trellis.tagSelector.showAutomatic "عرض تلقائي">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "عرض جميع الاوسمة في هذه المكتبة">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "احذف الوسوم الآلية في هذه المكتبة...">
+<!ENTITY trellis.tagSelector.clearAll "إلغاء تحديد الكل">
+<!ENTITY trellis.tagSelector.assignColor "تخصيص اللون...">
+<!ENTITY trellis.tagSelector.renameTag "تغيير اسم الوسم...">
+<!ENTITY trellis.tagSelector.deleteTag "حذف الوسم...">
+<!ENTITY trellis.tagSelector.splitTag "تقسيم...">
 
-<!ENTITY zotero.tagColorChooser.title "اختار لون وموقع الوسم">
-<!ENTITY zotero.tagColorChooser.color "لون:">
-<!ENTITY zotero.tagColorChooser.position "المكان:">
-<!ENTITY zotero.tagColorChooser.setColor "ضبط اللون">
-<!ENTITY zotero.tagColorChooser.removeColor "ازالة اللون">
+<!ENTITY trellis.tagColorChooser.title "اختار لون وموقع الوسم">
+<!ENTITY trellis.tagColorChooser.color "لون:">
+<!ENTITY trellis.tagColorChooser.position "المكان:">
+<!ENTITY trellis.tagColorChooser.setColor "ضبط اللون">
+<!ENTITY trellis.tagColorChooser.removeColor "ازالة اللون">
 
-<!ENTITY zotero.lookup.description "أدخل أرقام ISBN أو DOI أو PMID أو arXiv ID أو ADS Bibcode لإضافتها إلى مكتبتك:">
-<!ENTITY zotero.lookup.button.search "بحث">
+<!ENTITY trellis.lookup.description "أدخل أرقام ISBN أو DOI أو PMID أو arXiv ID أو ADS Bibcode لإضافتها إلى مكتبتك:">
+<!ENTITY trellis.lookup.button.search "بحث">
 
-<!ENTITY zotero.createParent.title "انشئ عنصر رئيسي">
-<!ENTITY zotero.createParent.button.manual "الإدخال اليدوي">
+<!ENTITY trellis.createParent.title "انشئ عنصر رئيسي">
+<!ENTITY trellis.createParent.button.manual "الإدخال اليدوي">
 
-<!ENTITY zotero.selectitems.title "تحديد العناصر">
-<!ENTITY zotero.selectitems.intro.label "حدد العناصر التي تريد إضافتها لمكتبتك">
-<!ENTITY zotero.selectitems.cancel.label "إلغاء">
-<!ENTITY zotero.selectitems.select.label "موافق">
+<!ENTITY trellis.selectitems.title "تحديد العناصر">
+<!ENTITY trellis.selectitems.intro.label "حدد العناصر التي تريد إضافتها لمكتبتك">
+<!ENTITY trellis.selectitems.cancel.label "إلغاء">
+<!ENTITY trellis.selectitems.select.label "موافق">
 
-<!ENTITY zotero.bibliography.title "إنشاء ببليوجرافية">
-<!ENTITY zotero.bibliography.style.label "نمط الاستشهاد:">
-<!ENTITY zotero.bibliography.manageStyles "أدر الأنماط...">
-<!ENTITY zotero.bibliography.locale.label "اللغة">
-<!ENTITY zotero.bibliography.outputMode "وضع المخرجات:">
-<!ENTITY zotero.bibliography.bibliography "ببليوجرافية">
-<!ENTITY zotero.bibliography.outputMethod "طريقة الاخراج:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "حفظ كملف  RTF">
-<!ENTITY zotero.bibliography.saveAsHTML.label "حفظ كملف  HTML">
-<!ENTITY zotero.bibliography.copyToClipboard.label "نسخ للحافظة">
-<!ENTITY zotero.bibliography.print.label "طباعة">
+<!ENTITY trellis.bibliography.title "إنشاء ببليوجرافية">
+<!ENTITY trellis.bibliography.style.label "نمط الاستشهاد:">
+<!ENTITY trellis.bibliography.manageStyles "أدر الأنماط...">
+<!ENTITY trellis.bibliography.locale.label "اللغة">
+<!ENTITY trellis.bibliography.outputMode "وضع المخرجات:">
+<!ENTITY trellis.bibliography.bibliography "ببليوجرافية">
+<!ENTITY trellis.bibliography.outputMethod "طريقة الاخراج:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "حفظ كملف  RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "حفظ كملف  HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "نسخ للحافظة">
+<!ENTITY trellis.bibliography.print.label "طباعة">
 
-<!ENTITY zotero.integration.docPrefs.title "تفضيلات المستند">
-<!ENTITY zotero.integration.addEditCitation.title "اضافة/تحرير استشهاد مرجعي">
-<!ENTITY zotero.integration.editBibliography.title "تحرير ببليوجرافية">
+<!ENTITY trellis.integration.docPrefs.title "تفضيلات المستند">
+<!ENTITY trellis.integration.addEditCitation.title "اضافة/تحرير استشهاد مرجعي">
+<!ENTITY trellis.integration.editBibliography.title "تحرير ببليوجرافية">
 
-<!ENTITY zotero.progress.title "التقدم">
+<!ENTITY trellis.progress.title "التقدم">
 
-<!ENTITY zotero.import "استيراد">
-<!ENTITY zotero.import.whereToImportFrom "من أين تريد الاستيراد؟">
-<!ENTITY zotero.import.source.file " ملف (BibTeX, RIS, Zotero RDF, etc.)">
-<!ENTITY zotero.import.source.folder "مجلد من ملفات ال PDFs أو ملفات أخرى">
-<!ENTITY zotero.import.onlineImport "الاستيراد عبر الإنترنت">
-<!ENTITY zotero.import.importing "استيراد...">
-<!ENTITY zotero.import.database "قاعدة البيانات">
-<!ENTITY zotero.import.lastModified "آخر تعديل">
-<!ENTITY zotero.import.size "حجم">
-<!ENTITY zotero.import.createCollection "ضع المجموعات المستوردة والمواد في مجموعة جديدة">
-<!ENTITY zotero.import.fileHandling "معاملة الملف">
-<!ENTITY zotero.import.online.newItemsOnly "تحميل العناصر الجديدة فقط؛ لا تقم بتحديث العناصر التي تم استيرادها مسبقاً">
+<!ENTITY trellis.import "استيراد">
+<!ENTITY trellis.import.whereToImportFrom "من أين تريد الاستيراد؟">
+<!ENTITY trellis.import.source.file " ملف (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "مجلد من ملفات ال PDFs أو ملفات أخرى">
+<!ENTITY trellis.import.onlineImport "الاستيراد عبر الإنترنت">
+<!ENTITY trellis.import.importing "استيراد...">
+<!ENTITY trellis.import.database "قاعدة البيانات">
+<!ENTITY trellis.import.lastModified "آخر تعديل">
+<!ENTITY trellis.import.size "حجم">
+<!ENTITY trellis.import.createCollection "ضع المجموعات المستوردة والمواد في مجموعة جديدة">
+<!ENTITY trellis.import.fileHandling "معاملة الملف">
+<!ENTITY trellis.import.online.newItemsOnly "تحميل العناصر الجديدة فقط؛ لا تقم بتحديث العناصر التي تم استيرادها مسبقاً">
 
-<!ENTITY zotero.exportOptions.title "تصدير...">
-<!ENTITY zotero.exportOptions.format.label "الصياغة:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "خيارات المترجم">
+<!ENTITY trellis.exportOptions.title "تصدير...">
+<!ENTITY trellis.exportOptions.format.label "الصياغة:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "خيارات المترجم">
 
-<!ENTITY zotero.charset.label "ترميز الأحرف">
-<!ENTITY zotero.moreEncodings.label "المزيد من الترميزات">
+<!ENTITY trellis.charset.label "ترميز الأحرف">
+<!ENTITY trellis.moreEncodings.label "المزيد من الترميزات">
 
-<!ENTITY zotero.citation.keepSorted.label "الحفاظ على المصادر مرتبة">
+<!ENTITY trellis.citation.keepSorted.label "الحفاظ على المصادر مرتبة">
 
-<!ENTITY zotero.citation.suppressAuthor.label "حذف المؤلف">
-<!ENTITY zotero.citation.prefix.label "بادئة:">
-<!ENTITY zotero.citation.suffix.label "لاحقة:">
-<!ENTITY zotero.citation.editorWarning.label "تحذير: إذا قمت بتحرير استشهاد في المحرر فلن يتم تحديثه ليعكس التغييرات في قاعدة بياناتك أو نمط الاستشهاد.">
+<!ENTITY trellis.citation.suppressAuthor.label "حذف المؤلف">
+<!ENTITY trellis.citation.prefix.label "بادئة:">
+<!ENTITY trellis.citation.suffix.label "لاحقة:">
+<!ENTITY trellis.citation.editorWarning.label "تحذير: إذا قمت بتحرير استشهاد في المحرر فلن يتم تحديثه ليعكس التغييرات في قاعدة بياناتك أو نمط الاستشهاد.">
 
-<!ENTITY zotero.richText.italic.label "مائل">
-<!ENTITY zotero.richText.bold.label "غامق">
-<!ENTITY zotero.richText.underline.label "تسطير">
-<!ENTITY zotero.richText.superscript.label "مرتفع">
-<!ENTITY zotero.richText.subscript.label "منخفض">
+<!ENTITY trellis.richText.italic.label "مائل">
+<!ENTITY trellis.richText.bold.label "غامق">
+<!ENTITY trellis.richText.underline.label "تسطير">
+<!ENTITY trellis.richText.superscript.label "مرتفع">
+<!ENTITY trellis.richText.subscript.label "منخفض">
 
-<!ENTITY zotero.annotate.toolbar.add.label "إضافة تعليق">
-<!ENTITY zotero.annotate.toolbar.collapse.label "طي جميع التعليقات">
-<!ENTITY zotero.annotate.toolbar.expand.label "بسط جميع التعليقات">
-<!ENTITY zotero.annotate.toolbar.highlight.label "تمييز النص">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "إلغاء تمييز النص">
+<!ENTITY trellis.annotate.toolbar.add.label "إضافة تعليق">
+<!ENTITY trellis.annotate.toolbar.collapse.label "طي جميع التعليقات">
+<!ENTITY trellis.annotate.toolbar.expand.label "بسط جميع التعليقات">
+<!ENTITY trellis.annotate.toolbar.highlight.label "تمييز النص">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "إلغاء تمييز النص">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "عرض الاستشهادات المرجعية كـ:">
-<!ENTITY zotero.integration.prefs.footnotes.label "حواشي سفلية">
-<!ENTITY zotero.integration.prefs.endnotes.label "تعليقات ختامية">
+<!ENTITY trellis.integration.prefs.displayAs.label "عرض الاستشهادات المرجعية كـ:">
+<!ENTITY trellis.integration.prefs.footnotes.label "حواشي سفلية">
+<!ENTITY trellis.integration.prefs.endnotes.label "تعليقات ختامية">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "تخزين الاستشهادات ك:
+<!ENTITY trellis.integration.prefs.formatUsing.label "تخزين الاستشهادات ك:
 ">
-<!ENTITY zotero.integration.prefs.bookmarks.label "الاشارات المرجعية">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "يمكن مشاركة الإشارات المرجعية بين ورد و ليبرأوفيس، ولكن قد تسبب أخطاء إذا تم تعديلها بالخطأ ولا يمكن إدراجها في الحواشي السفلية.
+<!ENTITY trellis.integration.prefs.bookmarks.label "الاشارات المرجعية">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "يمكن مشاركة الإشارات المرجعية بين ورد و ليبرأوفيس، ولكن قد تسبب أخطاء إذا تم تعديلها بالخطأ ولا يمكن إدراجها في الحواشي السفلية.
 ">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "حدث الاستشهادات آلياً">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "سيتم تمييز الاستشهادات ذات التحديثات المعلقة في المستند">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "يمكن أن يؤدي تعطيل التحديثات إلى تسريع إدراج الاستشهادات في المستندات الكبيرة. انقر على تحديث لتحديث الاستشهادات يدويًا.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "حدث الاستشهادات آلياً">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "سيتم تمييز الاستشهادات ذات التحديثات المعلقة في المستند">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "يمكن أن يؤدي تعطيل التحديثات إلى تسريع إدراج الاستشهادات في المستندات الكبيرة. انقر على تحديث لتحديث الاستشهادات يدويًا.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "استخدام اختصارات دورية ميدلين">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "سيتم تجاهل حقل &quot;اختصار المجلة&quot;.">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "استخدام اختصارات دورية ميدلين">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "سيتم تجاهل حقل &quot;اختصار المجلة&quot;.">
 
-<!ENTITY zotero.integration.prefs.exportDocument "التبديل إلى معالج نصوص آخر ...">
+<!ENTITY trellis.integration.prefs.exportDocument "التبديل إلى معالج نصوص آخر ...">
 
-<!ENTITY zotero.integration.showEditor.label "عرض المحرر">
-<!ENTITY zotero.integration.classicView.label "عرض تقليدي">
+<!ENTITY trellis.integration.showEditor.label "عرض المحرر">
+<!ENTITY trellis.integration.classicView.label "عرض تقليدي">
 
-<!ENTITY zotero.integration.references.label "المراجع الواردة في قائمة المراجع المستشهد بها">
+<!ENTITY trellis.integration.references.label "المراجع الواردة في قائمة المراجع المستشهد بها">
 
-<!ENTITY zotero.sync.stop "أوقف التزامن">
-<!ENTITY zotero.sync.error "خطأ في التزامن">
-<!ENTITY zotero.sync.storage.progress "التقدم:">
-<!ENTITY zotero.sync.storage.downloads "التحميل:">
-<!ENTITY zotero.sync.storage.uploads "الرفع:">
+<!ENTITY trellis.sync.stop "أوقف التزامن">
+<!ENTITY trellis.sync.error "خطأ في التزامن">
+<!ENTITY trellis.sync.storage.progress "التقدم:">
+<!ENTITY trellis.sync.storage.downloads "التحميل:">
+<!ENTITY trellis.sync.storage.uploads "الرفع:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "السمة التالية في مكتبة زوتيرو الخاص بك طويلة جدا لمزامنتها إلى الخادم:">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "الاوسمة المراد مزامنتها يجب ان تكون اقل من 256 حرف.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "يمكنك تقسيم الوسم إلى اوسمة متعددة، او تحرير الوسم يدويا لتقصيره، أو حذفه.">
-<!ENTITY zotero.sync.longTagFixer.split "تقسيم">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "التقسيم بعد">
-<!ENTITY zotero.sync.longTagFixer.character "حرف">
-<!ENTITY zotero.sync.longTagFixer.characters "احرف">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "لن يتم حفظ الاوسمة الغير محددة.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "سيتم حذف الوسم من جميع العناصر.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "السمة التالية في مكتبة زوتيرو الخاص بك طويلة جدا لمزامنتها إلى الخادم:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "الاوسمة المراد مزامنتها يجب ان تكون اقل من 256 حرف.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "يمكنك تقسيم الوسم إلى اوسمة متعددة، او تحرير الوسم يدويا لتقصيره، أو حذفه.">
+<!ENTITY trellis.sync.longTagFixer.split "تقسيم">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "التقسيم بعد">
+<!ENTITY trellis.sync.longTagFixer.character "حرف">
+<!ENTITY trellis.sync.longTagFixer.characters "احرف">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "لن يتم حفظ الاوسمة الغير محددة.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "سيتم حذف الوسم من جميع العناصر.">
 
-<!ENTITY zotero.merge.title "حل التضارب">
-<!ENTITY zotero.merge.of "من">
-<!ENTITY zotero.merge.deleted "محذوف">
+<!ENTITY trellis.merge.title "حل التضارب">
+<!ENTITY trellis.merge.of "من">
+<!ENTITY trellis.merge.deleted "محذوف">
 
-<!ENTITY zotero.proxy.recognized.title "التعرف على الوكيل">
-<!ENTITY zotero.proxy.recognized.warning "قم فقط بإضافة الوكلاء التي لها وصلات على موقع مكتبتك او مدرستك او شركتك">
-<!ENTITY zotero.proxy.recognized.warning.secondary "إضافة وكلاء أخرين يسمح للمواقع الضارة بالتنكر كمواقع موثوق بها.">
-<!ENTITY zotero.proxy.recognized.disable.label "لا تقم بدعم طلبات الانتقال التلقائي عن طريق الوكلاء المعرفين من قبل">
-<!ENTITY zotero.proxy.recognized.ignore.label "تجاهل">
+<!ENTITY trellis.proxy.recognized.title "التعرف على الوكيل">
+<!ENTITY trellis.proxy.recognized.warning "قم فقط بإضافة الوكلاء التي لها وصلات على موقع مكتبتك او مدرستك او شركتك">
+<!ENTITY trellis.proxy.recognized.warning.secondary "إضافة وكلاء أخرين يسمح للمواقع الضارة بالتنكر كمواقع موثوق بها.">
+<!ENTITY trellis.proxy.recognized.disable.label "لا تقم بدعم طلبات الانتقال التلقائي عن طريق الوكلاء المعرفين من قبل">
+<!ENTITY trellis.proxy.recognized.ignore.label "تجاهل">
 
-<!ENTITY zotero.feedSettings.title "إعدادات الخلاصة">
-<!ENTITY zotero.feedSettings.saveButton.label "حفظ">
-<!ENTITY zotero.feedSettings.url.label "الرابط:">
-<!ENTITY zotero.feedSettings.title.label "العنوان:">
-<!ENTITY zotero.feedSettings.refresh.label1 "حدث الخلاصة كل:">
-<!ENTITY zotero.feedSettings.refresh.label2 "ساعة أو ساعات">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "أزل الخلاصات غير المقروءة بعد">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "يوم">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "أزل الخلاصات المقروءة بعد">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "يوم">
+<!ENTITY trellis.feedSettings.title "إعدادات الخلاصة">
+<!ENTITY trellis.feedSettings.saveButton.label "حفظ">
+<!ENTITY trellis.feedSettings.url.label "الرابط:">
+<!ENTITY trellis.feedSettings.title.label "العنوان:">
+<!ENTITY trellis.feedSettings.refresh.label1 "حدث الخلاصة كل:">
+<!ENTITY trellis.feedSettings.refresh.label2 "ساعة أو ساعات">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "أزل الخلاصات غير المقروءة بعد">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "يوم">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "أزل الخلاصات المقروءة بعد">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "يوم">
 
-<!ENTITY zotero.rtfScan.title "فحص ملف RTF">
-<!ENTITY zotero.rtfScan.cancel.label "إلغاء">
-<!ENTITY zotero.rtfScan.citation.label "الاستشهاد">
-<!ENTITY zotero.rtfScan.itemName.label "اسم العنصر">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "استشهادات مرجعية غير مخططة">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "استشهادات مرجعية مبهمة">
-<!ENTITY zotero.rtfScan.mappedCitations.label "استشهادات مرجعية مخططة">
-<!ENTITY zotero.rtfScan.introPage.label "المقدمة">
-<!ENTITY zotero.rtfScan.introPage.description "يمكن لزوتيرو القيام بالاستخلاص التلقائي للاستشهادات واعادة صياغتها وكذلك ادراج قائمة المراجع في ملفات RTF. خاصية فحص RTF تدعم حاليا الاستشهادات المختلفة بناء على الصياغات التالية:">
-<!ENTITY zotero.rtfScan.introPage.description2 "للبدء في العملية، قم بتحديد ملف مدخلات و ملف مخرجات RTF:">
-<!ENTITY zotero.rtfScan.scanPage.label "جاري البحث عن الاستشهادات المرجعية">
-<!ENTITY zotero.rtfScan.scanPage.description "يقوم زوتيرو بفحص المستند بحثا عن استشهادات مرجعية. برجاء الانتظار.">
-<!ENTITY zotero.rtfScan.citationsPage.label "تأكد من صياغة استشهادات العناصر">
-<!ENTITY zotero.rtfScan.citationsPage.description "الرجاء مراجعة قائمة الاستشهادات المرجعية المتعرف عليها ادناه لضمان أن زوتيرو قد اختار العناصر المطابقة بشكل صحيح. يجب ضبط أي استشهادات غير مخططة أو مبهمة قبل الانتقال الى الخطوة التالية.">
-<!ENTITY zotero.rtfScan.stylePage.label "تنسيق المستند">
-<!ENTITY zotero.rtfScan.formatPage.label "صياغة الاستشهادات">
-<!ENTITY zotero.rtfScan.formatPage.description "يقوم زوتيرو بمعالجة وتنسيق ملف RTF لديك. يرجى الانتظار.">
-<!ENTITY zotero.rtfScan.completePage.label "تمت عملية فحص ملف RTF">
-<!ENTITY zotero.rtfScan.completePage.description "تم فحص ومعالجة المستند. برجاء التأكد من انه تم تنسيق الصياغات بشكل صحيح .">
-<!ENTITY zotero.rtfScan.inputFile.label "ملف المدخلات ">
-<!ENTITY zotero.rtfScan.outputFile.label "ملف المخرجات">
+<!ENTITY trellis.rtfScan.title "فحص ملف RTF">
+<!ENTITY trellis.rtfScan.cancel.label "إلغاء">
+<!ENTITY trellis.rtfScan.citation.label "الاستشهاد">
+<!ENTITY trellis.rtfScan.itemName.label "اسم العنصر">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "استشهادات مرجعية غير مخططة">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "استشهادات مرجعية مبهمة">
+<!ENTITY trellis.rtfScan.mappedCitations.label "استشهادات مرجعية مخططة">
+<!ENTITY trellis.rtfScan.introPage.label "المقدمة">
+<!ENTITY trellis.rtfScan.introPage.description "يمكن لزوتيرو القيام بالاستخلاص التلقائي للاستشهادات واعادة صياغتها وكذلك ادراج قائمة المراجع في ملفات RTF. خاصية فحص RTF تدعم حاليا الاستشهادات المختلفة بناء على الصياغات التالية:">
+<!ENTITY trellis.rtfScan.introPage.description2 "للبدء في العملية، قم بتحديد ملف مدخلات و ملف مخرجات RTF:">
+<!ENTITY trellis.rtfScan.scanPage.label "جاري البحث عن الاستشهادات المرجعية">
+<!ENTITY trellis.rtfScan.scanPage.description "يقوم زوتيرو بفحص المستند بحثا عن استشهادات مرجعية. برجاء الانتظار.">
+<!ENTITY trellis.rtfScan.citationsPage.label "تأكد من صياغة استشهادات العناصر">
+<!ENTITY trellis.rtfScan.citationsPage.description "الرجاء مراجعة قائمة الاستشهادات المرجعية المتعرف عليها ادناه لضمان أن زوتيرو قد اختار العناصر المطابقة بشكل صحيح. يجب ضبط أي استشهادات غير مخططة أو مبهمة قبل الانتقال الى الخطوة التالية.">
+<!ENTITY trellis.rtfScan.stylePage.label "تنسيق المستند">
+<!ENTITY trellis.rtfScan.formatPage.label "صياغة الاستشهادات">
+<!ENTITY trellis.rtfScan.formatPage.description "يقوم زوتيرو بمعالجة وتنسيق ملف RTF لديك. يرجى الانتظار.">
+<!ENTITY trellis.rtfScan.completePage.label "تمت عملية فحص ملف RTF">
+<!ENTITY trellis.rtfScan.completePage.description "تم فحص ومعالجة المستند. برجاء التأكد من انه تم تنسيق الصياغات بشكل صحيح .">
+<!ENTITY trellis.rtfScan.inputFile.label "ملف المدخلات ">
+<!ENTITY trellis.rtfScan.outputFile.label "ملف المخرجات">
 
-<!ENTITY zotero.file.choose.label "اختر الملف...">
-<!ENTITY zotero.file.noneSelected.label "لم يتم تحديد ملف">
+<!ENTITY trellis.file.choose.label "اختر الملف...">
+<!ENTITY trellis.file.noneSelected.label "لم يتم تحديد ملف">
 
-<!ENTITY zotero.attachLink.title "ارفاق رابط لمحتوى على الانترنت">
-<!ENTITY zotero.attachLink.label.link "رابط:">
-<!ENTITY zotero.attachLink.label.title "عنوان:">
+<!ENTITY trellis.attachLink.title "ارفاق رابط لمحتوى على الانترنت">
+<!ENTITY trellis.attachLink.label.link "رابط:">
+<!ENTITY trellis.attachLink.label.title "عنوان:">
 
-<!ENTITY zotero.context.addChildNote "إضافة ملاحظة على العنصر">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "إضافة ملاحظة العنصر من التعليقات التوضيحية">
-<!ENTITY zotero.context.addStandaloneNote "إضافة ملاحظة مستقلة بذاتها">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "إضافة ملاحظة مستقلة من التعليقات التوضيحية">
-<!ENTITY zotero.context.editInWindow "التحرير في نافذة منفصلة">
+<!ENTITY trellis.context.addChildNote "إضافة ملاحظة على العنصر">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "إضافة ملاحظة العنصر من التعليقات التوضيحية">
+<!ENTITY trellis.context.addStandaloneNote "إضافة ملاحظة مستقلة بذاتها">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "إضافة ملاحظة مستقلة من التعليقات التوضيحية">
+<!ENTITY trellis.context.editInWindow "التحرير في نافذة منفصلة">
 
-<!ENTITY zotero.pdfReader.firstPage "الصفحة الأولى">
-<!ENTITY zotero.pdfReader.lastPage "الصفحة الأخيرة">
-<!ENTITY zotero.pdfReader.back "ارجع">
-<!ENTITY zotero.pdfReader.forward "إلى الأمام">
-<!ENTITY zotero.pdfReader.handTool "الأداة اليدوية">
-<!ENTITY zotero.pdfReader.verticalScrolling "التمرير العمودي">
-<!ENTITY zotero.pdfReader.horizontalScrolling "التمرير الأفقي">
-<!ENTITY zotero.pdfReader.wrappedScrolling "التمرير الملتف">
-<!ENTITY zotero.pdfReader.noSpreads "عرض الصفحة الواحدة فقط">
-<!ENTITY zotero.pdfReader.oddSpreads "صفحات متقابلة ببداية فردية">
-<!ENTITY zotero.pdfReader.evenSpreads "صفحات متقابلة ببداية زوجية">
-<!ENTITY zotero.pdfReader.scrolled "تم التمرير">
-<!ENTITY zotero.pdfReader.paginated "مقسمة إلى صفحات">
-<!ENTITY zotero.pdfReader.zoomIn "تكبير">
-<!ENTITY zotero.pdfReader.zoomOut "تصغير">
-<!ENTITY zotero.pdfReader.zoomReset "إرجاع التكبير إلى الوضع الأصلي">
-<!ENTITY zotero.pdfReader.zoomAuto "تعديل الحجم تلقائيًا">
-<!ENTITY zotero.pdfReader.zoomPageWidth "التكبير ليتناسب مع عرض الصفحة">
-<!ENTITY zotero.pdfReader.zoomPageHeight "التكبير ليتناسب مع طول الصفحة">
-<!ENTITY zotero.pdfReader.splitVertically "تقسيم عمودي">
-<!ENTITY zotero.pdfReader.splitHorizontally "تقسيم أفقي">
-<!ENTITY zotero.pdfReader.transferFromPDF "استيراد الشروح التوضيحية...">
-<!ENTITY zotero.pdfReader.rotatePageLeft "تدوير الصفحة لليسار">
-<!ENTITY zotero.pdfReader.rotatePageRight "تدوير الصفحة لليمين">
+<!ENTITY trellis.pdfReader.firstPage "الصفحة الأولى">
+<!ENTITY trellis.pdfReader.lastPage "الصفحة الأخيرة">
+<!ENTITY trellis.pdfReader.back "ارجع">
+<!ENTITY trellis.pdfReader.forward "إلى الأمام">
+<!ENTITY trellis.pdfReader.handTool "الأداة اليدوية">
+<!ENTITY trellis.pdfReader.verticalScrolling "التمرير العمودي">
+<!ENTITY trellis.pdfReader.horizontalScrolling "التمرير الأفقي">
+<!ENTITY trellis.pdfReader.wrappedScrolling "التمرير الملتف">
+<!ENTITY trellis.pdfReader.noSpreads "عرض الصفحة الواحدة فقط">
+<!ENTITY trellis.pdfReader.oddSpreads "صفحات متقابلة ببداية فردية">
+<!ENTITY trellis.pdfReader.evenSpreads "صفحات متقابلة ببداية زوجية">
+<!ENTITY trellis.pdfReader.scrolled "تم التمرير">
+<!ENTITY trellis.pdfReader.paginated "مقسمة إلى صفحات">
+<!ENTITY trellis.pdfReader.zoomIn "تكبير">
+<!ENTITY trellis.pdfReader.zoomOut "تصغير">
+<!ENTITY trellis.pdfReader.zoomReset "إرجاع التكبير إلى الوضع الأصلي">
+<!ENTITY trellis.pdfReader.zoomAuto "تعديل الحجم تلقائيًا">
+<!ENTITY trellis.pdfReader.zoomPageWidth "التكبير ليتناسب مع عرض الصفحة">
+<!ENTITY trellis.pdfReader.zoomPageHeight "التكبير ليتناسب مع طول الصفحة">
+<!ENTITY trellis.pdfReader.splitVertically "تقسيم عمودي">
+<!ENTITY trellis.pdfReader.splitHorizontally "تقسيم أفقي">
+<!ENTITY trellis.pdfReader.transferFromPDF "استيراد الشروح التوضيحية...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "تدوير الصفحة لليسار">
+<!ENTITY trellis.pdfReader.rotatePageRight "تدوير الصفحة لليمين">

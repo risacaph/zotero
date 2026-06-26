@@ -168,13 +168,13 @@
     "message": "Įgalinti įrašymą į internetinę biblioteką"
   },
   "reports_report_submitted": {
-    "message": "Jūsų klaidos pranešimas išsiųstas.\n\nPranešimo ID: $1\n\nPrašome paskelbti žinutę Zotero forume su šio pranešimo ID, problemos aprašymu ir visais žingsniais, reikalingais jos atkartojimui.\n\nKlaidos pranešimai peržiūrimi tik jei paminimi forume."
+    "message": "Jūsų klaidos pranešimas išsiųstas.\n\nPranešimo ID: $1\n\nPrašome paskelbti žinutę Trellis forume su šio pranešimo ID, problemos aprašymu ir visais žingsniais, reikalingais jos atkartojimui.\n\nKlaidos pranešimai peržiūrimi tik jei paminimi forume."
   },
   "reports_debug_output_submitted": {
     "message": "Jūsų derinimo išvestis išsiųsta.\n\nDerinimo ID yra $1."
   },
   "reports_submission_failed": {
-    "message": "Įvyko klaida išsiunčiant jūsų ataskaitą.\n\n$1\n\nPatikrinkite savo interneto ryšį. Jei problema išlieka, parašykite žinutę į Zotero forumą."
+    "message": "Įvyko klaida išsiunčiant jūsų ataskaitą.\n\n$1\n\nPatikrinkite savo interneto ryšį. Jei problema išlieka, parašykite žinutę į Trellis forumą."
   },
   "integration_error_clientUpgrade": {
     "message": "Saityno pagrindu veikiančiam citavimui reikia $1 arba naujesnės versijos."
@@ -183,10 +183,10 @@
     "message": "„$1“ nepajėgia pasiekti „$2“ darbalaukio programos. Norint naudotis saityno pagrindu veikiančiu citavimu, „$2“ vis tiek turi būti atverta."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Šiame dokumente yra aktyvių Zotero citavimų, kurie parsisiųstoje kopijoje atrodys tarsi nuorodos į zotero.org."
+    "message": "Šiame dokumente yra aktyvių Trellis citavimų, kurie parsisiųstoje kopijoje atrodys tarsi nuorodos į trellis.org."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "Norėdami sukurti tinkamą versiją bendradarbiavimui, pasirinkite <b>Sukurti kopiją...</b> iš Failo meniu, naujame dokumente pasirinkite iš Zotero meniu pasirinkite <b>Atsieti citatas</b>  ir tada atsisiųskite atsietą versiją. Laikykite šį pradinį susietą dokumentą ateičiai, jei kartais prireiktų tolesnių pakeitimų."
+    "message": "Norėdami sukurti tinkamą versiją bendradarbiavimui, pasirinkite <b>Sukurti kopiją...</b> iš Failo meniu, naujame dokumente pasirinkite iš Trellis meniu pasirinkite <b>Atsieti citatas</b>  ir tada atsisiųskite atsietą versiją. Laikykite šį pradinį susietą dokumentą ateičiai, jei kartais prireiktų tolesnių pakeitimų."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "Vis tiek parsisiųsti susietą versiją"
@@ -195,7 +195,7 @@
     "message": "$1 atnaujina jūsų dokumentą."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "$1 integracija nėra galima, kai tiesiogiai redaguojate „Microsoft Word .docx“ rinkmenas per „Google Docs“. Norėdami įgalinti šią funkciją, pasirinkite Failas → Įrašyti kaip „Google Docs“.<br/><br/>Jei norite perkelti „Word“ dokumentą su $1 citatomis į „Google Docs“, žr. <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">Dokumentų perkėlimas tarp teksto rengyklių</a>."
+    "message": "$1 integracija nėra galima, kai tiesiogiai redaguojate „Microsoft Word .docx“ rinkmenas per „Google Docs“. Norėdami įgalinti šią funkciją, pasirinkite Failas → Įrašyti kaip „Google Docs“.<br/><br/>Jei norite perkelti „Word“ dokumentą su $1 citatomis į „Google Docs“, žr. <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">Dokumentų perkėlimas tarp teksto rengyklių</a>."
   },
   "integration_googleDocs_documentLocked": {
     "message": "Dokumento citatas redaguoja kitas naudotojas $1. Bandykite dar kartą vėliau."
@@ -219,7 +219,7 @@
     "message": "Susieti citatą"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Šios citatos yra <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">atsietos nuo $1</a>. Jums reikės jas vėl susieti tam, kad jos naujintųsi ir pasirodytų literatūros sąraše."
+    "message": "Šios citatos yra <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">atsietos nuo $1</a>. Jums reikės jas vėl susieti tam, kad jos naujintųsi ir pasirodytų literatūros sąraše."
   },
   "copyUnproxiedLink": {
     "message": "Kopijuoti nuorodą be įgaliotojo serverio"

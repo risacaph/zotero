@@ -3,29 +3,29 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-Zotero.Notifier = new function () {
+Trellis.Notifier = new function () {
 	// Options that apply to an entire event, not a specific object
 	this.EVENT_LEVEL_OPTIONS = ['autoSyncDelay', 'skipAutoSync'];
 	
@@ -67,7 +67,7 @@ Zotero.Notifier = new function () {
 	 */
 	this.registerObserver = function (ref, types, id, priority) {
 		if (types) {
-			types = Zotero.flattenArguments(types);
+			types = Trellis.flattenArguments(types);
 			
 			for (var i = 0; i < types.length; i++) {
 				if (_types.indexOf(types[i]) == -1) {
@@ -85,7 +85,7 @@ Zotero.Notifier = new function () {
 				tries = 10;
 			}
 			
-			var hash = (id ? id + '_' : '') + Zotero.randomString(len);
+			var hash = (id ? id + '_' : '') + Trellis.randomString(len);
 			tries--;
 		}
 		while (_observers[hash]);
@@ -95,7 +95,7 @@ Zotero.Notifier = new function () {
 		if (priority) {
 			msg += " with priority " + priority;
 		}
-		Zotero.debug(msg, 4);
+		Trellis.debug(msg, 4);
 		_observers[hash] = {
 			ref: ref,
 			types: types,
@@ -105,7 +105,7 @@ Zotero.Notifier = new function () {
 	};
 	
 	this.unregisterObserver = function (id) {
-		Zotero.debug("Unregistering notifier observer in notifier with id '" + id + "'", 4);
+		Trellis.debug("Unregistering notifier observer in notifier with id '" + id + "'", 4);
 		delete _observers[id];
 	};
 	
@@ -138,26 +138,26 @@ Zotero.Notifier = new function () {
 			throw new Error("Invalid type '" + type + "'");
 		}
 		
-		ids = Zotero.flattenArguments(ids);
+		ids = Trellis.flattenArguments(ids);
 		
-		if (Zotero.Debug.enabled) {
+		if (Trellis.Debug.enabled) {
 			_logTrigger(event, type, ids, extraData);
 		}
 		
 		var order = _getObserverOrder(type);
 		for (let id of order) {
-			//Zotero.debug("Calling notify() with " + event + "/" + type
+			//Trellis.debug("Calling notify() with " + event + "/" + type
 			//	+ " on observer with id '" + id + "'", 5);
 			
 			if (!_observers[id]) {
-				Zotero.debug("Observer no longer exists");
+				Trellis.debug("Observer no longer exists");
 				continue;
 			}
 			
 			let ref = _observers[id].ref;
 			
-			if (Zotero.Debug.enabled && Zotero.Utilities.Internal.isObjectLeakingWindow(ref)) {
-				Zotero.warn(`Notifier observer with id '${id}' belongs to leaked window`);
+			if (Trellis.Debug.enabled && Trellis.Utilities.Internal.isObjectLeakingWindow(ref)) {
+				Trellis.warn(`Notifier observer with id '${id}' belongs to leaked window`);
 			}
 			
 			// Catch exceptions so all observers get notified even if
@@ -167,11 +167,11 @@ Zotero.Notifier = new function () {
 				await Promise.resolve(ref.notify(event, type, ids, extraData));
 				t = new Date - t;
 				if (t > 5) {
-					//Zotero.debug(id + " observer finished in " + t + " ms", 5);
+					//Trellis.debug(id + " observer finished in " + t + " ms", 5);
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		
@@ -191,9 +191,9 @@ Zotero.Notifier = new function () {
 			throw new Error("Invalid type '" + type + "'");
 		}
 		
-		ids = Zotero.flattenArguments(ids);
+		ids = Trellis.flattenArguments(ids);
 		
-		if (Zotero.Debug.enabled) {
+		if (Trellis.Debug.enabled) {
 			_logTrigger(event, type, ids, extraData, true, queue ? queue.id : null);
 		}
 		
@@ -232,7 +232,7 @@ Zotero.Notifier = new function () {
 		// Merge extraData keys
 		if (extraData) {
 			// Set event-level options as top-level properties in extraData
-			for (let option of Zotero.Notifier.EVENT_LEVEL_OPTIONS) {
+			for (let option of Trellis.Notifier.EVENT_LEVEL_OPTIONS) {
 				if (extraData[option] !== undefined) {
 					queue[type][event].data[option] = extraData[option];
 					delete extraData[option];
@@ -258,7 +258,7 @@ Zotero.Notifier = new function () {
 	
 	
 	function _logTrigger(event, type, ids, extraData, queueing, queueID) {
-		Zotero.debug("Notifier.trigger("
+		Trellis.debug("Notifier.trigger("
 			+ "'" + event + "', "
 			+ "'" + type + "', "
 			+ "[" + ids.join() + "]"
@@ -327,7 +327,7 @@ Zotero.Notifier = new function () {
 	/**
 	 * Send notifications for ids in the event queue
 	 *
-	 * @param {Zotero.Notifier.Queue|Zotero.Notifier.Queue[]} [queues] - One or more queues to use
+	 * @param {Trellis.Notifier.Queue|Trellis.Notifier.Queue[]} [queues] - One or more queues to use
 	 *     instead of the internal queue
 	 * @param {String} [transactionID]
 	 */
@@ -406,10 +406,10 @@ Zotero.Notifier = new function () {
 					
 					// Don't send modify on nonexistent items or tags
 					if (event == 'modify') {
-						if (type == 'item' && !((await Zotero.Items.getAsync(id)))) {
+						if (type == 'item' && !((await Trellis.Items.getAsync(id)))) {
 							continue;
 						}
-						else if (type == 'tag' && !((await Zotero.Tags.getAsync(id)))) {
+						else if (type == 'tag' && !((await Trellis.Tags.getAsync(id)))) {
 							continue;
 						}
 					}
@@ -431,11 +431,11 @@ Zotero.Notifier = new function () {
 		
 		if (totals) {
 			if (queues) {
-				Zotero.debug("Committing notifier event queues" + totals
+				Trellis.debug("Committing notifier event queues" + totals
 					+ " [queues: " + queues.map(q => q.id).join(", ") + "]");
 			}
 			else {
-				Zotero.debug("Committing notifier event queue" + totals);
+				Trellis.debug("Committing notifier event queue" + totals);
 			}
 			
 			for (let type in runQueue) {
@@ -462,16 +462,16 @@ Zotero.Notifier = new function () {
 		if (transactionID != _transactionID) {
 			return;
 		}
-		//Zotero.debug("Resetting notifier event queue");
+		//Trellis.debug("Resetting notifier event queue");
 		_queue = {};
 		_transactionID = false;
 	};
 };
 
 
-Zotero.Notifier.Queue = function (options = {}) {
-	this.id = Zotero.Utilities.randomString();
-	Zotero.debug("Creating notifier queue " + this.id);
+Trellis.Notifier.Queue = function (options = {}) {
+	this.id = Trellis.Utilities.randomString();
+	Trellis.debug("Creating notifier queue " + this.id);
 	this._queue = {};
 	this.size = 0;
 	this.options = options;

@@ -4,42 +4,42 @@
 	
 	Copyright © 2009 Center for History and New Media
 	George Mason University, Fairfax, Virginia, USA
-	http://zotero.org
+	http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 
 <window
-	id="zotero-select-items-dialog"
-	windowtype="zotero:item-selector"
+	id="trellis-select-items-dialog"
+	windowtype="trellis:item-selector"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	onload="doLoad();"
 	onunload="doUnload();"
 	persist="screenX screenY width height"
-	class="zotero-dialog"
+	class="trellis-dialog"
 	data-l10n-id="select-items-window"
 	drawintitlebar-platforms="mac,win"
 >
@@ -51,29 +51,29 @@
 	data-l10n-attrs="buttonlabelaccept"
 >
 <script>
-	Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
 	// Custom elements
-	Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
-	Services.scriptloader.loadSubScript("chrome://zotero/content/selectItemsDialog.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/selectItemsDialog.js", this);
 
-	Services.scriptloader.loadSubScript("chrome://zotero/content/titlebar.js", this);
+	Services.scriptloader.loadSubScript("chrome://trellis/content/titlebar.js", this);
 </script>
 
 <linkset>
-	<html:link rel="localization" href="zotero.ftl" />
+	<html:link rel="localization" href="trellis.ftl" />
 </linkset>
 
-<vbox id="zotero-select-items-container" flex="1">
+<vbox id="trellis-select-items-container" flex="1">
 	<hbox id="collections-items-container">
-		<vbox id="zotero-collections-tree-container" class="virtualized-table-container">
-			<html:div id="zotero-collections-tree"/>
+		<vbox id="trellis-collections-tree-container" class="virtualized-table-container">
+			<html:div id="trellis-collections-tree"/>
 		</vbox>
-		<vbox id="zotero-items-tree-container" flex="1">
+		<vbox id="trellis-items-tree-container" flex="1">
 			<hbox id="search-toolbar">
-				<quick-search-textbox id="zotero-tb-search" timeout="250" oncommand="onSearch()" dir="reverse"/>
+				<quick-search-textbox id="trellis-tb-search" timeout="250" oncommand="onSearch()" dir="reverse"/>
 			</hbox>
-			<hbox id="zotero-items-pane-content" class="virtualized-table-container">
-				<html:div id="zotero-items-tree"/>
+			<hbox id="trellis-items-pane-content" class="virtualized-table-container">
+				<html:div id="trellis-items-tree"/>
 			</hbox>
 		</vbox>
 	</hbox>

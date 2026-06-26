@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.DataObjectUtilities = {
+Trellis.DataObjectUtilities = {
 	/**
 	 * Get all DataObject types
 	 *
@@ -41,7 +41,7 @@ Zotero.DataObjectUtilities = {
 	 * @return {String[]} - An array of DataObject types
 	 */
 	getTypesForLibrary: function (libraryID) {
-		switch (Zotero.Libraries.get(libraryID).libraryType) {
+		switch (Trellis.Libraries.get(libraryID).libraryType) {
 		case 'publications':
 			return ['item'];
 		
@@ -70,13 +70,13 @@ Zotero.DataObjectUtilities = {
 	
 	
 	generateKey: function () {
-		return Zotero.Utilities.generateObjectKey();
+		return Trellis.Utilities.generateObjectKey();
 	},
 	
 	
 	"checkKey": function(key) {
 		if (!key && key !== 0) return null;
-		if (!Zotero.Utilities.isValidObjectKey(key)) {
+		if (!Trellis.Utilities.isValidObjectKey(key)) {
 			throw new Error("key is not valid");
 		}
 		return key;
@@ -107,7 +107,7 @@ Zotero.DataObjectUtilities = {
 		
 		var objectTypePlural = this.getObjectTypePlural(objectType);
 		var className = objectTypePlural[0].toUpperCase() + objectTypePlural.substr(1);
-		return Zotero[className]
+		return Trellis[className]
 	},
 	
 	
@@ -232,7 +232,7 @@ Zotero.DataObjectUtilities = {
 	_creatorsChanged: function (data1, data2) {
 		if (!data2 || data1.length != data2.length) return true;
 		for (let i = 0; i < data1.length; i++) {
-			if (!Zotero.Creators.equals(data1[i], data2[i])) {
+			if (!Trellis.Creators.equals(data1[i], data2[i])) {
 				return true;
 			}
 		}
@@ -242,7 +242,7 @@ Zotero.DataObjectUtilities = {
 	_conditionsChanged: function (data1, data2) {
 		if (!data2 || data1.length != data2.length) return true;
 		for (let i = 0; i < data1.length; i++) {
-			if (!Zotero.Searches.conditionEquals(data1[i], data2[i])) {
+			if (!Trellis.Searches.conditionEquals(data1[i], data2[i])) {
 				return true;
 			}
 		}
@@ -255,7 +255,7 @@ Zotero.DataObjectUtilities = {
 		let c2 = data2.concat();
 		c1.sort();
 		c2.sort();
-		return !Zotero.Utilities.arrayEquals(c1, c2);
+		return !Trellis.Utilities.arrayEquals(c1, c2);
 	},
 	
 	_tagsChanged: function (data1, data2) {
@@ -267,7 +267,7 @@ Zotero.DataObjectUtilities = {
 		let sorted1 = [...data1].sort(cmp);
 		let sorted2 = [...data2].sort(cmp);
 		for (let i = 0; i < sorted1.length; i++) {
-			if (!Zotero.Tags.equals(sorted1[i], sorted2[i])) {
+			if (!Trellis.Tags.equals(sorted1[i], sorted2[i])) {
 				return true;
 			}
 		}
@@ -280,14 +280,14 @@ Zotero.DataObjectUtilities = {
 		pred1.sort();
 		var pred2 = Object.keys(data2);
 		pred2.sort();
-		if (!Zotero.Utilities.arrayEquals(pred1, pred2)) return true;
+		if (!Trellis.Utilities.arrayEquals(pred1, pred2)) return true;
 		for (let pred of pred1) {
 			let vals1 = typeof data1[pred] == 'string' ? [data1[pred]] : data1[pred];
 			let vals2 = (!data2[pred] || data2[pred] === '')
 				? []
 				: typeof data2[pred] == 'string' ? [data2[pred]] : data2[pred];
 			
-			if (!Zotero.Utilities.arrayEquals(vals1, vals2)) {
+			if (!Trellis.Utilities.arrayEquals(vals1, vals2)) {
 				return true;
 			}
 		}
@@ -421,7 +421,7 @@ Zotero.DataObjectUtilities = {
 	
 	_collectionsDiff: function (data1, data2 = []) {
 		var changeset = [];
-		var removed = Zotero.Utilities.arrayDiff(data1, data2);
+		var removed = Trellis.Utilities.arrayDiff(data1, data2);
 		for (let i = 0; i < removed.length; i++) {
 			changeset.push({
 				field: "collections",
@@ -429,7 +429,7 @@ Zotero.DataObjectUtilities = {
 				value: removed[i]
 			});
 		}
-		let added = Zotero.Utilities.arrayDiff(data2, data1);
+		let added = Trellis.Utilities.arrayDiff(data2, data1);
 		for (let i = 0; i < added.length; i++) {
 			changeset.push({
 				field: "collections",
@@ -493,9 +493,9 @@ Zotero.DataObjectUtilities = {
 			b = b.replace(new RegExp(mod[0], 'g'), mod[1]);
 		}
 		if (a != b) {
-			Zotero.debug("HTML diff:");
-			Zotero.debug(a);
-			Zotero.debug(b);
+			Trellis.debug("HTML diff:");
+			Trellis.debug(a);
+			Trellis.debug(b);
 			return {
 				field,
 				op: "modify",
@@ -507,10 +507,10 @@ Zotero.DataObjectUtilities = {
 	},
 	
 	_tagsDiff: function (data1, data2 = []) {
-		var equals = Zotero.Tags.equals.bind(Zotero.Tags);
+		var equals = Trellis.Tags.equals.bind(Trellis.Tags);
 		
-		var cleanedData1 = data1.map(x => Zotero.Tags.cleanData(x));
-		var cleanedData2 = data2.map(x => Zotero.Tags.cleanData(x));
+		var cleanedData1 = data1.map(x => Trellis.Tags.cleanData(x));
+		var cleanedData2 = data2.map(x => Trellis.Tags.cleanData(x));
 		
 		var changeset = [];
 		outer:
@@ -550,7 +550,7 @@ Zotero.DataObjectUtilities = {
 				? []
 				: typeof data2[pred] == 'string' ? [data2[pred]] : data2[pred];
 			
-			var removed = Zotero.Utilities.arrayDiff(vals1, vals2);
+			var removed = Trellis.Utilities.arrayDiff(vals1, vals2);
 			for (let i = 0; i < removed.length; i++) {
 				changeset.push({
 					field: "relations",
@@ -561,7 +561,7 @@ Zotero.DataObjectUtilities = {
 					}
 				});
 			}
-			let added = Zotero.Utilities.arrayDiff(vals2, vals1);
+			let added = Trellis.Utilities.arrayDiff(vals2, vals1);
 			for (let i = 0; i < added.length; i++) {
 				changeset.push({
 					field: "relations",
@@ -594,7 +594,7 @@ Zotero.DataObjectUtilities = {
 	
 	
 	/**
-	 * Apply a set of changes generated by Zotero.DataObjectUtilities.diff() to an API JSON object
+	 * Apply a set of changes generated by Trellis.DataObjectUtilities.diff() to an API JSON object
 	 *
 	 * @param {Object} json - API JSON object to modify
 	 * @param {Object[]} changeset - Change instructions, as generated by .diff()
@@ -623,7 +623,7 @@ Zotero.DataObjectUtilities = {
 					case 'tags':
 						let found = false;
 						for (let i = 0; i < json[c.field].length; i++) {
-							if (Zotero.Tags.equals(json[c.field][i], c.value)) {
+							if (Trellis.Tags.equals(json[c.field][i], c.value)) {
 								found = true;
 								break;
 							}
@@ -653,7 +653,7 @@ Zotero.DataObjectUtilities = {
 					
 					case 'tags':
 						for (let i = 0; i < json[c.field].length; i++) {
-							if (Zotero.Tags.equals(json[c.field][i], c.value)) {
+							if (Trellis.Tags.equals(json[c.field][i], c.value)) {
 								json[c.field].splice(i, 1);
 								break;
 							}
@@ -727,9 +727,9 @@ Zotero.DataObjectUtilities = {
 	},
 
 	/**
-	 * Methods shared by Zotero.Item, Zotero.Search and Zotero.Collection to allow
+	 * Methods shared by Trellis.Item, Trellis.Search and Trellis.Collection to allow
 	 * collections and saved searches to "pretend" to be items in itemTree of the trash.
-	 * Most of these are overriden by Zotero.Item.
+	 * Most of these are overriden by Trellis.Item.
 	 */
 	itemTreeMockProperties: {
 		isAnnotation: () => false,

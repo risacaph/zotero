@@ -1,5 +1,5 @@
 describe("Import/Export", function () {
-	describe("Zotero RDF", function () {
+	describe("Trellis RDF", function () {
 		var namespaces = {
 			rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
 			dc: 'http://purl.org/dc/elements/1.1/'
@@ -7,11 +7,11 @@ describe("Import/Export", function () {
 		
 		it("should export related items", async function () {
 			// Create related items
-			var item1 = new Zotero.Item('book');
+			var item1 = new Trellis.Item('book');
 			item1.setField('title', 'A');
 			item1.setField('ISBN', 1421402831);
 			await item1.saveTx();
-			var item2 = new Zotero.Item('webpage');
+			var item2 = new Trellis.Item('webpage');
 			item2.setField('title', 'B');
 			item2.setField('url', 'http://example.com');
 			await item2.saveTx();
@@ -29,41 +29,41 @@ describe("Import/Export", function () {
 			
 			// Export
 			var file = OS.Path.join(await getTempDirectory(), 'export.rdf');
-			var translator = Zotero.Translators.get('14763d24-8ba0-45df-8f52-b8d1108e7ac9');
+			var translator = Trellis.Translators.get('14763d24-8ba0-45df-8f52-b8d1108e7ac9');
 			var displayOptions = {
 				exportNotes: true
 			};
-			var translation = new Zotero.Translate.Export();
+			var translation = new Trellis.Translate.Export();
 			translation.setItems([item1, item2]);
-			translation.setLocation(Zotero.File.pathToFile(file));
+			translation.setLocation(Trellis.File.pathToFile(file));
 			translation.setTranslator(translator);
 			translation.setDisplayOptions(displayOptions);
 			await translation.translate();
 			
 			// Parse exported file and look for dc:relation elements
 			var dp = new DOMParser();
-			var doc = dp.parseFromString(Zotero.File.getContents(file), 'text/xml');
+			var doc = dp.parseFromString(Trellis.File.getContents(file), 'text/xml');
 			var item1Node = doc.querySelector(`Book`);
 			var item2Node = doc.querySelector(`Document`);
 			var note1Node = doc.querySelector(`Memo[*|about="#item_${note1.id}"]`);
 			var note2Node = doc.querySelector(`Memo[*|about="#item_${note2.id}"]`);
 			assert.equal(
-				Zotero.Utilities.xpath(item1Node, './dc:relation', namespaces)[0]
+				Trellis.Utilities.xpath(item1Node, './dc:relation', namespaces)[0]
 					.getAttributeNS(namespaces.rdf, 'resource'),
 				'http://example.com'
 			);
 			assert.equal(
-				Zotero.Utilities.xpath(item2Node, './dc:relation', namespaces)[0]
+				Trellis.Utilities.xpath(item2Node, './dc:relation', namespaces)[0]
 					.getAttributeNS(namespaces.rdf, 'resource'),
 				'urn:isbn:1-4214-0283-1'
 			);
 			assert.equal(
-				Zotero.Utilities.xpath(note1Node, './dc:relation', namespaces)[0]
+				Trellis.Utilities.xpath(note1Node, './dc:relation', namespaces)[0]
 					.getAttributeNS(namespaces.rdf, 'resource'),
 				'#item_' + note2.id
 			);
 			assert.equal(
-				Zotero.Utilities.xpath(note2Node, './dc:relation', namespaces)[0]
+				Trellis.Utilities.xpath(note2Node, './dc:relation', namespaces)[0]
 					.getAttributeNS(namespaces.rdf, 'resource'),
 				'#item_' + note1.id
 			);
@@ -71,10 +71,10 @@ describe("Import/Export", function () {
 		
 		// Not currently supported
 		it.skip("should import related items", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
-			var file = OS.Path.join(getTestDataDirectory().path, 'zotero_rdf.xml');
-			translation = new Zotero.Translate.Import();
-			translation.setLocation(Zotero.File.pathToFile(file));
+			var libraryID = Trellis.Libraries.userLibraryID;
+			var file = OS.Path.join(getTestDataDirectory().path, 'trellis_rdf.xml');
+			translation = new Trellis.Translate.Import();
+			translation.setLocation(Trellis.File.pathToFile(file));
 			let translators = await translation.getTranslators();
 			translation.setTranslator(translators[0]);
 			var newItems = await translation.translate({ libraryID });
@@ -87,8 +87,8 @@ describe("Import/Export", function () {
 			
 			var notes = newItems[0].getNotes();
 			assert.lengthOf(notes, 2);
-			var newNote1 = Zotero.Items.get(notes[0]);
-			var newNote2 = Zotero.Items.get(notes[1]);
+			var newNote1 = Trellis.Items.get(notes[0]);
+			var newNote2 = Trellis.Items.get(notes[1]);
 			assert.lengthOf(newNote1.relatedItems, 1);
 			assert.lengthOf(newNote2.relatedItems, 1);
 			assert.sameMembers(newNote1.relatedItems, [newNote2]);
@@ -98,7 +98,7 @@ describe("Import/Export", function () {
 		describe("standalone attachments", function () {
 			var rdf = `<rdf:RDF
  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
- xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:z="http://www.trellis.org/namespaces/export#"
  xmlns:dc="http://purl.org/dc/elements/1.1/"
  xmlns:dcterms="http://purl.org/dc/terms/"
  xmlns:link="http://purl.org/rss/1.0/modules/link/"
@@ -129,7 +129,7 @@ describe("Import/Export", function () {
 			async function doImport(libraryID) {
 				var tempDir = await getTempDirectory();
 				var file = OS.Path.join(tempDir, 'export.rdf');
-				await Zotero.File.putContentsAsync(file, rdf);
+				await Trellis.File.putContentsAsync(file, rdf);
 				var folder1 = OS.Path.join(tempDir, 'files', '1234');
 				var folder2 = OS.Path.join(tempDir, 'files', '2345');
 				await OS.File.makeDir(folder1, { from: tempDir });
@@ -143,8 +143,8 @@ describe("Import/Export", function () {
 					OS.Path.join(folder2, 'test2.pdf')
 				);
 				
-				var translation = new Zotero.Translate.Import();
-				translation.setLocation(Zotero.File.pathToFile(file));
+				var translation = new Trellis.Translate.Import();
+				translation.setLocation(Trellis.File.pathToFile(file));
 				let translators = await translation.getTranslators();
 				translation.setTranslator(translators[0]);
 				var newItems = await translation.translate({ libraryID });
@@ -161,7 +161,7 @@ describe("Import/Export", function () {
 			}
 			
 			it("should import into My Library", async function () {
-				var libraryID = Zotero.Libraries.userLibraryID;
+				var libraryID = Trellis.Libraries.userLibraryID;
 				var [newItem1, newItem2] = await doImport(libraryID);
 				assert.equal(newItem1.libraryID, libraryID);
 				assert.equal(newItem2.libraryID, libraryID);
@@ -183,30 +183,30 @@ describe("Import/Export", function () {
 		
 		it("should export item", async function () {
 			var title = "Title";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('title', title);
 			item.setField('ISBN', 1421402831);
 			await item.saveTx();
 			
 			// Export
 			var file = OS.Path.join(await getTempDirectory(), 'export.rdf');
-			var translator = Zotero.Translators.get('0e2235e7-babf-413c-9acf-f27cce5f059c');
+			var translator = Trellis.Translators.get('0e2235e7-babf-413c-9acf-f27cce5f059c');
 			var displayOptions = {
 				exportNotes: true
 			};
-			var translation = new Zotero.Translate.Export();
+			var translation = new Trellis.Translate.Export();
 			translation.setItems([item]);
-			translation.setLocation(Zotero.File.pathToFile(file));
+			translation.setLocation(Trellis.File.pathToFile(file));
 			translation.setTranslator(translator);
 			translation.setDisplayOptions(displayOptions);
 			await translation.translate();
 			
 			// Parse exported file and look for title
 			var dp = new DOMParser();
-			var doc = dp.parseFromString(Zotero.File.getContents(file), 'text/xml');
+			var doc = dp.parseFromString(Trellis.File.getContents(file), 'text/xml');
 			var modsNode = doc.querySelector('mods');
 			assert.equal(
-				Zotero.Utilities.xpath(modsNode, '//mods:title', namespaces)[0].textContent,
+				Trellis.Utilities.xpath(modsNode, '//mods:title', namespaces)[0].textContent,
 				title
 			);
 		});

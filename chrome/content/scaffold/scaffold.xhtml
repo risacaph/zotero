@@ -4,38 +4,38 @@
 	
 	Copyright © 2011 Center for History and New Media
 					 George Mason University, Fairfax, Virginia, USA
-					 http://zotero.org
+					 http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform-version/content/style.css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
-<?xml-stylesheet href="chrome://zotero/skin/scaffold.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform-version/content/style.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/scaffold.css" type="text/css"?>
 
 
 <!DOCTYPE window [
-	<!ENTITY % standaloneDTD SYSTEM "chrome://zotero/locale/standalone.dtd" > %standaloneDTD;
-	<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://zotero/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
+	<!ENTITY % standaloneDTD SYSTEM "chrome://trellis/locale/standalone.dtd" > %standaloneDTD;
+	<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://trellis/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
 	<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd" > %brandDTD;
-	<!ENTITY % zoteroDTD SYSTEM "chrome://zotero/locale/zotero.dtd"> %zoteroDTD;
+	<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
 	<!ENTITY % scaffoldDTD SYSTEM "chrome://scaffold/locale/scaffold.dtd"> %scaffoldDTD;
 ]>
 
@@ -43,7 +43,7 @@
 	title="Scaffold"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	windowtype="zotero:scaffold"
+	windowtype="trellis:scaffold"
 	style="display: flex;"
 	drawintitlebar-platforms="win, linux">
 
@@ -51,32 +51,32 @@
 		<html:link rel="localization" href="browser/menubar.ftl"/>
 		<html:link rel="localization" href="browser/browserSets.ftl"/>
 		<html:link rel="localization" href="toolkit/global/textActions.ftl"/>
-		<html:link rel="localization" href="zotero.ftl" />
+		<html:link rel="localization" href="trellis.ftl" />
 		<html:link rel="localization" href="scaffold.ftl" />
 	</linkset>
 
 	<script>
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
 		
-		Services.scriptloader.loadSubScript("chrome://zotero/content/titlebar.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/platformKeys.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/editMenuOverlay.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/titlebar.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/platformKeys.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/editMenuOverlay.js", this);
 		Services.scriptloader.loadSubScript("chrome://scaffold/content/translators.js", this);
 		Services.scriptloader.loadSubScript("chrome://scaffold/content/scaffold.js", this);
 		
 		// Mozilla scripts
 		Services.scriptloader.loadSubScript("chrome://global/content/globalOverlay.js", this);
 		Services.scriptloader.loadSubScript("chrome://global/content/contentAreaUtils.js", this);
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			Services.scriptloader.loadSubScript("chrome://global/content/macWindowMenu.js", this);
 		}
 
 		// Custom elements
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 		Services.scriptloader.loadSubScript("chrome://scaffold/content/scaffoldItemPreview.js", this);
 		Services.scriptloader.loadSubScript("chrome://scaffold/content/scaffoldItemPreviews.js", this);
 
-		Services.scriptloader.loadSubScript("chrome://zotero/content/menuAccessKey.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/menuAccessKey.js", this);
 	</script>
 
 	<commandset id="mainCommandSet">
@@ -92,7 +92,7 @@
 		<command id="cmd_run_translator_or_tests" oncommand="Scaffold.runTranslatorOrTests()"/>
 		<command id="cmd_run_detect" oncommand="Scaffold.run('detect')"/>
 		<command id="cmd_save" oncommand="Scaffold.save()"/>
-		<command id="cmd_save_to_zotero" oncommand="Scaffold.save(true)"/>
+		<command id="cmd_save_to_trellis" oncommand="Scaffold.save(true)"/>
 
 		<command id="cmd_increase_font_size" oncommand="Scaffold.increaseFontSize()"/>
 		<command id="cmd_decrease_font_size" oncommand="Scaffold.decreaseFontSize()"/>
@@ -107,7 +107,7 @@
 		<key id="run-do-web" modifiers="accel" key="R" command="cmd_run_translator_or_tests"/>
 		<key id="detect-web" modifiers="accel" key="T" command="cmd_run_detect"/>
 		<key id="save" modifiers="accel" key="S" command="cmd_save"/>
-		<key id="save-to-zotero" modifiers="accel alt" key="S" command="cmd_save"/>
+		<key id="save-to-trellis" modifiers="accel alt" key="S" command="cmd_save"/>
 		<key id="increase-font-size" modifiers="accel" key="+" command="cmd_increase_font_size"/>
 		<key id="increase-font-size" modifiers="accel" key="=" command="cmd_increase_font_size"/>
 		<key id="decrease-font-size" modifiers="accel" key="-" command="cmd_decrease_font_size"/>
@@ -161,7 +161,7 @@
 
 	<vbox id="titlebar">
 		<hbox class="titlebar-icon-container">
-			<image class="titlebar-icon" src="chrome://zotero/skin/z.svg"></image>
+			<image class="titlebar-icon" src="chrome://trellis/skin/z.svg"></image>
 		</hbox>
 		<!-- Menu -->
 		<!-- TEMP: Should be <toolbar>, but only HTML -moz-window-dragging: drag elements have rclick menu on Windows -->
@@ -178,7 +178,7 @@
 							<menuitem id="mb-file-setTranslatorsDirectory" label="&scaffold.menu.setTranslatorsDirectory;" oncommand="Scaffold.promptForTranslatorsDirectory()"/>
 							<menuseparator/>
 							<menuitem id="mb-file-save" label="&scaffold.toolbar.save.label;" key="save" command="cmd_save"/>
-							<menuitem id="mb-file-saveToZotero" label="&scaffold.toolbar.saveToZotero.label;" key="save-to-zotero" command="cmd_save_to_zotero"/>
+							<menuitem id="mb-file-saveToTrellis" label="&scaffold.toolbar.saveToTrellis.label;" key="save-to-trellis" command="cmd_save_to_trellis"/>
 							<menuseparator/>
 							<menuitem id="mb-file-runDetect" label="&scaffold.menu.runDetect;" key="detect-web" command="cmd_run_detect"/>
 							<menuitem id="mb-file-runDo" label="&scaffold.menu.runDo;" key="run-do-web" command="cmd_run_translator_or_tests"/>
@@ -221,7 +221,7 @@
 							#ifndef XP_MACOSX
 							<menuseparator/>
 							<menuitem id="menu_preferences"
-								oncommand="Zotero.Utilities.Internal.openPreferences()" data-l10n-id="menu-preferences"/>
+								oncommand="Trellis.Utilities.Internal.openPreferences()" data-l10n-id="menu-preferences"/>
 							#endif
 							#endif
 							-->
@@ -232,10 +232,10 @@
 						<menupopup id="mb-view-popup">
 							<menu id="mb-font-size-fields" label="&fontSize.label;">
 								<menupopup id="mb-help-fields-popup">
-									<menuitem id="mb-view-biggerFont" label="&zotero.general.bigger;" key="increase-font-size" command="cmd_increase_font_size"/>
-									<menuitem id="mb-view-smallerFont" label="&zotero.general.smaller;" key="decrease-font-size" command="cmd_decrease_font_size"/>
+									<menuitem id="mb-view-biggerFont" label="&trellis.general.bigger;" key="increase-font-size" command="cmd_increase_font_size"/>
+									<menuitem id="mb-view-smallerFont" label="&trellis.general.smaller;" key="decrease-font-size" command="cmd_decrease_font_size"/>
 									<menuseparator/>
-									<menuitem id="mb-view-restoreFont" label="&zotero.general.reset;" key="restore-font-size" command="restore-font-size"/>
+									<menuitem id="mb-view-restoreFont" label="&trellis.general.reset;" key="restore-font-size" command="restore-font-size"/>
 								</menupopup>
 							</menu>
 						</menupopup>
@@ -297,7 +297,7 @@
 						<menuitem id="menu_preferences"
 								label="&preferencesCmdMac.label;"
 								key="key_preferencesCmdMac"
-								oncommand="Zotero.Utilities.Internal.openPreferences()"/>
+								oncommand="Trellis.Utilities.Internal.openPreferences()"/>
 						<menuitem id="menu_mac_services"
 								label="&servicesMenuMac.label;"/>
 						<menuitem id="menu_mac_hide_app"
@@ -381,20 +381,20 @@
 	</vbox>
 
 	<vbox flex="1" id="scaffold-pane">
-		<toolbar id="zotero-toolbar" class="toolbar toolbar-primary">
+		<toolbar id="trellis-toolbar" class="toolbar toolbar-primary">
 			<hbox id="scaffold-toolbar" align="center">
-				<toolbarbutton id="tb-load" tooltiptext="&scaffold.toolbar.load.label;" command="cmd_load" class="zotero-tb-button" />
-				<toolbarbutton id="tb-save" tooltiptext="&scaffold.toolbar.save.label;" oncommand="Scaffold.save()" class="zotero-tb-button" />
-				<toolbarbutton id="tb-saveToZotero" tooltiptext="&scaffold.toolbar.saveToZotero.label;" oncommand="Scaffold.save(true)" class="zotero-tb-button" />
+				<toolbarbutton id="tb-load" tooltiptext="&scaffold.toolbar.load.label;" command="cmd_load" class="trellis-tb-button" />
+				<toolbarbutton id="tb-save" tooltiptext="&scaffold.toolbar.save.label;" oncommand="Scaffold.save()" class="trellis-tb-button" />
+				<toolbarbutton id="tb-saveToTrellis" tooltiptext="&scaffold.toolbar.saveToTrellis.label;" oncommand="Scaffold.save(true)" class="trellis-tb-button" />
 				<toolbarseparator/>
-				<toolbarbutton id="tb-detect" tooltiptext="&scaffold.toolbar.detect.label;" oncommand="Scaffold.run('detect')" class="zotero-tb-button" />
-				<toolbarbutton id="tb-do" tooltiptext="&scaffold.toolbar.do.label;" oncommand="Scaffold.run('do')" class="zotero-tb-button" />
+				<toolbarbutton id="tb-detect" tooltiptext="&scaffold.toolbar.detect.label;" oncommand="Scaffold.run('detect')" class="trellis-tb-button" />
+				<toolbarbutton id="tb-do" tooltiptext="&scaffold.toolbar.do.label;" oncommand="Scaffold.run('do')" class="trellis-tb-button" />
 				<toolbarseparator/>
 				<toolbarbutton
 						id="tb-template"
 						observes="code-tab-only"
 						tooltiptext="&scaffold.toolbar.template.label;"
-						class="zotero-tb-button"
+						class="trellis-tb-button"
 						type="menu"
 						wantdropmarker="true">
 					<menupopup>
@@ -514,7 +514,7 @@
 								<label control="browser-url" value="&scaffold.tabUrl.label;"/>
 								<html:input id="browser-url" style="flex: 1;"/>
 								<button id="load-url-button" label="→" tooltiptext="Load URL" oncommand="Scaffold.loadURLInBrowser()"/>
-								<image id="browser-loading" class="zotero-spinner-16" />
+								<image id="browser-loading" class="trellis-spinner-16" />
 								<button id="create-test-button" observes="validate-tests" label="&scaffold.testing.create.web;" tooltiptext="Create a new test from the current page" oncommand="Scaffold.saveTestFromCurrent('web')"/>
 							</hbox>
 							

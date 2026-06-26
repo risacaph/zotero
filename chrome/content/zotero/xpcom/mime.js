@@ -3,27 +3,27 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.MIME = new function () {
+Trellis.MIME = new function () {
 	this.isTextType = isTextType;
 	this.getPrimaryExtension = getPrimaryExtension;
 	this.sniffForBinary = sniffForBinary;
@@ -290,7 +290,7 @@ Zotero.MIME = new function () {
 	this.getMIMETypeFromData = function (str, ext){
 		var mimeType = this.sniffForMIMEType(str);
 		if (mimeType){
-			Zotero.debug('Detected MIME type ' + mimeType);
+			Trellis.debug('Detected MIME type ' + mimeType);
 			return mimeType;
 		}
 		
@@ -302,7 +302,7 @@ Zotero.MIME = new function () {
 		}
 		
 		var mimeType = sniffForBinary(str);
-		Zotero.debug('Cannot determine MIME type from magic number or extension -- settling for ' + mimeType);
+		Trellis.debug('Cannot determine MIME type from magic number or extension -- settling for ' + mimeType);
 		return mimeType;
 	}
 	
@@ -321,7 +321,7 @@ Zotero.MIME = new function () {
 			catch (e) {}
 		}
 		
-		Zotero.debug("Got MIME type " + type + " from extension '" + ext + "'");
+		Trellis.debug("Got MIME type " + type + " from extension '" + ext + "'");
 		return type;
 	}
 	
@@ -331,8 +331,8 @@ Zotero.MIME = new function () {
 	 * techniques
 	 */
 	this.getMIMETypeFromFile = async function (file) {
-		var str = await Zotero.File.getSample(file);
-		var ext = Zotero.File.getExtension(file);
+		var str = await Trellis.File.getSample(file);
+		var ext = Trellis.File.getExtension(file);
 		
 		return this.getMIMETypeFromData(str, ext);
 	};
@@ -343,7 +343,7 @@ Zotero.MIME = new function () {
 	 * @return {Promise}
 	 */
 	this.getMIMETypeFromURL = async function (url) {
-		var xmlhttp = await Zotero.HTTP.request(
+		var xmlhttp = await Trellis.HTTP.request(
 			"HEAD",
 			url,
 			{
@@ -352,8 +352,8 @@ Zotero.MIME = new function () {
 		);
 		
 		if (xmlhttp.status != 200 && xmlhttp.status != 204) {
-			Zotero.debug("Attachment HEAD request returned with status code "
-				+ xmlhttp.status + " in Zotero.MIME.getMIMETypeFromURL()", 2);
+			Trellis.debug("Attachment HEAD request returned with status code "
+				+ xmlhttp.status + " in Trellis.MIME.getMIMETypeFromURL()", 2);
 			var mimeType = '';
 		}
 		else {
@@ -364,7 +364,7 @@ Zotero.MIME = new function () {
 		
 		// Override MIME type to application/pdf if extension is .pdf --
 		// workaround for sites that respond to the HEAD request with an
-		// invalid MIME type (https://www.zotero.org/trac/ticket/460)
+		// invalid MIME type (https://www.trellis.org/trac/ticket/460)
 		//
 		// Downloaded file is inspected in attachment code and deleted if actually HTML
 		if (nsIURL.fileName.match(/pdf$/) || url.match(/pdf$/)) {
@@ -372,7 +372,7 @@ Zotero.MIME = new function () {
 		}
 		
 		var ext = nsIURL.fileExtension;
-		var hasNativeHandler = Zotero.MIME.hasNativeHandler(mimeType, ext);
+		var hasNativeHandler = Trellis.MIME.hasNativeHandler(mimeType, ext);
 		
 		return [mimeType, hasNativeHandler];
 	}
@@ -393,7 +393,7 @@ Zotero.MIME = new function () {
 	 */
 	function hasNativeHandler(mimeType, ext) {
 		if (_nativeMIMETypes[mimeType]){
-			Zotero.debug('MIME type ' + mimeType + ' can be handled natively');
+			Trellis.debug('MIME type ' + mimeType + ' can be handled natively');
 			return true;
 		}
 		return false;

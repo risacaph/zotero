@@ -5,28 +5,28 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
 
-    This file is part of Zotero.
+    This file is part of Trellis.
 
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
     ***** END LICENSE BLOCK *****
 */
 
-const SDT_CACHE_FILE_NAME = '.zotero-sdt-cache';
-const DOCUMENT_WORKER_METADATA_URL = 'resource://zotero/document-worker/metadata.json';
+const SDT_CACHE_FILE_NAME = '.trellis-sdt-cache';
+const DOCUMENT_WORKER_METADATA_URL = 'resource://trellis/document-worker/metadata.json';
 
-Zotero.SDT = new function () {
+Trellis.SDT = new function () {
 	// Per-item in-flight generation, so that concurrent getPack() calls share
 	// one extraction and two generations can never race on the same cache file
 	let _generating = new Map();
@@ -41,17 +41,17 @@ Zotero.SDT = new function () {
 
 	// Load the bundled SDT module lazily, so that a missing or broken
 	// resource degrades to an 'unavailable' result instead of breaking
-	// Zotero startup. Load failures aren't cached, so a load is retried
+	// Trellis startup. Load failures aren't cached, so a load is retried
 	// on the next call (require() itself caches successful loads)
 	function _getModule() {
 		if (!_module) {
 			try {
-				_module = require('resource://zotero/document-worker/structured-document-text.js');
+				_module = require('resource://trellis/document-worker/structured-document-text.js');
 			}
 			catch (e) {
 				if (!_moduleErrorLogged) {
 					_moduleErrorLogged = true;
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 				return null;
 			}
@@ -88,14 +88,14 @@ Zotero.SDT = new function () {
 			let cache = await _readValidCache(context, { allowStaleProcessorVersion: true });
 			if (cache.ok) {
 				if (cache.staleProcessorVersion) {
-					_generate(context, {}).catch(e => Zotero.logError(e));
+					_generate(context, {}).catch(e => Trellis.logError(e));
 				}
 				return _makeResult(cache);
 			}
 			return await _generate(context, options);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return { ok: false, reason: 'failed' };
 		}
 	};
@@ -130,7 +130,7 @@ Zotero.SDT = new function () {
 			return result.ok;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 	};
@@ -234,7 +234,7 @@ Zotero.SDT = new function () {
 				return { ok: false, reason: 'password-required' };
 			}
 			let t = new Date();
-			let result = await Zotero.PDFWorker.getStructuredDocumentText(
+			let result = await Trellis.PDFWorker.getStructuredDocumentText(
 				item.id,
 				!!options.isPriority
 			);
@@ -249,15 +249,15 @@ Zotero.SDT = new function () {
 			let currentHash = await _getSourceHash(item) || sourceHash;
 			let cache = await _validateBytes(bytes, currentHash, processorType);
 			if (!cache.ok) {
-				Zotero.debug(`Generated SDT pack for item ${item.libraryKey} is unusable: ${cache.reason}`);
+				Trellis.debug(`Generated SDT pack for item ${item.libraryKey} is unusable: ${cache.reason}`);
 				return { ok: false, reason: 'failed' };
 			}
-			// Don't use Zotero.Attachments.createDirectoryForItem() here -- it
+			// Don't use Trellis.Attachments.createDirectoryForItem() here -- it
 			// deletes and recreates the directory, which would destroy other
 			// files stored there (e.g., the full-text cache of a linked file)
-			await Zotero.File.createDirectoryIfMissingAsync(PathUtils.parent(cachePath));
+			await Trellis.File.createDirectoryIfMissingAsync(PathUtils.parent(cachePath));
 			await IOUtils.write(cachePath, bytes, { tmpPath: `${cachePath}.tmp` });
-			Zotero.debug(
+			Trellis.debug(
 				`Generated SDT pack for item ${item.libraryKey} in ${new Date() - t} ms `
 				+ `(${bytes.byteLength} bytes)`
 			);
@@ -268,7 +268,7 @@ Zotero.SDT = new function () {
 				_passwordFailures.set(_getItemKey(item), sourceHash);
 				return { ok: false, reason: 'password-required' };
 			}
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return { ok: false, reason: 'failed' };
 		}
 	}
@@ -294,7 +294,7 @@ Zotero.SDT = new function () {
 		}
 		try {
 			let metadata = JSON.parse(
-				await Zotero.File.getContentsFromURLAsync(DOCUMENT_WORKER_METADATA_URL)
+				await Trellis.File.getContentsFromURLAsync(DOCUMENT_WORKER_METADATA_URL)
 			);
 			_validateDocumentWorkerMetadata(metadata);
 			_documentWorkerMetadata = metadata;
@@ -303,7 +303,7 @@ Zotero.SDT = new function () {
 		catch (e) {
 			if (!_documentWorkerMetadataErrorLogged) {
 				_documentWorkerMetadataErrorLogged = true;
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			return null;
 		}
@@ -333,12 +333,12 @@ Zotero.SDT = new function () {
 	}
 
 	function _getCachePath(item) {
-		return PathUtils.join(Zotero.Attachments.getStorageDirectory(item).path, SDT_CACHE_FILE_NAME);
+		return PathUtils.join(Trellis.Attachments.getStorageDirectory(item).path, SDT_CACHE_FILE_NAME);
 	}
 
 	async function _getAttachmentContext(itemID) {
 		// getAsync() returns false, not null, for a nonexistent item
-		let item = await Zotero.Items.getAsync(itemID);
+		let item = await Trellis.Items.getAsync(itemID);
 		if (!item || !item.isAttachment()) {
 			return { ok: false, reason: 'unavailable' };
 		}
@@ -410,7 +410,7 @@ Zotero.SDT = new function () {
 		}
 		catch (e) {
 			if (e.name !== 'NotFoundError') {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			return null;
 		}

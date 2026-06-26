@@ -1,12 +1,12 @@
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs"
+	Trellis: "chrome://trellis/content/trellis.mjs"
 });
 
 export class ExternalLinkHandlerParent extends JSWindowActorParent {
 	async receiveMessage({ name, data }) {
 		switch (name) {
 			case "launchURL": {
-				Zotero.launchURL(data);
+				Trellis.launchURL(data);
 				return;
 			}
 		}

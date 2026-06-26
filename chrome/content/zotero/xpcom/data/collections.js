@@ -3,31 +3,31 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
 /*
- * Primary interface for accessing Zotero collection
+ * Primary interface for accessing Trellis collection
  */
-Zotero.Collections = function () {
+Trellis.Collections = function () {
 	this.constructor = null;
 	
 	this._ZDO_object = 'collection';
@@ -66,7 +66,7 @@ Zotero.Collections = function () {
 	 * @param {Integer} libraryID
 	 * @param {Boolean} [recursive=false]
 	 * @param {Boolean} [includeTrashed=false]
-	 * @return {Zotero.Collection[]}
+	 * @return {Trellis.Collection[]}
 	 */
 	this.getByLibrary = function (libraryID, recursive, includeTrashed) {
 		return _getByContainer(libraryID, null, recursive, includeTrashed);
@@ -79,7 +79,7 @@ Zotero.Collections = function () {
 	 * @param {Integer} parentCollectionID
 	 * @param {Boolean} [recursive=false]
 	 * @param {Boolean} [includeTrashed=false]
-	 * @return {Zotero.Collection[]}
+	 * @return {Trellis.Collection[]}
 	 */
 	this.getByParent = function (parentCollectionID, recursive, includeTrashed) {
 		return _getByContainer(null, parentCollectionID, recursive, includeTrashed);
@@ -90,7 +90,7 @@ Zotero.Collections = function () {
 		let children = [];
 		
 		if (parentID) {
-			let parent = Zotero.Collections.get(parentID);
+			let parent = Trellis.Collections.get(parentID);
 			children = parent.getChildCollections(false, includeTrashed);
 		} else if (libraryID) {
 			for (let id in this._objectCache) {
@@ -109,7 +109,7 @@ Zotero.Collections = function () {
 		}
 		
 		// Do proper collation sort
-		children.sort((a, b) => Zotero.localeCompare(a.name, b.name));
+		children.sort((a, b) => Trellis.localeCompare(a.name, b.name));
 		
 		if (!recursive) return children;
 		
@@ -151,7 +151,7 @@ Zotero.Collections = function () {
 			sqlParams.push(id);
 		}
 		sql = sql.substring(0, sql.length - 5);
-		return Zotero.DB.columnQueryAsync(sql, sqlParams)
+		return Trellis.DB.columnQueryAsync(sql, sqlParams)
 		.then(collectionIDs => {
 			return asIDs ? collectionIDs : this.get(collectionIDs);
 		});
@@ -178,7 +178,7 @@ Zotero.Collections = function () {
 			collection._clearChanged('childCollections');
 		}.bind(this);
 		
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -226,7 +226,7 @@ Zotero.Collections = function () {
 			collection._clearChanged('childItems');
 		}.bind(this);
 		
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -283,7 +283,7 @@ Zotero.Collections = function () {
 		}
 	}
 	
-	Zotero.DataObjects.call(this);
+	Trellis.DataObjects.call(this);
 	
 	return this;
-}.bind(Object.create(Zotero.DataObjects.prototype))();
+}.bind(Object.create(Trellis.DataObjects.prototype))();

@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "phiên bản">
-<!ENTITY zotero.whatsNew "Các điểm mới">
-<!ENTITY zotero.createdby "Một sản phẩm của:">
-<!ENTITY zotero.director "Giám đốc điều hành:">
-<!ENTITY zotero.directors "Giám đốc điều hành:">
-<!ENTITY zotero.developers "Phát triển phần mềm:">
-<!ENTITY zotero.alumni "Cựu thành viên:">
-<!ENTITY zotero.about.localizations "Bản địa hóa:">
-<!ENTITY zotero.about.additionalSoftware "Các phần mềm hỗ trợ">
-<!ENTITY zotero.thanks "Xin gửi lời cảm ơn đặc biệt tới:">
-<!ENTITY zotero.about.close "Đóng">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Những người tham gia &amp; Lời cảm ơn">
-<!ENTITY zotero.citationProcessing "Xử lý trích dẫn &amp; danh mục tài liệu tham khảo">
+<!ENTITY trellis.version "phiên bản">
+<!ENTITY trellis.whatsNew "Các điểm mới">
+<!ENTITY trellis.createdby "Một sản phẩm của:">
+<!ENTITY trellis.director "Giám đốc điều hành:">
+<!ENTITY trellis.directors "Giám đốc điều hành:">
+<!ENTITY trellis.developers "Phát triển phần mềm:">
+<!ENTITY trellis.alumni "Cựu thành viên:">
+<!ENTITY trellis.about.localizations "Bản địa hóa:">
+<!ENTITY trellis.about.additionalSoftware "Các phần mềm hỗ trợ">
+<!ENTITY trellis.thanks "Xin gửi lời cảm ơn đặc biệt tới:">
+<!ENTITY trellis.about.close "Đóng">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Những người tham gia &amp; Lời cảm ơn">
+<!ENTITY trellis.citationProcessing "Xử lý trích dẫn &amp; danh mục tài liệu tham khảo">

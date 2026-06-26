@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -29,7 +29,7 @@ import { getCSSIcon } from 'components/icons';
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -42,7 +42,7 @@ import { getCSSIcon } from 'components/icons';
 			<popupset>
 				<menupopup class="add-popup"/>
 			</popupset>
-		`, ['chrome://zotero/locale/zotero.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd']);
 
 		_linkedItems = [];
 
@@ -70,7 +70,7 @@ import { getCSSIcon } from 'components/icons';
 		}
 
 		init() {
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item', 'collection'], 'librariesCollectionsBox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item', 'collection'], 'librariesCollectionsBox');
 			this._body = this.querySelector('.body');
 			this.initCollapsibleSection();
 			this._addPopup = this.querySelector('.add-popup');
@@ -79,7 +79,7 @@ import { getCSSIcon } from 'components/icons';
 		}
 
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 			this._section?.removeEventListener('add', this._handleAdd);
 			this._addPopup?.removeEventListener('popupshowing', this._handleAddPopupShowing);
 		}
@@ -93,7 +93,7 @@ import { getCSSIcon } from 'components/icons';
 			}
 			
 			if (["modify", "trash"].includes(action) && type == "collection") {
-				let isRelevantCollection = ids.some(id => Zotero.Collections.get(id).hasItem(this._item));
+				let isRelevantCollection = ids.some(id => Trellis.Collections.get(id).hasItem(this._item));
 				if (isRelevantCollection) {
 					this._forceRenderAll();
 				}
@@ -101,7 +101,7 @@ import { getCSSIcon } from 'components/icons';
 		}
 		
 		_buildRow(obj, level, contextItem) {
-			let isContext = obj instanceof Zotero.Collection && !contextItem.inCollection(obj.id);
+			let isContext = obj instanceof Trellis.Collection && !contextItem.inCollection(obj.id);
 
 			let row = document.createElement('div');
 			row.classList.add('row');
@@ -117,10 +117,10 @@ import { getCSSIcon } from 'components/icons';
 			box.setAttribute('role', "button");
 			
 			let iconName;
-			if (obj instanceof Zotero.Group) {
+			if (obj instanceof Trellis.Group) {
 				iconName = 'library-group';
 			}
-			else if (obj instanceof Zotero.Library) {
+			else if (obj instanceof Trellis.Library) {
 				iconName = 'library';
 			}
 			else {
@@ -136,16 +136,16 @@ import { getCSSIcon } from 'components/icons';
 			
 			row.append(box);
 			
-			if (this.editable && obj instanceof Zotero.Collection && !isContext) {
+			if (this.editable && obj instanceof Trellis.Collection && !isContext) {
 				let remove = document.createXULElement('toolbarbutton');
-				remove.className = 'zotero-clicky zotero-clicky-minus';
+				remove.className = 'trellis-clicky trellis-clicky-minus';
 				remove.setAttribute("tabindex", "0");
 				remove.setAttribute("data-l10n-id", 'section-button-remove');
 				remove.addEventListener('command', () => {
 					if (Services.prompt.confirm(
 						window,
-						Zotero.getString('pane.items.remove.title'),
-						Zotero.getString('pane.items.removeFromOther', [obj.name])
+						Trellis.getString('pane.items.remove.title'),
+						Trellis.getString('pane.items.removeFromOther', [obj.name])
 					)) {
 						contextItem.removeFromCollection(obj.id);
 						contextItem.saveTx({
@@ -166,12 +166,12 @@ import { getCSSIcon } from 'components/icons';
 			box.toggleAttribute('disabled', disableClicky);
 			if (!disableClicky) {
 				box.addEventListener('click', async () => {
-					await ZoteroPane.collectionsView.selectByID(obj.treeViewID);
+					await TrellisPane.collectionsView.selectByID(obj.treeViewID);
 					// Do not try to view deleted items in a collection.
 					// They do not appear outside of trash, and selecting a deleted item
 					// will re-open trash in collectionTree.
 					if (!contextItem.deleted) {
-						await ZoteroPane.selectItem(contextItem.id);
+						await TrellisPane.selectItem(contextItem.id);
 					}
 				});
 			}
@@ -206,9 +206,9 @@ import { getCSSIcon } from 'components/icons';
 				return existingRow;
 			}
 			
-			let parent = obj instanceof Zotero.Library
+			let parent = obj instanceof Trellis.Library
 				? null
-				: (obj.parentID ? Zotero.Collections.get(obj.parentID) : Zotero.Libraries.get(obj.libraryID));
+				: (obj.parentID ? Trellis.Collections.get(obj.parentID) : Trellis.Libraries.get(obj.libraryID));
 			let parentRow = parent && this._findRow(parent);
 			if (parent && !parentRow) {
 				parentRow = this._addObject(parent, contextItem);
@@ -218,7 +218,7 @@ import { getCSSIcon } from 'components/icons';
 			let siblings = this._getChildren(parentRow);
 			let added = false;
 			for (let sibling of siblings) {
-				if (Zotero.localeCompare(sibling.querySelector('.label').textContent, obj.name) > 0) {
+				if (Trellis.localeCompare(sibling.querySelector('.label').textContent, obj.name) > 0) {
 					sibling.before(row);
 					added = true;
 					break;
@@ -252,8 +252,8 @@ import { getCSSIcon } from 'components/icons';
 
 			this._body.replaceChildren();
 			for (let item of [this._item, ...this._linkedItems]) {
-				this._addObject(Zotero.Libraries.get(item.libraryID), item);
-				for (let collection of Zotero.Collections.get(item.getCollections())) {
+				this._addObject(Trellis.Libraries.get(item.libraryID), item);
+				for (let collection of Trellis.Collections.get(item.getCollections())) {
 					this._addObject(collection, item);
 				}
 			}
@@ -269,13 +269,13 @@ import { getCSSIcon } from 'components/icons';
 				return;
 			}
 
-			this._linkedItems = (await Promise.all(Zotero.Libraries.getAll()
+			this._linkedItems = (await Promise.all(Trellis.Libraries.getAll()
 					.filter(lib => lib.libraryID !== this._item.libraryID)
 					.map(lib => this._item.getLinkedItem(lib.libraryID, true))))
 				.filter(Boolean);
 			for (let item of this._linkedItems) {
-				this._addObject(Zotero.Libraries.get(item.libraryID), item);
-				for (let collection of Zotero.Collections.get(item.getCollections())) {
+				this._addObject(Trellis.Libraries.get(item.libraryID), item);
+				for (let collection of Trellis.Collections.get(item.getCollections())) {
 					this._addObject(collection, item);
 				}
 			}
@@ -291,7 +291,7 @@ import { getCSSIcon } from 'components/icons';
 		};
 
 		_handleAddPopupShowing = (event) => {
-			ZoteroPane.buildAddItemToCollectionMenu(event, [this._item]);
+			TrellisPane.buildAddItemToCollectionMenu(event, [this._item]);
 		};
 	}
 	customElements.define("libraries-collections-box", LibrariesCollectionsBox);

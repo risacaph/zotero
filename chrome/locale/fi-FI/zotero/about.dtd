@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "versio">
-<!ENTITY zotero.whatsNew "Mitä uutta?">
-<!ENTITY zotero.createdby "Luonut:">
-<!ENTITY zotero.director "Johtaja:">
-<!ENTITY zotero.directors "Johtajat:">
-<!ENTITY zotero.developers "Kehittäjät:">
-<!ENTITY zotero.alumni "Alumnit:">
-<!ENTITY zotero.about.localizations "Lokalisaatiot:">
-<!ENTITY zotero.about.additionalSoftware "Kolmannen osapuolen ohjelmistot:">
-<!ENTITY zotero.thanks "Erityiskiitokset:">
-<!ENTITY zotero.about.close "Sulje">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Lisää kiitoksia">
-<!ENTITY zotero.citationProcessing "Viittausten ja lähdeluetteloiden käsittely">
+<!ENTITY trellis.version "versio">
+<!ENTITY trellis.whatsNew "Mitä uutta?">
+<!ENTITY trellis.createdby "Luonut:">
+<!ENTITY trellis.director "Johtaja:">
+<!ENTITY trellis.directors "Johtajat:">
+<!ENTITY trellis.developers "Kehittäjät:">
+<!ENTITY trellis.alumni "Alumnit:">
+<!ENTITY trellis.about.localizations "Lokalisaatiot:">
+<!ENTITY trellis.about.additionalSoftware "Kolmannen osapuolen ohjelmistot:">
+<!ENTITY trellis.thanks "Erityiskiitokset:">
+<!ENTITY trellis.about.close "Sulje">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Lisää kiitoksia">
+<!ENTITY trellis.citationProcessing "Viittausten ja lähdeluetteloiden käsittely">

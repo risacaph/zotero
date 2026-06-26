@@ -3,37 +3,37 @@
     
     Copyright © 2016 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
-var { OS } = ChromeUtils.importESModule("chrome://zotero/content/osfile.mjs");
+var { OS } = ChromeUtils.importESModule("chrome://trellis/content/osfile.mjs");
 
-Zotero.Profile = {
+Trellis.Profile = {
 	dir: OS.Constants.Path.profileDir,
 	
 	getDefaultInProfilesDir: async function (profilesDir) {
 		var profilesIni = OS.Path.join(profilesDir, "profiles.ini");
 		
 		try {
-			var iniContents = await Zotero.File.getContentsAsync(profilesIni);
+			var iniContents = await Trellis.File.getContentsAsync(profilesIni);
 		}
 		catch (e) {
 			if (e.name == 'NotFoundError') {
@@ -91,7 +91,7 @@ Zotero.Profile = {
 	
 	
 	/**
-	 * Find other Zotero profile directories using the given data directory
+	 * Find other Trellis profile directories using the given data directory
 	 *
 	 * @param {String} dataDir
 	 * @return {String[]}
@@ -103,11 +103,11 @@ Zotero.Profile = {
 
 		for (let i = 0; i < otherProfiles.length; i++) {
 			let dir = otherProfiles[i];
-			let prefs = await Zotero.File.getContentsAsync(OS.Path.join(dir, "prefs.js"));
+			let prefs = await Trellis.File.getContentsAsync(OS.Path.join(dir, "prefs.js"));
 			prefs = prefs.trim().split(/(?:\r\n|\r|\n)/);
 
-			let keep = prefs.some(line => line.includes("extensions.zotero.useDataDir") && line.includes("true"))
-				&& prefs.some(line => line.match(/extensions\.zotero\.(lastD|d)ataDir/) && line.includes(escapedDataDir));
+			let keep = prefs.some(line => line.includes("extensions.trellis.useDataDir") && line.includes("true"))
+				&& prefs.some(line => line.match(/extensions\.trellis\.(lastD|d)ataDir/) && line.includes(escapedDataDir));
 			if (!keep) {
 				otherProfiles.splice(i, 1);
 				i--;
@@ -115,11 +115,11 @@ Zotero.Profile = {
 		}
 		
 		if (otherProfiles.length) {
-			Zotero.debug("Found other profiles pointing to " + dataDir);
-			Zotero.debug(otherProfiles);
+			Trellis.debug("Found other profiles pointing to " + dataDir);
+			Trellis.debug(otherProfiles);
 		}
 		else {
-			Zotero.debug("No other profiles point to " + dataDir);
+			Trellis.debug("No other profiles point to " + dataDir);
 		}
 		
 		return otherProfiles;
@@ -129,21 +129,21 @@ Zotero.Profile = {
 	updateProfileDataDirectory: async function (profileDir, oldDir, newDir) {
 		let prefsFile = OS.Path.join(profileDir, "prefs.js");
 		let prefsFileTmp = OS.Path.join(profileDir, "prefs.js.tmp");
-		Zotero.debug("Updating " + prefsFile + " to point to new data directory");
-		let contents = await Zotero.File.getContentsAsync(prefsFile);
+		Trellis.debug("Updating " + prefsFile + " to point to new data directory");
+		let contents = await Trellis.File.getContentsAsync(prefsFile);
 		contents = contents
 			.trim()
 			.split(/(?:\r\n|\r|\n)/)
 			// Remove existing lines
-			.filter(line => !line.match(/extensions\.zotero\.(useD|lastD|d)ataDir/));
+			.filter(line => !line.match(/extensions\.trellis\.(useD|lastD|d)ataDir/));
 		// Shouldn't happen, but let's make sure we don't corrupt the prefs file
 		let safeVal = newDir.replace(/["]/g, "");
 		contents.push(
-			`user_pref("extensions.zotero.dataDir", "${safeVal}");`,
-			`user_pref("extensions.zotero.lastDataDir", "${safeVal}");`,
-			'user_pref("extensions.zotero.useDataDir", true);'
+			`user_pref("extensions.trellis.dataDir", "${safeVal}");`,
+			`user_pref("extensions.trellis.lastDataDir", "${safeVal}");`,
+			'user_pref("extensions.trellis.useDataDir", true);'
 		);
-		let lineSep = Zotero.isWin ? "\r\n" : "\n";
+		let lineSep = Trellis.isWin ? "\r\n" : "\n";
 		contents = contents.join(lineSep) + lineSep;
 		await OS.File.writeAtomic(
 			prefsFile,
@@ -167,10 +167,10 @@ Zotero.Profile = {
 	 */
 	_getProfilesInDir: async function (profilesDir) {
 		var dirs = [];
-		await Zotero.File.iterateDirectory(profilesDir, async function (entry) {
+		await Trellis.File.iterateDirectory(profilesDir, async function (entry) {
 			// entry.isDir can be false for some reason on Travis, causing spurious test failures
-			if (Zotero.automatedTest && !entry.isDir && (await OS.File.stat(entry.path)).isDir) {
-				Zotero.debug("Overriding isDir for " + entry.path);
+			if (Trellis.automatedTest && !entry.isDir && (await OS.File.stat(entry.path)).isDir) {
+				Trellis.debug("Overriding isDir for " + entry.path);
 				entry.isDir = true;
 			}
 			if (entry.isDir && (await OS.File.exists(OS.Path.join(entry.path, "prefs.js")))) {
@@ -182,7 +182,7 @@ Zotero.Profile = {
 	
 	
 	/**
-	 * Find other Zotero profile directories
+	 * Find other Trellis profile directories
 	 *
 	 * @return {Promise<String[]>} - Array of paths
 	 */

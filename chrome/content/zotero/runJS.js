@@ -6,7 +6,7 @@ function update() {
 }
 
 async function run() {
-	var win = Zotero.getMainWindow();
+	var win = Trellis.getMainWindow();
 	if (!win) {
 		return;
 	}
@@ -42,18 +42,18 @@ async function run() {
 		resultTextbox.textContent = result;
 	}
 	else if (result !== undefined) {
-		resultTextbox.textContent = Zotero.Utilities.varDump(result);
+		resultTextbox.textContent = Trellis.Utilities.varDump(result);
 	}
 	else {
 		// when nothing is returned, log undefined as the return value but
 		// for clarity also add a note that the JS run was successful
-		resultTextbox.textContent = `===>undefined<=== (${Zotero.getString("runJS-completed")})`;
+		resultTextbox.textContent = `===>undefined<=== (${Trellis.getString("runJS-completed")})`;
 	}
 }
 
 // eslint-disable-next-line no-unused-vars
 function openHelp() {
-	Zotero.launchURL("https://www.zotero.org/support/dev/client_coding/javascript_api");
+	Trellis.launchURL("https://www.trellis.org/support/dev/client_coding/javascript_api");
 }
 
 function handleInput() { // eslint-disable-line no-unused-vars
@@ -71,7 +71,7 @@ function handleInput() { // eslint-disable-line no-unused-vars
 }
 
 window.addEventListener('keypress', function (event) {
-	if (Zotero.isMac) {
+	if (Trellis.isMac) {
 		if (!event.metaKey) {
 			return;
 		}
@@ -93,7 +93,7 @@ window.addEventListener('keypress', function (event) {
 	}
 });
 
-var shortcut = Zotero.isMac ? 'Cmd-R' : 'Ctrl+R';
+var shortcut = Trellis.isMac ? 'Cmd-R' : 'Ctrl+R';
 document.getElementById('run-label').textContent = `(${shortcut})`;
 
 update();
@@ -104,13 +104,13 @@ window.addEventListener("load", function (e) {
 		return;
 	}
 
-	MozXULElement.insertFTLIfNeeded("zotero.ftl");
+	MozXULElement.insertFTLIfNeeded("trellis.ftl");
 	var codeWin = document.getElementById("editor-code").contentWindow;
 	codeEditor = codeWin.editor;
 	var session = codeEditor.getSession();
 	session.setMode(new codeWin.JavaScriptMode);
 	codeEditor.setOptions({
-		// TODO: Enable if we modify to autocomplete from the Zotero API
+		// TODO: Enable if we modify to autocomplete from the Trellis API
 		//enableLiveAutocompletion: true,
 		highlightActiveLine: false,
 		showGutter: false

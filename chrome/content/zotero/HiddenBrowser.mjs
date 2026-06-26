@@ -3,35 +3,35 @@
     
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-import { BlockingObserver } from "chrome://zotero/content/BlockingObserver.mjs";
-import "chrome://zotero/content/actors/ActorManager.mjs";
+import { BlockingObserver } from "chrome://trellis/content/BlockingObserver.mjs";
+import "chrome://trellis/content/actors/ActorManager.mjs";
 
 /* global HiddenFrame, E10SUtils */
 ChromeUtils.defineESModuleGetters(globalThis, {
 	E10SUtils: "resource://gre/modules/E10SUtils.sys.mjs",
 	HiddenFrame: "resource://gre/modules/HiddenFrame.sys.mjs",
-	Zotero: "chrome://zotero/content/zotero.mjs",
+	Trellis: "chrome://trellis/content/trellis.mjs",
 	setTimeout: "resource://gre/modules/Timer.sys.mjs"
 });
 
@@ -48,7 +48,7 @@ export class HiddenBrowser {
 	 * @param {Boolean} [options.blockRemoteResources] Block all remote (non-file:) resources
 	 * @param {Boolean} [options.useHiddenFrame=true] Use a hidden frame to create the browser.
 	 * 		Must be set to false if intending to call print().
-	 * @param {Number} [options.userContextId] - From Zotero.HTTP.newCookieContext() for cookie isolation
+	 * @param {Number} [options.userContextId] - From Trellis.HTTP.newCookieContext() for cookie isolation
 	 * @param {String} [options.customUserAgent] - Override User-Agent for all requests
 	 *     from this browser's browsing context
 	 */
@@ -69,7 +69,7 @@ export class HiddenBrowser {
 				doc = windowlessBrowser.document;
 			}
 			else {
-				doc = Zotero.getMainWindow()?.document;
+				doc = Trellis.getMainWindow()?.document;
 				if (!doc) {
 					throw new Error("HiddenBrowser with useHiddenFrame: false requires the main window to be open");
 				}
@@ -138,10 +138,10 @@ export class HiddenBrowser {
 		}
 		// Convert string path to file: URL
 		else {
-			uri = Zotero.File.pathToFileURI(source);
+			uri = Trellis.File.pathToFileURI(source);
 		}
 			
-		Zotero.debug(`Loading ${uri} in hidden browser`);
+		Trellis.debug(`Loading ${uri} in hidden browser`);
 		// Next bit adapted from Mozilla's HeadlessShell.jsm
 		try {
 			// Figure out whether the browser should be remote. We actually
@@ -213,13 +213,13 @@ export class HiddenBrowser {
 			let loadURISuccess = await this.browsingContext.currentWindowGlobal.getActor("PageData")
 				.sendQuery("loadURI", { uri });
 			if (!loadURISuccess) {
-				Zotero.logError(new Error("Load failed"));
+				Trellis.logError(new Error("Load failed"));
 				return false;
 			}
 			await loadCompletePromise;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		
@@ -227,10 +227,10 @@ export class HiddenBrowser {
 			let { channelInfo } = await this.getPageData(['channelInfo']);
 			if (channelInfo && (channelInfo.responseStatus < 200 || channelInfo.responseStatus >= 400)) {
 				let response = `${channelInfo.responseStatus} ${channelInfo.responseStatusText}`;
-				Zotero.debug(`HiddenBrowser.load: ${uri} failed with ${response}`, 2);
+				Trellis.debug(`HiddenBrowser.load: ${uri} failed with ${response}`, 2);
 				// HiddenBrowser will never get returned so we need to clean it up here
 				this.destroy();
-				throw new Zotero.HTTP.UnexpectedStatusException(
+				throw new Trellis.HTTP.UnexpectedStatusException(
 					{
 						status: channelInfo.responseStatus
 					},
@@ -271,7 +271,7 @@ export class HiddenBrowser {
 	async getDocument() {
 		let { documentHTML, cookie } = await this.getPageData(['documentHTML', 'cookie']);
 		let doc = new DOMParser().parseFromString(documentHTML, 'text/html');
-		let docWithLocation = Zotero.HTTP.wrapDocument(doc, this.currentURI);
+		let docWithLocation = Trellis.HTTP.wrapDocument(doc, this.currentURI);
 		return new Proxy(docWithLocation, {
 			get(obj, prop) {
 				if (prop === 'cookie') {
@@ -298,8 +298,8 @@ export class HiddenBrowser {
 		if (this._frame) {
 			throw new Error("Printing is not supported with useHiddenFrame: true");
 		}
-		let actor = this.browsingContext.currentWindowGlobal.getActor("ZoteroPrint");
-		return actor.zoteroPrint(options);
+		let actor = this.browsingContext.currentWindowGlobal.getActor("TrellisPrint");
+		return actor.trellisPrint(options);
 	}
 
 	destroy() {
@@ -315,7 +315,7 @@ export class HiddenBrowser {
 				else {
 					this._browser.remove();
 				}
-				Zotero.debug("Deleted hidden browser");
+				Trellis.debug("Deleted hidden browser");
 			})();
 		}
 	}

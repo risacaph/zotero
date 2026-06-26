@@ -3,22 +3,22 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -46,7 +46,7 @@
 		set value(val) {
 			if (!this.values.includes(val)) {
 				try {
-					let style = Zotero.Styles.get(val);
+					let style = Trellis.Styles.get(val);
 					// Check for remapped style id
 					if (style) {
 						val = style.styleID;
@@ -75,12 +75,12 @@
 		async init() {
 			const styleListEl = this.querySelector('#style-list');
 			const placeholderEl = this.querySelector('.placeholder');
-			await Zotero.Styles.init();
+			await Trellis.Styles.init();
 
-			Zotero.Styles.getVisible().forEach((so) => {
+			Trellis.Styles.getVisible().forEach((so) => {
 				const value = so.styleID;
 				// Add acronyms to APA and ASA to avoid confusion
-				// https://forums.zotero.org/discussion/comment/357135/#Comment_357135
+				// https://forums.trellis.org/discussion/comment/357135/#Comment_357135
 				const label = so.title
 					.replace(/^American Psychological Association/, "American Psychological Association (APA)")
 					.replace(/^American Sociological Association/, "American Sociological Association (ASA)");
@@ -140,12 +140,12 @@
 				new Intl.Locale(val);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				val = '';
 			}
 			
 			this._value = val;
-			const styleData = this._style ? Zotero.Styles.get(this._style) : null;
+			const styleData = this._style ? Trellis.Styles.get(this._style) : null;
 			this.localeListEl.value = styleData && styleData.effectiveLocale || this._value;
 		}
 
@@ -155,7 +155,7 @@
 
 		set style(style) {
 			this._style = style;
-			const styleData = style ? Zotero.Styles.get(style) : null;
+			const styleData = style ? Trellis.Styles.get(style) : null;
 			this.localeListEl.disabled = !style || !!styleData.effectiveLocale;
 			this.localeListEl.value = styleData && styleData.effectiveLocale || this._value || this.fallbackLocale;
 		}
@@ -170,10 +170,10 @@
 			this._style = this.getAttribute('style');
 			this._value = this.getAttribute('value');
 
-			await Zotero.Styles.init();
-			this.fallbackLocale = Zotero.Styles?.primaryDialects[Zotero.locale] || Zotero.locale;
+			await Trellis.Styles.init();
+			this.fallbackLocale = Trellis.Styles?.primaryDialects[Trellis.locale] || Trellis.locale;
 
-			const menuLocales = Zotero.Utilities.deepCopy(Zotero.Styles.locales);
+			const menuLocales = Trellis.Utilities.deepCopy(Trellis.Styles.locales);
 			const menuLocalesKeys = Object.keys(menuLocales).sort();
 
 			// Make sure that client locale is always available as a choice
@@ -265,17 +265,17 @@
 			let styleSelector = document.createXULElement('style-selector');
 			styleSelector.id = 'style-selector';
 			// value needs to be initialized before the style-selector CE connects
-			styleSelector.setAttribute('value', this.getAttribute('style') || Zotero.Prefs.get('export.lastStyle'));
+			styleSelector.setAttribute('value', this.getAttribute('style') || Trellis.Prefs.get('export.lastStyle'));
 			this.querySelector('.style-selector-wrapper').append(styleSelector);
 
 			let localeSelector = document.createXULElement('locale-selector');
 			localeSelector.id = 'locale-selector';
 			// As above - initialize values first to avoid race conditions in LocaleSelector#init()
-			localeSelector.setAttribute('value', this.getAttribute('locale') || Zotero.Prefs.get('export.lastLocale') || '');
-			localeSelector.setAttribute('style', this.getAttribute('style') || Zotero.Prefs.get('export.lastStyle') || '');
+			localeSelector.setAttribute('value', this.getAttribute('locale') || Trellis.Prefs.get('export.lastLocale') || '');
+			localeSelector.setAttribute('style', this.getAttribute('style') || Trellis.Prefs.get('export.lastStyle') || '');
 			this.querySelector('.locale-selector-wrapper').append(localeSelector);
 			
-			await Zotero.Styles.init();
+			await Trellis.Styles.init();
 			styleSelector.addEventListener('select', (_event) => {
 				this.handleStyleChanged(_event.target.value);
 
@@ -326,7 +326,7 @@
 		}
 		
 		toggleNoteTypePicker(style) {
-			const styleData = style ? Zotero.Styles.get(style) : null;
+			const styleData = style ? Trellis.Styles.get(style) : null;
 			const isNoteStyle = (styleData || {}).class === 'note';
 			const noMultipleNotes = this.hasAttribute('no-multi-notes');
 			this.querySelector('.display-as-wrapper').style.display

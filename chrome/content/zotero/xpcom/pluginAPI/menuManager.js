@@ -5,27 +5,27 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
 
 
 {
-	const PluginAPIBase = ChromeUtils.importESModule("chrome://zotero/content/xpcom/pluginAPI/pluginAPIBase.mjs").PluginAPIBase;
+	const PluginAPIBase = ChromeUtils.importESModule("chrome://trellis/content/xpcom/pluginAPI/pluginAPIBase.mjs").PluginAPIBase;
 
 	const VALID_TARGETS = [
 		// Main window menubar menus
@@ -70,10 +70,10 @@
 		"submenu",
 	];
 
-	const CUSTOM_MENU_CLASS = "zotero-custom-menu-item";
+	const CUSTOM_MENU_CLASS = "trellis-custom-menu-item";
 
 	/**
-	 * @namespace Zotero
+	 * @namespace Trellis
 	 */
 
 	/**
@@ -270,7 +270,7 @@
 			menuData = selfResult.obj;
 
 			// Add unique key to the menu data
-			menuData._key = `zotero-custom-menu-${this._generateRandomKey()}`;
+			menuData._key = `trellis-custom-menu-${this._generateRandomKey()}`;
 
 			// Only check for submenu type here, as submenus can have nested menus
 			if (menuData?.menuType !== "submenu") {
@@ -307,12 +307,12 @@
 				return [];
 			}
 			// Remove all custom menu items from the main window and reader window
-			let enumerator = Services.wm.getEnumerator("zotero:reader");
+			let enumerator = Services.wm.getEnumerator("trellis:reader");
 			let windows = [];
 			while (enumerator.hasMoreElements()) {
 				windows.push(enumerator.getNext());
 			}
-			windows.push(...Zotero.getMainWindows());
+			windows.push(...Trellis.getMainWindows());
 			for (let window of windows) {
 				// The query selector is like ".CUSTOM_MENU_CLASS:is(.key1, .key2, .key3)"
 				let selector = removedKeys.map(k => `.${CSS.escape(k)}`).join(", ");
@@ -730,7 +730,7 @@
 			// Add separator
 			groupedMenus.push({
 				menuType: "separator",
-				_key: "zotero-custom-menu-group-separator",
+				_key: "trellis-custom-menu-group-separator",
 			});
 			
 			let ungroupedCount = this._computeAvailableMenuNum(popupElem);
@@ -748,7 +748,7 @@
 			groupedMenus.push({
 				menuType: "submenu",
 				l10nID: "menu-custom-group-submenu",
-				_key: "zotero-custom-menu-group-submenu",
+				_key: "trellis-custom-menu-group-submenu",
 				menus: [...menus.slice(ungroupedCount)],
 			});
 			return groupedMenus;
@@ -770,20 +770,20 @@
 
 			let menuHeight, separatorHeight, popupPadding;
 
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				menuHeight = 22;
 				separatorHeight = 11;
 				popupPadding = 5 * 2;
 			}
 
-			if (Zotero.isWin) {
+			if (Trellis.isWin) {
 				menuHeight = 26;
 				separatorHeight = 9;
 				popupPadding = 4 * 2;
 			}
 
 			// For Linux, we only roughly estimate the height, as it varies a lot
-			if (Zotero.isLinux) {
+			if (Trellis.isLinux) {
 				menuHeight = 24;
 				separatorHeight = 9;
 				popupPadding = 4 * 2;
@@ -803,9 +803,9 @@
 	/**
 	 * Manages menu APIs.
 	 *
-	 * @memberof Zotero
+	 * @memberof Trellis
 	 */
-	Zotero.MenuManager = {
+	Trellis.MenuManager = {
 		_menuManager: new MenuManagerInternal(),
 
 		/**

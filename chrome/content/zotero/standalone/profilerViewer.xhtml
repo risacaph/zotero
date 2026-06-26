@@ -2,7 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-		windowtype="zotero:profiler-viewer"
+		windowtype="trellis:profiler-viewer"
 		title="Firefox Profiler"
 		style="min-width: 1100px; min-height: 800px;"
 		persist="screenX screenY width height sizemode">
@@ -43,11 +43,11 @@
 				ChromeUtils.registerWindowActor("ProfilerViewer", {
 					parent: {
 						esModuleURI:
-							"chrome://zotero/content/actors/ProfilerViewerParent.mjs",
+							"chrome://trellis/content/actors/ProfilerViewerParent.mjs",
 					},
 					child: {
 						esModuleURI:
-							"chrome://zotero/content/actors/ProfilerViewerChild.mjs",
+							"chrome://trellis/content/actors/ProfilerViewerChild.mjs",
 						events: {
 							click: { capture: true, mozSystemGroup: true },
 						},

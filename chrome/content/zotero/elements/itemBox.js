@@ -3,22 +3,22 @@
     
     Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 	const { XPCOMUtils } = ChromeUtils.importESModule("resource://gre/modules/XPCOMUtils.sys.mjs");
@@ -91,20 +91,20 @@
 						<div id="info-box" xmlns="http://www.w3.org/1999/xhtml">
 							<popupset xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 								<menupopup id="creator-type-menu" position="after_start"/>
-								<menupopup id="zotero-creator-transform-menu">
-									<menuitem id="creator-transform-swap-names" label="&zotero.item.creatorTransform.nameSwap;"/>
-									<menuitem id="creator-transform-capitalize" label="&zotero.item.creatorTransform.fixCase;"/>
-									<menuseparator id="zotero-creator-move-sep"/>
-									<menuitem id="zotero-creator-move-to-top" class="zotero-creator-move" data-l10n-id="item-creator-moveToTop"/>
-									<menuitem id="zotero-creator-move-up" class="zotero-creator-move" data-l10n-id="item-creator-moveUp"/>
-									<menuitem id="zotero-creator-move-down" class="zotero-creator-move" data-l10n-id="item-creator-moveDown"/>
+								<menupopup id="trellis-creator-transform-menu">
+									<menuitem id="creator-transform-swap-names" label="&trellis.item.creatorTransform.nameSwap;"/>
+									<menuitem id="creator-transform-capitalize" label="&trellis.item.creatorTransform.fixCase;"/>
+									<menuseparator id="trellis-creator-move-sep"/>
+									<menuitem id="trellis-creator-move-to-top" class="trellis-creator-move" data-l10n-id="item-creator-moveToTop"/>
+									<menuitem id="trellis-creator-move-up" class="trellis-creator-move" data-l10n-id="item-creator-moveUp"/>
+									<menuitem id="trellis-creator-move-down" class="trellis-creator-move" data-l10n-id="item-creator-moveDown"/>
 								</menupopup>
-								<menupopup id="zotero-link-menu">
-									<menuitem id="zotero-link-menu-view-online" data-l10n-id="item-menu-option-view-online"/>
-									<menuitem id="zotero-link-menu-copy" label="&zotero.item.copyAsURL;"/>
+								<menupopup id="trellis-link-menu">
+									<menuitem id="trellis-link-menu-view-online" data-l10n-id="item-menu-option-view-online"/>
+									<menuitem id="trellis-link-menu-copy" label="&trellis.item.copyAsURL;"/>
 								</menupopup>
-								<menupopup id="zotero-field-menu"></menupopup>
-								<guidance-panel id="zotero-author-guidance" about="authorMenu" position="after_end" x="-25"/>
+								<menupopup id="trellis-field-menu"></menupopup>
+								<guidance-panel id="trellis-author-guidance" about="authorMenu" position="after_end" x="-25"/>
 							</popupset>
 							<div id="retraction-box" hidden="hidden">
 								<div id="retraction-header">
@@ -127,7 +127,7 @@
 						</div>
 					</html:div>
 				</collapsible-section>
-			`, ['chrome://zotero/locale/zotero.dtd']);
+			`, ['chrome://trellis/locale/trellis.dtd']);
 		}
 		
 		get _renderDependencies() {
@@ -138,9 +138,9 @@
 			this.initCollapsibleSection();
 			this._creatorTypeMenu.addEventListener('command', this._handleCreatorTypeChange);
 
-			this._id('zotero-creator-transform-menu').addEventListener('popupshowing', this._handleCreatorTransformMenuShowing);
+			this._id('trellis-creator-transform-menu').addEventListener('popupshowing', this._handleCreatorTransformMenuShowing);
 
-			this._id('zotero-creator-transform-menu').addEventListener('command', this._handleCreatorTransformMenuCommand);
+			this._id('trellis-creator-transform-menu').addEventListener('command', this._handleCreatorTransformMenuCommand);
 
 			this._id('creator-transform-swap-names').addEventListener('command', this._handleCreatorTransformSwapNames);
 
@@ -148,11 +148,11 @@
 			
 			this._linkMenu.addEventListener('popupshowing', this._handleLinkMenuShowing);
 			
-			this._id('zotero-link-menu-view-online').addEventListener(
+			this._id('trellis-link-menu-view-online').addEventListener(
 				'command',
 				this._handleLinkMenuViewOnline
 			);
-			this._id('zotero-link-menu-copy').addEventListener(
+			this._id('trellis-link-menu-copy').addEventListener(
 				'command',
 				this._handleLinkMenuCopy
 			);
@@ -162,29 +162,29 @@
 			// Ensure no button is forced to stay visible once the menu is closed
 			this.addEventListener('popuphidden', this._handlePopupHidden);
 
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item', 'infobox', 'tab'], 'itemBox');
-			this._prefsObserverID = Zotero.Prefs.registerObserver('fontSize', () => {
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item', 'infobox', 'tab'], 'itemBox');
+			this._prefsObserverID = Trellis.Prefs.registerObserver('fontSize', () => {
 				this._forceRenderAll();
 			});
 			
 			this.style.setProperty('--comma-character',
-				"'" + Zotero.getString('punctuation.comma') + "'");
+				"'" + Trellis.getString('punctuation.comma') + "'");
 			this.style.setProperty('--ellipsis-and-comma-character',
-				"'" + Zotero.getString('punctuation.ellipsis') + Zotero.getString('punctuation.comma') + "'");
+				"'" + Trellis.getString('punctuation.ellipsis') + Trellis.getString('punctuation.comma') + "'");
 		}
 		
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 
-			Zotero.Prefs.unregisterObserver(this._prefsObserverID);
+			Trellis.Prefs.unregisterObserver(this._prefsObserverID);
 
-			this._id('zotero-creator-transform-menu')?.removeEventListener('popupshowing', this._handleCreatorTransformMenuShowing);
-			this._id('zotero-creator-transform-menu')?.removeEventListener('command', this._handleCreatorTransformMenuCommand);
+			this._id('trellis-creator-transform-menu')?.removeEventListener('popupshowing', this._handleCreatorTransformMenuShowing);
+			this._id('trellis-creator-transform-menu')?.removeEventListener('command', this._handleCreatorTransformMenuCommand);
 			this._id('creator-transform-swap-names')?.removeEventListener('command', this._handleCreatorTransformSwapNames);
 			this._id('creator-transform-capitalize')?.removeEventListener('command', this._handleCreatorTransformCapitalize);
 			this._linkMenu?.removeEventListener('popupshowing', this._handleLinkMenuShowing);
-			this._id('zotero-link-menu-view-online')?.removeEventListener('command', this._handleLinkMenuViewOnline);
-			this._id('zotero-link-menu-copy')?.removeEventListener('command', this._handleLinkMenuCopy);
+			this._id('trellis-link-menu-view-online')?.removeEventListener('command', this._handleLinkMenuViewOnline);
+			this._id('trellis-link-menu-copy')?.removeEventListener('command', this._handleLinkMenuCopy);
 			this._infoTable?.removeEventListener("focusout", this._handleFocusout);
 			this.removeEventListener('popuphidden', this._handlePopupHidden);
 		}
@@ -247,8 +247,8 @@
 		}
 		
 		set item(val) {
-			if (!(val instanceof Zotero.Item)) {
-				throw new Error("'item' must be a Zotero.Item");
+			if (!(val instanceof Trellis.Item)) {
+				throw new Error("'item' must be a Trellis.Item");
 			}
 
 			if (val?.isRegularItem()) {
@@ -272,7 +272,7 @@
 				// Not awaiting the blurOpenField() call here is not great practice, but it's unavoidable - setters
 				// can't be async and should immediately update their backing fields. Additionally, it matches the old
 				// behavior, as the blur event was triggered immediately before the item setter, with the
-				// Zotero.Item#saveTx() call continuing in the background.
+				// Trellis.Item#saveTx() call continuing in the background.
 				this.blurOpenField();
 			}
 			
@@ -293,7 +293,7 @@
 			if (!Array.isArray(val)) {
 				return;
 			}
-			this._extraItems = val.filter(item => item instanceof Zotero.Item && item.isRegularItem());
+			this._extraItems = val.filter(item => item instanceof Trellis.Item && item.isRegularItem());
 			this._unionFieldDescriptors = null;
 			this._resetRenderedFlags();
 		}
@@ -394,15 +394,15 @@
 		}
 		
 		get _defaultFirstName() {
-			return '(' + Zotero.getString('pane.item.defaultFirstName') + ')';
+			return '(' + Trellis.getString('pane.item.defaultFirstName') + ')';
 		}
 		
 		get _defaultLastName() {
-			return '(' + Zotero.getString('pane.item.defaultLastName') + ')';
+			return '(' + Trellis.getString('pane.item.defaultLastName') + ')';
 		}
 		
 		get _defaultFullName() {
-			return '(' + Zotero.getString('pane.item.defaultFullName') + ')';
+			return '(' + Trellis.getString('pane.item.defaultFullName') + ')';
 		}
 		
 		get _ignoreFields() {
@@ -410,7 +410,7 @@
 		}
 
 		get _linkMenu() {
-			return this._id('zotero-link-menu');
+			return this._id('trellis-link-menu');
 		}
 		
 		
@@ -432,10 +432,10 @@
 		}
 		
 		render() {
-			Zotero.debug('Refreshing item box');
+			Trellis.debug('Refreshing item box');
 
 			if (!this.item) {
-				Zotero.debug('No item to refresh', 2);
+				Trellis.debug('No item to refresh', 2);
 				return;
 			}
 			if (!this._section.open) return;
@@ -481,27 +481,27 @@
 			let orderCounter = 0;
 
 			for (let typeID of allTypeIDs) {
-				let typeFieldIDs = Zotero.ItemFields.getItemTypeFields(typeID);
+				let typeFieldIDs = Trellis.ItemFields.getItemTypeFields(typeID);
 				for (let fieldID of typeFieldIDs) {
-					let fieldName = Zotero.ItemFields.getName(fieldID);
+					let fieldName = Trellis.ItemFields.getName(fieldID);
 
 					// Resolve to base field name if a mapping exists
-					let baseID = Zotero.ItemFields.getBaseIDFromTypeAndField(typeID, fieldID);
+					let baseID = Trellis.ItemFields.getBaseIDFromTypeAndField(typeID, fieldID);
 					let canonicalName = baseID
-						? Zotero.ItemFields.getName(baseID)
+						? Trellis.ItemFields.getName(baseID)
 						: fieldName;
 
 					if (fieldMap.has(canonicalName)) {
 						// Shared by multiple types -- use base field label
 						fieldMap.get(canonicalName).label
-							= Zotero.ItemFields.getLocalizedString(canonicalName);
+							= Trellis.ItemFields.getLocalizedString(canonicalName);
 					}
 					else {
 						fieldMap.set(canonicalName, {
 							canonicalName,
 							firstOrder: orderCounter++,
 							// Use type-specific label until another type shares this field
-							label: Zotero.ItemFields.getLocalizedString(fieldName),
+							label: Trellis.ItemFields.getLocalizedString(fieldName),
 						});
 					}
 				}
@@ -563,22 +563,22 @@
 				}
 				else {
 					// Same-type batch: use the shared item type's fields
-					let fields = Zotero.ItemFields.getItemTypeFields(this.item.getField("itemTypeID"));
+					let fields = Trellis.ItemFields.getItemTypeFields(this.item.getField("itemTypeID"));
 					for (let i = 0; i < fields.length; i++) {
-						fieldNames.push(Zotero.ItemFields.getName(fields[i]));
+						fieldNames.push(Trellis.ItemFields.getName(fields[i]));
 					}
 				}
 				fieldNames.push("dateAdded", "dateModified");
 			}
 			else {
-				var fields = Zotero.ItemFields.getItemTypeFields(this.item.getField("itemTypeID"));
+				var fields = Trellis.ItemFields.getItemTypeFields(this.item.getField("itemTypeID"));
 
 				for (let i = 0; i < fields.length; i++) {
-					fieldNames.push(Zotero.ItemFields.getName(fields[i]));
+					fieldNames.push(Trellis.ItemFields.getName(fields[i]));
 				}
 
-				if (this.item instanceof Zotero.FeedItem) {
-					let row = ZoteroPane.getCollectionTreeRows()[0];
+				if (this.item instanceof Trellis.FeedItem) {
+					let row = TrellisPane.getCollectionTreeRows()[0];
 					if (row && row.isFeeds()) {
 						fieldNames.unshift("feed");
 					}
@@ -596,11 +596,11 @@
 				let extraFieldValues = [];
 				
 				if (fieldName) {
-					var fieldID = Zotero.ItemFields.getID(fieldName);
+					var fieldID = Trellis.ItemFields.getID(fieldName);
 					// In cross-type batch mode, union fields are pre-validated
 					if (!this._unionFieldDescriptors
 							&& fieldID
-							&& !Zotero.ItemFields.isValidForType(fieldID, this.item.itemTypeID)) {
+							&& !Trellis.ItemFields.isValidForType(fieldID, this.item.itemTypeID)) {
 						fieldName = null;
 					}
 				}
@@ -618,7 +618,7 @@
 					// Fake "field" in the feeds global view that displays the name
 					// of the containing feed
 					else if (fieldName == 'feed') {
-						val = Zotero.Feeds.get(this.item.libraryID)?.name;
+						val = Trellis.Feeds.get(this.item.libraryID)?.name;
 					}
 					else if (this._unionFieldDescriptors) {
 						val = this.item.getField(fieldName, false, true);
@@ -642,8 +642,8 @@
 					var fieldIsClickable = this._fieldIsClickable(fieldName);
 					
 					if (fieldIsClickable
-							&& !Zotero.Items.isPrimaryField(fieldName)
-							&& Zotero.ItemFields.isDate(fieldName)
+							&& !Trellis.Items.isPrimaryField(fieldName)
+							&& Trellis.ItemFields.isDate(fieldName)
 							// TEMP - NSF
 							&& fieldName != 'dateSent') {
 						let dateVal = this._unionFieldDescriptors
@@ -669,7 +669,7 @@
 				
 				if (fieldName) {
 					let labelText = this._unionFieldDescriptors?.get(fieldName)?.label
-						?? Zotero.ItemFields.getLocalizedString(fieldName);
+						?? Trellis.ItemFields.getLocalizedString(fieldName);
 					let label = this.createLabelElement({
 						text: labelText,
 						id: `itembox-field-${fieldName}-label`,
@@ -687,13 +687,13 @@
 				// TEMP - NSF (homepage)
 				else if ((fieldName == 'url' || fieldName == 'homepage')
 						// Only make plausible HTTP URLs clickable
-						&& Zotero.Utilities.isHTTPURL(val, true)) {
+						&& Trellis.Utilities.isHTTPURL(val, true)) {
 					openLinkButton = this.createOpenLinkIcon(val, fieldName);
 					addLinkContextMenu = true;
 				}
 				else if (fieldName == 'DOI' && val && typeof val == 'string') {
 					// Pull out DOI, in case there's a prefix
-					let doi = Zotero.Utilities.cleanDOI(val);
+					let doi = Trellis.Utilities.cleanDOI(val);
 					if (doi) {
 						doi = "https://doi.org/"
 							// Encode some characters that are technically valid in DOIs,
@@ -751,14 +751,14 @@
 				
 				// Add options button for title fields
 				if (this.editable && fieldID && (fieldName == 'seriesTitle' || fieldName == 'shortTitle'
-				|| Zotero.ItemFields.isFieldOfBase(fieldID, 'title')
-				|| Zotero.ItemFields.isFieldOfBase(fieldID, 'publicationTitle'))) {
+				|| Trellis.ItemFields.isFieldOfBase(fieldID, 'title')
+				|| Trellis.ItemFields.isFieldOfBase(fieldID, 'publicationTitle'))) {
 					let optionsButton = document.createXULElement("toolbarbutton");
-					optionsButton.className = "zotero-clicky zotero-clicky-options show-on-hover";
+					optionsButton.className = "trellis-clicky trellis-clicky-options show-on-hover";
 					optionsButton.setAttribute('data-l10n-id', "itembox-button-options");
 					optionsButton.id = `itembox-field-${fieldName}-options`;
 					onContextMenu = this.createContextMenuHandler(fieldName, () => {
-						let menupopup = ZoteroPane.buildFieldTransformMenu({
+						let menupopup = TrellisPane.buildFieldTransformMenu({
 							target: valueElement,
 							onTransform: (newValues) => {
 								this._setFieldTransformedValue(valueElement, newValues);
@@ -786,7 +786,7 @@
 				if (this.mode == 'fieldmerge' && typeof this._fieldAlternatives[fieldName] != 'undefined') {
 					button = document.createXULElement("toolbarbutton");
 					button.id = `itembox-field-${fieldName}-merge`;
-					button.className = 'zotero-field-version-button zotero-clicky-merge';
+					button.className = 'trellis-field-version-button trellis-clicky-merge';
 					let fieldLocalName = rowLabel.querySelector("label")?.textContent;
 					document.l10n.setAttributes(button, 'itembox-button-merge', { field: fieldLocalName || "" });
 					
@@ -794,7 +794,7 @@
 					
 					for (let v of this._fieldAlternatives[fieldName]) {
 						let menuitem = document.createXULElement("menuitem");
-						var sv = Zotero.Utilities.ellipsize(v, 60);
+						var sv = Trellis.Utilities.ellipsize(v, 60);
 						menuitem.setAttribute('label', sv);
 						if (v != sv) {
 							menuitem.setAttribute('tooltiptext', v);
@@ -819,7 +819,7 @@
 				}
 
 				// Insert user row after the corresponding date row
-				if (Zotero.Libraries.get(this.item.libraryID).libraryType === 'group') {
+				if (Trellis.Libraries.get(this.item.libraryID).libraryType === 'group') {
 					let userID;
 					let userFieldName;
 					let labelKey;
@@ -844,18 +844,18 @@
 						userLabel.className = "meta-label";
 						userLabel.setAttribute("fieldname", userFieldName);
 						userLabel.appendChild(this.createLabelElement({
-							text: Zotero.getString(labelKey),
+							text: Trellis.getString(labelKey),
 							id: `itembox-field-${userFieldName}-label`,
 						}));
 						let userData = document.createElement("div");
 						userData.className = "meta-data";
 						let valueElem = this.createValueElement({
-							text: hasMultipleUsers ? '' : Zotero.Users.getName(userID),
+							text: hasMultipleUsers ? '' : Trellis.Users.getName(userID),
 						});
 						if (this._extraItems.length) {
 							valueElem.multipleValues = true;
 							if (hasMultipleUsers) {
-								valueElem.placeholder = Zotero.getString(
+								valueElem.placeholder = Trellis.getString(
 									'item-pane-batch-editing-multiple-values-placeholder'
 								);
 							}
@@ -878,18 +878,18 @@
 						this._creatorTypeMenu.removeChild(this._creatorTypeMenu.firstChild);
 					}
 					
-					var creatorTypes = Zotero.CreatorTypes.getTypesForItemType(this.item.itemTypeID);
+					var creatorTypes = Trellis.CreatorTypes.getTypesForItemType(this.item.itemTypeID);
 		
 					var localized = {};
 					for (let i = 0; i < creatorTypes.length; i++) {
 						localized[creatorTypes[i].name]
-							= Zotero.CreatorTypes.getLocalizedString(creatorTypes[i].name);
+							= Trellis.CreatorTypes.getLocalizedString(creatorTypes[i].name);
 					}
 					
 					for (let i in localized) {
 						var menuitem = document.createXULElement("menuitem");
 						menuitem.setAttribute("label", localized[i]);
-						menuitem.setAttribute("typeid", Zotero.CreatorTypes.getID(i));
+						menuitem.setAttribute("typeid", Trellis.CreatorTypes.getID(i));
 						this._creatorTypeMenu.appendChild(menuitem);
 					}
 					this._creatorTypeMenu.addEventListener('popuphidden', () => {
@@ -957,7 +957,7 @@
 							this._displayAllCreators = true;
 						}
 					}
-					else if (this.editable && Zotero.CreatorTypes.itemTypeHasCreators(this.item.itemTypeID)) {
+					else if (this.editable && Trellis.CreatorTypes.itemTypeHasCreators(this.item.itemTypeID)) {
 						// Add default row
 						this.addCreatorRow(false, false, false);
 					}
@@ -966,7 +966,7 @@
 
 				if (this._showCreatorTypeGuidance) {
 					let creatorTypeLabels = this.querySelectorAll(".creator-type-label");
-					this._id("zotero-author-guidance").show({
+					this._id("trellis-author-guidance").show({
 						forEl: creatorTypeLabels[creatorTypeLabels.length - 1]
 					});
 					this._showCreatorTypeGuidance = false;
@@ -1007,7 +1007,7 @@
 		}
 
 		renderCustomRows(rowIDs) {
-			let { options: targetRows, updateID } = Zotero.ItemPaneManager.customInfoRowData;
+			let { options: targetRows, updateID } = Trellis.ItemPaneManager.customInfoRowData;
 			
 			// If rowIDs are provided, always update them
 			if (rowIDs?.length > 0) {
@@ -1146,7 +1146,7 @@
 			let valueElem = rowElem.querySelector(".meta-data > .value");
 			if (!this.editable) valueElem.toggleAttribute('readonly', true);
 			
-			let onItemChange = Zotero.ItemPaneManager.getInfoRowHook(rowID, "onItemChange");
+			let onItemChange = Trellis.ItemPaneManager.getInfoRowHook(rowID, "onItemChange");
 			if (!onItemChange) return;
 			try {
 				onItemChange({
@@ -1164,14 +1164,14 @@
 				});
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 
 		updateCustomRowData(rowElem) {
 			if (!this.item) return;
 			let rowID = rowElem.dataset.customRowId;
-			let onGetData = Zotero.ItemPaneManager.getInfoRowHook(rowID, "onGetData");
+			let onGetData = Trellis.ItemPaneManager.getInfoRowHook(rowID, "onGetData");
 			if (!onGetData) return;
 			let data = "";
 			try {
@@ -1186,7 +1186,7 @@
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			let valueElem = rowElem.querySelector(".meta-data > .value");
 			valueElem.value = data;
@@ -1198,7 +1198,7 @@
 			}
 			// If not, assume it follows the locale's direction
 			else {
-				valueElem.dir = Zotero.dir;
+				valueElem.dir = Trellis.dir;
 			}
 		}
 		
@@ -1210,7 +1210,7 @@
 			labelWrapper.setAttribute("fieldname", "itemType");
 			var label = this.createLabelElement({
 				id: "itembox-field-itemType-label",
-				text: Zotero.getString("zotero.items.itemType")
+				text: Trellis.getString("trellis.items.itemType")
 			});
 			labelWrapper.appendChild(label);
 			var rowData = document.createElement('div');
@@ -1221,7 +1221,7 @@
 			else {
 				var menulist = document.createXULElement("menulist", { is: "menulist-item-types" });
 				menulist.id = "item-type-menu";
-				menulist.className = "zotero-clicky keyboard-clickable";
+				menulist.className = "trellis-clicky keyboard-clickable";
 				// This is to make it easier to identify the itemType menu in _saveFieldFocus
 				menulist.setAttribute("tabindex", 0);
 				menulist.addEventListener('command', (event) => {
@@ -1253,7 +1253,7 @@
 			return (event) => {
 				let menupopup = null;
 				if (!getMenuPopup) {
-					menupopup = this._id("zotero-field-menu");
+					menupopup = this._id("trellis-field-menu");
 				}
 				else {
 					menupopup = getMenuPopup(event);
@@ -1262,7 +1262,7 @@
 				if (!targetInput) {
 					targetInput = event.target.closest('input, textarea');
 				}
-				Zotero.Utilities.Internal.updateEditContextMenu(menupopup, targetInput);
+				Trellis.Utilities.Internal.updateEditContextMenu(menupopup, targetInput);
 				this.handlePopupOpening(event, menupopup, fieldName);
 			};
 		}
@@ -1330,7 +1330,7 @@
 			// getCreatorFields(), switchCreatorMode() and handleCreatorAutoCompleteSelect()
 			// may need need to be adjusted if this DOM structure changes
 
-			var fieldMode = Zotero.Prefs.get('lastCreatorFieldMode');
+			var fieldMode = Trellis.Prefs.get('lastCreatorFieldMode');
 			var firstName = '';
 			var lastName = '';
 			if (creatorData) {
@@ -1341,7 +1341,7 @@
 			
 			// Use the first entry in the drop-down for the default type if none specified
 			var typeID = creatorTypeIDOrName
-				? Zotero.CreatorTypes.getID(creatorTypeIDOrName)
+				? Trellis.CreatorTypes.getID(creatorTypeIDOrName)
 				: this._creatorTypeMenu.childNodes[0].getAttribute('typeid');
 			
 			var rowIndex = this._creatorCount;
@@ -1361,12 +1361,12 @@
 			
 			labelWrapper.className = 'creator-type-label keyboard-clickable';
 			labelWrapper.setAttribute("tabindex", 0);
-			grippy.className = "zotero-clicky zotero-clicky-grippy show-on-hover";
+			grippy.className = "trellis-clicky trellis-clicky-grippy show-on-hover";
 			grippy.setAttribute('tabindex', -1);
 			rowLabel.appendChild(grippy);
 			
 			if (this.editable) {
-				labelWrapper.classList.add('zotero-clicky');
+				labelWrapper.classList.add('trellis-clicky');
 				let span = document.createElement('span');
 				span.className = 'creator-type-dropmarker';
 				labelWrapper.appendChild(span);
@@ -1394,7 +1394,7 @@
 			rowLabel.appendChild(labelWrapper);
 			let label = this.createLabelElement({
 				id: 'creator-type-label-inner',
-				text: Zotero.CreatorTypes.getLocalizedString(typeID),
+				text: Trellis.CreatorTypes.getLocalizedString(typeID),
 				skipEventHandlers: true,
 			});
 			labelWrapper.appendChild(label);
@@ -1432,7 +1432,7 @@
 
 			// Switch creator type button
 			var switchCreatorModeButton = document.createXULElement('toolbarbutton');
-			switchCreatorModeButton.setAttribute("class", "zotero-clicky zotero-clicky-switch-type show-on-hover no-display");
+			switchCreatorModeButton.setAttribute("class", "trellis-clicky trellis-clicky-switch-type show-on-hover no-display");
 			switchCreatorModeButton.setAttribute('id', `creator-${rowIndex}-switchType`);
 			switchCreatorModeButton.addEventListener("command", () => {
 				// Record that this creator is being updated. It is used to avoid flickering during re-render
@@ -1444,17 +1444,17 @@
 			
 			// Minus (-) button
 			var removeButton = document.createXULElement('toolbarbutton');
-			removeButton.setAttribute("class", "zotero-clicky zotero-clicky-minus show-on-hover no-display");
+			removeButton.setAttribute("class", "trellis-clicky trellis-clicky-minus show-on-hover no-display");
 			removeButton.setAttribute('id', `creator-${rowIndex}-remove`);
-			removeButton.setAttribute('tooltiptext', Zotero.getString('general.delete'));
+			removeButton.setAttribute('tooltiptext', Trellis.getString('general.delete'));
 			removeButton.addEventListener("command", () => this.removeCreator(rowIndex, rowData.parentNode));
 			rowData.appendChild(removeButton);
 			
 			// Plus (+) button
 			var addButton = document.createXULElement('toolbarbutton');
-			addButton.setAttribute("class", "zotero-clicky zotero-clicky-plus show-on-hover no-display");
+			addButton.setAttribute("class", "trellis-clicky trellis-clicky-plus show-on-hover no-display");
 			addButton.setAttribute('id', `creator-${rowIndex}-add`);
-			addButton.setAttribute('tooltiptext', Zotero.getString('general.create'));
+			addButton.setAttribute('tooltiptext', Trellis.getString('general.create'));
 			addButton.addEventListener("command", (e) => {
 				// + button adds a creator row after the row that was clicked
 				let nextRow = e.target.closest(".meta-row").nextElementSibling;
@@ -1476,7 +1476,7 @@
 				optionsButton.style.visibility = "hidden";
 				optionsButton.disabled = true;
 			}
-			optionsButton.className = "zotero-clicky zotero-clicky-options show-on-hover no-display";
+			optionsButton.className = "trellis-clicky trellis-clicky-options show-on-hover no-display";
 			optionsButton.setAttribute('id', `creator-${rowIndex}-options`);
 			optionsButton.setAttribute('data-l10n-id', "itembox-button-options");
 			rowData.appendChild(optionsButton);
@@ -1484,7 +1484,7 @@
 			if (this.editable) {
 				let onContextMenu = this.createContextMenuHandler(fieldName, () => {
 					this._popupNode = firstlast;
-					let menupopup = this._id('zotero-creator-transform-menu');
+					let menupopup = this._id('trellis-creator-transform-menu');
 					return menupopup;
 				});
 				optionsButton.addEventListener("command", onContextMenu);
@@ -1540,7 +1540,7 @@
 					return;
 				}
 				e.dataTransfer.setDragImage(row, 15, 15);
-				e.dataTransfer.setData('zotero/creator', rowIndex);
+				e.dataTransfer.setData('trellis/creator', rowIndex);
 				// Hide the row after the drag image is generated to make it look like
 				// a placeholder where the creator will be dropped.
 				setTimeout(() => {
@@ -1624,7 +1624,7 @@
 					this._forceRenderAll();
 				}
 			});
-			rowData.textContent = Zotero.getString('general.numMore', num);
+			rowData.textContent = Trellis.getString('general.numMore', num);
 			
 			this.addDynamicRow(rowLabel, rowData);
 		}
@@ -1634,7 +1634,7 @@
 			rowLabel.className = "meta-label";
 			rowLabel.setAttribute("fieldname", field);
 			let labelText = this._unionFieldDescriptors?.get(field)?.label
-				?? Zotero.ItemFields.getLocalizedString(field);
+				?? Trellis.ItemFields.getLocalizedString(field);
 			let label = this.createLabelElement({
 				text: labelText,
 				id: `itembox-field-${field}-label`
@@ -1645,7 +1645,7 @@
 			rowData.className = "meta-data date-box";
 			
 			var elem = this.createFieldValueElement(
-				Zotero.Date.multipartToStr(value),
+				Trellis.Date.multipartToStr(value),
 				field,
 				extraFieldValues
 			);
@@ -1655,8 +1655,8 @@
 			// Don't show y-m-d status indicator in batch edit mode
 			if (!this._extraItems.length) {
 				var ymd = document.createElement('span');
-				ymd.id = 'zotero-date-field-status';
-				ymd.textContent = Zotero.Date.strToDate(Zotero.Date.multipartToStr(value))
+				ymd.id = 'trellis-date-field-status';
+				ymd.textContent = Trellis.Date.strToDate(Trellis.Date.multipartToStr(value))
 						.order.split('').join(' ');
 				ymd.className = "show-on-hover";
 				rowData.appendChild(ymd);
@@ -1670,15 +1670,15 @@
 		switchCreatorMode(row, fieldMode, initial, updatePref, rowIndex) {
 			// Change if button position changes
 			var creatorNameBox = row.querySelector(".creator-name-box");
-			let switchTypeBtn = row.querySelector(".zotero-clicky-switch-type");
+			let switchTypeBtn = row.querySelector(".trellis-clicky-switch-type");
 			var lastName = creatorNameBox.firstChild;
 			var firstName = creatorNameBox.lastChild;
 
 			// Switch to single-field mode
 			if (fieldMode == 1) {
-				creatorNameBox.setAttribute('switch-mode-label', Zotero.getString('pane.item.switchFieldMode.two'));
+				creatorNameBox.setAttribute('switch-mode-label', Trellis.getString('pane.item.switchFieldMode.two'));
 				switchTypeBtn.setAttribute("type", "single");
-				switchTypeBtn.setAttribute("tooltiptext", Zotero.getString('pane.item.switchFieldMode.two'));
+				switchTypeBtn.setAttribute("tooltiptext", Trellis.getString('pane.item.switchFieldMode.two'));
 				lastName.setAttribute('fieldMode', '1');
 				lastName.placeholder = this._defaultFullName;
 				delete lastName.style.width;
@@ -1699,9 +1699,9 @@
 			}
 			// Switch to two-field mode
 			else {
-				creatorNameBox.setAttribute('switch-mode-label', Zotero.getString('pane.item.switchFieldMode.one'));
+				creatorNameBox.setAttribute('switch-mode-label', Trellis.getString('pane.item.switchFieldMode.one'));
 				switchTypeBtn.setAttribute("type", "dual");
-				switchTypeBtn.setAttribute("tooltiptext", Zotero.getString('pane.item.switchFieldMode.one'));
+				switchTypeBtn.setAttribute("tooltiptext", Trellis.getString('pane.item.switchFieldMode.one'));
 				lastName.setAttribute('fieldMode', '0');
 
 				lastName.placeholder = this._defaultLastName;
@@ -1724,8 +1724,8 @@
 			
 			// Save the last-used field mode
 			if (updatePref) {
-				Zotero.debug("Switching lastCreatorFieldMode to " + fieldMode);
-				Zotero.Prefs.set('lastCreatorFieldMode', fieldMode);
+				Trellis.debug("Switching lastCreatorFieldMode to " + fieldMode);
+				Trellis.Prefs.set('lastCreatorFieldMode', fieldMode);
 			}
 			
 			// Update autocomplete settings to ensure the correct options are suggested
@@ -1772,14 +1772,14 @@
 			var fieldsToDelete = this.item.getFieldsNotInType(itemTypeID, true);
 			
 			// Special cases handled below
-			var bookTypeID = Zotero.ItemTypes.getID('book');
-			var bookSectionTypeID = Zotero.ItemTypes.getID('bookSection');
+			var bookTypeID = Trellis.ItemTypes.getID('book');
+			var bookSectionTypeID = Trellis.ItemTypes.getID('bookSection');
 			
 			// Add warning for shortTitle when moving from book to bookSection
 			// when title will be transferred
 			if (this.item.itemTypeID == bookTypeID && itemTypeID == bookSectionTypeID) {
-				let titleFieldID = Zotero.ItemFields.getID('title');
-				let shortTitleFieldID = Zotero.ItemFields.getID('shortTitle');
+				let titleFieldID = Trellis.ItemFields.getID('title');
+				let shortTitleFieldID = Trellis.ItemFields.getID('shortTitle');
 				if (this.item.getField(titleFieldID) && this.item.getField(shortTitleFieldID)) {
 					if (!fieldsToDelete) {
 						fieldsToDelete = [];
@@ -1792,11 +1792,11 @@
 			if (fieldsToDelete) {
 				// Ignore warning for bookTitle when going from bookSection to book
 				// if there's not also a title, since the book title is transferred
-				// to title automatically in Zotero.Item.setType()
+				// to title automatically in Trellis.Item.setType()
 				if (this.item.itemTypeID == bookSectionTypeID && itemTypeID == bookTypeID) {
-					let titleFieldID = Zotero.ItemFields.getID('title');
-					var bookTitleFieldID = Zotero.ItemFields.getID('bookTitle');
-					let shortTitleFieldID = Zotero.ItemFields.getID('shortTitle');
+					let titleFieldID = Trellis.ItemFields.getID('title');
+					var bookTitleFieldID = Trellis.ItemFields.getID('bookTitle');
+					let shortTitleFieldID = Trellis.ItemFields.getID('shortTitle');
 					if (this.item.getField(bookTitleFieldID) && !this.item.getField(titleFieldID)) {
 						var index = fieldsToDelete.indexOf(bookTitleFieldID);
 						fieldsToDelete.splice(index, 1);
@@ -1810,7 +1810,7 @@
 				var fieldNames = "";
 				for (var i = 0; i < fieldsToDelete.length; i++) {
 					fieldNames += "\n - "
-						+ Zotero.ItemFields.getLocalizedString(fieldsToDelete[i]);
+						+ Trellis.ItemFields.getLocalizedString(fieldsToDelete[i]);
 				}
 				
 				var promptService = Services.prompt;
@@ -1818,8 +1818,8 @@
 			
 			if (!fieldsToDelete || fieldsToDelete.length == 0
 					|| promptService.confirm(null,
-						Zotero.getString('pane.item.changeType.title'),
-						Zotero.getString('pane.item.changeType.text') + "\n" + fieldNames)) {
+						Trellis.getString('pane.item.changeType.title'),
+						Trellis.getString('pane.item.changeType.text') + "\n" + fieldNames)) {
 				this.item.setType(itemTypeID);
 				
 				if (this.saveOnEdit) {
@@ -1859,8 +1859,8 @@
 			}
 			let openLink = document.createXULElement("toolbarbutton");
 			openLink.id = `itembox-field-${fieldName}-link`;
-			openLink.className = "zotero-clicky zotero-clicky-open-link show-on-hover";
-			openLink.addEventListener("click", event => ZoteroPane.loadURI(value, event));
+			openLink.className = "trellis-clicky trellis-clicky-open-link show-on-hover";
+			openLink.addEventListener("click", event => TrellisPane.loadURI(value, event));
 			openLink.setAttribute('data-l10n-id', "item-button-view-online");
 			if (!value) openLink.hidden = true;
 			return openLink;
@@ -1890,11 +1890,11 @@
 					if (labelWrapper.nextSibling.contains(document.activeElement)) {
 						// click on label when value field is already focused
 						// will refocus itemTree in library tab or reader content in reader tab
-						if (Zotero_Tabs.selectedType === "library") {
-							ZoteroPane.itemsView.focus();
+						if (Trellis_Tabs.selectedType === "library") {
+							TrellisPane.itemsView.focus();
 						}
 						else {
-							let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+							let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 							reader.focus();
 						}
 					}
@@ -1943,11 +1943,11 @@
 			}
 			// If not, assume it follows the locale's direction
 			else {
-				valueElement.dir = Zotero.dir;
+				valueElement.dir = Trellis.dir;
 			}
 			
 			// Regardless, align the text in the label consistently, following the locale's direction
-			if (Zotero.rtl) {
+			if (Trellis.rtl) {
 				valueElement.style.textAlign = 'right';
 			}
 			else {
@@ -1960,10 +1960,10 @@
 			valueText += '';
 
 			if (fieldName) {
-				var fieldID = Zotero.ItemFields.getID(fieldName);
+				var fieldID = Trellis.ItemFields.getID(fieldName);
 			}
 
-			let isMultiline = Zotero.ItemFields.isMultiline(fieldName);
+			let isMultiline = Trellis.ItemFields.isMultiline(fieldName);
 			let isNoWrap = fieldName.startsWith('creator-');
 
 			let attributes = {
@@ -1973,7 +1973,7 @@
 			switch (fieldName) {
 				case 'itemType':
 					attributes.itemTypeID = valueText;
-					valueText = Zotero.ItemTypes.getLocalizedString(valueText);
+					valueText = Trellis.ItemTypes.getLocalizedString(valueText);
 					break;
 				
 				// Convert dates from UTC
@@ -1995,8 +1995,8 @@
 			if (fieldID && !this._extraItems.length) {
 				// Display the SQL date as a tooltip for date fields
 				// TEMP - filingDate
-				if (Zotero.ItemFields.isFieldOfBase(fieldID, 'date') || fieldName == 'filingDate') {
-					tooltipText = Zotero.Date.multipartToSQL(this.item.getField(fieldName, true));
+				if (Trellis.ItemFields.isFieldOfBase(fieldID, 'date') || fieldName == 'filingDate') {
+					tooltipText = Trellis.Date.multipartToSQL(this.item.getField(fieldName, true));
 				}
 			}
 			
@@ -2013,13 +2013,13 @@
 			if (lazy.BIDI_BROWSER_UI) {
 				// Attempt to guess text direction automatically
 				let language = this.item.getField('language');
-				valueElement.dir = Zotero.ItemFields.getDirection(
+				valueElement.dir = Trellis.ItemFields.getDirection(
 					this.item.itemTypeID, fieldName, language
 				);
 			}
 			
 			// Regardless, align the text in unfocused fields consistently, following the locale's direction
-			if (Zotero.rtl) {
+			if (Trellis.rtl) {
 				valueElement.style.textAlign = 'right';
 			}
 			else {
@@ -2047,7 +2047,7 @@
 					|| a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true }));
 				valueElement.multipleValues = true;
 				valueElement.value = '';
-				valueElement.placeholder = Zotero.getString('item-pane-batch-editing-multiple-values-placeholder');
+				valueElement.placeholder = Trellis.getString('item-pane-batch-editing-multiple-values-placeholder');
 				if (this._fieldIsClickable(fieldName)) {
 					valueElement.initialValue = valueText;
 					valueElement.autocomplete = {
@@ -2055,9 +2055,9 @@
 						noRollupOnEmptySearch: true,
 						completeSelectedIndex: true,
 						ignoreBlurWhileSearching: false,
-						search: 'zotero-options',
+						search: 'trellis-options',
 						searchParam: JSON.stringify({
-							search: 'zotero-options',
+							search: 'trellis-options',
 							options: options,
 							includeNoValue: true
 						}),
@@ -2119,14 +2119,14 @@
 		
 		dateTimeFromUTC(valueText) {
 			if (valueText) {
-				var date = Zotero.Date.sqlToDate(valueText, true);
+				var date = Trellis.Date.sqlToDate(valueText, true);
 				if (date) {
 					// If no time, interpret as local, not UTC
-					if (Zotero.Date.isSQLDate(valueText)) {
+					if (Trellis.Date.isSQLDate(valueText)) {
 						// Add time to avoid showing previous day if date is in
 						// DST (including the current date at 00:00:00) and we're
 						// in standard time
-						date = Zotero.Date.sqlToDate(valueText + ' 12:00:00');
+						date = Trellis.Date.sqlToDate(valueText + ' 12:00:00');
 						valueText = date.toLocaleDateString();
 					}
 					else {
@@ -2144,7 +2144,7 @@
 			let isCustomRow = elem.classList.contains("custom-row-value");
 
 			var fieldName = elem.getAttribute('fieldname');
-			let isMultiline = Zotero.ItemFields.isMultiline(fieldName);
+			let isMultiline = Trellis.ItemFields.isMultiline(fieldName);
 			if (isCustomRow) {
 				isMultiline = elem.hasAttribute("multiline");
 			}
@@ -2158,7 +2158,7 @@
 				return;
 			}
 
-			Zotero.debug(`Showing editor for ${fieldName}`);
+			Trellis.debug(`Showing editor for ${fieldName}`);
 
 			var [field, creatorIndex, creatorField] = fieldName.split('-');
 			let value;
@@ -2181,13 +2181,13 @@
 						case 'dateDue':
 						case 'accepted':
 							// If no time, interpret as local, not UTC
-							if (Zotero.Date.isSQLDate(value)) {
-								localDate = Zotero.Date.sqlToDate(value);
+							if (Trellis.Date.isSQLDate(value)) {
+								localDate = Trellis.Date.sqlToDate(value);
 							}
 							else {
-								localDate = Zotero.Date.sqlToDate(value, true);
+								localDate = Trellis.Date.sqlToDate(value, true);
 							}
-							value = Zotero.Date.dateToSQL(localDate);
+							value = Trellis.Date.dateToSQL(localDate);
 							
 							// Don't show time in editor
 							value = value.replace(' 00:00:00', '');
@@ -2201,14 +2201,14 @@
 		addAutocompleteToElement(elem) {
 			var fieldName = elem.getAttribute('fieldname');
 			var [field, _creatorIndex, _creatorField] = fieldName.split('-');
-			if (elem.getAttribute("readonly") || !(field == 'creator' || Zotero.ItemFields.isAutocompleteField(fieldName))) {
+			if (elem.getAttribute("readonly") || !(field == 'creator' || Trellis.ItemFields.isAutocompleteField(fieldName))) {
 				return;
 			}
 			let itemID = this.item.id;
 			let params = {
 				fieldName: fieldName,
 				libraryID: this.item.libraryID,
-				search: 'zotero'
+				search: 'trellis'
 			};
 			if (field == 'creator') {
 				params.fieldMode = parseInt(elem.getAttribute('fieldMode'));
@@ -2241,7 +2241,7 @@
 			elem.autocomplete = {
 				completeSelectedIndex: true,
 				ignoreBlurWhileSearching: false,
-				search: 'zotero',
+				search: 'trellis',
 				searchParam: JSON.stringify(params),
 				popup: 'PopupAutoComplete',
 			};
@@ -2284,7 +2284,7 @@
 				var [_field, creatorIndex, creatorField]
 					= textbox.getAttribute('fieldname').split('-');
 				
-				var creator = Zotero.Creators.get(creatorID);
+				var creator = Trellis.Creators.get(creatorID);
 				
 				var otherField = creatorField == 'lastName' ? 'firstName' : 'lastName';
 				
@@ -2418,7 +2418,7 @@
 
 			var fieldName = textbox.getAttribute('fieldname');
 
-			let isMultiline = Zotero.ItemFields.isMultiline(fieldName);
+			let isMultiline = Trellis.ItemFields.isMultiline(fieldName);
 			let isCustomRow = textbox.classList.contains("custom-row-value");
 
 			if (isCustomRow) {
@@ -2431,7 +2431,7 @@
 
 			if (isCustomRow) {
 				let rowID = textbox.closest(".meta-row").dataset.customRowId;
-				let onSetData = Zotero.ItemPaneManager.getInfoRowHook(rowID, "onSetData");
+				let onSetData = Trellis.ItemPaneManager.getInfoRowHook(rowID, "onSetData");
 				if (onSetData) {
 					try {
 						onSetData({
@@ -2443,7 +2443,7 @@
 						});
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 
@@ -2456,7 +2456,7 @@
 				this.handleCreatorAutoCompleteSelect(textbox);
 			}
 
-			Zotero.debug(`Hiding editor for ${fieldName}`);
+			Trellis.debug(`Hiding editor for ${fieldName}`);
 			
 			// Prevent autocomplete breakage in Firefox 3
 			if (textbox.mController) {
@@ -2465,7 +2465,7 @@
 			
 			
 			// Multiline fields go back to occupying as much space as needed
-			if (Zotero.ItemFields.isMultiline(fieldName)) {
+			if (Trellis.ItemFields.isMultiline(fieldName)) {
 				textbox.setAttribute("min-lines", 1);
 			}
 			var value = textbox.value.trim();
@@ -2486,7 +2486,7 @@
 				otherFields[creatorField] = value;
 				this.modifyCreator(creatorIndex, otherFields);
 				
-				if (Zotero.ItemTypes.getName(this.item.itemTypeID) === "bookSection") {
+				if (Trellis.ItemTypes.getName(this.item.itemTypeID) === "bookSection") {
 					this._showCreatorTypeGuidance = true;
 				}
 			}
@@ -2498,27 +2498,27 @@
 					switch (fieldName) {
 						case 'accessDate':
 							// Parse 'yesterday'/'today'/'tomorrow'
-							value = Zotero.Date.parseDescriptiveString(value);
+							value = Trellis.Date.parseDescriptiveString(value);
 
 							// Allow "now" to use current time
 							if (value == 'now') {
-								value = Zotero.Date.dateToSQL(new Date(), true);
+								value = Trellis.Date.dateToSQL(new Date(), true);
 							}
 							// If just date, don't convert to UTC
-							else if (Zotero.Date.isSQLDate(value)) {
-								let localDate = Zotero.Date.sqlToDate(value);
-								value = Zotero.Date.dateToSQL(localDate).replace(' 00:00:00', '');
+							else if (Trellis.Date.isSQLDate(value)) {
+								let localDate = Trellis.Date.sqlToDate(value);
+								value = Trellis.Date.dateToSQL(localDate).replace(' 00:00:00', '');
 							}
-							else if (Zotero.Date.isSQLDateTime(value)) {
-								let localDate = Zotero.Date.sqlToDate(value);
-								value = Zotero.Date.dateToSQL(localDate, true);
+							else if (Trellis.Date.isSQLDateTime(value)) {
+								let localDate = Trellis.Date.sqlToDate(value);
+								value = Trellis.Date.dateToSQL(localDate, true);
 							}
 							else {
-								let d = Zotero.Date.strToDate(value);
+								let d = Trellis.Date.strToDate(value);
 								value = null;
 								if (d.year && d.month != undefined && d.day) {
 									d = new Date(d.year, d.month, d.day);
-									value = Zotero.Date.dateToSQL(d).replace(' 00:00:00', '');
+									value = Trellis.Date.dateToSQL(d).replace(' 00:00:00', '');
 								}
 							}
 							textbox.value = this.dateTimeFromUTC(value);
@@ -2528,16 +2528,16 @@
 						case 'dateSent':
 						case 'dateDue':
 						case 'accepted':
-							if (Zotero.Date.isSQLDate(value)) {
-								let localDate = Zotero.Date.sqlToDate(value);
-								value = Zotero.Date.dateToSQL(localDate).replace(' 00:00:00', '');
+							if (Trellis.Date.isSQLDate(value)) {
+								let localDate = Trellis.Date.sqlToDate(value);
+								value = Trellis.Date.dateToSQL(localDate).replace(' 00:00:00', '');
 							}
 							else {
-								let d = Zotero.Date.strToDate(value);
+								let d = Trellis.Date.strToDate(value);
 								value = null;
 								if (d.year && d.month != undefined && d.day) {
 									d = new Date(d.year, d.month, d.day);
-									value = Zotero.Date.dateToSQL(d).replace(' 00:00:00', '');
+									value = Trellis.Date.dateToSQL(d).replace(' 00:00:00', '');
 								}
 							}
 							textbox.value = this.dateTimeFromUTC(value);
@@ -2545,9 +2545,9 @@
 						
 						default:
 							// TODO: generalize to all date rows/fields
-							if (Zotero.ItemFields.isFieldOfBase(fieldName, 'date')) {
+							if (Trellis.ItemFields.isFieldOfBase(fieldName, 'date')) {
 								// Parse 'yesterday'/'today'/'tomorrow'
-								value = Zotero.Date.parseDescriptiveString(value);
+								value = Trellis.Date.parseDescriptiveString(value);
 							}
 					}
 				}
@@ -2565,7 +2565,7 @@
 				else {
 					saveOptions.undoAction = 'undo-action-edit-field';
 					saveOptions.undoActionArgs = {
-						field: Zotero.ItemFields.getLocalizedString(fieldName),
+						field: Trellis.ItemFields.getLocalizedString(fieldName),
 						count: 1 + this._extraItems.length
 					};
 				}
@@ -2581,7 +2581,7 @@
 		
 		_fieldIsClickable(fieldName) {
 			return !this.clickByRow
-					&& ((this.clickable && !Zotero.Items.isPrimaryField(fieldName))
+					&& ((this.clickable && !Trellis.Items.isPrimaryField(fieldName))
 					|| this._clickableFields.indexOf(fieldName) != -1);
 		}
 		
@@ -2589,10 +2589,10 @@
 		 * Check whether a field can be set on an item, considering base field mappings.
 		 */
 		_canSetFieldOnItem(field, item) {
-			let fieldID = Zotero.ItemFields.getID(field);
+			let fieldID = Trellis.ItemFields.getID(field);
 			if (!fieldID) return false;
-			if (Zotero.ItemFields.isValidForType(fieldID, item.itemTypeID)) return true;
-			return !!Zotero.ItemFields.getFieldIDFromTypeAndBase(item.itemTypeID, fieldID);
+			if (Trellis.ItemFields.isValidForType(fieldID, item.itemTypeID)) return true;
+			return !!Trellis.ItemFields.getFieldIDFromTypeAndBase(item.itemTypeID, fieldID);
 		}
 
 		_modifyField(field, value, item = null) {
@@ -2607,12 +2607,12 @@
 		
 		async _saveItems(saveOptions = {}) {
 			// Cache item and extra items to avoid a race condition where, after `hideEditor`,
-			// while we yield for `await Zotero.DB.executeTransaction`, itemBox is rendered for
+			// while we yield for `await Trellis.DB.executeTransaction`, itemBox is rendered for
 			// the new item and this.item is no longer relevant
 			let item = this.item;
 			let extraItems = this._extraItems;
 			
-			await Zotero.DB.executeTransaction(async () => {
+			await Trellis.DB.executeTransaction(async () => {
 				await item.save(saveOptions);
 				for (let extraItem of extraItems) {
 					await extraItem.save(saveOptions);
@@ -2635,7 +2635,7 @@
 				let newValue = newValues[index];
 				this._modifyField(fieldName, newValue, item);
 				
-				if (Zotero.ItemFields.isFieldOfBase(fieldName, 'title')) {
+				if (Trellis.ItemFields.isFieldOfBase(fieldName, 'title')) {
 					let shortTitleVal = item.getField('shortTitle');
 					if (newValue.toLowerCase().startsWith(shortTitleVal.toLowerCase())) {
 						this._modifyField('shortTitle', newValue.substring(0, shortTitleVal.length), item);
@@ -2647,7 +2647,7 @@
 				await this._saveItems({
 					undoAction: 'undo-action-edit-field',
 					undoActionArgs: {
-						field: Zotero.ItemFields.getLocalizedString(fieldName),
+						field: Trellis.ItemFields.getLocalizedString(fieldName),
 						count: 1 + this._extraItems.length
 					}
 				});
@@ -2667,15 +2667,15 @@
 				let isDefaultEmptyRow = isEmpty && creatorValues.length == 1;
 		
 				if (!this.editable) {
-					row.querySelector(".zotero-clicky-plus").hidden = true;
-					row.querySelector(".zotero-clicky-minus").hidden = true;
-					row.querySelector(".zotero-clicky-options").hidden = true;
-					row.querySelector(".zotero-clicky-switch-type").hidden = true;
+					row.querySelector(".trellis-clicky-plus").hidden = true;
+					row.querySelector(".trellis-clicky-minus").hidden = true;
+					row.querySelector(".trellis-clicky-options").hidden = true;
+					row.querySelector(".trellis-clicky-switch-type").hidden = true;
 					continue;
 				}
 
-				row.querySelector(".zotero-clicky-plus").disabled = isEmpty || isNextRowUnsavedCreator;
-				row.querySelector(".zotero-clicky-minus").disabled = isDefaultEmptyRow;
+				row.querySelector(".trellis-clicky-plus").disabled = isEmpty || isNextRowUnsavedCreator;
+				row.querySelector(".trellis-clicky-minus").disabled = isDefaultEmptyRow;
 			}
 		}
 
@@ -2759,8 +2759,8 @@
 		
 		canCapitalizeCreatorName(row) {
 			var fields = this.getCreatorFields(row);
-			return fields.firstName && Zotero.Utilities.capitalizeName(fields.firstName) != fields.firstName
-				|| fields.lastName && Zotero.Utilities.capitalizeName(fields.lastName) != fields.lastName;
+			return fields.firstName && Trellis.Utilities.capitalizeName(fields.firstName) != fields.firstName
+				|| fields.lastName && Trellis.Utilities.capitalizeName(fields.lastName) != fields.lastName;
 		}
 
 		/**
@@ -2771,8 +2771,8 @@
 			let label = row.querySelector('.meta-label');
 			var creatorIndex = parseInt(label.getAttribute('fieldname').split('-')[1]);
 			let [lastName, firstName] = row.querySelectorAll("editable-text");
-			lastName.value = Zotero.Utilities.capitalizeName(lastName.value);
-			firstName.value = Zotero.Utilities.capitalizeName(firstName.value);
+			lastName.value = Trellis.Utilities.capitalizeName(lastName.value);
+			firstName.value = Trellis.Utilities.capitalizeName(firstName.value);
 			var fields = this.getCreatorFields(row);
 			this.modifyCreator(creatorIndex, fields);
 			if (this.saveOnEdit) {
@@ -2785,7 +2785,7 @@
 			return (e) => {
 				e.preventDefault();
 				let row = e.target.closest(".meta-row");
-				let index = parseInt(e.dataTransfer.getData("zotero/creator"));
+				let index = parseInt(e.dataTransfer.getData("trellis/creator"));
 				let nextSibling = row.nextSibling;
 				let beforeCreatorField = nextSibling.querySelector('.meta-label').getAttribute('fieldname') || "";
 				let beforeCreatorIndex;
@@ -2828,7 +2828,7 @@
 		handleCreatorDragOver(rowIndex, row) {
 			return (e) => {
 				e.preventDefault();
-				let index = e.dataTransfer.getData("zotero/creator");
+				let index = e.dataTransfer.getData("trellis/creator");
 				if (!index) {
 					return false;
 				}
@@ -2847,11 +2847,11 @@
 
 		moveCreator(index, dir, newIndex, skipSave) {
 			if (index == 0 && dir == 'up') {
-				Zotero.debug("Can't move up creator 0");
+				Trellis.debug("Can't move up creator 0");
 				return;
 			}
 			else if (index + 1 == this.item.numCreators() && dir == 'down') {
-				Zotero.debug("Can't move down last creator");
+				Trellis.debug("Can't move down last creator");
 				return;
 			}
 			else if (newIndex && index == newIndex) {
@@ -2991,8 +2991,8 @@
 			if (this._unionFieldDescriptors) {
 				return this._infoTable.querySelector('editable-text[fieldname="title"]');
 			}
-			var titleFieldID = Zotero.ItemFields.getFieldIDFromTypeAndBase(this.item.itemTypeID, 'title');
-			return this._infoTable.querySelector(`editable-text[fieldname="${Zotero.ItemFields.getName(titleFieldID)}"]`);
+			var titleFieldID = Trellis.ItemFields.getFieldIDFromTypeAndBase(this.item.itemTypeID, 'title');
+			return this._infoTable.querySelector(`editable-text[fieldname="${Trellis.ItemFields.getName(titleFieldID)}"]`);
 		}
 
 		getFocusedTextArea() {
@@ -3026,13 +3026,13 @@
 			let targetElem = event.target.closest("editable-text")?._input;
 			let tabID;
 			let tabSubType;
-			if (typeof Zotero_Tabs != 'undefined') {
-				let { id, subType } = Zotero_Tabs.getTabInfo();
+			if (typeof Trellis_Tabs != 'undefined') {
+				let { id, subType } = Trellis_Tabs.getTabInfo();
 				tabID = id;
 				tabSubType = subType;
 			}
 
-			Zotero.MenuManager.updateMenuPopup(
+			Trellis.MenuManager.updateMenuPopup(
 				popup,
 				"itemPane/info/row",
 				{
@@ -3096,26 +3096,26 @@
 		}
 		
 		updateRetracted() {
-			// Create the real function here so we can use Zotero.serial(). updateRetracted()
+			// Create the real function here so we can use Trellis.serial(). updateRetracted()
 			// isn't awaited in refresh(), so we want to make sure successive invocations
 			// don't overlap.
 			if (!this._updateRetracted) {
-				this._updateRetracted = Zotero.serial(async function (item) {
-					var show = Zotero.Retractions.isRetracted(item);
+				this._updateRetracted = Trellis.serial(async function (item) {
+					var show = Trellis.Retractions.isRetracted(item);
 					if (!show) {
 						this._id('retraction-box').hidden = true;
 						return;
 					}
-					var data = await Zotero.Retractions.getData(item);
+					var data = await Trellis.Retractions.getData(item);
 					
 					this._id('retraction-box').hidden = false;
 					this._id('retraction-header-text').textContent
-						= Zotero.getString('retraction.banner');
+						= Trellis.getString('retraction.banner');
 					
 					// Date
 					if (data.date) {
 						this._id('retraction-date').hidden = false;
-						this._id('retraction-date').textContent = Zotero.getString(
+						this._id('retraction-date').textContent = Trellis.getString(
 							'retraction.date',
 							data.date.toLocaleDateString()
 						);
@@ -3135,7 +3135,7 @@
 							let dd = document.createElement('dd');
 							
 							dt.textContent = reason;
-							dd.textContent = Zotero.Retractions.getReasonDescription(reason);
+							dd.textContent = Trellis.Retractions.getReasonDescription(reason);
 							
 							elem.appendChild(dt);
 							elem.appendChild(dd);
@@ -3154,7 +3154,7 @@
 						let div = this._id('retraction-notice');
 						div.textContent = '';
 						let a = document.createElement('a');
-						a.textContent = Zotero.getString('retraction.notice');
+						a.textContent = Trellis.getString('retraction.notice');
 						if (data.doi) {
 							a.href = 'https://doi.org/' + data.doi;
 						}
@@ -3174,7 +3174,7 @@
 						div.textContent = '';
 						
 						let p = document.createElement('p');
-						p.textContent = Zotero.getString('retraction.details');
+						p.textContent = Trellis.getString('retraction.details');
 						
 						let ul = document.createElement('ul');
 						for (let url of data.urls) {
@@ -3196,11 +3196,11 @@
 					
 					let creditElem = this._id('retraction-credit');
 					if (!creditElem.childNodes.length) {
-						let text = Zotero.getString(
+						let text = Trellis.getString(
 							'retraction.credit',
 							'<a href="https://retractionwatch.com">Retraction Watch</a>'
 						);
-						let parts = Zotero.Utilities.parseMarkup(text);
+						let parts = Trellis.Utilities.parseMarkup(text);
 						for (let part of parts) {
 							if (part.type == 'text') {
 								creditElem.appendChild(document.createTextNode(part.text));
@@ -3215,13 +3215,13 @@
 					}
 					
 					let hideElem = this._id('retraction-hide');
-					hideElem.firstChild.textContent = Zotero.getString('retraction.replacedItem.hide');
+					hideElem.firstChild.textContent = Trellis.getString('retraction.replacedItem.hide');
 					hideElem.hidden = !allowHiding;
 					hideElem.firstChild.onclick = (_event) => {
-						ZoteroPane.promptToHideRetractionForReplacedItem(item);
+						TrellisPane.promptToHideRetractionForReplacedItem(item);
 					};
 					
-					Zotero.Utilities.Internal.updateHTMLInXUL(this._id('retraction-box'));
+					Trellis.Utilities.Internal.updateHTMLInXUL(this._id('retraction-box'));
 				}.bind(this));
 			}
 			
@@ -3241,7 +3241,7 @@
 			var fields = this.getCreatorFields(row);
 			fields.creatorTypeID = typeID;
 			typeBox.querySelector("#creator-type-label-inner").textContent
-				= Zotero.CreatorTypes.getLocalizedString(typeID);
+				= Trellis.CreatorTypes.getLocalizedString(typeID);
 			typeBox.setAttribute('typeid', typeID);
 			
 			this.modifyCreator(index, fields);
@@ -3268,10 +3268,10 @@
 			
 			this._id('creator-transform-swap-names').hidden = hideNameSwap;
 			this._id('creator-transform-capitalize').disabled = !this.canCapitalizeCreatorName(row);
-			this._id('zotero-creator-move-sep').setAttribute('hidden', hideMoveSep);
-			this._id('zotero-creator-move-to-top').setAttribute('hidden', hideMoveToTop);
-			this._id('zotero-creator-move-up').setAttribute('hidden', hideMoveUp);
-			this._id('zotero-creator-move-down').setAttribute('hidden', hideMoveDown);
+			this._id('trellis-creator-move-sep').setAttribute('hidden', hideMoveSep);
+			this._id('trellis-creator-move-to-top').setAttribute('hidden', hideMoveToTop);
+			this._id('trellis-creator-move-up').setAttribute('hidden', hideMoveUp);
+			this._id('trellis-creator-move-down').setAttribute('hidden', hideMoveDown);
 		};
 
 		_handleCreatorTransformMenuCommand = async (event) => {
@@ -3279,18 +3279,18 @@
 			var typeBox = row.querySelector('.creator-type-label').parentNode;
 			var index = parseInt(typeBox.getAttribute('fieldname').split('-')[1]);
 			
-			if (event.explicitOriginalTarget.className == 'zotero-creator-move') {
+			if (event.explicitOriginalTarget.className == 'trellis-creator-move') {
 				let dir;
 				switch (event.explicitOriginalTarget.id) {
-					case 'zotero-creator-move-to-top':
+					case 'trellis-creator-move-to-top':
 						dir = 'top';
 						break;
 					
-					case 'zotero-creator-move-up':
+					case 'trellis-creator-move-up':
 						dir = 'up';
 						break;
 					
-					case 'zotero-creator-move-down':
+					case 'trellis-creator-move-down':
 						dir = 'down';
 						break;
 				}
@@ -3311,8 +3311,8 @@
 			let link = menu.dataset.link;
 			let val = menu.dataset.val;
 
-			let viewOnline = this._id('zotero-link-menu-view-online');
-			let copy = this._id('zotero-link-menu-copy');
+			let viewOnline = this._id('trellis-link-menu-view-online');
+			let copy = this._id('trellis-link-menu-copy');
 			
 			viewOnline.disabled = !link;
 			copy.disabled = !link;
@@ -3327,10 +3327,10 @@
 			}
 		};
 
-		_handleLinkMenuViewOnline = event => ZoteroPane.loadURI(this._linkMenu.dataset.link, event);
+		_handleLinkMenuViewOnline = event => TrellisPane.loadURI(this._linkMenu.dataset.link, event);
 
 		_handleLinkMenuCopy = () => {
-			Zotero.Utilities.Internal.copyTextToClipboard(this._linkMenu.dataset.link);
+			Trellis.Utilities.Internal.copyTextToClipboard(this._linkMenu.dataset.link);
 		};
 
 		_handlePopupHidden = (event) => {
@@ -3347,7 +3347,7 @@
 		};
 
 		_handleFocusout = async (_) => {
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// If the focus leaves the itemBox, clear the last focused element
 			let focused = document.activeElement;
 			if (!this._infoTable.contains(focused)) {
@@ -3356,7 +3356,7 @@
 			// If user moves focus outside of empty unsaved creator row, remove it.
 			let unsavedCreatorRow = this.querySelector(".creator-type-value.unsaved-creator")?.closest(".meta-row");
 			// But not if these parent components receive focus which happens when menus are opened
-			if (["zotero-view-item", "main-window"].includes(focused.id) || !unsavedCreatorRow) return;
+			if (["trellis-view-item", "main-window"].includes(focused.id) || !unsavedCreatorRow) return;
 			let focusLeftUnsavedCreatorRow = !unsavedCreatorRow.contains(focused);
 			if (focusLeftUnsavedCreatorRow) {
 				this.removeUnsavedCreatorRow(true);
@@ -3364,7 +3364,7 @@
 		};
 
 		_handleTabSelect = (tabID) => {
-			if (!this.tabID || typeof Zotero_Tabs === 'undefined') {
+			if (!this.tabID || typeof Trellis_Tabs === 'undefined') {
 				return;
 			}
 			if (tabID !== this.tabID) {

@@ -3,27 +3,27 @@
 	
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-Zotero.UIProperties = new (class {
+Trellis.UIProperties = new (class {
 	_roots = new Set();
 	
 	registerRoot(root) {
@@ -53,10 +53,10 @@ Zotero.UIProperties = new (class {
 	}
 	
 	_setFontSize(root) {
-		let size = Zotero.Prefs.get('fontSize');
+		let size = Trellis.Prefs.get('fontSize');
 		let sizeCSS = size + 'rem';
 		root.style.fontSize = sizeCSS;
-		root.style.setProperty('--zotero-font-size', sizeCSS);
+		root.style.setProperty('--trellis-font-size', sizeCSS);
 		if (size <= 1) {
 			size = 'small';
 		}
@@ -69,9 +69,9 @@ Zotero.UIProperties = new (class {
 		else {
 			size = 'x-large';
 		}
-		// Custom attribute -- allows for additional customizations in zotero.css
-		root.setAttribute('zoteroFontSize', size);
-		if (Zotero.rtl) {
+		// Custom attribute -- allows for additional customizations in trellis.css
+		root.setAttribute('trellisFontSize', size);
+		if (Trellis.rtl) {
 			root.setAttribute('dir', 'rtl');
 		}
 		else {
@@ -80,8 +80,8 @@ Zotero.UIProperties = new (class {
 	}
 	
 	_setUIDensity(root) {
-		let density = Zotero.Prefs.get('uiDensity');
-		root.style.setProperty('--zotero-ui-density', density);
-		root.setAttribute('zoteroUIDensity', density);
+		let density = Trellis.Prefs.get('uiDensity');
+		root.style.setProperty('--trellis-ui-density', density);
+		root.setAttribute('trellisUIDensity', density);
 	}
 });

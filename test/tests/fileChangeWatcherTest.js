@@ -1,13 +1,13 @@
-describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
-	let watcher = Zotero.Sync.Storage.FileChangeWatcher;
+describe("Trellis.Sync.Storage.FileChangeWatcher", function () {
+	let watcher = Trellis.Sync.Storage.FileChangeWatcher;
 
 	// Pref keys used by the watcher
 	let PREF_FSEVENTS_EVENT_ID = "sync.storage.watcher.fsEventsEventID";
 	let PREF_FSEVENTS_STORAGE_PATH = "sync.storage.watcher.fsEventsStoragePath";
 
 	function clearWatcherPrefs() {
-		Zotero.Prefs.clear(PREF_FSEVENTS_EVENT_ID);
-		Zotero.Prefs.clear(PREF_FSEVENTS_STORAGE_PATH);
+		Trellis.Prefs.clear(PREF_FSEVENTS_EVENT_ID);
+		Trellis.Prefs.clear(PREF_FSEVENTS_STORAGE_PATH);
 	}
 
 	// The Set returned by getChangedItemKeys() is created in the XPCOM
@@ -21,13 +21,13 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 	describe("FSEvents backend (macOS)", function () {
 		before(async function () {
-			if (!Zotero.isMac) {
+			if (!Trellis.isMac) {
 				this.skip();
 			}
 			// Ensure the storage directory exists (it may not yet in
 			// the test environment)
 			let storageDir = PathUtils.join(
-				Zotero.DataDirectory.dir, "storage"
+				Trellis.DataDirectory.dir, "storage"
 			);
 			await IOUtils.makeDirectory(storageDir, {
 				ignoreExisting: true
@@ -60,7 +60,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 			let result = watcher.getChangedItemKeys();
 			assert.isNull(result, "First call should return null");
 			// Should have saved a baseline event ID
-			let savedId = Zotero.Prefs.get(PREF_FSEVENTS_EVENT_ID);
+			let savedId = Trellis.Prefs.get(PREF_FSEVENTS_EVENT_ID);
 			assert.isString(savedId);
 			assert.notEqual(savedId, "0");
 		});
@@ -88,12 +88,12 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 				// Modify the file
 				let path = await item.getFilePathAsync();
-				await Zotero.File.putContentsAsync(
-					path, Zotero.Utilities.randomString()
+				await Trellis.File.putContentsAsync(
+					path, Trellis.Utilities.randomString()
 				);
 
 				// Wait for FSEvents to register
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 
 				let result = watcher.getChangedItemKeys();
 				assertIsSet(result);
@@ -118,20 +118,20 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 				watcher.init();
 				// Wait for FSEvents from item creation to flush
 				// before establishing baseline
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 				watcher.getChangedItemKeys();
 
 				// Modify only items 1 and 3
 				let path1 = await item1.getFilePathAsync();
-				await Zotero.File.putContentsAsync(
-					path1, Zotero.Utilities.randomString()
+				await Trellis.File.putContentsAsync(
+					path1, Trellis.Utilities.randomString()
 				);
 				let path3 = await item3.getFilePathAsync();
-				await Zotero.File.putContentsAsync(
-					path3, Zotero.Utilities.randomString()
+				await Trellis.File.putContentsAsync(
+					path3, Trellis.Utilities.randomString()
 				);
 
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 
 				let result = watcher.getChangedItemKeys();
 				assertIsSet(result);
@@ -160,11 +160,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 				// Modify file
 				let path = await item.getFilePathAsync();
-				await Zotero.File.putContentsAsync(
-					path, Zotero.Utilities.randomString()
+				await Trellis.File.putContentsAsync(
+					path, Trellis.Utilities.randomString()
 				);
 
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 
 				// First query picks up the change
 				let result1 = watcher.getChangedItemKeys();
@@ -192,11 +192,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 				watcher.getChangedItemKeys();
 
 				// Add a new file to the item's storage directory
-				let storageDir = Zotero.Attachments.getStorageDirectory(item).path;
+				let storageDir = Trellis.Attachments.getStorageDirectory(item).path;
 				let newFile = PathUtils.join(storageDir, "extra.txt");
-				await Zotero.File.putContentsAsync(newFile, "extra content");
+				await Trellis.File.putContentsAsync(newFile, "extra content");
 
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 
 				let result = watcher.getChangedItemKeys();
 				assertIsSet(result);
@@ -210,8 +210,8 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 		it("should return null when storage path has changed", function () {
 			// Simulate a previous run with a different storage path
-			Zotero.Prefs.set(PREF_FSEVENTS_STORAGE_PATH, "/some/other/path/");
-			Zotero.Prefs.set(PREF_FSEVENTS_EVENT_ID, "12345");
+			Trellis.Prefs.set(PREF_FSEVENTS_STORAGE_PATH, "/some/other/path/");
+			Trellis.Prefs.set(PREF_FSEVENTS_EVENT_ID, "12345");
 
 			watcher.init();
 
@@ -231,7 +231,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 				// Establish baseline
 				watcher.getChangedItemKeys();
 
-				let savedId = Zotero.Prefs.get(PREF_FSEVENTS_EVENT_ID);
+				let savedId = Trellis.Prefs.get(PREF_FSEVENTS_EVENT_ID);
 				assert.ok(savedId, "Event ID should be saved");
 
 				// Close and re-init (simulating restart)
@@ -263,11 +263,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 				// Modify file while watcher is closed
 				let path = await item.getFilePathAsync();
-				await Zotero.File.putContentsAsync(
-					path, Zotero.Utilities.randomString()
+				await Trellis.File.putContentsAsync(
+					path, Trellis.Utilities.randomString()
 				);
 
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 
 				// Re-init and query -- FSEvents journal should have
 				// the change even though the watcher was closed
@@ -296,7 +296,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 			let testFile = PathUtils.join(invalidDir, "test.txt");
 			await IOUtils.writeUTF8(testFile, "test");
 
-			await Zotero.Promise.delay(1000);
+			await Trellis.Promise.delay(1000);
 
 			try {
 				let result = watcher.getChangedItemKeys();
@@ -316,11 +316,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 	describe("integration with storageEngine", function () {
 		before(async function () {
-			if (!Zotero.isMac) {
+			if (!Trellis.isMac) {
 				this.skip();
 			}
 			let storageDir = PathUtils.join(
-				Zotero.DataDirectory.dir, "storage"
+				Trellis.DataDirectory.dir, "storage"
 			);
 			await IOUtils.makeDirectory(storageDir, {
 				ignoreExisting: true
@@ -362,11 +362,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 				// Modify the file
 				let path = await item.getFilePathAsync();
 				await OS.File.setDates(path);
-				await Zotero.File.putContentsAsync(
-					path, Zotero.Utilities.randomString()
+				await Trellis.File.putContentsAsync(
+					path, Trellis.Utilities.randomString()
 				);
 
-				await Zotero.Promise.delay(1000);
+				await Trellis.Promise.delay(1000);
 
 				// Verify the watcher reports the change
 				let changedKeys = watcher.getChangedItemKeys();
@@ -374,8 +374,8 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 				assert.isTrue(changedKeys.has(item.key));
 
 				// Map keys to itemIDs as storageEngine does
-				let libraryID = Zotero.Libraries.userLibraryID;
-				let itemIDs = await Zotero.DB.columnQueryAsync(
+				let libraryID = Trellis.Libraries.userLibraryID;
+				let itemIDs = await Trellis.DB.columnQueryAsync(
 					"SELECT itemID FROM items WHERE libraryID=?"
 						+ " AND key IN ("
 						+ Array.from(changedKeys).map(() => '?')
@@ -386,12 +386,12 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 				assert.include(itemIDs, item.id);
 
 				// checkForUpdatedFiles should flag it for upload
-				let changed = await Zotero.Sync.Storage.Local
+				let changed = await Trellis.Sync.Storage.Local
 					.checkForUpdatedFiles(libraryID, itemIDs);
 				assert.isTrue(changed);
 				assert.equal(
 					item.attachmentSyncState,
-					Zotero.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD
+					Trellis.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD
 				);
 			}
 			finally {
@@ -404,7 +404,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 		watcher._snapshotTaken = false;
 		watcher._scannedLibraries = new Set();
 		watcher._lastFullScan = {};
-		Zotero.Prefs.clear(watcher._SCANNED_LIBRARIES_PREF);
+		Trellis.Prefs.clear(watcher._SCANNED_LIBRARIES_PREF);
 	}
 
 	function markLibrariesScanned(...libraryIDs) {
@@ -456,7 +456,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 		it("should prune scan records for deleted libraries", async function () {
 			stub = sinon.stub(watcher, 'getChangedItemKeys').returns(new Set());
-			let userLibraryID = Zotero.Libraries.userLibraryID;
+			let userLibraryID = Trellis.Libraries.userLibraryID;
 			markLibrariesScanned(userLibraryID, 99999);
 			await watcher.snapshot();
 			assert.isFalse(watcher.needsFullScan(userLibraryID, true));
@@ -477,45 +477,45 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 	});
 
 	describe("multi-library file syncs", function () {
-		var apiKey = Zotero.Utilities.randomString(24);
+		var apiKey = Trellis.Utilities.randomString(24);
 		var server, httpd, port, baseURL;
 
 		beforeEach(async function () {
-			Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+			Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 			server = sinon.fakeServer.create();
 			server.autoRespond = true;
 
 			({ httpd, port } = await startHTTPServer());
 			baseURL = `http://localhost:${port}/`;
 
-			await Zotero.Users.setCurrentUserID(1);
-			await Zotero.Users.setCurrentUsername("testuser");
+			await Trellis.Users.setCurrentUserID(1);
+			await Trellis.Users.setCurrentUsername("testuser");
 		});
 
 		afterEach(async function () {
-			Zotero.HTTP.mock = null;
+			Trellis.HTTP.mock = null;
 			await new Promise(resolve => httpd.stop(resolve));
 			resetWatcherState();
 		});
 
 		function makeEngine(libraryID) {
 			const { ConcurrentCaller } = ChromeUtils.importESModule(
-				"resource://zotero/concurrentCaller.mjs"
+				"resource://trellis/concurrentCaller.mjs"
 			);
 			var caller = new ConcurrentCaller(1);
-			caller.setLogger(msg => Zotero.debug(msg));
+			caller.setLogger(msg => Trellis.debug(msg));
 
-			var client = new Zotero.Sync.APIClient({
+			var client = new Trellis.Sync.APIClient({
 				baseURL,
-				apiVersion: ZOTERO_CONFIG.API_VERSION,
+				apiVersion: TRELLIS_CONFIG.API_VERSION,
 				apiKey,
 				caller,
 				background: true
 			});
 
-			return new Zotero.Sync.Storage.Engine({
+			return new Trellis.Sync.Storage.Engine({
 				libraryID,
-				controller: new Zotero.Sync.Storage.Mode.ZFS({
+				controller: new Trellis.Sync.Storage.Mode.ZFS({
 					apiClient: client
 				}),
 				background: true,
@@ -542,7 +542,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 			await item.saveTx({ skipAll: true });
 
 			// Modify the file externally
-			await Zotero.File.putContentsAsync(path, Zotero.Utilities.randomString());
+			await Trellis.File.putContentsAsync(path, Trellis.Utilities.randomString());
 
 			// Simulate a watcher backend that reports the group file change on the first
 			// drain and nothing after that
@@ -553,14 +553,14 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 			watcher.available = true;
 			// Simulate the steady state, with both libraries previously scanned
 			resetWatcherState();
-			markLibrariesScanned(Zotero.Libraries.userLibraryID, group.libraryID);
+			markLibrariesScanned(Trellis.Libraries.userLibraryID, group.libraryID);
 
-			var spy = sinon.spy(Zotero.Sync.Storage.Local, 'checkForUpdatedFiles');
+			var spy = sinon.spy(Trellis.Sync.Storage.Local, 'checkForUpdatedFiles');
 			try {
 				// Drain events once per session and then file-sync My Library first and the
 				// group second, as the sync runner does
 				await watcher.snapshot();
-				await makeEngine(Zotero.Libraries.userLibraryID).start();
+				await makeEngine(Trellis.Libraries.userLibraryID).start();
 				await makeEngine(group.libraryID).start();
 			}
 			finally {
@@ -580,7 +580,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 			);
 			assert.equal(
 				item.attachmentSyncState,
-				Zotero.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD,
+				Trellis.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD,
 				"Group file modified on disk should be marked for upload"
 			);
 
@@ -590,11 +590,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 	describe("ReadDirectoryChangesW backend (Windows)", function () {
 		before(async function () {
-			if (!Zotero.isWin) {
+			if (!Trellis.isWin) {
 				this.skip();
 			}
 			let storageDir = PathUtils.join(
-				Zotero.DataDirectory.dir, "storage"
+				Trellis.DataDirectory.dir, "storage"
 			);
 			await IOUtils.makeDirectory(storageDir, {
 				ignoreExisting: true
@@ -623,11 +623,11 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 
 	describe("inotify backend (Linux)", function () {
 		before(async function () {
-			if (!Zotero.isLinux) {
+			if (!Trellis.isLinux) {
 				this.skip();
 			}
 			let storageDir = PathUtils.join(
-				Zotero.DataDirectory.dir, "storage"
+				Trellis.DataDirectory.dir, "storage"
 			);
 			await IOUtils.makeDirectory(storageDir, {
 				ignoreExisting: true
@@ -672,7 +672,7 @@ describe("Zotero.Sync.Storage.FileChangeWatcher", function () {
 		});
 
 		it("should set available to false after close()", function () {
-			if (!Zotero.isMac) {
+			if (!Trellis.isMac) {
 				this.skip();
 			}
 			watcher.init();

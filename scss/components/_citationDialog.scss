@@ -74,7 +74,7 @@
 		#z-icon-container {
 			width: 36px; // same as left margin on .library-other-items
 			#z-icon {
-				background-image: url(chrome://zotero/skin/z.svg);
+				background-image: url(chrome://trellis/skin/z.svg);
 				width: 16px;
 				height: 16px;
   				margin-top: 7px;
@@ -129,7 +129,7 @@
 		}
 	}
 
-	.zotero-spinner-16 {
+	.trellis-spinner-16 {
 		background-size: 60%;
 		background-repeat: no-repeat;
 		display: none;
@@ -360,7 +360,7 @@
 				min-height: 100%;
 				width: 200px;
 				flex-shrink: 0;
-				& > #zotero-collections-tree {
+				& > #trellis-collections-tree {
 					background: var(--material-sidepane) !important;
 				}
 				.virtualized-table-body {
@@ -705,8 +705,8 @@
 				height: 16px;
 				@include light-dark(
 					background,
-					url('chrome://zotero/skin/16/light/annotations.svg') no-repeat center/contain,
-					url('chrome://zotero/skin/16/dark/annotations.svg') no-repeat center/contain
+					url('chrome://trellis/skin/16/light/annotations.svg') no-repeat center/contain,
+					url('chrome://trellis/skin/16/dark/annotations.svg') no-repeat center/contain
 				);
 			}
 		}

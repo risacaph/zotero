@@ -3,22 +3,22 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -62,8 +62,8 @@ window.addEventListener("load", /*async */function () {
 
 window.addEventListener("keypress", function (event) {
 	// Cmd-R/Ctrl-R (with or without Shift) to reload
-	if (((Zotero.isMac && event.metaKey && !event.ctrlKey)
-			|| (!Zotero.isMac && event.ctrlKey))
+	if (((Trellis.isMac && event.metaKey && !event.ctrlKey)
+			|| (!Trellis.isMac && event.ctrlKey))
 			&& !event.altKey && event.which == 114) {
 		browser.reloadWithFlags(browser.webNavigation.LOAD_FLAGS_BYPASS_CACHE);
 	}

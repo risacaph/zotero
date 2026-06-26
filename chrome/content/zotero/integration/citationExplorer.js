@@ -3,22 +3,22 @@
 	
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -32,8 +32,8 @@ const { getCSSIcon, IconAttachSmall } = require('components/icons');
 // Currently uses changeCollectionTreeRow which only exists on CollectionViewItemTree,
 // so this is broken until we either switch to CollectionViewItemTree or create a
 // simple row provider that can display arbitrary items.
-const ItemTree = require('zotero/itemTree');
-const { getColumnDefinitionsByDataKey } = require('zotero/itemTreeColumns');
+const ItemTree = require('trellis/itemTree');
+const { getColumnDefinitionsByDataKey } = require('trellis/itemTreeColumns');
 const { makeRowRenderer } = VirtualizedTable;
 
 let io, citations, items, uncitedItems, citationList, itemList;
@@ -87,7 +87,7 @@ itemColumns.push({
 });
 itemColumns[1].sortDirection = 1;
 
-window.ZoteroDocumentCitations = {
+window.TrellisDocumentCitations = {
 	init: async function () {
 		this._highlightedCitations = new Set();
 		this._filteredCitations = new Set();
@@ -96,21 +96,21 @@ window.ZoteroDocumentCitations = {
 		document.querySelector('#button-show-in-document').addEventListener('click', this.onCitationActivate.bind(this));
 		document.querySelector('#button-edit-citation').addEventListener('click', this.onCitationEdit.bind(this));
 
-		document.querySelector('#button-show-in-zotero').addEventListener('click', this.onItemActivate.bind(this));
+		document.querySelector('#button-show-in-trellis').addEventListener('click', this.onItemActivate.bind(this));
 		document.querySelector('#button-relink-item').addEventListener('click', this.onItemRelink.bind(this));
 		
-		let lastTranslationTarget = Zotero.Prefs.get('documentCitations.lastAddToTarget');
+		let lastTranslationTarget = Trellis.Prefs.get('documentCitations.lastAddToTarget');
 		if (lastTranslationTarget) {
 			let id = parseInt(lastTranslationTarget.substr(1));
 			if (lastTranslationTarget[0] == "L") {
-				_addToTarget = Zotero.Libraries.get(id);
+				_addToTarget = Trellis.Libraries.get(id);
 			}
 			else if (lastTranslationTarget[0] == "C") {
-				_addToTarget = Zotero.Collections.get(id);
+				_addToTarget = Trellis.Collections.get(id);
 			}
 		}
 		if (!_addToTarget) {
-			_addToTarget = Zotero.Libraries.userLibrary;
+			_addToTarget = Trellis.Libraries.userLibrary;
 		}
 		this.setAddToButton();
 		
@@ -169,7 +169,7 @@ window.ZoteroDocumentCitations = {
 				shouldListenForNotifications: false,
 				onSelectionChange: this.onItemSelectionChange.bind(this),
 				onActivate: this.onItemActivate.bind(this),
-				emptyMessage: Zotero.getString('pane.items.loading')
+				emptyMessage: Trellis.getString('pane.items.loading')
 			});
 			await itemList.waitForLoad();
 		}
@@ -211,7 +211,7 @@ window.ZoteroDocumentCitations = {
 		selectedTab = selectedIndex;
 		if (selectedTab) {
 			this._highlightedCitations = new Set();
-			document.querySelector('#button-show-in-zotero').hidden = true;
+			document.querySelector('#button-show-in-trellis').hidden = true;
 			document.querySelector('#button-relink-item').hidden = false;
 			document.querySelector('#button-addTo-library').style.display = 'none';
 		}
@@ -302,8 +302,8 @@ window.ZoteroDocumentCitations = {
 		// activation is not going to work right.
 		
 		var ps = Services.prompt;
-		var title = Zotero.getString('general.warning');
-		var message = Zotero.getString('integration.citationExplorer.citationsModified', [Zotero.appName]);
+		var title = Trellis.getString('general.warning');
+		var message = Trellis.getString('integration.citationExplorer.citationsModified', [Trellis.appName]);
 		ps.alert(window, title, message);
 		disableCitationActivate = true;
 		document.querySelector('#button-show-in-document').disabled = true;
@@ -352,7 +352,7 @@ window.ZoteroDocumentCitations = {
 		const item = itemList.getRow(itemList.selection.focused).ref;
 		const isUnlinked = typeof item.id != 'number';
 		const isMultiple = itemList.selection.selected.size > 1;
-		document.querySelector('#button-show-in-zotero').hidden = isMultiple || isUnlinked;
+		document.querySelector('#button-show-in-trellis').hidden = isMultiple || isUnlinked;
 		document.querySelector('#button-relink-item').hidden = isMultiple || !isUnlinked;
 		document.querySelector('#button-addTo-library').style.display = (isMultiple || !isUnlinked) ? 'none' : 'inherit';
 		
@@ -366,13 +366,13 @@ window.ZoteroDocumentCitations = {
 			this.onItemRelink();
 		}
 		else {
-			await Zotero.Utilities.Internal.showInLibrary(item);
+			await Trellis.Utilities.Internal.showInLibrary(item);
 		}
 	},
 
 	onItemRelink: async function () {
-		let io = { dataIn: null, dataOut: null, multiSelect: false, deferred: Zotero.Promise.defer() };
-		window.openDialog('chrome://zotero/content/selectItemsDialog.xhtml', '',
+		let io = { dataIn: null, dataOut: null, multiSelect: false, deferred: Trellis.Promise.defer() };
+		window.openDialog('chrome://trellis/content/selectItemsDialog.xhtml', '',
 			'chrome,dialog=no,centerscreen,resizable=yes', io);
 
 		await io.deferred.promise;
@@ -380,7 +380,7 @@ window.ZoteroDocumentCitations = {
 			return;
 		}
 
-		let items = await Zotero.Items.getAsync(io.dataOut);
+		let items = await Trellis.Items.getAsync(io.dataOut);
 		if (!items.length) {
 			return;
 		}
@@ -422,7 +422,7 @@ window.ZoteroDocumentCitations = {
 			let citationItem = citation.citationItems[citationItemIdx];
 			// Update the citation with the new item
 			citationItem.id = item.id;
-			citationItem.uris = Zotero.Integration.currentSession.uriMap.getURIsForItemID(citationItem.id);
+			citationItem.uris = Trellis.Integration.currentSession.uriMap.getURIsForItemID(citationItem.id);
 			// Mark citation for an update with citeproc and write changes to doc
 			io.updateIndex(citationIndex);
 		}
@@ -440,41 +440,41 @@ window.ZoteroDocumentCitations = {
 			menu.removeChild(menu.firstChild);
 		}
 		
-		let target = Zotero.Prefs.get('documentCitations.lastAddToTarget');
+		let target = Trellis.Prefs.get('documentCitations.lastAddToTarget');
 		if (!target) {
-			target = "L" + Zotero.Libraries.userLibraryID;
+			target = "L" + Trellis.Libraries.userLibraryID;
 		}
 		
-		var libraries = Zotero.Libraries.getAll();
+		var libraries = Trellis.Libraries.getAll();
 		for (let library of libraries) {
 			if (!library.editable || library.libraryType == 'publications') {
 				continue;
 			}
-			Zotero.Utilities.Internal.createMenuForTarget(
+			Trellis.Utilities.Internal.createMenuForTarget(
 				library,
 				menu,
 				target,
 				function(event, libraryOrCollection) {
 					if (event.target.tagName == 'menu') {
-						Zotero.Promise.coroutine(function* () {
+						Trellis.Promise.coroutine(function* () {
 							// Simulate menuitem flash on OS X
-							if (Zotero.isMac) {
+							if (Trellis.isMac) {
 								event.target.setAttribute('_moz-menuactive', false);
-								yield Zotero.Promise.delay(50);
+								yield Trellis.Promise.delay(50);
 								event.target.setAttribute('_moz-menuactive', true);
-								yield Zotero.Promise.delay(50);
+								yield Trellis.Promise.delay(50);
 								event.target.setAttribute('_moz-menuactive', false);
-								yield Zotero.Promise.delay(50);
+								yield Trellis.Promise.delay(50);
 								event.target.setAttribute('_moz-menuactive', true);
 							}
 							menu.hidePopup();
 							
-							ZoteroDocumentCitations.setAddToTarget(libraryOrCollection);
+							TrellisDocumentCitations.setAddToTarget(libraryOrCollection);
 							event.stopPropagation();
 						})();
 					}
 					else {
-						ZoteroDocumentCitations.setAddToTarget(libraryOrCollection);
+						TrellisDocumentCitations.setAddToTarget(libraryOrCollection);
 						event.stopPropagation();
 					}
 				}
@@ -484,12 +484,12 @@ window.ZoteroDocumentCitations = {
 	
 	setAddToTarget(translationTarget) {
 		_addToTarget = translationTarget;
-		Zotero.Prefs.set('documentCitations.lastAddToTarget', translationTarget.treeViewID);
+		Trellis.Prefs.set('documentCitations.lastAddToTarget', translationTarget.treeViewID);
 		this.setAddToButton();
 	},
 	
 	setAddToButton() {
-		var label = Zotero.getString('pane.item.addTo', _addToTarget.name);
+		var label = Trellis.getString('pane.item.addTo', _addToTarget.name);
 		var elem = document.querySelector('#button-addTo-library');
 		elem.label = label;
 		elem.title = label;
@@ -502,13 +502,13 @@ window.ZoteroDocumentCitations = {
 	 * @return {String}
 	 */
 	_normalizeSearch(s) {
-		return Zotero.Utilities.removeDiacritics(
-			Zotero.Utilities.trimInternal(s).toLowerCase(),
+		return Trellis.Utilities.removeDiacritics(
+			Trellis.Utilities.trimInternal(s).toLowerCase(),
 			true);
 	},
 
 };
 
 window.addEventListener('DOMContentLoaded', function () {
-	ZoteroDocumentCitations.init();
+	TrellisDocumentCitations.init();
 });

@@ -3,22 +3,22 @@
 
 	Copyright © 2026 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 http://zotero.org
+					 http://trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -29,7 +29,7 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 	_forceClose: false,
 
 	init: function () {
-		const { DEFAULT_ATTACHMENT_RENAME_TEMPLATE, DEFAULT_AUTO_RENAME_FILE_TYPES } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+		const { DEFAULT_ATTACHMENT_RENAME_TEMPLATE, DEFAULT_AUTO_RENAME_FILE_TYPES } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 		this.DEFAULT_ATTACHMENT_RENAME_TEMPLATE = DEFAULT_ATTACHMENT_RENAME_TEMPLATE;
 		this.DEFAULT_AUTO_RENAME_FILE_TYPES = DEFAULT_AUTO_RENAME_FILE_TYPES;
 
@@ -39,7 +39,7 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 		this.doneBtn = document.getElementById('file-renaming-done-btn');
 
 		// Populate library picker
-		let libraries = Zotero.Libraries.getAll().filter(lib => !(lib instanceof Zotero.Feed));
+		let libraries = Trellis.Libraries.getAll().filter(lib => !(lib instanceof Trellis.Feed));
 		let menupopup = this.libraryPicker.querySelector('menupopup');
 		for (let lib of libraries) {
 			let menuitem = document.createXULElement('menuitem');
@@ -49,7 +49,7 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 		}
 
 		// Default to user library, or use passed-in libraryID
-		let initialLibraryID = window.arguments?.[0]?.wrappedJSObject?.libraryID ?? Zotero.Libraries.userLibraryID;
+		let initialLibraryID = window.arguments?.[0]?.wrappedJSObject?.libraryID ?? Trellis.Libraries.userLibraryID;
 		this.libraryPicker.value = String(initialLibraryID);
 
 		this.libraryPicker.addEventListener('command', this.handleLibraryChange.bind(this));
@@ -58,14 +58,14 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 		this.doneBtn.addEventListener('command', this._handleDoneClick.bind(this));
 
 		this._handleDonePrefChange = this._handleDonePrefChange.bind(this);
-		this._renameFilesPrefObserver = Zotero.Prefs.registerObserver('autoRenameFiles.done', this._handleDonePrefChange);
+		this._renameFilesPrefObserver = Trellis.Prefs.registerObserver('autoRenameFiles.done', this._handleDonePrefChange);
 
 		this.loadSettingsForLibrary(initialLibraryID);
 		this._currentLibraryID = initialLibraryID;
 		this._updateButtons();
 
 		window.addEventListener('unload', () => {
-			Zotero.Prefs.unregisterObserver(this._renameFilesPrefObserver);
+			Trellis.Prefs.unregisterObserver(this._renameFilesPrefObserver);
 		});
 	},
 
@@ -74,12 +74,12 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 	},
 
 	get isUserLibrary() {
-		return this.libraryID === Zotero.Libraries.userLibraryID;
+		return this.libraryID === Trellis.Libraries.userLibraryID;
 	},
 
 	_updateButtons: function () {
 		let autoRenameEnabled = this.settingsEl.autoRenameEnabled;
-		let library = Zotero.Libraries.get(this._currentLibraryID);
+		let library = Trellis.Libraries.get(this._currentLibraryID);
 		let isAdmin = this.isUserLibrary || library.isAdmin;
 		this.renameFilesBtn.hidden = !isAdmin;
 		this.renameFilesBtn.disabled = !autoRenameEnabled || this._isRenameFilesBtnDisabled();
@@ -87,14 +87,14 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 
 	_isRenameFilesBtnDisabled: function () {
 		if (this.isUserLibrary) {
-			return Zotero.Prefs.get('autoRenameFiles.done');
+			return Trellis.Prefs.get('autoRenameFiles.done');
 		}
 		return false;
 	},
 
 	_openRenameFilesPreview: function (libraryID) {
 		let args = { libraryID };
-		Services.ww.openWindow(null, "chrome://zotero/content/renameFilesPreview.xhtml",
+		Services.ww.openWindow(null, "chrome://trellis/content/renameFilesPreview.xhtml",
 			"renameFilesPreview", "chrome,dialog=yes,centerscreen,modal", args);
 		if (!args.cancelled) {
 			this._resetBaseline(libraryID);
@@ -121,7 +121,7 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 
 	loadSettingsForLibrary: function (libraryID) {
 		this._settingsChanged = false;
-		let isUserLib = libraryID === Zotero.Libraries.userLibraryID;
+		let isUserLib = libraryID === Trellis.Libraries.userLibraryID;
 
 		let autoRenameEnabled;
 		let fileTypes;
@@ -129,27 +129,27 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 		let renameLinked;
 
 		if (isUserLib) {
-			autoRenameEnabled = Zotero.Prefs.get('autoRenameFiles');
-			fileTypes = Zotero.Prefs.get('autoRenameFiles.fileTypes');
-			renameLinked = Zotero.Prefs.get('autoRenameFiles.linked');
-			formatTemplate = Zotero.SyncedSettings.get(libraryID, 'attachmentRenameTemplate')
+			autoRenameEnabled = Trellis.Prefs.get('autoRenameFiles');
+			fileTypes = Trellis.Prefs.get('autoRenameFiles.fileTypes');
+			renameLinked = Trellis.Prefs.get('autoRenameFiles.linked');
+			formatTemplate = Trellis.SyncedSettings.get(libraryID, 'attachmentRenameTemplate')
 				?? this.DEFAULT_ATTACHMENT_RENAME_TEMPLATE;
 
-			let library = Zotero.Libraries.get(libraryID);
+			let library = Trellis.Libraries.get(libraryID);
 			this.settingsEl.setAttribute('readonly', String(!library.editable));
 			this.settingsEl.setAttribute('rename-linked-hidden', 'false');
 			this.settingsEl.setAttribute('rename-linked-enabled', String(renameLinked));
 
-			this._baselineDone = Zotero.Prefs.get('autoRenameFiles.done');
+			this._baselineDone = Trellis.Prefs.get('autoRenameFiles.done');
 		}
 		else {
-			autoRenameEnabled = Zotero.Attachments.isAutoRenameFilesEnabledForLibrary(libraryID);
-			fileTypes = Zotero.SyncedSettings.get(libraryID, 'autoRenameFilesFileTypes')
+			autoRenameEnabled = Trellis.Attachments.isAutoRenameFilesEnabledForLibrary(libraryID);
+			fileTypes = Trellis.SyncedSettings.get(libraryID, 'autoRenameFilesFileTypes')
 				?? this.DEFAULT_AUTO_RENAME_FILE_TYPES;
-			formatTemplate = Zotero.SyncedSettings.get(libraryID, 'attachmentRenameTemplate')
+			formatTemplate = Trellis.SyncedSettings.get(libraryID, 'attachmentRenameTemplate')
 				?? this.DEFAULT_ATTACHMENT_RENAME_TEMPLATE;
 
-			let isAdmin = Zotero.Libraries.get(libraryID).isAdmin;
+			let isAdmin = Trellis.Libraries.get(libraryID).isAdmin;
 			this.settingsEl.setAttribute('readonly', String(!isAdmin));
 			this.settingsEl.setAttribute('rename-linked-hidden', 'true');
 		}
@@ -194,29 +194,29 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 		let base = this._baselineSettings;
 
 		if (this.isUserLibrary) {
-			Zotero.Prefs.set('autoRenameFiles', autoRenameEnabled);
-			Zotero.Prefs.set('autoRenameFiles.fileTypes', enabledFileTypes);
-			Zotero.Prefs.set('autoRenameFiles.linked', renameLinkedEnabled);
+			Trellis.Prefs.set('autoRenameFiles', autoRenameEnabled);
+			Trellis.Prefs.set('autoRenameFiles.fileTypes', enabledFileTypes);
+			Trellis.Prefs.set('autoRenameFiles.linked', renameLinkedEnabled);
 
 			// Handle template changes
 			if (formatTemplate.replace(/\s/g, '') === '') {
-				Zotero.SyncedSettings.clear(Zotero.Libraries.userLibraryID, 'attachmentRenameTemplate');
+				Trellis.SyncedSettings.clear(Trellis.Libraries.userLibraryID, 'attachmentRenameTemplate');
 			}
 			else {
-				Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'attachmentRenameTemplate', formatTemplate);
+				Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'attachmentRenameTemplate', formatTemplate);
 			}
 
 			let settingsMatch = autoRenameEnabled === base.autoRenameEnabled
 				&& enabledFileTypes === base.fileTypes
 				&& formatTemplate === base.formatTemplate
 				&& renameLinkedEnabled === base.renameLinked;
-			Zotero.Prefs.set('autoRenameFiles.done', settingsMatch && this._baselineDone);
+			Trellis.Prefs.set('autoRenameFiles.done', settingsMatch && this._baselineDone);
 			this._settingsChanged = !settingsMatch;
 		}
 		else {
-			Zotero.SyncedSettings.set(this.libraryID, 'autoRenameFiles', autoRenameEnabled);
-			Zotero.SyncedSettings.set(this.libraryID, 'autoRenameFilesFileTypes', enabledFileTypes);
-			Zotero.SyncedSettings.set(this.libraryID, 'attachmentRenameTemplate', formatTemplate);
+			Trellis.SyncedSettings.set(this.libraryID, 'autoRenameFiles', autoRenameEnabled);
+			Trellis.SyncedSettings.set(this.libraryID, 'autoRenameFilesFileTypes', enabledFileTypes);
+			Trellis.SyncedSettings.set(this.libraryID, 'attachmentRenameTemplate', formatTemplate);
 
 			this._settingsChanged = autoRenameEnabled !== base.autoRenameEnabled
 				|| enabledFileTypes !== base.fileTypes
@@ -244,7 +244,7 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 	},
 
 	_handleDonePrefChange: function () {
-		if (this._currentLibraryID !== Zotero.Libraries.userLibraryID) {
+		if (this._currentLibraryID !== Trellis.Libraries.userLibraryID) {
 			return;
 		}
 
@@ -255,24 +255,24 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 		if (!this._settingsChanged) {
 			return false;
 		}
-		if (libraryID === Zotero.Libraries.userLibraryID) {
-			return Zotero.Prefs.get('autoRenameFiles') && !Zotero.Prefs.get('autoRenameFiles.done');
+		if (libraryID === Trellis.Libraries.userLibraryID) {
+			return Trellis.Prefs.get('autoRenameFiles') && !Trellis.Prefs.get('autoRenameFiles.done');
 		}
-		return Zotero.Attachments.isAutoRenameFilesEnabledForLibrary(libraryID);
+		return Trellis.Attachments.isAutoRenameFilesEnabledForLibrary(libraryID);
 	},
 
 	_promptRename: async function (libraryID) {
-		let isUserLib = libraryID === Zotero.Libraries.userLibraryID;
+		let isUserLib = libraryID === Trellis.Libraries.userLibraryID;
 		let bodyID = isUserLib
 			? { id: 'file-renaming-auto-rename-prompt-body' }
-			: { id: 'file-renaming-auto-rename-prompt-body-library', args: { library: Zotero.Libraries.get(libraryID).name } };
+			: { id: 'file-renaming-auto-rename-prompt-body-library', args: { library: Trellis.Libraries.get(libraryID).name } };
 		let [title, description, yes, no] = await document.l10n.formatValues([
 			'file-renaming-auto-rename-prompt-title',
 			bodyID,
 			'file-renaming-auto-rename-prompt-yes',
 			'file-renaming-auto-rename-prompt-no'
 		]);
-		let index = Zotero.Prompt.confirm({
+		let index = Trellis.Prompt.confirm({
 			title,
 			text: description,
 			button0: yes,
@@ -282,30 +282,30 @@ var FileRenamingDialog = { // eslint-disable-line no-unused-vars
 			return true;
 		}
 		if (isUserLib) {
-			Zotero.Prefs.set('autoRenameFiles.done', false);
+			Trellis.Prefs.set('autoRenameFiles.done', false);
 		}
 		return false;
 	},
 
 	_resetBaseline: function (libraryID) {
 		this._settingsChanged = false;
-		if (libraryID === Zotero.Libraries.userLibraryID) {
+		if (libraryID === Trellis.Libraries.userLibraryID) {
 			this._baselineDone = true;
 			this._baselineSettings = {
-				autoRenameEnabled: Zotero.Prefs.get('autoRenameFiles'),
-				fileTypes: Zotero.Prefs.get('autoRenameFiles.fileTypes'),
-				formatTemplate: Zotero.SyncedSettings.get(
-					Zotero.Libraries.userLibraryID, 'attachmentRenameTemplate'
+				autoRenameEnabled: Trellis.Prefs.get('autoRenameFiles'),
+				fileTypes: Trellis.Prefs.get('autoRenameFiles.fileTypes'),
+				formatTemplate: Trellis.SyncedSettings.get(
+					Trellis.Libraries.userLibraryID, 'attachmentRenameTemplate'
 				) ?? this.DEFAULT_ATTACHMENT_RENAME_TEMPLATE,
-				renameLinked: Zotero.Prefs.get('autoRenameFiles.linked'),
+				renameLinked: Trellis.Prefs.get('autoRenameFiles.linked'),
 			};
 		}
 		else {
 			this._baselineSettings = {
-				autoRenameEnabled: Zotero.Attachments.isAutoRenameFilesEnabledForLibrary(libraryID),
-				fileTypes: Zotero.SyncedSettings.get(libraryID, 'autoRenameFilesFileTypes')
+				autoRenameEnabled: Trellis.Attachments.isAutoRenameFilesEnabledForLibrary(libraryID),
+				fileTypes: Trellis.SyncedSettings.get(libraryID, 'autoRenameFilesFileTypes')
 					?? this.DEFAULT_AUTO_RENAME_FILE_TYPES,
-				formatTemplate: Zotero.SyncedSettings.get(libraryID, 'attachmentRenameTemplate')
+				formatTemplate: Trellis.SyncedSettings.get(libraryID, 'attachmentRenameTemplate')
 					?? this.DEFAULT_ATTACHMENT_RENAME_TEMPLATE,
 			};
 		}

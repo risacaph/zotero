@@ -3,30 +3,30 @@
 	
 	Copyright © 2014 Center for History and New Media
 					 George Mason University, Fairfax, Virginia, USA
-					 http://zotero.org
+					 http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-Zotero.API = {
+Trellis.API = {
 	parseParams: function (params) {
 		if (params.groupID) {
-			params.libraryID = Zotero.Groups.getLibraryIDFromGroupID(params.groupID);
+			params.libraryID = Trellis.Groups.getLibraryIDFromGroupID(params.groupID);
 		}
 		
 		if (typeof params.itemKey == 'string') {
@@ -36,7 +36,7 @@ Zotero.API = {
 	
 	
 	/**
-	 * @return {(Zotero.Collection|Zotero.Search|Zotero.Item)[]}
+	 * @return {(Trellis.Collection|Trellis.Search|Trellis.Item)[]}
 	 */
 	getResultsFromParams: async function (params) {
 		if (!params.objectType) {
@@ -46,13 +46,13 @@ Zotero.API = {
 		var results;
 		
 		if (params.objectType == 'collection') {
-			let col = Zotero.Collections.getByLibraryAndKey(params.libraryID, params.objectKey);
+			let col = Trellis.Collections.getByLibraryAndKey(params.libraryID, params.objectKey);
 			if (col) {
 				results = [col];
 			}
 		}
 		else if (params.objectType == 'search') {
-			let s = Zotero.Searches.getByLibraryAndKey(params.libraryID, params.objectKey);
+			let s = Trellis.Searches.getByLibraryAndKey(params.libraryID, params.objectKey);
 			if (s) {
 				results = [s];
 			}
@@ -61,12 +61,12 @@ Zotero.API = {
 			switch (params.scopeObject) {
 				case 'collections':
 					if (params.scopeObjectKey) {
-						var col = Zotero.Collections.getByLibraryAndKey(
+						var col = Trellis.Collections.getByLibraryAndKey(
 							params.libraryID, params.scopeObjectKey
 						);
 					}
 					else {
-						var col = Zotero.Collections.get(params.scopeObjectID);
+						var col = Trellis.Collections.get(params.scopeObjectID);
 					}
 					if (!col) {
 						throw new Error('Invalid collection ID or key');
@@ -80,22 +80,22 @@ Zotero.API = {
 				
 				case 'searches':
 					if (params.scopeObjectKey) {
-						var s = Zotero.Searches.getByLibraryAndKey(
+						var s = Trellis.Searches.getByLibraryAndKey(
 							params.libraryID, params.scopeObjectKey
 						);
 					}
 					else {
-						var s = Zotero.Searches.get(params.scopeObjectID);
+						var s = Trellis.Searches.get(params.scopeObjectID);
 					}
 					if (!s) {
 						throw new Error('Invalid search ID or key');
 					}
 					
-					var s2 = new Zotero.Search();
+					var s2 = new Trellis.Search();
 					s2.setScope(s);
 					var ids = await s2.search();
 					if (params.objectKey) {
-						let id = Zotero.Items.getIDFromLibraryAndKey(s.libraryID, params.objectKey);
+						let id = Trellis.Items.getIDFromLibraryAndKey(s.libraryID, params.objectKey);
 						ids = ids.includes(id) ? [id] : [];
 					}
 					break;
@@ -105,7 +105,7 @@ Zotero.API = {
 						throw new Error("Invalid scope object '" + params.scopeObject + "'");
 					}
 					
-					var s = new Zotero.Search;
+					var s = new Trellis.Search;
 					s.libraryID = params.libraryID;
 					
 					if (params.objectKey) {
@@ -142,11 +142,11 @@ Zotero.API = {
 				// Filter results by item key
 				if (params.itemKey) {
 					ids = ids.filter((id) => {
-						var {libraryID, key} = Zotero.Items.getLibraryAndKeyFromID(id);
+						var {libraryID, key} = Trellis.Items.getLibraryAndKeyFromID(id);
 						return itemKeys.has(key);
 					});
 				}
-				results = await Zotero.Items.getAsync(ids);
+				results = await Trellis.Items.getAsync(ids);
 			}
 		}
 		else {
@@ -158,7 +158,7 @@ Zotero.API = {
 	
 	
 	getLibraryPrefix: function (libraryID) {
-		var type = Zotero.Libraries.get(libraryID).libraryType;
+		var type = Trellis.Libraries.get(libraryID).libraryType;
 		switch (type) {
 		case 'user':
 			return 'library';
@@ -167,7 +167,7 @@ Zotero.API = {
 			return 'publications';
 		
 		case 'group':
-			return 'groups/' + Zotero.Groups.getGroupIDFromLibraryID(libraryID);
+			return 'groups/' + Trellis.Groups.getGroupIDFromLibraryID(libraryID);
 		
 		default:
 			throw new Error(`Invalid type '${type}'`);
@@ -175,14 +175,14 @@ Zotero.API = {
 	}
 };
 
-Zotero.API.Data = {
+Trellis.API.Data = {
 	/**
 	 * Parse a relative URI path and return parameters for the request
 	 */
 	parsePath: function (path) {
-		var userLibraryID = Zotero.Libraries.userLibraryID;
+		var userLibraryID = Trellis.Libraries.userLibraryID;
 		var params = {};
-		var router = new Zotero.Router(params);
+		var router = new Trellis.Router(params);
 		
 		// Top-level objects
 		router.add('library/:controller/top', function () {
@@ -209,13 +209,13 @@ Zotero.API.Data = {
 		
 		var parsed = router.run(path);
 		if (!parsed || !params.controller) {
-			throw new Zotero.Router.InvalidPathException(path);
+			throw new Trellis.Router.InvalidPathException(path);
 		}
 		
 		if (params.groupID) {
-			params.libraryID = Zotero.Groups.getLibraryIDFromGroupID(params.groupID);
+			params.libraryID = Trellis.Groups.getLibraryIDFromGroupID(params.groupID);
 		}
-		Zotero.Router.Utilities.convertControllerToObjectType(params);
+		Trellis.Router.Utilities.convertControllerToObjectType(params);
 		
 		return params;
 	},
@@ -223,9 +223,9 @@ Zotero.API.Data = {
 	
 	getGenerator: function (path) {
 		var params = this.parsePath(path);
-		//Zotero.debug(params);
+		//Trellis.debug(params);
 		
-		return Zotero.DataObjectUtilities.getObjectsClassForObjectType(params.objectType)
+		return Trellis.DataObjectUtilities.getObjectsClassForObjectType(params.objectType)
 			.apiDataGenerator(params);
 	}
 };

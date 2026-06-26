@@ -1,7 +1,7 @@
 "use strict";
 
 {
-	class ZoteroTextLink extends XULTextElement {
+	class TrellisTextLink extends XULTextElement {
 		constructor() {
 			super();
 			this.addEventListener('click', (event) => {
@@ -18,7 +18,7 @@
 		}
 
 		connectedCallback() {
-			this.classList.add('zotero-text-link');
+			this.classList.add('trellis-text-link');
 			this.setAttribute('role', 'link');
 		}
 
@@ -64,14 +64,14 @@
 						nsISSM.DISALLOW_INHERIT_PRINCIPAL);
 				}
 				catch {
-					var msg = "Error: Cannot open a " + uri.scheme + ": link using the zotero-text-link CE.";
+					var msg = "Error: Cannot open a " + uri.scheme + ": link using the trellis-text-link CE.";
 					Components.utils.reportError(msg);
 					return;
 				}
 
 				// Open HTTP URLs externally
-				if (window.Zotero && ["http", "https"].includes(uri.scheme)) {
-					Zotero.launchURL(uri.spec);
+				if (window.Trellis && ["http", "https"].includes(uri.scheme)) {
+					Trellis.launchURL(uri.spec);
 					event.preventDefault();
 					return;
 				}
@@ -93,5 +93,5 @@
 		}
 	}
 
-	customElements.define('zotero-text-link', ZoteroTextLink, { extends: 'label' });
+	customElements.define('trellis-text-link', TrellisTextLink, { extends: 'label' });
 }

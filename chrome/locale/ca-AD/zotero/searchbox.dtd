@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Nom:">
+<!ENTITY trellis.search.name "Nom:">
 
-<!ENTITY zotero.search.searchInLibrary "Cerca a la biblioteca:">
+<!ENTITY trellis.search.searchInLibrary "Cerca a la biblioteca:">
 
-<!ENTITY zotero.search.joinMode.prefix "Coincideix">
-<!ENTITY zotero.search.joinMode.any "qualsevol">
-<!ENTITY zotero.search.joinMode.all "totes">
-<!ENTITY zotero.search.joinMode.suffix "de les següents:">
+<!ENTITY trellis.search.joinMode.prefix "Coincideix">
+<!ENTITY trellis.search.joinMode.any "qualsevol">
+<!ENTITY trellis.search.joinMode.all "totes">
+<!ENTITY trellis.search.joinMode.suffix "de les següents:">
 
-<!ENTITY zotero.search.recursive.label "Cerca dins les subcarpetes">
-<!ENTITY zotero.search.noChildren "Mostra només elements de nivell superior">
-<!ENTITY zotero.search.includeParentsAndChildren "Inclou pares i descendents dels elements coincidents">
+<!ENTITY trellis.search.recursive.label "Cerca dins les subcarpetes">
+<!ENTITY trellis.search.noChildren "Mostra només elements de nivell superior">
+<!ENTITY trellis.search.includeParentsAndChildren "Inclou pares i descendents dels elements coincidents">
 
-<!ENTITY zotero.search.textModes.phrase "Frase">
-<!ENTITY zotero.search.textModes.phraseBinary "Frase (també dins dels fitxers binaris)">
-<!ENTITY zotero.search.textModes.regexp "Expressió regular">
-<!ENTITY zotero.search.textModes.regexpCS "Expressió regular (distingeix entre majúscules i minúscules)">
+<!ENTITY trellis.search.textModes.phrase "Frase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (també dins dels fitxers binaris)">
+<!ENTITY trellis.search.textModes.regexp "Expressió regular">
+<!ENTITY trellis.search.textModes.regexpCS "Expressió regular (distingeix entre majúscules i minúscules)">
 
-<!ENTITY zotero.search.date.units.days "dies">
-<!ENTITY zotero.search.date.units.months "mesos">
-<!ENTITY zotero.search.date.units.years "anys">
+<!ENTITY trellis.search.date.units.days "dies">
+<!ENTITY trellis.search.date.units.months "mesos">
+<!ENTITY trellis.search.date.units.years "anys">
 
-<!ENTITY zotero.search.search "Cerca">
-<!ENTITY zotero.search.clear "Neteja">
-<!ENTITY zotero.search.saveSearch "Desa la cerca">
+<!ENTITY trellis.search.search "Cerca">
+<!ENTITY trellis.search.clear "Neteja">
+<!ENTITY trellis.search.saveSearch "Desa la cerca">

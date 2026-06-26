@@ -4,13 +4,13 @@ describe("Item Tags Box", function () {
 	var win, doc, collectionsView;
 	
 	before(function* () {
-		win = yield loadZoteroPane();
+		win = yield loadTrellisPane();
 		doc = win.document;
-		win.Zotero_Tabs.select("zotero-pane")
-		win.Zotero_Tabs.closeAll();
+		win.Trellis_Tabs.select("trellis-pane")
+		win.Trellis_Tabs.closeAll();
 		
 		// Wait for things to settle
-		yield Zotero.Promise.delay(100);
+		yield Trellis.Promise.delay(100);
 	});
 	after(function () {
 		win.close();
@@ -19,15 +19,15 @@ describe("Item Tags Box", function () {
 	
 	describe("Tag Editing", function () {
 		before(async () => {
-			await activateZoteroPane();
+			await activateTrellisPane();
 		});
 		it("should update tag when pressing Enter in textbox", async function () {
-			var tag = Zotero.Utilities.randomString();
-			var newTag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
+			var newTag = Trellis.Utilities.randomString();
 			
 			var item = await createDataObject('item', { tags: [{ tag }] });
 			
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var rows = tagsbox.querySelectorAll('.row editable-text');
 			assert.equal(rows.length, 1);
 			assert.equal(rows[0].value, tag);
@@ -54,11 +54,11 @@ describe("Item Tags Box", function () {
 		});
 
 		it("should focus a new empty tag on Shift-Enter in textbox", async function () {
-			var tag = Zotero.Utilities.randomString();
-			var updatedTag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
+			var updatedTag = Trellis.Utilities.randomString();
 			
 			await createDataObject('item', { tags: [{ tag }] });
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var rows = tagsbox.querySelectorAll('.row editable-text');
 			assert.equal(rows.length, 1);
 			
@@ -82,7 +82,7 @@ describe("Item Tags Box", function () {
 			let waited = 0;
 			while (doc.activeElement.tagName == "window" && waited < 1000) {
 				waited += 1;
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			// New empty tag should have focus
 			assert.exists(doc.activeElement.closest("[isNew]"));
@@ -90,11 +90,11 @@ describe("Item Tags Box", function () {
 
 		it("should save tag edits when another item is selected", async function () {
 			let notSelectedItem = await createDataObject('item');
-			var tag = Zotero.Utilities.randomString();
-			var updatedTag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
+			var updatedTag = Trellis.Utilities.randomString();
 			
 			let selectedItem = await createDataObject('item', { tags: [{ tag }] });
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var rows = tagsbox.querySelectorAll('.row editable-text');
 			assert.equal(rows.length, 1);
 			
@@ -106,7 +106,7 @@ describe("Item Tags Box", function () {
 			
 			// change the item by clicking on another row in itemTree
 			let promise = waitForItemEvent('modify');
-			win.ZoteroPane.selectItem(notSelectedItem.id);
+			win.TrellisPane.selectItem(notSelectedItem.id);
 			// selectedItem should be modified
 			await promise;
 			// make sure that the tag was actually updated
@@ -117,8 +117,8 @@ describe("Item Tags Box", function () {
 	
 	describe("#notify()", function () {
 		it("should update an existing tag on rename", async function () {
-			var tag = Zotero.Utilities.randomString();
-			var newTag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
+			var newTag = Trellis.Utilities.randomString();
 			
 			var item = createUnsavedDataObject('item');
 			item.setTags([
@@ -127,12 +127,12 @@ describe("Item Tags Box", function () {
 				}
 			]);
 			await item.saveTx();
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var rows = tagsbox.querySelectorAll('.row');
 			assert.equal(rows.length, 1);
 			assert.equal(rows[0].querySelector("editable-text").value, tag);
 			
-			await Zotero.Tags.rename(Zotero.Libraries.userLibraryID, tag, newTag);
+			await Trellis.Tags.rename(Trellis.Libraries.userLibraryID, tag, newTag);
 			
 			rows = tagsbox.querySelectorAll('.row');
 			assert.equal(rows.length, 1);
@@ -140,11 +140,11 @@ describe("Item Tags Box", function () {
 		})
 		
 		it("should update when a tag's color is removed", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
-			var tag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
 			
-			await Zotero.Tags.setColor(libraryID, tag, "#990000");
+			await Trellis.Tags.setColor(libraryID, tag, "#990000");
 			var item = createUnsavedDataObject('item');
 			item.setTags([
 				{
@@ -156,7 +156,7 @@ describe("Item Tags Box", function () {
 			]);
 			await item.saveTx();
 			
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var rows = tagsbox.querySelectorAll('.row');
 
 			// Colored tags are sorted first
@@ -166,7 +166,7 @@ describe("Item Tags Box", function () {
 			assert.notOk(getComputedStyle(rows[1]).getPropertyValue('--tag-color'));
 			assert.equal(rows[1].querySelector("editable-text").value, "_A");
 			
-			await Zotero.Tags.setColor(libraryID, tag, false);
+			await Trellis.Tags.setColor(libraryID, tag, false);
 			
 			// No color remains on the tag
 			rows = tagsbox.querySelectorAll('.row');
@@ -175,7 +175,7 @@ describe("Item Tags Box", function () {
 		})
 		
 		it("should update when a tag is removed from the library", async function () {
-			var tag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
 			
 			var item = createUnsavedDataObject('item');
 			item.setTags([
@@ -185,12 +185,12 @@ describe("Item Tags Box", function () {
 			]);
 			await item.saveTx();
 			
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var rows = tagsbox.querySelectorAll('.row');
 			assert.equal(rows.length, 1);
 			assert.equal(rows[0].querySelector("editable-text").value, tag);
 			
-			await Zotero.Tags.removeFromLibrary(Zotero.Libraries.userLibraryID, Zotero.Tags.getID(tag));
+			await Trellis.Tags.removeFromLibrary(Trellis.Libraries.userLibraryID, Trellis.Tags.getID(tag));
 			
 			rows = tagsbox.querySelectorAll('.row');
 			assert.equal(rows.length, 0);
@@ -210,10 +210,10 @@ describe("Item Tags Box", function () {
 				]
 			});
 
-			await Zotero.Tags.setColor(item.libraryID, 'F_colored_tag', '#111111', 0);
-			await Zotero.Tags.setColor(item.libraryID, 'E_colored_tag', '#222222', 1);
+			await Trellis.Tags.setColor(item.libraryID, 'F_colored_tag', '#111111', 0);
+			await Trellis.Tags.setColor(item.libraryID, 'E_colored_tag', '#222222', 1);
 
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var tagRows = [...tagsbox.querySelectorAll(".row")];
 
 			// Colored tags sorted first by their position
@@ -247,11 +247,11 @@ describe("Item Tags Box", function () {
 				]
 			});
 
-			await Zotero.Tags.setColor(item.libraryID, 'FF_colored_tag', '#111111', 0);
-			await Zotero.Tags.setColor(item.libraryID, 'EE_colored_tag', '#222222', 1);
-			await Zotero.Tags.setColor(item.libraryID, 'a_colored_tag', '#222222', 2);
+			await Trellis.Tags.setColor(item.libraryID, 'FF_colored_tag', '#111111', 0);
+			await Trellis.Tags.setColor(item.libraryID, 'EE_colored_tag', '#222222', 1);
+			await Trellis.Tags.setColor(item.libraryID, 'a_colored_tag', '#222222', 2);
 
-			var tagsbox = doc.querySelector('#zotero-editpane-tags');
+			var tagsbox = doc.querySelector('#trellis-editpane-tags');
 			var tagRows;
 			
 			// should be added above all usual tags but below colored and emoji
@@ -273,7 +273,7 @@ describe("Item Tags Box", function () {
 
 	describe("Paste Handling", function () {
 		before(async () => {
-			await activateZoteroPane();
+			await activateTrellisPane();
 		});
 
 		function createPasteEvent(text) {
@@ -296,7 +296,7 @@ describe("Item Tags Box", function () {
 
 			for (let { str, delimiter } of testCases) {
 				let item = await createDataObject('item');
-				let tagsbox = doc.querySelector('#zotero-editpane-tags');
+				let tagsbox = doc.querySelector('#trellis-editpane-tags');
 				let stub = sinon.stub(tagsbox, 'openTagSplitterWindow');
 
 				let row = tagsbox.newTag();
@@ -316,7 +316,7 @@ describe("Item Tags Box", function () {
 
 		it("should insert pasted text at cursor position within existing value", async function () {
 			let item = await createDataObject('item');
-			let tagsbox = doc.querySelector('#zotero-editpane-tags');
+			let tagsbox = doc.querySelector('#trellis-editpane-tags');
 			let stub = sinon.stub(tagsbox, 'openTagSplitterWindow');
 
 			let row = tagsbox.newTag();

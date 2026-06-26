@@ -138,13 +138,13 @@
     "message": "オンライン・ライブラリへの保存を有効にする"
   },
   "reports_report_submitted": {
-    "message": "エラーレポートが送信されました。\n\nレポート ID: $1\n\nこのレポート ID、問題の説明、再現に必要な手順を Zotero フォーラムに投稿してください。\n\nフォーラムで参照されない限り、エラーレポートはレビューされません。"
+    "message": "エラーレポートが送信されました。\n\nレポート ID: $1\n\nこのレポート ID、問題の説明、再現に必要な手順を Trellis フォーラムに投稿してください。\n\nフォーラムで参照されない限り、エラーレポートはレビューされません。"
   },
   "reports_debug_output_submitted": {
     "message": "デバッグ出力が送信されました。\n\nデバッグ ID は $1 です、"
   },
   "reports_submission_failed": {
-    "message": "下記のレポートの送信中にエラーが発生しました。\n\n$1\n\nインターネット接続を確認してください。 問題が解決しない場合は、Zotero フォーラムにメッセージを投稿してください。"
+    "message": "下記のレポートの送信中にエラーが発生しました。\n\n$1\n\nインターネット接続を確認してください。 問題が解決しない場合は、Trellis フォーラムにメッセージを投稿してください。"
   },
   "integration_error_clientUpgrade": {
     "message": "ウェブベースの引用にはバージョン $1 以上が必要です。"
@@ -153,10 +153,10 @@
     "message": " $1 が $2 デスクトップアプリケーションとは通信できません。ウェブベース引用を利用するには $2 を起動しておく必要があります。"
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "文書には有効な Zotero の引用が含まれています。ダウンロードコピー内に zotero.org のリンクが表示されます。"
+    "message": "文書には有効な Trellis の引用が含まれています。ダウンロードコピー内に trellis.org のリンクが表示されます。"
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "共有に適した版を生成するには、ファイルメニューから <b>コピーを作成…</b> を選択し、新しい文書の Zotero メニューから <b>引用リンクを解除</b> を選び、リンクを解除した版をダウンロードします。更に変更を加える必要がある場合は、オリジナルのリンク付きの文書を保存しておいてください。"
+    "message": "共有に適した版を生成するには、ファイルメニューから <b>コピーを作成…</b> を選択し、新しい文書の Trellis メニューから <b>引用リンクを解除</b> を選び、リンクを解除した版をダウンロードします。更に変更を加える必要がある場合は、オリジナルのリンク付きの文書を保存しておいてください。"
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "リンクされたバージョンを強制的にダウンロード"
@@ -165,7 +165,7 @@
     "message": "$1 が文書を更新しています。"
   },
   "integration_googleDocs_docxAlert": {
-    "message": "Microsoft Word の.docx ファイルを Google Docs で直接編集する場合、$1 との連携機能は利用できません。この機能を有効にするには、[ファイル] → [Googleドキュメントとして保存] を選択します。<br/><br/>$1 の引用を含む Word 文書を Google ドキュメントに転送する場合は、「<a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">ワープロソフト間で文書を移動する</a>」を参照してください。"
+    "message": "Microsoft Word の.docx ファイルを Google Docs で直接編集する場合、$1 との連携機能は利用できません。この機能を有効にするには、[ファイル] → [Googleドキュメントとして保存] を選択します。<br/><br/>$1 の引用を含む Word 文書を Google ドキュメントに転送する場合は、「<a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">ワープロソフト間で文書を移動する</a>」を参照してください。"
   },
   "integration_googleDocs_documentLocked": {
     "message": "別のユーザー $1 が文書の引用を編集中です。 後でもう一度やり直してください。"
@@ -189,7 +189,7 @@
     "message": "引用を再リンクする"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "これらの引用は <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">$1 からリンク解除</a>されました。更新したり、参考文献目録に表示したりする前に、再リンクする必要があります。"
+    "message": "これらの引用は <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">$1 からリンク解除</a>されました。更新したり、参考文献目録に表示したりする前に、再リンクする必要があります。"
   },
   "copyUnproxiedLink": {
     "message": "プロキシを通じないリンクをコピーします"

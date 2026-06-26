@@ -3,22 +3,22 @@
     
     Copyright © 2012 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -30,20 +30,20 @@
  * @param {Object} options
  *         <li>libraryID - ID of library in which items should be saved</li>
  *         <li>collections - New collections to create (used during Import translation</li>
- *         <li>attachmentMode - One of Zotero.Translate.ItemSaver.ATTACHMENT_* specifying how attachments should be saved</li>
+ *         <li>attachmentMode - One of Trellis.Translate.ItemSaver.ATTACHMENT_* specifying how attachments should be saved</li>
  *         <li>linkFiles - Save attachments as linked files instead of stored files</li>
  *         <li>forceTagType - Force tags to specified tag type</li>
  *         <li>proxy - A proxy to deproxify item URLs</li>
  *         <li>baseURI - URI to which attachment paths should be relative</li>
  *         <li>saveOptions - Options to pass to DataObject::save() (e.g., skipSelect)</li>
  */
-Zotero.Translate.ItemSaver = function (options) {
+Trellis.Translate.ItemSaver = function (options) {
 	// initialize constants
 	this._IDMap = {};
 	
 	// determine library ID
 	if(!options.libraryID) {
-		this._libraryID = Zotero.Libraries.userLibraryID;
+		this._libraryID = Trellis.Libraries.userLibraryID;
 	} else {
 		this._libraryID = options.libraryID;
 	}
@@ -51,8 +51,8 @@ Zotero.Translate.ItemSaver = function (options) {
 	this._collections = options.collections || false;
 	
 	// If group filesEditable==false, don't save attachments
-	this.attachmentMode = Zotero.Libraries.get(this._libraryID).filesEditable ? options.attachmentMode :
-	                      Zotero.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE;
+	this.attachmentMode = Trellis.Libraries.get(this._libraryID).filesEditable ? options.attachmentMode :
+	                      Trellis.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE;
 	this._linkFiles = options.linkFiles;
 	this._forceTagType = options.forceTagType;
 	this._referrer = options.referrer;
@@ -72,19 +72,19 @@ Zotero.Translate.ItemSaver = function (options) {
 	this._saveOptions = options.saveOptions || {};
 };
 
-Zotero.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE = 0;
-Zotero.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD = 1;
-Zotero.Translate.ItemSaver.ATTACHMENT_MODE_FILE = 2;
-Zotero.Translate.ItemSaver.PRIMARY_ATTACHMENT_TYPES = new Set([
+Trellis.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE = 0;
+Trellis.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD = 1;
+Trellis.Translate.ItemSaver.ATTACHMENT_MODE_FILE = 2;
+Trellis.Translate.ItemSaver.PRIMARY_ATTACHMENT_TYPES = new Set([
 	'application/pdf',
 	'application/epub+zip',
 ]);
 
-Zotero.Translate.ItemSaver.prototype = {
+Trellis.Translate.ItemSaver.prototype = {
 
 	/**
 	 * Saves items to Standalone or the server
-	 * @param {Object[]} jsonItems - Items in Zotero.Item.toArray() format
+	 * @param {Object[]} jsonItems - Items in Trellis.Item.toArray() format
 	 * @param {Function} [attachmentCallback] A callback that receives information about attachment
 	 *     save progress. The callback will be called as attachmentCallback(attachment, false, error)
 	 *     on failure or attachmentCallback(attachment, progressPercent) periodically during saving.
@@ -96,7 +96,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		var standaloneAttachments = [];
 		var childAttachments = [];
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			for (let jsonItem of jsonItems) {
 				jsonItem = Object.assign({}, jsonItem);
 				
@@ -150,8 +150,8 @@ Zotero.Translate.ItemSaver.prototype = {
 		this._openAccessPDFURLs = new Map();
 
 		// TODO: Separate pref?
-		var shouldDownloadOAPDF = this.attachmentMode == Zotero.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD
-			&& Zotero.Prefs.get('downloadAssociatedFiles');
+		var shouldDownloadOAPDF = this.attachmentMode == Trellis.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD
+			&& Trellis.Prefs.get('downloadAssociatedFiles');
 		if (shouldDownloadOAPDF) {
 			for (let item of items) {
 				let urlObjects = await this._getOpenAccessPDFURLs(item, attachmentCallback);
@@ -208,7 +208,7 @@ Zotero.Translate.ItemSaver.prototype = {
 	saveSnapshotAttachments: async function (options) {
 		let { title, url, parentItemID, snapshotContent } = options;
 		let attachment = { title, url };
-		Zotero.debug('Saving pending attachment: ' + JSON.stringify(attachment));
+		Trellis.debug('Saving pending attachment: ' + JSON.stringify(attachment));
 		if (snapshotContent) {
 			attachment.snapshotContent = snapshotContent;
 		}
@@ -229,13 +229,13 @@ Zotero.Translate.ItemSaver.prototype = {
 	
 	async _saveItem(jsonItem, type) {
 		let itemID;
-		let item = new Zotero.Item(type);
+		let item = new Trellis.Item(type);
 		item.libraryID = this._libraryID;
 		if (jsonItem.creators) this._cleanCreators(jsonItem.creators);
 		if (jsonItem.tags) jsonItem.tags = this._cleanTags(jsonItem.tags);
 
 		if (jsonItem.accessDate == 'CURRENT_TIMESTAMP') {
-			jsonItem.accessDate = Zotero.Date.dateToISO(new Date());
+			jsonItem.accessDate = Trellis.Date.dateToISO(new Date());
 		}
 
 		item.fromJSON(this._copyJSONItemForImport(jsonItem));
@@ -243,7 +243,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		// deproxify url
 		if (this._proxy && jsonItem.url) {
 			let url = this._proxy.toProper(jsonItem.url);
-			Zotero.debug(`Deproxifying item url ${jsonItem.url} with scheme ${this._proxy.scheme} to ${url}`, 5);
+			Trellis.debug(`Deproxifying item url ${jsonItem.url} with scheme ${this._proxy.scheme} to ${url}`, 5);
 			item.setField('url', url);
 		}
 
@@ -267,7 +267,7 @@ Zotero.Translate.ItemSaver.prototype = {
 
 
 	/**
-	 * Processes attachments to be saved either via Zotero or externally (Connector)
+	 * Processes attachments to be saved either via Trellis or externally (Connector)
 	 *
 	 * Calls attachment callbacks for initial attachment progress (0)
 	 */
@@ -275,7 +275,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		let childAttachments = [];
 		
 		let foundPrimary = false;
-		// Attachments to be saved within Zotero
+		// Attachments to be saved within Trellis
 		if (jsonItem.attachments) {
 			let attachmentsToSave = [];
 			for (let jsonAttachment of jsonItem.attachments) {
@@ -285,7 +285,7 @@ Zotero.Translate.ItemSaver.prototype = {
 
 				// The first PDF/EPUB is the primary one. If that one fails to download,
 				// we might check for an open-access PDF below.
-				if (Zotero.Translate.ItemSaver.PRIMARY_ATTACHMENT_TYPES.has(jsonAttachment.mimeType)
+				if (Trellis.Translate.ItemSaver.PRIMARY_ATTACHMENT_TYPES.has(jsonAttachment.mimeType)
 					&& !foundPrimary) {
 					jsonAttachment.isPrimary = true;
 					foundPrimary = true;
@@ -315,21 +315,21 @@ Zotero.Translate.ItemSaver.prototype = {
 		let urlObjects = [];
 		
 		// Has a primary attachment or a pending (from Connector) primary attachment
-		if (jsonItem.attachments?.some(x => Zotero.Translate.ItemSaver.PRIMARY_ATTACHMENT_TYPES.has(x.mimeType))
+		if (jsonItem.attachments?.some(x => Trellis.Translate.ItemSaver.PRIMARY_ATTACHMENT_TYPES.has(x.mimeType))
 			|| jsonItem.pendingPrimaryAttachment) {
 			return null;
 		}
 
 		// If no primary attachments available look for an OA one and call attachmentCallback to update UI
 		try {
-			let resolvers = Zotero.Attachments.getPDFResolvers(item, ['oa']);
+			let resolvers = Trellis.Attachments.getPDFResolvers(item, ['oa']);
 			if (!resolvers.length) {
 				return urlObjects;
 			}
 			urlObjects = await resolvers[0]();
 			// If there are possible URLs, create a status line for the PDF
 			if (urlObjects.length) {
-				let title = Zotero.getString('findPDF.openAccessPDF');
+				let title = Trellis.getString('findPDF.openAccessPDF');
 				let jsonAttachment = this._makeJSONAttachment(jsonItem.id, title);
 				if (!jsonItem.attachments) jsonItem.attachments = [];
 				jsonItem.attachments.push(jsonAttachment);
@@ -337,7 +337,7 @@ Zotero.Translate.ItemSaver.prototype = {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		return urlObjects;
 	},
@@ -366,7 +366,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		// We checked for OA PDFs in _getOpenAccessPDFURLs() so there was no translated pdf
 		if (resolvers) {
 			// Add custom resolvers
-			resolvers.push(...Zotero.Attachments.getPDFResolvers(item, ['custom'], true));
+			resolvers.push(...Trellis.Attachments.getPDFResolvers(item, ['custom'], true));
 
 			// No translated, no OA, no custom, no status line
 			if (!resolvers.length) {
@@ -376,7 +376,7 @@ Zotero.Translate.ItemSaver.prototype = {
 			// No translated, no OA, just potential custom, so create a status line
 			if (!jsonAttachment) {
 				jsonAttachment = this._makeJSONAttachment(
-					jsonItem.id, Zotero.getString('findPDF.searchingForAvailableFiles')
+					jsonItem.id, Trellis.getString('findPDF.searchingForAvailableFiles')
 				);
 			}
 		}
@@ -384,13 +384,13 @@ Zotero.Translate.ItemSaver.prototype = {
 			// Translated attachment failed, so we didn't check for OA PDFs yet and didn't
 			// update the status line
 			// Look for OA PDFs now
-			resolvers = Zotero.Attachments.getPDFResolvers(item, ['oa']);
+			resolvers = Trellis.Attachments.getPDFResolvers(item, ['oa']);
 			if (resolvers.length) {
 				resolvers = await resolvers[0]();
 			}
 
 			// Add custom resolvers
-			resolvers.push(...Zotero.Attachments.getPDFResolvers(item, ['custom'], true));
+			resolvers.push(...Trellis.Attachments.getPDFResolvers(item, ['custom'], true));
 
 			// Failed translated, no OA, no custom, so fail the existing translator line
 			if (!resolvers.length) {
@@ -401,7 +401,7 @@ Zotero.Translate.ItemSaver.prototype = {
 
 		let attachment;
 		try {
-			attachment = await Zotero.Attachments.addFileFromURLs(
+			attachment = await Trellis.Attachments.addFileFromURLs(
 				item,
 				resolvers,
 				{
@@ -414,7 +414,7 @@ Zotero.Translate.ItemSaver.prototype = {
 			);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			attachmentCallback(jsonAttachment, false, e);
 			return;
 		}
@@ -430,7 +430,7 @@ Zotero.Translate.ItemSaver.prototype = {
 	
 	_makeJSONAttachment: function (parentID, title) {
 		return {
-			id: Zotero.Utilities.randomString(),
+			id: Trellis.Utilities.randomString(),
 			parent: parentID,
 			title,
 			mimeType: 'application/pdf',
@@ -441,10 +441,10 @@ Zotero.Translate.ItemSaver.prototype = {
 	
 	_getPDFTitleForAccessMethod: function (accessMethod) {
 		if (accessMethod == 'oa') {
-			return Zotero.getString('findPDF.openAccessPDF');
+			return Trellis.getString('findPDF.openAccessPDF');
 		}
 		if (accessMethod) {
-			return Zotero.getString('findPDF.pdfWithMethod', accessMethod);
+			return Trellis.getString('findPDF.pdfWithMethod', accessMethod);
 		}
 		return "PDF";
 	},
@@ -458,12 +458,12 @@ Zotero.Translate.ItemSaver.prototype = {
 		var parentIDs = collections.map(c => null);
 		var topLevelCollections = [];
 
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			while(collectionsToProcess.length) {
 				var collection = collectionsToProcess.shift();
 				var parentID = parentIDs.shift();
 
-				var newCollection = new Zotero.Collection;
+				var newCollection = new Trellis.Collection;
 				newCollection.libraryID = this._libraryID;
 				newCollection.name = collection.name;
 				if (parentID) {
@@ -488,13 +488,13 @@ Zotero.Translate.ItemSaver.prototype = {
 						if(this._IDMap[child.id]) {
 							toAdd.push(this._IDMap[child.id]);
 						} else {
-							Zotero.debug("Translate: Could not map "+child.id+" to an imported item", 2);
+							Trellis.debug("Translate: Could not map "+child.id+" to an imported item", 2);
 						}
 					}
 				}
 
 				if(toAdd.length) {
-					Zotero.debug("Translate: Adding " + toAdd, 5);
+					Trellis.debug("Translate: Adding " + toAdd, 5);
 					await newCollection.addItems(toAdd);
 				}
 			}
@@ -531,34 +531,34 @@ Zotero.Translate.ItemSaver.prototype = {
 	
 	_canSaveAttachment: function (attachment) {
 		// Always save link attachments
-		var isLink = Zotero.MIME.isWebPageType(attachment.mimeType)
+		var isLink = Trellis.MIME.isWebPageType(attachment.mimeType)
 			// .snapshot coming from most translators, .linkMode coming from RDF
-			&& (attachment.snapshot === false || attachment.linkMode == Zotero.Attachments.LINK_MODE_LINKED_URL);
-		if (isLink || this.attachmentMode == Zotero.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD) {
+			&& (attachment.snapshot === false || attachment.linkMode == Trellis.Attachments.LINK_MODE_LINKED_URL);
+		if (isLink || this.attachmentMode == Trellis.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD) {
 			if (!attachment.url && !attachment.document) {
-				Zotero.debug("Translate: Not adding attachment: no URL specified");
+				Trellis.debug("Translate: Not adding attachment: no URL specified");
 				return false;
 			}
 			if (attachment.snapshot !== false) {
-				if (attachment.document || Zotero.MIME.isWebPageType(attachment.mimeType)) {
-					if (!Zotero.Prefs.get("automaticSnapshots")) {
-						Zotero.debug("Translate: Not adding attachment: automatic snapshots are disabled");
+				if (attachment.document || Trellis.MIME.isWebPageType(attachment.mimeType)) {
+					if (!Trellis.Prefs.get("automaticSnapshots")) {
+						Trellis.debug("Translate: Not adding attachment: automatic snapshots are disabled");
 						return false;
 					}
 				}
 				else {
-					if (!Zotero.Prefs.get("downloadAssociatedFiles")) {
-						Zotero.debug("Translate: Not adding attachment: automatic file attachments are disabled");
+					if (!Trellis.Prefs.get("downloadAssociatedFiles")) {
+						Trellis.debug("Translate: Not adding attachment: automatic file attachments are disabled");
 						return false;
 					}
 				}
 			}
 			return true;
 		}
-		else if (this.attachmentMode == Zotero.Translate.ItemSaver.ATTACHMENT_MODE_FILE) {
+		else if (this.attachmentMode == Trellis.Translate.ItemSaver.ATTACHMENT_MODE_FILE) {
 			return true;
 		}
-		Zotero.debug('Translate: Ignoring attachment due to ATTACHMENT_MODE_IGNORE');
+		Trellis.debug('Translate: Ignoring attachment due to ATTACHMENT_MODE_IGNORE');
 		return false;
 	},
 	
@@ -572,7 +572,7 @@ Zotero.Translate.ItemSaver.prototype = {
 	 *   parameters: translator attachment object, percent completion (integer),
 	 *   and an optional error object
 	 *
-	 * @return {Zotero.Promise<Zotero.Item|false} - False is returned if attachment
+	 * @return {Trellis.Promise<Trellis.Item|false} - False is returned if attachment
 	 *   was not saved due to error or user settings.
 	 */
 	_saveAttachment: async function (attachment, parentItemID, attachmentCallback) {
@@ -583,19 +583,19 @@ Zotero.Translate.ItemSaver.prototype = {
 			// determine whether to save files and attachments
 			// .snapshot coming from most translators, .linkMode coming from RDF
 			var isLink = attachment.snapshot === false
-				|| attachment.linkMode == Zotero.Attachments.LINK_MODE_LINKED_URL;
+				|| attachment.linkMode == Trellis.Attachments.LINK_MODE_LINKED_URL;
 
-			if (isLink || this.attachmentMode === Zotero.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE) {
+			if (isLink || this.attachmentMode === Trellis.Translate.ItemSaver.ATTACHMENT_MODE_IGNORE) {
 				newAttachment = await this._saveAttachmentLink.apply(this, arguments);
 			}
-			else if (isSinglefileSnapshot || this.attachmentMode == Zotero.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD) {
+			else if (isSinglefileSnapshot || this.attachmentMode == Trellis.Translate.ItemSaver.ATTACHMENT_MODE_DOWNLOAD) {
 				newAttachment = await this._saveAttachmentDownload.apply(this, arguments);
 			}
-			else if (this.attachmentMode == Zotero.Translate.ItemSaver.ATTACHMENT_MODE_FILE) {
+			else if (this.attachmentMode == Trellis.Translate.ItemSaver.ATTACHMENT_MODE_FILE) {
 				newAttachment = await this._saveAttachmentFile.apply(this, arguments);
 			}
 			else {
-				Zotero.debug(`Translate: Ignoring attachment ${attachment.title} due to ATTACHMENT_MODE_IGNORE`);
+				Trellis.debug(`Translate: Ignoring attachment ${attachment.title} due to ATTACHMENT_MODE_IGNORE`);
 			}
 			
 			if (!newAttachment) return false; // attachmentCallback should not have been called in this case
@@ -613,19 +613,19 @@ Zotero.Translate.ItemSaver.prototype = {
 			await newAttachment.saveTx(this._saveOptions);
 			this._handleRelated(attachment, newAttachment);
 
-			Zotero.debug("Translate: Created attachment; id is " + newAttachment.id, 4);
+			Trellis.debug("Translate: Created attachment; id is " + newAttachment.id, 4);
 			attachmentCallback(attachment, 100);
 			return newAttachment;
 		} catch(e) {
-			Zotero.debug("Saving attachment failed", 2);
-			Zotero.debug(e, 2);
+			Trellis.debug("Saving attachment failed", 2);
+			Trellis.debug(e, 2);
 			attachmentCallback(attachment, false, e);
 			return false;
 		}
 	},
 	
 	_saveAttachmentFile: async function (attachment, parentItemID, attachmentCallback) {
-		Zotero.debug("Translate: Adding attachment", 4);
+		Trellis.debug("Translate: Adding attachment", 4);
 		attachmentCallback(attachment, 0);
 		
 		if(!attachment.url && !attachment.path) {
@@ -634,10 +634,10 @@ Zotero.Translate.ItemSaver.prototype = {
 		
 		if (attachment.path) {
 			// If we have an explicit "attachments:" value, just save that as a linked file
-			if (attachment.path.startsWith(Zotero.Attachments.BASE_PATH_PLACEHOLDER)) {
+			if (attachment.path.startsWith(Trellis.Attachments.BASE_PATH_PLACEHOLDER)) {
 				attachment.linkMode = "linked_file";
-				return Zotero.Attachments.linkFromFileWithRelativePath({
-					path: attachment.path.substr(Zotero.Attachments.BASE_PATH_PLACEHOLDER.length),
+				return Trellis.Attachments.linkFromFileWithRelativePath({
+					path: attachment.path.substr(Trellis.Attachments.BASE_PATH_PLACEHOLDER.length),
 					title: attachment.title,
 					contentType: attachment.mimeType,
 					parentItemID,
@@ -646,7 +646,7 @@ Zotero.Translate.ItemSaver.prototype = {
 				});
 			}
 			
-			var url = Zotero.Attachments.cleanAttachmentURI(attachment.path, false);
+			var url = Trellis.Attachments.cleanAttachmentURI(attachment.path, false);
 			if (url && /^(?:https?|ftp):/.test(url)) {
 				// A web URL. Don't bother parsing it as path below
 				// Some paths may look like URIs though, so don't just test for 'file'
@@ -660,19 +660,19 @@ Zotero.Translate.ItemSaver.prototype = {
 		var file = attachment.path && this._parsePath(attachment.path);
 		if (!file) {
 			if (attachment.path) {
-				let asUrl = Zotero.Attachments.cleanAttachmentURI(attachment.path);
+				let asUrl = Trellis.Attachments.cleanAttachmentURI(attachment.path);
 				if (!attachment.url && !asUrl) {
 					throw new Error("Translate: Could not parse attachment path <" + attachment.path + ">");
 				}
 
 				if (!attachment.url && asUrl) {
-					Zotero.debug("Translate: attachment path looks like a URI: " + attachment.path);
+					Trellis.debug("Translate: attachment path looks like a URI: " + attachment.path);
 					attachment.url = asUrl;
 					delete attachment.path;
 				}
 			}
 
-			let url = Zotero.Attachments.cleanAttachmentURI(attachment.url);
+			let url = Trellis.Attachments.cleanAttachmentURI(attachment.url);
 			if (!url) {
 				throw new Error("Translate: Invalid attachment.url specified <" + attachment.url + ">");
 			}
@@ -691,7 +691,7 @@ Zotero.Translate.ItemSaver.prototype = {
 
 			// At this point, must be a valid HTTP/HTTPS url
 			attachment.linkMode = "linked_url";
-			newItem = await Zotero.Attachments.linkFromURL({
+			newItem = await Trellis.Attachments.linkFromURL({
 				url: attachment.url,
 				parentItemID,
 				contentType: attachment.mimeType || undefined,
@@ -702,9 +702,9 @@ Zotero.Translate.ItemSaver.prototype = {
 		}
 		else if (this._linkFiles
 				// Don't link if it's a path to the current storage directory
-				&& !Zotero.File.directoryContains(Zotero.DataDirectory.getSubdirectory('storage'), file.path)) {
+				&& !Trellis.File.directoryContains(Trellis.DataDirectory.getSubdirectory('storage'), file.path)) {
 			attachment.linkMode = "linked_file";
-			newItem = await Zotero.Attachments.linkFromFile({
+			newItem = await Trellis.Attachments.linkFromFile({
 				file,
 				parentItemID,
 				collections: !parentItemID ? this._collections : undefined,
@@ -720,7 +720,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		else {
 			if (attachment.url) {
 				attachment.linkMode = "imported_url";
-				newItem = await Zotero.Attachments.importSnapshotFromFile({
+				newItem = await Trellis.Attachments.importSnapshotFromFile({
 					file: file,
 					url: attachment.url,
 					title: attachment.title,
@@ -734,7 +734,7 @@ Zotero.Translate.ItemSaver.prototype = {
 			}
 			else {
 				attachment.linkMode = "imported_file";
-				newItem = await Zotero.Attachments.importFromFile({
+				newItem = await Trellis.Attachments.importFromFile({
 					file: file,
 					parentItemID,
 					libraryID: this._libraryID,
@@ -752,7 +752,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		try {
 			var uri = Services.io.newURI(path, "", this._baseURI);
 		} catch(e) {
-			Zotero.debug("Translate: " + path + " is not a valid URI");
+			Trellis.debug("Translate: " + path + " is not a valid URI");
 			return false;
 		}
 		
@@ -760,17 +760,17 @@ Zotero.Translate.ItemSaver.prototype = {
 			var file = uri.QueryInterface(Components.interfaces.nsIFileURL).file;
 		}
 		catch (e) {
-			Zotero.debug("Translate: " + uri.spec + " is not a file URI");
+			Trellis.debug("Translate: " + uri.spec + " is not a file URI");
 			return false;
 		}
 		
 		if(file.path == '/') {
-			Zotero.debug("Translate: " + path + " points to root directory");
+			Trellis.debug("Translate: " + path + " points to root directory");
 			return false;
 		}
 		
 		if(!file.exists()) {
-			Zotero.debug("Translate: File at " + file.path + " does not exist");
+			Trellis.debug("Translate: File at " + file.path + " does not exist");
 			return false;
 		}
 		
@@ -780,15 +780,15 @@ Zotero.Translate.ItemSaver.prototype = {
 	"_parseAbsolutePath":function (path) {
 		var file;
 		try {
-			file = Zotero.File.pathToFile(path);
+			file = Trellis.File.pathToFile(path);
 		}
 		catch (e) {
-			Zotero.debug("Translate: Invalid absolute path: " + path);
+			Trellis.debug("Translate: Invalid absolute path: " + path);
 			return false;
 		}
 		
 		if(!file.exists()) {
-			Zotero.debug("Translate: File at absolute path " + file.path + " does not exist");
+			Trellis.debug("Translate: File at absolute path " + file.path + " does not exist");
 			return false;
 		}
 		
@@ -797,7 +797,7 @@ Zotero.Translate.ItemSaver.prototype = {
 
 	"_parseRelativePath":function (path) {
 		if (!this._baseURI) {
-			Zotero.debug("Translate: Cannot parse as relative path. No base URI available.");
+			Trellis.debug("Translate: Cannot parse as relative path. No base URI available.");
 			return false;
 		}
 		
@@ -808,7 +808,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		}
 		
 		if(!file.exists()) {
-			Zotero.debug("Translate: File at " + file.path + " does not exist");
+			Trellis.debug("Translate: File at " + file.path + " does not exist");
 			return false;
 		}
 		
@@ -816,51 +816,51 @@ Zotero.Translate.ItemSaver.prototype = {
 	},
 
 	"_parsePath":function (path) {
-		Zotero.debug("Translate: Attempting to parse path " + path);
+		Trellis.debug("Translate: Attempting to parse path " + path);
 		
 		var file;
 
 		// First, try to parse as absolute path
-		if((/^[a-zA-Z]:[\\\/]|^\\\\/.test(path) && Zotero.isWin) // Paths starting with drive letter or network shares starting with \\
-			|| (path[0] === "/" && !Zotero.isWin)) {
+		if((/^[a-zA-Z]:[\\\/]|^\\\\/.test(path) && Trellis.isWin) // Paths starting with drive letter or network shares starting with \\
+			|| (path[0] === "/" && !Trellis.isWin)) {
 			// Forward slashes on Windows are not allowed in filenames, so we can
 			// assume they're meant to be backslashes. Backslashes are technically
 			// allowed on Linux, so the reverse cannot be done reliably.
-			var nativePath = Zotero.isWin ? path.replace('/', '\\', 'g') : path;
+			var nativePath = Trellis.isWin ? path.replace('/', '\\', 'g') : path;
 			if (file = this._parseAbsolutePath(nativePath)) {
-				Zotero.debug("Translate: Got file "+nativePath+" as absolute path");
+				Trellis.debug("Translate: Got file "+nativePath+" as absolute path");
 				return file;
 			}
 		}
 
 		// Next, try to parse as URI
 		if((file = this._parsePathURI(path))) {
-			Zotero.debug("Translate: Got "+path+" as URI")
+			Trellis.debug("Translate: Got "+path+" as URI")
 			return file;
 		} else if(path.substr(0, 7) !== "file://") {
 			// If it was a fully qualified file URI, we can give up now
 
 			// Next, try to parse as relative path, replacing backslashes with slashes
 			if((file = this._parseRelativePath(path.replace(/\\/g, "/")))) {
-				Zotero.debug("Translate: Got file "+path+" as relative path");
+				Trellis.debug("Translate: Got file "+path+" as relative path");
 				return file;
 			}
 
 			// Next, try to parse as relative path, without replacing backslashes with slashes
 			if((file = this._parseRelativePath(path))) {
-				Zotero.debug("Translate: Got file "+path+" as relative path");
+				Trellis.debug("Translate: Got file "+path+" as relative path");
 				return file;
 			}
 
 			if(path[0] !== "/") {
 				// Next, try to parse a path with no / as an absolute URI or path
 				if((file = this._parsePathURI("/"+path))) {
-					Zotero.debug("Translate: Got file "+path+" as broken URI");
+					Trellis.debug("Translate: Got file "+path+" as broken URI");
 					return file;
 				}
 
 				if((file = this._parseAbsolutePath("/"+path))) {
-					Zotero.debug("Translate: Got file "+path+" as broken absolute path");
+					Trellis.debug("Translate: Got file "+path+" as broken absolute path");
 					return file;
 				}
 
@@ -868,7 +868,7 @@ Zotero.Translate.ItemSaver.prototype = {
 		}
 
 		// Give up
-		Zotero.debug("Translate: Could not find file "+path)
+		Trellis.debug("Translate: Could not find file "+path)
 
 		return false;
 	},
@@ -887,14 +887,14 @@ Zotero.Translate.ItemSaver.prototype = {
 		// If no title provided, use "Attachment" as title for progress UI (but not for item)
 		let title = attachment.title || null;
 		if(!attachment.title) {
-			attachment.title = Zotero.getString("itemTypes.attachment");
+			attachment.title = Trellis.getString("itemTypes.attachment");
 		}
 
 		if(!mimeType || !title) {
-			Zotero.debug("Translate: mimeType or title is missing; attaching link to URL will be slower");
+			Trellis.debug("Translate: mimeType or title is missing; attaching link to URL will be slower");
 		}
 
-		let cleanURI = Zotero.Attachments.cleanAttachmentURI(url);
+		let cleanURI = Trellis.Attachments.cleanAttachmentURI(url);
 		if (!cleanURI) {
 			throw new Error("Translate: Invalid attachment URL specified <" + url + ">");
 		}
@@ -907,7 +907,7 @@ Zotero.Translate.ItemSaver.prototype = {
 			throw new Error("Translate: " + url.scheme + " protocol is not allowed for attachments from translators.");
 		}
 
-		return Zotero.Attachments.linkFromURL({
+		return Trellis.Attachments.linkFromURL({
 			url: cleanURI,
 			parentItemID,
 			contentType: mimeType,
@@ -918,18 +918,18 @@ Zotero.Translate.ItemSaver.prototype = {
 	},
 	
 	_saveAttachmentDownload: async function (attachment, parentItemID, attachmentCallback) {
-		Zotero.debug("Translate: Adding attachment", 4);
+		Trellis.debug("Translate: Adding attachment", 4);
 		
 		let doc = undefined;
 		if(attachment.document) {
-			doc = new XPCNativeWrapper(Zotero.Translate.DOMWrapper.unwrap(attachment.document));
+			doc = new XPCNativeWrapper(Trellis.Translate.DOMWrapper.unwrap(attachment.document));
 			if(!attachment.title) attachment.title = doc.title;
 		}
 		
 		// If no title provided, use "Attachment" as title for progress UI (but not for item)
 		let title = attachment.title || null;
 		if(!attachment.title) {
-			attachment.title = Zotero.getString("itemTypes.attachment");
+			attachment.title = Trellis.getString("itemTypes.attachment");
 		}
 		
 		// Commit to saving
@@ -940,10 +940,10 @@ Zotero.Translate.ItemSaver.prototype = {
 		
 		// Import from document
 		if (attachment.document) {
-			Zotero.debug('Importing attachment from document');
+			Trellis.debug('Importing attachment from document');
 			attachment.linkMode = "imported_url";
 			
-			return Zotero.Attachments.importFromDocument({
+			return Trellis.Attachments.importFromDocument({
 				libraryID: this._libraryID,
 				document: attachment.document,
 				parentItemID,
@@ -955,9 +955,9 @@ Zotero.Translate.ItemSaver.prototype = {
 		
 		// Import from SingleFile content
 		if (attachment.snapshotContent) {
-			Zotero.debug('Importing attachment from SingleFile');
+			Trellis.debug('Importing attachment from SingleFile');
 
-			return Zotero.Attachments.importFromSnapshotContent({
+			return Trellis.Attachments.importFromSnapshotContent({
 				libraryID: this._libraryID,
 				title,
 				url: attachment.url,
@@ -972,12 +972,12 @@ Zotero.Translate.ItemSaver.prototype = {
 		let mimeType = attachment.mimeType ? attachment.mimeType : null;
 		let fileBaseName;
 		if (parentItemID) {
-			let parentItem = await Zotero.Items.getAsync(parentItemID);
-			fileBaseName = Zotero.Attachments.getFileBaseNameFromItem(parentItem, { attachmentTitle: title });
+			let parentItem = await Trellis.Items.getAsync(parentItemID);
+			fileBaseName = Trellis.Attachments.getFileBaseNameFromItem(parentItem, { attachmentTitle: title });
 		}
 
-		Zotero.debug('Importing attachment from URL');
-		return Zotero.Attachments.importFromURL({
+		Trellis.debug('Importing attachment from URL');
+		return Trellis.Attachments.importFromURL({
 			libraryID: this._libraryID,
 			url: attachment.url,
 			parentItemID,
@@ -991,7 +991,7 @@ Zotero.Translate.ItemSaver.prototype = {
 	},
 	
 	"_saveNote":async function (note, parentItemID) {
-		var myNote = new Zotero.Item('note');
+		var myNote = new Trellis.Item('note');
 		myNote.libraryID = this._libraryID;
 		if (parentItemID) {
 			myNote.parentItemID = parentItemID;
@@ -1016,7 +1016,7 @@ Zotero.Translate.ItemSaver.prototype = {
 	_cleanCreators: function (creators) {
 		creators.forEach(creator => {
 			if (!creator.creatorType) {
-				Zotero.warn(".creatorType missing in creator -- update translator code");
+				Trellis.warn(".creatorType missing in creator -- update translator code");
 				creator.creatorType = "author";
 			}
 		});
@@ -1028,7 +1028,7 @@ Zotero.Translate.ItemSaver.prototype = {
 	 */
 	"_cleanTags":function (tags) {
 		// If all tags are automatic and automatic tags pref is on, return immediately
-		let tagPref = Zotero.Prefs.get("automaticTags");
+		let tagPref = Trellis.Prefs.get("automaticTags");
 		if(this._forceTagType == 1 && !tagPref) return [];
 
 		let newTags = [];
@@ -1066,14 +1066,14 @@ Zotero.Translate.ItemSaver.prototype = {
 	}
 }
 
-Zotero.Translate.ItemGetter = function () {
+Trellis.Translate.ItemGetter = function () {
 	this._itemsLeft = [];
 	this._collectionsLeft = null;
 	this._exportFileDirectory = null;
 	this.legacy = false;
 };
 
-Zotero.Translate.ItemGetter.prototype = {
+Trellis.Translate.ItemGetter.prototype = {
 	setItems: function (items) {
 		this._itemsLeft = items;
 		// Don't sort items if doing notes export
@@ -1089,10 +1089,10 @@ Zotero.Translate.ItemGetter.prototype = {
 		
 		if (getChildCollections) {
 			// Get child collections
-			this._collectionsLeft = Zotero.Collections.getByParent(collection.id);
+			this._collectionsLeft = Trellis.Collections.getByParent(collection.id);
 			
 			// Get items in all descendant collections
-			let descendantCollections = Zotero.Collections.getByParent(collection.id, true);
+			let descendantCollections = Trellis.Collections.getByParent(collection.id, true);
 			for (let collection of descendantCollections) {
 				let childItems = collection.getChildItems();
 				childItems.forEach(item => items.add(item));
@@ -1105,11 +1105,11 @@ Zotero.Translate.ItemGetter.prototype = {
 	},
 	
 	/**
-	 * NOTE: This function should use the Zotero.Promise.method wrapper which adds a
+	 * NOTE: This function should use the Trellis.Promise.method wrapper which adds a
 	 * isResolved property to the returned promise for noWait translation.
 	 */
-	setAll: Zotero.Promise.method(async function (libraryID, getChildCollections) {
-		this._itemsLeft = (await Zotero.Items.getAll(libraryID, true))
+	setAll: Trellis.Promise.method(async function (libraryID, getChildCollections) {
+		this._itemsLeft = (await Trellis.Items.getAll(libraryID, true))
 			.filter((item) => {
 				// Don't export annotations
 				switch (item.itemType) {
@@ -1120,7 +1120,7 @@ Zotero.Translate.ItemGetter.prototype = {
 			});
 		
 		if (getChildCollections) {
-			this._collectionsLeft = Zotero.Collections.getByLibrary(libraryID);
+			this._collectionsLeft = Trellis.Collections.getByLibrary(libraryID);
 		}
 
 		this._itemsLeft.sort((a, b) => a.id - b.id);
@@ -1156,11 +1156,11 @@ Zotero.Translate.ItemGetter.prototype = {
 	 * Converts an attachment to array format and copies it to the export folder if desired
 	 */
 	"_attachmentToArray": function (attachment) {
-		var attachmentArray = Zotero.Utilities.Internal.itemToExportFormat(attachment, {
+		var attachmentArray = Trellis.Utilities.Internal.itemToExportFormat(attachment, {
 			legacy: this.legacy
 		});
 		var linkMode = attachment.attachmentLinkMode;
-		if(linkMode != Zotero.Attachments.LINK_MODE_LINKED_URL) {
+		if(linkMode != Trellis.Attachments.LINK_MODE_LINKED_URL) {
 			let includeAnnotations = attachment.isPDFAttachment() && this._includeAnnotations;
 			attachmentArray.localPath = attachment.getFilePath();
 			
@@ -1171,14 +1171,14 @@ Zotero.Translate.ItemGetter.prototype = {
 				let attachFile;
 				if (attachmentArray.localPath) {
 					try {
-						attachFile = Zotero.File.pathToFile(attachmentArray.localPath);
+						attachFile = Trellis.File.pathToFile(attachmentArray.localPath);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 				else {
-					Zotero.logError(`Path doesn't exist for attachment ${attachment.libraryKey} `
+					Trellis.logError(`Path doesn't exist for attachment ${attachment.libraryKey} `
 						+ '-- not exporting file');
 				}
 				// TODO: Make async, but that will require translator changes
@@ -1250,8 +1250,8 @@ Zotero.Translate.ItemGetter.prototype = {
 						// that should be performed
 						//
 						// TODO: Change the below to use OS.File.DirectoryIterator?
-						if (linkMode != Zotero.Attachments.LINK_MODE_LINKED_FILE
-								&& (await Zotero.Attachments.hasMultipleFiles(attachment))) {
+						if (linkMode != Trellis.Attachments.LINK_MODE_LINKED_FILE
+								&& (await Trellis.Attachments.hasMultipleFiles(attachment))) {
 							var copySrcs = [];
 							var files = attachment.getFile().parent.directoryEntries;
 							while (files.hasMoreElements()) {
@@ -1288,10 +1288,10 @@ Zotero.Translate.ItemGetter.prototype = {
 							if (includeAnnotations) {
 								// TODO: Make export async
 								try {
-								await Zotero.PDFWorker.export(attachment.id, targetFile.path);
+								await Trellis.PDFWorker.export(attachment.id, targetFile.path);
 								}
 								catch (e) {
-									Zotero.logError(e);
+									Trellis.logError(e);
 									throw e;
 								}
 							}
@@ -1320,7 +1320,7 @@ Zotero.Translate.ItemGetter.prototype = {
 				var returnItemArray = this._attachmentToArray(returnItem);
 				if(returnItemArray) return returnItemArray;
 			} else {
-				var returnItemArray = Zotero.Utilities.Internal.itemToExportFormat(returnItem, {
+				var returnItemArray = Trellis.Utilities.Internal.itemToExportFormat(returnItem, {
 					legacy: this.legacy
 				});
 				
@@ -1329,7 +1329,7 @@ Zotero.Translate.ItemGetter.prototype = {
 				if (returnItem.isRegularItem()) {
 					var attachments = returnItem.getAttachments();
 					for (let attachmentID of attachments) {
-						var attachment = Zotero.Items.get(attachmentID);
+						var attachment = Trellis.Items.get(attachmentID);
 						var attachmentInfo = this._attachmentToArray(attachment);
 						
 						if(attachmentInfo) {
@@ -1354,4 +1354,4 @@ Zotero.Translate.ItemGetter.prototype = {
 		return obj;
 	}
 }
-Zotero.Translate.ItemGetter.prototype.__defineGetter__("numItemsRemaining", function () { return this._itemsLeft.length });
+Trellis.Translate.ItemGetter.prototype.__defineGetter__("numItemsRemaining", function () { return this._itemsLeft.length });

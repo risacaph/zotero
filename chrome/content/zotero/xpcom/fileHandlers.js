@@ -3,54 +3,54 @@
     
     Copyright © 2018 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     https://zotero.org
+                     https://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
  
 
-Zotero.FileHandlers = {
+Trellis.FileHandlers = {
 	async open(item, params) {
 		let { location, openInWindow = false } = params || {};
 		
 		let path = await item.getFilePathAsync();
 		if (!path) {
-			Zotero.warn(`File not found: ${item.attachmentPath}`);
+			Trellis.warn(`File not found: ${item.attachmentPath}`);
 			return false;
 		}
 		
-		Zotero.debug('Opening ' + path);
+		Trellis.debug('Opening ' + path);
 		
 		let readerType = item.attachmentReaderType;
 		
 		// Not a file that we/external readers handle with page number support -
 		// just open it with the system handler
 		if (!readerType) {
-			Zotero.debug('No associated reader type -- launching default application');
-			Zotero.launchFile(path);
+			Trellis.debug('No associated reader type -- launching default application');
+			Trellis.launchFile(path);
 			return true;
 		}
 		
-		let handler = Zotero.Prefs.get(`fileHandler.${readerType}`);
+		let handler = Trellis.Prefs.get(`fileHandler.${readerType}`);
 		if (!handler) {
-			Zotero.debug('No external handler for ' + readerType + ' -- opening in Zotero');
-			await Zotero.Reader.open(item.id, location, {
+			Trellis.debug('No external handler for ' + readerType + ' -- opening in Trellis');
+			await Trellis.Reader.open(item.id, location, {
 				openInWindow,
 				allowDuplicate: openInWindow
 			});
@@ -61,23 +61,23 @@ Zotero.FileHandlers = {
 
 		if (handler === 'system') {
 			handler = systemHandler;
-			Zotero.debug(`System handler is ${handler}`);
+			Trellis.debug(`System handler is ${handler}`);
 		}
 		else {
-			Zotero.debug(`Custom handler is ${handler}`);
+			Trellis.debug(`Custom handler is ${handler}`);
 		}
 		
 		let handlers;
 		if (this._mockHandlers) {
 			handlers = this._mockHandlers[readerType];
 		}
-		else if (Zotero.isMac) {
+		else if (Trellis.isMac) {
 			handlers = this._handlersMac[readerType];
 		}
-		else if (Zotero.isWin) {
+		else if (Trellis.isWin) {
 			handlers = this._handlersWin[readerType];
 		}
-		else if (Zotero.isLinux) {
+		else if (Trellis.isLinux) {
 			handlers = this._handlersLinux[readerType];
 		}
 		
@@ -89,7 +89,7 @@ Zotero.FileHandlers = {
 			// If caller didn't pass a pageIndex but passed an annotation,
 			// look up its pageIndex so we can pass that to external readers
 			else if (location.annotationID) {
-				let annotation = Zotero.Items.getByLibraryAndKey(item.libraryID, location.annotationID);
+				let annotation = Trellis.Items.getByLibraryAndKey(item.libraryID, location.annotationID);
 				if (annotation && annotation.isAnnotation() && annotation.parentItemID === item.id) {
 					page = JSON.parse(annotation.annotationPosition).pageIndex;
 				}
@@ -108,14 +108,14 @@ Zotero.FileHandlers = {
 				try {
 					for (let [i, { name, open }] of handlers.entries()) {
 						if (name.test(handler)) {
-							Zotero.debug('Opening with handler ' + i);
+							Trellis.debug('Opening with handler ' + i);
 							await open(handler, { filePath: path, location, page });
 							return true;
 						}
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 
@@ -126,11 +126,11 @@ Zotero.FileHandlers = {
 			if (location) {
 				try {
 					if (systemHandler && handler !== systemHandler) {
-						Zotero.debug(`Custom handler did not match -- falling back to system handler ${systemHandler}`);
+						Trellis.debug(`Custom handler did not match -- falling back to system handler ${systemHandler}`);
 						handler = systemHandler;
 						for (let [i, { name, open }] of handlers.entries()) {
 							if (name.test(handler)) {
-								Zotero.debug('Opening with handler ' + i);
+								Trellis.debug('Opening with handler ' + i);
 								await open(handler, { filePath: path, location, page });
 								return true;
 							}
@@ -138,7 +138,7 @@ Zotero.FileHandlers = {
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 
 				// And lastly, the fallback handler for this platform/reader type,
@@ -146,7 +146,7 @@ Zotero.FileHandlers = {
 				let fallback = handlers.find(h => h.fallback);
 				if (fallback) {
 					try {
-						Zotero.debug('Opening with fallback');
+						Trellis.debug('Opening with fallback');
 						await fallback.open(null, { filePath: path, location, page });
 						return true;
 					}
@@ -158,36 +158,36 @@ Zotero.FileHandlers = {
 			}
 		}
 		
-		Zotero.debug("Opening handler without page number");
+		Trellis.debug("Opening handler without page number");
 		
 		handler = handler || systemHandler;
 		if (handler) {
-			if (Zotero.isMac) {
-				Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+			if (Trellis.isMac) {
+				Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 				try {
-					await Zotero.Utilities.Internal.exec('/usr/bin/open', ['-a', handler, path]);
+					await Trellis.Utilities.Internal.exec('/usr/bin/open', ['-a', handler, path]);
 					return true;
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			
 			try {
 				if (await IOUtils.exists(handler)) {
-					Zotero.debug(`Opening with handler ${handler}`);
-					Zotero.launchFileWithApplication(path, handler);
+					Trellis.debug(`Opening with handler ${handler}`);
+					Trellis.launchFileWithApplication(path, handler);
 					return true;
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
-			Zotero.logError(`${handler} not found`);
+			Trellis.logError(`${handler} not found`);
 		}
 		
-		Zotero.debug('Launching file normally');
-		Zotero.launchFile(path);
+		Trellis.debug('Launching file normally');
+		Trellis.launchFile(path);
 		return true;
 	},
 
@@ -197,7 +197,7 @@ Zotero.FileHandlers = {
 				name: /Preview/,
 				fallback: true,
 				async open(appPath, { filePath, page }) {
-					await Zotero.Utilities.Internal.exec('/usr/bin/open', ['-a', "Preview", filePath]);
+					await Trellis.Utilities.Internal.exec('/usr/bin/open', ['-a', "Preview", filePath]);
 					if (page !== undefined) {
 						// Go to page using AppleScript
 						let args = [
@@ -206,14 +206,14 @@ Zotero.FileHandlers = {
 							'-e', `tell app "System Events" to keystroke "${page}"`,
 							'-e', 'tell app "System Events" to keystroke return'
 						];
-						await Zotero.Utilities.Internal.exec('/usr/bin/osascript', args);
+						await Trellis.Utilities.Internal.exec('/usr/bin/osascript', args);
 					}
 				},
 			},
 			{
 				name: /Adobe Acrobat/,
 				async open(appPath, { filePath, page }) {
-					await Zotero.Utilities.Internal.exec('/usr/bin/open', ['-a', appPath, filePath]);
+					await Trellis.Utilities.Internal.exec('/usr/bin/open', ['-a', appPath, filePath]);
 					if (page !== undefined) {
 						// Go to page using AppleScript
 						let args = [
@@ -222,7 +222,7 @@ Zotero.FileHandlers = {
 							'-e', `tell app "System Events" to keystroke "${page}"`,
 							'-e', 'tell app "System Events" to keystroke return'
 						];
-						await Zotero.Utilities.Internal.exec('/usr/bin/osascript', args);
+						await Trellis.Utilities.Internal.exec('/usr/bin/osascript', args);
 					}
 				}
 			},
@@ -241,13 +241,13 @@ Zotero.FileHandlers = {
 							.replace(quoteRE, '\\"');
 						args.push('-e', `tell document "${filename}" of application "${appPath}" to go to page ${page}`);
 					}
-					await Zotero.Utilities.Internal.exec('/usr/bin/osascript', args);
+					await Trellis.Utilities.Internal.exec('/usr/bin/osascript', args);
 				}
 			},
 			{
 				name: /PDF Expert/,
 				async open(appPath, { filePath, page }) {
-					await Zotero.Utilities.Internal.exec('/usr/bin/open', ['-a', appPath, filePath]);
+					await Trellis.Utilities.Internal.exec('/usr/bin/open', ['-a', appPath, filePath]);
 					// Go to page using AppleScript (same as Preview)
 					let args = [
 						'-e', `tell app "${appPath}" to activate`
@@ -259,7 +259,7 @@ Zotero.FileHandlers = {
 							'-e', 'tell app "System Events" to keystroke return'
 						);
 					}
-					await Zotero.Utilities.Internal.exec('/usr/bin/osascript', args);
+					await Trellis.Utilities.Internal.exec('/usr/bin/osascript', args);
 				}
 			},
 		],
@@ -274,7 +274,7 @@ Zotero.FileHandlers = {
 					if (location?.position?.value) {
 						args.push('--args', '--open-at=' + location.position.value);
 					}
-					await Zotero.Utilities.Internal.exec('/usr/bin/open', args);
+					await Trellis.Utilities.Internal.exec('/usr/bin/open', args);
 				}
 			},
 		]
@@ -293,7 +293,7 @@ Zotero.FileHandlers = {
 						// PDF-XChange: http://help.tracker-software.com/eu/default.aspx?pageid=PDFXView25:command_line_options
 						args.unshift('/A', 'page=' + page);
 					}
-					await Zotero.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
+					await Trellis.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
 				}
 			}
 		],
@@ -308,7 +308,7 @@ Zotero.FileHandlers = {
 					if (location?.position?.value) {
 						args.push('--open-at=' + location.position.value);
 					}
-					await Zotero.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
+					await Trellis.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
 				}
 			}
 		]
@@ -350,7 +350,7 @@ Zotero.FileHandlers = {
 					if (page !== undefined) {
 						args.unshift('-p', page);
 					}
-					await Zotero.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
+					await Trellis.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
 				}
 			}
 		],
@@ -365,14 +365,14 @@ Zotero.FileHandlers = {
 					if (location?.position?.value) {
 						args.push('--open-at=' + location.position.value);
 					}
-					await Zotero.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
+					await Trellis.FileHandlers._checkAndExecWithoutBlocking(appPath, args);
 				}
 			}
 		]
 	},
 
 	_getSystemHandler(mimeType) {
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			return this._getSystemHandlerWin(mimeType);
 		}
 		else {
@@ -387,7 +387,7 @@ Zotero.FileHandlers = {
 		var wrk = Components.classes["@mozilla.org/windows-registry-key;1"]
 			.createInstance(Components.interfaces.nsIWindowsRegKey);
 		// Get handler
-		var extension = Zotero.MIME.getPrimaryExtension(mimeType);
+		var extension = Trellis.MIME.getPrimaryExtension(mimeType);
 		var tryKeys = [
 			{
 				root: wrk.ROOT_KEY_CURRENT_USER,
@@ -477,7 +477,7 @@ Zotero.FileHandlers = {
 		}
 		if (!handler) {
 			// We can't get the name of the system default handler unless we add an entry
-			Zotero.debug("Default handler not found -- adding default entry");
+			Trellis.debug("Default handler not found -- adding default entry");
 			let mimeService = Components.classes["@mozilla.org/mime;1"]
 				.getService(Components.interfaces.nsIMIMEService);
 			let mimeInfo = mimeService.getFromTypeAndExtension(mimeType, "");
@@ -496,7 +496,7 @@ Zotero.FileHandlers = {
 			}
 		}
 		if (handler) {
-			Zotero.debug(`Default handler is ${handler.defaultDescription}`);
+			Trellis.debug(`Default handler is ${handler.defaultDescription}`);
 			return handler.defaultDescription;
 		}
 		return false;
@@ -512,25 +512,25 @@ Zotero.FileHandlers = {
 		if (!(await OS.File.exists(command))) {
 			throw new Error(`${command} not found`);
 		}
-		if (!Zotero.File.pathToFile(command).isExecutable()) {
+		if (!Trellis.File.pathToFile(command).isExecutable()) {
 			throw new Error(`${command} is not an executable`);
 		}
 		
-		Zotero.Utilities.Internal.Environment.clearMozillaVariables();
+		Trellis.Utilities.Internal.Environment.clearMozillaVariables();
 		
 		// Do not await
-		Zotero.Utilities.Internal.exec(command, args);
+		Trellis.Utilities.Internal.exec(command, args);
 	},
 };
 
-Zotero.OpenPDF = {
+Trellis.OpenPDF = {
 	openToPage: async function (pathOrItem, page, annotationKey) {
-		Zotero.warn('Zotero.OpenPDF.openToPage() is deprecated -- use Zotero.FileHandlers.open()');
+		Trellis.warn('Trellis.OpenPDF.openToPage() is deprecated -- use Trellis.FileHandlers.open()');
 		if (typeof pathOrItem === 'string') {
-			throw new Error('Zotero.OpenPDF.openToPage() requires an item -- update your code!');
+			throw new Error('Trellis.OpenPDF.openToPage() requires an item -- update your code!');
 		}
 		
-		await Zotero.FileHandlers.open(pathOrItem, {
+		await Trellis.FileHandlers.open(pathOrItem, {
 			location: {
 				annotationID: annotationKey,
 				pageIndex: page,

@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -44,14 +44,14 @@ async function onLoad() {
 	let parentItemKey = io.parentItemKey;
 	let ref;
 
-	noteEditor = document.getElementById('zotero-note-editor');
+	noteEditor = document.getElementById('trellis-note-editor');
 	noteEditor.mode = 'edit';
 	noteEditor.viewMode = 'window';
 	
 	// Set font size from pref
-	Zotero.UIProperties.registerRoot(noteEditor);
+	Trellis.UIProperties.registerRoot(noteEditor);
 	if (itemID) {
-		ref = await Zotero.Items.getAsync(itemID);
+		ref = await Trellis.Items.getAsync(itemID);
 		noteEditor.item = ref;
 		document.title = ref.getNoteTitle();
 		// Readonly for attachment notes
@@ -61,14 +61,14 @@ async function onLoad() {
 	}
 	else {
 		if (parentItemKey) {
-			ref = Zotero.Items.getByLibraryAndKey(parentItemKey);
+			ref = Trellis.Items.getByLibraryAndKey(parentItemKey);
 			noteEditor.parentItem = ref;
 		}
 		noteEditor.refresh();
 	}
 	
 	noteEditor.focus();
-	notifierUnregisterID = Zotero.Notifier.registerObserver(NotifyCallback, 'item', 'noteWindow');
+	notifierUnregisterID = Trellis.Notifier.registerObserver(NotifyCallback, 'item', 'noteWindow');
 
 	io.noteEditor = noteEditor;
 	io._initPromise?.resolve();
@@ -77,16 +77,16 @@ async function onLoad() {
 // If there's an error saving a note, close the window and crash the app
 window.onEditorError = function () {
 	try {
-		window.opener.ZoteroPane.displayErrorMessage();
+		window.opener.TrellisPane.displayErrorMessage();
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 	}
 	window.close();
 };
 
 function onUnload() {
-	Zotero.Notifier.unregisterObserver(notifierUnregisterID);
+	Trellis.Notifier.unregisterObserver(notifierUnregisterID);
 	noteEditor.saveSync();
 }
 
@@ -102,7 +102,7 @@ var NotifyCallback = {
 			document.title = noteTitle;
 			
 			// Update the window name (used for focusing) in case this is a new note
-			window.name = 'zotero-note-' + noteEditor.item.id;
+			window.name = 'trellis-note-' + noteEditor.item.id;
 		}
 	}
 };

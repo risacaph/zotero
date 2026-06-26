@@ -3,41 +3,41 @@
     
     Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-Zotero.Annotations = new function () {
-	Zotero.defineProperty(this, 'ANNOTATION_POSITION_MAX_SIZE', { value: 65000 });
+Trellis.Annotations = new function () {
+	Trellis.defineProperty(this, 'ANNOTATION_POSITION_MAX_SIZE', { value: 65000 });
 	// Keep in sync with items.js::loadAnnotations()
-	Zotero.defineProperty(this, 'ANNOTATION_TYPE_HIGHLIGHT', { value: 1 });
-	Zotero.defineProperty(this, 'ANNOTATION_TYPE_NOTE', { value: 2 });
-	Zotero.defineProperty(this, 'ANNOTATION_TYPE_IMAGE', { value: 3 });
-	Zotero.defineProperty(this, 'ANNOTATION_TYPE_INK', { value: 4 });
-	Zotero.defineProperty(this, 'ANNOTATION_TYPE_UNDERLINE', { value: 5 });
-	Zotero.defineProperty(this, 'ANNOTATION_TYPE_TEXT', { value: 6 });
+	Trellis.defineProperty(this, 'ANNOTATION_TYPE_HIGHLIGHT', { value: 1 });
+	Trellis.defineProperty(this, 'ANNOTATION_TYPE_NOTE', { value: 2 });
+	Trellis.defineProperty(this, 'ANNOTATION_TYPE_IMAGE', { value: 3 });
+	Trellis.defineProperty(this, 'ANNOTATION_TYPE_INK', { value: 4 });
+	Trellis.defineProperty(this, 'ANNOTATION_TYPE_UNDERLINE', { value: 5 });
+	Trellis.defineProperty(this, 'ANNOTATION_TYPE_TEXT', { value: 6 });
 
-	Zotero.defineProperty(this, 'DEFAULT_COLOR', { value: '#ffd400' });
+	Trellis.defineProperty(this, 'DEFAULT_COLOR', { value: '#ffd400' });
 	
-	Zotero.defineProperty(this, 'PROPS', {
+	Trellis.defineProperty(this, 'PROPS', {
 		value: ['type', 'authorName', 'text', 'comment', 'color', 'pageLabel', 'sortIndex', 'position'],
 		writable: false
 	});
@@ -55,7 +55,7 @@ Zotero.Annotations = new function () {
 	
 	
 	this.saveCacheImage = async function ({ libraryID, key }, blob) {
-		var item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, key);
+		var item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, key);
 		if (!item) {
 			throw new Error(`Item not found`);
 		}
@@ -63,14 +63,14 @@ Zotero.Annotations = new function () {
 			throw new Error("Item must be an image/ink annotation item");
 		}
 		
-		var cacheDir = Zotero.DataDirectory.getSubdirectory('cache', true);
+		var cacheDir = Trellis.DataDirectory.getSubdirectory('cache', true);
 		var file = this._getLibraryCacheDirectory(item.libraryID);
-		await Zotero.File.createDirectoryIfMissingAsync(file, { from: cacheDir });
+		await Trellis.File.createDirectoryIfMissingAsync(file, { from: cacheDir });
 		
 		file = OS.Path.join(file, item.key + '.png');
-		Zotero.debug("Creating annotation cache file " + file);
-		await Zotero.File.putContentsAsync(file, blob);
-		await Zotero.File.setNormalFilePermissions(file);
+		Trellis.debug("Creating annotation cache file " + file);
+		await Trellis.File.putContentsAsync(file, blob);
+		await Trellis.File.setNormalFilePermissions(file);
 		
 		return file;
 	};
@@ -78,7 +78,7 @@ Zotero.Annotations = new function () {
 	
 	this.removeCacheImage = async function ({ libraryID, key }) {
 		var path = this.getCacheImagePath({ libraryID, key });
-		Zotero.debug("Deleting annotation cache file " + path);
+		Trellis.debug("Deleting annotation cache file " + path);
 		await OS.File.remove(path, { ignoreAbsent: true });
 	};
 	
@@ -101,8 +101,8 @@ Zotero.Annotations = new function () {
 	
 	
 	this._getLibraryCacheDirectory = function (libraryID) {
-		var parts = [Zotero.DataDirectory.getSubdirectory('cache')];
-		var library = Zotero.Libraries.get(libraryID);
+		var parts = [Trellis.DataDirectory.getSubdirectory('cache')];
+		var library = Trellis.Libraries.get(libraryID);
 		if (library.libraryType == 'user') {
 			parts.push('library');
 		}
@@ -122,20 +122,20 @@ Zotero.Annotations = new function () {
 		o.key = item.key;
 		o.type = item.annotationType;
 		o.isExternal = item.annotationIsExternal;
-		var isAuthor = !item.createdByUserID || item.createdByUserID == Zotero.Users.getCurrentUserID();
+		var isAuthor = !item.createdByUserID || item.createdByUserID == Trellis.Users.getCurrentUserID();
 		var isGroup = item.library.libraryType == 'group';
 		if (item.annotationAuthorName) {
 			o.authorName = item.annotationAuthorName;
 			if (isGroup) {
-				o.lastModifiedByUser = Zotero.Users.getName(item.lastModifiedByUserID)
-					|| Zotero.Users.getName(item.createdByUserID);
+				o.lastModifiedByUser = Trellis.Users.getName(item.lastModifiedByUserID)
+					|| Trellis.Users.getName(item.createdByUserID);
 			}
 		}
 		else if (!o.isExternal && isGroup) {
-			o.authorName = Zotero.Users.getName(item.createdByUserID);
+			o.authorName = Trellis.Users.getName(item.createdByUserID);
 			o.isAuthorNameAuthoritative = true;
 			if (item.lastModifiedByUserID) {
-				o.lastModifiedByUser = Zotero.Users.getName(item.lastModifiedByUserID);
+				o.lastModifiedByUser = Trellis.Users.getName(item.lastModifiedByUserID);
 			}
 		}
 		o.readOnly = o.isExternal || !isAuthor;
@@ -150,7 +150,7 @@ Zotero.Annotations = new function () {
 		o.position = JSON.parse(item.annotationPosition);
 		
 		// Add tags and tag colors
-		var tagColors = Zotero.Tags.getColors(item.libraryID);
+		var tagColors = Trellis.Tags.getColors(item.libraryID);
 		var tags = item.getTags().map((t) => {
 			let obj = {
 				name: t.tag
@@ -164,7 +164,7 @@ Zotero.Annotations = new function () {
 		});
 		// Sort colored tags by position and other tags by name
 		tags.sort((a, b) => {
-			if (!a.color && !b.color) return Zotero.localeCompare(a.name, b.name);
+			if (!a.color && !b.color) return Trellis.localeCompare(a.name, b.name);
 			if (!a.color && !b.color) return -1;
 			if (!a.color && b.color) return 1;
 			return a.position - b.position;
@@ -175,7 +175,7 @@ Zotero.Annotations = new function () {
 			o.tags = tags;
 		}
 		
-		o.dateModified = Zotero.Date.sqlToISO8601(item.dateModified);
+		o.dateModified = Trellis.Date.sqlToISO8601(item.dateModified);
 		return o;
 	};
 
@@ -184,7 +184,7 @@ Zotero.Annotations = new function () {
 		if (['image', 'ink'].includes(o.type)) {
 			let file = this.getCacheImagePath(item);
 			if (await OS.File.exists(file)) {
-				o.image = await Zotero.File.generateDataURI(file, 'image/png');
+				o.image = await Trellis.File.generateDataURI(file, 'image/png');
 			}
 		}
 		return o;
@@ -192,9 +192,9 @@ Zotero.Annotations = new function () {
 	
 	
 	/**
-	 * @param {Zotero.Item} attachment - Saved parent attachment item
+	 * @param {Trellis.Item} attachment - Saved parent attachment item
 	 * @param {Object} json
-	 * @return {Promise<Zotero.Item>} - Promise for an annotation item
+	 * @return {Promise<Trellis.Item>} - Promise for an annotation item
 	 */
 	this.saveFromJSON = async function (attachment, json, saveOptions = {}) {
 		if (!attachment) {
@@ -207,9 +207,9 @@ Zotero.Annotations = new function () {
 			throw new Error("'key' not provided in JSON");
 		}
 		
-		var item = Zotero.Items.getByLibraryAndKey(attachment.libraryID, json.key);
+		var item = Trellis.Items.getByLibraryAndKey(attachment.libraryID, json.key);
 		if (!item) {
-			item = new Zotero.Item('annotation');
+			item = new Trellis.Item('annotation');
 			item.libraryID = attachment.libraryID;
 			item.key = json.key;
 			await item.loadPrimaryData();
@@ -264,7 +264,7 @@ Zotero.Annotations = new function () {
 				let rect = annotation.position.rects[i];
 				if (!tmpAnnotation) {
 					tmpAnnotation = JSON.parse(JSON.stringify(annotation));
-					tmpAnnotation.key = Zotero.DataObjectUtilities.generateKey();
+					tmpAnnotation.key = Trellis.DataObjectUtilities.generateKey();
 					tmpAnnotation.position.rects = [];
 					totalLength = JSON.stringify(tmpAnnotation.position).length;
 				}
@@ -293,7 +293,7 @@ Zotero.Annotations = new function () {
 				for (let j = 0; j < path.length; j += 2) {
 					if (!tmpAnnotation) {
 						tmpAnnotation = JSON.parse(JSON.stringify(annotation));
-						tmpAnnotation.key = Zotero.DataObjectUtilities.generateKey();
+						tmpAnnotation.key = Trellis.DataObjectUtilities.generateKey();
 						tmpAnnotation.position.paths = [[]];
 						totalLength = JSON.stringify(tmpAnnotation.position).length;
 					}
@@ -331,7 +331,7 @@ Zotero.Annotations = new function () {
 	/**
 	 * Split annotations
 	 *
-	 * @param {Zotero.Item[]} items
+	 * @param {Trellis.Item[]} items
 	 * @returns {Promise<void>}
 	 */
 	this.splitAnnotations = async function (items) {

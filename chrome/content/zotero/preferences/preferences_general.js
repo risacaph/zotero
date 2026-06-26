@@ -3,50 +3,50 @@
     
     Copyright © 2006–2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
-Zotero_Preferences.General = {
+Trellis_Preferences.General = {
 	_openURLResolvers: null,
 
 	init: function () {
 		// JS-based strings
 		var checkbox = document.getElementById('launchNonNativeFiles-checkbox');
 		if (checkbox) {
-			checkbox.label = Zotero.getString(
-				'zotero.preferences.launchNonNativeFiles', Zotero.appName
+			checkbox.label = Trellis.getString(
+				'trellis.preferences.launchNonNativeFiles', Trellis.appName
 			);
 		}
 		var menuitems = document.querySelectorAll('.fileHandler-internal');
 		for (let menuitem of menuitems) {
-			menuitem.setAttribute('label', Zotero.appName);
+			menuitem.setAttribute('label', Trellis.appName);
 		}
 
 		// Set OpenURL resolver drop-down to last-known name or "custom" placeholder
-		let resolverName = Zotero.getString("general.custom");
-		if (Zotero.Prefs.get('openURL.resolver')) {
-			let name = Zotero.Prefs.get('openURL.name');
+		let resolverName = Trellis.getString("general.custom");
+		if (Trellis.Prefs.get('openURL.resolver')) {
+			let name = Trellis.Prefs.get('openURL.name');
 			if (name) {
 				resolverName = name;
 			}
@@ -64,9 +64,9 @@ Zotero_Preferences.General = {
 	},
 
 	_getAutomaticLocaleMenuLabel: function () {
-		return Zotero.getString(
-			'zotero.preferences.locale.automaticWithLocale',
-			Zotero.Locale.availableLocales[Zotero.locale] || Zotero.locale
+		return Trellis.getString(
+			'trellis.preferences.locale.automaticWithLocale',
+			Trellis.Locale.availableLocales[Trellis.locale] || Trellis.locale
 		);
 	},
 	
@@ -75,14 +75,14 @@ Zotero_Preferences.General = {
 		var autoLocaleName, currentValue;
 		
 		// If matching OS, get the name of the current locale
-		if (Zotero.Prefs.get('intl.locale.requested', true) === '') {
+		if (Trellis.Prefs.get('intl.locale.requested', true) === '') {
 			autoLocaleName = this._getAutomaticLocaleMenuLabel();
 			currentValue = 'automatic';
 		}
 		// Otherwise get the name of the locale specified in the pref
 		else {
-			autoLocaleName = Zotero.getString('zotero.preferences.locale.automatic');
-			currentValue = Zotero.locale;
+			autoLocaleName = Trellis.getString('trellis.preferences.locale.automatic');
+			currentValue = Trellis.locale;
 		}
 		
 		// Populate menu
@@ -93,8 +93,8 @@ Zotero_Preferences.General = {
 		menu.appendItem(autoLocaleName, 'automatic');
 		menu.menupopup.appendChild(document.createXULElement('menuseparator'));
 		// Add all available locales
-		for (let locale in Zotero.Locale.availableLocales) {
-			menu.appendItem(Zotero.Locale.availableLocales[locale], locale);
+		for (let locale in Trellis.Locale.availableLocales) {
+			menu.appendItem(Trellis.Locale.availableLocales[locale], locale);
 		}
 		menu.value = currentValue;
 	},
@@ -107,7 +107,7 @@ Zotero_Preferences.General = {
 			// Changed if not already set to automatic (unless we have the automatic locale name,
 			// meaning we just switched away to the same manual locale and back to automatic)
 			var changed = requestedLocale
-				&& requestedLocale == Zotero.locale
+				&& requestedLocale == Trellis.locale
 				&& menu.label != this._getAutomaticLocaleMenuLabel();
 			Services.locale.requestedLocales = [];
 		}
@@ -119,7 +119,7 @@ Zotero_Preferences.General = {
 		
 		// https://searchfox.org/mozilla-central/rev/961a9e56a0b5fa96ceef22c61c5e75fb6ba53395/browser/base/content/utilityOverlay.js#383-387
 		if (Services.locale.isAppLocaleRTL) {
-			Zotero.Prefs.set("bidi.browser.ui", true, true);
+			Trellis.Prefs.set("bidi.browser.ui", true, true);
 		}
 		
 		if (!changed) {
@@ -130,20 +130,20 @@ Zotero_Preferences.General = {
 		var buttonFlags = ps.BUTTON_POS_0 * ps.BUTTON_TITLE_IS_STRING
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_IS_STRING;
 		var index = ps.confirmEx(null,
-			Zotero.getString('general.restartRequired'),
-			Zotero.getString('general.restartRequiredForChange', Zotero.appName),
+			Trellis.getString('general.restartRequired'),
+			Trellis.getString('general.restartRequiredForChange', Trellis.appName),
 			buttonFlags,
-			Zotero.getString('general.restartNow'),
-			Zotero.getString('general.restartLater'),
+			Trellis.getString('general.restartNow'),
+			Trellis.getString('general.restartLater'),
 			null, null, {});
 		
 		if (index == 0) {
-			Zotero.Utilities.Internal.quitZotero(true);
+			Trellis.Utilities.Internal.quitTrellis(true);
 		}
 	},
 
 	_initItemPaneHeaderUI() {
-		let pane = document.querySelector('#zotero-prefpane-general');
+		let pane = document.querySelector('#trellis-prefpane-general');
 		let headerMenu = document.querySelector('#item-pane-header-menulist');
 		let styleMenu = document.querySelector('#item-pane-header-style-menu');
 
@@ -162,34 +162,34 @@ Zotero_Preferences.General = {
 		styleMenu.addEventListener('command', updateUI);
 	},
 	
-	_updateItemPaneHeaderStyleUI: Zotero.Utilities.Internal.serial(async function () {
+	_updateItemPaneHeaderStyleUI: Trellis.Utilities.Internal.serial(async function () {
 		let optionsContainer = document.querySelector('#item-pane-header-bib-entry-options');
 		let styleMenu = document.querySelector('#item-pane-header-style-menu');
 		let localeMenu = document.querySelector('#item-pane-header-locale-menu');
 
-		optionsContainer.hidden = Zotero.Prefs.get('itemPaneHeader') !== 'bibEntry';
+		optionsContainer.hidden = Trellis.Prefs.get('itemPaneHeader') !== 'bibEntry';
 		if (optionsContainer.hidden) {
 			return;
 		}
 		
-		if (!Zotero.Styles.initialized()) {
+		if (!Trellis.Styles.initialized()) {
 			let menus = [styleMenu, localeMenu];
 			for (let menu of menus) {
 				menu.selectedItem = null;
-				menu.setAttribute('label', Zotero.getString('general.loading'));
+				menu.setAttribute('label', Trellis.getString('general.loading'));
 				menu.disabled = true;
 			}
-			await Zotero.Styles.init();
+			await Trellis.Styles.init();
 			for (let menu of menus) {
 				menu.disabled = false;
 			}
 		}
 
-		let currentStyle = Zotero.Styles.get(styleMenu.value);
-		let currentLocale = Zotero.Prefs.get('itemPaneHeader.bibEntry.locale');
+		let currentStyle = Trellis.Styles.get(styleMenu.value);
+		let currentLocale = Trellis.Prefs.get('itemPaneHeader.bibEntry.locale');
 
 		styleMenu.menupopup.replaceChildren();
-		for (let style of Zotero.Styles.getVisible()) {
+		for (let style of Trellis.Styles.getVisible()) {
 			let menuitem = document.createXULElement('menuitem');
 			menuitem.label = style.title;
 			menuitem.value = style.styleID;
@@ -203,13 +203,13 @@ Zotero_Preferences.General = {
 			}
 
 			if (!localeMenu.menupopup.childElementCount) {
-				Zotero.Styles.populateLocaleList(localeMenu);
+				Trellis.Styles.populateLocaleList(localeMenu);
 			}
-			Zotero.Styles.updateLocaleList(localeMenu, currentStyle, currentLocale);
+			Trellis.Styles.updateLocaleList(localeMenu, currentStyle, currentLocale);
 		}
 		else {
 			// Style is unknown/removed - show placeholder
-			let shortName = styleMenu.value.replace('http://www.zotero.org/styles/', '');
+			let shortName = styleMenu.value.replace('http://www.trellis.org/styles/', '');
 			let missingLabel = await document.l10n.formatValue(
 				'preferences-item-pane-header-missing-style',
 				{ shortName }
@@ -220,8 +220,8 @@ Zotero_Preferences.General = {
 	}),
 	
 	openFileRenamingDialog: function () {
-		Services.ww.openWindow(null, 'chrome://zotero/content/fileRenamingDialog.xhtml',
-			'zotero-file-renaming-dialog', 'chrome,dialog=no,titlebar,centerscreen,resizable=yes', null
+		Services.ww.openWindow(null, 'chrome://trellis/content/fileRenamingDialog.xhtml',
+			'trellis-file-renaming-dialog', 'chrome,dialog=no,titlebar,centerscreen,resizable=yes', null
 		);
 	},
 
@@ -230,7 +230,7 @@ Zotero_Preferences.General = {
 	//
 	chooseFileHandler: async function (type) {
 		var pref = this._getFileHandlerPref(type);
-		var currentPath = Zotero.Prefs.get(pref);
+		var currentPath = Trellis.Prefs.get(pref);
 		
 		var fp = new FilePicker();
 		if (currentPath && currentPath != 'system') {
@@ -238,7 +238,7 @@ Zotero_Preferences.General = {
 		}
 		fp.init(
 			window,
-			Zotero.getString('zotero.preferences.chooseApplication'),
+			Trellis.getString('trellis.preferences.chooseApplication'),
 			fp.modeOpen
 		);
 		fp.appendFilters(fp.filterApps);
@@ -252,28 +252,28 @@ Zotero_Preferences.General = {
 	setFileHandler: function (type, handler) {
 		var pref = this._getFileHandlerPref(type);
 		
-		var isZotero = false;
-		if (Zotero.isMac) {
-			isZotero = /Zotero.*\.app/.test(handler);
+		var isTrellis = false;
+		if (Trellis.isMac) {
+			isTrellis = /Trellis.*\.app/.test(handler);
 		}
-		else if (Zotero.isWindows) {
-			isZotero = handler.endsWith('\\zotero.exe');
+		else if (Trellis.isWindows) {
+			isTrellis = handler.endsWith('\\trellis.exe');
 		}
-		else if (Zotero.isLinux) {
-			isZotero = handler.endsWith('/zotero');
+		else if (Trellis.isLinux) {
+			isTrellis = handler.endsWith('/trellis');
 		}
-		// Reset to the internal reader if pointing to Zotero
-		if (isZotero) {
+		// Reset to the internal reader if pointing to Trellis
+		if (isTrellis) {
 			handler = '';
 		}
 		
-		Zotero.Prefs.set(pref, handler);
+		Trellis.Prefs.set(pref, handler);
 		this._updateFileHandlerUI();
 	},
 	
 	_updateFileHandlerUI: function () {
 		function update(type) {
-			let handler = Zotero.Prefs.get('fileHandler.' + type);
+			let handler = Trellis.Prefs.get('fileHandler.' + type);
 			let menulist = document.getElementById('fileHandler-' + type);
 			var customMenuItem = menulist.querySelector('.fileHandler-custom');
 			
@@ -286,15 +286,15 @@ Zotero_Preferences.General = {
 			else if (handler) {
 				let icon;
 				try {
-					let urlspec = Zotero.File.pathToFileURI(handler);
+					let urlspec = Trellis.File.pathToFileURI(handler);
 					icon = "moz-icon://" + urlspec + "?size=16";
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 
 				let handlerFilename = PathUtils.filename(handler);
-				if (Zotero.isMac) {
+				if (Trellis.isMac) {
 					handlerFilename = handlerFilename.replace(/\.app$/, '');
 				}
 				customMenuItem.setAttribute('label', handlerFilename);
@@ -312,7 +312,7 @@ Zotero_Preferences.General = {
 				// but why doesn't the icon just behave by default?
 				menulist.shadowRoot.querySelector('[part="icon"]').style.height = '16px';
 			}
-			// Zotero
+			// Trellis
 			else {
 				menulist.selectedIndex = 0;
 				customMenuItem.hidden = true;
@@ -323,7 +323,7 @@ Zotero_Preferences.General = {
 		update('epub');
 		update('snapshot');
 		var inNewWindowCheckbox = document.getElementById('open-reader-in-new-window');
-		inNewWindowCheckbox.disabled = ['pdf', 'epub', 'snapshot'].every(type => Zotero.Prefs.get('fileHandler.' + type));
+		inNewWindowCheckbox.disabled = ['pdf', 'epub', 'snapshot'].every(type => Trellis.Prefs.get('fileHandler.' + type));
 	},
 	
 	_getFileHandlerPref: function (type) {
@@ -340,18 +340,18 @@ Zotero_Preferences.General = {
 		var openURLMenu = document.getElementById('openurl-menu');
 		let openURLMenuFirstItem = openURLMenu.menupopup.firstChild;
 		if (!this._openURLResolvers) {
-			openURLMenuFirstItem.setAttribute('label', Zotero.getString('general.loading'));
+			openURLMenuFirstItem.setAttribute('label', Trellis.getString('general.loading'));
 			try {
-				this._openURLResolvers = await Zotero.Utilities.Internal.OpenURL.getResolvers();
+				this._openURLResolvers = await Trellis.Utilities.Internal.OpenURL.getResolvers();
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				openURLMenu.menupopup.firstChild.setAttribute('label', "Error loading resolvers");
 				return;
 			}
 		}
 		// Set top-most item to "Custom" once the menu appears
-		openURLMenuFirstItem.setAttribute('label', Zotero.getString('general.custom'));
+		openURLMenuFirstItem.setAttribute('label', Trellis.getString('general.custom'));
 		openURLMenuFirstItem.setAttribute('value', 'custom');
 		this.updateOpenURLResolversMenu();
 	},
@@ -365,11 +365,11 @@ Zotero_Preferences.General = {
 		this.emptyOpenURLMenu();
 		// Set the proper values on the first item to be displayed when dropdown closes
 		let firstItem = document.getElementById('openurl-menu').menupopup.firstChild;
-		if (Zotero.Prefs.get('openURL.resolver')) {
-			firstItem.setAttribute("value", Zotero.Prefs.get('openURL.resolver'));
+		if (Trellis.Prefs.get('openURL.resolver')) {
+			firstItem.setAttribute("value", Trellis.Prefs.get('openURL.resolver'));
 		}
-		if (Zotero.Prefs.get('openURL.name')) {
-			firstItem.setAttribute("label", Zotero.Prefs.get('openURL.name'));
+		if (Trellis.Prefs.get('openURL.name')) {
+			firstItem.setAttribute("label", Trellis.Prefs.get('openURL.name'));
 		}
 		// Ensures that arrow keys will navigate the menu in case of subsequent opening on windows
 		document.getElementById('openurl-menu').selectedItem = firstItem;
@@ -386,11 +386,11 @@ Zotero_Preferences.General = {
 	
 	updateOpenURLResolversMenu: function () {
 		if (!this._openURLResolvers) {
-			Zotero.debug("Resolvers not loaded -- not updating menu");
+			Trellis.debug("Resolvers not loaded -- not updating menu");
 			return;
 		}
 		
-		var currentResolver = Zotero.Prefs.get('openURL.resolver');
+		var currentResolver = Trellis.Prefs.get('openURL.resolver');
 		
 		var openURLMenu = document.getElementById('openurl-menu');
 		var menupopup = openURLMenu.firstChild;
@@ -437,7 +437,7 @@ Zotero_Preferences.General = {
 			menuitem.setAttribute('value', r.url);
 			menuitem.setAttribute('type', 'checkbox');
 			currentMenuPopup.appendChild(menuitem);
-			var checked = r.url == Zotero.Prefs.get('openURL.resolver');
+			var checked = r.url == Trellis.Prefs.get('openURL.resolver');
 			menuitem.setAttribute('checked', checked);
 			if (checked) {
 				selectedName = r.name;
@@ -448,14 +448,14 @@ Zotero_Preferences.General = {
 		if (selectedName) {
 			openURLMenu.setAttribute('label', selectedName);
 			// If we found a match, update stored name
-			Zotero.Prefs.set('openURL.name', selectedName);
+			Trellis.Prefs.set('openURL.name', selectedName);
 			firstItem.setAttribute('checked', false);
 		}
 		// Custom
 		else {
-			openURLMenu.setAttribute('label', Zotero.getString('general.custom'));
+			openURLMenu.setAttribute('label', Trellis.getString('general.custom'));
 			firstItem.setAttribute('checked', true);
-			Zotero.Prefs.clear('openURL.name');
+			Trellis.Prefs.clear('openURL.name');
 		}
 	},
 	
@@ -465,7 +465,7 @@ Zotero_Preferences.General = {
 		event.preventDefault();
 		
 		if (event.target.localName != 'menuitem') {
-			Zotero.debug("Ignoring click on " + event.target.localName);
+			Trellis.debug("Ignoring click on " + event.target.localName);
 			return;
 		}
 		
@@ -475,23 +475,23 @@ Zotero_Preferences.General = {
 		
 		// If "Custom" selected, clear URL field
 		if (event.target.value == "custom") {
-			Zotero.Prefs.clear('openURL.name');
-			Zotero.Prefs.set('openURL.resolver', '');
+			Trellis.Prefs.clear('openURL.name');
+			Trellis.Prefs.set('openURL.resolver', '');
 			openURLServerField.value = '';
 			openURLServerField.focus();
 		}
 		else {
-			Zotero.Prefs.set('openURL.name', openURLServerField.value = event.target.label);
-			Zotero.Prefs.set('openURL.resolver', openURLServerField.value = event.target.value);
+			Trellis.Prefs.set('openURL.name', openURLServerField.value = event.target.label);
+			Trellis.Prefs.set('openURL.resolver', openURLServerField.value = event.target.value);
 		}
 	},
 	
 	onOpenURLCustomized: function () {
 		// Change resolver preference to "custom"
 		let firstItem = document.getElementById('openurl-menu').menupopup.firstChild;
-		firstItem.setAttribute('label', Zotero.getString('general.custom'));
+		firstItem.setAttribute('label', Trellis.getString('general.custom'));
 		firstItem.setAttribute('value', 'custom');
-		Zotero.Prefs.clear('openURL.name');
+		Trellis.Prefs.clear('openURL.name');
 	},
 
 	EBOOK_FONT_STACKS: {
@@ -547,16 +547,16 @@ Zotero_Preferences.General = {
 		let checkbox = document.getElementById('auto-disable-tool');
 		checkbox.addEventListener('command', () => {
 			let value = checkbox.checked;
-			Zotero.Prefs.set('reader.autoDisableTool.note', value);
-			Zotero.Prefs.set('reader.autoDisableTool.text', value);
-			Zotero.Prefs.set('reader.autoDisableTool.image', value);
+			Trellis.Prefs.set('reader.autoDisableTool.note', value);
+			Trellis.Prefs.set('reader.autoDisableTool.text', value);
+			Trellis.Prefs.set('reader.autoDisableTool.image', value);
 			checkbox.querySelector('.checkbox-check').style.opacity = 'unset';
 		});
 
 		let values = [
-			Zotero.Prefs.get('reader.autoDisableTool.note'),
-			Zotero.Prefs.get('reader.autoDisableTool.text'),
-			Zotero.Prefs.get('reader.autoDisableTool.image')
+			Trellis.Prefs.get('reader.autoDisableTool.note'),
+			Trellis.Prefs.get('reader.autoDisableTool.text'),
+			Trellis.Prefs.get('reader.autoDisableTool.image')
 		];
 		if (values.every(x => x)) {
 			checkbox.checked = true;

@@ -3,84 +3,84 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 'use strict';
 
-Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
+Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
 Services.scriptloader.loadSubScript("chrome://global/content/customElements.js", this);
-Services.scriptloader.loadSubScript("chrome://zotero/content/elements/base.js", this);
-Services.scriptloader.loadSubScript('chrome://zotero/content/elements/itemTreeMenuBar.js', this);
+Services.scriptloader.loadSubScript("chrome://trellis/content/elements/base.js", this);
+Services.scriptloader.loadSubScript('chrome://trellis/content/elements/itemTreeMenuBar.js', this);
 
 {
 	// https://searchfox.org/mozilla-central/rev/8e885f04a0a4ff6d64ea59741c10d9b8e45d9ff8/toolkit/content/customElements.js#826-832
 	for (let [tag, script] of [
-		['advanced-search-deck', 'chrome://zotero/content/elements/advancedSearchDeck.js'],
-		['advanced-search-pane', 'chrome://zotero/content/elements/advancedSearchPane.js'],
-		['attachment-box', 'chrome://zotero/content/elements/attachmentBox.js'],
-		['attachment-preview', 'chrome://zotero/content/elements/attachmentPreview.js'],
-		['attachment-preview-box', 'chrome://zotero/content/elements/attachmentPreviewBox.js'],
-		['context-pane', 'chrome://zotero/content/elements/contextPane.js'],
-		['duplicates-merge-pane', 'chrome://zotero/content/elements/duplicatesMergePane.js'],
-		['guidance-panel', 'chrome://zotero/content/elements/guidancePanel.js'],
+		['advanced-search-deck', 'chrome://trellis/content/elements/advancedSearchDeck.js'],
+		['advanced-search-pane', 'chrome://trellis/content/elements/advancedSearchPane.js'],
+		['attachment-box', 'chrome://trellis/content/elements/attachmentBox.js'],
+		['attachment-preview', 'chrome://trellis/content/elements/attachmentPreview.js'],
+		['attachment-preview-box', 'chrome://trellis/content/elements/attachmentPreviewBox.js'],
+		['context-pane', 'chrome://trellis/content/elements/contextPane.js'],
+		['duplicates-merge-pane', 'chrome://trellis/content/elements/duplicatesMergePane.js'],
+		['guidance-panel', 'chrome://trellis/content/elements/guidancePanel.js'],
 		// TODO: rename itemBox.js to infoBox.js later to avoid conflict
-		['info-box', 'chrome://zotero/content/elements/itemBox.js'],
-		['item-details', 'chrome://zotero/content/elements/itemDetails.js'],
-		['item-pane', 'chrome://zotero/content/elements/itemPane.js'],
-		['item-message-pane', 'chrome://zotero/content/elements/itemMessagePane.js'],
-		['merge-group', 'chrome://zotero/content/elements/mergeGroup.js'],
-		['menulist-item-types', 'chrome://zotero/content/elements/menulistItemTypes.js'],
-		['note-box', 'chrome://zotero/content/elements/noteBox.js'],
-		['note-editor', 'chrome://zotero/content/elements/noteEditor.js'],
-		['notes-box', 'chrome://zotero/content/elements/notesBox.js'],
-		['quick-search-textbox', 'chrome://zotero/content/elements/quickSearchTextbox.js'],
-		['related-box', 'chrome://zotero/content/elements/relatedBox.js'],
-		['shadow-autocomplete-input', 'chrome://zotero/content/elements/shadowAutocompleteInput.js'],
-		['split-menu-button', 'chrome://zotero/content/elements/splitMenuButton.js'],
-		['tabs-menu-panel', 'chrome://zotero/content/elements/tabsMenuPanel.js'],
-		['tab-content', 'chrome://zotero/content/elements/tabContent.js'],
-		['tags-box', 'chrome://zotero/content/elements/tagsBox.js'],
-		['zotero-text-link', 'chrome://zotero/content/elements/textLink.js'],
-		['zoterosearch', 'chrome://zotero/content/elements/zoteroSearch.js'],
-		['zoterosearchcondition', 'chrome://zotero/content/elements/zoteroSearch.js'],
-		['zoterosearchtextbox', 'chrome://zotero/content/elements/zoteroSearch.js'],
-		['zoterosearchagefield', 'chrome://zotero/content/elements/zoteroSearch.js'],
-		['item-pane-custom-section', 'chrome://zotero/content/elements/itemPaneCustomSection.js'],
-		['item-pane-header', 'chrome://zotero/content/elements/itemPaneHeader.js'],
-		['editable-text', 'chrome://zotero/content/elements/editableText.js'],
-		['item-pane-sidenav', 'chrome://zotero/content/elements/itemPaneSidenav.js'],
-		['abstract-box', 'chrome://zotero/content/elements/abstractBox.js'],
-		['collapsible-section', 'chrome://zotero/content/elements/collapsibleSection.js'],
-		['attachments-box', 'chrome://zotero/content/elements/attachmentsBox.js'],
-		['attachment-row', 'chrome://zotero/content/elements/attachmentRow.js'],
-		['attachment-annotations-box', 'chrome://zotero/content/elements/attachmentAnnotationsBox.js'],
-		['annotation-row', 'chrome://zotero/content/elements/annotationRow.js'],
-		['annotation-items-pane', 'chrome://zotero/content/elements/annotationItemsPane.js'],
-		['context-notes-list', 'chrome://zotero/content/elements/contextNotesList.js'],
-		['note-row', 'chrome://zotero/content/elements/noteRow.js'],
-		['notes-context', 'chrome://zotero/content/elements/notesContext.js'],
-		['libraries-collections-box', 'chrome://zotero/content/elements/librariesCollectionsBox.js'],
-		['autocomplete-textarea', 'chrome://zotero/content/elements/autocompleteTextArea.js'],
-		['bubble-input', 'chrome://zotero/content/elements/bubbleInput.js'],
-		['file-renaming-settings', 'chrome://zotero/content/elements/fileRenamingSettings.js']
+		['info-box', 'chrome://trellis/content/elements/itemBox.js'],
+		['item-details', 'chrome://trellis/content/elements/itemDetails.js'],
+		['item-pane', 'chrome://trellis/content/elements/itemPane.js'],
+		['item-message-pane', 'chrome://trellis/content/elements/itemMessagePane.js'],
+		['merge-group', 'chrome://trellis/content/elements/mergeGroup.js'],
+		['menulist-item-types', 'chrome://trellis/content/elements/menulistItemTypes.js'],
+		['note-box', 'chrome://trellis/content/elements/noteBox.js'],
+		['note-editor', 'chrome://trellis/content/elements/noteEditor.js'],
+		['notes-box', 'chrome://trellis/content/elements/notesBox.js'],
+		['quick-search-textbox', 'chrome://trellis/content/elements/quickSearchTextbox.js'],
+		['related-box', 'chrome://trellis/content/elements/relatedBox.js'],
+		['shadow-autocomplete-input', 'chrome://trellis/content/elements/shadowAutocompleteInput.js'],
+		['split-menu-button', 'chrome://trellis/content/elements/splitMenuButton.js'],
+		['tabs-menu-panel', 'chrome://trellis/content/elements/tabsMenuPanel.js'],
+		['tab-content', 'chrome://trellis/content/elements/tabContent.js'],
+		['tags-box', 'chrome://trellis/content/elements/tagsBox.js'],
+		['trellis-text-link', 'chrome://trellis/content/elements/textLink.js'],
+		['trellissearch', 'chrome://trellis/content/elements/trellisSearch.js'],
+		['trellissearchcondition', 'chrome://trellis/content/elements/trellisSearch.js'],
+		['trellissearchtextbox', 'chrome://trellis/content/elements/trellisSearch.js'],
+		['trellissearchagefield', 'chrome://trellis/content/elements/trellisSearch.js'],
+		['item-pane-custom-section', 'chrome://trellis/content/elements/itemPaneCustomSection.js'],
+		['item-pane-header', 'chrome://trellis/content/elements/itemPaneHeader.js'],
+		['editable-text', 'chrome://trellis/content/elements/editableText.js'],
+		['item-pane-sidenav', 'chrome://trellis/content/elements/itemPaneSidenav.js'],
+		['abstract-box', 'chrome://trellis/content/elements/abstractBox.js'],
+		['collapsible-section', 'chrome://trellis/content/elements/collapsibleSection.js'],
+		['attachments-box', 'chrome://trellis/content/elements/attachmentsBox.js'],
+		['attachment-row', 'chrome://trellis/content/elements/attachmentRow.js'],
+		['attachment-annotations-box', 'chrome://trellis/content/elements/attachmentAnnotationsBox.js'],
+		['annotation-row', 'chrome://trellis/content/elements/annotationRow.js'],
+		['annotation-items-pane', 'chrome://trellis/content/elements/annotationItemsPane.js'],
+		['context-notes-list', 'chrome://trellis/content/elements/contextNotesList.js'],
+		['note-row', 'chrome://trellis/content/elements/noteRow.js'],
+		['notes-context', 'chrome://trellis/content/elements/notesContext.js'],
+		['libraries-collections-box', 'chrome://trellis/content/elements/librariesCollectionsBox.js'],
+		['autocomplete-textarea', 'chrome://trellis/content/elements/autocompleteTextArea.js'],
+		['bubble-input', 'chrome://trellis/content/elements/bubbleInput.js'],
+		['file-renaming-settings', 'chrome://trellis/content/elements/fileRenamingSettings.js']
 	]) {
 		customElements.setElementCreationCallback(tag, () => {
 			Services.scriptloader.loadSubScript(script, window);
@@ -182,14 +182,14 @@ Services.scriptloader.loadSubScript('chrome://zotero/content/elements/itemTreeMe
 	}, true);
 
 	// Add MacOS menupopup fade animation to menupopups
-	if (Zotero.isMac) {
+	if (Trellis.isMac) {
 		let MozMenuPopupPrototype = customElements.get("menupopup").prototype;
 
 		// Initialize the menupopup when it's first opened
 		let originalEnsureInitialized = MozMenuPopupPrototype.ensureInitialized;
 		MozMenuPopupPrototype.ensureInitialized = function () {
-			if (!this._zoteroInitialized) {
-				this._zoteroInitialized = true;
+			if (!this._trellisInitialized) {
+				this._trellisInitialized = true;
 
 				// Following the implementation from https://searchfox.org/mozilla-esr102/source/toolkit/content/widgets/menupopup.js
 				let haveCheckableChild = this.querySelector(
@@ -349,14 +349,14 @@ Services.scriptloader.loadSubScript('chrome://zotero/content/elements/itemTreeMe
 
 		if (target.open) {
 			// Simulate blinking of the selected menuitem on macOS (same as on Return keypress)
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				let interval = 70;
 				target.activeChild.removeAttribute("_moz-menuactive");
-				await Zotero.Promise.delay(interval);
+				await Trellis.Promise.delay(interval);
 				target.activeChild.setAttribute("_moz-menuactive", true);
-				await Zotero.Promise.delay(interval);
+				await Trellis.Promise.delay(interval);
 				target.activeChild.removeAttribute("_moz-menuactive");
-				await Zotero.Promise.delay(interval);
+				await Trellis.Promise.delay(interval);
 				target.activeChild.doCommand();
 				target.addEventListener("popuphiding", () => {
 					target.selectedItem.setAttribute("selected", true);
@@ -367,7 +367,7 @@ Services.scriptloader.loadSubScript('chrome://zotero/content/elements/itemTreeMe
 			else {
 				target.activeChild.doCommand();
 				// Timeout to avoid empty context menu behind an alert or dialog if one
-				// appears on 'command' event on Windows (https://github.com/zotero/zotero/issues/5633)
+				// appears on 'command' event on Windows (https://github.com/trellis/trellis/issues/5633)
 				setTimeout(() => {
 					target.open = false;
 				});
@@ -380,7 +380,7 @@ Services.scriptloader.loadSubScript('chrome://zotero/content/elements/itemTreeMe
 		event.preventDefault();
 	}, true);
 
-	if (Zotero.isWin) {
+	if (Trellis.isWin) {
 		// ArrowUp/ArrowDown should change the active menuitem without triggering the command event.
 		// Otherwise navigating menulist options via keyboard triggers alerts meant to fire after
 		// a confirmed selection (e.g. language change alert in preferences). Only relevant to Windows.
@@ -455,15 +455,15 @@ Services.scriptloader.loadSubScript('chrome://zotero/content/elements/itemTreeMe
 		],
 	};
 	for (let [key, configs] of Object.entries(InjectCSSConfig)) {
-		if (key == "win" && !Zotero.isWin) continue;
-		if (key == "mac" && !Zotero.isMac) continue;
-		if (key == "linux" && !Zotero.isLinux) continue;
+		if (key == "win" && !Trellis.isWin) continue;
+		if (key == "mac" && !Trellis.isMac) continue;
+		if (key == "linux" && !Trellis.isLinux) continue;
 		let prefix = "";
 		if (key == "global") {
-			prefix = "zotero/skin/xulElementPatches/";
+			prefix = "trellis/skin/xulElementPatches/";
 		}
 		else {
-			prefix = "zotero-platform/content/xulElementPatches/";
+			prefix = "trellis-platform/content/xulElementPatches/";
 		}
 		for (let config of configs) {
 			let element, patchedFunction;

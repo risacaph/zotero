@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Debug = new function () {
+Trellis.Debug = new function () {
 	var _console, _stackTrace, _store, _level, _lastTime, _output = [];
 	var _slowTime = false;
 	var _colorOutput = false;
@@ -40,43 +40,43 @@ Zotero.Debug = new function () {
 	 *
 	 *   - via the debug.log pref in the client or connector
 	 *   - by enabling debug output logging from the Help menu
-	 *   - by passing -ZoteroDebug or -ZoteroDebugText on the command line
+	 *   - by passing -TrellisDebug or -TrellisDebugText on the command line
 	 *
-	 * In the client, debug.log and -ZoteroDebugText enable logging via the terminal, while -ZoteroDebug
+	 * In the client, debug.log and -TrellisDebugText enable logging via the terminal, while -TrellisDebug
 	 * enables logging via an in-app HTML-based window.
 	 *
 	 * @param {Integer} [forceDebugLog = 0] - Force output even if pref disabled
-	 *    2: window (-ZoteroDebug)
-	 *    1: text console (-ZoteroDebugText)
+	 *    2: window (-TrellisDebug)
+	 *    1: text console (-TrellisDebugText)
 	 *    0: disabled
 	 */
 	this.init = function (forceDebugLog = 0) {
-		_console = Zotero.Prefs.get('debug.log') || forceDebugLog == 1;
+		_console = Trellis.Prefs.get('debug.log') || forceDebugLog == 1;
 		_consoleViewer = forceDebugLog == 2;
 		// When logging to the text console from the client on Mac/Linux, colorize output
-		if (_console && Zotero.isFx && !Zotero.isBookmarklet) {
+		if (_console && Trellis.isFx && !Trellis.isBookmarklet) {
 			_colorOutput = true;
 			
 			// Time threshold in ms above which intervals should be colored red in terminal output
-			_slowTime = Zotero.Prefs.get('debug.log.slowTime');
+			_slowTime = Trellis.Prefs.get('debug.log.slowTime');
 		}
-		_store = Zotero.Prefs.get('debug.store');
+		_store = Trellis.Prefs.get('debug.store');
 		if (_store) {
-			Zotero.Prefs.set('debug.store', false);
+			Trellis.Prefs.set('debug.store', false);
 		}
-		_level = Zotero.Prefs.get('debug.level');
-		_stackTrace = Zotero.Prefs.get('debug.stackTrace');
+		_level = Trellis.Prefs.get('debug.level');
+		_stackTrace = Trellis.Prefs.get('debug.stackTrace');
 		
 		this.storing = _store;
 		this.updateEnabled();
 		
 		// Enable dump() from window (non-XPCOM) scopes when terminal or viewer logging is enabled.
 		// (These will always go to the terminal, even in viewer mode.)
-		Zotero.Prefs.set('browser.dom.window.dump.enabled', _console || _consoleViewer || Zotero.test, true);
+		Trellis.Prefs.set('browser.dom.window.dump.enabled', _console || _consoleViewer || Trellis.test, true);
 		
 		if (_consoleViewer) {
 			setTimeout(function () {
-				Zotero.openInViewer("chrome://zotero/content/debugViewer.html");
+				Trellis.openInViewer("chrome://trellis/content/debugViewer.html");
 			}, 1000);
 		}
 	}
@@ -87,7 +87,7 @@ Zotero.Debug = new function () {
 		}
 		
 		if (typeof message != 'string') {
-			message = Zotero.Utilities.varDump(message, 0, maxDepth);
+			message = Trellis.Utilities.varDump(message, 0, maxDepth);
 		}
 		
 		if (!level) {
@@ -143,10 +143,10 @@ Zotero.Debug = new function () {
 		
 		if (_console || _consoleViewer || _listeners.length) {
 			var output = '(' + level + ')' + deltaStr + ': ' + message;
-			if (Zotero.isFx && !Zotero.isBookmarklet) {
+			if (Trellis.isFx && !Trellis.isBookmarklet) {
 				// Text console
 				if (_console) {
-					dump("zotero" + output + "\n\n");
+					dump("trellis" + output + "\n\n");
 				}
 				
 				// Remove ANSI color codes for the viewer and listeners. We could replace this with
@@ -181,7 +181,7 @@ Zotero.Debug = new function () {
 		if (_store) {
 			if (Math.random() < 1/1000) {
 				// Remove initial lines if over limit
-				var overage = this.count() - Zotero.Prefs.get('debug.store.limit');
+				var overage = this.count() - Trellis.Prefs.get('debug.store.limit');
 				if (overage > 0) {
 					_output.splice(0, Math.abs(overage));
 				}
@@ -202,7 +202,7 @@ Zotero.Debug = new function () {
 		if (maxLineLength) {
 			for (var i=0, len=output.length; i<len; i++) {
 				if (output[i].length > maxLineLength) {
-					output[i] = Zotero.Utilities.ellipsize(output[i], maxLineLength, false, true);
+					output[i] = Trellis.Utilities.ellipsize(output[i], maxLineLength, false, true);
 				}
 			}
 		}
@@ -218,8 +218,8 @@ Zotero.Debug = new function () {
 			}
 		}
 
-		return Zotero.getSystemInfo().then(function (sysInfo) {
-			return Zotero.getErrors(true).join('\n\n') +
+		return Trellis.getSystemInfo().then(function (sysInfo) {
+			return Trellis.getErrors(true).join('\n\n') +
 				"\n\n" + sysInfo + "\n\n" +
 				"=========================================================\n\n" +
 				output;

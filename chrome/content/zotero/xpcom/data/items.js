@@ -3,42 +3,42 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
 /*
- * Primary interface for accessing Zotero items
+ * Primary interface for accessing Trellis items
  */
-Zotero.Items = function () {
+Trellis.Items = function () {
 	this.constructor = null;
 	
 	this._ZDO_object = 'item';
 	
-	// This needs to wait until all Zotero components are loaded to initialize,
+	// This needs to wait until all Trellis components are loaded to initialize,
 	// but otherwise it can be just a simple property
-	Zotero.defineProperty(this, "_primaryDataSQLParts", {
+	Trellis.defineProperty(this, "_primaryDataSQLParts", {
 		get: function () {
-			var itemTypeAttachment = Zotero.ItemTypes.getID('attachment');
-			var itemTypeNote = Zotero.ItemTypes.getID('note');
-			var itemTypeAnnotation = Zotero.ItemTypes.getID('annotation');
+			var itemTypeAttachment = Trellis.ItemTypes.getID('attachment');
+			var itemTypeNote = Trellis.ItemTypes.getID('note');
+			var itemTypeAnnotation = Trellis.ItemTypes.getID('annotation');
 			
 			return {
 				itemID: "O.itemID",
@@ -105,7 +105,7 @@ Zotero.Items = function () {
 	 */
 	this.hasDeleted = async function (libraryID) {
 		var sql = "SELECT COUNT(*) > 0 FROM items JOIN deletedItems USING (itemID) WHERE libraryID=?";
-		return !!((await Zotero.DB.valueQueryAsync(sql, [libraryID])));
+		return !!((await Trellis.DB.valueQueryAsync(sql, [libraryID])));
 	};
 	
 	
@@ -116,7 +116,7 @@ Zotero.Items = function () {
 	 * @param  {Boolean}  [onlyTopLevel=false]   If true, don't include child items
 	 * @param  {Boolean}  [includeDeleted=false] If true, include deleted items
 	 * @param  {Boolean}  [asIDs=false] 		 If true, resolves only with IDs
-	 * @return {Promise<Array<Zotero.Item|Integer>>}
+	 * @return {Promise<Array<Trellis.Item|Integer>>}
 	 */
 	this.getAll = async function (libraryID, onlyTopLevel, includeDeleted, asIDs=false) {
 		var sql = 'SELECT A.itemID FROM items A';
@@ -132,7 +132,7 @@ Zotero.Items = function () {
 			sql += " AND A.itemID NOT IN (SELECT itemID FROM deletedItems)";
 		}
 		sql += " AND libraryID=?";
-		var ids = await Zotero.DB.columnQueryAsync(sql, libraryID);
+		var ids = await Trellis.DB.columnQueryAsync(sql, libraryID);
 		if (asIDs) {
 			return ids;
 		}
@@ -165,7 +165,7 @@ Zotero.Items = function () {
 			+ "AND IA.lastRead IS NOT NULL "
 			+ "AND IA.itemID NOT IN (SELECT itemID FROM deletedItems) "
 			+ "AND COALESCE(IA.parentItemID, IA.itemID) NOT IN (SELECT itemID FROM deletedItems)";
-		let maxLastRead = await Zotero.DB.valueQueryAsync(maxSQL, [libraryID]);
+		let maxLastRead = await Trellis.DB.valueQueryAsync(maxSQL, [libraryID]);
 		if (maxLastRead) {
 			let cutoff = maxLastRead - twoWeeksInSeconds;
 			this._lastReadCutoffs.set(libraryID, cutoff);
@@ -192,7 +192,7 @@ Zotero.Items = function () {
 			+ "AND I.libraryID = ? "
 			+ "AND IA.itemID NOT IN (SELECT itemID FROM deletedItems) "
 			+ "AND COALESCE(IA.parentItemID, IA.itemID) NOT IN (SELECT itemID FROM deletedItems)";
-		return Zotero.DB.columnQueryAsync(sql, [cutoff, libraryID]);
+		return Trellis.DB.columnQueryAsync(sql, [cutoff, libraryID]);
 	};
 
 	/**
@@ -222,7 +222,7 @@ Zotero.Items = function () {
 	//
 	// Bulk data loading functions
 	//
-	// These are called by Zotero.DataObjects.prototype._loadDataType().
+	// These are called by Trellis.DataObjects.prototype._loadDataType().
 	//
 	this._loadItemData = async function (libraryID, ids, idSQL) {
 		var missingItems = {};
@@ -231,8 +231,8 @@ Zotero.Items = function () {
 		var sql = "SELECT itemID, fieldID, value FROM items "
 			+ "JOIN itemData USING (itemID) "
 			+ "JOIN itemDataValues USING (valueID) WHERE libraryID=? AND itemTypeID!=?" + idSQL;
-		var params = [libraryID, Zotero.ItemTypes.getID('note')];
-		await Zotero.DB.queryAsync(
+		var params = [libraryID, Trellis.ItemTypes.getID('note')];
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -242,7 +242,7 @@ Zotero.Items = function () {
 					let fieldID = row.getResultByIndex(1);
 					let value = row.getResultByIndex(2);
 					
-					//Zotero.debug('Setting field ' + fieldID + ' for item ' + itemID);
+					//Trellis.debug('Setting field ' + fieldID + ' for item ' + itemID);
 					if (this._objectCache[itemID]) {
 						if (value === null) {
 							value = false;
@@ -252,7 +252,7 @@ Zotero.Items = function () {
 					else {
 						if (!missingItems[itemID]) {
 							missingItems[itemID] = true;
-							Zotero.logError("itemData row references nonexistent item " + itemID);
+							Trellis.logError("itemData row references nonexistent item " + itemID);
 						}
 					}
 					if (!itemFieldsCached[itemID]) {
@@ -266,7 +266,7 @@ Zotero.Items = function () {
 		var sql = "SELECT itemID FROM items WHERE libraryID=?" + idSQL;
 		var params = [libraryID];
 		var allItemIDs = [];
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -276,11 +276,11 @@ Zotero.Items = function () {
 					let item = this._objectCache[itemID];
 					
 					// Set nonexistent fields in the cache list to false (instead of null)
-					let fieldIDs = Zotero.ItemFields.getItemTypeFields(item.itemTypeID);
+					let fieldIDs = Trellis.ItemFields.getItemTypeFields(item.itemTypeID);
 					for (let j=0; j<fieldIDs.length; j++) {
 						let fieldID = fieldIDs[j];
 						if (!itemFieldsCached[itemID] || !itemFieldsCached[itemID][fieldID]) {
-							//Zotero.debug('Setting field ' + fieldID + ' to false for item ' + itemID);
+							//Trellis.debug('Setting field ' + fieldID + ' to false for item ' + itemID);
 							item.setField(fieldID, false, true);
 						}
 					}
@@ -291,14 +291,14 @@ Zotero.Items = function () {
 		);
 		
 		
-		var titleFieldID = Zotero.ItemFields.getID('title');
+		var titleFieldID = Trellis.ItemFields.getID('title');
 		
 		// Note titles
 		var sql = "SELECT itemID, title FROM items JOIN itemNotes USING (itemID) "
 			+ "WHERE libraryID=? AND itemID NOT IN (SELECT itemID FROM itemAttachments)" + idSQL;
 		var params = [libraryID];
 		
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -307,14 +307,14 @@ Zotero.Items = function () {
 					let itemID = row.getResultByIndex(0);
 					let title = row.getResultByIndex(1);
 					
-					//Zotero.debug('Setting title for note ' + row.itemID);
+					//Trellis.debug('Setting title for note ' + row.itemID);
 					if (this._objectCache[itemID]) {
 						this._objectCache[itemID].setField(titleFieldID, title, true);
 					}
 					else {
 						if (!missingItems[itemID]) {
 							missingItems[itemID] = true;
-							Zotero.logError("itemData row references nonexistent item " + itemID);
+							Trellis.logError("itemData row references nonexistent item " + itemID);
 						}
 					}
 				}.bind(this)
@@ -338,8 +338,8 @@ Zotero.Items = function () {
 				// to be displayed in itemTree.
 				// Instead of making updateDisplayTitle() async and loading conditionally, just catch the error
 				// and load on demand
-				if (e instanceof Zotero.Exception.UnloadedDataException) {
-					Zotero.debug(`Unloaded data for item ${item.libraryKey} updating display title`);
+				if (e instanceof Trellis.Exception.UnloadedDataException) {
+					Trellis.debug(`Unloaded data for item ${item.libraryKey} updating display title`);
 					if (item.isRegularItem()) {
 						await item.loadDataType('creators');
 						await item.loadDataType('tags');
@@ -351,7 +351,7 @@ Zotero.Items = function () {
 						item.updateDisplayTitle();
 					}
 					catch (e2) {
-						Zotero.logError(e2);
+						Trellis.logError(e2);
 					}
 				}
 				else {
@@ -367,12 +367,12 @@ Zotero.Items = function () {
 			+ 'FROM items LEFT JOIN itemCreators USING (itemID) '
 			+ 'WHERE libraryID=?' + idSQL + " ORDER BY itemID, orderIndex";
 		var params = [libraryID];
-		var rows = await Zotero.DB.queryAsync(sql, params, { noCache: true });
+		var rows = await Trellis.DB.queryAsync(sql, params, { noCache: true });
 		
 		// Mark creator indexes above the number of creators as changed,
 		// so that they're cleared if the item is saved
 		var fixIncorrectIndexes = function (item, numCreators, maxOrderIndex) {
-			Zotero.debug("Fixing incorrect creator indexes for item " + item.libraryKey
+			Trellis.debug("Fixing incorrect creator indexes for item " + item.libraryKey
 				+ " (" + numCreators + ", " + maxOrderIndex + ")", 2);
 			var i = numCreators;
 			if (!item._changed.creators) {
@@ -422,7 +422,7 @@ Zotero.Items = function () {
 				maxOrderIndex = row.orderIndex;
 			}
 			
-			let creatorData = Zotero.Creators.get(row.creatorID);
+			let creatorData = Trellis.Creators.get(row.creatorID);
 			creatorData.creatorTypeID = row.creatorTypeID;
 			item._creators[index] = creatorData;
 			item._creatorIDs[index] = row.creatorID;
@@ -442,7 +442,7 @@ Zotero.Items = function () {
 			+ "JOIN itemNotes USING (itemID) "
 			+ "WHERE libraryID=?" + idSQL;
 		var params = [libraryID];
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -461,19 +461,19 @@ Zotero.Items = function () {
 							note = '' + note;
 						}
 						if (typeof note == 'string') {
-							if (!note.substr(0, 36).match(/^<div class="zotero-note znv[0-9]+">/)) {
-								note = Zotero.Utilities.htmlSpecialChars(note);
-								note = Zotero.Notes.notePrefix + '<p>'
+							if (!note.substr(0, 36).match(/^<div class="trellis-note znv[0-9]+">/)) {
+								note = Trellis.Utilities.htmlSpecialChars(note);
+								note = Trellis.Notes.notePrefix + '<p>'
 									+ note.replace(/\n/g, '</p><p>')
 									.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
 									.replace(/  /g, '&nbsp;&nbsp;')
-									+ '</p>' + Zotero.Notes.noteSuffix;
+									+ '</p>' + Trellis.Notes.noteSuffix;
 								note = note.replace(/<p>\s*<\/p>/g, '<p>&nbsp;</p>');
 								notesToUpdate.push([item.id, note]);
 							}
 							
 							// Don't include <div> wrapper when returning value
-							let startLen = note.substr(0, 36).match(/^<div class="zotero-note znv[0-9]+">/)[0].length;
+							let startLen = note.substr(0, 36).match(/^<div class="trellis-note znv[0-9]+">/)[0].length;
 							let endLen = 6; // "</div>".length
 							note = note.substr(startLen, note.length - startLen - endLen);
 						}
@@ -492,11 +492,11 @@ Zotero.Items = function () {
 		);
 		
 		if (notesToUpdate.length) {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				for (let i = 0; i < notesToUpdate.length; i++) {
 					let row = notesToUpdate[i];
 					let sql = "UPDATE itemNotes SET note=? WHERE itemID=?";
-					await Zotero.DB.queryAsync(sql, [row[1], row[0]]);
+					await Trellis.DB.queryAsync(sql, [row[1], row[0]]);
 				}
 			}.bind(this));
 		}
@@ -504,8 +504,8 @@ Zotero.Items = function () {
 		// Mark notes and attachments without notes as loaded
 		sql = "SELECT itemID FROM items WHERE libraryID=?" + idSQL
 			+ " AND itemTypeID IN (?, ?) AND itemID NOT IN (SELECT itemID FROM itemNotes)";
-		params = [libraryID, Zotero.ItemTypes.getID('note'), Zotero.ItemTypes.getID('attachment')];
-		await Zotero.DB.queryAsync(
+		params = [libraryID, Trellis.ItemTypes.getID('note'), Trellis.ItemTypes.getID('attachment')];
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -534,9 +534,9 @@ Zotero.Items = function () {
 		var params = [libraryID];
 		
 		// TEMP: Fix faulty upgrade from early 6.0 beta
-		// https://github.com/zotero/zotero/issues/3013
+		// https://github.com/trellis/trellis/issues/3013
 		try {
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				sql,
 				params,
 				{
@@ -553,27 +553,27 @@ Zotero.Items = function () {
 						var typeID = row.getResultByIndex(2);
 						var type;
 						switch (typeID) {
-							case Zotero.Annotations.ANNOTATION_TYPE_HIGHLIGHT:
+							case Trellis.Annotations.ANNOTATION_TYPE_HIGHLIGHT:
 								type = 'highlight';
 								break;
 
-							case Zotero.Annotations.ANNOTATION_TYPE_UNDERLINE:
+							case Trellis.Annotations.ANNOTATION_TYPE_UNDERLINE:
 								type = 'underline';
 								break;
 							
-							case Zotero.Annotations.ANNOTATION_TYPE_NOTE:
+							case Trellis.Annotations.ANNOTATION_TYPE_NOTE:
 								type = 'note';
 								break;
 
-							case Zotero.Annotations.ANNOTATION_TYPE_TEXT:
+							case Trellis.Annotations.ANNOTATION_TYPE_TEXT:
 								type = 'text';
 								break;
 							
-							case Zotero.Annotations.ANNOTATION_TYPE_IMAGE:
+							case Trellis.Annotations.ANNOTATION_TYPE_IMAGE:
 								type = 'image';
 								break;
 							
-							case Zotero.Annotations.ANNOTATION_TYPE_INK:
+							case Trellis.Annotations.ANNOTATION_TYPE_INK:
 								type = 'ink';
 								break;
 							
@@ -596,9 +596,9 @@ Zotero.Items = function () {
 		}
 		catch (e) {
 			if (e.message.includes('no such column: IA.authorName')
-					&& (await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM version WHERE schema='userdata' AND version IN (120, 121, 122)"))) {
-				await Zotero.DB.queryAsync("UPDATE version SET version=119 WHERE schema='userdata'");
-				Zotero.crash();
+					&& (await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM version WHERE schema='userdata' AND version IN (120, 121, 122)"))) {
+				await Trellis.DB.queryAsync("UPDATE version SET version=119 WHERE schema='userdata'");
+				Trellis.crash();
 			}
 			throw e;
 		}
@@ -610,7 +610,7 @@ Zotero.Items = function () {
 			+ "JOIN itemAnnotations IA USING (itemID) "
 			+ "WHERE libraryID=?" + idSQL;
 		var params = [libraryID];
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -657,7 +657,7 @@ Zotero.Items = function () {
 		//
 		// Attachments
 		//
-		var titleFieldID = Zotero.ItemFields.getID('title');
+		var titleFieldID = Trellis.ItemFields.getID('title');
 		var sql = "SELECT parentItemID, A.itemID, value AS title, "
 			+ "CASE WHEN DI.itemID IS NULL THEN 0 ELSE 1 END AS trashed "
 			+ "FROM itemAttachments A "
@@ -670,7 +670,7 @@ Zotero.Items = function () {
 			+ " ORDER BY parentItemID";
 		// Since we do the sort here and cache these results, a restart will be required
 		// if this pref (off by default) is turned on, but that's OK
-		if (Zotero.Prefs.get('sortAttachmentsChronologically')) {
+		if (Trellis.Prefs.get('sortAttachmentsChronologically')) {
 			sql +=  ", dateAdded";
 		}
 		var setAttachmentItem = function (itemID, rows) {
@@ -688,7 +688,7 @@ Zotero.Items = function () {
 			};
 		}.bind(this);
 		var lastItemID = null;
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -718,7 +718,7 @@ Zotero.Items = function () {
 			+ "WHERE libraryID=?"
 			+ (ids.length ? " AND parentItemID IN (" + ids.map(id => parseInt(id)).join(", ") + ")" : "")
 			+ " ORDER BY parentItemID";
-		if (Zotero.Prefs.get('sortNotesChronologically')) {
+		if (Trellis.Prefs.get('sortNotesChronologically')) {
 			sql +=  ", dateAdded";
 		}
 		var setNoteItem = function (itemID, rows) {
@@ -742,7 +742,7 @@ Zotero.Items = function () {
 		}.bind(this);
 		lastItemID = null;
 		rows = [];
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -787,7 +787,7 @@ Zotero.Items = function () {
 		}.bind(this);
 		lastItemID = null;
 		rows = [];
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -811,7 +811,7 @@ Zotero.Items = function () {
 		if (idSQL) {
 			sql += idSQL;
 		}
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -847,13 +847,13 @@ Zotero.Items = function () {
 			item._tags = [];
 			for (let i = 0; i < rows.length; i++) {
 				let row = rows[i];
-				item._tags.push(Zotero.Tags.cleanData(row));
+				item._tags.push(Trellis.Tags.cleanData(row));
 			}
 			
 			item._loaded.tags = true;
 		}.bind(this);
 		
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -906,7 +906,7 @@ Zotero.Items = function () {
 			item._clearChanged('collections');
 		}.bind(this);
 		
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			sql,
 			params,
 			{
@@ -941,7 +941,7 @@ Zotero.Items = function () {
 	 * Requires a transaction
 	 */
 	this.copyChildItems = async function (fromItem, toItem) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		var fromGroup = fromItem.library.isGroup;
 		
@@ -959,9 +959,9 @@ Zotero.Items = function () {
 				// user from a group, set the author to the creating user
 				if (fromGroup
 						&& !annotation.annotationAuthorName
-						&& annotation.createdByUserID != Zotero.Users.getCurrentUserID()) {
+						&& annotation.createdByUserID != Trellis.Users.getCurrentUserID()) {
 					newAnnotation.annotationAuthorName =
-						Zotero.Users.getName(annotation.createdByUserID);
+						Trellis.Users.getName(annotation.createdByUserID);
 				}
 				await newAnnotation.save();
 			}
@@ -976,15 +976,15 @@ Zotero.Items = function () {
 	 *
 	 * Requires a transaction
 	 *
-	 * @param {Zotero.Item} fromItem
-	 * @param {Zotero.Item} toItem
+	 * @param {Trellis.Item} fromItem
+	 * @param {Trellis.Item} toItem
 	 * @param {Object} options
 	 * @param {Boolean} [includeTrashed=false]
 	 * @param {Boolean} [skipEditCheck=false]
 	 * @return {Promise}
 	 */
 	this.moveChildItems = async function (fromItem, toItem, { includeTrashed = false, skipEditCheck = false } = {}) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		// Annotations on files
 		if (fromItem.isFileAttachment()) {
@@ -1003,25 +1003,25 @@ Zotero.Items = function () {
 	
 	
 	this.merge = function (item, otherItems) {
-		Zotero.debug("Zotero.Items.merge() is deprecated -- use mergeItems.mjs");
+		Trellis.debug("Trellis.Items.merge() is deprecated -- use mergeItems.mjs");
 		
-		let { mergeItems } = ChromeUtils.importESModule("chrome://zotero/content/mergeItems.mjs");
+		let { mergeItems } = ChromeUtils.importESModule("chrome://trellis/content/mergeItems.mjs");
 		return mergeItems(item, otherItems);
 	};
 
 
 	this.trash = async function (ids) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 
 		var libraryIDs = new Set();
-		ids = Zotero.flattenArguments(ids);
+		ids = Trellis.flattenArguments(ids);
 		var items = [];
 		var undoableCount = 0;
 		for (let id of ids) {
 			let item = this.get(id);
 			if (!item) {
-				Zotero.debug('Item ' + id + ' does not exist in Items.trash()!', 1);
-				Zotero.Notifier.queue('trash', 'item', id);
+				Trellis.debug('Item ' + id + ' does not exist in Items.trash()!', 1);
+				Trellis.Notifier.queue('trash', 'item', id);
 				continue;
 			}
 
@@ -1029,13 +1029,13 @@ Zotero.Items = function () {
 				throw new Error(item._ObjectType + " " + item.libraryKey + " is not editable");
 			}
 
-			if (!Zotero.Libraries.get(item.libraryID).hasTrash) {
-				throw new Error(Zotero.Libraries.getName(item.libraryID) + " does not have a trash");
+			if (!Trellis.Libraries.get(item.libraryID).hasTrash) {
+				throw new Error(Trellis.Libraries.getName(item.libraryID) + " does not have a trash");
 			}
 
 			// Record undo data before modifying state
-			if (Zotero.UndoHistory && !item.deleted) {
-				Zotero.UndoHistory.stageChange({
+			if (Trellis.UndoHistory && !item.deleted) {
+				Trellis.UndoHistory.stageChange({
 					objectType: 'item',
 					id: item.id,
 					libraryID: item.libraryID,
@@ -1050,8 +1050,8 @@ Zotero.Items = function () {
 			items.push(item);
 			libraryIDs.add(item.libraryID);
 		}
-		if (Zotero.UndoHistory && undoableCount) {
-			Zotero.UndoHistory.stageAction('undo-action-trash', { count: undoableCount });
+		if (Trellis.UndoHistory && undoableCount) {
+			Trellis.UndoHistory.stageAction('undo-action-trash', { count: undoableCount });
 		}
 		
 		var parentItemIDs = new Set();
@@ -1063,25 +1063,25 @@ Zotero.Items = function () {
 			}
 		});
 		let hasGroupLibrary = [...libraryIDs].some(
-			id => Zotero.Libraries.get(id).libraryType === 'group'
+			id => Trellis.Libraries.get(id).libraryType === 'group'
 		);
-		let dateModified = Zotero.DB.transactionDateTime;
-		await Zotero.Utilities.Internal.forEachChunkAsync(ids, 250, async function (chunk) {
+		let dateModified = Trellis.DB.transactionDateTime;
+		await Trellis.Utilities.Internal.forEachChunkAsync(ids, 250, async function (chunk) {
 			let idStr = chunk.map(id => parseInt(id)).join(", ");
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE items SET synced=0, clientDateModified=CURRENT_TIMESTAMP, "
 					+ `dateModified=? WHERE itemID IN (${idStr})`,
 				dateModified
 			);
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"INSERT OR IGNORE INTO deletedItems (itemID) VALUES "
 					+ chunk.map(id => "(" + id + ")").join(", ")
 			);
 			// Update lastModifiedByUserID for group items
 			if (hasGroupLibrary) {
-				let currentUserID = Zotero.Users.getCurrentUserID();
+				let currentUserID = Trellis.Users.getCurrentUserID();
 				if (currentUserID) {
-					await Zotero.DB.queryAsync(
+					await Trellis.DB.queryAsync(
 						"UPDATE groupItems SET lastModifiedByUserID=? "
 							+ `WHERE itemID IN (${idStr})`,
 						currentUserID
@@ -1090,21 +1090,21 @@ Zotero.Items = function () {
 			}
 		}.bind(this));
 		
-		// Keep in sync with Zotero.Item::saveData()
+		// Keep in sync with Trellis.Item::saveData()
 		for (let parentItemID of parentItemIDs) {
-			let parentItem = await Zotero.Items.getAsync(parentItemID);
+			let parentItem = await Trellis.Items.getAsync(parentItemID);
 			await parentItem.reload(['primaryData', 'childItems'], true);
 		}
-		Zotero.Notifier.queue('modify', 'item', ids);
-		Zotero.Notifier.queue('trash', 'item', ids);
+		Trellis.Notifier.queue('modify', 'item', ids);
+		Trellis.Notifier.queue('trash', 'item', ids);
 		Array.from(libraryIDs).forEach(libraryID => {
-			Zotero.Notifier.queue('refresh', 'trash', libraryID);
+			Trellis.Notifier.queue('refresh', 'trash', libraryID);
 		});
 	};
 	
 	
 	this.trashTx = function (ids) {
-		return Zotero.DB.executeTransaction(async function () {
+		return Trellis.DB.executeTransaction(async function () {
 			return this.trash(ids);
 		}.bind(this));
 	}
@@ -1119,7 +1119,7 @@ Zotero.Items = function () {
 	 */
 	this.emptyTrash = async function (libraryID, options = {}) {
 		if (arguments.length > 2 || typeof arguments[1] == 'number') {
-			Zotero.warn("Zotero.Items.emptyTrash() has changed -- update your code");
+			Trellis.warn("Trellis.Items.emptyTrash() has changed -- update your code");
 			options.days = arguments[1];
 			options.limit = arguments[2];
 		}
@@ -1155,7 +1155,7 @@ Zotero.Items = function () {
 				}
 				: undefined;
 			for (let x of ['top', 'child']) {
-				await Zotero.Utilities.Internal.forEachChunkAsync(
+				await Trellis.Utilities.Internal.forEachChunkAsync(
 					toDelete[x],
 					1000,
 					async function (chunk) {
@@ -1164,8 +1164,8 @@ Zotero.Items = function () {
 					}.bind(this)
 				);
 			}
-			Zotero.debug("Emptied " + deleted.length + " item(s) from trash in " + (new Date() - t) + " ms");
-			Zotero.Notifier.trigger('refresh', 'trash', libraryID);
+			Trellis.debug("Emptied " + deleted.length + " item(s) from trash in " + (new Date() - t) + " ms");
+			Trellis.Notifier.trigger('refresh', 'trash', libraryID);
 		}
 		
 		return deleted.length;
@@ -1181,7 +1181,7 @@ Zotero.Items = function () {
 		this._emptyTrashIdleObserver = {
 			observe: (subject, topic, data) => {
 				if (topic == 'idle' || topic == 'timer-callback') {
-					var days = Zotero.Prefs.get('trashAutoEmptyDays');
+					var days = Trellis.Prefs.get('trashAutoEmptyDays');
 					if (!days) {
 						return;
 					}
@@ -1194,7 +1194,7 @@ Zotero.Items = function () {
 					// tag.getLinkedItems() call during deletes
 					let num = 50;
 					this.emptyTrash(
-						Zotero.Libraries.userLibraryID,
+						Trellis.Libraries.userLibraryID,
 						{
 							days,
 							limit: num
@@ -1231,8 +1231,8 @@ Zotero.Items = function () {
 	this.addToPublications = function (items, options = {}) {
 		if (!items.length) return;
 		
-		return Zotero.DB.executeTransaction(async function () {
-			var timestamp = Zotero.DB.transactionTimestamp;
+		return Trellis.DB.executeTransaction(async function () {
+			var timestamp = Trellis.DB.transactionTimestamp;
 			
 			var allItems = [...items];
 			
@@ -1246,28 +1246,28 @@ Zotero.Items = function () {
 			
 			if (options.childNotes) {
 				for (let item of items) {
-					item.getNotes().forEach(id => allItems.push(Zotero.Items.get(id)));
+					item.getNotes().forEach(id => allItems.push(Trellis.Items.get(id)));
 				}
 			}
 			
 			if (options.childFileAttachments || options.childLinks) {
 				for (let item of items) {
 					item.getAttachments().forEach(id => {
-						var attachment = Zotero.Items.get(id);
+						var attachment = Trellis.Items.get(id);
 						var linkMode = attachment.attachmentLinkMode;
 						
-						if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
-							Zotero.debug("Skipping child linked file attachment on drag");
+						if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
+							Trellis.debug("Skipping child linked file attachment on drag");
 							return;
 						}
-						if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_URL) {
+						if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_URL) {
 							if (!options.childLinks) {
-								Zotero.debug("Skipping child link attachment on drag");
+								Trellis.debug("Skipping child link attachment on drag");
 								return;
 							}
 						}
 						else if (!options.childFileAttachments) {
-							Zotero.debug("Skipping child file attachment on drag");
+							Trellis.debug("Skipping child file attachment on drag");
 							return;
 						}
 						allItems.push(attachment);
@@ -1275,27 +1275,27 @@ Zotero.Items = function () {
 				}
 			}
 			
-			await Zotero.Utilities.Internal.forEachChunkAsync(allItems, 250, async function (chunk) {
+			await Trellis.Utilities.Internal.forEachChunkAsync(allItems, 250, async function (chunk) {
 				for (let item of chunk) {
 					item.setPublications(true);
 					item.synced = false;
 				}
 				let ids = chunk.map(item => item.id);
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					`UPDATE items SET synced=0, clientDateModified=? WHERE itemID IN (${ids.join(", ")})`,
 					timestamp
 				);
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					`INSERT OR IGNORE INTO publicationsItems VALUES (${ids.join("), (")})`
 				);
 			}.bind(this));
-			Zotero.Notifier.queue('modify', 'item', allItems.map(item => item.id));
+			Trellis.Notifier.queue('modify', 'item', allItems.map(item => item.id));
 		}.bind(this));
 	};
 	
 	
 	this.removeFromPublications = function (items) {
-		return Zotero.DB.executeTransaction(async function () {
+		return Trellis.DB.executeTransaction(async function () {
 			let allItems = [];
 			for (let item of items) {
 				if (!item.inPublications) {
@@ -1315,16 +1315,16 @@ Zotero.Items = function () {
 				item.synced = false;
 			});
 			
-			var timestamp = Zotero.DB.transactionTimestamp;
-			await Zotero.Utilities.Internal.forEachChunkAsync(allItems, 250, async function (chunk) {
+			var timestamp = Trellis.DB.transactionTimestamp;
+			await Trellis.Utilities.Internal.forEachChunkAsync(allItems, 250, async function (chunk) {
 				let idStr = chunk.map(item => item.id).join(", ");
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					`UPDATE items SET synced=0, clientDateModified=? WHERE itemID IN (${idStr})`,
 					timestamp
 				);
-				await Zotero.DB.queryAsync(`DELETE FROM publicationsItems WHERE itemID IN (${idStr})`);
+				await Trellis.DB.queryAsync(`DELETE FROM publicationsItems WHERE itemID IN (${idStr})`);
 			}.bind(this));
-			Zotero.Notifier.queue('modify', 'item', items.map(item => item.id));
+			Trellis.Notifier.queue('modify', 'item', items.map(item => item.id));
 		}.bind(this));
 	};
 	
@@ -1333,32 +1333,32 @@ Zotero.Items = function () {
 	 * Purge unused data values
 	 */
 	this.purge = async function () {
-		if (!Zotero.Prefs.get('purge.items')) {
+		if (!Trellis.Prefs.get('purge.items')) {
 			return;
 		}
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			let sql = "DELETE FROM itemDataValues WHERE valueID NOT IN "
 				+ "(SELECT valueID FROM itemData)";
-			await Zotero.DB.queryAsync(sql, [], { ignoreDBLock: true });
+			await Trellis.DB.queryAsync(sql, [], { ignoreDBLock: true });
 		}, { disableForeignKeys: true });
 		
-		Zotero.Prefs.set('purge.items', false)
+		Trellis.Prefs.set('purge.items', false)
 	};
 	
 	
 	
 	this.getFirstCreatorFromJSON = function (json) {
-		Zotero.warn("Zotero.Items.getFirstCreatorFromJSON() is deprecated "
-			+ "-- use Zotero.Utilities.Internal.getFirstCreatorFromItemJSON()");
-		return Zotero.Utilities.Internal.getFirstCreatorFromItemJSON(json);
+		Trellis.warn("Trellis.Items.getFirstCreatorFromJSON() is deprecated "
+			+ "-- use Trellis.Utilities.Internal.getFirstCreatorFromItemJSON()");
+		return Trellis.Utilities.Internal.getFirstCreatorFromItemJSON(json);
 	};
 	
 	
 	/**
-	 * Return a firstCreator string from internal creators data (from Zotero.Item::getCreators()).
+	 * Return a firstCreator string from internal creators data (from Trellis.Item::getCreators()).
 	 *
-	 * Used in Zotero.Item::getField() for unsaved items
+	 * Used in Trellis.Item::getField() for unsaved items
 	 *
 	 * @param {Integer} itemTypeID
 	 * @param {Object} creatorData
@@ -1378,12 +1378,12 @@ Zotero.Items = function () {
 		}
 		
 		var validCreatorTypes = [
-			Zotero.CreatorTypes.getPrimaryIDForType(itemTypeID),
-			Zotero.CreatorTypes.getID('editor'),
+			Trellis.CreatorTypes.getPrimaryIDForType(itemTypeID),
+			Trellis.CreatorTypes.getID('editor'),
 			// Director used to be the primary type for Video Recording before
 			// Creator (mapped to Author) was added
-			Zotero.CreatorTypes.getID('director'),
-			Zotero.CreatorTypes.getID('contributor')
+			Trellis.CreatorTypes.getID('director'),
+			Trellis.CreatorTypes.getID('contributor')
 		];
 	
 		for (let creatorTypeID of validCreatorTypes) {
@@ -1402,10 +1402,10 @@ Zotero.Items = function () {
 					// \u2068 FIRST STRONG ISOLATE: Isolates the directionality of characters that follow
 					// \u2069 POP DIRECTIONAL ISOLATE: Pops the above isolation
 					: [`\u2068${a.lastName}\u2069`, `\u2068${b.lastName}\u2069`];
-				return Zotero.getString('general.andJoiner', args);
+				return Trellis.getString('general.andJoiner', args);
 			}
 			if (matches.length >= 3) {
-				return matches[0].lastName + " " + Zotero.getString('general.etAl');
+				return matches[0].lastName + " " + Trellis.getString('general.etAl');
 			}
 		}
 		
@@ -1416,8 +1416,8 @@ Zotero.Items = function () {
 	/**
 	 * Get the top-level items of all passed items
 	 *
-	 * @param {Zotero.Item[]} items
-	 * @return {Zotero.Item[]}
+	 * @param {Trellis.Item[]} items
+	 * @return {Trellis.Item[]}
 	 */
 	this.getTopLevel = function (items) {
 		return [...new Set(items.map(item => item.topLevelItem))];
@@ -1429,8 +1429,8 @@ Zotero.Items = function () {
 	 *
 	 * Non-top-level items that aren't descendents of selected items are kept.
 	 *
-	 * @param {Zotero.Item[]}
-	 * @return {Zotero.Item[]}
+	 * @param {Trellis.Item[]}
+	 * @return {Trellis.Item[]}
 	 */
 	this.keepTopLevel = function (items) {
 		var topLevelItems = new Set(
@@ -1445,7 +1445,7 @@ Zotero.Items = function () {
 	
 	
 	this.keepParents = function (items) {
-		Zotero.debug("Zotero.Items.keepParents() is deprecated -- use Zotero.Items.keepTopLevel() instead");
+		Trellis.debug("Trellis.Items.keepParents() is deprecated -- use Trellis.Items.keepTopLevel() instead");
 		return this.keepTopLevel(items);
 	};
 	
@@ -1455,7 +1455,7 @@ Zotero.Items = function () {
 	 * array of items (which can include both parent and child items) in order to display a menu
 	 * label (e.g., "Show File" or "Show Files")
 	 *
-	 * @param {[Zotero.Item]} items
+	 * @param {[Trellis.Item]} items
 	 * @param {Function} filter - An additional filter function to run on file attachment items to
 	 *     determine if they qualify
 	 * @return {Integer} - 0, 1, or 2, where 2 means >1
@@ -1470,7 +1470,7 @@ Zotero.Items = function () {
 				// multiple files, but getBestAttachment() is asynchronous and we need to do this
 				// synchronously, so try to use the cached best-attachment state
 				let { key } = item.getBestAttachmentStateCached();
-				let bestAttachment = key && Zotero.Items.getByLibraryAndKey(item.libraryID, key);
+				let bestAttachment = key && Trellis.Items.getByLibraryAndKey(item.libraryID, key);
 				if (bestAttachment && filter(bestAttachment)) {
 					if (foundKey) {
 						if (key == foundKey) {
@@ -1485,7 +1485,7 @@ Zotero.Items = function () {
 				// parent item if it has any file attachments. Since we're not recording the actual
 				// attachment being counted, this might result in returning MAX_ITEMS even if only
 				// the parent item and primary attachment are selected.
-				else if (item.getAttachments().map(itemID => Zotero.Items.get(itemID)).some(filter)) {
+				else if (item.getAttachments().map(itemID => Trellis.Items.get(itemID)).some(filter)) {
 					foundKey = item.key;
 					num++;
 				}
@@ -1519,8 +1519,8 @@ Zotero.Items = function () {
 			return _firstCreatorSQL;
 		}
 
-		var localizedAnd = Zotero.getString('general.andJoiner').replace(/%S/g, '%s');
-		var localizedEtAl = Zotero.getString('general.etAl');
+		var localizedAnd = Trellis.getString('general.andJoiner').replace(/%S/g, '%s');
+		var localizedEtAl = Trellis.getString('general.etAl');
 
 		// Generate a CASE block that returns the firstCreator display string
 		// for creators matching the given WHERE clause
@@ -1554,7 +1554,7 @@ Zotero.Items = function () {
 			+ "ON (IC.creatorTypeID=ITCT.creatorTypeID AND ITCT.itemTypeID=O.itemTypeID) "
 			+ "WHERE itemID=O.itemID AND primaryField=1";
 		function creatorTypeWhere(typeName) {
-			return `WHERE itemID=O.itemID AND creatorTypeID=${Zotero.CreatorTypes.getID(typeName)}`;
+			return `WHERE itemID=O.itemID AND creatorTypeID=${Trellis.CreatorTypes.getID(typeName)}`;
 		}
 
 		let sql = "COALESCE("
@@ -1613,7 +1613,7 @@ Zotero.Items = function () {
 			+ "ON (IC.creatorTypeID=ITCT.creatorTypeID AND ITCT.itemTypeID=O.itemTypeID) "
 			+ "WHERE itemID=O.itemID AND primaryField=1";
 		function creatorTypeWhere(typeName) {
-			return `WHERE itemID=O.itemID AND creatorTypeID=${Zotero.CreatorTypes.getID(typeName)}`;
+			return `WHERE itemID=O.itemID AND creatorTypeID=${Trellis.CreatorTypes.getID(typeName)}`;
 		}
 
 		let sql = "COALESCE("
@@ -1641,7 +1641,7 @@ Zotero.Items = function () {
 		// Any punctuation at the beginning of the string, repeated any number
 		// of times, and any opening punctuation that follows
 		'^\\s*([^\\P{P}@#*])\\1*[\\p{Ps}"\']*',
-	].map(re => Zotero.Utilities.XRegExp(re, 'g'));
+	].map(re => Trellis.Utilities.XRegExp(re, 'g'));
 	
 	
 	this.getSortTitle = function (title) {
@@ -1665,15 +1665,15 @@ Zotero.Items = function () {
 	 *
 	 * @param {Number} libraryID
 	 * @param {String} pathPrefix
-	 * @return {Zotero.Item[]}
+	 * @return {Trellis.Item[]}
 	 */
 	this.findMissingLinkedFiles = async function (libraryID, pathPrefix) {
 		let sql = "SELECT itemID FROM items JOIN itemAttachments USING (itemID) "
 			+ "WHERE itemID NOT IN (SELECT itemID FROM deletedItems) "
-			+ `AND linkMode=${Zotero.Attachments.LINK_MODE_LINKED_FILE} `
+			+ `AND linkMode=${Trellis.Attachments.LINK_MODE_LINKED_FILE} `
 			+ "AND path LIKE ? ESCAPE '\\' "
 			+ "AND libraryID=?";
-		let ids = await Zotero.DB.columnQueryAsync(sql, [Zotero.DB.escapeSQLExpression(pathPrefix) + '%', libraryID]);
+		let ids = await Trellis.DB.columnQueryAsync(sql, [Trellis.DB.escapeSQLExpression(pathPrefix) + '%', libraryID]);
 		let items = await this.getAsync(ids);
 		let missingItems = await Promise.all(
 			items.map(async item => ((await item.fileExists()) ? false : item))
@@ -1682,7 +1682,7 @@ Zotero.Items = function () {
 	};
 	
 	
-	Zotero.DataObjects.call(this);
+	Trellis.DataObjects.call(this);
 	
 	return this;
-}.bind(Object.create(Zotero.DataObjects.prototype))();
+}.bind(Object.create(Trellis.DataObjects.prototype))();

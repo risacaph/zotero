@@ -3,29 +3,29 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 var { ctypes } = ChromeUtils.importESModule("resource://gre/modules/ctypes.sys.mjs");
 
-Zotero.IPC = new function () {
+Trellis.IPC = new function () {
 	var _libc, _libcPath, _instancePipe, _user32, open, write, close;
 	
 	/**
@@ -40,7 +40,7 @@ Zotero.IPC = new function () {
 	this.safePipeWrite = function (pipe, string, block) {
 		if(!open) {
 			// safely write to instance pipes
-			var lib = Zotero.IPC.getLibc();
+			var lib = Trellis.IPC.getLibc();
 			if(!lib) return false;
 			
 			// int open(const char *path, int oflag);
@@ -55,7 +55,7 @@ Zotero.IPC = new function () {
 		// On Linux, O_NONBLOCK = 00004000
 		// On both, O_WRONLY = 0x0001
 		var mode = 0x0001;
-		if(!block) mode = mode | (Zotero.isLinux ? 0o0004000 : 0x0004);
+		if(!block) mode = mode | (Trellis.isLinux ? 0o0004000 : 0x0004);
 		
 		var fd = open(pipe.path, mode);
 		if(fd === -1) return false;			
@@ -71,7 +71,7 @@ Zotero.IPC = new function () {
 		if(_libcPath) return _libcPath;
 		
 		// get possible names for libc
-		if(Zotero.isMac) {
+		if(Trellis.isMac) {
 			var possibleLibcs = ["/usr/lib/libc.dylib"];
 		} else {
 			var possibleLibcs = [
@@ -92,8 +92,8 @@ Zotero.IPC = new function () {
 	
 		// throw appropriate error on failure
 		if(!lib) {
-			Components.utils.reportError("Zotero: libc could not be loaded. Word processor integration "+
-				"and other functionality will not be available. Please post on the Zotero Forums so we "+
+			Components.utils.reportError("Trellis: libc could not be loaded. Word processor integration "+
+				"and other functionality will not be available. Please post on the Trellis Forums so we "+
 				"can add support for your operating system.");
 			return;
 		}
@@ -115,7 +115,7 @@ Zotero.IPC = new function () {
 /**
  * Methods for reading from and writing to a pipe
  */
-Zotero.IPC.Pipe = new function () {
+Trellis.IPC.Pipe = new function () {
 	var _mkfifo, _pipeClass;
 	
 	/**
@@ -125,10 +125,10 @@ Zotero.IPC.Pipe = new function () {
 	 * @param {Function} callback A function to be passed any data received on the pipe
 	 */
 	this.initPipeListener = function (file, callback) {
-		Zotero.debug("IPC: Initializing pipe at "+file.path);
+		Trellis.debug("IPC: Initializing pipe at "+file.path);
 		
 		// make new pipe
-		new Zotero.IPC.Pipe.DeferredOpen(file, callback);
+		new Trellis.IPC.Pipe.DeferredOpen(file, callback);
 	}
 	
 	/**
@@ -138,7 +138,7 @@ Zotero.IPC.Pipe = new function () {
 	this.mkfifo = function (file) {
 		// int mkfifo(const char *path, mode_t mode);
 		if(!_mkfifo) {
-			var libc = Zotero.IPC.getLibc();
+			var libc = Trellis.IPC.getLibc();
 			if(!libc) return false;
 			_mkfifo = libc.declare("mkfifo", ctypes.default_abi, ctypes.int, ctypes.char.ptr, ctypes.unsigned_int);
 		}
@@ -149,19 +149,19 @@ Zotero.IPC.Pipe = new function () {
 	}
 	
 	/**
-	 * Adds a shutdown listener for a pipe that writes "Zotero shutdown\n" to the pipe and then
+	 * Adds a shutdown listener for a pipe that writes "Trellis shutdown\n" to the pipe and then
 	 * deletes it
 	 */
 	this.remove = function (pipe, file) {
 		// Make sure pipe actually exists
 		if(!file.exists()) {
-			Zotero.debug("IPC: Not closing pipe "+file.path+": already deleted");
+			Trellis.debug("IPC: Not closing pipe "+file.path+": already deleted");
 			return;
 		}
 		
 		// Keep trying to write to pipe until we succeed, in case pipe is not yet open
-		Zotero.debug("IPC: Closing pipe "+file.path);
-		Zotero.IPC.safePipeWrite(file, "Zotero shutdown\n");
+		Trellis.debug("IPC: Closing pipe "+file.path);
+		Trellis.IPC.safePipeWrite(file, "Trellis shutdown\n");
 		
 		// Delete pipe
 		file.remove(false);
@@ -173,19 +173,19 @@ Zotero.IPC.Pipe = new function () {
  * 
  * Used to read from pipe on Gecko 5+
  */
-Zotero.IPC.Pipe.DeferredOpen = function (file, callback) {
+Trellis.IPC.Pipe.DeferredOpen = function (file, callback) {
 	this._file = file;
 	this._callback = callback;
 	
-	if(!Zotero.IPC.Pipe.mkfifo(file)) return;
+	if(!Trellis.IPC.Pipe.mkfifo(file)) return;
 	
 	this._initPump();
 	
 	// add shutdown listener
-	Zotero.addShutdownListener(Zotero.IPC.Pipe.remove.bind(null, this, file));
+	Trellis.addShutdownListener(Trellis.IPC.Pipe.remove.bind(null, this, file));
 }
 
-Zotero.IPC.Pipe.DeferredOpen.prototype = {
+Trellis.IPC.Pipe.DeferredOpen.prototype = {
 	"onStartRequest":function () {},
 	"onStopRequest":function () {},
 	onDataAvailable: function (request, inputStream, offset, count) {
@@ -198,7 +198,7 @@ Zotero.IPC.Pipe.DeferredOpen.prototype = {
 		converterInputStream.readString(count, out);
 		inputStream.close();
 		
-		if(out.value === "Zotero shutdown\n") return
+		if(out.value === "Trellis shutdown\n") return
 		
 		this._initPump();
 		this._callback(out.value);

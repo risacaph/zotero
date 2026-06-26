@@ -140,20 +140,20 @@ main-window-command =
     .label = நூலகம்
 main-window-key =
     .key = த
-zotero-toolbar-tabs-menu =
+trellis-toolbar-tabs-menu =
     .tooltiptext = அனைத்து தாவல்களையும் பட்டியலிடு
 filter-collections = சேகரிப்புகளை வடிகட்டு
-zotero-collections-search =
+trellis-collections-search =
     .placeholder = { filter-collections }
-zotero-collections-search-btn =
+trellis-collections-search-btn =
     .tooltiptext = { filter-collections }
-zotero-tabs-menu-filter =
+trellis-tabs-menu-filter =
     .placeholder = தாவல்களில் தேடு
-zotero-tabs-menu-close-button =
+trellis-tabs-menu-close-button =
     .title = தாவலை மூடு
-zotero-toolbar-tabs-scroll-forwards =
+trellis-toolbar-tabs-scroll-forwards =
     .title = முன்னோக்கி உருட்டு
-zotero-toolbar-tabs-scroll-backwards =
+trellis-toolbar-tabs-scroll-backwards =
     .title = பின்னோக்கி உருட்டு
 toolbar-add-attachment =
     .tooltiptext = { add-attachment }
@@ -271,7 +271,7 @@ file-interface-items-were-relinked =
         [one] One item was relinked
        *[other] { $numRelinked } items were relinked
     }
-import-mendeley-encrypted = The selected Mendeley database cannot be read, likely because it is encrypted. See <a data-l10n-name="mendeley-import-kb">How do I import a Mendeley library into Zotero?</a> for more information.
+import-mendeley-encrypted = The selected Mendeley database cannot be read, likely because it is encrypted. See <a data-l10n-name="mendeley-import-kb">How do I import a Mendeley library into Trellis?</a> for more information.
 file-interface-import-error-translator = An error occurred importing the selected file with “{ $translator }”. Please ensure that the file is valid and try again.
 import-online-intro = In the next step you will be asked to log in to { $targetAppOnline } and grant { -app-name } access. This is necessary to import your { $targetApp } library into { -app-name }.
 import-online-intro2 = { -app-name } will never see or store your { $targetApp } password.
@@ -605,7 +605,7 @@ attachment-preview-placeholder = No attachment to preview
 attachment-rename-from-parent =
     .tooltiptext = Rename File to Match Parent Item
 account-log-in = Log In
-account-not-logged-in-text = Log in to your Zotero account to sync your data.
+account-not-logged-in-text = Log in to your Trellis account to sync your data.
 account-error-login-session-expired = Your login session has expired. Please try again.
 toggle-preview =
     .label =
@@ -757,7 +757,7 @@ post-upgrade-done =
     .label = { general-done }
 text-action-paste-and-search =
     .label = Paste and Search
-mac-word-plugin-install-message = Zotero needs access to Word data to install the Word plugin.
+mac-word-plugin-install-message = Trellis needs access to Word data to install the Word plugin.
 mac-word-plugin-install-action-button =
     .label = Install Word plugin
 mac-word-plugin-install-remind-later-button =

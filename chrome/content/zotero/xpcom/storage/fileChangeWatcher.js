@@ -3,22 +3,22 @@
 
 	Copyright © 2026 Corporation for Digital Scholarship
 	                 Vienna, Virginia, USA
-	                 https://www.zotero.org
+	                 https://www.trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -51,7 +51,7 @@
  *
  * On unsupported platforms or on error, falls back to the existing scan logic.
  */
-Zotero.Sync.Storage.FileChangeWatcher = {
+Trellis.Sync.Storage.FileChangeWatcher = {
 	available: false,
 	_backend: null,
 
@@ -80,9 +80,9 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 		try {
 			// Ensure the storage directory exists -- on a new installation it may not have
 			// been created yet, and the backends need it to set up their watches
-			let storageDir = Zotero.getStorageDirectory();
+			let storageDir = Trellis.getStorageDirectory();
 			storageDir.normalize();
-			let sep = Zotero.isWin ? "\\" : "/";
+			let sep = Trellis.isWin ? "\\" : "/";
 			let path = storageDir.path;
 			if (!path.endsWith(sep)) {
 				path += sep;
@@ -90,27 +90,27 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 			this._storageRoot = path;
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug("FileChangeWatcher: Could not resolve storage root");
+			Trellis.logError(e);
+			Trellis.debug("FileChangeWatcher: Could not resolve storage root");
 			return;
 		}
 
 		let initFn;
 		let backendName;
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			initFn = '_initFSEvents';
 			backendName = 'fsevents';
 		}
-		else if (Zotero.isWin) {
+		else if (Trellis.isWin) {
 			initFn = '_initRDCW';
 			backendName = 'rdcw';
 		}
-		else if (Zotero.isLinux) {
+		else if (Trellis.isLinux) {
 			initFn = '_initInotify';
 			backendName = 'inotify';
 		}
 		else {
-			Zotero.debug("FileChangeWatcher: No backend available for this platform");
+			Trellis.debug("FileChangeWatcher: No backend available for this platform");
 			return;
 		}
 
@@ -118,11 +118,11 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 			this[initFn]();
 			this._backend = backendName;
 			this.available = true;
-			Zotero.debug(`FileChangeWatcher: ${backendName} backend initialized`);
+			Trellis.debug(`FileChangeWatcher: ${backendName} backend initialized`);
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug("FileChangeWatcher: " + backendName + " init failed -- "
+			Trellis.logError(e);
+			Trellis.debug("FileChangeWatcher: " + backendName + " init failed -- "
 				+ "falling back to legacy scanning");
 			return;
 		}
@@ -149,7 +149,7 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 			keys = this.getChangedItemKeys();
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			keys = null;
 		}
 		if (!keys) {
@@ -165,11 +165,11 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 			// Map keys to items across all libraries -- a key can match items in multiple
 			// libraries, and checkForUpdatedFiles() filters out unchanged files by mtime/hash
 			let itemIDsByLibrary = {};
-			await Zotero.Utilities.Internal.forEachChunkAsync(
+			await Trellis.Utilities.Internal.forEachChunkAsync(
 				[...keys],
 				500,
 				async (chunk) => {
-					let rows = await Zotero.DB.queryAsync(
+					let rows = await Trellis.DB.queryAsync(
 						"SELECT libraryID, itemID FROM items WHERE key IN ("
 							+ chunk.map(() => '?').join(',') + ")",
 						chunk
@@ -183,14 +183,14 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 				}
 			);
 			for (let libraryID in itemIDsByLibrary) {
-				await Zotero.Sync.Storage.Local.checkForUpdatedFiles(
+				await Trellis.Sync.Storage.Local.checkForUpdatedFiles(
 					parseInt(libraryID), itemIDsByLibrary[libraryID]
 				);
 			}
 		}
 		catch (e) {
 			// Don't lose changes if the check failed
-			Zotero.logError(e);
+			Trellis.logError(e);
 			this._requireFullScans();
 		}
 	},
@@ -233,7 +233,7 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 		if (!reason) {
 			return false;
 		}
-		Zotero.debug("FileChangeWatcher: Full scan needed for library " + libraryID
+		Trellis.debug("FileChangeWatcher: Full scan needed for library " + libraryID
 			+ " -- " + reason);
 		return true;
 	},
@@ -276,8 +276,8 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 			// A backend exception means the watcher can no longer be trusted (e.g., the
 			// inotify watch limit was reached), so disable it and let the legacy scan logic
 			// take over for the rest of the session
-			Zotero.logError(e);
-			Zotero.debug("FileChangeWatcher: getChangedItemKeys() failed -- disabling for "
+			Trellis.logError(e);
+			Trellis.debug("FileChangeWatcher: getChangedItemKeys() failed -- disabling for "
 				+ "this session and falling back to legacy scanning");
 			this.close();
 		}
@@ -311,7 +311,7 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 	 * new one, which shouldn't inherit the old library's scan record
 	 */
 	_pruneScannedLibraries() {
-		let libraryIDs = new Set(Zotero.Libraries.getAll().map(library => library.libraryID));
+		let libraryIDs = new Set(Trellis.Libraries.getAll().map(library => library.libraryID));
 		let pruned = false;
 		for (let libraryID of this._scannedLibraries) {
 			if (!libraryIDs.has(libraryID)) {
@@ -343,18 +343,18 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 			return;
 		}
 		try {
-			let scanned = Zotero.Prefs.get(this._SCANNED_LIBRARIES_PREF);
+			let scanned = Trellis.Prefs.get(this._SCANNED_LIBRARIES_PREF);
 			if (scanned) {
 				this._scannedLibraries = new Set(JSON.parse(scanned));
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	},
 
 	_saveScannedLibraries() {
-		Zotero.Prefs.set(
+		Trellis.Prefs.set(
 			this._SCANNED_LIBRARIES_PREF, JSON.stringify([...this._scannedLibraries])
 		);
 	},
@@ -367,11 +367,11 @@ Zotero.Sync.Storage.FileChangeWatcher = {
 	 */
 	_returnKeys(keys) {
 		if (keys.size > 0) {
-			Zotero.debug("FileChangeWatcher: " + keys.size + " changed key(s): "
+			Trellis.debug("FileChangeWatcher: " + keys.size + " changed key(s): "
 				+ [...keys].join(", "));
 		}
 		else {
-			Zotero.debug("FileChangeWatcher: No changes detected");
+			Trellis.debug("FileChangeWatcher: No changes detected");
 		}
 		return keys;
 	},

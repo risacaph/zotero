@@ -1,6 +1,6 @@
 
 // The split button was originally created by flachware for pdf-reader:
-// https://github.com/zotero/pdf-reader/blob/master/src/stylesheets/abstracts/mixins/_split-button.scss
+// https://github.com/trellis/pdf-reader/blob/master/src/stylesheets/abstracts/mixins/_split-button.scss
 
 $accent-color:          #0a6cf5; // 215° 96 96
 $accent-color-darken-6: darken($accent-color, 6%);
@@ -79,11 +79,11 @@ $toolbar-btn-icon-active-offset:    0;
 }
 
 @function icon-url($path) {
-  @return asset-url("chrome://zotero/skin", $path);
+  @return asset-url("chrome://trellis/skin", $path);
 }
 
 @function image-url($path) {
-  @return asset-url("chrome://zotero/skin", $path);
+  @return asset-url("chrome://trellis/skin", $path);
 }
 
 

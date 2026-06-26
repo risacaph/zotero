@@ -3,27 +3,27 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Styles = new function () {
+Trellis.Styles = new function () {
 	var _initialized = false;
 	var _initializationDeferred = false;
 	var _styles, _visibleStyles;
@@ -35,7 +35,7 @@ Zotero.Styles = new function () {
 		"csl":"http://purl.org/net/xbiblio/csl"
 	};
 
-	this.CSL_VALIDATOR_URL = "resource://zotero/csl-validator-wasm/worker.mjs";
+	this.CSL_VALIDATOR_URL = "resource://trellis/csl-validator-wasm/worker.mjs";
 
 	this._memoryPressureObserver = {
 		observe: (subject, topic) => {
@@ -55,14 +55,14 @@ Zotero.Styles = new function () {
 	 * Initializes styles cache, loading metadata for styles into memory
 	 */
 	this.init = async function (options = {}) {
-		if (Zotero.Prefs.get('cite.useCiteprocRs')) {
-			await Zotero.CiteprocRs.init();
+		if (Trellis.Prefs.get('cite.useCiteprocRs')) {
+			await Trellis.CiteprocRs.init();
 		}
 		
 		// Wait until bundled files have been updated, except when this is called by the schema update
 		// code itself
 		if (!options.fromSchemaUpdate) {
-			await Zotero.Schema.schemaUpdatePromise;
+			await Trellis.Schema.schemaUpdatePromise;
 		}
 		
 		// If an initialization has already started, a regular init() call should return the promise
@@ -78,24 +78,24 @@ Zotero.Styles = new function () {
 			}
 		}
 		
-		_initializationDeferred = Zotero.Promise.defer();
+		_initializationDeferred = Trellis.Promise.defer();
 		
-		Zotero.debug("Initializing styles");
+		Trellis.debug("Initializing styles");
 		var start = new Date;
 		
 		// Upgrade style locale prefs for 4.0.27
-		var bibliographyLocale = Zotero.Prefs.get("export.bibliographyLocale");
+		var bibliographyLocale = Trellis.Prefs.get("export.bibliographyLocale");
 		if (bibliographyLocale) {
-			Zotero.Prefs.set("export.lastLocale", bibliographyLocale);
-			Zotero.Prefs.set("export.quickCopy.locale", bibliographyLocale);
-			Zotero.Prefs.clear("export.bibliographyLocale");
+			Trellis.Prefs.set("export.lastLocale", bibliographyLocale);
+			Trellis.Prefs.set("export.quickCopy.locale", bibliographyLocale);
+			Trellis.Prefs.clear("export.bibliographyLocale");
 		}
 		
 		_styles = {};
 		_visibleStyles = [];
 		
 		// main dir
-		var dir = Zotero.getStylesDirectory().path;
+		var dir = Trellis.getStylesDirectory().path;
 		var num = await _readStylesFromDirectory(dir, false);
 		
 		// hidden dir
@@ -106,22 +106,22 @@ Zotero.Styles = new function () {
 
 		// Load renamed styles
 		_renamedStyles = JSON.parse(
-			await Zotero.File.getResourceAsync("resource://zotero/schema/renamed-styles.json")
+			await Trellis.File.getResourceAsync("resource://trellis/schema/renamed-styles.json")
 		);
 
 		// Delete installed styles that have been renamed if the new style is also installed
-		var prefix = "http://www.zotero.org/styles/";
+		var prefix = "http://www.trellis.org/styles/";
 		for (let oldName in _renamedStyles) {
 			let oldID = prefix + oldName;
 			let newID = prefix + _renamedStyles[oldName];
 			if (_styles[oldID] && _styles[newID]) {
-				Zotero.debug("Deleting renamed style '" + oldID + "'");
+				Trellis.debug("Deleting renamed style '" + oldID + "'");
 				try {
 					await OS.File.remove(_styles[oldID].path);
 					delete _styles[oldID];
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}
@@ -134,14 +134,14 @@ Zotero.Styles = new function () {
 		// .. and freeze, so they can be returned directly
 		_visibleStyles = Object.freeze(_visibleStyles);
 		
-		Zotero.debug("Cached " + num + " styles in " + (new Date - start) + " ms");
+		Trellis.debug("Cached " + num + " styles in " + (new Date - start) + " ms");
 		
 		// load available CSL locales
 		var localeFile = {};
 		var locales = {};
 		var primaryDialects = {};
 		localeFile = JSON.parse(
-			await Zotero.File.getResourceAsync("chrome://zotero/content/locale/csl/locales.json")
+			await Trellis.File.getResourceAsync("chrome://trellis/content/locale/csl/locales.json")
 		);
 		
 		primaryDialects = localeFile["primary-dialects"];
@@ -159,7 +159,7 @@ Zotero.Styles = new function () {
 		
 		// Styles are fully loaded, but we still need to trigger citeproc reloads in Integration
 		// so that style updates are reflected in open documents
-		Zotero.Integration.resetSessionStyles();
+		Trellis.Integration.resetSessionStyles();
 	};
 	
 	this.reinit = function (options = {}) {
@@ -167,7 +167,7 @@ Zotero.Styles = new function () {
 	};
 	
 	// This is used by bibliography.js to work around a weird interaction between Bluebird and modal
-	// dialogs in tests. Calling `yield Zotero.Styles.init()` from `Zotero_File_Interface_Bibliography.init()`
+	// dialogs in tests. Calling `yield Trellis.Styles.init()` from `Trellis_File_Interface_Bibliography.init()`
 	// in the modal Create Bibliography dialog results in a hang, so instead use a synchronous check for
 	// initialization. The hang doesn't seem to happen (at least in the same way) outside of tests.
 	this.initialized = function () {
@@ -196,12 +196,12 @@ Zotero.Styles = new function () {
 							|| entry.isDir) continue;
 					
 					try {
-						let code = await Zotero.File.getContentsAsync(path);
-						var style = new Zotero.Style(code, path);
+						let code = await Trellis.File.getContentsAsync(path);
+						var style = new Trellis.Style(code, path);
 					}
 					catch (e) {
 						Components.utils.reportError(e);
-						Zotero.debug(e, 1);
+						Trellis.debug(e, 1);
 						continue;
 					}
 					if(style.styleID) {
@@ -233,15 +233,15 @@ Zotero.Styles = new function () {
 	 */
 	this.get = function (id, skipMappings) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
+			throw new Trellis.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
 		}
 		
 		if(!skipMappings) {
-			var prefix = "http://www.zotero.org/styles/";
+			var prefix = "http://www.trellis.org/styles/";
 			var shortName = id.replace(prefix, "");
 			if(_renamedStyles.hasOwnProperty(shortName) && _styles[prefix + _renamedStyles[shortName]]) {
 				let newID = prefix + _renamedStyles[shortName];
-				Zotero.debug("Mapping " + id + " to " + newID);
+				Trellis.debug("Mapping " + id + " to " + newID);
 				return _styles[newID];
 			}
 		}
@@ -251,11 +251,11 @@ Zotero.Styles = new function () {
 	
 	/**
 	 * Gets all visible styles
-	 * @return {Zotero.Style[]} - An immutable array of Zotero.Style objects
+	 * @return {Trellis.Style[]} - An immutable array of Trellis.Style objects
 	 */
 	this.getVisible = function () {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
+			throw new Trellis.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
 		}
 		return _visibleStyles; // Immutable
 	}
@@ -263,11 +263,11 @@ Zotero.Styles = new function () {
 	/**
 	 * Gets all styles
 	 *
-	 * @return {Object} - An object with style IDs for keys and Zotero.Style objects for values
+	 * @return {Object} - An object with style IDs for keys and Trellis.Style objects for values
 	 */
 	this.getAll = function () {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
+			throw new Trellis.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
 		}
 		return _styles;
 	}
@@ -316,34 +316,34 @@ Zotero.Styles = new function () {
 			style = {string: style};
 		}
 		if (warnDeprecated) {
-			Zotero.debug("Zotero.Styles.install() now takes a style object as first argument -- update your code", 2);
+			Trellis.debug("Trellis.Styles.install() now takes a style object as first argument -- update your code", 2);
 		}
 		
 		try {
 			if (style.file) {
-				style.string = await Zotero.File.getContentsAsync(style.file);
+				style.string = await Trellis.File.getContentsAsync(style.file);
 			}
 			else if (style.url) {
-				style.string = await Zotero.File.getContentsFromURLAsync(style.url);
+				style.string = await Trellis.File.getContentsFromURLAsync(style.url);
 			}
 			var { styleTitle, styleID } = await _install(style.string, origin, false, silent);
 		}
 		catch (error) {
 			// Unless user cancelled, show an alert with the error
-			if(typeof error === "object" && error instanceof Zotero.Exception.UserCancelled) return {};
-			if(typeof error === "object" && error instanceof Zotero.Exception.Alert) {
-				Zotero.logError(error);
+			if(typeof error === "object" && error instanceof Trellis.Exception.UserCancelled) return {};
+			if(typeof error === "object" && error instanceof Trellis.Exception.Alert) {
+				Trellis.logError(error);
 				if (silent) {
 					throw error;
 				} else {
 					error.present();
 				}
 			} else {
-				Zotero.logError(error);
+				Trellis.logError(error);
 				if (silent) {
 					throw error
 				} else {
-					(new Zotero.Exception.Alert("styles.install.unexpectedError",
+					(new Trellis.Exception.Alert("styles.install.unexpectedError",
 						origin, "styles.install.title", error)).present();
 				}
 			}
@@ -361,7 +361,7 @@ Zotero.Styles = new function () {
 	 * @return {Promise}
 	 */
 	var _install = async function (style, origin, hidden, silent=false) {
-		if (!_initialized) await Zotero.Styles.init();
+		if (!_initialized) await Trellis.Styles.init();
 		
 		var existingFile, destFile, source;
 		
@@ -369,38 +369,38 @@ Zotero.Styles = new function () {
 		var parser = new DOMParser(),
 			doc = parser.parseFromString(style, "application/xml");
 		
-		var styleID = Zotero.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:id[1]',
-				Zotero.Styles.ns),
+		var styleID = Trellis.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:id[1]',
+				Trellis.Styles.ns),
 			// Get file name from URL
 			m = /[^\/]+$/.exec(styleID),
-			fileName = Zotero.File.getValidFileName(m ? m[0] : styleID),
-			title = Zotero.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:title[1]',
-				Zotero.Styles.ns);
+			fileName = Trellis.File.getValidFileName(m ? m[0] : styleID),
+			title = Trellis.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:title[1]',
+				Trellis.Styles.ns);
 		
 		if(!styleID || !title) {
 			// If it's not valid XML, we'll return a promise that immediately resolves
 			// to an error
-			throw new Zotero.Exception.Alert("styles.installError", origin,
+			throw new Trellis.Exception.Alert("styles.installError", origin,
 				"styles.install.title", "Style is not valid XML, or the styleID or title is missing");
 		}
 			
 		// look for a parent
-		source = Zotero.Utilities.xpathText(doc,
+		source = Trellis.Utilities.xpathText(doc,
 			'/csl:style/csl:info[1]/csl:link[@rel="source" or @rel="independent-parent"][1]/@href',
-			Zotero.Styles.ns);
+			Trellis.Styles.ns);
 		if(source == styleID) {
-			throw new Zotero.Exception.Alert("styles.installError", origin,
+			throw new Trellis.Exception.Alert("styles.installError", origin,
 				"styles.install.title", "Style references itself as source");
 		}
 		
 		// ensure csl extension
 		if(fileName.substr(-4).toLowerCase() != ".csl") fileName += ".csl";
 		
-		destFile = Zotero.getStylesDirectory();
+		destFile = Trellis.getStylesDirectory();
 		var destFileHidden = destFile.clone();
 		destFile.append(fileName);
 		destFileHidden.append("hidden");
-		if(hidden) Zotero.File.createDirectoryIfMissing(destFileHidden);
+		if(hidden) Trellis.File.createDirectoryIfMissing(destFileHidden);
 		destFileHidden.append(fileName);
 		
 		// look for an existing style with the same styleID or filename
@@ -428,7 +428,7 @@ Zotero.Styles = new function () {
 		
 		// also look for an existing style with the same title
 		if(!existingFile) {
-			let styles = Zotero.Styles.getAll();
+			let styles = Trellis.Styles.getAll();
 			for (let i in styles) {
 				let existingStyle = styles[i];
 				if(title === existingStyle.title) {
@@ -444,26 +444,26 @@ Zotero.Styles = new function () {
 			destFile = destFileHidden;
 		} else if (!silent) {
 			if(existingTitle) {
-				var text = Zotero.getString('styles.updateStyle', [existingTitle, title, origin]);
+				var text = Trellis.getString('styles.updateStyle', [existingTitle, title, origin]);
 			} else {
-				var text = Zotero.getString('styles.installStyle', [title, origin]);
+				var text = Trellis.getString('styles.installStyle', [title, origin]);
 			}
 			
-			var index = Services.prompt.confirmEx(null, Zotero.getString('styles.install.title'),
+			var index = Services.prompt.confirmEx(null, Trellis.getString('styles.install.title'),
 				text,
 				((Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_IS_STRING)
 				+ (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_CANCEL)),
-				Zotero.getString('general.install'), null, null, null, {}
+				Trellis.getString('general.install'), null, null, null, {}
 			);
 			
 			if(index !== 0) {
-				throw new Zotero.Exception.UserCancelled("style installation");
+				throw new Trellis.Exception.UserCancelled("style installation");
 			}
 		}
 		
-		await Zotero.Styles.validate(style)
+		await Trellis.Styles.validate(style)
 		.catch(function (validationErrors) {
-			Zotero.logError("Style from " + origin + " failed to validate:\n\n" + validationErrors);
+			Trellis.logError("Style from " + origin + " failed to validate:\n\n" + validationErrors);
 			
 			// If this is the parent of a dependent style, or if we're in
 			// silent mode, suppress the prompt
@@ -471,15 +471,15 @@ Zotero.Styles = new function () {
 			
 			// Otherwise, ask the user whether to continue installing
 			var shouldInstall = Services.prompt.confirmEx(null,
-				Zotero.getString('styles.install.title'),
-				Zotero.getString('styles.validationWarning', [origin, Zotero.appName]),
+				Trellis.getString('styles.install.title'),
+				Trellis.getString('styles.validationWarning', [origin, Trellis.appName]),
 				(Services.prompt.BUTTON_POS_0) * (Services.prompt.BUTTON_TITLE_OK)
 				+ (Services.prompt.BUTTON_POS_1) * (Services.prompt.BUTTON_TITLE_CANCEL)
 				+ Services.prompt.BUTTON_POS_1_DEFAULT + Services.prompt.BUTTON_DELAY_ENABLE,
 				null, null, null, null, {}
 			);
 			if(shouldInstall !== 0) {
-				throw new Zotero.Exception.UserCancelled("style installation");
+				throw new Trellis.Exception.UserCancelled("style installation");
 			}
 		});
 		
@@ -488,12 +488,12 @@ Zotero.Styles = new function () {
 			// Need to fetch source
 			if(source.substr(0, 7) === "http://" || source.substr(0, 8) === "https://") {
 				try {
-					let xmlhttp = await Zotero.HTTP.request("GET", source);
+					let xmlhttp = await Trellis.HTTP.request("GET", source);
 					await _install(xmlhttp.responseText, origin, true);
 				}
 				catch (e) {
-					if (typeof e === "object" && e instanceof Zotero.Exception.Alert) {
-						throw new Zotero.Exception.Alert(
+					if (typeof e === "object" && e instanceof Trellis.Exception.Alert) {
+						throw new Trellis.Exception.Alert(
 							"styles.installSourceError",
 							[origin, source],
 							"styles.install.title",
@@ -503,7 +503,7 @@ Zotero.Styles = new function () {
 					throw e;
 				}
 			} else {
-				throw new Zotero.Exception.Alert("styles.installSourceError", [origin, source],
+				throw new Trellis.Exception.Alert("styles.installSourceError", [origin, source],
 					"styles.install.title", "Source CSL URI is invalid");
 			}
 		}
@@ -514,16 +514,16 @@ Zotero.Styles = new function () {
 		// Remove any existing file with a different name
 		if(existingFile) existingFile.remove(false);
 		
-		await Zotero.File.putContentsAsync(destFile, style);
+		await Trellis.File.putContentsAsync(destFile, style);
 		
-		await Zotero.Styles.reinit();
+		await Trellis.Styles.reinit();
 		
 		// Refresh preferences windows
-		var enumerator = Services.wm.getEnumerator("zotero:pref");
+		var enumerator = Services.wm.getEnumerator("trellis:pref");
 		while(enumerator.hasMoreElements()) {
 			var win = enumerator.getNext();
-			if(win.Zotero_Preferences.Cite) {
-				await win.Zotero_Preferences.Cite.refreshStylesList(styleID);
+			if(win.Trellis_Preferences.Cite) {
+				await win.Trellis_Preferences.Cite.refreshStylesList(styleID);
 			}
 		}
 		return {
@@ -539,17 +539,17 @@ Zotero.Styles = new function () {
 	 */
 	this.populateLocaleList = function (menulist) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
+			throw new Trellis.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
 		}
 		
 		// Reset menulist
 		menulist.selectedItem = null;
 		menulist.removeAllItems();
 		
-		let fallbackLocale = Zotero.Styles.primaryDialects[Zotero.locale]
-			|| Zotero.locale;
+		let fallbackLocale = Trellis.Styles.primaryDialects[Trellis.locale]
+			|| Trellis.locale;
 		
-		let menuLocales = Zotero.Utilities.deepCopy(Zotero.Styles.locales);
+		let menuLocales = Trellis.Utilities.deepCopy(Trellis.Styles.locales);
 		let menuLocalesKeys = Object.keys(menuLocales).sort();
 		
 		// Make sure that client locale is always available as a choice
@@ -577,21 +577,21 @@ Zotero.Styles = new function () {
 	 *   yet set.
 	 * 
 	 * @param {xul:menulist} menulist Menulist object that will be manipulated
-	 * @param {Zotero.Style} style Currently selected style
+	 * @param {Trellis.Style} style Currently selected style
 	 * @param {String} prefLocale Preferred locale if not overridden by the style
 	 * 
 	 * @return {String} The locale that was selected
 	 */
 	this.updateLocaleList = function (menulist, style, prefLocale) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
+			throw new Trellis.Exception.UnloadedDataException("Styles not yet loaded", 'styles');
 		}
 		
 		// Remove any nodes that were manually added to menulist
 		let availableLocales = [];
 		for (let i=0; i<menulist.itemCount; i++) {
 			let item = menulist.getItemAtIndex(i);
-			if (item.getAttributeNS('zotero:', 'customLocale')) {
+			if (item.getAttributeNS('trellis:', 'customLocale')) {
 				item.remove();
 				i--;
 				continue;
@@ -608,7 +608,7 @@ Zotero.Styles = new function () {
 			// set node to blank node
 			// If we just set value to "", the internal label is collapsed and the dropdown list becomes shorter
 			let blankListNode = menulist.appendItem('', '');
-			blankListNode.setAttributeNS('zotero:', 'customLocale', true);
+			blankListNode.setAttributeNS('trellis:', 'customLocale', true);
 			
 			menulist.selectedItem = blankListNode;
 			return menulist.value;
@@ -617,15 +617,15 @@ Zotero.Styles = new function () {
 		menulist.disabled = !!style.effectiveLocale;
 		if (menulist.labelElement) menulist.labelElement.disabled = false;
 		
-		let selectLocale = style.effectiveLocale || prefLocale || Zotero.locale;
-		selectLocale = Zotero.Styles.primaryDialects[selectLocale] || selectLocale;
+		let selectLocale = style.effectiveLocale || prefLocale || Trellis.locale;
+		selectLocale = Trellis.Styles.primaryDialects[selectLocale] || selectLocale;
 		
 		// Make sure the locale we want to select is in the menulist
 		if (availableLocales.indexOf(selectLocale) == -1) {
 			var menuitem = menulist.ownerDocument.createXULElement('menuitem');
 			menuitem.setAttribute('label', selectLocale);
 			menuitem.setAttribute('value', selectLocale);
-			menuitem.setAttributeNS('zotero:', 'customLocale', true);
+			menuitem.setAttributeNS('trellis:', 'customLocale', true);
 			menulist.menupopup.append(menuitem);
 		}
 		
@@ -645,11 +645,11 @@ Zotero.Styles = new function () {
  * @property {String} class "in-text" or "note"
  * @property {String} source The CSL that contains the formatting information for this one, or null
  *	if this CSL contains formatting information
- * @property {Zotero.CSL} csl The Zotero.CSL object used to format using this style
+ * @property {Trellis.CSL} csl The Trellis.CSL object used to format using this style
  * @property {Boolean} hidden True if this style is hidden in style selection dialogs, false if it
  *	is not
  */
-Zotero.Style = function (style, path) {
+Trellis.Style = function (style, path) {
 	if (typeof style != "string") {
 		throw new Error("Style code must be a string");
 	}
@@ -670,22 +670,22 @@ Zotero.Style = function (style, path) {
 		this.string = style;
 	}
 	
-	this.styleID = Zotero.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:id[1]',
-		Zotero.Styles.ns);
-	this.url = Zotero.Utilities.xpathText(doc,
+	this.styleID = Trellis.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:id[1]',
+		Trellis.Styles.ns);
+	this.url = Trellis.Utilities.xpathText(doc,
 		'/csl:style/csl:info[1]/csl:link[@rel="self"][1]/@href',
-		Zotero.Styles.ns);
-	this.title = Zotero.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:title[1]',
-		Zotero.Styles.ns);
-	this.updated = Zotero.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:updated[1]',
-		Zotero.Styles.ns).replace(/(.+)T([^\+]+)\+?.*/, "$1 $2");
-	this.locale = Zotero.Utilities.xpathText(doc, '/csl:style/@default-locale',
-		Zotero.Styles.ns) || null;
+		Trellis.Styles.ns);
+	this.title = Trellis.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:title[1]',
+		Trellis.Styles.ns);
+	this.updated = Trellis.Utilities.xpathText(doc, '/csl:style/csl:info[1]/csl:updated[1]',
+		Trellis.Styles.ns).replace(/(.+)T([^\+]+)\+?.*/, "$1 $2");
+	this.locale = Trellis.Utilities.xpathText(doc, '/csl:style/@default-locale',
+		Trellis.Styles.ns) || null;
 	
 	this._class = doc.documentElement.getAttribute("class");
-	this._usesAbbreviation = !!Zotero.Utilities.xpath(doc,
+	this._usesAbbreviation = !!Trellis.Utilities.xpath(doc,
 		'//csl:text[(@variable="container-title" and @form="short") or (@variable="container-title-short")][1]',
-		Zotero.Styles.ns).length;
+		Trellis.Styles.ns).length;
 	this._hasBibliography = !!doc.getElementsByTagName("bibliography").length;
 	this._version = doc.documentElement.getAttribute("version");
 	if(!this._version) {
@@ -693,20 +693,20 @@ Zotero.Style = function (style, path) {
 		
 		//In CSL 0.8.1, the "term" attribute on cs:category stored both
 		//citation formats and fields.
-		this.categories = Zotero.Utilities.xpath(
-			doc, '/csl:style/csl:info[1]/csl:category', Zotero.Styles.ns)
+		this.categories = Trellis.Utilities.xpath(
+			doc, '/csl:style/csl:info[1]/csl:category', Trellis.Styles.ns)
 		.filter(category => category.hasAttribute("term"))
 		.map(category => category.getAttribute("term"));
 	} else {
 		//CSL 1.0 introduced a dedicated "citation-format" attribute on cs:category 
-		this.categories = Zotero.Utilities.xpathText(doc,
+		this.categories = Trellis.Utilities.xpathText(doc,
 			'/csl:style/csl:info[1]/csl:category[@citation-format][1]/@citation-format',
-			Zotero.Styles.ns);
+			Trellis.Styles.ns);
 	}
 	
-	this.source = Zotero.Utilities.xpathText(doc,
+	this.source = Trellis.Utilities.xpathText(doc,
 		'/csl:style/csl:info[1]/csl:link[@rel="source" or @rel="independent-parent"][1]/@href',
-		Zotero.Styles.ns);
+		Trellis.Styles.ns);
 	if(this.source === this.styleID) {
 		throw new Error("Style with ID "+this.styleID+" references itself as source");
 	}
@@ -720,11 +720,11 @@ Zotero.Style = function (style, path) {
  * will honor the parent's default-locale over any user-selected locale unless
  * forced, so this reflects the locale that will actually be used.
  */
-Object.defineProperty(Zotero.Style.prototype, 'effectiveLocale', {
+Object.defineProperty(Trellis.Style.prototype, 'effectiveLocale', {
 	get: function () {
 		if (this.locale) return this.locale;
 		if (this.source) {
-			let parent = Zotero.Styles.get(this.source);
+			let parent = Trellis.Styles.get(this.source);
 			if (parent) return parent.locale;
 		}
 		return null;
@@ -745,17 +745,17 @@ Object.defineProperty(Zotero.Style.prototype, 'effectiveLocale', {
  *     cache?: boolean;
  * }} GetCiteProcOptions
  */
-Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
+Trellis.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 	if (typeof options === 'boolean') {
 		options = { automaticJournalAbbreviations: options };
 	}
 	let { automaticJournalAbbreviations, cache } = options;
 	
-	locale = locale || Zotero.locale || 'en-US';
+	locale = locale || Trellis.locale || 'en-US';
 	format = format || 'text';
 	automaticJournalAbbreviations = !!automaticJournalAbbreviations;
 
-	let useCiteprocRs = Zotero.Prefs.get('cite.useCiteprocRs');
+	let useCiteprocRs = Trellis.Prefs.get('cite.useCiteprocRs');
 	
 	// We can cache the Engine instance if we aren't using citeproc-rs
 	// and this is an installed style. The output format is excluded from
@@ -781,11 +781,11 @@ Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 	// determine version of parent style
 	var overrideLocale = false; // to force dependent style locale
 	if(this.source) {
-		var parentStyle = Zotero.Styles.get(this.source);
+		var parentStyle = Trellis.Styles.get(this.source);
 		if(!parentStyle) {
 			throw new Error(
 				'Style references ' + this.source + ', but this style is not installed',
-				Zotero.File.pathToFileURI(this.path)
+				Trellis.File.pathToFileURI(this.path)
 			);
 		}
 		var version = parentStyle._version;
@@ -810,14 +810,14 @@ Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 	
 	if(version === "0.8") {
 		// get XSLT processor from updateCSL.xsl file
-		if(!Zotero.Styles.xsltProcessor) {
-			let xsl = Zotero.File.getContentsFromURL("chrome://zotero/content/updateCSL.xsl");
+		if(!Trellis.Styles.xsltProcessor) {
+			let xsl = Trellis.File.getContentsFromURL("chrome://trellis/content/updateCSL.xsl");
 			let updateXSLT = new DOMParser()
 				.parseFromString(xsl, "application/xml");
 			
 			// load XSLT file into XSLTProcessor
-			Zotero.Styles.xsltProcessor = new XSLTProcessor();
-			Zotero.Styles.xsltProcessor.importStylesheet(updateXSLT);
+			Trellis.Styles.xsltProcessor = new XSLTProcessor();
+			Trellis.Styles.xsltProcessor.importStylesheet(updateXSLT);
 		}
 		
 		// read style file as DOM XML
@@ -825,7 +825,7 @@ Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 			.parseFromString(this.getXML(), "text/xml");
 		
 		// apply XSLT and serialize output
-		let newDOMXML = Zotero.Styles.xsltProcessor.transformToDocument(styleDOMXML);
+		let newDOMXML = Trellis.Styles.xsltProcessor.transformToDocument(styleDOMXML);
 		var xml = new XMLSerializer().serializeToString(newDOMXML);
 	} else {
 		var xml = this.getXML();
@@ -837,8 +837,8 @@ Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 		var citeproc;
 		var engineDesc;
 		if (useCiteprocRs) {
-			citeproc = new Zotero.CiteprocRs.Engine(
-				new Zotero.Cite.System({
+			citeproc = new Trellis.CiteprocRs.Engine(
+				new Trellis.Cite.System({
 					automaticJournalAbbreviations,
 					uppercaseSubtitles: uppercaseSubtitles
 				}),
@@ -851,8 +851,8 @@ Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 			engineDesc = 'CiteprocRs';
 		}
 		else {
-			citeproc = new Zotero.CiteProc.CSL.Engine(
-				new Zotero.Cite.System({
+			citeproc = new Trellis.CiteProc.CSL.Engine(
+				new Trellis.Cite.System({
 					automaticJournalAbbreviations,
 					uppercaseSubtitles
 				}),
@@ -871,18 +871,18 @@ Zotero.Style.prototype.getCiteProc = function (locale, format, options = {}) {
 		// Cache the Engine instance if allowed
 		if (cacheKey) {
 			this._cachedEngines.set(cacheKey, citeproc);
-			Zotero.debug(`Cached ${engineDesc}.Engine instance with ${cacheKey} for ${this.styleID}`);
+			Trellis.debug(`Cached ${engineDesc}.Engine instance with ${cacheKey} for ${this.styleID}`);
 		}
 
 		return citeproc;
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 		throw e;
 	}
 };
 
-Zotero.Style.prototype.clearEngineCache = function () {
+Trellis.Style.prototype.clearEngineCache = function () {
 	this._cachedEngines.clear();
 };
 
@@ -891,7 +891,7 @@ Zotero.Style.prototype.clearEngineCache = function () {
  *
  * Until https://github.com/citation-style-language/styles/issues/6151
  */
-Zotero.Style.prototype._eventToEventTitle = function (xml) {
+Trellis.Style.prototype._eventToEventTitle = function (xml) {
 	var parser = new DOMParser();
 	var doc = parser.parseFromString(xml, "text/xml");
 	// Ignore styles that already include `event-title`
@@ -918,7 +918,7 @@ Zotero.Style.prototype._eventToEventTitle = function (xml) {
 	return xml;
 };
 
-Zotero.Style.prototype.__defineGetter__("class",
+Trellis.Style.prototype.__defineGetter__("class",
 /**
  * Retrieves the style class, either from the metadata that's already loaded or by loading the file
  * @type String
@@ -926,7 +926,7 @@ Zotero.Style.prototype.__defineGetter__("class",
 function () {
 	if(this.source) {
 		// use class from source style
-		var parentStyle = Zotero.Styles.get(this.source);
+		var parentStyle = Trellis.Styles.get(this.source);
 		if(!parentStyle) {
 			throw new Error('Style references missing parent ' + this.source);
 		}
@@ -935,7 +935,7 @@ function () {
 	return this._class;
 });
 
-Zotero.Style.prototype.__defineGetter__("hasBibliography",
+Trellis.Style.prototype.__defineGetter__("hasBibliography",
 /**
  * Determines whether or not this style has a bibliography, either from the metadata that's already\
  * loaded or by loading the file
@@ -944,7 +944,7 @@ Zotero.Style.prototype.__defineGetter__("hasBibliography",
 function () {
 	if(this.source) {
 		// use hasBibliography from source style
-		var parentStyle = Zotero.Styles.get(this.source);
+		var parentStyle = Trellis.Styles.get(this.source);
 		if(!parentStyle) {
 			throw new Error('Style references missing parent ' + this.source);
 		}
@@ -953,21 +953,21 @@ function () {
 	return this._hasBibliography;
 });
 
-Zotero.Style.prototype.__defineGetter__("usesAbbreviation",
+Trellis.Style.prototype.__defineGetter__("usesAbbreviation",
 /**
  * Retrieves the style class, either from the metadata that's already loaded or by loading the file
  * @type String
  */
 function () {
 	if(this.source) {
-		var parentStyle = Zotero.Styles.get(this.source);
+		var parentStyle = Trellis.Styles.get(this.source);
 		if(!parentStyle) return false;
 		return parentStyle.usesAbbreviation;
 	}
 	return this._usesAbbreviation;
 });
 
-Zotero.Style.prototype.__defineGetter__("independentFile",
+Trellis.Style.prototype.__defineGetter__("independentFile",
 /**
  * Retrieves the file corresponding to the independent CSL
  * (the parent if this style is dependent, or this style if it is not)
@@ -975,7 +975,7 @@ Zotero.Style.prototype.__defineGetter__("independentFile",
 function () {
 	if(this.source) {
 		// parent/child
-		var formatCSL = Zotero.Styles.get(this.source);
+		var formatCSL = Trellis.Styles.get(this.source);
 		if(!formatCSL) {
 			throw new Error('Style references missing parent ' + this.source);
 		}
@@ -990,23 +990,23 @@ function () {
  * Retrieves the XML corresponding to this style
  * @type String
  */
-Zotero.Style.prototype.getXML = function () {
+Trellis.Style.prototype.getXML = function () {
 	var indepFile = this.independentFile;
-	if(indepFile) return Zotero.File.getContents(indepFile);
+	if(indepFile) return Trellis.File.getContents(indepFile);
 	return this.string;
 };
 
 /**
  * Deletes a style
  */
-Zotero.Style.prototype.remove = async function () {
+Trellis.Style.prototype.remove = async function () {
 	if (!this.path) {
 		throw new Error("Cannot delete a style with no associated file")
 	}
 	
 	// make sure no styles depend on this one
 	var dependentStyles = false;
-	var styles = Zotero.Styles.getAll();
+	var styles = Trellis.Styles.getAll();
 	for (let i in styles) {
 		let style = styles[i];
 		if(style.source == this.styleID) {
@@ -1017,8 +1017,8 @@ Zotero.Style.prototype.remove = async function () {
 	
 	if(dependentStyles) {
 		// copy dependent styles to hidden directory
-		let hiddenDir = OS.Path.join(Zotero.getStylesDirectory().path, 'hidden');
-		await Zotero.File.createDirectoryIfMissingAsync(hiddenDir);
+		let hiddenDir = OS.Path.join(Trellis.getStylesDirectory().path, 'hidden');
+		await Trellis.File.createDirectoryIfMissingAsync(hiddenDir);
 		await OS.File.move(this.path, OS.Path.join(hiddenDir, PathUtils.filename(this.path)));
 	} else {
 		// remove defunct files
@@ -1027,12 +1027,12 @@ Zotero.Style.prototype.remove = async function () {
 	
 	// check to see if this style depended on a hidden one
 	if(this.source) {
-		var source = Zotero.Styles.get(this.source);
+		var source = Trellis.Styles.get(this.source);
 		if(source && source.hidden) {
 			var deleteSource = true;
 			
 			// check to see if any other styles depend on the hidden one
-			let styles = Zotero.Styles.getAll();
+			let styles = Trellis.Styles.getAll();
 			for (let i in styles) {
 				let style = styles[i];
 				if(style.source == this.source && style.styleID != this.styleID) {
@@ -1048,5 +1048,5 @@ Zotero.Style.prototype.remove = async function () {
 		}
 	}
 	
-	return Zotero.Styles.reinit();
+	return Trellis.Styles.reinit();
 };

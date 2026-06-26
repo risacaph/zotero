@@ -3,29 +3,29 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -51,7 +51,7 @@
 		}
 
 		set item(item) {
-			super.item = (item instanceof Zotero.Item && item.isFileAttachment()) ? item : null;
+			super.item = (item instanceof Trellis.Item && item.isFileAttachment()) ? item : null;
 			if (item.isFileAttachment()) {
 				this._annotationItems = item.getAnnotations();
 				this.updateCount();
@@ -66,7 +66,7 @@
 		init() {
 			this.initCollapsibleSection();
 
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'attachmentAnnotationsBox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'attachmentAnnotationsBox');
 
 			this._body = this.querySelector('.body');
 
@@ -74,7 +74,7 @@
 		}
 
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 		}
 
 		notify(event, _type, ids, _extraData) {
@@ -117,13 +117,13 @@
 			for (let annotation of this._annotationItems) {
 				if (!imageAnnotationRendered
 						&& ['image', 'ink'].includes(annotation.annotationType)
-						&& !await Zotero.Annotations.hasCacheImage(annotation)) {
+						&& !await Trellis.Annotations.hasCacheImage(annotation)) {
 					try {
-						await Zotero.PDFWorker.renderAttachmentAnnotations(annotation.parentID);
+						await Trellis.PDFWorker.renderAttachmentAnnotations(annotation.parentID);
 						imageAnnotationRendered = true;
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 				this.addRow(annotation);

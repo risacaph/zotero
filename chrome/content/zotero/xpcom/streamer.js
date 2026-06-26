@@ -3,22 +3,22 @@
     
     Copyright © 2016 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -26,8 +26,8 @@
 "use strict";
 
 
-// Initialized as Zotero.Streamer in zotero.js
-Zotero.Streamer_Module = function (options = {}) {
+// Initialized as Trellis.Streamer in trellis.js
+Trellis.Streamer_Module = function (options = {}) {
 	this.url = options.url;
 	this.apiKey = options.apiKey;
 	
@@ -38,10 +38,10 @@ Zotero.Streamer_Module = function (options = {}) {
 			}
 		}
 	};
-	this._observerID = Zotero.Notifier.registerObserver(observer, ['api-key'], 'streamer');
+	this._observerID = Trellis.Notifier.registerObserver(observer, ['api-key'], 'streamer');
 };
 
-Zotero.Streamer_Module.prototype = {
+Trellis.Streamer_Module.prototype = {
 	_initialized: null,
 	_observerID: null,
 	_socket: null,
@@ -53,10 +53,10 @@ Zotero.Streamer_Module.prototype = {
 
 
 	init: function () {
-		Zotero.Prefs.registerObserver('streaming.enabled', (val) => this._update());
-		Zotero.Prefs.registerObserver('automaticScraperUpdates', (val) => this._update());
-		Zotero.Prefs.registerObserver('sync.autoSync', (val) => this._update());
-		Zotero.uiReadyPromise.then(() => this._update());
+		Trellis.Prefs.registerObserver('streaming.enabled', (val) => this._update());
+		Trellis.Prefs.registerObserver('automaticScraperUpdates', (val) => this._update());
+		Trellis.Prefs.registerObserver('sync.autoSync', (val) => this._update());
+		Trellis.uiReadyPromise.then(() => this._update());
 	},
 
 
@@ -97,7 +97,7 @@ Zotero.Streamer_Module.prototype = {
 			action: "deleteSubscriptions",
 			subscriptions
 		});
-		Zotero.debug("WebSocket message send: " + data);
+		Trellis.debug("WebSocket message send: " + data);
 		this._socket.send(data);
 	},
 
@@ -109,7 +109,7 @@ Zotero.Streamer_Module.prototype = {
 		if (!this._subscriptions.has('sync')) {
 			return;
 		}
-		let apiKey = this.apiKey || (await Zotero.Sync.Data.Local.getAPIKey());
+		let apiKey = this.apiKey || (await Trellis.Sync.Data.Local.getAPIKey());
 		if (!apiKey || !this._socket || this._socket.readyState !== this._socket.OPEN) {
 			this._subscriptions.delete('sync');
 			return;
@@ -118,7 +118,7 @@ Zotero.Streamer_Module.prototype = {
 			action: 'deleteSubscriptions',
 			subscriptions: [{ apiKey }]
 		});
-		Zotero.debug("WebSocket message send: " + this._hideAPIKey(data));
+		Trellis.debug("WebSocket message send: " + this._hideAPIKey(data));
 		this._socket.send(data);
 		this._subscriptions.delete('sync');
 	},
@@ -129,7 +129,7 @@ Zotero.Streamer_Module.prototype = {
 			action: "createSubscriptions",
 			subscriptions: [{ topics }]
 		});
-		Zotero.debug("WebSocket message send: " + data);
+		Trellis.debug("WebSocket message send: " + data);
 		this._socket.send(data);
 	},
 
@@ -150,12 +150,12 @@ Zotero.Streamer_Module.prototype = {
 			return;
 		}
 		
-		var apiKey = this.apiKey || (await Zotero.Sync.Data.Local.getAPIKey());
+		var apiKey = this.apiKey || (await Trellis.Sync.Data.Local.getAPIKey());
 		
 		var subscriptionsToAdd = [];
 		var subscriptionsToRemove = [];
 		
-		if (Zotero.Prefs.get('sync.autoSync') && Zotero.Sync.Runner.enabled) {
+		if (Trellis.Prefs.get('sync.autoSync') && Trellis.Sync.Runner.enabled) {
 			if (!this._subscriptions.has('sync')) {
 				// Subscribe to all topics accessible to the API key
 				subscriptionsToAdd.push({ apiKey });
@@ -172,7 +172,7 @@ Zotero.Streamer_Module.prototype = {
 			}
 		}
 		
-		if (Zotero.Prefs.get('automaticScraperUpdates')) {
+		if (Trellis.Prefs.get('automaticScraperUpdates')) {
 			if (!this._subscriptions.has('bundled-files')) {
 				subscriptionsToAdd.push(
 					{
@@ -197,7 +197,7 @@ Zotero.Streamer_Module.prototype = {
 				action: 'createSubscriptions',
 				subscriptions: subscriptionsToAdd
 			});
-			Zotero.debug("WebSocket message send: " + this._hideAPIKey(data));
+			Trellis.debug("WebSocket message send: " + this._hideAPIKey(data));
 			this._socket.send(data);
 		}
 		if (subscriptionsToRemove.length) {
@@ -205,7 +205,7 @@ Zotero.Streamer_Module.prototype = {
 				action: 'deleteSubscriptions',
 				subscriptions: subscriptionsToRemove
 			});
-			Zotero.debug("WebSocket message send: " + this._hideAPIKey(data));
+			Trellis.debug("WebSocket message send: " + this._hideAPIKey(data));
 			this._socket.send(data);
 		}
 
@@ -217,10 +217,10 @@ Zotero.Streamer_Module.prototype = {
 	
 	
 	_isEnabled: function () {
-		return Zotero.Prefs.get('streaming.enabled')
+		return Trellis.Prefs.get('streaming.enabled')
 			// Only connect if either auto-sync or automatic style/translator updates are enabled
-			&& ((Zotero.Prefs.get('sync.autoSync') && Zotero.Sync.Runner.enabled)
-				|| Zotero.Prefs.get('automaticScraperUpdates'));
+			&& ((Trellis.Prefs.get('sync.autoSync') && Trellis.Sync.Runner.enabled)
+				|| Trellis.Prefs.get('automaticScraperUpdates'));
 	},
 	
 	
@@ -231,8 +231,8 @@ Zotero.Streamer_Module.prototype = {
 	
 	
 	_connect: async function () {
-		let url = this.url || Zotero.Prefs.get('streaming.url') || ZOTERO_CONFIG.STREAMING_URL;
-		Zotero.debug(`Connecting to streaming server at ${url}`);
+		let url = this.url || Trellis.Prefs.get('streaming.url') || TRELLIS_CONFIG.STREAMING_URL;
+		Trellis.debug(`Connecting to streaming server at ${url}`);
 		
 		this._ready = false;
 		this._reconnect = true;
@@ -240,15 +240,15 @@ Zotero.Streamer_Module.prototype = {
 		this._socket = new WebSocket(url);
 		
 		this._socket.onopen = () => {
-			Zotero.debug("WebSocket connection opened");
+			Trellis.debug("WebSocket connection opened");
 		};
 		
 		this._socket.onerror = async function (event) {
-			Zotero.debug("WebSocket error");
+			Trellis.debug("WebSocket error");
 		};
 		
 		this._socket.onmessage = async function (event) {
-			Zotero.debug("WebSocket message: " + this._hideAPIKey(event.data));
+			Trellis.debug("WebSocket message: " + this._hideAPIKey(event.data));
 			
 			let data = JSON.parse(event.data);
 			
@@ -270,7 +270,7 @@ Zotero.Streamer_Module.prototype = {
 					}
 					
 					for (let error of data.errors) {
-						Zotero.logError(this._hideAPIKey(JSON.stringify(error)));
+						Trellis.logError(this._hideAPIKey(JSON.stringify(error)));
 					}
 				}
 				else if (data.event == "subscriptionsDeleted") {
@@ -285,7 +285,7 @@ Zotero.Streamer_Module.prototype = {
 				}
 				// Library added or removed
 				else if (data.event == 'topicAdded' || data.event == 'topicRemoved') {
-					await Zotero.Sync.Runner.sync({
+					await Trellis.Sync.Runner.sync({
 						background: true
 					});
 				}
@@ -293,24 +293,24 @@ Zotero.Streamer_Module.prototype = {
 				else if (data.event == 'topicUpdated') {
 					// Update translators and styles
 					if (data.topic == 'translators' || data.topic == 'styles') {
-						await Zotero.Schema.onUpdateNotification(data.delay);
+						await Trellis.Schema.onUpdateNotification(data.delay);
 					}
 					// Auto-sync
 					else {
-						let library = Zotero.URI.getPathLibrary(data.topic);
+						let library = Trellis.URI.getPathLibrary(data.topic);
 						if (library) {
 							// Ignore if skipped library
-							if (!Zotero.Sync.Data.Local.filterSkippedLibraries([library]).length) {
-								Zotero.debug("Library not selected for syncing -- skipping");
+							if (!Trellis.Sync.Data.Local.filterSkippedLibraries([library]).length) {
+								Trellis.debug("Library not selected for syncing -- skipping");
 								return;
 							}
 							
 							if (data.version && data.version == library.libraryVersion) {
-								Zotero.debug("Library is already up to date");
+								Trellis.debug("Library is already up to date");
 								return;
 							}
 							
-							await Zotero.Sync.Runner.sync({
+							await Trellis.Sync.Runner.sync({
 								background: true,
 								libraries: [library.libraryID]
 							});
@@ -324,12 +324,12 @@ Zotero.Streamer_Module.prototype = {
 						callback(data);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 				// TODO: Handle this in other ways?
 				else if (data.event == 'error') {
-					Zotero.logError(data);
+					Trellis.logError(data);
 				}
 			}
 		}.bind(this);
@@ -338,17 +338,17 @@ Zotero.Streamer_Module.prototype = {
 			var msg = `WebSocket connection closed: ${event.code} ${event.reason}`;
 			
 			if (event.code != 1000) {
-				Zotero.logError(msg);
+				Trellis.logError(msg);
 			}
 			else {
-				Zotero.debug(msg);
+				Trellis.debug(msg);
 			}
 			
 			this._subscriptions.clear();
 			
 			if (this._reconnect) {
 				if (event.code >= 4400 && event.code < 4500) {
-					Zotero.debug("Not reconnecting to WebSocket due to client error");
+					Trellis.debug("Not reconnecting to WebSocket due to client error");
 					return;
 				}
 				
@@ -365,7 +365,7 @@ Zotero.Streamer_Module.prototype = {
 						14400, 14400, 14400, // every 4 hours for 12 hours
 						86400 // 1 day
 					].map(i => i * 1000);
-					this._reconnectGenerator = Zotero.Utilities.Internal.delayGenerator(intervals);
+					this._reconnectGenerator = Trellis.Utilities.Internal.delayGenerator(intervals);
 				}
 				await this._reconnectGenerator.next().value;
 				this._update();

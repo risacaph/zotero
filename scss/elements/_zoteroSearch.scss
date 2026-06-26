@@ -1,4 +1,4 @@
-zoterosearch {
+trellissearch {
 	flex-direction: column;
 	padding-inline: 8px;
 	// Block padding lives inside the scroll container (like the inline padding)
@@ -333,7 +333,7 @@ zoterosearch {
 		}
 	}
 
-	zoterosearchtextbox[hasOptions="true"] #search-textbox {
+	trellissearchtextbox[hasOptions="true"] #search-textbox {
 		padding-inline-start: 20px;
 	}
 

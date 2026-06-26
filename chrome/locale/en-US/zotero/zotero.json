@@ -266,22 +266,22 @@
 	"main-window-key.key": {
 		"string": "L"
 	},
-	"zotero-toolbar-tabs-menu.tooltiptext": {
+	"trellis-toolbar-tabs-menu.tooltiptext": {
 		"string": "List all tabs"
 	},
 	"filter-collections": {
 		"string": "Filter Collections"
 	},
-	"zotero-tabs-menu-filter.placeholder": {
+	"trellis-tabs-menu-filter.placeholder": {
 		"string": "Search Tabs"
 	},
-	"zotero-tabs-menu-close-button.title": {
+	"trellis-tabs-menu-close-button.title": {
 		"string": "Close Tab"
 	},
-	"zotero-toolbar-tabs-scroll-forwards.title": {
+	"trellis-toolbar-tabs-scroll-forwards.title": {
 		"string": "Scroll forwards"
 	},
-	"zotero-toolbar-tabs-scroll-backwards.title": {
+	"trellis-toolbar-tabs-scroll-backwards.title": {
 		"string": "Scroll backwards"
 	},
 	"recently-read": {
@@ -366,7 +366,7 @@
 		"string": "Introduction"
 	},
 	"import-source-file.label": {
-		"string": "A file (BibTeX, RIS, Zotero RDF, etc.)"
+		"string": "A file (BibTeX, RIS, Trellis RDF, etc.)"
 	},
 	"import-source-folder.label": {
 		"string": "A folder of PDFs or other files"
@@ -432,7 +432,7 @@
 		"string": "{numRelinked, plural, =0 {No items were relinked} one {One item was relinked} other {{ numRelinked } items were relinked}}"
 	},
 	"import-mendeley-encrypted": {
-		"string": "The selected Mendeley database cannot be read, likely because it is encrypted. See <a data-l10n-name=\"mendeley-import-kb\">How do I import a Mendeley library into Zotero?</a> for more information."
+		"string": "The selected Mendeley database cannot be read, likely because it is encrypted. See <a data-l10n-name=\"mendeley-import-kb\">How do I import a Mendeley library into Trellis?</a> for more information."
 	},
 	"file-interface-import-error-translator": {
 		"string": "An error occurred importing the selected file with “{ translator }”. Please ensure that the file is valid and try again."
@@ -603,7 +603,7 @@
 		"string": "My Publications"
 	},
 	"publications-intro": {
-		"string": "Items you add to My Publications will be shown on your profile page on zotero.org. If you choose to include attached files, they will be made publicly available under the license you specify. Only add work you yourself have created, and only include files if you have the rights to distribute them and wish to do so."
+		"string": "Items you add to My Publications will be shown on your profile page on trellis.org. If you choose to include attached files, they will be made publicly available under the license you specify. Only add work you yourself have created, and only include files if you have the rights to distribute them and wish to do so."
 	},
 	"publications-include-checkbox-files.label": {
 		"string": "Include files"
@@ -630,13 +630,13 @@
 		"string": "Keep the existing Rights field where available"
 	},
 	"publications-sharing-text": {
-		"string": "You can reserve all rights to your work, license it under a Creative Commons license, or dedicate it to the public domain. In all cases, the work will be made publicly available via zotero.org."
+		"string": "You can reserve all rights to your work, license it under a Creative Commons license, or dedicate it to the public domain. In all cases, the work will be made publicly available via trellis.org."
 	},
 	"publications-sharing-prompt": {
 		"string": "Would you like to allow your work to be shared by others?"
 	},
 	"publications-sharing-reserved.label": {
-		"string": "No, only publish my work on zotero.org"
+		"string": "No, only publish my work on trellis.org"
 	},
 	"publications-sharing-cc.label": {
 		"string": "Yes, under a Creative Commons license"
@@ -918,7 +918,7 @@
 		"string": "Log In"
 	},
 	"account-not-logged-in-text": {
-		"string": "Log in to your Zotero account to sync your data."
+		"string": "Log in to your Trellis account to sync your data."
 	},
 	"account-error-login-session-expired": {
 		"string": "Your login session has expired. Please try again."
@@ -1134,7 +1134,7 @@
 		"string": "Paste and Search"
 	},
 	"mac-word-plugin-install-message": {
-		"string": "Zotero needs access to Word data to install the Word plugin."
+		"string": "Trellis needs access to Word data to install the Word plugin."
 	},
 	"mac-word-plugin-install-action-button.label": {
 		"string": "Install Word plugin"

@@ -4,29 +4,29 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
 <?xml-stylesheet href="chrome://global/skin/"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
-<?xml-stylesheet href="chrome://zotero/skin/bibliography.css"?>
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/bibliography.css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 <window
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -35,27 +35,27 @@
 	class="bibliography-window"
 	persist="screenX screenY width height sizemode"
 	data-l10n-id="integration-docPrefs-window"
-	onload="Zotero_File_Interface_Bibliography.init();"
+	onload="Trellis_File_Interface_Bibliography.init();"
 	>
 	<dialog
-		id="zotero-doc-prefs-dialog"
-		class="zotero-dialog-window"
+		id="trellis-doc-prefs-dialog"
+		class="trellis-dialog-window"
 		orient="vertical"
 		buttons="accept,cancel,help"
 		onclose="document.documentElement.cancelDialog(); event.preventDefault(); event.stopPropagation();">
 		<script>
-			Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
-			Services.scriptloader.loadSubScript('chrome://zotero/content/elements/styleConfigurator.js', this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/bibliography.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
+			Services.scriptloader.loadSubScript('chrome://trellis/content/elements/styleConfigurator.js', this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/bibliography.js", this);
 		</script>
 		<linkset>
 			<html:link rel="localization" href="branding/brand.ftl" />
-			<html:link rel="localization" href="zotero.ftl"/>
+			<html:link rel="localization" href="trellis.ftl"/>
 			<html:link rel="localization" href="integration.ftl"/>
 		</linkset>
 
-		<vbox id="zotero-bibliography-container">
+		<vbox id="trellis-bibliography-container">
 			<style-configurator id="style-configurator" show-manage-styles="true" />
 
 			<vbox id="automaticCitationUpdates-vbox">

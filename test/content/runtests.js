@@ -1,9 +1,9 @@
 var { FileUtils } = ChromeUtils.importESModule("resource://gre/modules/FileUtils.sys.mjs");
 
-var { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
-var { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
-var { TestOptions } = ChromeUtils.importESModule("chrome://zotero/content/modules/commandLineOptions.mjs");
-var { OS } = ChromeUtils.importESModule("chrome://zotero/content/osfile.mjs");
+var { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
+var { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
+var { TestOptions } = ChromeUtils.importESModule("chrome://trellis/content/modules/commandLineOptions.mjs");
+var { OS } = ChromeUtils.importESModule("chrome://trellis/content/osfile.mjs");
 
 // Mocha HTML reporter doesn't show deepEqual diffs, so we change this.
 chai.config.truncateThreshold = 0
@@ -25,7 +25,7 @@ function quit(failed) {
 if (TestOptions.makeTestData) {
 	let dataPath = getTestDataDirectory().path;
 	
-	Zotero.Prefs.set("export.citePaperJournalArticleURL", true);
+	Trellis.Prefs.set("export.citePaperJournalArticleURL", true);
 	
 	let dataFiles = [
 		{
@@ -53,7 +53,7 @@ if (TestOptions.makeTestData) {
 		}
 	];
 	(async function () {
-		await Zotero.initializationPromise;
+		await Trellis.initializationPromise;
 		for (let i=0; i<dataFiles.length; i++) {
 			let first = !i;
 			let params = dataFiles[i];
@@ -82,7 +82,7 @@ if (TestOptions.makeTestData) {
 		}
 		dump("\n");
 	})()
-	.catch(function(e) { dump('\n'); dump(Zotero.Utilities.varDump(e)) })
+	.catch(function(e) { dump('\n'); dump(Trellis.Utilities.varDump(e)) })
 	.finally(function() { quit(false) });
 }
 
@@ -123,7 +123,7 @@ function Reporter(runner) {
 
 	runner.on('fail', function(test, err){
 		// Remove internal code references
-		err.stack = err.stack.replace(/.+(?:zotero-unit\/|\/Task\.jsm|zotero\/bluebird\/).+\n?/g, "");
+		err.stack = err.stack.replace(/.+(?:trellis-unit\/|\/Task\.jsm|trellis\/bluebird\/).+\n?/g, "");
 		
 		// Strip "From previous event:" block if it's all internals
 		if (err.stack.includes('From previous event:')) {
@@ -143,7 +143,7 @@ function Reporter(runner) {
 			// Dark red X for errors
 			+ "\x1B[31;40m" + Mocha.reporters.Base.symbols.err + " [FAIL]\x1B[0m"
 			// Trigger bell if interactive
-			+ (Zotero.automatedTest ? "" : "\x07")
+			+ (Trellis.automatedTest ? "" : "\x07")
 			+ " " + test.title + "\n"
 			+ indentStr + "  " + err.message + " at\n"
 			+ err.stack.replace(/^/gm, indentStr + "    ").trim() + "\n\n");
@@ -174,27 +174,27 @@ coMocha(Mocha);
 
 before(function () {
 	// Store all prefs set in runtests.sh
-	var prefBranch = Services.prefs.getBranch(ZOTERO_CONFIG.PREF_BRANCH);
+	var prefBranch = Services.prefs.getBranch(TRELLIS_CONFIG.PREF_BRANCH);
 	TestOptions.customPrefs = {};
 	prefBranch.getChildList("", {})
 		.filter(key => prefBranch.prefHasUserValue(key))
-		.forEach(key => TestOptions.customPrefs[key] = Zotero.Prefs.get(key));
+		.forEach(key => TestOptions.customPrefs[key] = Trellis.Prefs.get(key));
 });
 
 /**
  * Clear all prefs, and reset those set in runtests.sh to original values
  */
 function resetPrefs() {
-	var prefBranch = Services.prefs.getBranch(ZOTERO_CONFIG.PREF_BRANCH);
+	var prefBranch = Services.prefs.getBranch(TRELLIS_CONFIG.PREF_BRANCH);
 	prefBranch.getChildList("", {}).forEach(key => {
 		var origVal = TestOptions.customPrefs[key];
 		if (origVal !== undefined) {
-			if (origVal != Zotero.Prefs.get(key)) {
-				Zotero.Prefs.set(key, TestOptions.customPrefs[key]);
+			if (origVal != Trellis.Prefs.get(key)) {
+				Trellis.Prefs.set(key, TestOptions.customPrefs[key]);
 			}
 		}
 		else if (prefBranch.prefHasUserValue(key)) {
-			Zotero.Prefs.clear(key)
+			Trellis.Prefs.clear(key)
 		}
 	});
 }
@@ -274,7 +274,7 @@ if (run && TestOptions.tests) {
 	for(var fname of testFiles) {
 		var el = document.createElement("script");
 		el.type = "application/javascript";
-		el.src = "resource://zotero-unit-tests/"+fname;
+		el.src = "resource://trellis-unit-tests/"+fname;
 		el.async = false;
 		document.body.appendChild(el);
 	}
@@ -282,10 +282,10 @@ if (run && TestOptions.tests) {
 
 if(run) {
 	window.onload = async function () {
-		await Zotero.Schema.schemaUpdatePromise;
+		await Trellis.Schema.schemaUpdatePromise;
 		
 		// Make a copy of the database that can be used in resetDB()
-		var dbFile = Zotero.DataDirectory.getDatabase();
+		var dbFile = Trellis.DataDirectory.getDatabase();
 		await IOUtils.copy(dbFile, dbFile + '-test-template');
 		
 		return mocha.run();

@@ -1,18 +1,18 @@
-describe("Zotero.DB", function () {
+describe("Trellis.DB", function () {
 	var tmpTable = "tmpDBTest";
 	
 	before(function* () {
 		this.timeout(5000);
-		Zotero.debug("Waiting for DB activity to settle");
-		yield Zotero.DB.waitForTransaction();
-		yield Zotero.Promise.delay(1000);
+		Trellis.debug("Waiting for DB activity to settle");
+		yield Trellis.DB.waitForTransaction();
+		yield Trellis.Promise.delay(1000);
 	});
 	beforeEach(function* () {
-		yield Zotero.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable);
-		yield Zotero.DB.queryAsync("CREATE TABLE " + tmpTable + " (foo INT)");
+		yield Trellis.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable);
+		yield Trellis.DB.queryAsync("CREATE TABLE " + tmpTable + " (foo INT)");
 	});
 	after(function* () {
-		yield Zotero.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable);
+		yield Trellis.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable);
 	});
 	
 	
@@ -21,118 +21,118 @@ describe("Zotero.DB", function () {
 		
 		before(function* () {
 			tmpTable = "tmp_queryAsync";
-			yield Zotero.DB.queryAsync("CREATE TEMPORARY TABLE " + tmpTable + " (a, b)");
-			yield Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1, 2)");
-			yield Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (3, 4)");
-			yield Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (5, NULL)");
+			yield Trellis.DB.queryAsync("CREATE TEMPORARY TABLE " + tmpTable + " (a, b)");
+			yield Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1, 2)");
+			yield Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (3, 4)");
+			yield Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (5, NULL)");
 		})
 		after(function* () {
 			if (tmpTable) {
-				yield Zotero.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable);
+				yield Trellis.DB.queryAsync("DROP TABLE IF EXISTS " + tmpTable);
 			}
 		})
 		
 		it("should throw an error if no parameters are passed for a query with placeholders", async function () {
-			var e = await getPromiseError(Zotero.DB.queryAsync("SELECT itemID FROM items WHERE itemID=?"));
+			var e = await getPromiseError(Trellis.DB.queryAsync("SELECT itemID FROM items WHERE itemID=?"));
 			assert.ok(e);
 			assert.include(e.message, "for query containing placeholders");
 		})
 		
 		it("should throw an error if too few parameters are passed", async function () {
-			var e = await getPromiseError(Zotero.DB.queryAsync("SELECT itemID FROM items WHERE itemID=? OR itemID=?", [1]));
+			var e = await getPromiseError(Trellis.DB.queryAsync("SELECT itemID FROM items WHERE itemID=? OR itemID=?", [1]));
 			assert.ok(e);
 			assert.include(e.message, "Incorrect number of parameters provided for query");
 		})
 		
 		it("should throw an error if too many parameters are passed", async function () {
-			var e = await getPromiseError(Zotero.DB.queryAsync("SELECT itemID FROM items WHERE itemID=?", [1, 2]));
+			var e = await getPromiseError(Trellis.DB.queryAsync("SELECT itemID FROM items WHERE itemID=?", [1, 2]));
 			assert.ok(e);
 			assert.include(e.message, "Incorrect number of parameters provided for query");
 		})
 		
 		it("should throw an error if too many parameters are passed for numbered placeholders", async function () {
-			var e = await getPromiseError(Zotero.DB.queryAsync("SELECT itemID FROM items WHERE itemID=?1 OR itemID=?1", [1, 2]));
+			var e = await getPromiseError(Trellis.DB.queryAsync("SELECT itemID FROM items WHERE itemID=?1 OR itemID=?1", [1, 2]));
 			assert.ok(e);
 			assert.include(e.message, "Incorrect number of parameters provided for query");
 		})
 		
 		it("should accept a single placeholder given as a value", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", 2);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", 2);
 			assert.lengthOf(rows, 1);
 			assert.equal(rows[0].a, 1);
 		})
 		
 		it("should accept a single placeholder given as an array", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", [2]);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", [2]);
 			assert.lengthOf(rows, 1);
 			assert.equal(rows[0].a, 1);
 		})
 		
 		it("should accept multiple placeholders", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=? OR b=?", [2, 4]);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=? OR b=?", [2, 4]);
 			assert.lengthOf(rows, 2);
 			assert.equal(rows[0].a, 1);
 			assert.equal(rows[1].a, 3);
 		});
 		
 		it("should accept combination of numbered and unnumbered placeholders", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE (a=?1 OR b=?1) OR b=?", [2, 4]);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE (a=?1 OR b=?1) OR b=?", [2, 4]);
 			assert.lengthOf(rows, 2);
 			assert.equal(rows[0].a, 1);
 			assert.equal(rows[1].a, 3);
 		});
 		
 		it("should accept a single placeholder within parentheses", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b IN (?)", 2);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b IN (?)", 2);
 			assert.lengthOf(rows, 1);
 			assert.equal(rows[0].a, 1);
 		})
 		
 		it("should accept multiple placeholders within parentheses", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b IN (?, ?)", [2, 4]);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b IN (?, ?)", [2, 4]);
 			assert.lengthOf(rows, 2);
 			assert.equal(rows[0].a, 1);
 			assert.equal(rows[1].a, 3);
 		})
 		
 		it("should replace =? with IS NULL if NULL is passed as a value", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", null);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", null);
 			assert.lengthOf(rows, 1);
 			assert.equal(rows[0].a, 5);
 		})
 		
 		it("should replace =? with IS NULL if NULL is passed in an array", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", [null]);
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?", [null]);
 			assert.lengthOf(rows, 1);
 			assert.equal(rows[0].a, 5);
 		})
 		
 		it("should replace ? with NULL for placeholders within parentheses in INSERT statements", async function () {
-			await Zotero.DB.queryAsync("CREATE TEMPORARY TABLE tmp_srqwnfpwpinss (a, b)");
+			await Trellis.DB.queryAsync("CREATE TEMPORARY TABLE tmp_srqwnfpwpinss (a, b)");
 			// Replace ", ?"
-			await Zotero.DB.queryAsync("INSERT INTO tmp_srqwnfpwpinss (a, b) VALUES (?, ?)", [1, null]);
+			await Trellis.DB.queryAsync("INSERT INTO tmp_srqwnfpwpinss (a, b) VALUES (?, ?)", [1, null]);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync("SELECT a FROM tmp_srqwnfpwpinss WHERE b IS NULL"))),
+				((await Trellis.DB.valueQueryAsync("SELECT a FROM tmp_srqwnfpwpinss WHERE b IS NULL"))),
 				1
 			);
 			// Replace "(?"
-			await Zotero.DB.queryAsync("DELETE FROM tmp_srqwnfpwpinss");
-			await Zotero.DB.queryAsync("INSERT INTO tmp_srqwnfpwpinss (a, b) VALUES (?, ?)", [null, 2]);
+			await Trellis.DB.queryAsync("DELETE FROM tmp_srqwnfpwpinss");
+			await Trellis.DB.queryAsync("INSERT INTO tmp_srqwnfpwpinss (a, b) VALUES (?, ?)", [null, 2]);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync("SELECT b FROM tmp_srqwnfpwpinss WHERE a IS NULL"))),
+				((await Trellis.DB.valueQueryAsync("SELECT b FROM tmp_srqwnfpwpinss WHERE a IS NULL"))),
 				2
 			);
-			await Zotero.DB.queryAsync("DROP TABLE tmp_srqwnfpwpinss");
+			await Trellis.DB.queryAsync("DROP TABLE tmp_srqwnfpwpinss");
 		})
 		
 		it("should throw an error if NULL is passed for placeholder within parentheses in a SELECT statement", async function () {
-			var e = await getPromiseError(Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b IN (?)", null));
+			var e = await getPromiseError(Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b IN (?)", null));
 			assert.ok(e);
 			assert.include(e.message, "NULL cannot be used for parenthesized placeholders in SELECT queries");
 		})
 		
 		it("should handle numbered parameters", async function () {
-			var rows = await Zotero.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?1 "
+			var rows = await Trellis.DB.queryAsync("SELECT a FROM " + tmpTable + " WHERE b=?1 "
 				+ "UNION SELECT b FROM " + tmpTable + " WHERE b=?1", 2);
 			assert.lengthOf(rows, 2);
 			assert.equal(rows[0].a, 1);
@@ -141,7 +141,7 @@ describe("Zotero.DB", function () {
 		
 		it("should throw an error if onRow throws an error", async function () {
 			var i = 0;
-			var e = Zotero.DB.queryAsync(
+			var e = Trellis.DB.queryAsync(
 				"SELECT * FROM " + tmpTable,
 				false,
 				{
@@ -161,7 +161,7 @@ describe("Zotero.DB", function () {
 		it("should stop gracefully if onRow calls cancel()", async function () {
 			var i = 0;
 			var rows = [];
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"SELECT * FROM " + tmpTable,
 				false,
 				{
@@ -192,22 +192,22 @@ describe("Zotero.DB", function () {
 				reject2 = reject;
 			});
 			
-			Zotero.DB.executeTransaction(async function () {
-				await Zotero.Promise.delay(250);
-				var num = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
+			Trellis.DB.executeTransaction(async function () {
+				await Trellis.Promise.delay(250);
+				var num = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
 				assert.equal(num, 0);
-				await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
-				assert.ok(Zotero.DB.inTransaction());
+				await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
+				assert.ok(Trellis.DB.inTransaction());
 			})
 			.then(resolve1)
 			.catch(reject1);
 			
-			Zotero.DB.executeTransaction(async function () {
-				var num = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
+			Trellis.DB.executeTransaction(async function () {
+				var num = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
 				assert.equal(num, 1);
-				await Zotero.Promise.delay(500);
-				await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (2)");
-				assert.ok(Zotero.DB.inTransaction());
+				await Trellis.Promise.delay(500);
+				await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (2)");
+				assert.ok(Trellis.DB.inTransaction());
 			})
 			.then(resolve2)
 			.catch(reject2);
@@ -231,34 +231,34 @@ describe("Zotero.DB", function () {
 			});
 			
 			// Start a transaction and have it delay
-			Zotero.DB.executeTransaction(async function () {
-				await Zotero.Promise.delay(100);
-				var num = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
+			Trellis.DB.executeTransaction(async function () {
+				await Trellis.Promise.delay(100);
+				var num = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
 				assert.equal(num, 0);
-				await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
-				assert.ok(Zotero.DB.inTransaction());
+				await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
+				assert.ok(Trellis.DB.inTransaction());
 			})
 			.then(resolve1)
 			.catch(reject1);
 			
 			// Start two more transactions, which should wait on the first
-			Zotero.DB.executeTransaction(async function () {
-				var num = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
+			Trellis.DB.executeTransaction(async function () {
+				var num = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
 				assert.equal(num, 1);
-				await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (2)");
-				assert.ok(Zotero.DB.inTransaction());
+				await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (2)");
+				assert.ok(Trellis.DB.inTransaction());
 			})
 			.then(resolve2)
 			.catch(reject2);
 			
-			Zotero.DB.executeTransaction(async function () {
-				var num = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
+			Trellis.DB.executeTransaction(async function () {
+				var num = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable);
 				assert.equal(num, 2);
-				await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (3)");
+				await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (3)");
 				// But make sure the second queued transaction doesn't start at the same time,
 				// such that the first queued transaction gets closed while the second is still
 				// running
-				assert.ok(Zotero.DB.inTransaction());
+				assert.ok(Trellis.DB.inTransaction());
 			})
 			.then(resolve3)
 			.catch(reject3);
@@ -267,31 +267,31 @@ describe("Zotero.DB", function () {
 		})
 		
 		it("should roll back on error", async function () {
-			await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
+			await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
 			try {
-				await Zotero.DB.executeTransaction(async function () {
-					await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (2)");
+				await Trellis.DB.executeTransaction(async function () {
+					await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (2)");
 					throw 'Aborting transaction -- ignore';
 				});
 			}
 			catch (e) {
 				if (typeof e != 'string' || !e.startsWith('Aborting transaction')) throw e;
 			}
-			var count = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable + "");
+			var count = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM " + tmpTable + "");
 			assert.equal(count, 1);
 			
-			var conn = await Zotero.DB._getConnectionAsync();
+			var conn = await Trellis.DB._getConnectionAsync();
 			assert.isFalse(conn.transactionInProgress);
 			
-			await Zotero.DB.queryAsync("DROP TABLE " + tmpTable);
+			await Trellis.DB.queryAsync("DROP TABLE " + tmpTable);
 		});
 		
 		it("should run onRollback callbacks", async function () {
 			var callbackRan = false;
 			try {
-				await Zotero.DB.executeTransaction(
+				await Trellis.DB.executeTransaction(
 					async function () {
-						await Zotero.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
+						await Trellis.DB.queryAsync("INSERT INTO " + tmpTable + " VALUES (1)");
 						throw 'Aborting transaction -- ignore';
 					},
 					{
@@ -306,20 +306,20 @@ describe("Zotero.DB", function () {
 			}
 			assert.ok(callbackRan);
 			
-			await Zotero.DB.queryAsync("DROP TABLE " + tmpTable);
+			await Trellis.DB.queryAsync("DROP TABLE " + tmpTable);
 		});
 		
 		it("should time out on nested transactions", async function () {
 			var e;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				e = await getPromiseError(
 					Promise.race([
-						Zotero.Promise.delay(250).then(() => {
+						Trellis.Promise.delay(250).then(() => {
 							var e = new Error;
 							e.name = "TimeoutError";
 							throw e;
 						}),
-						Zotero.DB.executeTransaction(async function () {})
+						Trellis.DB.executeTransaction(async function () {})
 					])
 				);
 			});
@@ -331,8 +331,8 @@ describe("Zotero.DB", function () {
 			var callback1Ran = false;
 			var callback2Ran = false;
 			try {
-				await Zotero.DB.executeTransaction(async function () {
-					await Zotero.DB.executeTransaction(
+				await Trellis.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(
 						async function () {},
 						{
 							waitTimeout: 100,
@@ -359,34 +359,34 @@ describe("Zotero.DB", function () {
 	
 	describe("#columnExists()", function () {
 		it("should return true if a column exists", async function () {
-			assert.isTrue(await Zotero.DB.columnExists('items', 'itemID'));
+			assert.isTrue(await Trellis.DB.columnExists('items', 'itemID'));
 		});
 		
 		it("should return false if a column doesn't exists", async function () {
-			assert.isFalse(await Zotero.DB.columnExists('items', 'foo'));
+			assert.isFalse(await Trellis.DB.columnExists('items', 'foo'));
 		});
 		
 		it("should return false if a table doesn't exists", async function () {
-			assert.isFalse(await Zotero.DB.columnExists('foo', 'itemID'));
+			assert.isFalse(await Trellis.DB.columnExists('foo', 'itemID'));
 		});
 	});
 	
 	
 	describe("#indexExists()", function () {
 		it("should return true if an index exists", async function () {
-			assert.isTrue(await Zotero.DB.indexExists('items_synced'));
+			assert.isTrue(await Trellis.DB.indexExists('items_synced'));
 		});
 		
 		it("should return false if an index doesn't exists", async function () {
-			assert.isFalse(await Zotero.DB.indexExists('foo'));
+			assert.isFalse(await Trellis.DB.indexExists('foo'));
 		});
 	});
 	
 	
 	describe("#parseSQLFile", function () {
 		it("should extract tables and indexes from userdata SQL file", async function () {
-			var sql = Zotero.File.getResource(`resource://zotero/schema/userdata.sql`);
-			var statements = await Zotero.DB.parseSQLFile(sql);
+			var sql = Trellis.File.getResource(`resource://trellis/schema/userdata.sql`);
+			var statements = await Trellis.DB.parseSQLFile(sql);
 			assert.isTrue(statements.some(x => x.startsWith('CREATE TABLE items')));
 		});
 	});
@@ -396,8 +396,8 @@ describe("Zotero.DB", function () {
 		var bakFile2;
 		
 		beforeEach(async function () {
-			bakFile = Zotero.DB.path + '.test.bak';
-			bakFile2 = Zotero.DB.path + '.test2.bak';
+			bakFile = Trellis.DB.path + '.test.bak';
+			bakFile2 = Trellis.DB.path + '.test2.bak';
 			await IOUtils.remove(bakFile);
 			await IOUtils.remove(bakFile2);
 		});
@@ -408,20 +408,20 @@ describe("Zotero.DB", function () {
 		});
 		
 		it("should perform an offline backup", async function () {
-			await Zotero.DB.backUpDatabase({ suffix: 'test' });
+			await Trellis.DB.backUpDatabase({ suffix: 'test' });
 			assert.isTrue(await IOUtils.exists(bakFile));
-			assert.equal(await Zotero.DB.valueQueryAsync("PRAGMA main.locking_mode"), "exclusive");
+			assert.equal(await Trellis.DB.valueQueryAsync("PRAGMA main.locking_mode"), "exclusive");
 		});
 		
 		it("should perform an online backup", async function () {
-			await Zotero.DB.backUpDatabase({ suffix: 'test', online: true });
+			await Trellis.DB.backUpDatabase({ suffix: 'test', online: true });
 			assert.isTrue(await IOUtils.exists(bakFile));
-			assert.equal(await Zotero.DB.valueQueryAsync("PRAGMA main.locking_mode"), "exclusive");
+			assert.equal(await Trellis.DB.valueQueryAsync("PRAGMA main.locking_mode"), "exclusive");
 		});
 		
 		it("shouldn't perform an offline backup if one is already in progress", async function () {
-			var promise = Zotero.DB.backUpDatabase({ suffix: 'test' });
-			var result2 = await Zotero.DB.backUpDatabase({ suffix: 'test2' });
+			var promise = Trellis.DB.backUpDatabase({ suffix: 'test' });
+			var result2 = await Trellis.DB.backUpDatabase({ suffix: 'test2' });
 			var result1 = await promise;
 			assert.isTrue(result1);
 			assert.isTrue(await IOUtils.exists(bakFile));
@@ -435,44 +435,44 @@ describe("Zotero.DB", function () {
 
 	describe("#vacuum()", function () {
 		it("should vacuum the database with force option", async function () {
-			let result = await Zotero.DB.vacuum({ force: true });
+			let result = await Trellis.DB.vacuum({ force: true });
 			assert.isTrue(result);
 
 			// DB should still be functional
-			let count = await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM items");
+			let count = await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM items");
 			assert.isNumber(count);
 
 			// Vacuum timestamp should be updated
-			assert.isAbove(Zotero.Prefs.get('vacuum.lastTime'), 0);
+			assert.isAbove(Trellis.Prefs.get('vacuum.lastTime'), 0);
 
 			// Temp file should be cleaned up
-			assert.isFalse(await IOUtils.exists(Zotero.DB.path + '.vacuum.tmp'));
+			assert.isFalse(await IOUtils.exists(Trellis.DB.path + '.vacuum.tmp'));
 		});
 
 		it("should skip vacuum when recently vacuumed", async function () {
-			Zotero.Prefs.set('vacuum.lastTime', Math.floor(Date.now() / 1000));
-			let result = await Zotero.DB.vacuum();
+			Trellis.Prefs.set('vacuum.lastTime', Math.floor(Date.now() / 1000));
+			let result = await Trellis.DB.vacuum();
 			assert.isFalse(result);
-			Zotero.Prefs.clear('vacuum.lastTime');
+			Trellis.Prefs.clear('vacuum.lastTime');
 		});
 
 		it("should skip vacuum when freelist is below threshold", async function () {
-			Zotero.Prefs.clear('vacuum.lastTime');
-			Zotero.Prefs.set('vacuum.freelistThreshold', 99);
-			let result = await Zotero.DB.vacuum();
+			Trellis.Prefs.clear('vacuum.lastTime');
+			Trellis.Prefs.set('vacuum.freelistThreshold', 99);
+			let result = await Trellis.DB.vacuum();
 			assert.isFalse(result);
-			Zotero.Prefs.clear('vacuum.freelistThreshold');
+			Trellis.Prefs.clear('vacuum.freelistThreshold');
 		});
 	});
 
 	describe("#onConnect()", function () {
 		it("should run registered callbacks after the connection is reopened", async function () {
 			let count = 0;
-			Zotero.DB.onConnect(async () => {
+			Trellis.DB.onConnect(async () => {
 				count++;
 			});
-			await Zotero.DB.closeDatabase();
-			await Zotero.DB.valueQueryAsync("SELECT 1");
+			await Trellis.DB.closeDatabase();
+			await Trellis.DB.valueQueryAsync("SELECT 1");
 			assert.equal(count, 1);
 		});
 	});

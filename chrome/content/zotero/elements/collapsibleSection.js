@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -200,7 +200,7 @@
 				this.render();
 			});
 			
-			this._prefsObserverID = Zotero.Prefs.registerObserver(`panes.${this.dataset.pane}.open`, this._restoreOpenState.bind(this));
+			this._prefsObserverID = Trellis.Prefs.registerObserver(`panes.${this.dataset.pane}.open`, this._restoreOpenState.bind(this));
 			
 			if (this.hasAttribute('data-l10n-id') && !this.hasAttribute('data-l10n-args')) {
 				this.setAttribute('data-l10n-args', JSON.stringify({ count: 0 }));
@@ -213,13 +213,13 @@
 		}
 		
 		_buildContextMenu() {
-			let containerRoot = this.closest('.item-pane-container-root, .zotero-view-item-container, context-notes-list');
+			let containerRoot = this.closest('.item-pane-container-root, .trellis-view-item-container, context-notes-list');
 			
 			let contextMenu = document.createXULElement('menupopup');
 
 			let pinSection, unpinSection;
 			pinSection = document.createXULElement('menuitem');
-			pinSection.classList.add('menuitem-iconic', 'zotero-menuitem-pin');
+			pinSection.classList.add('menuitem-iconic', 'trellis-menuitem-pin');
 			pinSection.setAttribute('data-l10n-id', 'pin-section');
 			pinSection.addEventListener('command', () => {
 				let sidenav = this._getSidenav();
@@ -229,7 +229,7 @@
 			contextMenu.append(pinSection);
 
 			unpinSection = document.createXULElement('menuitem');
-			unpinSection.classList.add('menuitem-iconic', 'zotero-menuitem-unpin');
+			unpinSection.classList.add('menuitem-iconic', 'trellis-menuitem-unpin');
 			unpinSection.setAttribute('data-l10n-id', 'unpin-section');
 			unpinSection.addEventListener('command', () => {
 				this._getSidenav().pinnedPane = null;
@@ -240,7 +240,7 @@
 			contextMenu.append(pinSeparator);
 
 			let collapseOtherSections = document.createXULElement('menuitem');
-			collapseOtherSections.classList.add('menuitem-iconic', 'zotero-menuitem-collapse-others');
+			collapseOtherSections.classList.add('menuitem-iconic', 'trellis-menuitem-collapse-others');
 			collapseOtherSections.setAttribute('data-l10n-id', 'collapse-other-sections');
 			collapseOtherSections.addEventListener('command', () => {
 				// Scroll to the top (first section), so we don't end up scrolled past the end
@@ -254,7 +254,7 @@
 			contextMenu.append(collapseOtherSections);
 
 			let expandAllSections = document.createXULElement('menuitem');
-			expandAllSections.classList.add('menuitem-iconic', 'zotero-menuitem-expand-all');
+			expandAllSections.classList.add('menuitem-iconic', 'trellis-menuitem-expand-all');
 			expandAllSections.setAttribute('data-l10n-id', 'expand-all-sections');
 			expandAllSections.addEventListener('command', () => {
 				for (let section of containerRoot.querySelectorAll('collapsible-section')) {
@@ -267,7 +267,7 @@
 			contextMenu.append(reorderSeparator);
 
 			let moveSectionUp = document.createXULElement('menuitem');
-			moveSectionUp.classList.add('menuitem-iconic', 'zotero-menuitem-reorder-up');
+			moveSectionUp.classList.add('menuitem-iconic', 'trellis-menuitem-reorder-up');
 			moveSectionUp.setAttribute('data-l10n-id', 'sidenav-reorder-up');
 			moveSectionUp.addEventListener('command', () => {
 				let sidenav = this._getSidenav();
@@ -276,7 +276,7 @@
 			contextMenu.append(moveSectionUp);
 
 			let moveSectionDown = document.createXULElement('menuitem');
-			moveSectionDown.classList.add('menuitem-iconic', 'zotero-menuitem-reorder-down');
+			moveSectionDown.classList.add('menuitem-iconic', 'trellis-menuitem-reorder-down');
 			moveSectionDown.setAttribute('data-l10n-id', 'sidenav-reorder-down');
 			moveSectionDown.addEventListener('command', () => {
 				let sidenav = this._getSidenav();
@@ -285,7 +285,7 @@
 			contextMenu.append(moveSectionDown);
 
 			let resetSectionOrder = document.createXULElement('menuitem');
-			resetSectionOrder.classList.add('menuitem-iconic', 'zotero-menuitem-reorder-reset');
+			resetSectionOrder.classList.add('menuitem-iconic', 'trellis-menuitem-reorder-reset');
 			resetSectionOrder.setAttribute('data-l10n-id', 'sidenav-reorder-reset');
 			resetSectionOrder.addEventListener('command', () => {
 				let sidenav = this._getSidenav();
@@ -358,12 +358,12 @@
 
 			this._contextMenu?.remove();
 			
-			Zotero.Prefs.unregisterObserver(this._prefsObserverID);
+			Trellis.Prefs.unregisterObserver(this._prefsObserverID);
 		}
 		
 		_saveOpenState() {
 			if (this._disableSavingOpenState || this._skipSaveOpenState) return;
-			Zotero.Prefs.set(`panes.${this.dataset.pane}.open`, this.open);
+			Trellis.Prefs.set(`panes.${this.dataset.pane}.open`, this.open);
 		}
 		
 		_restoreOpenState() {
@@ -372,7 +372,7 @@
 				return;
 			}
 			this._restoringOpenState = true;
-			this.open = Zotero.Prefs.get(`panes.${this.dataset.pane}.open`) ?? true;
+			this.open = Trellis.Prefs.get(`panes.${this.dataset.pane}.open`) ?? true;
 			this._restoringOpenState = false;
 		}
 
@@ -433,7 +433,7 @@
 			// ArrowLeft/ArrowRight on actual header will close/open (depending on locale direction)
 			if (["ArrowLeft", "ArrowRight", " ", "Enter"].includes(event.key) && !this._disableCollapsing && this.collapsible) {
 				stopEvent();
-				this.open = ([" ", "Enter"].includes(event.key)) ? !this.open : (event.key == Zotero.arrowNextKey);
+				this.open = ([" ", "Enter"].includes(event.key)) ? !this.open : (event.key == Trellis.arrowNextKey);
 				event.target.focus();
 			}
 			if (["ArrowUp", "ArrowDown"].includes(event.key)) {
@@ -474,9 +474,9 @@
 			if (document.documentElement.getAttribute('windowtype') !== 'navigator:browser') {
 				return null;
 			}
-			if (typeof ZoteroContextPane == "undefined") return null;
+			if (typeof TrellisContextPane == "undefined") return null;
 			// TODO: update this after unifying item pane & context pane
-			return ZoteroContextPane.sidenav;
+			return TrellisContextPane.sidenav;
 		}
 		
 		render() {

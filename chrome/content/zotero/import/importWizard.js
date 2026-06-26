@@ -3,38 +3,38 @@
     
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
     
-	This file is part of Zotero.
+	This file is part of Trellis.
     
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
     
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
     
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
 	***** END LICENSE BLOCK *****
 */
-/* eslint camelcase: ["error", {allow: ["Zotero_File_Interface", "Zotero_Import_Wizard"]} ] */
-/* global Zotero_File_Interface: false, mendeleyAPIUtils: false */
+/* eslint camelcase: ["error", {allow: ["Trellis_File_Interface", "Trellis_Import_Wizard"]} ] */
+/* global Trellis_File_Interface: false, mendeleyAPIUtils: false */
 
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProgressQueueTable from 'components/progressQueueTable';
 
-Services.scriptloader.loadSubScript("chrome://zotero/content/import/mendeley/mendeleyAPIUtils.js");
+Services.scriptloader.loadSubScript("chrome://trellis/content/import/mendeley/mendeleyAPIUtils.js");
 const { directAuth } = mendeleyAPIUtils;
 
 
-const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
+const Trellis_Import_Wizard = { // eslint-disable-line no-unused-vars
 	file: null,
 	folder: null,
 	isZotfileInstalled: false,
@@ -56,7 +56,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 			+ "AND itemID NOT IN (SELECT itemID FROM itemNotes WHERE parentItemID IS NOT NULL) "
 			+ "AND itemID NOT IN (SELECT itemID FROM itemAttachments WHERE parentItemID IS NOT NULL) "
 			+ "LIMIT 1";
-		return Zotero.DB.valueQueryAsync(sql, this.libraryID);
+		return Trellis.DB.valueQueryAsync(sql, this.libraryID);
 	},
 
 	async init() {
@@ -118,21 +118,21 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 			.querySelector('.wizard-header-label').style.fontSize = '16px';
 		
 		// Run async checks. This should be near instantaneous in most cases (unless the DB is busy). See #4300
-		const predicateID = Zotero.RelationPredicates.getID('mendeleyDB:documentUUID');
+		const predicateID = Trellis.RelationPredicates.getID('mendeleyDB:documentUUID');
 		if (predicateID) {
 			const relSQL = 'SELECT ROWID FROM itemRelations WHERE predicateID = ? LIMIT 1';
-			this.mendeleyHasPreviouslyImported = !!(await Zotero.DB.valueQueryAsync(relSQL, predicateID));
+			this.mendeleyHasPreviouslyImported = !!(await Trellis.DB.valueQueryAsync(relSQL, predicateID));
 		}
 
-		const extensions = await Zotero.getInstalledExtensions();
+		const extensions = await Trellis.getInstalledExtensions();
 		this.isZotfileInstalled = !!extensions.find(extName => extName.match(/^ZotFile((?!disabled).)*$/));
-		this.mendeleyImporterVersion = parseInt((await Zotero.DB.valueQueryAsync("SELECT value FROM settings WHERE setting='mendeleyImport' AND key='version'")) || 0);
+		this.mendeleyImporterVersion = parseInt((await Trellis.DB.valueQueryAsync("SELECT value FROM settings WHERE setting='mendeleyImport' AND key='version'")) || 0);
 
 		// Initialize controls on the options page with default or previously saved values
-		const shouldCreateCollection = Zotero.Prefs.prefHasUserValue('import.createCollection')
-			? Zotero.Prefs.get('import.createCollection')
+		const shouldCreateCollection = Trellis.Prefs.prefHasUserValue('import.createCollection')
+			? Trellis.Prefs.get('import.createCollection')
 			: await this.getShouldCreateCollection();
-		const fileHandling = Zotero.Prefs.get('import.fileHandling') ?? 'copy';
+		const fileHandling = Trellis.Prefs.get('import.fileHandling') ?? 'copy';
 		fileHandlingEl.value = fileHandling;
 		createCollectionEl.checked = shouldCreateCollection;
 
@@ -148,7 +148,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 			this.wizard.goTo(pageID);
 		}
 
-		if (mendeleyCode && Zotero.Prefs.get("import.mendeleyUseOAuth")) {
+		if (mendeleyCode && Trellis.Prefs.get("import.mendeleyUseOAuth")) {
 			this.mendeleyCode = mendeleyCode;
 			this.wizard.goTo('page-options');
 		}
@@ -176,7 +176,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 		if (this.folder && !showReportErrorButton) {
 			doneQueueContainer.style.display = 'flex';
 			ReactDOM.createRoot(doneQueue).render(
-				<ProgressQueueTable progressQueue={ Zotero.ProgressQueues.get('recognize') } />
+				<ProgressQueueTable progressQueue={ Trellis.ProgressQueues.get('recognize') } />
 			);
 		}
 		else {
@@ -193,12 +193,12 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 	},
 
 	async chooseFile() {
-		const translation = new Zotero.Translate.Import();
+		const translation = new Trellis.Translate.Import();
 		const translators = await translation.getTranslators();
 		const fp = new FilePicker();
-		fp.init(window, Zotero.getString("fileInterface.import"), fp.modeOpen);
+		fp.init(window, Trellis.getString("fileInterface.import"), fp.modeOpen);
 		fp.appendFilters(fp.filterAll);
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 
 		// Add Mendeley DB, which isn't a translator
 		const mendeleyFilter = {
@@ -218,7 +218,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 			return;
 		}
 
-		Zotero.debug(`File is ${fp.file}`);
+		Trellis.debug(`File is ${fp.file}`);
 		this.file = fp.file;
 		this.wizard.canAdvance = true;
 		this.wizard.goTo('page-options');
@@ -226,7 +226,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 
 	async chooseFolder() {
 		const fp = new FilePicker();
-		fp.init(window, Zotero.getString('attachmentBasePath.selectDir'), fp.modeGetFolder);
+		fp.init(window, Trellis.getString('attachmentBasePath.selectDir'), fp.modeGetFolder);
 		fp.appendFilters(fp.filterAll);
 
 		const rv = await fp.show();
@@ -234,7 +234,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 			return;
 		}
 
-		Zotero.debug(`Folder is ${fp.file}`);
+		Trellis.debug(`Folder is ${fp.file}`);
 
 		this.folder = fp.file;
 		this.wizard.canAdvance = true;
@@ -242,20 +242,20 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 	},
 
 	async onMendeleyOnlineShow() {
-		document.getElementById('import-online-intro').l10nId = Zotero.Prefs.get("import.mendeleyUseOAuth")
+		document.getElementById('import-online-intro').l10nId = Trellis.Prefs.get("import.mendeleyUseOAuth")
 			? 'import-online-intro'
 			: 'import-online-form-intro';
-		document.getElementById('mendeley-login').style.display = Zotero.Prefs.get("import.mendeleyUseOAuth") ? 'none' : '';
+		document.getElementById('mendeley-login').style.display = Trellis.Prefs.get("import.mendeleyUseOAuth") ? 'none' : '';
 		document.getElementById('mendeley-online-login-feedback').style.display = 'none';
 
 		// If we use oAuth, form doesn't show and we can advance, otherwise need to fill-in form first so disable
-		this.wizard.canAdvance = Zotero.Prefs.get("import.mendeleyUseOAuth");
+		this.wizard.canAdvance = Trellis.Prefs.get("import.mendeleyUseOAuth");
 	},
 
 	async onMendeleyOnlineAdvance(ev) {
 		ev.preventDefault();
 
-		if (Zotero.Prefs.get("import.mendeleyUseOAuth")) {
+		if (Trellis.Prefs.get("import.mendeleyUseOAuth")) {
 			this.openMendeleyAuthWindow();
 		}
 		else {
@@ -270,12 +270,12 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 			catch (e) {
 				const feedbackEl = document.getElementById('mendeley-online-login-feedback');
 				feedbackEl.textContent = '';
-				if (e instanceof Zotero.HTTP.SecurityException) {
+				if (e instanceof Trellis.HTTP.SecurityException) {
 					feedbackEl.removeAttribute('data-l10n-id');
 					feedbackEl.removeAttribute('data-l10n-args');
 					feedbackEl.textContent = e.message;
 				}
-				else if (e instanceof Zotero.HTTP.UnexpectedStatusException && (e.status === 400 || e.status === 401 || e.status === 403)) {
+				else if (e instanceof Trellis.HTTP.UnexpectedStatusException && (e.status === 400 || e.status === 401 || e.status === 403)) {
 					feedbackEl.setAttribute('data-l10n-id', 'import-online-wrong-credentials');
 					feedbackEl.setAttribute('data-l10n-args', JSON.stringify({ targetApp: "Mendeley" }));
 					this.wizard.canAdvance = false; // change to login/password input will reset this
@@ -358,7 +358,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 
 		window.close();
 
-		Services.ww.openWindow(null, "chrome://zotero/content/standalone/basicViewer.xhtml",
+		Services.ww.openWindow(null, "chrome://trellis/content/standalone/basicViewer.xhtml",
 			"basicViewer", "chrome,dialog=yes,centerscreen,width=1000,height=700,modal", arg);
 	},
 
@@ -389,7 +389,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 		if (this.folder) {
 			progressQueueContainer.style.display = 'flex';
 			ReactDOM.createRoot(progressQueue).render(
-				<ProgressQueueTable progressQueue={Zotero.ProgressQueues.get('recognize')} />
+				<ProgressQueueTable progressQueue={Trellis.ProgressQueues.get('recognize')} />
 			);
 		}
 		else {
@@ -409,7 +409,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 
 	onURLInteract(ev) {
 		if (ev.type === 'click' || (ev.type === 'keydown' && ev.key === ' ')) {
-			Zotero.launchURL(ev.currentTarget.getAttribute('href'));
+			Trellis.launchURL(ev.currentTarget.getAttribute('href'));
 			window.close();
 			ev.preventDefault();
 		}
@@ -417,7 +417,7 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 
 	onReportErrorInteract(ev) {
 		if (ev.type === 'click' || (ev.type === 'keydown' && ev.key === ' ')) {
-			Zotero.getActiveZoteroPane().reportErrors();
+			Trellis.getActiveTrellisPane().reportErrors();
 			window.close();
 		}
 	},
@@ -449,11 +449,11 @@ const Zotero_Import_Wizard = { // eslint-disable-line no-unused-vars
 		const newItemsOnly = document.getElementById('new-items-only-checkbox').checked;
 		const relinkOnly = document.getElementById('relink-only-checkbox').checked;
 
-		Zotero.Prefs.set('import.fileHandling', fileHandling);
-		Zotero.Prefs.set('import.createCollection', shouldCreateCollection);
+		Trellis.Prefs.set('import.fileHandling', fileHandling);
+		Trellis.Prefs.set('import.createCollection', shouldCreateCollection);
 		
 		try {
-			const result = await Zotero_File_Interface.importFile({
+			const result = await Trellis_File_Interface.importFile({
 				createNewCollection: shouldCreateCollection,
 				file: this.file,
 				fileTypes,

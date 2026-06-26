@@ -7,7 +7,7 @@
 /* import-globals-from ../../../content/contentAreaUtils.js */
 
 /* globals DownloadUtils, Services, AUSTLMY */
-var { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
+var { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
 
 const { DownloadUtils } = ChromeUtils.importESModule(
 	"resource://gre/modules/DownloadUtils.sys.mjs"
@@ -27,7 +27,7 @@ const PREF_APP_UPDATE_NOTIFIEDUNSUPPORTED = "app.update.notifiedUnsupported";
 const PREF_APP_UPDATE_URL_MANUAL = "app.update.url.manual";
 
 const URI_UPDATES_PROPERTIES =
-	"chrome://zotero/locale/mozilla/updates.properties";
+	"chrome://trellis/locale/mozilla/updates.properties";
 
 const STATE_DOWNLOADING = "downloading";
 const STATE_PENDING = "pending";
@@ -65,10 +65,10 @@ var gUpdatesFoundPageId;
  */
 function LOG(module, string) {
 	if (arguments.length == 2) {
-		Zotero.debug("AUS:UI " + module + ":" + string);
+		Trellis.debug("AUS:UI " + module + ":" + string);
 	}
 	else {
-		Zotero.debug("AUS:UI " + string);
+		Trellis.debug("AUS:UI " + string);
 	}
 }
 

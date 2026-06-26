@@ -1,9 +1,9 @@
-var { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
+var { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
 
 // Useful "constants"
 var sqlDateTimeRe = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 var isoDateTimeRe = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
-var zoteroObjectKeyRe = /^[23456789ABCDEFGHIJKLMNPQRSTUVWXYZ]{8}$/; // based on Zotero.Utilities::generateObjectKey()
+var trellisObjectKeyRe = /^[23456789ABCDEFGHIJKLMNPQRSTUVWXYZ]{8}$/; // based on Trellis.Utilities::generateObjectKey()
 var browserWindowInitialized = false;
 
 /**
@@ -11,7 +11,7 @@ var browserWindowInitialized = false;
  * resolved with the event.
  */
 function waitForDOMEvent(target, event, capture) {
-	var deferred = Zotero.Promise.defer();
+	var deferred = Trellis.Promise.defer();
 	var func = function(ev) {
 		target.removeEventListener(event, func, capture);
 		deferred.resolve(ev);
@@ -30,7 +30,7 @@ async function waitForDOMAttributes(target, attributes, callback) {
 	if (typeof attributes === "string") {
 		attributes = [attributes];
 	}
-	let deferred = Zotero.Promise.defer();
+	let deferred = Trellis.Promise.defer();
 	function handleMutation(mutations) {
 		for (let mutation of mutations) {
 			if (mutation.type === 'attributes') {
@@ -57,11 +57,11 @@ async function waitForDOMAttributes(target, attributes, callback) {
 }
 
 async function waitForRecognizer() {
-	var win = await waitForWindow('chrome://zotero/content/progressQueueDialog.xhtml')
+	var win = await waitForWindow('chrome://trellis/content/progressQueueDialog.xhtml')
 	// Wait for status to show as complete
-	var completeStr = Zotero.getString("general.finished");
+	var completeStr = Trellis.getString("general.finished");
 	while (win.document.getElementById("label").value != completeStr) {
-		await Zotero.Promise.delay(20);
+		await Trellis.Promise.delay(20);
 	}
 	return win;
 }
@@ -79,19 +79,19 @@ function loadWindow(winurl, argument) {
 }
 
 /**
- * Open a Zotero window and return a promise for the window
+ * Open a Trellis window and return a promise for the window
  *
  * @param {boolean} [enablePersist] Load persisted layout values, like pane collapse states
  * @return {Promise<ChromeWindow>}
  */
-function loadZoteroWindow({ enablePersist } = {}) {
+function loadTrellisWindow({ enablePersist } = {}) {
 	if (!enablePersist) {
-		Zotero.Prefs.clear('pane.persist');
+		Trellis.Prefs.clear('pane.persist');
 	}
 	
-	var win = window.openDialog("chrome://zotero/content/zoteroPane.xhtml", "", "all,height=700,width=1000");
+	var win = window.openDialog("chrome://trellis/content/trellisPane.xhtml", "", "all,height=700,width=1000");
 	return waitForDOMEvent(win, "load").then(function() {
-		return new Zotero.Promise((resolve) => {
+		return new Trellis.Promise((resolve) => {
 			if (!browserWindowInitialized) {
 				setTimeout(function () {
 					browserWindowInitialized = true;
@@ -105,22 +105,22 @@ function loadZoteroWindow({ enablePersist } = {}) {
 }
 
 /**
- * Opens the Zotero pane and selects My Library. Returns the containing window.
+ * Opens the Trellis pane and selects My Library. Returns the containing window.
  *
  * @param {Window} [win] - Existing window to use; if not specified, a new window is opened
  */
-var loadZoteroPane = async function (win) {
+var loadTrellisPane = async function (win) {
 	if (!win) {
-		var win = await loadZoteroWindow();
+		var win = await loadTrellisWindow();
 	}
-	Zotero.Prefs.clear('lastViewedFolder');
+	Trellis.Prefs.clear('lastViewedFolder');
 	
 	while (true) {
-		if (win.ZoteroPane && win.ZoteroPane.collectionsView) {
+		if (win.TrellisPane && win.TrellisPane.collectionsView) {
 			break;
 		}
-		Zotero.debug("Waiting for ZoteroPane initialization");
-		await Zotero.Promise.delay(50);
+		Trellis.debug("Waiting for TrellisPane initialization");
+		await Trellis.Promise.delay(50);
 	}
 	
 	await waitForItemsLoad(win, 0);
@@ -131,8 +131,8 @@ var loadZoteroPane = async function (win) {
 /**
  * Bring the main window to the front, for tests that rely on focus (e.g., editable-text).
  */
-async function activateZoteroPane() {
-	let win = Zotero.getMainWindow();
+async function activateTrellisPane() {
+	let win = Trellis.getMainWindow();
 	if (!win) {
 		throw new Error('Main window is not open');
 	}
@@ -145,17 +145,17 @@ async function activateZoteroPane() {
 	let activatePromise = new Promise(
 		resolve => win.addEventListener('activate', resolve, { once: true })
 	);
-	Zotero.Utilities.Internal.activate();
-	Zotero.Utilities.Internal.activate(win);
+	Trellis.Utilities.Internal.activate();
+	Trellis.Utilities.Internal.activate(win);
 	await activatePromise;
 }
 
 var loadPrefPane = async function (paneName) {
-	var id = 'zotero-prefpane-' + paneName;
-	var win = await loadWindow("chrome://zotero/content/preferences/preferences.xhtml", {
+	var id = 'trellis-prefpane-' + paneName;
+	var win = await loadWindow("chrome://trellis/content/preferences/preferences.xhtml", {
 		pane: id
 	});
-	await win.Zotero_Preferences.waitForFirstPaneLoad();
+	await win.Trellis_Preferences.waitForFirstPaneLoad();
 	return win;
 };
 
@@ -166,13 +166,13 @@ var loadPrefPane = async function (paneName) {
  * which prevent async code from continuing
  */
 function waitForWindow(uri, callback) {
-	var deferred = Zotero.Promise.defer();
+	var deferred = Trellis.Promise.defer();
 	var loadobserver = function(ev) {
 		ev.originalTarget.removeEventListener("load", loadobserver, false);
-		Zotero.debug("Window opened: " + ev.target.location.href);
+		Trellis.debug("Window opened: " + ev.target.location.href);
 		
 		if (ev.target.location.href != uri) {
-			Zotero.debug(`Ignoring window ${ev.target.location.href} in waitForWindow()`);
+			Trellis.debug(`Ignoring window ${ev.target.location.href} in waitForWindow()`);
 			return;
 		}
 		
@@ -190,7 +190,7 @@ function waitForWindow(uri, callback) {
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					win.close();
 					deferred.reject(e);
 					return;
@@ -234,7 +234,7 @@ function waitForDialog(onOpen, button='accept', url) {
 			}
 		}
 		else if (button != 'cancel') {
-			let deferred = Zotero.Promise.defer();
+			let deferred = Trellis.Promise.defer();
 			function acceptWhenEnabled() {
 				// Handle delayed buttons
 				if (dialog.getButton(button).disabled) {
@@ -265,46 +265,46 @@ function waitForDialog(onOpen, button='accept', url) {
 }
 
 async function select(win, object) {
-	if (object instanceof Zotero.Library) {
+	if (object instanceof Trellis.Library) {
 		return selectLibrary(win, object);
 	}
-	if (object instanceof Zotero.Collection) {
+	if (object instanceof Trellis.Collection) {
 		return selectCollection(win, object);
 	}
-	if (object instanceof Zotero.Search) {
+	if (object instanceof Trellis.Search) {
 		return selectSearch(win, object);
 	}
-	if (object instanceof Zotero.Item) {
-		return win.ZoteroPane.itemsView.selectItem(object.id);
+	if (object instanceof Trellis.Item) {
+		return win.TrellisPane.itemsView.selectItem(object.id);
 	}
 	throw new Error("Unknown object");
 }
 
-async function selectLibrary(win, libraryOrID = Zotero.Libraries.userLibraryID) {
-	var libraryID = libraryOrID instanceof Zotero.Library ? libraryOrID.libraryID : libraryOrID;
-	await win.ZoteroPane.collectionsView.selectLibrary(libraryID);
+async function selectLibrary(win, libraryOrID = Trellis.Libraries.userLibraryID) {
+	var libraryID = libraryOrID instanceof Trellis.Library ? libraryOrID.libraryID : libraryOrID;
+	await win.TrellisPane.collectionsView.selectLibrary(libraryID);
 	await waitForItemsLoad(win);
 }
 
 async function selectCollection(win, collectionOrID) {
-	var collectionID = collectionOrID instanceof Zotero.Collection ? collectionOrID.id : collectionOrID;
-	await win.ZoteroPane.collectionsView.selectCollection(collectionID);
+	var collectionID = collectionOrID instanceof Trellis.Collection ? collectionOrID.id : collectionOrID;
+	await win.TrellisPane.collectionsView.selectCollection(collectionID);
 	await waitForItemsLoad(win);
 }
 
 async function selectSearch(win, searchOrID) {
-	var searchID = searchOrID instanceof Zotero.Search ? searchOrID.id : searchOrID;
-	await win.ZoteroPane.collectionsView.selectSearch(searchID);
+	var searchID = searchOrID instanceof Trellis.Search ? searchOrID.id : searchOrID;
+	await win.TrellisPane.collectionsView.selectSearch(searchID);
 	await waitForItemsLoad(win);
 }
 
-async function selectTrash(win, libraryID = Zotero.Libraries.userLibraryID) {
-	await win.ZoteroPane.collectionsView.selectTrash(libraryID);
+async function selectTrash(win, libraryID = Trellis.Libraries.userLibraryID) {
+	await win.TrellisPane.collectionsView.selectTrash(libraryID);
 	await waitForItemsLoad(win);
 }
 
 var waitForItemsLoad = async function (win, collectionRowToSelect) {
-	var zp = win.ZoteroPane;
+	var zp = win.TrellisPane;
 	var cv = zp.collectionsView;
 	
 	await cv.waitForLoad();
@@ -323,8 +323,8 @@ var waitForItemsLoad = async function (win, collectionRowToSelect) {
 var waitForTagSelector = function (win, numUpdates = 1) {
 	var updates = 0;
 	
-	var zp = win.ZoteroPane;
-	var deferred = Zotero.Promise.defer();
+	var zp = win.TrellisPane;
+	var deferred = Trellis.Promise.defer();
 	if (zp.tagSelectorShown()) {
 		let tagSelector = zp.tagSelector;
 		let componentDidUpdate = tagSelector.componentDidUpdate;
@@ -346,7 +346,7 @@ var waitForTagSelector = function (win, numUpdates = 1) {
 };
 
 var waitForCollectionTree = function(win) {
-	let cv = win.ZoteroPane.collectionsView;
+	let cv = win.TrellisPane.collectionsView;
 	return cv._waitForEvent('refresh');
 }
 
@@ -365,10 +365,10 @@ function waitForItemEvent(event) {
 function waitForNotifierEvent(event, type) {
 	if (!event) throw new Error("event not provided");
 	
-	var deferred = Zotero.Promise.defer();
-	var notifierID = Zotero.Notifier.registerObserver({notify:function (ev, type, ids, extraData) {
+	var deferred = Trellis.Promise.defer();
+	var notifierID = Trellis.Notifier.registerObserver({notify:function (ev, type, ids, extraData) {
 		if(ev == event) {
-			Zotero.Notifier.unregisterObserver(notifierID);
+			Trellis.Notifier.unregisterObserver(notifierID);
 			deferred.resolve({
 				ids: ids,
 				extraData: extraData
@@ -379,13 +379,13 @@ function waitForNotifierEvent(event, type) {
 }
 
 async function waitForPrefsChange(key, global) {
-	var deferred = Zotero.Promise.defer();
+	var deferred = Trellis.Promise.defer();
 	let observerID;
 	var observer = function() {
-		Zotero.Prefs.unregisterObserver(observerID);
+		Trellis.Prefs.unregisterObserver(observerID);
 		deferred.resolve();
 	};
-	observerID = Zotero.Prefs.registerObserver(key, observer, global);
+	observerID = Trellis.Prefs.registerObserver(key, observer, global);
 	return deferred.promise;
 }
 
@@ -394,7 +394,7 @@ async function waitForPrefsChange(key, global) {
  */
 async function pause(thisObj) {
 	thisObj.timeout(100000000);
-	await Zotero.Promise.delay(100000000);
+	await Trellis.Promise.delay(100000000);
 }
 
 /**
@@ -418,7 +418,7 @@ function getWindows(uri) {
  * should assume failure.
  */
 function waitForCallback(cb, interval, timeout) {
-	var deferred = Zotero.Promise.defer();
+	var deferred = Trellis.Promise.defer();
 	if(interval === undefined) interval = 100;
 	if(timeout === undefined) timeout = 10000;
 	var start = Date.now();
@@ -437,7 +437,7 @@ function waitForCallback(cb, interval, timeout) {
 
 
 async function delay(ms) {
-	return Zotero.Promise.delay(ms);
+	return Trellis.Promise.delay(ms);
 }
 
 async function waitForFrame() {
@@ -455,7 +455,7 @@ async function waitForFrames(n) {
 async function waitNoLongerThan(promise, ms = 1000) {
 	return Promise.race([
 		promise,
-		Zotero.Promise.delay(ms)
+		Trellis.Promise.delay(ms)
 	]);
 }
 
@@ -498,22 +498,22 @@ var getGroup = function () {
 
 var createGroup = async function (props = {}) {
 	// Creating a group item requires the current user to be set and in the users table
-	let currentUserID = Zotero.Users.getCurrentUserID();
+	let currentUserID = Trellis.Users.getCurrentUserID();
 	if (!currentUserID) {
-		await Zotero.Users.setCurrentUserID(1);
+		await Trellis.Users.setCurrentUserID(1);
 		currentUserID = 1;
 	}
-	if (!Zotero.Users.getName(currentUserID)) {
-		await Zotero.Users.setName(currentUserID, 'Name');
+	if (!Trellis.Users.getName(currentUserID)) {
+		await Trellis.Users.setName(currentUserID, 'Name');
 	}
 	
-	var group = new Zotero.Group;
-	group.id = props.id || Zotero.Utilities.rand(10000, 1000000);
-	group.name = props.name || "Test " + Zotero.Utilities.randomString();
+	var group = new Trellis.Group;
+	group.id = props.id || Trellis.Utilities.rand(10000, 1000000);
+	group.name = props.name || "Test " + Trellis.Utilities.randomString();
 	group.description = props.description || "";
 	group.editable = props.editable === undefined ? true : props.editable;
 	group.filesEditable = props.filesEditable === undefined ? true : props.filesEditable;
-	group.version = props.version === undefined ? Zotero.Utilities.rand(1000, 10000) : props.version;
+	group.version = props.version === undefined ? Trellis.Utilities.rand(1000, 10000) : props.version;
 	if (props.libraryVersion) {
 		group.libraryVersion = props.libraryVersion;
 	}
@@ -523,10 +523,10 @@ var createGroup = async function (props = {}) {
 };
 
 var createFeed = async function (props = {}) {
-	var feed = new Zotero.Feed;
-	feed.name = props.name || "Test " + Zotero.Utilities.randomString();
+	var feed = new Trellis.Feed;
+	feed.name = props.name || "Test " + Trellis.Utilities.randomString();
 	feed.description = props.description || "";
-	feed.url = props.url || 'http://www.' + Zotero.Utilities.randomString() + '.com/feed.rss';
+	feed.url = props.url || 'http://www.' + Trellis.Utilities.randomString() + '.com/feed.rss';
 	feed.refreshInterval = props.refreshInterval || 12;
 	feed.cleanupReadAfter = props.cleanupReadAfter || 2;
 	feed.cleanupUnreadAfter = props.cleanupUnreadAfter || 30;
@@ -535,7 +535,7 @@ var createFeed = async function (props = {}) {
 };
 
 var clearFeeds = async function () {
-	let feeds = Zotero.Feeds.getAll();
+	let feeds = Trellis.Feeds.getAll();
 	for (let i=0; i<feeds.length; i++) {
 		await feeds[i].eraseTx();
 	}
@@ -576,11 +576,11 @@ function createUnsavedDataObject(objectType, params = {}) {
 		allowedParams.push('inPublications');
 	}
 	if (objectType == 'feedItem') {
-		params.guid = params.guid || Zotero.randomString();
+		params.guid = params.guid || Trellis.randomString();
 		allowedParams.push('guid');
 	}
 	
-	var obj = new Zotero[Zotero.Utilities.capitalize(objectType)](itemType);
+	var obj = new Trellis[Trellis.Utilities.capitalize(objectType)](itemType);
 	if (params.libraryID) {
 		obj.libraryID = params.libraryID;
 	}
@@ -593,7 +593,7 @@ function createUnsavedDataObject(objectType, params = {}) {
 			delete params.parentItemID;
 		}
 		if (params.title !== undefined || params.setTitle) {
-			obj.setField('title', params.title !== undefined ? params.title : Zotero.Utilities.randomString());
+			obj.setField('title', params.title !== undefined ? params.title : Trellis.Utilities.randomString());
 		}
 		if (params.creators !== undefined) {
 			obj.setCreators(params.creators);
@@ -611,16 +611,16 @@ function createUnsavedDataObject(objectType, params = {}) {
 	
 	case 'collection':
 	case 'search':
-		obj.name = params.name !== undefined ? params.name : Zotero.Utilities.randomString();
+		obj.name = params.name !== undefined ? params.name : Trellis.Utilities.randomString();
 		break;
 	}
 	
 	if (objectType == 'search') {
-		obj.addCondition('title', 'contains', Zotero.Utilities.randomString());
-		obj.addCondition('title', 'isNot', Zotero.Utilities.randomString());
+		obj.addCondition('title', 'contains', Trellis.Utilities.randomString());
+		obj.addCondition('title', 'isNot', Trellis.Utilities.randomString());
 	}
 	
-	Zotero.Utilities.Internal.assignProps(obj, params, allowedParams);
+	Trellis.Utilities.Internal.assignProps(obj, params, allowedParams);
 	
 	return obj;
 }
@@ -643,12 +643,12 @@ var modifyDataObject = function (obj, params = {}, saveOptions) {
 	case 'item':
 		obj.setField(
 			'title',
-			params.title !== undefined ? params.title : Zotero.Utilities.randomString()
+			params.title !== undefined ? params.title : Trellis.Utilities.randomString()
 		);
 		break;
 	
 	default:
-		obj.name = params.name !== undefined ? params.name : Zotero.Utilities.randomString();
+		obj.name = params.name !== undefined ? params.name : Trellis.Utilities.randomString();
 	}
 	return obj.saveTx(saveOptions);
 };
@@ -671,7 +671,7 @@ async function getPromiseError(promise) {
  * (i.e., test/tests/data)
  */
 function getTestDataDirectory() {
-	var file = Zotero.File.pathToFile(Zotero.resourcesDir);
+	var file = Trellis.File.pathToFile(Trellis.resourcesDir);
 	file.append('tests');
 	file.append('data');
 	return file;
@@ -682,7 +682,7 @@ function getTestDataUrl(path) {
 	if (path[0].length == 0) {
 		path.splice(0, 1);
 	}
-	return "resource://zotero-unit-tests/data/" + path.join('/');
+	return "resource://trellis-unit-tests/data/" + path.join('/');
 }
 
 /**
@@ -691,9 +691,9 @@ function getTestDataUrl(path) {
 var getTempDirectory = async function getTempDirectory() {
 	let path,
 		attempts = 3,
-		zoteroTmpDirPath = Zotero.getTempDirectory().path;
+		trellisTmpDirPath = Trellis.getTempDirectory().path;
 	while (attempts--) {
-		path = PathUtils.join(zoteroTmpDirPath, Zotero.Utilities.randomString());
+		path = PathUtils.join(trellisTmpDirPath, Trellis.Utilities.randomString());
 		try {
 			await IOUtils.makeDirectory(path, { ignoreExisting: false });
 			break;
@@ -709,17 +709,17 @@ var removeDir = async function (dir) {
 	// OS.File.DirectoryIterator, used by OS.File.removeDir(), isn't reliable on Travis,
 	// returning entry.isDir == false for subdirectories, so use nsIFile instead
 	//yield OS.File.removeDir(zipDir);
-	dir = Zotero.File.pathToFile(dir);
+	dir = Trellis.File.pathToFile(dir);
 	if (dir.exists()) {
 		dir.remove(true);
 	}
 };
 
 /**
- * Resets the Zotero DB and restarts Zotero. Returns a promise resolved
+ * Resets the Trellis DB and restarts Trellis. Returns a promise resolved
  * when this finishes.
  *
- * @param {Object} [options] - Initialization options, as passed to Zotero.init(), overriding
+ * @param {Object} [options] - Initialization options, as passed to Trellis.init(), overriding
  *                             any that were set at startup
  */
 async function resetDB(options = {}) {
@@ -728,15 +728,15 @@ async function resetDB(options = {}) {
 	if (options.thisArg) {
 		options.thisArg.timeout(60000);
 	}
-	var db = Zotero.DataDirectory.getDatabase();
-	await Zotero.reinit(
+	var db = Trellis.DataDirectory.getDatabase();
+	await Trellis.reinit(
 		async function () {
 			// Extract a zipped DB file into place as the initial DB
 			if (options.dbFile && options.dbFile.endsWith('.zip')) {
 				let zipReader = Components.classes['@mozilla.org/libjar/zip-reader;1']
 					.createInstance(Components.interfaces.nsIZipReader);
-				zipReader.open(Zotero.File.pathToFile(options.dbFile));
-				zipReader.extract('zotero.sqlite', Zotero.File.pathToFile(db));
+				zipReader.open(Trellis.File.pathToFile(options.dbFile));
+				zipReader.extract('trellis.sqlite', Trellis.File.pathToFile(db));
 				zipReader.close();
 			}
 			// Otherwise swap in the initial copy we made of the DB, or an alternative non-zip file
@@ -748,93 +748,93 @@ async function resetDB(options = {}) {
 		},
 		options
 	);
-	await Zotero.Schema.schemaUpdatePromise;
+	await Trellis.Schema.schemaUpdatePromise;
 }
 
 /**
  * Lightweight alternative to resetDB() that clears user data and sync state without doing a full
- * Zotero shutdown/reinit cycle. Uses application APIs where possible to keep in-memory caches
+ * Trellis shutdown/reinit cycle. Uses application APIs where possible to keep in-memory caches
  * consistent.
  *
  * This is much faster than resetDB() because it avoids reloading all JS files and reinitializing
- * the entire Zotero context. It's suitable for tests that need a clean data state (no items,
- * collections, searches, or sync state) but don't need a completely fresh Zotero instance.
+ * the entire Trellis context. It's suitable for tests that need a clean data state (no items,
+ * collections, searches, or sync state) but don't need a completely fresh Trellis instance.
  */
 async function resetData() {
 	resetPrefs();
 
 	// Erase group and feed libraries (cascades to their items, collections, etc.)
-	for (let group of Zotero.Groups.getAll()) {
+	for (let group of Trellis.Groups.getAll()) {
 		await group.eraseTx({ skipDeleteLog: true });
 	}
-	for (let feed of Zotero.Feeds.getAll()) {
+	for (let feed of Trellis.Feeds.getAll()) {
 		await feed.eraseTx({ skipDeleteLog: true });
 	}
 	_defaultGroup = null;
 
-	let userLibraryID = Zotero.Libraries.userLibraryID;
+	let userLibraryID = Trellis.Libraries.userLibraryID;
 
 	// Erase all objects in user library using application APIs so caches stay consistent.
 	// Top-level items first (children are erased automatically), then collections, then searches.
-	await Zotero.DB.executeTransaction(async function () {
+	await Trellis.DB.executeTransaction(async function () {
 		let eraseOptions = { skipDeleteLog: true };
-		for (let item of (await Zotero.Items.getAll(userLibraryID, true, true))) {
+		for (let item of (await Trellis.Items.getAll(userLibraryID, true, true))) {
 			await item.erase(eraseOptions);
 		}
-		for (let collection of Zotero.Collections.getByLibrary(userLibraryID, false, true)) {
+		for (let collection of Trellis.Collections.getByLibrary(userLibraryID, false, true)) {
 			if (!collection.parentID) {
 				await collection.erase(eraseOptions);
 			}
 		}
-		for (let search of (await Zotero.Searches.getAll(userLibraryID))) {
+		for (let search of (await Trellis.Searches.getAll(userLibraryID))) {
 			await search.erase(eraseOptions);
 		}
 
 		// Clear synced settings
 		let sql = "SELECT setting FROM syncedSettings WHERE libraryID=?";
-		let settings = await Zotero.DB.columnQueryAsync(sql, userLibraryID);
+		let settings = await Trellis.DB.columnQueryAsync(sql, userLibraryID);
 		for (let setting of settings) {
-			await Zotero.SyncedSettings.clear(userLibraryID, setting, { skipDeleteLog: true });
+			await Trellis.SyncedSettings.clear(userLibraryID, setting, { skipDeleteLog: true });
 		}
 
 		// Clear sync-specific tables
-		await Zotero.Sync.Data.Local.clearCacheForLibrary(userLibraryID);
-		await Zotero.Sync.Data.Local.clearQueueForLibrary(userLibraryID);
+		await Trellis.Sync.Data.Local.clearCacheForLibrary(userLibraryID);
+		await Trellis.Sync.Data.Local.clearQueueForLibrary(userLibraryID);
 
 		// Clear fulltext and last-sync version entries
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			"DELETE FROM version WHERE schema IN (?, 'lastsync')",
 			"fulltext_" + userLibraryID
 		);
 
 		// Clear orphaned shared tables (items are gone but value rows remain)
-		await Zotero.DB.queryAsync("DELETE FROM tags");
-		await Zotero.DB.queryAsync("DELETE FROM creators");
+		await Trellis.DB.queryAsync("DELETE FROM tags");
+		await Trellis.DB.queryAsync("DELETE FROM creators");
 
 		// Clear account settings so Users.init() resets its private state
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			"DELETE FROM settings WHERE setting='account' AND key IN ('userID', 'libraryID', 'username')"
 		);
-		await Zotero.DB.queryAsync("DELETE FROM users");
+		await Trellis.DB.queryAsync("DELETE FROM users");
 
 		// Reset library version
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			"UPDATE libraries SET version=0, storageVersion=0, lastSync=0 WHERE libraryID=?",
 			userLibraryID
 		);
 	});
 
 	// Clear delete logs
-	await Zotero.Sync.Data.Local.clearDeleteLogForLibrary(userLibraryID);
-	await Zotero.DB.queryAsync("DELETE FROM storageDeleteLog WHERE libraryID=?", userLibraryID);
+	await Trellis.Sync.Data.Local.clearDeleteLogForLibrary(userLibraryID);
+	await Trellis.DB.queryAsync("DELETE FROM storageDeleteLog WHERE libraryID=?", userLibraryID);
 
 	// Reload caches from DB
-	await Zotero.Libraries.init();
-	await Zotero.Users.init();
-	await Zotero.Tags.init();
-	await Zotero.Creators.init();
-	await Zotero.SyncedSettings.loadAll(userLibraryID);
-	await Zotero.Sync.Data.Local.init();
+	await Trellis.Libraries.init();
+	await Trellis.Users.init();
+	await Trellis.Tags.init();
+	await Trellis.Creators.init();
+	await Trellis.SyncedSettings.loadAll(userLibraryID);
+	await Trellis.Sync.Data.Local.init();
 }
 
 /**
@@ -859,7 +859,7 @@ function stableStringify(obj) {
  * Loads specified sample data from file
  */
 function loadSampleData(dataName) {
-	let data = Zotero.File.getContentsFromURL('resource://zotero-unit-tests/data/' + dataName + '.js');
+	let data = Trellis.File.getContentsFromURL('resource://trellis-unit-tests/data/' + dataName + '.js');
 	return JSON.parse(data);
 }
 
@@ -868,7 +868,7 @@ function loadSampleData(dataName) {
  */
 function generateAllTypesAndFieldsData() {
 	let data = {};
-	let itemTypes = Zotero.ItemTypes.getTypes();
+	let itemTypes = Trellis.ItemTypes.getTypes();
 	// For most fields, use the field name as the value, but this doesn't
 	// work well for some fields that expect values in certain formats
 	let specialValues = {
@@ -901,12 +901,12 @@ function generateAllTypesAndFieldsData() {
 			itemType: itemTypes[i].name
 		};
 		
-		let fields = Zotero.ItemFields.getItemTypeFields(itemTypes[i].id);
+		let fields = Trellis.ItemFields.getItemTypeFields(itemTypes[i].id);
 		for (let j = 0; j < fields.length; j++) {
 			let field = fields[j];
-			field = Zotero.ItemFields.getBaseIDFromTypeAndField(itemTypes[i].id, field) || field;
+			field = Trellis.ItemFields.getBaseIDFromTypeAndField(itemTypes[i].id, field) || field;
 			
-			let name = Zotero.ItemFields.getName(field),
+			let name = Trellis.ItemFields.getName(field),
 				value;
 			
 			// Use field name as field value
@@ -922,7 +922,7 @@ function generateAllTypesAndFieldsData() {
 			itemFields[name] = value;
 		}
 		
-		let creatorTypes = Zotero.CreatorTypes.getTypesForItemType(itemTypes[i].id),
+		let creatorTypes = Trellis.CreatorTypes.getTypesForItemType(itemTypes[i].id),
 			creators = itemFields.creators = [];
 		for (let j = 0; j < creatorTypes.length; j++) {
 			let typeName = creatorTypes[j].name;
@@ -934,8 +934,8 @@ function generateAllTypesAndFieldsData() {
 		}
 		
 		// Also add a single-field mode author, which is valid for all types
-		let primaryCreatorType = Zotero.CreatorTypes.getName(
-			Zotero.CreatorTypes.getPrimaryIDForType(itemTypes[i].id)
+		let primaryCreatorType = Trellis.CreatorTypes.getName(
+			Trellis.CreatorTypes.getPrimaryIDForType(itemTypes[i].id)
 		);
 		creators.push({
 			creatorType: primaryCreatorType,
@@ -949,13 +949,13 @@ function generateAllTypesAndFieldsData() {
 
 /**
  * Populates the database with sample items
- * The field values should be in the form exactly as they would appear in Zotero
+ * The field values should be in the form exactly as they would appear in Trellis
  */
 function populateDBWithSampleData(data) {
-	return Zotero.DB.executeTransaction(async function () {
+	return Trellis.DB.executeTransaction(async function () {
 		for (let itemName in data) {
 			let item = data[itemName];
-			let zItem = new Zotero.Item;
+			let zItem = new Trellis.Item;
 			zItem.fromJSON(item);
 			item.id = await zItem.save();
 		}
@@ -969,7 +969,7 @@ var generateItemJSONData = async function generateItemJSONData(options, currentD
 		jsonData = {};
 	
 	for (let itemName in items) {
-		let zItem = await Zotero.Items.getAsync(items[itemName].id);
+		let zItem = await Trellis.Items.getAsync(items[itemName].id);
 		jsonData[itemName] = zItem.toJSON(options || {});
 
 		// Don't replace some fields that _always_ change (e.g. item keys)
@@ -988,7 +988,7 @@ var generateItemJSONData = async function generateItemJSONData(options, currentD
 					if (!isoDateTimeRe.test(oldVal) || !isoDateTimeRe.test(val)) continue;
 				break;
 				case 'key':
-					if (!zoteroObjectKeyRe.test(oldVal) || !zoteroObjectKeyRe.test(val)) continue;
+					if (!trellisObjectKeyRe.test(oldVal) || !trellisObjectKeyRe.test(val)) continue;
 				break;
 				default:
 					continue;
@@ -1006,8 +1006,8 @@ var generateCiteProcJSExportData = async function generateCiteProcJSExportData(c
 		cslExportData = {};
 	
 	for (let itemName in items) {
-		let zItem = await Zotero.Items.getAsync(items[itemName].id);
-		cslExportData[itemName] = Zotero.Cite.System.prototype.retrieveItem(zItem);
+		let zItem = await Trellis.Items.getAsync(items[itemName].id);
+		cslExportData[itemName] = Trellis.Cite.System.prototype.retrieveItem(zItem);
 		
 		if (!currentData || !currentData[itemName]) continue;
 		
@@ -1026,11 +1026,11 @@ var generateTranslatorExportData = async function generateTranslatorExportData(l
 	let items = await populateDBWithSampleData(loadSampleData('allTypesAndFields')),
 		translatorExportData = {};
 	
-	let itemGetter = new Zotero.Translate.ItemGetter();
+	let itemGetter = new Trellis.Translate.ItemGetter();
 	itemGetter.legacy = !!legacy;
 	
 	for (let itemName in items) {
-		let zItem = await Zotero.Items.getAsync(items[itemName].id);
+		let zItem = await Trellis.Items.getAsync(items[itemName].id);
 		itemGetter._itemsLeft = [zItem];
 		translatorExportData[itemName] = itemGetter.nextItem();
 		
@@ -1038,7 +1038,7 @@ var generateTranslatorExportData = async function generateTranslatorExportData(l
 		if (!currentData || !currentData[itemName]) continue;
 		
 		// For simplicity, be more lenient than for item key
-		let uriRe = /^http:\/\/zotero\.org\/users\/local\/\w{8}\/items\/\w{8}$/;
+		let uriRe = /^http:\/\/trellis\.org\/users\/local\/\w{8}\/items\/\w{8}$/;
 		let itemIDRe = /^\d+$/;
 		for (let field in translatorExportData[itemName]) {
 			let oldVal = currentData[itemName][field];
@@ -1053,7 +1053,7 @@ var generateTranslatorExportData = async function generateTranslatorExportData(l
 					if (!itemIDRe.test(oldVal) || !itemIDRe.test(val)) continue;
 				break;
 				case 'key':
-					if (!zoteroObjectKeyRe.test(oldVal) || !zoteroObjectKeyRe.test(val)) continue;
+					if (!trellisObjectKeyRe.test(oldVal) || !trellisObjectKeyRe.test(val)) continue;
 				break;
 				case 'dateAdded':
 				case 'dateModified':
@@ -1076,7 +1076,7 @@ var generateTranslatorExportData = async function generateTranslatorExportData(l
 
 
 /**
- * Build a dummy translator that can be passed to Zotero.Translate
+ * Build a dummy translator that can be passed to Trellis.Translate
  */
 function buildDummyTranslator(translatorType, code, info={}) {
 	const TRANSLATOR_TYPES = {"import":1, "export":2, "web":4, "search":8};
@@ -1091,7 +1091,7 @@ function buildDummyTranslator(translatorType, code, info={}) {
 		"inRepository":false,
 		"lastUpdated":"0000-00-00 00:00:00",
 	}, info);
-	let translator = new Zotero.Translator(info);
+	let translator = new Trellis.Translator(info);
 	translator.code = JSON.stringify(info) + "\n" + code;
 	return translator;
 }
@@ -1100,7 +1100,7 @@ function buildDummyTranslator(translatorType, code, info={}) {
 /**
  * Imports an attachment from a test file.
  * @param {string} filename - The filename to import (in data directory)
- * @return {Promise<Zotero.Item>}
+ * @return {Promise<Trellis.Item>}
  */
 function importFileAttachment(filename, options = {}) {
 	let file = getTestDataDirectory();
@@ -1111,14 +1111,14 @@ function importFileAttachment(filename, options = {}) {
 	};
 	Object.assign(importOptions, options);
 	// If the caller didn't pass anything as title (null counts as something),
-	// override default Zotero.Attachments.importFromFile() behavior - don't
+	// override default Trellis.Attachments.importFromFile() behavior - don't
 	// set the title based on the attachment type and existing attachments,
 	// just use the extension-less leafName. Makes titles deterministic and not
 	// dependent on existing attachments, which is better for tests.
 	if (importOptions.title === undefined) {
 		importOptions.title = file.leafName.replace(/\.[^.]+$/, '');
 	}
-	return Zotero.Attachments.importFromFile(importOptions);
+	return Trellis.Attachments.importFromFile(importOptions);
 }
 
 
@@ -1147,7 +1147,7 @@ function importHTMLAttachment(parentItem, options = {}) {
 function importSnapshotAttachment(parentItem, options = {}) {
 	let file = getTestDataDirectory();
 	file.append('test.html');
-	return Zotero.Attachments.importSnapshotFromFile({
+	return Trellis.Attachments.importSnapshotFromFile({
 		title: options.title || 'Snapshot',
 		url: 'http://example.com',
 		file,
@@ -1174,7 +1174,7 @@ async function importPDFAttachment(parentItem, options = {}) {
 
 
 async function createAnnotation(type, parentItem, options = {}) {
-	var annotation = new Zotero.Item('annotation');
+	var annotation = new Trellis.Item('annotation');
 	annotation.libraryID = parentItem.libraryID;
 	if (options.version != undefined) {
 		annotation.version = options.version;
@@ -1182,21 +1182,21 @@ async function createAnnotation(type, parentItem, options = {}) {
 	annotation.parentID = parentItem.id;
 	annotation.annotationType = type;
 	if (type == 'highlight') {
-		annotation.annotationText = Zotero.Utilities.randomString();
+		annotation.annotationText = Trellis.Utilities.randomString();
 	}
 	if (options.comment !== undefined) {
 		annotation.annotationComment = options.comment;
 	}
 	else {
-		annotation.annotationComment = Zotero.Utilities.randomString();
+		annotation.annotationComment = Trellis.Utilities.randomString();
 	}
 	annotation.annotationColor = '#ffd400';
-	var page = Zotero.Utilities.rand(1, 100);
+	var page = Trellis.Utilities.rand(1, 100);
 	annotation.annotationPageLabel = `${page}`;
 	page = page.toString().padStart(5, '0');
 	switch (parentItem.attachmentReaderType) {
 		case 'pdf':
-			var pos = Zotero.Utilities.rand(1, 10000).toString().padStart(6, '0');
+			var pos = Trellis.Utilities.rand(1, 10000).toString().padStart(6, '0');
 			annotation.annotationSortIndex = `${page}|${pos}|00000`;
 			annotation.annotationPosition = JSON.stringify({
 				pageIndex: 123,
@@ -1206,8 +1206,8 @@ async function createAnnotation(type, parentItem, options = {}) {
 			});
 			break;
 		case 'epub':
-			var pos1 = Zotero.Utilities.rand(1, 10000).toString().padStart(5, '0');
-			var pos2 = Zotero.Utilities.rand(1, 10000).toString().padStart(8, '0');
+			var pos1 = Trellis.Utilities.rand(1, 10000).toString().padStart(5, '0');
+			var pos2 = Trellis.Utilities.rand(1, 10000).toString().padStart(8, '0');
 			annotation.annotationSortIndex = `${pos1}|${pos2}`;
 			annotation.annotationPosition = JSON.stringify({
 				type: 'FragmentSelector',
@@ -1216,7 +1216,7 @@ async function createAnnotation(type, parentItem, options = {}) {
 			});
 			break;
 		case 'snapshot':
-			annotation.annotationSortIndex = Zotero.Utilities.rand(1, 10000).toString().padStart(7, '0');
+			annotation.annotationSortIndex = Trellis.Utilities.rand(1, 10000).toString().padStart(7, '0');
 			annotation.annotationPosition = JSON.stringify({
 				type: 'CssSelector',
 				value: 'body',
@@ -1245,7 +1245,7 @@ async function createAnnotation(type, parentItem, options = {}) {
 
 
 async function createEmbeddedImage(parentItem, options = {}) {
-	var attachment = await Zotero.Attachments.importEmbeddedImage({
+	var attachment = await Trellis.Attachments.importEmbeddedImage({
 		blob: await File.createFromFileName(
 			PathUtils.join(getTestDataDirectory().path, 'test.png')
 		),
@@ -1261,7 +1261,7 @@ async function createEmbeddedImage(parentItem, options = {}) {
 
 async function getImageBlob() {
 	var path = PathUtils.join(getTestDataDirectory().path, 'test.png');
-	var imageData = await Zotero.File.getBinaryContentsAsync(path);
+	var imageData = await Trellis.File.getBinaryContentsAsync(path);
 	var array = new Uint8Array(imageData.length);
 	for (let i = 0; i < imageData.length; i++) {
 		array[i] = imageData.charCodeAt(i);
@@ -1342,7 +1342,7 @@ async function startHTTPServer(port = null) {
 			break;
 		}
 		catch (e) {
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 		}
 	}
 	var baseURL = `http://localhost:${port}/`

@@ -1,10 +1,10 @@
 "use strict";
 
-describe("Zotero.Sync.Storage.Mode.ZFS", function () {
+describe("Trellis.Sync.Storage.Mode.ZFS", function () {
 	//
 	// Setup
 	//
-	var apiKey = Zotero.Utilities.randomString(24);
+	var apiKey = Trellis.Utilities.randomString(24);
 	
 	var win, server, requestCount, httpd, baseURL;
 	var responses = {};
@@ -35,7 +35,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 	}
 	
 	function assertAPIKey(request) {
-		assert.equal(request.requestHeaders["Zotero-API-Key"], apiKey);
+		assert.equal(request.requestHeaders["Trellis-API-Key"], apiKey);
 	}
 	
 	//
@@ -43,9 +43,9 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 	//
 	beforeEach(async function () {
 		await resetData();
-		win = await loadZoteroPane();
+		win = await loadTrellisPane();
 		
-		Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+		Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 		server = sinon.fakeServer.create();
 		server.autoRespond = true;
 		
@@ -53,37 +53,37 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		({ httpd, port } = await startHTTPServer());
 		baseURL = `http://localhost:${port}/`;
 		
-		await Zotero.Users.setCurrentUserID(1);
-		await Zotero.Users.setCurrentUsername("testuser");
+		await Trellis.Users.setCurrentUserID(1);
+		await Trellis.Users.setCurrentUsername("testuser");
 		
-		Zotero.Sync.Storage.Local.setModeForLibrary(Zotero.Libraries.userLibraryID, 'zfs');
+		Trellis.Sync.Storage.Local.setModeForLibrary(Trellis.Libraries.userLibraryID, 'zfs');
 		
 		// Set download-on-sync by default
-		Zotero.Sync.Storage.Local.downloadOnSync(
-			Zotero.Libraries.userLibraryID, true
+		Trellis.Sync.Storage.Local.downloadOnSync(
+			Trellis.Libraries.userLibraryID, true
 		);
 		
 		resetRequestCount();
 	})
 	
 	var setup = async function (options = {}) {
-		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 		var stopOnError = options.stopOnError !== undefined ? options.stopOnError : true;
 		var caller = new ConcurrentCaller(1);
-		caller.setLogger(msg => Zotero.debug(msg));
+		caller.setLogger(msg => Trellis.debug(msg));
 		caller.stopOnError = stopOnError;
 		
-		var client = new Zotero.Sync.APIClient({
+		var client = new Trellis.Sync.APIClient({
 			baseURL,
-			apiVersion: options.apiVersion || ZOTERO_CONFIG.API_VERSION,
+			apiVersion: options.apiVersion || TRELLIS_CONFIG.API_VERSION,
 			apiKey,
 			caller,
 			background: options.background || true
 		});
 		
-		var engine = new Zotero.Sync.Storage.Engine({
-			libraryID: options.libraryID || Zotero.Libraries.userLibraryID,
-			controller: new Zotero.Sync.Storage.Mode.ZFS({
+		var engine = new Trellis.Sync.Storage.Engine({
+			libraryID: options.libraryID || Trellis.Libraries.userLibraryID,
+			controller: new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client,
 				maxS3ConsecutiveFailures: 2
 			}),
@@ -95,12 +95,12 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 	}
 	
 	afterEach(function* () {
-		Zotero.HTTP.mock = null;
-		var defer = Zotero.Promise.defer();
+		Trellis.HTTP.mock = null;
+		var defer = Trellis.Promise.defer();
 		httpd.stop(() => defer.resolve());
 		yield defer.promise;
 		win.close();
-		Zotero.HTTP.disableErrorRetry = false;
+		Trellis.HTTP.disableErrorRetry = false;
 	})
 	
 	after(function* () {
@@ -114,7 +114,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		it("should skip downloads if not marked as needed", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			
@@ -132,12 +132,12 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		it("should ignore download for a remotely missing file", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			item.attachmentSyncState = "to_download";
@@ -158,21 +158,21 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			assert.equal(library.storageVersion, library.libraryVersion);
 			assert.equal(
 				item.attachmentSyncState,
-				Zotero.Sync.Storage.Local.SYNC_STATE_IN_SYNC
+				Trellis.Sync.Storage.Local.SYNC_STATE_IN_SYNC
 			);
 		})
 		
 		it("shouldn't update storageVersion if stopped", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
 			var items = [];
 			for (let i = 0; i < 5; i++) {
-				let item = new Zotero.Item("attachment");
+				let item = new Trellis.Item("attachment");
 				item.attachmentLinkMode = 'imported_file';
 				item.attachmentPath = 'storage:test.txt';
 				item.attachmentSyncState = "to_download";
@@ -186,7 +186,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 				if (call == 1) {
 					engine.stop();
 				}
-				return new Zotero.Sync.Storage.Result;
+				return new Trellis.Sync.Storage.Result;
 			});
 			
 			var result = await engine.start();
@@ -199,18 +199,18 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		it("should handle a remotely failing file", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
-			Zotero.HTTP.disableErrorRetry = true;
+			Trellis.HTTP.disableErrorRetry = true;
 			server.respondWith(
 				'GET',
 				baseURL + `users/1/items/${item.key}/file`,
@@ -219,7 +219,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			// TODO: In stopOnError mode, this the promise is rejected.
 			// This should probably test with stopOnError mode turned off instead.
 			var e = await getPromiseError(engine.start());
-			assert.equal(e.message, Zotero.Sync.Storage.defaultError);
+			assert.equal(e.message, Trellis.Sync.Storage.defaultError);
 			
 			assert.isTrue(library.storageDownloadNeeded);
 			assert.equal(library.storageVersion, 0);
@@ -228,30 +228,30 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		it("should download a missing file", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			// TODO: Test binary data
-			var text = Zotero.Utilities.randomString();
+			var text = Trellis.Utilities.randomString();
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
 			var mtime = "1441252524905";
-			var md5 = Zotero.Utilities.Internal.md5(text)
+			var md5 = Trellis.Utilities.Internal.md5(text)
 			
 			var s3Path = `pretend-s3/${item.key}`;
 			server.respondWith(function (req) {
 				if (req.method == "GET"
 						&& req.url == baseURL + `users/1/items/${item.key}/file`) {
 					req.respond(302, {
-						"Zotero-File-Modification-Time": mtime,
-						"Zotero-File-MD5": md5,
-						"Zotero-File-Compressed": "No",
+						"Trellis-File-Modification-Time": mtime,
+						"Trellis-File-MD5": md5,
+						"Trellis-File-Compressed": "No",
 						"Location": baseURL + s3Path,
 					}, "");
 				}
@@ -271,7 +271,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			assert.isFalse(result.remoteChanges);
 			assert.isFalse(result.syncRequired);
 			
-			var contents = await Zotero.File.getContentsAsync(await item.getFilePathAsync());
+			var contents = await Trellis.File.getContentsAsync(await item.getFilePathAsync());
 			assert.equal(contents, text);
 			
 			assert.isFalse(library.storageDownloadNeeded);
@@ -281,29 +281,29 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		it("should notify when file is downloaded", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
-			var text = Zotero.Utilities.randomString();
+			var text = Trellis.Utilities.randomString();
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
 			var mtime = "1441252524905";
-			var md5 = Zotero.Utilities.Internal.md5(text);
+			var md5 = Trellis.Utilities.Internal.md5(text);
 			
 			var s3Path = `pretend-s3/${item.key}`;
 			server.respondWith(function (req) {
 				if (req.method == "GET"
 						&& req.url == baseURL + `users/1/items/${item.key}/file`) {
 					req.respond(302, {
-						"Zotero-File-Modification-Time": mtime,
-						"Zotero-File-MD5": md5,
-						"Zotero-File-Compressed": "No",
+						"Trellis-File-Modification-Time": mtime,
+						"Trellis-File-MD5": md5,
+						"Trellis-File-Compressed": "No",
 						"Location": baseURL + s3Path,
 					}, "");
 				}
@@ -318,8 +318,8 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 				}
 			);
 
-			var deferred = Zotero.Promise.defer();
-			var observerID = Zotero.Notifier.registerObserver({
+			var deferred = Trellis.Promise.defer();
+			var observerID = Trellis.Notifier.registerObserver({
 				notify: async function (event, type, ids, extraData) {
 					if (event == 'download' && ids[0] == item.id && (await item.getFilePathAsync())) {
 						deferred.resolve();
@@ -329,7 +329,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			
 			await engine.start();
 			await deferred.promise;
-			Zotero.Notifier.unregisterObserver(observerID);
+			Trellis.Notifier.unregisterObserver(observerID);
 		});
 		
 		it("should upload new files", async function () {
@@ -338,16 +338,16 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			// Single file
 			var file1 = getTestDataDirectory();
 			file1.append('test.png');
-			var item1 = await Zotero.Attachments.importFromFile({ file: file1 });
+			var item1 = await Trellis.Attachments.importFromFile({ file: file1 });
 			var mtime1 = await item1.attachmentModificationTime;
 			var hash1 = await item1.attachmentHash;
 			var path1 = item1.getFilePath();
 			var filename1 = 'test.png';
 			var size1 = ((await OS.File.stat(path1))).size;
 			var contentType1 = 'image/png';
-			var prefix1 = Zotero.Utilities.randomString();
-			var suffix1 = Zotero.Utilities.randomString();
-			var uploadKey1 = Zotero.Utilities.randomString(32, 'abcdef0123456789');
+			var prefix1 = Trellis.Utilities.randomString();
+			var suffix1 = Trellis.Utilities.randomString();
+			var uploadKey1 = Trellis.Utilities.randomString(32, 'abcdef0123456789');
 			
 			let file1Blob = File.createFromFileName ? File.createFromFileName(file1.path) : new File(file1);
 			if (file1Blob.then) {
@@ -357,7 +357,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			// HTML file with auxiliary image
 			var file2 = OS.Path.join(getTestDataDirectory().path, 'snapshot', 'index.html');
 			var parentItem = await createDataObject('item');
-			var item2 = await Zotero.Attachments.importSnapshotFromFile({
+			var item2 = await Trellis.Attachments.importSnapshotFromFile({
 				file: file2,
 				url: 'http://example.com/',
 				parentItemID: parentItem.id,
@@ -372,9 +372,9 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			var size2 = ((await OS.File.stat(path2))).size;
 			var contentType2 = 'text/html';
 			var charset2 = 'utf-8';
-			var prefix2 = Zotero.Utilities.randomString();
-			var suffix2 = Zotero.Utilities.randomString();
-			var uploadKey2 = Zotero.Utilities.randomString(32, 'abcdef0123456789');
+			var prefix2 = Trellis.Utilities.randomString();
+			var suffix2 = Trellis.Utilities.randomString();
+			var uploadKey2 = Trellis.Utilities.randomString(32, 'abcdef0123456789');
 			
 			var deferreds = [];
 			
@@ -430,11 +430,11 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 					
 					// Verify ZIP hash
 					let tmpZipPath = OS.Path.join(
-						Zotero.getTempDirectory().path,
+						Trellis.getTempDirectory().path,
 						item2.key + '.zip'
 					);
 					deferreds.push({
-						promise: Zotero.Utilities.Internal.md5Async(tmpZipPath)
+						promise: Trellis.Utilities.Internal.md5Async(tmpZipPath)
 							.then(function (md5) {
 								assert.equal(params.zipMD5, md5);
 							})
@@ -446,7 +446,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 						let [key, val] = part.split('=');
 						params[key] = decodeURIComponent(val);
 					}
-					Zotero.debug(params);
+					Trellis.debug(params);
 					assert.equal(params.md5, hash2);
 					assert.notEqual(params.zipMD5, hash2);
 					assert.equal(params.mtime, mtime2);
@@ -489,11 +489,11 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 					
 					// Verify uploaded ZIP file
 					let tmpZipPath = OS.Path.join(
-						Zotero.getTempDirectory().path,
-						Zotero.Utilities.randomString() + '.zip'
+						Trellis.getTempDirectory().path,
+						Trellis.Utilities.randomString() + '.zip'
 					);
 					
-					let deferred = Zotero.Promise.defer();
+					let deferred = Trellis.Promise.defer();
 					deferreds.push(deferred);
 					var reader = new FileReader();
 					reader.addEventListener("loadend", async function () {
@@ -504,7 +504,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 							
 							var zr = Components.classes["@mozilla.org/libjar/zip-reader;1"]
 								.createInstance(Components.interfaces.nsIZipReader);
-							zr.open(Zotero.File.pathToFile(tmpZipPath));
+							zr.open(Trellis.File.pathToFile(tmpZipPath));
 							zr.test(null);
 							var entries = zr.findEntries('*');
 							var entryNames = [];
@@ -643,14 +643,14 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		it("should update local info for remotely updated file that matches local file", async function () {
 			var { engine, client, caller } = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
 			var file = getTestDataDirectory();
 			file.append('test.txt');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.version = 5;
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
@@ -658,21 +658,21 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			await OS.File.setDates(path, null, new Date() - 100000);
 			
 			var json = item.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObject('item', item.libraryID, json);
+			await Trellis.Sync.Data.Local.saveCacheObject('item', item.libraryID, json);
 			
 			var mtime = (Math.floor(new Date().getTime() / 1000) * 1000) + "";
-			var md5 = Zotero.Utilities.Internal.md5(file)
+			var md5 = Trellis.Utilities.Internal.md5(file)
 			
-			var processDownloadSpy = sinon.spy(Zotero.Sync.Storage.Local, "processDownload");
+			var processDownloadSpy = sinon.spy(Trellis.Sync.Storage.Local, "processDownload");
 			
 			var s3Path = `pretend-s3/${item.key}`;
 			server.respondWith(function (req) {
 				if (req.method == "GET"
 						&& req.url == baseURL + `users/1/items/${item.key}/file`) {
 					req.respond(302, {
-						"Zotero-File-Modification-Time": mtime,
-						"Zotero-File-MD5": md5,
-						"Zotero-File-Compressed": "No",
+						"Trellis-File-Modification-Time": mtime,
+						"Trellis-File-MD5": md5,
+						"Trellis-File-Compressed": "No",
 						"Location": baseURL + s3Path,
 					}, "");
 				}
@@ -694,11 +694,11 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file: file });
+			var item = await Trellis.Attachments.importFromFile({ file: file });
 			item.version = 5;
 			await item.saveTx();
 			var json = item.toJSON();
-			await Zotero.Sync.Data.Local.saveCacheObject('item', item.libraryID, json);
+			await Trellis.Sync.Data.Local.saveCacheObject('item', item.libraryID, json);
 			
 			var mtime = await item.attachmentModificationTime;
 			var hash = await item.attachmentHash;
@@ -751,13 +751,13 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		
 		it("should retry with If-None-Match on 412 with missing remote hash", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.version = 5;
 			item.synced = true;
 			item.attachmentSyncedModificationTime = Date.now();
@@ -765,9 +765,9 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			await item.saveTx();
 			
 			var contentType = 'image/png';
-			var prefix = Zotero.Utilities.randomString();
-			var suffix = Zotero.Utilities.randomString();
-			var uploadKey = Zotero.Utilities.randomString(32, 'abcdef0123456789');
+			var prefix = Trellis.Utilities.randomString();
+			var suffix = Trellis.Utilities.randomString();
+			var uploadKey = Trellis.Utilities.randomString(32, 'abcdef0123456789');
 			
 			var called = 0;
 			// https://github.com/cjohansen/Sinon.JS/issues/607
@@ -859,8 +859,8 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 						{
 							"Content-Type": "application/json",
 							"Last-Modified-Version": 10,
-							"Zotero-Storage-Usage": "300",
-							"Zotero-Storage-Quota": "300"
+							"Trellis-Storage-Usage": "300",
+							"Trellis-Storage-Quota": "300"
 						},
 						"File would exceed quota (299.7 + 0.5 > 300)"
 					);
@@ -868,9 +868,9 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			})
 			
 			await engine.start();
-			assert.equal(requests, Zotero.Prefs.get('sync.storage.maxUploads'));
+			assert.equal(requests, Trellis.Prefs.get('sync.storage.maxUploads'));
 			
-			Zotero.Sync.Storage.Local.storageRemainingForLibrary.delete(items[0].libraryID);
+			Trellis.Sync.Storage.Local.storageRemainingForLibrary.delete(items[0].libraryID);
 		});
 		
 		
@@ -890,15 +890,15 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 				items.push(item);
 			}
 			
-			Zotero.Sync.Storage.Local.storageRemainingForLibrary.set(items[0].libraryID, 0);
+			Trellis.Sync.Storage.Local.storageRemainingForLibrary.set(items[0].libraryID, 0);
 			
 			var spy = sinon.spy(engine.controller, 'uploadFile');
 			await engine.start()
 			
-			assert.equal(spy.callCount, Zotero.Prefs.get('sync.storage.maxUploads'));
+			assert.equal(spy.callCount, Trellis.Prefs.get('sync.storage.maxUploads'));
 			spy.restore();
 			
-			Zotero.Sync.Storage.Local.storageRemainingForLibrary.delete(items[0].libraryID);
+			Trellis.Sync.Storage.Local.storageRemainingForLibrary.delete(items[0].libraryID);
 		});
 	})
 	
@@ -906,7 +906,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 	describe("#uploadFile()", function () {
 		it("should compress single-file HTML snapshots", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
@@ -917,7 +917,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			file = file2;
 			
 			var parentItem = await createDataObject('item');
-			var item = await Zotero.Attachments.importSnapshotFromFile({
+			var item = await Trellis.Attachments.importSnapshotFromFile({
 				file,
 				url: 'http://example.com/',
 				parentItemID: parentItem.id,
@@ -931,7 +931,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			var stub = sinon.stub(zfs, '_processUploadFile').returns(Promise.resolve());
 			await zfs.uploadFile(request);
 			
-			var zipFile = OS.Path.join(Zotero.getTempDirectory().path, item.key + '.zip');
+			var zipFile = OS.Path.join(Trellis.getTempDirectory().path, item.key + '.zip');
 			// _getUploadFile() should return the ZIP file
 			assert.equal((await zfs._getUploadFile(item)).path, zipFile);
 			assert.isTrue(await OS.File.exists(zipFile));
@@ -944,12 +944,12 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 	describe("#_processUploadFile()", function () {
 		it("should handle 404 from upload authorization request", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
 			var filePath = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var item = await Zotero.Attachments.importFromFile({ file: filePath });
+			var item = await Trellis.Attachments.importFromFile({ file: filePath });
 			item.version = 5;
 			item.synced = true;
 			await item.saveTx();
@@ -980,12 +980,12 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		
 		it("should handle 412 with matching version and hash matching local file", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
 			var filePath = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var item = await Zotero.Attachments.importFromFile({ file: filePath });
+			var item = await Trellis.Attachments.importFromFile({ file: filePath });
 			item.version = 5;
 			item.synced = true;
 			await item.saveTx();
@@ -1037,12 +1037,12 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		
 		it("should handle 412 with matching version and hash not matching local file", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
 			var filePath = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var item = await Zotero.Attachments.importFromFile({ file: filePath });
+			var item = await Trellis.Attachments.importFromFile({ file: filePath });
 			item.version = 5;
 			item.synced = true;
 			await item.saveTx();
@@ -1077,7 +1077,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 				name: item.libraryKey
 			});
 			assert.isNull(item.attachmentSyncedHash);
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_IN_CONFLICT);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_IN_CONFLICT);
 			assert.isFalse(result.localChanges);
 			assert.isFalse(result.remoteChanges);
 			assert.isFalse(result.syncRequired);
@@ -1086,13 +1086,13 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 		
 		it("should handle 412 with greater version", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.version = 5;
 			item.synced = true;
 			await item.saveTx();
@@ -1122,20 +1122,20 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			assert.isFalse(result.remoteChanges);
 			assert.isTrue(result.syncRequired);
 			// Item should be marked for redownloading
-			var versions = await Zotero.Sync.Data.Local.getObjectsToTryFromSyncQueue('item', item.libraryID);
+			var versions = await Trellis.Sync.Data.Local.getObjectsToTryFromSyncQueue('item', item.libraryID);
 			assert.include(versions, item.key);
 		});
 		
 		
 		it("should handle 413 on quota limit", async function () {
 			var { engine, client, caller } = await setup();
-			var zfs = new Zotero.Sync.Storage.Mode.ZFS({
+			var zfs = new Trellis.Sync.Storage.Mode.ZFS({
 				apiClient: client
 			})
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.version = 5;
 			item.synced = true;
 			await item.saveTx();
@@ -1152,8 +1152,8 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 						{
 							"Content-Type": "application/json",
 							"Last-Modified-Version": 10,
-							"Zotero-Storage-Usage": "300",
-							"Zotero-Storage-Quota": "300"
+							"Trellis-Storage-Usage": "300",
+							"Trellis-Storage-Quota": "300"
 						},
 						"File would exceed quota (299.7 + 0.5 > 300)"
 					);
@@ -1166,7 +1166,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			assert.ok(e);
 			assert.equal(e.errorType, 'warning');
 			assert.include(e.message, 'test.png');
-			assert.equal(e.dialogButtonText, Zotero.getString('sync.storage.openAccountSettings'));
+			assert.equal(e.dialogButtonText, Trellis.getString('sync.storage.openAccountSettings'));
 			assert.equal(responses, 1);
 			
 			// Try again
@@ -1177,7 +1177,7 @@ describe("Zotero.Sync.Storage.Mode.ZFS", function () {
 			assert.ok(e);
 			assert.equal(e.errorType, 'warning');
 			assert.include(e.message, 'test.png');
-			assert.equal(e.dialogButtonText, Zotero.getString('sync.storage.openAccountSettings'));
+			assert.equal(e.dialogButtonText, Trellis.getString('sync.storage.openAccountSettings'));
 			// Shouldn't have been another request. A manual sync resets the flag, but we're not
 			// testing that here.
 			assert.equal(responses, 1);

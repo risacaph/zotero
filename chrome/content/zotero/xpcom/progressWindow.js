@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.ProgressWindowSet = new function () {
+Trellis.ProgressWindowSet = new function () {
 	this.add = add;
 	this.tile = tile;
 	this.remove = remove;
@@ -100,7 +100,7 @@ Zotero.ProgressWindowSet = new function () {
  *
  * Pass the active window into the constructor
  */
-Zotero.ProgressWindow = function (options = {}) {
+Trellis.ProgressWindow = function (options = {}) {
 	var _window = options.window || null;
 	var _closeOnClick = typeof options.closeOnClick == 'undefined' ? true : options.closeOnClick;
 	var self = this,
@@ -123,11 +123,11 @@ Zotero.ProgressWindow = function (options = {}) {
 		}
 		
 		if (!_window) {
-			_window = Zotero.getMainWindow();
+			_window = Trellis.getMainWindow();
 		}
 		
 		if (_window) {
-			_progressWindow = _window.openDialog("chrome://zotero/content/progressWindow.xhtml",
+			_progressWindow = _window.openDialog("chrome://trellis/content/progressWindow.xhtml",
 				"", "chrome,dialog=no,titlebar=no,alwaysontop=yes");
 			_window.addEventListener('close', () => {
 				this.close();
@@ -136,7 +136,7 @@ Zotero.ProgressWindow = function (options = {}) {
 		else {
 			let ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 				.getService(Components.interfaces.nsIWindowWatcher);
-			_progressWindow = ww.openWindow(null, "chrome://zotero/content/progressWindow.xhtml",
+			_progressWindow = ww.openWindow(null, "chrome://trellis/content/progressWindow.xhtml",
 				"", "chrome,dialog=no,titlebar=no,alwaysontop=yes", null);
 		}
 		_progressWindow.addEventListener("load", _onWindowLoaded, false);
@@ -146,7 +146,7 @@ Zotero.ProgressWindow = function (options = {}) {
 		
 		_windowLoading = true;
 		
-		Zotero.ProgressWindowSet.add(_progressWindow, this);
+		Trellis.ProgressWindowSet.add(_progressWindow, this);
 		
 		return true;
 	}
@@ -156,7 +156,7 @@ Zotero.ProgressWindow = function (options = {}) {
 	 */
 	this.changeHeadline = _deferUntilWindowLoad(function changeHeadline(text, cssIconKey, postText) {
 		var doc = _progressWindow.document,
-			headline = doc.getElementById("zotero-progress-text-headline");
+			headline = doc.getElementById("trellis-progress-text-headline");
 		while(headline.hasChildNodes()) headline.removeChild(headline.firstChild);
 		
 		var preNode = doc.createXULElement("label");
@@ -207,10 +207,10 @@ Zotero.ProgressWindow = function (options = {}) {
 	 */
 	this.addDescription = _deferUntilWindowLoad(function addDescription(text) {
 		var newHB = _progressWindow.document.createXULElement("hbox");
-		newHB.setAttribute("class", "zotero-progress-item-hbox");
+		newHB.setAttribute("class", "trellis-progress-item-hbox");
 		var newDescription = _progressWindow.document.createXULElement("description");
 		
-		var parts = Zotero.Utilities.parseMarkup(text);
+		var parts = Trellis.Utilities.parseMarkup(text);
 		for (let part of parts) {
 			if (part.type == 'text') {
 				var elem = _progressWindow.document.createTextNode(part.text);
@@ -218,7 +218,7 @@ Zotero.ProgressWindow = function (options = {}) {
 			else if (part.type == 'link') {
 				var elem = _progressWindow.document.createXULElement('label');
 				elem.setAttribute('value', part.text);
-				elem.setAttribute('class', 'zotero-text-link');
+				elem.setAttribute('class', 'trellis-text-link');
 				elem.setAttribute('role', 'link');
 				for (var i in part.attributes) {
 					elem.setAttribute(i, part.attributes[i]);
@@ -229,7 +229,7 @@ Zotero.ProgressWindow = function (options = {}) {
 		}
 		
 		newHB.appendChild(newDescription);
-		_progressWindow.document.getElementById("zotero-progress-text-box").appendChild(newHB);
+		_progressWindow.document.getElementById("trellis-progress-text-box").appendChild(newHB);
 		
 		_move();
 	});
@@ -268,13 +268,13 @@ Zotero.ProgressWindow = function (options = {}) {
 		_disableTimeout();
 		_windowLoaded = false;
 		_windowLoading = false;
-		Zotero.ProgressWindowSet.remove(_progressWindow);
+		Trellis.ProgressWindowSet.remove(_progressWindow);
 		
 		try {
 			_progressWindow.close();
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 	
@@ -292,10 +292,10 @@ Zotero.ProgressWindow = function (options = {}) {
 		}
 		
 		this._hbox = _progressWindow.document.createXULElement("hbox");
-		this._hbox.setAttribute("class", "zotero-progress-item-hbox");
+		this._hbox.setAttribute("class", "trellis-progress-item-hbox");
 		if(parentItemProgress) {
 			this._hbox.style.marginLeft = "16px";
-			this._hbox.zoteroIsChildItem;
+			this._hbox.trellisIsChildItem;
 		} else {
 			this._hbox.setAttribute("parent", "true");
 		}
@@ -304,10 +304,10 @@ Zotero.ProgressWindow = function (options = {}) {
 		this._hbox.appendChild(this._image);
 		this._hbox.appendChild(this._itemText);
 		
-		var container = _progressWindow.document.getElementById("zotero-progress-text-box");
+		var container = _progressWindow.document.getElementById("trellis-progress-text-box");
 		if(parentItemProgress) {
 			var nextItem = parentItemProgress._hbox.nextSibling;
-			while(nextItem && nextItem.zoteroIsChildItem) {
+			while(nextItem && nextItem.trellisIsChildItem) {
 				nextItem = nextItem.nextSibling;
 			}
 			container.insertBefore(this._hbox, nextItem);
@@ -330,7 +330,7 @@ Zotero.ProgressWindow = function (options = {}) {
 			this._image.style.width = "16px";
 			this._image.style.backgroundRepeat = "no-repeat";
 			this._image.style.backgroundSize = "auto 16px";
-			this._image.style.backgroundImage = "url('chrome://zotero/skin/progress_arcs.png')";
+			this._image.style.backgroundImage = "url('chrome://trellis/skin/progress_arcs.png')";
 			this._image.style.backgroundPosition = "-"+(Math.round(percent/100*nArcs)*16)+"px 0";
 			this._hbox.style.opacity = percent/200+.5;
 		} else if(percent == 100) {
@@ -361,7 +361,7 @@ Zotero.ProgressWindow = function (options = {}) {
 			this._itemText.textContent = '';
 		}
 		this._itemText.appendChild(_progressWindow.document.createTextNode(text));
-		this._itemText.setAttribute("class", "zotero-progress-item-label");
+		this._itemText.setAttribute("class", "trellis-progress-item-label");
 		this._itemText.setAttribute("crop", "end");
 	});
 	
@@ -369,7 +369,7 @@ Zotero.ProgressWindow = function (options = {}) {
 	 * Indicates that an error occurred saving this item.
 	 */
 	this.ItemProgress.prototype.setError = _deferUntilWindowLoad(function () {
-		this._image.style.backgroundImage = "url('chrome://zotero/skin/cross.png')";
+		this._image.style.backgroundImage = "url('chrome://trellis/skin/cross.png')";
 		this._image.style.backgroundPosition = "";
 		this._itemText.style.color = "red";
 		this._hbox.style.opacity = "1";
@@ -380,24 +380,24 @@ Zotero.ProgressWindow = function (options = {}) {
 	
 	this.Translation.operationInProgress = function () {
 		var desc = [
-			Zotero.getString('general.operationInProgress'),
-			Zotero.getString('general.operationInProgress.waitUntilFinishedAndTryAgain')
+			Trellis.getString('general.operationInProgress'),
+			Trellis.getString('general.operationInProgress.waitUntilFinishedAndTryAgain')
 		].join(' ');
 		self.Translation._scrapeError(desc);
 	};
 	
 	this.Translation.cannotEditCollection = function () {
-		var desc = Zotero.getString('save.error.cannotMakeChangesToCollection');
+		var desc = Trellis.getString('save.error.cannotMakeChangesToCollection');
 		self.Translation._scrapeError(desc);
 	};
 	
 	this.Translation.cannotAddToPublications = function () {
-		var desc = Zotero.getString('save.error.cannotAddToMyPublications');
+		var desc = Trellis.getString('save.error.cannotAddToMyPublications');
 		self.Translation._scrapeError(desc);
 	};
 	
 	this.Translation.cannotAddToFeed = function () {
-		var desc = Zotero.getString('save.error.cannotAddToFeed');
+		var desc = Trellis.getString('save.error.cannotAddToFeed');
 		self.Translation._scrapeError(desc);
 	};
 	
@@ -406,13 +406,13 @@ Zotero.ProgressWindow = function (options = {}) {
 		if(collection) {
 			name = collection.name;
 		} else if(libraryID) {
-			name = Zotero.Libraries.getName(libraryID);
+			name = Trellis.Libraries.getName(libraryID);
 		} else {
-			name = Zotero.getString("pane.collections.library");
+			name = Trellis.getString("pane.collections.library");
 		}
 		
 		self.changeHeadline(
-			Zotero.getString("ingester.scrapingTo"),
+			Trellis.getString("ingester.scrapingTo"),
 			collection ? 'collection' : 'library',
 			name + "\u2026"
 		);
@@ -421,10 +421,10 @@ Zotero.ProgressWindow = function (options = {}) {
 	this.Translation.doneHandler = function (obj, returnValue) {		
 		if(!returnValue) {
 			// Include link to translator troubleshooting page
-			var url = "https://www.zotero.org/support/troubleshooting_translator_issues";
+			var url = "https://www.trellis.org/support/troubleshooting_translator_issues";
 			var linkText = '<a href="' + url + '" tooltiptext="' + url + '">'
-				+ Zotero.getString('ingester.scrapeErrorDescription.linkText') + '</a>';
-			var desc = Zotero.getString("ingester.scrapeErrorDescription", linkText)
+				+ Trellis.getString('ingester.scrapeErrorDescription.linkText') + '</a>';
+			var desc = Trellis.getString("ingester.scrapeErrorDescription", linkText)
 			self.Translation._scrapeError(desc);
 		} else {
 			self.startCloseTimer();
@@ -439,7 +439,7 @@ Zotero.ProgressWindow = function (options = {}) {
 			itemProgress.setProgress(100);
 			for(let attachment of item.attachments) {
 				// Create unsaved item to get icon
-				let attachmentItem = new Zotero.Item('attachment');
+				let attachmentItem = new Trellis.Item('attachment');
 				attachmentItem.attachmentContentType = attachment.mimeType;
 				if (attachment.linkMode) {
 					attachmentItem.attachmentLinkMode = attachment.linkMode;
@@ -453,7 +453,7 @@ Zotero.ProgressWindow = function (options = {}) {
 	};
 	
 	this.Translation._scrapeError = function (description) {
-		self.changeHeadline(Zotero.getString("ingester.scrapeError"));
+		self.changeHeadline(Trellis.getString("ingester.scrapeError"));
 		self.addDescription(description);
 		self.show();
 		self.startCloseTimer(8000)	
@@ -479,7 +479,7 @@ Zotero.ProgressWindow = function (options = {}) {
 	
 	function _move() {
 		_progressWindow.sizeToContent();
-		Zotero.ProgressWindowSet.tile(_progressWindow);
+		Trellis.ProgressWindowSet.tile(_progressWindow);
 	}
 	
 	function _timeout() {
@@ -518,7 +518,7 @@ Zotero.ProgressWindow = function (options = {}) {
 	 */
 	function _onMouseOut(e) {
 		// |this| refers to progressWindow's XUL window
-		var top = this.screenY + (Zotero.isMac ? 22 : 0);
+		var top = this.screenY + (Trellis.isMac ? 22 : 0);
 		if ((e.screenX >= this.screenX && e.screenX <= (this.screenX + this.outerWidth))
 			&& (e.screenY >= top) && e.screenY <= (top + this.outerHeight)) {
 				return;

@@ -4,45 +4,45 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
 
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
-<?xul-overlay href="chrome://zotero/content/standalone/editMenuOverlay.xul"?>
-<?xul-overlay href="chrome://zotero-platform/content/standalone/menuOverlay.xul"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+<?xul-overlay href="chrome://trellis/content/standalone/editMenuOverlay.xul"?>
+<?xul-overlay href="chrome://trellis-platform/content/standalone/menuOverlay.xul"?>
 
 <!DOCTYPE window [
-	<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://zotero/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
-	<!ENTITY % standaloneDTD SYSTEM "chrome://zotero/locale/standalone.dtd" > %standaloneDTD;
+	<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://trellis/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
+	<!ENTITY % standaloneDTD SYSTEM "chrome://trellis/locale/standalone.dtd" > %standaloneDTD;
 	<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd" > %brandDTD;
-	<!ENTITY % zoteroDTD SYSTEM "chrome://zotero/locale/zotero.dtd"> %zoteroDTD;
+	<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
 ]>
 
 <window id="main-window"
 				xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 				xmlns:html="http://www.w3.org/1999/xhtml"
 				onload="window.sizeToContent()"
-				windowtype="zotero:basicViewer" 
+				windowtype="trellis:basicViewer" 
 				title="&brandShortName;"
 				style="min-width: 1000px; min-height: 700px;"
 				persist="screenX screenY width height sizemode">
@@ -55,23 +55,23 @@
 
 	<script>
 		
-		Services.scriptloader.loadSubScript("chrome://zotero/content/platformKeys.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/editMenuOverlay.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/browserWindowShim.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/platformKeys.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/editMenuOverlay.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/browserWindowShim.js", this);
 		
 		// Mozilla scripts
 		Services.scriptloader.loadSubScript("chrome://global/content/globalOverlay.js", this);
 		Services.scriptloader.loadSubScript("chrome://global/content/contentAreaUtils.js", this);
 		Services.scriptloader.loadSubScript("chrome://global/content/printUtils.js", this);
 		Services.scriptloader.loadSubScript("chrome://global/content/viewZoomOverlay.js", this);
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			Services.scriptloader.loadSubScript("chrome://global/content/macWindowMenu.js", this);
 		}
 		if(window.arguments?.[0] === 'mendeleyImport') {
-			Services.scriptloader.loadSubScript("chrome://zotero/content/import/mendeley/authViewer.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/import/mendeley/authViewer.js", this);
 		} else {
-			Services.scriptloader.loadSubScript("chrome://zotero/content/standalone/basicViewer.js", this);	
+			Services.scriptloader.loadSubScript("chrome://trellis/content/standalone/basicViewer.js", this);	
 		}
 	</script>
 	
@@ -85,7 +85,7 @@
 		<!--EDIT-->
 		<commandset id="editMenuCommands"/>
 		<command id="cmd_find"
-			oncommand="document.getElementById('zotero-tb-search').focus();"/>
+			oncommand="document.getElementById('trellis-tb-search').focus();"/>
 
 		<!--VIEW-->
 		<command id="cmd_fullZoomReduce" oncommand="ZoomManager.reduce()" />

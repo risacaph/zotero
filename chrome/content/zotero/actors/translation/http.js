@@ -3,22 +3,22 @@
 	
 	Copyright © 2021 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -29,7 +29,7 @@ var { NetUtil } = ChromeUtils.importESModule("resource://gre/modules/NetUtil.sys
  * Functions for performing HTTP requests, both via XMLHTTPRequest and using a hidden browser
  * @namespace
  */
-Zotero.HTTP = new function() {
+Trellis.HTTP = new function() {
 	this.StatusError = function(xmlhttp, url) {
 		this.message = `HTTP request to ${url} rejected with status ${xmlhttp.status}`;
 		this.status = xmlhttp.status;
@@ -101,11 +101,11 @@ Zotero.HTTP = new function() {
 			logBody = logBody.replace(/password":"[^"]+/, 'password":"********');
 			logBody = logBody.replace(/password=[^&]+/, 'password=********');
 		}
-		Zotero.debug(`HTTP ${method} ${url}${logBody}`);
+		Trellis.debug(`HTTP ${method} ${url}${logBody}`);
 
 		var xmlhttp = new XMLHttpRequest({ mozAnon: false });
 		xmlhttp.timeout = options.timeout;
-		var promise = Zotero.HTTP._attachHandlers(url, xmlhttp, options);
+		var promise = Trellis.HTTP._attachHandlers(url, xmlhttp, options);
 
 		xmlhttp.open(method, url, true);
 		
@@ -126,10 +126,10 @@ Zotero.HTTP = new function() {
 		return promise.then(function(xmlhttp) {
 			if (options.debug) {
 				if (xmlhttp.responseType == '' || xmlhttp.responseType == 'text') {
-					Zotero.debug(`HTTP ${xmlhttp.status} response: ${xmlhttp.responseText}`);
+					Trellis.debug(`HTTP ${xmlhttp.status} response: ${xmlhttp.responseText}`);
 				}
 				else {
-					Zotero.debug(`HTTP ${xmlhttp.status} response`);
+					Trellis.debug(`HTTP ${xmlhttp.status} response`);
 				}
 			}
 
@@ -137,7 +137,7 @@ Zotero.HTTP = new function() {
 				(xmlhttp.status < 200 || xmlhttp.status >= 300);
 			let invalidStatus = Array.isArray(options.successCodes) && !options.successCodes.includes(xmlhttp.status);
 			if (invalidDefaultStatus || invalidStatus) {
-				throw new Zotero.HTTP.StatusError(xmlhttp, url);
+				throw new Trellis.HTTP.StatusError(xmlhttp, url);
 			}
 			return xmlhttp;
 		});
@@ -145,7 +145,7 @@ Zotero.HTTP = new function() {
 	/**
 	 * Send an HTTP GET request via XMLHTTPRequest
 	 *
-	 * @deprecated Use {@link Zotero.HTTP.request}
+	 * @deprecated Use {@link Trellis.HTTP.request}
 	 * @param {String}			url				URL to request
 	 * @param {Function} 		onDone			Callback to be executed upon request completion
 	 * @param {String}			responseCharset
@@ -154,7 +154,7 @@ Zotero.HTTP = new function() {
 	 * @return {Boolean} True if the request was sent, or false if the browser is offline
 	 */
 	this.doGet = function(url, onDone, responseCharset, cookieSandbox, headers) {
-		Zotero.debug('Zotero.HTTP.doGet is deprecated. Use Zotero.HTTP.request');
+		Trellis.debug('Trellis.HTTP.doGet is deprecated. Use Trellis.HTTP.request');
 		this.request('GET', url, {responseCharset, headers})
 			.then(onDone, function(e) {
 				onDone({status: e.status, responseText: e.responseText});
@@ -166,7 +166,7 @@ Zotero.HTTP = new function() {
 	/**
 	 * Send an HTTP POST request via XMLHTTPRequest
 	 *
-	 * @deprecated Use {@link Zotero.HTTP.request}
+	 * @deprecated Use {@link Trellis.HTTP.request}
 	 * @param {String}			url URL to request
 	 * @param {String|Object[]}	body Request body
 	 * @param {Function}			onDone Callback to be executed upon request completion
@@ -175,7 +175,7 @@ Zotero.HTTP = new function() {
 	 * @return {Boolean} True if the request was sent, or false if the browser is offline
 	 */
 	this.doPost = function(url, body, onDone, headers, responseCharset) {
-		Zotero.debug('Zotero.HTTP.doPost is deprecated. Use Zotero.HTTP.request');
+		Trellis.debug('Trellis.HTTP.doPost is deprecated. Use Trellis.HTTP.request');
 		this.request('POST', url, {body, responseCharset, headers})
 			.then(onDone, function(e) {
 				onDone({status: e.status, responseText: e.responseText});
@@ -188,7 +188,7 @@ Zotero.HTTP = new function() {
 	/**
 	 * Load one or more documents via XMLHttpRequest
 	 *
-	 * Based on equivalent code from zotero-connectors.
+	 * Based on equivalent code from trellis-connectors.
 	 *
 	 * @param {String|String[]} urls - URL(s) of documents to load
 	 * @param {Function} processor - Callback to be executed for each document loaded
@@ -197,14 +197,14 @@ Zotero.HTTP = new function() {
 	this.processDocuments = async function (urls, processor) {
 		// Handle old signature: urls, processor, onDone, onError
 		if (typeof arguments[2] == 'function' || typeof arguments[3] == 'function') {
-			Zotero.debug("Zotero.HTTP.processDocuments() no longer takes onDone or onError -- update your code");
+			Trellis.debug("Trellis.HTTP.processDocuments() no longer takes onDone or onError -- update your code");
 			var onDone = arguments[2];
 			var onError = arguments[3];
 		}
 
 		if (typeof urls == "string") urls = [urls];
 		var funcs = urls.map(url => () => {
-			return Zotero.HTTP.request(
+			return Trellis.HTTP.request(
 				"GET",
 				url,
 				{
@@ -212,7 +212,7 @@ Zotero.HTTP = new function() {
 				}
 			)
 				.then((xhr) => {
-					let doc = Zotero.HTTP.wrapDocument(xhr.response, url);
+					let doc = Trellis.HTTP.wrapDocument(xhr.response, url);
 					return processor(doc, url);
 				});
 		});
@@ -283,14 +283,14 @@ Zotero.HTTP = new function() {
 	 * the request is complete. xmlhttp.send() still needs to be called, this just attaches the
 	 * handler
 	 *
-	 * See {@link Zotero.HTTP.request} for parameters
+	 * See {@link Trellis.HTTP.request} for parameters
 	 * @private
 	 */
 	this._attachHandlers = function(url, xmlhttp, options) {
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		xmlhttp.onload = () => deferred.resolve(xmlhttp);
 		xmlhttp.onerror = xmlhttp.onabort = function() {
-			var e = new Zotero.HTTP.StatusError(xmlhttp, url);
+			var e = new Trellis.HTTP.StatusError(xmlhttp, url);
 			if (options.successCodes === false) {
 				deferred.resolve(xmlhttp);
 			} else {
@@ -298,8 +298,8 @@ Zotero.HTTP = new function() {
 			}
 		};
 		xmlhttp.ontimeout = function() {
-			var e = new Zotero.HTTP.TimeoutError(xmlhttp.timeout);
-			Zotero.logError(e);
+			var e = new Trellis.HTTP.TimeoutError(xmlhttp.timeout);
+			Trellis.logError(e);
 			deferred.reject(e);
 		};
 		return deferred.promise;

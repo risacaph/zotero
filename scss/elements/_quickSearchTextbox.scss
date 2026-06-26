@@ -1,14 +1,14 @@
 // | 6px padding | 16px icon width | 2px padding | 8px dropmarker width | 4px padding |
 quick-search-textbox {
 	--search-textbox-width: 146px;
-	font-size: var(--zotero-font-size);
+	font-size: var(--trellis-font-size);
 	margin-right: 0;
 	width: var(--search-textbox-width);
 	height: 28px;
 	max-width: 300px;
 	flex-grow: 1;
 
-	*[zoteroFontSize=small] {
+	*[trellisFontSize=small] {
 		font-size: 11px;
 	}
 
@@ -28,11 +28,11 @@ quick-search-textbox {
 	}
 }
 
-#zotero-tb-search {
+#trellis-tb-search {
 	height: 100%;
 }
 
-#zotero-tb-search-dropmarker {
+#trellis-tb-search-dropmarker {
 	position: relative;
 	// 6px padding + 16px icon width + 2px padding + 8px dropmarker width + 4px padding
 	width: 36px;
@@ -40,7 +40,7 @@ quick-search-textbox {
 	z-index: 2;
 }
 
-#zotero-tb-search-menu-button {
+#trellis-tb-search-menu-button {
 	width: 36px;
 	height: 28px;
 	min-height: 28px;
@@ -64,7 +64,7 @@ quick-search-textbox {
 	}
 }
 
-#zotero-tb-search-textbox {
+#trellis-tb-search-textbox {
 	padding: 0;
 	padding-inline-end: 6px;
 	margin: 0;
@@ -76,13 +76,13 @@ quick-search-textbox {
 	width: 100%;
 
 	// Keep input text and the clear icon out from under the Advanced Search button
-	&:has(~ #zotero-tb-search-advanced-button) {
+	&:has(~ #trellis-tb-search-advanced-button) {
 		padding-inline-end: 30px;
 	}
 }
 
-// Match the specificity of the #zotero-items-toolbar toolbarbutton rules
-#zotero-tb-search #zotero-tb-search-advanced-button {
+// Match the specificity of the #trellis-items-toolbar toolbarbutton rules
+#trellis-tb-search #trellis-tb-search-advanced-button {
 	position: relative;
 	width: 28px;
 	height: 28px;
@@ -124,7 +124,7 @@ quick-search-textbox {
 	}
 }
 
-#zotero-tb-search-spinner {
+#trellis-tb-search-spinner {
 	margin: 0 8px;
 	// make sure the spinner always occupies space
 	display: inline;
@@ -164,7 +164,7 @@ quick-search-textbox {
 		font-weight: 700;
 	}
 
-	.zotero-clicky {
+	.trellis-clicky {
 		width: 28px;
 		height: 28px;
 		margin: 0;

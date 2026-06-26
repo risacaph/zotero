@@ -5,11 +5,11 @@ export class FeedAbstractChild extends JSWindowActorChild {
 	
 	actorCreated() {
 		this._stylesheetPromise = this.sendQuery("getStylesheet");
-		Services.prefs.addObserver("extensions.zotero.fontSize", this._setFontSize);
+		Services.prefs.addObserver("extensions.trellis.fontSize", this._setFontSize);
 	}
 	
 	didDestroy() {
-		Services.prefs.removeObserver("extensions.zotero.fontSize", this._setFontSize);
+		Services.prefs.removeObserver("extensions.trellis.fontSize", this._setFontSize);
 	}
 	
 	async receiveMessage({ name, data: { url, html } }) {
@@ -56,7 +56,7 @@ export class FeedAbstractChild extends JSWindowActorChild {
 	}
 	
 	_setFontSize = () => {
-		let fontSize = Services.prefs.getStringPref("extensions.zotero.fontSize");
+		let fontSize = Services.prefs.getStringPref("extensions.trellis.fontSize");
 		this.document.body.style.fontSize = fontSize + "rem";
 	};
 }

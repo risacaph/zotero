@@ -3,22 +3,22 @@
 
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
 
-    This file is part of Zotero.
+    This file is part of Trellis.
 
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
     ***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -38,12 +38,12 @@
 						<html:div id="rows" class="tags-box-list"/>
 						<popupset>
 							<menupopup id="tags-context-menu">
-								<menuitem id="remove-all-item-tags" label="&zotero.item.tags.removeAll;"/>
+								<menuitem id="remove-all-item-tags" label="&trellis.item.tags.removeAll;"/>
 							</menupopup>
 						</popupset>
 					</html:div>
 				</collapsible-section>
-			`, ['chrome://zotero/locale/zotero.dtd']);
+			`, ['chrome://trellis/locale/trellis.dtd']);
 
 		init() {
 			this.count = 0;
@@ -67,17 +67,17 @@
 			this.querySelector('.body').addEventListener('contextmenu', (event) => {
 				event.preventDefault();
 
-				Zotero.Utilities.Internal.updateEditContextMenu(menupopup, event.target.closest('editable-text'));
+				Trellis.Utilities.Internal.updateEditContextMenu(menupopup, event.target.closest('editable-text'));
 				removeAllItemTags.disabled = !this.editable || !this.count;
 				menupopup.openPopupAtScreen(event.screenX, event.screenY, true);
 			});
-			// Register our observer with priority 101 (after Zotero.Tags) so we get updated tag colors
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item-tag', 'setting'], 'tagsBox', 101);
+			// Register our observer with priority 101 (after Trellis.Tags) so we get updated tag colors
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item-tag', 'setting'], 'tagsBox', 101);
 		}
 
 		destroy() {
 			this._section?.removeEventListener('add', this._handleAddButtonClick);
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 		}
 
 		get item() {
@@ -136,12 +136,12 @@
 			if (!this.item) return;
 			if (this._isAlreadyRendered()) return;
 
-			Zotero.debug('Reloading tags box');
+			Trellis.debug('Reloading tags box');
 
 			// Cancel field focusing while we're updating
 			this._reloading = true;
 
-			this._tagColors = Zotero.Tags.getColors(this.item.libraryID);
+			this._tagColors = Trellis.Tags.getColors(this.item.libraryID);
 			
 			let focusedTag = this._id('rows').querySelector('editable-text:focus-within')?.value;
 
@@ -152,7 +152,7 @@
 
 
 			// Sort tags alphabetically with colored tags at the top followed by emoji tags
-			tags.sort((a, b) => Zotero.Tags.compareTagsOrder(this.item.libraryID, a.tag, b.tag));
+			tags.sort((a, b) => Trellis.Tags.compareTagsOrder(this.item.libraryID, a.tag, b.tag));
 			
 
 			for (let i = 0; i < tags.length; i++) {
@@ -176,7 +176,7 @@
 			}
 
 			var icon = document.createElement("div");
-			icon.className = "zotero-box-icon";
+			icon.className = "trellis-box-icon";
 
 			// DEBUG: Why won't just this.nextSibling.blur() work?
 			icon.addEventListener('click', (event) => {
@@ -187,7 +187,7 @@
 
 			if (this.editable) {
 				var remove = document.createXULElement("toolbarbutton");
-				remove.setAttribute('class', 'zotero-clicky zotero-clicky-minus');
+				remove.setAttribute('class', 'trellis-clicky trellis-clicky-minus');
 				remove.setAttribute('tabindex', 0);
 				remove.setAttribute("data-l10n-id", 'section-button-remove');
 			}
@@ -234,8 +234,8 @@
 			// Icon
 			let icon = row.firstChild;
 			icon.title = tagType == 0
-				? Zotero.getString('pane.item.tags.icon.user')
-				: Zotero.getString('pane.item.tags.icon.automatic');
+				? Trellis.getString('pane.item.tags.icon.user')
+				: Trellis.getString('pane.item.tags.icon.automatic');
 
 			// "-" button
 			if (this.editable) {
@@ -264,7 +264,7 @@
 					}
 
 					// TODO: Return focus to items pane
-					var tree = document.getElementById('zotero-items-tree');
+					var tree = document.getElementById('trellis-items-tree');
 					if (tree) {
 						tree.focus();
 					}
@@ -280,7 +280,7 @@
 			valueElement.setAttribute('nowrap', true);
 			valueElement.setAttribute('tight', true);
 			document.l10n.setAttributes(valueElement, "tag-field");
-			valueElement.className = 'zotero-box-label';
+			valueElement.className = 'trellis-box-label';
 			valueElement.readOnly = !this.editable;
 			valueElement.value = valueText;
 			let params = {
@@ -291,7 +291,7 @@
 			valueElement.autocomplete = {
 				ignoreBlurWhileSearching: false,
 				popup: 'PopupAutoComplete',
-				search: 'zotero',
+				search: 'trellis',
 				searchParam: JSON.stringify(params),
 				completeSelectedIndex: true
 			};
@@ -416,7 +416,7 @@
 			const dataOut = { result: null };
 
 			window.openDialog(
-				'chrome://zotero/content/longTagFixer.xhtml',
+				'chrome://trellis/content/longTagFixer.xhtml',
 				'',
 				'chrome,modal,centerscreen',
 				dataIn, dataOut
@@ -434,7 +434,7 @@
 		saveTag = async (event) => {
 			var textbox = event.currentTarget;
 
-			Zotero.debug('Saving tag');
+			Trellis.debug('Saving tag');
 
 			var oldValue = textbox.initialValue;
 			var value = textbox.value = textbox.value.trim();
@@ -574,7 +574,7 @@
 			let newTagsArray = this.item.getTags();
 			newTagsArray.push({ tag: tagName, color: color || null });
 			// Sort it with the colored tags on top, followed by emoji tags, followed by everything else
-			newTagsArray.sort((a, b) => Zotero.Tags.compareTagsOrder(this._item.libraryID, a.tag, b.tag));
+			newTagsArray.sort((a, b) => Trellis.Tags.compareTagsOrder(this._item.libraryID, a.tag, b.tag));
 			// Find where the new tag should be placed and insert it there
 			let newTagIndex = newTagsArray.findIndex(tag => tag.tag == tagName);
 			if (newTagIndex < rowsElement.childNodes.length) {
@@ -610,7 +610,7 @@
 		}
 
 		removeAll = () => {
-			if (Services.prompt.confirm(null, "", Zotero.getString('pane.item.tags.removeAll'))) {
+			if (Services.prompt.confirm(null, "", Trellis.getString('pane.item.tags.removeAll'))) {
 				this.item.setTags([]);
 				this.item.saveTx({
 					undoAction: 'undo-action-remove-all-tags'
@@ -666,7 +666,7 @@
 
 		_pendingRemovalCount = 0;
 
-		_saveItemDebounced = Zotero.Utilities.debounce(async (item) => {
+		_saveItemDebounced = Trellis.Utilities.debounce(async (item) => {
 			let count = this._pendingRemovalCount;
 			this._pendingRemovalCount = 0;
 			await item.saveTx({

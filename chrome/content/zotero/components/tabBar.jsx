@@ -3,22 +3,22 @@
     
     Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -46,7 +46,7 @@ const Tab = memo((props) => {
 	let titleHTML;
 	if (renderTitle) {
 		let parentElement = document.createElement('div');
-		titleText = Zotero.Utilities.Internal.renderItemTitle(title, parentElement);
+		titleText = Trellis.Utilities.Internal.renderItemTitle(title, parentElement);
 		titleHTML = parentElement.innerHTML;
 	}
 	else {
@@ -140,7 +140,7 @@ const TabBar = forwardRef(function (props, ref) {
 	useImperativeHandle(ref, () => ({ setTabs }));
 
 	useEffect(() => {
-		let handleResize = Zotero.Utilities.throttle(() => {
+		let handleResize = Trellis.Utilities.throttle(() => {
 			updateScrollArrows();
 			updateOverflowing();
 		}, 300, { leading: false });
@@ -176,7 +176,7 @@ const TabBar = forwardRef(function (props, ref) {
 			let lastTab = tabsRef.current.lastChild;
 
 			// Don't allow to move tab beyond the second and the last tab
-			if (Zotero.rtl) {
+			if (Trellis.rtl) {
 				if (tab.offsetLeft + x < lastTab.offsetLeft
 					|| tab.offsetLeft + tab.offsetWidth + x > firstTab.offsetLeft) {
 					x = 0;
@@ -285,7 +285,7 @@ const TabBar = forwardRef(function (props, ref) {
 		img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 		event.dataTransfer.setDragImage(img, 0, 0);
 		// Some data needs to be set, although this is not used anywhere
-		event.dataTransfer.setData('zotero/tab', id);
+		event.dataTransfer.setData('trellis/tab', id);
 		// Store the relative mouse to tab X position where the tab was grabbed
 		dragGrabbedDeltaXRef.current = event.clientX - event.target.offsetLeft;
 		// Enable dragging
@@ -334,8 +334,8 @@ const TabBar = forwardRef(function (props, ref) {
 			let p1 = points[i];
 			let p2 = points[i + 1];
 			if (
-				Zotero.rtl && (x2 < p1 && x2 > p2 || x1 < p1 && x1 > p2)
-				|| !Zotero.rtl && (x2 > p1 && x2 < p2 || x1 > p1 && x1 < p2)
+				Trellis.rtl && (x2 < p1 && x2 > p2 || x1 < p1 && x1 > p2)
+				|| !Trellis.rtl && (x2 > p1 && x2 < p2 || x1 > p1 && x1 < p2)
 			) {
 				index = i + 1;
 				break;
@@ -346,7 +346,7 @@ const TabBar = forwardRef(function (props, ref) {
 		// of other tabs, check if it's moved beyond the last tab
 		if (index === null) {
 			let p = points[points.length - 1];
-			if (Zotero.rtl && x1 < p || !Zotero.rtl && x2 > p) {
+			if (Trellis.rtl && x1 < p || !Trellis.rtl && x2 > p) {
 				index = points.length;
 			}
 		}
@@ -362,10 +362,10 @@ const TabBar = forwardRef(function (props, ref) {
 		// so that the next tab's "X" button also ends up under the mouse
 		if (!lockedTabsState.size) {
 			let tabElements = [...tabsInnerContainerRef.current.querySelectorAll(".tab")].filter(tab => tab.offsetWidth);
-			let zoteroPaneTab = tabElements.find(tab => tab.dataset.id === "zotero-pane");
-			let tab = tabElements.find(tab => tab.dataset.id !== "zotero-pane");
+			let trellisPaneTab = tabElements.find(tab => tab.dataset.id === "trellis-pane");
+			let tab = tabElements.find(tab => tab.dataset.id !== "trellis-pane");
 			setLockedTabsState(new Map([
-				["zotero-pane", zoteroPaneTab.offsetWidth],
+				["trellis-pane", trellisPaneTab.offsetWidth],
 				["tab", tab.offsetWidth],
 				["scroll-left", tabsRef.current.scrollLeft]
 			]));
@@ -400,14 +400,14 @@ const TabBar = forwardRef(function (props, ref) {
 
 	const handleClickScrollStart = useCallback(() => {
 		tabsRef.current.scrollTo({
-			left: tabsRef.current.scrollLeft - (SCROLL_ARROW_SCROLL_BY * (Zotero.rtl ? -1 : 1)),
+			left: tabsRef.current.scrollLeft - (SCROLL_ARROW_SCROLL_BY * (Trellis.rtl ? -1 : 1)),
 			behavior: 'smooth'
 		});
 	}, []);
 
 	const handleClickScrollEnd = useCallback(() => {
 		tabsRef.current.scrollTo({
-			left: tabsRef.current.scrollLeft + (SCROLL_ARROW_SCROLL_BY * (Zotero.rtl ? -1 : 1)),
+			left: tabsRef.current.scrollLeft + (SCROLL_ARROW_SCROLL_BY * (Trellis.rtl ? -1 : 1)),
 			behavior: 'smooth'
 		});
 	}, []);
@@ -449,10 +449,10 @@ const TabBar = forwardRef(function (props, ref) {
 				<div
 					ref={startArrowRef}
 					className="scroll-start-arrow"
-					style={{ transform: Zotero.rtl ? 'scaleX(-1)' : undefined }}
+					style={{ transform: Trellis.rtl ? 'scaleX(-1)' : undefined }}
 				>
 					<button
-						data-l10n-id="zotero-toolbar-tabs-scroll-backwards"
+						data-l10n-id="trellis-toolbar-tabs-scroll-backwards"
 						onClick={handleClickScrollStart}
 						onDoubleClick={handleScrollArrowDoubleClick}
 					>
@@ -465,13 +465,13 @@ const TabBar = forwardRef(function (props, ref) {
 						className="tabs"
 						onDragOver={handleTabBarDragOver}
 						onScroll={updateScrollArrows}
-						dir={Zotero.dir}
+						dir={Trellis.dir}
 					>
 						{tabs.map((tab, index) => <Tab
 							{...tab}
 							key={tab.id}
 							index={index}
-							width={ tab.id === "zotero-pane" ? lockedTabsState.get("zotero-pane") : lockedTabsState.get("tab") }
+							width={ tab.id === "trellis-pane" ? lockedTabsState.get("trellis-pane") : lockedTabsState.get("tab") }
 							isBeingDragged={dragging && dragIDRef.current === tab.id}
 							onContextMenu={handleContextMenu}
 							onDragEnd={handleDragEnd}
@@ -487,10 +487,10 @@ const TabBar = forwardRef(function (props, ref) {
 				<div
 					ref={endArrowRef}
 					className="scroll-end-arrow"
-					style={{ transform: Zotero.rtl ? 'scaleX(-1)' : undefined }}
+					style={{ transform: Trellis.rtl ? 'scaleX(-1)' : undefined }}
 				>
 					<button
-						data-l10n-id="zotero-toolbar-tabs-scroll-forwards"
+						data-l10n-id="trellis-toolbar-tabs-scroll-forwards"
 						onClick={handleClickScrollEnd}
 						onDoubleClick={handleScrollArrowDoubleClick}
 					>

@@ -3,28 +3,28 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-const { FeedProcessor } = ChromeUtils.importESModule("resource://zotero/feeds/FeedProcessor.mjs");
+const { FeedProcessor } = ChromeUtils.importESModule("resource://trellis/feeds/FeedProcessor.mjs");
 
 /**
  * Sample feeds:
@@ -41,28 +41,28 @@ const { FeedProcessor } = ChromeUtils.importESModule("resource://zotero/feeds/Fe
  */
 
 /**
- * class Zotero.FeedReader
+ * class Trellis.FeedReader
  * Asynchronously reads an ATOM/RSS feed
  *
  * @param {String} url URL of the feed
  *
- * @property {Zotero.Promise<Object>} feedProperties An object
+ * @property {Trellis.Promise<Object>} feedProperties An object
  *   representing feed properties
- * @property {Zotero.Promise<FeedItem>*} ItemIterator Returns an iterator
+ * @property {Trellis.Promise<FeedItem>*} ItemIterator Returns an iterator
  *   for feed items. The iterator returns FeedItem promises that have to be
  *   resolved before requesting the next promise. When all items are exhausted.
  *   the promise resolves to null.
  * @method {void} terminate Stops retrieving/parsing the feed. Data parsed up
  *   to this point is still available.
  */
-Zotero.FeedReader = function (url) {
+Trellis.FeedReader = function (url) {
 	if (!url) throw new Error("Feed URL must be supplied");
 	
 	this._url = url;
-	this._feedItems = [Zotero.Promise.defer()];
-	this._feedProcessed = Zotero.Promise.defer();
+	this._feedItems = [Trellis.Promise.defer()];
+	this._feedProcessed = Trellis.Promise.defer();
 	
-	let feedFetched = Zotero.Promise.defer();
+	let feedFetched = Trellis.Promise.defer();
 	feedFetched.promise.then(function (feed) {
 		let info = {};
 		
@@ -73,7 +73,7 @@ Zotero.FeedReader = function (url) {
 		
 		// categories: MDN says "not yet implemented"
 		
-		info.creators = Zotero.FeedReader._processCreators(feed, 'authors', 'author');
+		info.creators = Trellis.FeedReader._processCreators(feed, 'authors', 'author');
 		
 		// TODO: image as icon
 		
@@ -107,17 +107,17 @@ Zotero.FeedReader = function (url) {
 				let item = items[i];
 				if (!item) continue;
 				
-				let feedItem = Zotero.FeedReader._getFeedItem(item, this._feedProperties);
+				let feedItem = Trellis.FeedReader._getFeedItem(item, this._feedProperties);
 				if (!feedItem) continue;
 				
 				let lastItem = this._feedItems[this._feedItems.length - 1];
-				this._feedItems.push(Zotero.Promise.defer()); // Push a new deferred promise so an iterator has something to return
+				this._feedItems.push(Trellis.Promise.defer()); // Push a new deferred promise so an iterator has something to return
 				lastItem.resolve(feedItem);
 			}
 		}
 		this._feedProcessed.resolve();
 	}.bind(this)).catch(function (e) {
-		Zotero.debug("Feed processing failed " + e.message);
+		Trellis.debug("Feed processing failed " + e.message);
 		this._feedProcessed.reject(e);
 	 
 	}.bind(this)).finally(function () {
@@ -152,13 +152,13 @@ Zotero.FeedReader = function (url) {
 		}
 	};
 	
-	// https://github.com/zotero/zotero/issues/2249
+	// https://github.com/trellis/trellis/issues/2249
 	let isNatureFeed = url.match(/^https?:\/\/[^.]+\.nature\.com\/.+\.rss/);
 	if (isNatureFeed) {
-		Zotero.HTTP.RequestModifier.enableRule('remove-nature-feed-origin');
+		Trellis.HTTP.RequestModifier.enableRule('remove-nature-feed-origin');
 	}
 	
-	Zotero.debug("FeedReader: Fetching feed from " + feedUrl);
+	Trellis.debug("FeedReader: Fetching feed from " + feedUrl);
 	
 	// Fetch and start processing
 	fetch(feedUrl, {
@@ -166,11 +166,11 @@ Zotero.FeedReader = function (url) {
 	}).then((response) => {
 		return feedProcessor.onResponseAvailable(response);
 	}).catch((e) => {
-		Zotero.debug(e);
+		Trellis.debug(e);
 		this.terminate("Processing failed");
 	}).finally(() => {
 		if (isNatureFeed) {
-			Zotero.HTTP.RequestModifier.disableRule('remove-nature-feed-origin');
+			Trellis.HTTP.RequestModifier.disableRule('remove-nature-feed-origin');
 		}
 	});
 };
@@ -179,7 +179,7 @@ Zotero.FeedReader = function (url) {
  * The constructor initiates async feed processing, but _feedProcessed
  * needs to be resolved before proceeding.
  */
-Zotero.FeedReader.prototype.process = async function () {
+Trellis.FeedReader.prototype.process = async function () {
 	return this._feedProcessed.promise;
 };
 
@@ -187,8 +187,8 @@ Zotero.FeedReader.prototype.process = async function () {
  * Terminate feed processing at any given time
  * @param {String} status Reason for terminating processing
  */
-Zotero.FeedReader.prototype.terminate = function (status) {
-	Zotero.debug("FeedReader: Terminating feed reader (" + status + ")");
+Trellis.FeedReader.prototype.terminate = function (status) {
+	Trellis.debug("FeedReader: Terminating feed reader (" + status + ")");
 	
 	// Reject feed promise if not resolved yet
 	this._feedProcessed.reject(new Error(status));
@@ -205,7 +205,7 @@ Zotero.FeedReader.prototype.terminate = function (status) {
 	lastItem.reject(er);
 };
 
-Zotero.defineProperty(Zotero.FeedReader.prototype, 'feedProperties', {
+Trellis.defineProperty(Trellis.FeedReader.prototype, 'feedProperties', {
 	get: function () {
 		if (!this._feedProperties) {
 			throw new Error("Feed has not been resolved yet. Try calling FeedReader#process first");
@@ -222,7 +222,7 @@ Zotero.defineProperty(Zotero.FeedReader.prototype, 'feedProperties', {
  * is terminated ahead of time, in which case it will be rejected with the reason
  * for termination.
  */
-Zotero.defineProperty(Zotero.FeedReader.prototype, 'ItemIterator', {
+Trellis.defineProperty(Trellis.FeedReader.prototype, 'ItemIterator', {
 	get: function () {
 		let items = this._feedItems;
 		 
@@ -259,7 +259,7 @@ Zotero.defineProperty(Zotero.FeedReader.prototype, 'ItemIterator', {
 /**
  * Determine item type based on item data
  */
-Zotero.FeedReader._guessItemType = function (item) {
+Trellis.FeedReader._guessItemType = function (item) {
 	// Default to journalArticle
 	item.itemType = 'journalArticle';
 	
@@ -292,7 +292,7 @@ Zotero.FeedReader._guessItemType = function (item) {
 /*
  * Fetch creators from given field of a feed entry
  */
-Zotero.FeedReader._processCreators = function (feedEntry, field, role) {
+Trellis.FeedReader._processCreators = function (feedEntry, field, role) {
 	let names = [],
 		nameStr;
 	try {
@@ -301,7 +301,7 @@ Zotero.FeedReader._processCreators = function (feedEntry, field, role) {
 			let person = personArr[i];
 			if (!person || !person.name) continue;
 			
-			let name = Zotero.Utilities.cleanTags(Zotero.Utilities.trimInternal(person.name));
+			let name = Trellis.Utilities.cleanTags(Trellis.Utilities.trimInternal(person.name));
 			if (!name) continue;
 			
 			let commas = name.split(',').length - 1,
@@ -327,8 +327,8 @@ Zotero.FeedReader._processCreators = function (feedEntry, field, role) {
 		if (field != 'authors') return [];
 		
 		// ieeexplore places these in "authors"... sigh
-		nameStr = Zotero.FeedReader._getFeedField(feedEntry, 'authors');
-		if (nameStr) nameStr = Zotero.Utilities.trimInternal(nameStr);
+		nameStr = Trellis.FeedReader._getFeedField(feedEntry, 'authors');
+		if (nameStr) nameStr = Trellis.Utilities.trimInternal(nameStr);
 		if (!nameStr) return [];
 	}
 	
@@ -338,7 +338,7 @@ Zotero.FeedReader._processCreators = function (feedEntry, field, role) {
 	
 	let creators = [];
 	for (let i = 0; i < names.length; i++) {
-		let creator = Zotero.Utilities.cleanAuthor(
+		let creator = Trellis.Utilities.cleanAuthor(
 			names[i],
 			role,
 			names[i].split(',').length == 2
@@ -357,14 +357,14 @@ Zotero.FeedReader._processCreators = function (feedEntry, field, role) {
 };
 
 /*
- * Parse feed entry into a Zotero item
+ * Parse feed entry into a Trellis item
  */
-Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
+Trellis.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 	// ID is not required, but most feeds have these and we have to rely on them
 	// to handle updating properly
 	// Can probably fall back to links on missing id - unlikely to change
 	if (!feedEntry.id && !feedEntry.link) {
-		Zotero.debug("FeedReader: Feed item missing an ID or link - discarding");
+		Trellis.debug("FeedReader: Feed item missing an ID or link - discarding");
 		return null;
 	}
 	
@@ -372,7 +372,7 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 		guid: feedEntry.id || feedEntry.link.href
 	};
 			
-	if (feedEntry.title) item.title = Zotero.FeedReader._getRichText(feedEntry.title, 'title');
+	if (feedEntry.title) item.title = Trellis.FeedReader._getRichText(feedEntry.title, 'title');
 	
 	if (feedEntry.content || feedEntry.summary) {
 		let abstractFragment = (feedEntry.content || feedEntry.summary).createDocumentFragment();
@@ -387,7 +387,7 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 	if (feedEntry.summary && !item.title) {
 		// We will probably have to trim this, so let's use plain text to
 		// avoid splitting inside some markup
-		let title = Zotero.Utilities.trimInternal(feedEntry.summary.plainText());
+		let title = Trellis.Utilities.trimInternal(feedEntry.summary.plainText());
 		let splitAt = title.lastIndexOf(' ', 50);
 		if (splitAt == -1) splitAt = 50;
 
@@ -398,9 +398,9 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 	let url = feedEntry.link?.href || feedEntry.url?.plainText();
 	if (url) item.url = url;
 	
-	if (feedEntry.rights) item.rights = Zotero.FeedReader._getRichText(feedEntry.rights, 'rights');
+	if (feedEntry.rights) item.rights = Trellis.FeedReader._getRichText(feedEntry.rights, 'rights');
 	
-	item.creators = Zotero.FeedReader._processCreators(feedEntry, 'authors', 'author');
+	item.creators = Trellis.FeedReader._processCreators(feedEntry, 'authors', 'author');
 	if (!item.creators.length) {
 		// Use feed authors as item author. Maybe not the best idea.
 		for (let i = 0; i < feedInfo.creators.length; i++) {
@@ -409,7 +409,7 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 		}
 	}
 	
-	let contributors = Zotero.FeedReader._processCreators(feedEntry, 'contributors', 'contributor');
+	let contributors = Trellis.FeedReader._processCreators(feedEntry, 'contributors', 'contributor');
 	if (contributors.length) item.creators = item.creators.concat(contributors);
 	
 	/** Done with basic metadata, now look for better data **/
@@ -444,7 +444,7 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 	let identifier = feedEntry.identifier;
 	if (identifier) {
 		for (let type of ['DOI', 'ISBN', 'ISSN']) {
-			let cleanId = Zotero.Utilities[`clean${type}`](identifier);
+			let cleanId = Trellis.Utilities[`clean${type}`](identifier);
 			if (cleanId) {
 				if (!item[type]) item[type] = cleanId;
 				break;
@@ -477,9 +477,9 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
 		}
 	}
 	
-	Zotero.FeedReader._guessItemType(item);
+	Trellis.FeedReader._guessItemType(item);
 	
-	item.enclosedItems = Zotero.FeedReader._getEnclosedItems(feedEntry);
+	item.enclosedItems = Trellis.FeedReader._getEnclosedItems(feedEntry);
 	
 	return item;
 };
@@ -488,19 +488,19 @@ Zotero.FeedReader._getFeedItem = function (feedEntry, feedInfo) {
  * Utility functions *
  *********************/
 /*
- * Convert HTML-formatted text to Zotero-compatible formatting
+ * Convert HTML-formatted text to Trellis-compatible formatting
  */
-Zotero.FeedReader._getRichText = function (feedText, field) {
+Trellis.FeedReader._getRichText = function (feedText, field) {
 	if (typeof feedText === 'string') {
 		// FIXME: Don't expose TextConstructs on Feed/Entry objects so this bug can't happen
-		Zotero.debug(`FeedReader: Field ${field} was a string instead of a TextConstruct. Update the _textConstructs map.`);
+		Trellis.debug(`FeedReader: Field ${field} was a string instead of a TextConstruct. Update the _textConstructs map.`);
 		return feedText;
 	}
 	let domFragment = feedText.createDocumentFragment();
 	if (!domFragment) {
 		return '';
 	}
-	return Zotero.Utilities.trimInternal(domFragment.textContent);
+	return Trellis.Utilities.trimInternal(domFragment.textContent);
 };
 
 /*
@@ -512,7 +512,7 @@ let ns = {
 	prism: 'null',
 	dc: 'dc:'
 };
-Zotero.FeedReader._getFeedField = function (feedEntry, field, namespace) {
+Trellis.FeedReader._getFeedField = function (feedEntry, field, namespace) {
 	let prefix = namespace ? ns[namespace] || 'null' : '';
 	if (feedEntry.fields[prefix + field]) {
 		return feedEntry.fields[prefix + field];
@@ -528,7 +528,7 @@ Zotero.FeedReader._getFeedField = function (feedEntry, field, namespace) {
 	return null;
 };
 
-Zotero.FeedReader._getEnclosedItems = function (feedEntry) {
+Trellis.FeedReader._getEnclosedItems = function (feedEntry) {
 	var enclosedItems = [];
 	
 	if (feedEntry.enclosures) {

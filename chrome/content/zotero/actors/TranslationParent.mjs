@@ -1,4 +1,4 @@
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 export const TranslationManager = new (class {
 	_registeredRemoteTranslates = new Map();
@@ -61,7 +61,7 @@ export const TranslationManager = new (class {
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}
@@ -75,7 +75,7 @@ export class TranslationParent extends JSWindowActorParent {
 		switch (name) {
 			case 'Translators:call': {
 				let { id, method, args } = data;
-				let provider = TranslationManager.getTranslatorProvider(id) || Zotero.Translators;
+				let provider = TranslationManager.getTranslatorProvider(id) || Trellis.Translators;
 				return provider[method](...args);
 			}
 			

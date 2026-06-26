@@ -3,22 +3,22 @@
     
     Copyright © 2021 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -29,7 +29,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -44,12 +44,12 @@ import { getCSSItemTypeIcon } from 'components/icons';
 			this._noteIDs = [];
 			this.initCollapsibleSection();
 			this._section.addEventListener('add', this._handleAdd);
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'notesBox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'notesBox');
 		}
 		
 		destroy() {
 			this._section?.removeEventListener('add', this._handleAdd);
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 		}
 		
 		get item() {
@@ -89,7 +89,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 			let body = this.querySelector('.body');
 			body.replaceChildren();
 
-			let notes = Zotero.Items.get(this._item.getNotes());
+			let notes = Trellis.Items.get(this._item.getNotes());
 			for (let item of notes) {
 				let id = item.id;
 
@@ -117,14 +117,14 @@ import { getCSSItemTypeIcon } from 'components/icons';
 				if (this.editable) {
 					let remove = document.createXULElement("toolbarbutton");
 					remove.addEventListener('command', () => this._handleRemove(id));
-					remove.className = 'zotero-clicky zotero-clicky-minus';
+					remove.className = 'trellis-clicky trellis-clicky-minus';
 					remove.setAttribute("tabindex", "0");
 					remove.setAttribute("data-l10n-id", 'section-button-remove');
 					row.append(remove);
 				}
 
 				row.addEventListener('dragstart', (event) => {
-					Zotero.Utilities.Internal.onDragItems(event, [id]);
+					Trellis.Utilities.Internal.onDragItems(event, [id]);
 				});
 
 				body.append(row);
@@ -135,18 +135,18 @@ import { getCSSItemTypeIcon } from 'components/icons';
 		}
 
 		_handleAdd = (event) => {
-			ZoteroPane_Local.newNote(event.shiftKey, this._item.key);
+			TrellisPane_Local.newNote(event.shiftKey, this._item.key);
 		};
 
 		_handleRemove(id) {
 			var ps = Services.prompt;
-			if (ps.confirm(null, '', Zotero.getString('pane.item.notes.delete.confirm'))) {
-				Zotero.Items.trashTx(id);
+			if (ps.confirm(null, '', Trellis.getString('pane.item.notes.delete.confirm'))) {
+				Trellis.Items.trashTx(id);
 			}
 		}
 
 		_handleShowItem(id) {
-			ZoteroPane_Local.selectItem(id);
+			TrellisPane_Local.selectItem(id);
 		}
 
 		_id(id) {
@@ -182,7 +182,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 			else {
 				text = text.replace(/<br\s*\/?>/g, ' ');
 			}
-			text = Zotero.Utilities.unescapeHTML(text);
+			text = Trellis.Utilities.unescapeHTML(text);
 
 			// If first line is just an opening HTML tag, remove it
 			//

@@ -3,22 +3,22 @@
 	
 	Copyright © 2019 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -30,17 +30,17 @@ const ReactDOM = require('react-dom');
 const LibraryTree = require('./libraryTree');
 const VirtualizedTable = require('components/virtualized-table');
 const { VirtualizedTree, formatColumnName } = VirtualizedTable;
-const { COLUMNS } = require("zotero/itemTreeColumns");
-const { ItemTreeRow } = require('zotero/itemTreeRow');
-const { OS } = ChromeUtils.importESModule("chrome://zotero/content/osfile.mjs");
-const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
+const { COLUMNS } = require("trellis/itemTreeColumns");
+const { ItemTreeRow } = require('trellis/itemTreeRow');
+const { OS } = ChromeUtils.importESModule("chrome://trellis/content/osfile.mjs");
+const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
 
 /**
  * @typedef {import("./itemTreeColumns.jsx").ItemTreeColumnOptions} ItemTreeColumnOptions
  */
 
 const CHILD_INDENT = 16;
-const COLUMN_PREFS_FILEPATH = OS.Path.join(Zotero.Profile.dir, "treePrefs.json");
+const COLUMN_PREFS_FILEPATH = OS.Path.join(Trellis.Profile.dir, "treePrefs.json");
 
 // Migrate unsuffixed `<id>` keys back to `<id>-default`. Earlier 10.0 betas dropped the `-default`
 // suffix from main-library tree IDs, stranding 9.0.x prefs and breaking version switching.
@@ -51,7 +51,7 @@ function _migrateTreePrefsFile() {
 		_treePrefsMigrationPromise = (async () => {
 			let persistSettings;
 			try {
-				let contents = await Zotero.File.getContentsAsync(COLUMN_PREFS_FILEPATH);
+				let contents = await Trellis.File.getContentsAsync(COLUMN_PREFS_FILEPATH);
 				persistSettings = JSON.parse(contents);
 			}
 			catch {
@@ -60,7 +60,7 @@ function _migrateTreePrefsFile() {
 			if (!persistSettings || typeof persistSettings !== 'object') return;
 			let knownSuffixes = [
 				'-default',
-				...Object.values(Zotero.CollectionTreeRow.visibilityGroups).map(g => '-' + g),
+				...Object.values(Trellis.CollectionTreeRow.visibilityGroups).map(g => '-' + g),
 			];
 			let changed = false;
 			for (let key of Object.keys(persistSettings)) {
@@ -76,7 +76,7 @@ function _migrateTreePrefsFile() {
 				changed = true;
 			}
 			if (changed) {
-				await Zotero.File.putContentsAsync(
+				await Trellis.File.putContentsAsync(
 					COLUMN_PREFS_FILEPATH, JSON.stringify(persistSettings)
 				);
 			}
@@ -114,7 +114,7 @@ class ItemTreeRowProvider {
 	 * Create an ItemTreeRow for a reference object.
 	 * Subclasses can override to return custom row types.
 	 *
-	 * @param {Object} ref - The reference object (e.g. Zotero.Item, Zotero.Collection)
+	 * @param {Object} ref - The reference object (e.g. Trellis.Item, Trellis.Collection)
 	 * @param {number} level - The nesting level
 	 * @param {boolean} isOpen - Whether the row is open (if a container)
 	 * @returns {ItemTreeRow}
@@ -186,7 +186,7 @@ class ItemTreeRowProvider {
 	 */
 	getRowIndexByID(id) {
 		if (!(id in this._rowMap)) {
-			Zotero.debug(`${this.itemTree.id}: Trying to access a row with invalid ID ${id}`);
+			Trellis.debug(`${this.itemTree.id}: Trying to access a row with invalid ID ${id}`);
 			return false;
 		}
 		return this._rowMap[id];
@@ -424,13 +424,13 @@ class ItemTreeRowProvider {
 		// Stop if the row already exists or if the item is not found
 		if (this._rowMap[id] !== undefined) return true;
 
-		let item = Zotero.Items.get(id);
+		let item = Trellis.Items.get(id);
 		if (!item) return false;
 
 		let toExpand = [];
 		// Collect all ancestors of the item that are not in the tree
 		while (item.parentItemID && this._rowMap[item.id] === undefined) {
-			item = Zotero.Items.get(item.parentItemID);
+			item = Trellis.Items.get(item.parentItemID);
 			toExpand.push(item.id);
 		}
 
@@ -465,8 +465,8 @@ class ItemTreeRowProvider {
 		for (let i = 0; i < this._rows.length; i++) {
 			let id = this._rows[i].id;
 			if (rowMap[id] !== undefined) {
-				Zotero.debug(`WARNING: refreshRowMap(): item row ${rowMap[id]} already found for item ${id} at ${i}`, 2);
-				Zotero.debug(new Error().stack, 2);
+				Trellis.debug(`WARNING: refreshRowMap(): item row ${rowMap[id]} already found for item ${id} at ${i}`, 2);
+				Trellis.debug(new Error().stack, 2);
 			}
 			rowMap[id] = i;
 		}
@@ -563,8 +563,8 @@ class ItemTreeRowProvider {
 	_initSortState() {
 		this._sortFields = this.itemTree.getSortFields();
 		this._sortDirection = this.itemTree.getSortDirection(this._sortFields);
-		this._sortCollation = Zotero.getLocaleCollation();
-		this._sortCreatorAsString = Zotero.Prefs.get('sortCreatorAsString');
+		this._sortCollation = Trellis.getLocaleCollation();
+		this._sortCreatorAsString = Trellis.Prefs.get('sortCreatorAsString');
 		this._sortCache = {};
 		this._sortFields.forEach(x => this._sortCache[x] = {});
 		this._sortCreatorCache = {};
@@ -583,7 +583,7 @@ class ItemTreeRowProvider {
 		let val;
 		switch (field) {
 			case 'title':
-				val = Zotero.Items.getSortTitle(row.getDisplayTitle());
+				val = Trellis.Items.getSortTitle(row.getDisplayTitle());
 				break;
 
 			case 'hasAttachment':
@@ -615,7 +615,7 @@ class ItemTreeRowProvider {
 				break;
 
 			case 'feed':
-				val = (row.ref.isFeedItem && Zotero.Feeds.get(row.ref.libraryID).name) || "";
+				val = (row.ref.isFeedItem && Trellis.Feeds.get(row.ref.libraryID).name) || "";
 				break;
 
 			case 'lastRead':
@@ -624,12 +624,12 @@ class ItemTreeRowProvider {
 
 			case 'addedBy':
 				val = row.ref.createdByUserID
-					? Zotero.Users.getName(row.ref.createdByUserID) : '';
+					? Trellis.Users.getName(row.ref.createdByUserID) : '';
 				break;
 
 			case 'lastModifiedBy':
 				let userID = row.ref.lastModifiedByUserID || row.ref.createdByUserID;
-				val = userID ? Zotero.Users.getName(userID) : '';
+				val = userID ? Trellis.Users.getName(userID) : '';
 				break;
 
 			default: {
@@ -666,12 +666,12 @@ class ItemTreeRowProvider {
 				if (fieldA === undefined) {
 					let s = a.ref[prop];
 					if (!s) s = a.ref.getField('firstCreator');
-					cache[a.id] = fieldA = Zotero.Items.getSortTitle(s || '');
+					cache[a.id] = fieldA = Trellis.Items.getSortTitle(s || '');
 				}
 				if (fieldB === undefined) {
 					let s = b.ref[prop];
 					if (!s) s = b.ref.getField('firstCreator');
-					cache[b.id] = fieldB = Zotero.Items.getSortTitle(s || '');
+					cache[b.id] = fieldB = Trellis.Items.getSortTitle(s || '');
 				}
 				if (fieldA === '' && fieldB === '') return 0;
 				if (fieldA === '' && fieldB !== '') return 1;
@@ -702,7 +702,7 @@ class ItemTreeRowProvider {
 				}
 
 				if (sortField == 'callNumber') {
-					return Zotero.Utilities.Item.compareCallNumbers(fieldA, fieldB);
+					return Trellis.Utilities.Item.compareCallNumbers(fieldA, fieldB);
 				}
 
 				return this._sortCollation.compareString(1, String(fieldA), String(fieldB));
@@ -772,24 +772,24 @@ class ItemTreeRowProvider {
 
 			let numSorted = itemIDs.length - skipped.length;
 			if (numSorted) {
-				Zotero.debug(`Sorted ${numSorted} child items by parent toggle`);
+				Trellis.debug(`Sorted ${numSorted} child items by parent toggle`);
 			}
 			if (!skipped.length) {
 				return;
 			}
 			itemIDs = skipped;
 			if (numSorted) {
-				Zotero.debug(`${itemIDs.length} items left to sort`);
+				Trellis.debug(`${itemIDs.length} items left to sort`);
 			}
 		}
 
 		// Save open state and close containers before sorting
 		var openIDs = this._saveOpenState();
 
-		Zotero.debug(`Sorting items list by ${this._sortFields.join(", ")} `
+		Trellis.debug(`Sorting items list by ${this._sortFields.join(", ")} `
 			+ `${this._sortDirection == 1 ? "ascending" : "descending"} `
 			+ (itemIDs && itemIDs.length
-				? `for ${itemIDs.length} ` + Zotero.Utilities.pluralize(itemIDs.length, ['item', 'items'])
+				? `for ${itemIDs.length} ` + Trellis.Utilities.pluralize(itemIDs.length, ['item', 'items'])
 				: ""));
 
 		// Sort specific items or all
@@ -806,10 +806,10 @@ class ItemTreeRowProvider {
 			}
 		}
 		catch (e) {
-			Zotero.logError("Error sorting fields: " + e.message);
-			Zotero.debug(e, 1);
-			Zotero.Prefs.clear('secondarySort.' + this._sortFields[0]);
-			Zotero.Prefs.clear('fallbackSort');
+			Trellis.logError("Error sorting fields: " + e.message);
+			Trellis.debug(e, 1);
+			Trellis.Prefs.clear('secondarySort.' + this._sortFields[0]);
+			Trellis.Prefs.clear('fallbackSort');
 		}
 
 		// Restore open state — _toggleOpenState() sorts children
@@ -872,7 +872,7 @@ class ItemTreeRowProvider {
 		if (action == 'remove' || action == 'delete' || action == 'trash') {
 			let displayedIds = ids.filter(id => this._rowMap[id] !== undefined);
 			if (displayedIds.length) {
-				Zotero.debug(`ItemTreeRowProvider.notify: ${action} on displayed items: ${displayedIds.join(', ')}. Subclass should handle removal.`);
+				Trellis.debug(`ItemTreeRowProvider.notify: ${action} on displayed items: ${displayedIds.join(', ')}. Subclass should handle removal.`);
 			}
 			return;
 		}
@@ -881,7 +881,7 @@ class ItemTreeRowProvider {
 
 var ItemTree = class ItemTree extends LibraryTree {
 	static async init(domEl, opts={}) {
-		Zotero.debug(`Initializing React ${this.name} ${opts.id}`);
+		Trellis.debug(`Initializing React ${this.name} ${opts.id}`);
 		var ref;
 		opts.domEl = domEl;
 		let itemTreeMenuBar = null;
@@ -900,7 +900,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		if (itemTreeMenuBar) {
 			itemTreeMenuBar.init(ref);
 		}
-		Zotero.debug(`React ${this.name} ${opts.id} initialized`);
+		Trellis.debug(`React ${this.name} ${opts.id} initialized`);
 		return ref;
 	}
 	
@@ -956,7 +956,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		this._cachedSelection = [];
 		this._cachedScrollPosition = null;
 		
-		this._modificationLock = Zotero.Promise.resolve();
+		this._modificationLock = Trellis.Promise.resolve();
 		this._dropRow = null;
 		this._rowCache = {};
 		
@@ -969,7 +969,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		};
 
 		if (props.shouldListenForNotifications) {
-			this._unregisterID = Zotero.Notifier.registerObserver(
+			this._unregisterID = Trellis.Notifier.registerObserver(
 				this,
 				['item', 'collection-item', 'item-tag', 'share-items', 'bucket', 'feedItem', 'search', 'itemtree', 'collection'],
 				'itemTreeView',
@@ -977,12 +977,12 @@ var ItemTree = class ItemTree extends LibraryTree {
 			);
 		}
 		this._prefsObserverIDs = [
-			Zotero.Prefs.registerObserver('recursiveCollections', this.refreshAndMaintainSelection.bind(this)),
-			Zotero.Prefs.registerObserver('showAttachmentFilenames', () => {
+			Trellis.Prefs.registerObserver('recursiveCollections', this.refreshAndMaintainSelection.bind(this)),
+			Trellis.Prefs.registerObserver('showAttachmentFilenames', () => {
 				this.invalidateRowCache(true);
 				this.tree.invalidate();
 			}),
-			Zotero.Prefs.registerObserver('hideContextAnnotationRows', async () => {
+			Trellis.Prefs.registerObserver('hideContextAnnotationRows', async () => {
 				await this.refresh();
 				this.tree.invalidate();
 			}),
@@ -991,10 +991,10 @@ var ItemTree = class ItemTree extends LibraryTree {
 		this._itemsPaneMessage = null;
 		
 		this._columnsId = null;
-		this._sortContextReadyPromise = Zotero.Promise.resolve();
+		this._sortContextReadyPromise = Trellis.Promise.resolve();
 
 		// Initial deferred to be resolved on componentDidMount()
-		this._itemTreeLoadingDeferred = Zotero.Promise.defer();
+		this._itemTreeLoadingDeferred = Trellis.Promise.defer();
 		this._loadingDeferredResolved = false;
 		
 		this._setRowProviderUpdateHandler();
@@ -1023,7 +1023,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		this._id = newId;
 
 		if (!this.props.columnPicker) {
-			this._sortContextReadyPromise = Zotero.Promise.resolve();
+			this._sortContextReadyPromise = Trellis.Promise.resolve();
 			return;
 		}
 
@@ -1103,7 +1103,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			// Leave any existing unresolved deferred in place
 			if (this._loadingDeferredResolved) {
 				this._loadingDeferredResolved = false;
-				this._itemTreeLoadingDeferred = Zotero.Promise.defer();
+				this._itemTreeLoadingDeferred = Trellis.Promise.defer();
 			}
 			const result = await this.handleRowModelUpdate(...args);
 
@@ -1117,9 +1117,9 @@ var ItemTree = class ItemTree extends LibraryTree {
 
 	unregister() {
 		this._uninitialized = true;
-		Zotero.Notifier.unregisterObserver(this._unregisterID);
+		Trellis.Notifier.unregisterObserver(this._unregisterID);
 		for (let id of this._prefsObserverIDs) {
-			Zotero.Prefs.unregisterObserver(id);
+			Trellis.Prefs.unregisterObserver(id);
 		}
 		this._writeColumnPrefsToFile(true);
 	}
@@ -1149,7 +1149,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	 * @returns {ItemTreeColumnOptions[]}
 	 */
 	getColumns() {
-		const extraColumns = Zotero.ItemTreeManager.getCustomColumns(this.props.id);
+		const extraColumns = Trellis.ItemTreeManager.getCustomColumns(this.props.id);
 
 		/** @type {ItemTreeColumnOptions[]} */
 		const currentColumns = this.props.columns.map(col => Object.assign({}, col));
@@ -1167,7 +1167,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	 * `load` event was a `once` and `triggerImmediately` event.
 	 *
 	 * Since in this implementation the item tree class is created once and stays up through
-	 * the lifetime of Zotero we cannot replicate the previous behaviour with events easily
+	 * the lifetime of Trellis we cannot replicate the previous behaviour with events easily
 	 * so we use a deferred promise instead
 	 * @returns {Promise}
 	 */
@@ -1179,7 +1179,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		if (this._locked) return;
 		if (typeof message == 'string') {
 			// Hack to keep "Loading items…" small
-			if (message == Zotero.getString('pane.items.loading')) {}
+			if (message == Trellis.getString('pane.items.loading')) {}
 			else {
 				let messageParts = message.split("\n\n");
 				message = messageParts.map(part => `<p>${part}</p>`).join('');
@@ -1195,13 +1195,13 @@ var ItemTree = class ItemTree extends LibraryTree {
 	}
 	
 	async clearItemsPaneMessage() {
-		Zotero.debug('clearItemsPaneMessage called, current message: ' + !!this._itemsPaneMessage);
+		Trellis.debug('clearItemsPaneMessage called, current message: ' + !!this._itemsPaneMessage);
 		const shouldRerender = this._itemsPaneMessage;
 		this._itemsPaneMessage = null;
 		return shouldRerender && new Promise(resolve => this.forceUpdate(resolve));
 	}
 	
-	refresh = Zotero.serial(async function (options) {
+	refresh = Trellis.serial(async function (options) {
 		return this.rowProvider.refresh(options);
 	})
 
@@ -1236,7 +1236,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	}) {
 		// Handle loading/message state
 		if (options.loading) {
-			options.message ||= Zotero.getString('pane.items.loading');
+			options.message ||= Trellis.getString('pane.items.loading');
 			// Suppress select events during loading
 			this.selection.selectEventsSuppressed = true;
 			this.selection.clearSelection();
@@ -1262,7 +1262,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			rows.forEach(row => this.tree.invalidateRow(row));
 		}
 
-		const itemsViewInActiveWindow = Zotero.getActiveZoteroPane()?.itemsView == this;
+		const itemsViewInActiveWindow = Trellis.getActiveTrellisPane()?.itemsView == this;
 		const prioritizeRestore = !(options.selectInActiveWindow && itemsViewInActiveWindow);
 		const ensureVisible = options.restoreScroll ? false : options.ensureRowsAreVisible;
 
@@ -1289,7 +1289,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	}
 
 	/**
-	 * Called by Zotero.Notifier on any changes to items in the data layer.
+	 * Called by Trellis.Notifier on any changes to items in the data layer.
 	 *
 	 * Handles visual-only updates (redraws, tag colors, column resets) directly.
 	 * Delegates data/row mutations to rowProvider.notify() for changes that
@@ -1348,14 +1348,14 @@ var ItemTree = class ItemTree extends LibraryTree {
 	 * @returns {boolean} false to prevent any handling by the virtualized-table
 	 */
 	handleKeyDown(event) {
-		if (Zotero.locked) {
+		if (Trellis.locked) {
 			return false;
 		}
 		
 		// Handle arrow keys specially on multiple selection, since
 		// otherwise the tree just applies it to the last-selected row
 		if (this.selection.count > 1 && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
-			if (event.key == Zotero.arrowNextKey) {
+			if (event.key == Trellis.arrowNextKey) {
 				this.expandSelectedRows();
 			}
 			else {
@@ -1379,7 +1379,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	 * Select the first row when the tree is tabbed into with no selection.
 	 */
 	handleKeyUp = (event) => {
-		if (!Zotero.locked && event.code === 'Tab' && this.selection.count == 0) {
+		if (!Trellis.locked && event.code === 'Tab' && this.selection.count == 0) {
 			this.selection.select(this.selection.focused);
 		}
 	};
@@ -1392,10 +1392,10 @@ var ItemTree = class ItemTree extends LibraryTree {
 			onDrop={e => this.props.dragAndDrop && this.onDrop(e, -1)}
 			onClick={(e) => {
 				if (e.target.dataset.href) {
-					window.ZoteroPane.loadURI(e.target.dataset.href);
+					window.TrellisPane.loadURI(e.target.dataset.href);
 				}
 				if (e.target.dataset.action == 'open-sync-prefs') {
-					Zotero.Utilities.Internal.openPreferences('zotero-prefpane-account');
+					Trellis.Utilities.Internal.openPreferences('trellis-prefpane-account');
 				}
 			}}
 			className={"items-tree-message"}
@@ -1452,10 +1452,10 @@ var ItemTree = class ItemTree extends LibraryTree {
 				onItemContextMenu: (...args) => this.props.onContextMenu(...args),
 				
 				role: 'tree',
-				label: Zotero.getString('pane.items.title'),
+				label: Trellis.getString('pane.items.title'),
 			}
 		);
-		Zotero.debug(`itemTree.render(). Displaying ${showMessage ? "Item Pane Message" : "Item Tree"}`);
+		Trellis.debug(`itemTree.render(). Displaying ${showMessage ? "Item Pane Message" : "Item Tree"}`);
 
 		return [
 			itemsPaneMessage,
@@ -1502,12 +1502,12 @@ var ItemTree = class ItemTree extends LibraryTree {
 				if (!this._rowMap[id]) {
 					// The row is still not found
 					// Clear the quick search and tag selection and try again (once)
-					if (!noRecurse && window.ZoteroPane) {
+					if (!noRecurse && window.TrellisPane) {
 						let hasQuickSearch = !!this.collectionTreeRow.searchText;
 						let hasTagFilters = this.collectionTreeRow.tags?.size > 0;
 						if (hasQuickSearch || hasTagFilters) {
 							// Clear all searches set on the collection tree rows directly on
-							// the rows (vs using ZoteroPane functions) to avoid
+							// the rows (vs using TrellisPane functions) to avoid
 							// refreshing the itemTree multiple times at the same time, which can lead
 							// to tag selector not showing all tags after quickSearch is cleared
 							for (let collectionTreeRow of this.collectionTreeRows) {
@@ -1516,10 +1516,10 @@ var ItemTree = class ItemTree extends LibraryTree {
 							}
 							// Clear quickSearch text field and tag selection without
 							// rerunning search
-							if (window.ZoteroPane.tagSelector) {
-								window.ZoteroPane.tagSelector.clearTagSelection();
+							if (window.TrellisPane.tagSelector) {
+								window.TrellisPane.tagSelector.clearTagSelection();
 							}
-							window.ZoteroPane.clearQuicksearch(true);
+							window.TrellisPane.clearQuicksearch(true);
 							// Rerun search and refresh the itemTree
 							await this.refreshAndMaintainSelection();
 							// Try to select the item(s) again
@@ -1527,7 +1527,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 						}
 					}
 					
-					Zotero.debug(`Couldn't find row for item ${id} -- not selecting`);
+					Trellis.debug(`Couldn't find row for item ${id} -- not selecting`);
 					continue;
 				}
 			}
@@ -1541,7 +1541,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		for (let id of idsToSelect) {
 			let row = this._rowMap[id];
 			if (row === undefined) {
-				Zotero.debug(`Item ${id} not in row map -- skipping`);
+				Trellis.debug(`Item ${id} not in row map -- skipping`);
 				continue;
 			}
 			rowsToSelect.push(row);
@@ -1561,7 +1561,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		// Single item
 		if (rowsToSelect.length == 1) {
 			// this.selection.select() triggers the tree onSelect handler attribute, which calls
-			// ZoteroPane.itemSelected(), which calls ZoteroPane.itemPane.render(), which refreshes the
+			// TrellisPane.itemSelected(), which calls TrellisPane.itemPane.render(), which refreshes the
 			// itembox. But since the 'onselect' doesn't handle promises, itemSelected() isn't waited for
 			// here, which means that 'yield selectItem(itemID)' continues before the itembox has been
 			// refreshed. To get around this, we wait for a select event that's triggered by
@@ -1575,7 +1575,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 				nothingToSelect = !this.selection.select(rowsToSelect[0]);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 
 			if (!nothingToSelect && promise) {
@@ -1615,7 +1615,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		await this.waitForLoad();
 
 		var numSorted = itemIDs ? itemIDs.length : this._rows.length;
-		Zotero.debug(`Sorted ${numSorted} ${Zotero.Utilities.pluralize(numSorted, ['item', 'items'])} `
+		Trellis.debug(`Sorted ${numSorted} ${Trellis.Utilities.pluralize(numSorted, ['item', 'items'])} `
 			+ `in ${new Date() - t} ms`);
 	}
 
@@ -1640,7 +1640,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		
 		// If all rows are already visible, don't do anything
 		if (indices.every(x => this.tree.rowIsVisible(x))) {
-			//Zotero.debug("All indices are already visible");
+			//Trellis.debug("All indices are already visible");
 			return;
 		}
 		
@@ -1653,7 +1653,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		// If we can fit all parent indices in view, do that
 		for (let buffer = maxBuffer; buffer >= 0; buffer--) {
 			if (indicesWithParents[indicesWithParents.length - 1] - indicesWithParents[0] - buffer < pageLength) {
-				//Zotero.debug(`We can fit all parent indices with buffer ${buffer}`);
+				//Trellis.debug(`We can fit all parent indices with buffer ${buffer}`);
 				this.ensureRowIsVisible(indicesWithParents[0] - buffer);
 				this.ensureRowIsVisible(indicesWithParents[indicesWithParents.length-1] + buffer);
 				return;
@@ -1663,7 +1663,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		// If we can fit all indices in view, do that
 		for (let buffer = maxBuffer; buffer >= 0; buffer--) {
 			if (indices[indices.length - 1] - indices[0] - buffer < pageLength) {
-				//Zotero.debug(`We can fit all indices with buffer ${buffer}`);
+				//Trellis.debug(`We can fit all indices with buffer ${buffer}`);
 				this.ensureRowIsVisible(indices[0] - buffer);
 				this.ensureRowIsVisible(indices[indices.length-1] + buffer);
 				return;
@@ -1675,7 +1675,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		if (indices[0] != indicesWithParents[0]) {
 			for (let buffer = maxBuffer; buffer >= 0; buffer--) {
 				if (indices[0] - indicesWithParents[0] - buffer <= pageLength) {
-					//Zotero.debug(`Scrolling to first parent minus ${buffer}`);
+					//Trellis.debug(`Scrolling to first parent minus ${buffer}`);
 					this.ensureRowIsVisible(indicesWithParents[0] + buffer);
 					this.ensureRowIsVisible(indicesWithParents[0] - buffer);
 					return;
@@ -1684,7 +1684,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		}
 		
 		// Otherwise just put the first row at the top
-		//Zotero.debug("Scrolling to first row " + Math.max(indices[0] - maxBuffer, 0));
+		//Trellis.debug("Scrolling to first row " + Math.max(indices[0] - maxBuffer, 0));
 		this.ensureRowIsVisible(indices[0] - maxBuffer);
 		this.ensureRowIsVisible(indices[0] + maxBuffer);
 	}
@@ -1773,7 +1773,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			return indexes.map(index => this.getRow(index).ref);
 		}
 		catch (e) {
-			Zotero.debug(indexes);
+			Trellis.debug(indexes);
 			throw e;
 		}
 	}
@@ -1782,7 +1782,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	 * Get selected items, omitting collections and searches in the trash
 	 */
 	getSelectedItems(asIDs) {
-		var items = this.getSelectedObjects().filter(o => o instanceof Zotero.Item);
+		var items = this.getSelectedObjects().filter(o => o instanceof Trellis.Item);
 		return asIDs ? items.map(x => x.id) : items;
 	}
 	
@@ -1790,7 +1790,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	 * Returns an array of items of visible items in current sort order
 	 *
 	 * @param {Boolean} asIDs - Return itemIDs
-	 * @return {Zotero.Item[]|Integer[]} - An array of Zotero.Item objects or itemIDs
+	 * @return {Trellis.Item[]|Integer[]} - An array of Trellis.Item objects or itemIDs
 	 */
 	getSortedItems(asIDs) {
 		return this._rows.map(row => asIDs ? row.ref.id : row.ref);
@@ -1818,7 +1818,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		if (!column) {
 			column = this._getColumns().find(col => !col.hidden);
 		}
-		// zotero-items-column-_________
+		// trellis-items-column-_________
 		return column.dataKey;
 	}
 
@@ -1830,18 +1830,18 @@ var ItemTree = class ItemTree extends LibraryTree {
 			fields.push(secondaryField);
 		}
 		try {
-			var fallbackFields = Zotero.Prefs.get('fallbackSort')
+			var fallbackFields = Trellis.Prefs.get('fallbackSort')
 				.split(',')
 				.map((x) => x.trim())
 				.filter((x) => x !== '');
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
-			Zotero.logError(e);
+			Trellis.debug(e, 1);
+			Trellis.logError(e);
 			// This should match the default value for the fallbackSort pref
 			var fallbackFields = ['firstCreator', 'date', 'title', 'dateAdded'];
 		}
-		fields = Zotero.Utilities.arrayUnique(fields.concat(fallbackFields));
+		fields = Trellis.Utilities.arrayUnique(fields.concat(fallbackFields));
 
 		// If date appears after year, remove it, unless it's the explicit secondary sort
 		var yearPos = fields.indexOf('year');
@@ -1906,7 +1906,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		// Get selected item IDs in the item tree order
 		itemIDs = this.getSortedItems(true).filter(id => itemIDs.includes(id));
 
-		Zotero.Utilities.Internal.onDragItems(event, itemIDs, this._dragImageContainer);
+		Trellis.Utilities.Internal.onDragItems(event, itemIDs, this._dragImageContainer);
 	};
 
 	/**
@@ -1945,7 +1945,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 
 	// //////////////////////////////////////////////////////////////////////////////
 	//
-	//  Menu utilities for ZoteroPane
+	//  Menu utilities for TrellisPane
 	//
 	// //////////////////////////////////////////////////////////////////////////////
 
@@ -1976,7 +1976,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			let id = prefix + 'more-menu';
 
 			let moreMenu = document.createXULElement('menu');
-			moreMenu.setAttribute('label', Zotero.getString('pane.items.columnChooser.moreColumns'));
+			moreMenu.setAttribute('label', Trellis.getString('pane.items.columnChooser.moreColumns'));
 			moreMenu.setAttribute('anonid', id);
 
 			let moreMenuPopup = document.createXULElement('menupopup');
@@ -1991,7 +1991,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			}
 
 			// Sort fields and move to submenu
-			var collation = Zotero.getLocaleCollation();
+			var collation = Trellis.getLocaleCollation();
 			moreItems.sort(function (a, b) {
 				return collation.compareString(1, a.getAttribute('label'), b.getAttribute('label'));
 			});
@@ -2005,8 +2005,8 @@ var ItemTree = class ItemTree extends LibraryTree {
 			menupopup.appendChild(moreMenu);
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug(e, 1);
+			Trellis.logError(e);
+			Trellis.debug(e, 1);
 		}
 	}
 
@@ -2024,7 +2024,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 
 			const sortMenu = document.createXULElement('menu');
 			sortMenu.setAttribute('label',
-				Zotero.getString('pane.items.columnChooser.secondarySort', primaryFieldLabel));
+				Trellis.getString('pane.items.columnChooser.secondarySort', primaryFieldLabel));
 			sortMenu.setAttribute('anonid', id);
 
 			const sortMenuPopup = document.createXULElement('menupopup');
@@ -2069,8 +2069,8 @@ var ItemTree = class ItemTree extends LibraryTree {
 			menupopup.appendChild(sortMenu);
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug(e, 1);
+			Trellis.logError(e);
+			Trellis.debug(e, 1);
 		}
 	}
 
@@ -2085,7 +2085,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		let moveColumnMenu = document.createXULElement('menu');
 		document.l10n.setAttributes(
 			moveColumnMenu,
-			Zotero.rtl ? 'menu-view-columns-move-right' : 'menu-view-columns-move-left'
+			Trellis.rtl ? 'menu-view-columns-move-right' : 'menu-view-columns-move-left'
 		);
 		moveColumnMenu.setAttribute('anonid', prefix + 'move-column');
 		let moveColumnPopup = document.createXULElement('menupopup');
@@ -2118,7 +2118,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		// Restore Default Column Order
 		//
 		let menuitem = document.createXULElement('menuitem');
-		menuitem.setAttribute('label', Zotero.getString('zotero.items.restoreColumnOrder.label'));
+		menuitem.setAttribute('label', Trellis.getString('trellis.items.restoreColumnOrder.label'));
 		menuitem.setAttribute('anonid', prefix + 'restore-order');
 		menuitem.addEventListener('command', () => this.tree._columns.restoreDefaultOrder());
 		menupopup.appendChild(menuitem);
@@ -2126,7 +2126,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 	
 	buildColumnPickerMenu(menupopup) {
 		if (!this.props.columnPicker) return;
-		const prefix = 'zotero-column-picker-';
+		const prefix = 'trellis-column-picker-';
 		const columns = this._getColumns();
 
 		const columnMenuitemElements = this._buildColumnPickerMenu(menupopup, prefix, columns);
@@ -2205,9 +2205,9 @@ var ItemTree = class ItemTree extends LibraryTree {
 		
 		if (this._dropRow == index) {
 			let span;
-			if (Zotero.DragDrop.currentOrientation != 0) {
+			if (Trellis.DragDrop.currentOrientation != 0) {
 				span = document.createElement('span');
-				span.className = Zotero.DragDrop.currentOrientation < 0 ? 'drop-before' : 'drop-after';
+				span.className = Trellis.DragDrop.currentOrientation < 0 ? 'drop-before' : 'drop-after';
 				div.appendChild(span);
 			}
 			else {
@@ -2263,7 +2263,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			column = Object.assign({}, column, { renderCell: null });
 		}
@@ -2327,7 +2327,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		let row = {
 			id: itemID,
 			// Not a collection or search in the trash
-			isItem: treeRow.ref instanceof Zotero.Item
+			isItem: treeRow.ref instanceof Trellis.Item
 		};
 		
 		// Mark items not matching search as context rows, displayed in gray
@@ -2355,7 +2355,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			}
 		}
 		row.numNotes = treeRow.numNotes() || "";
-		row.feed = (treeRow.ref.isFeedItem && Zotero.Feeds.get(treeRow.ref.libraryID).name) || "";
+		row.feed = (treeRow.ref.isFeedItem && Trellis.Feeds.get(treeRow.ref.libraryID).name) || "";
 		row.lastRead = row.isItem ? treeRow.ref.getItemLastRead() : "";
 		row.addedBy = row.isItem && treeRow.getAddedBy();
 		row.lastModifiedBy = row.isItem && treeRow.getLastModifiedBy();
@@ -2382,11 +2382,11 @@ var ItemTree = class ItemTree extends LibraryTree {
 			case 'dateModified':
 			case 'accessDate':
 				if (val) {
-					let date = Zotero.Date.sqlToDate(val, true);
+					let date = Trellis.Date.sqlToDate(val, true);
 					if (date) {
 						// If no time, interpret as local, not UTC
-						if (Zotero.Date.isSQLDate(val)) {
-							date = Zotero.Date.sqlToDate(val);
+						if (Trellis.Date.isSQLDate(val)) {
+							date = Trellis.Date.sqlToDate(val);
 							val = date.toLocaleDateString();
 						}
 						else {
@@ -2423,7 +2423,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			this._columnsId = null;
 			return;
 		}
-		Zotero.debug(`Storing itemTree ${this.id} column prefs`, 2);
+		Trellis.debug(`Storing itemTree ${this.id} column prefs`, 2);
 		// Preserve prefs for columns not active in the current view (e.g.,
 		// group-only columns when viewing a personal library) so their
 		// settings (ordinal, width, etc.) come back when the view switches.
@@ -2452,7 +2452,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		if (!this.props.columnPicker) return;
 		await _migrateTreePrefsFile();
 		try {
-			let columnPrefs = await Zotero.File.getContentsAsync(COLUMN_PREFS_FILEPATH);
+			let columnPrefs = await Trellis.File.getContentsAsync(COLUMN_PREFS_FILEPATH);
 			let persistSettings = JSON.parse(columnPrefs);
 			this._columnPrefs = persistSettings[this.id] || {};
 		}
@@ -2472,7 +2472,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		await _migrateTreePrefsFile();
 		var writeToFile = async () => {
 			try {
-				let persistSettingsString = await Zotero.File.getContentsAsync(COLUMN_PREFS_FILEPATH);
+				let persistSettingsString = await Trellis.File.getContentsAsync(COLUMN_PREFS_FILEPATH);
 				var persistSettings = JSON.parse(persistSettingsString);
 			}
 			catch {
@@ -2481,9 +2481,9 @@ var ItemTree = class ItemTree extends LibraryTree {
 			persistSettings[this.id] = this._columnPrefs;
 
 			let prefString = JSON.stringify(persistSettings);
-			Zotero.debug(`Writing column prefs of length ${prefString.length} to file ${COLUMN_PREFS_FILEPATH}`);
+			Trellis.debug(`Writing column prefs of length ${prefString.length} to file ${COLUMN_PREFS_FILEPATH}`);
 
-			return Zotero.File.putContentsAsync(COLUMN_PREFS_FILEPATH, prefString);
+			return Trellis.File.putContentsAsync(COLUMN_PREFS_FILEPATH, prefString);
 		};
 		if (this._writeColumnsTimeout) {
 			clearTimeout(this._writeColumnsTimeout);
@@ -2524,7 +2524,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 		let baseType = viewType.replace(/-group$/, '');
 		if (viewTypes.includes(baseType)) return true;
 		// 'default' matches any type not in the special visibility groups
-		if (viewTypes.includes('default') && !Zotero.CollectionTreeRow.visibilityGroups[baseType]) return true;
+		if (viewTypes.includes('default') && !Trellis.CollectionTreeRow.visibilityGroups[baseType]) return true;
 		return false;
 	}
 
@@ -2754,9 +2754,9 @@ var ItemTree = class ItemTree extends LibraryTree {
 			// Ignore NS_ERROR_UNEXPECTED from nsITreeSelection::toggleSelect(), apparently when the tree
 			// disappears before it's called (though I can't reproduce it):
 			//
-			// https://forums.zotero.org/discussion/69226/papers-become-invisible-in-the-middle-pane
+			// https://forums.trellis.org/discussion/69226/papers-become-invisible-in-the-middle-pane
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 
 		if (ensureRowsAreVisible) {
@@ -2772,14 +2772,14 @@ var ItemTree = class ItemTree extends LibraryTree {
 		let columnSettings = this._getColumnPrefs();
 		let column = this._getColumn(index);
 		if (column.dataKey == 'hasAttachment') {
-			Zotero.debug("Caching best attachment states");
+			Trellis.debug("Caching best attachment states");
 			if (!this._cachedBestAttachmentStates) {
 				let t = new Date();
 				for (let i = 0; i < this._rows.length; i++) {
 					let row = this.getRow(i);
 					await row.getBestAttachmentState();
 				}
-				Zotero.debug("Cached best attachment states in " + (new Date - t) + " ms");
+				Trellis.debug("Cached best attachment states in " + (new Date - t) + " ms");
 				this._cachedBestAttachmentStates = true;
 			}
 		}
@@ -2815,15 +2815,15 @@ var ItemTree = class ItemTree extends LibraryTree {
 
 	_displayColumnPickerMenu = (event) => {
 		if (!this.props.columnPicker) return;
-		let popupset = document.querySelector('#zotero-column-picker-popupset');
+		let popupset = document.querySelector('#trellis-column-picker-popupset');
 		if (!popupset) {
 			popupset = document.createXULElement('popupset');
-			popupset.id = 'zotero-column-picker-popupset';
+			popupset.id = 'trellis-column-picker-popupset';
 			document.children[0].appendChild(popupset);
 		}
 		
 		const menupopup = document.createXULElement('menupopup');
-		menupopup.id = 'zotero-column-picker';
+		menupopup.id = 'trellis-column-picker';
 		menupopup.addEventListener('popuphiding', (event) => {
 			if (event.target.id == menupopup.id) {
 				popupset.removeChild(menupopup);
@@ -2842,7 +2842,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 
 	_getSecondarySortField() {
 		var primaryField = this.getSortField();
-		var secondaryField = Zotero.Prefs.get('secondarySort.' + primaryField);
+		var secondaryField = Trellis.Prefs.get('secondarySort.' + primaryField);
 		if (!secondaryField || secondaryField == primaryField) {
 			return false;
 		}
@@ -2866,7 +2866,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			
 			// If not, but same as first implicit sort, remove current explicit sort
 			if (sortFields[2] && sortFields[2] == secondaryField) {
-				Zotero.Prefs.clear('secondarySort.' + primaryField);
+				Trellis.Prefs.clear('secondarySort.' + primaryField);
 				return true;
 			}
 		}
@@ -2875,7 +2875,7 @@ var ItemTree = class ItemTree extends LibraryTree {
 			return false;
 		}
 		
-		Zotero.Prefs.set('secondarySort.' + primaryField, secondaryField);
+		Trellis.Prefs.set('secondarySort.' + primaryField, secondaryField);
 		return true;
 	}
 	
@@ -2898,8 +2898,8 @@ var ItemTree = class ItemTree extends LibraryTree {
 	}
 };
 
-Zotero.Utilities.Internal.makeClassEventDispatcher(ItemTree);
-Zotero.Utilities.Internal.makeClassEventDispatcher(ItemTreeRowProvider);
+Trellis.Utilities.Internal.makeClassEventDispatcher(ItemTree);
+Trellis.Utilities.Internal.makeClassEventDispatcher(ItemTreeRowProvider);
 
 module.exports = ItemTree;
 module.exports.ItemTreeRow = ItemTreeRow;

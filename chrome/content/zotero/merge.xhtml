@@ -4,36 +4,36 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/merge.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/merge.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
 
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 		xmlns:html="http://www.w3.org/1999/xhtml"
-		onload="Zotero_Merge_Window.init()"
+		onload="Trellis_Merge_Window.init()"
 		drawintitlebar-platforms="mac"
 		style="min-width: 850px; min-height: 500px;"
 >
@@ -44,31 +44,31 @@
 		</linkset>
 
 		<script>
-			Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/titlebar.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/platformKeys.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/titlebar.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/platformKeys.js", this);
 			Services.scriptloader.loadSubScript("chrome://global/content/globalOverlay.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/editMenuOverlay.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/components/annotation.js", this);
-			Services.scriptloader.loadSubScript("chrome://zotero/content/merge.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/editMenuOverlay.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/components/annotation.js", this);
+			Services.scriptloader.loadSubScript("chrome://trellis/content/merge.js", this);
 		</script>
 		
-		<wizardpage label="&zotero.merge.title;" pageid="page-id">
-			<html:span id="zotero-merge-instructions"></html:span>
+		<wizardpage label="&trellis.merge.title;" pageid="page-id">
+			<html:span id="trellis-merge-instructions"></html:span>
 			<merge-group flex="1"/>
 			<separator class="thin"/>
 			<hbox align="center">
 				<separator orient="vertical" flex="1"/>
 				<hbox>
 					<checkbox id="resolve-all" native="true"
-						oncommand="Zotero_Merge_Window.updateNextFinish()"/>
+						oncommand="Trellis_Merge_Window.updateNextFinish()"/>
 				</hbox>
 				<separator orient="vertical"/>
-				<hbox id="zotero-step-count">
-					<label id="zotero-merge-num-objects"/>
-					<label value="&zotero.merge.of;"/>
-					<label id="zotero-merge-total-objects"/>
+				<hbox id="trellis-step-count">
+					<label id="trellis-merge-num-objects"/>
+					<label value="&trellis.merge.of;"/>
+					<label id="trellis-merge-total-objects"/>
 				</hbox>
 			</hbox>
 		</wizardpage>

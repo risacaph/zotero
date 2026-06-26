@@ -1,6 +1,6 @@
 /* global JSWindowActorChild:false */
 
-import { documentIsReady } from "chrome://zotero/content/actors/actorUtils.mjs";  
+import { documentIsReady } from "chrome://trellis/content/actors/actorUtils.mjs";  
 
 export class MendeleyAuthChild extends JSWindowActorChild {  
 	async receiveMessage(message) {

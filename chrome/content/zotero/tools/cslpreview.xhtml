@@ -4,49 +4,49 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
     Contributed by Julian Onions
 -->
 <?xml-stylesheet href="chrome://global/skin/global.css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
 
 <!DOCTYPE window [
-	<!ENTITY % cslpreviewDTD SYSTEM "chrome://zotero/locale/cslpreview.dtd"> %cslpreviewDTD;
-	<!ENTITY % zoteroDTD SYSTEM "chrome://zotero/locale/zotero.dtd"> %zoteroDTD;
+	<!ENTITY % cslpreviewDTD SYSTEM "chrome://trellis/locale/cslpreview.dtd"> %cslpreviewDTD;
+	<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
 ]>
 
 <window
 	id="csl-preview"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="Zotero_CSL_Preview.init();"
+	onload="Trellis_CSL_Preview.init();"
 	title="&styles.preview;">
 	
-	<script src="chrome://zotero/content/include.js"/>
+	<script src="chrome://trellis/content/include.js"/>
 	<script src="cslpreview.js"/>
 
 	<vbox flex="1">
 		<hbox align="center">
-			<button id="preview-refresh-button" label="&zotero.general.refresh;" oncommand="Zotero_CSL_Preview.refresh()"/>
+			<button id="preview-refresh-button" label="&trellis.general.refresh;" oncommand="Trellis_CSL_Preview.refresh()"/>
 			
 			<label value="&styles.preview.citationFormat;" />
-			<menulist id="citation-format" oncommand="Zotero_CSL_Preview.refresh()" native="true">
+			<menulist id="citation-format" oncommand="Trellis_CSL_Preview.refresh()" native="true">
 				<menupopup>
 					<menuitem value="all" label="&styles.preview.citationFormat.all;"/>
 					<menuitem value="author" label="&styles.preview.citationFormat.author;"/>
@@ -57,9 +57,9 @@
 				</menupopup>
 			</menulist>
 			
-			<menulist id="locale-menu" oncommand="Zotero.Prefs.set('export.lastLocale', this.value); Zotero_CSL_Preview.refresh()" native="true"/>
+			<menulist id="locale-menu" oncommand="Trellis.Prefs.set('export.lastLocale', this.value); Trellis_CSL_Preview.refresh()" native="true"/>
 		</hbox>
-		<iframe id="zotero-csl-preview-box" flex="1" overflow="auto" type="content"/>
+		<iframe id="trellis-csl-preview-box" flex="1" overflow="auto" type="content"/>
 	</vbox>
 	
 	<keyset>

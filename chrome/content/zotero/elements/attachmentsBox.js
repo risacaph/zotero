@@ -3,22 +3,22 @@
 	
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -76,8 +76,8 @@
 			if (this.tabType != "library") {
 				return false;
 			}
-			return ZoteroPane.collectionsView.selectedTreeRow
-				&& ZoteroPane.collectionsView.selectedTreeRow.isTrash();
+			return TrellisPane.collectionsView.selectedTreeRow
+				&& TrellisPane.collectionsView.selectedTreeRow.isTrash();
 		}
 
 		get usePreview() {
@@ -124,9 +124,9 @@
 			addLink.addEventListener('command', this._handleAddLink);
 			addWebLink.addEventListener('command', this._handleAddWebLink);
 			
-			this.usePreview = Zotero.Prefs.get('showAttachmentPreview');
+			this.usePreview = Trellis.Prefs.get('showAttachmentPreview');
 
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'attachmentsBox');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'attachmentsBox');
 
 			this._section._contextMenu.addEventListener('popupshowing', this._handleContextMenu, { once: true });
 
@@ -144,7 +144,7 @@
 			this._preview?.remove();
 			delete this._preview;
 
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 
 			this._section?.removeEventListener('add', this._handleAdd);
 			if (this._addPopup) {
@@ -173,7 +173,7 @@
 						?.remove();
 				}
 				if (action !== 'delete') {
-					let attachments = Zotero.Items.get(this._attachmentIDs.filter(id => ids.includes(id)));
+					let attachments = Trellis.Items.get(this._attachmentIDs.filter(id => ids.includes(id)));
 					for (let attachment of attachments) {
 						this.addRow(attachment);
 					}
@@ -259,7 +259,7 @@
 		async updateRows() {
 			await this._updateAttachmentIDs();
 
-			let itemAttachments = Zotero.Items.get(this._attachmentIDs);
+			let itemAttachments = Trellis.Items.get(this._attachmentIDs);
 
 			this._attachments.querySelectorAll("attachment-row").forEach(e => e.remove());
 			for (let attachment of itemAttachments) {
@@ -274,7 +274,7 @@
 				return;
 			}
 			let attachment = await this._getPreviewAttachment();
-			this.toggleAttribute('data-use-preview', !!attachment && Zotero.Prefs.get('showAttachmentPreview'));
+			this.toggleAttribute('data-use-preview', !!attachment && Trellis.Prefs.get('showAttachmentPreview'));
 			if (!attachment) {
 				return;
 			}
@@ -292,7 +292,7 @@
 		async _getPreviewAttachment() {
 			let attachment = await this._item.getBestAttachment();
 			if (this.tabType === "reader"
-				&& Zotero_Tabs._getTab(this.tabID)?.tab?.data?.itemID == attachment.id) {
+				&& Trellis_Tabs._getTab(this.tabID)?.tab?.data?.itemID == attachment.id) {
 				// In the reader, only show the preview when viewing a secondary attachment
 				return null;
 			}
@@ -320,22 +320,22 @@
 		};
 
 		_handleAddFile = () => {
-			ZoteroPane.addAttachmentFromDialog(false, this.item.id);
+			TrellisPane.addAttachmentFromDialog(false, this.item.id);
 		};
 
 		_handleAddLink = () => {
-			ZoteroPane.addAttachmentFromDialog(true, this.item.id);
+			TrellisPane.addAttachmentFromDialog(true, this.item.id);
 		};
 
 		_handleAddWebLink = () => {
-			ZoteroPane.addAttachmentFromURI(true, this.item.id);
+			TrellisPane.addAttachmentFromURI(true, this.item.id);
 		};
 
 		_handleTogglePreview = () => {
-			let toOpen = !Zotero.Prefs.get('showAttachmentPreview');
-			Zotero.Prefs.set('showAttachmentPreview', toOpen);
+			let toOpen = !Trellis.Prefs.get('showAttachmentPreview');
+			Trellis.Prefs.set('showAttachmentPreview', toOpen);
 			this.usePreview = toOpen;
-			let menu = this._section._contextMenu.querySelector('.zotero-menuitem-toggle-preview');
+			let menu = this._section._contextMenu.querySelector('.trellis-menuitem-toggle-preview');
 			menu.dataset.l10nArgs = `{ "type": "${this.usePreview ? "open" : "collapsed"}" }`;
 			
 			if (toOpen) {
@@ -347,7 +347,7 @@
 			if (!await this._getPreviewAttachment()) return;
 			let contextMenu = this._section._contextMenu;
 			let menu = document.createXULElement("menuitem");
-			menu.classList.add('menuitem-iconic', 'zotero-menuitem-toggle-preview');
+			menu.classList.add('menuitem-iconic', 'trellis-menuitem-toggle-preview');
 			menu.setAttribute('data-l10n-id', 'toggle-preview');
 			menu.addEventListener('command', this._handleTogglePreview);
 			menu.dataset.l10nArgs = `{ "type": "${this.usePreview ? "open" : "collapsed"}" }`;

@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,8 +27,8 @@ const { TreeSelectionStub } = require('components/virtualized-table');
 const React = require('react');
 
 /**
- * Common methods for Zotero.ItemTree and Zotero.CollectionTree
- * @type {Zotero.LibraryTree}
+ * Common methods for Trellis.ItemTree and Trellis.CollectionTree
+ * @type {Trellis.LibraryTree}
  */
 var LibraryTree = class LibraryTree extends React.Component {
 	constructor(props) {
@@ -78,11 +78,11 @@ var LibraryTree = class LibraryTree extends React.Component {
 		// so we set an unintialized flag that we check in select functions
 		// like #notify
 		if (this._uninitialized) return;
-		Zotero.debug("ItemTree: React threw an error");
-		Zotero.logError(error);
-		Zotero.debug(info);
-		if (this.type == 'item') Zotero.Prefs.clear('lastViewedFolder');
-		Zotero.crash();
+		Trellis.debug("ItemTree: React threw an error");
+		Trellis.logError(error);
+		Trellis.debug(info);
+		if (this.type == 'item') Trellis.Prefs.clear('lastViewedFolder');
+		Trellis.crash();
 	}
 	
 	focus() {
@@ -128,7 +128,7 @@ var LibraryTree = class LibraryTree extends React.Component {
 	 */
 	getRowIndexByID(id) {
 		if (!(id in this._rowMap)) {
-			Zotero.debug(`${this.name}: Trying to access a row with invalid ID ${id}`)
+			Trellis.debug(`${this.name}: Trying to access a row with invalid ID ${id}`)
 			return false;
 		}
 		return this._rowMap[id];
@@ -144,7 +144,7 @@ var LibraryTree = class LibraryTree extends React.Component {
 			return indexes.map(index => this.getRow(index));
 		}
 		catch (e) {
-			Zotero.debug(indexes);
+			Trellis.debug(indexes);
 			throw e;
 		}
 	}
@@ -178,7 +178,7 @@ var LibraryTree = class LibraryTree extends React.Component {
 	}
 
 	_removeRows(rows) {
-		rows = Zotero.Utilities.arrayUnique(rows);
+		rows = Trellis.Utilities.arrayUnique(rows);
 		rows.sort((a, b) => a - b);
 		for (let i = rows.length - 1; i >= 0; i--) {
 			this._removeRow(rows[i], true);
@@ -222,8 +222,8 @@ var LibraryTree = class LibraryTree extends React.Component {
 			let row = this.getRow(i);
 			let id = row.id;
 			if (rowMap[id] !== undefined) {
-				Zotero.debug(`WARNING: _refreshRowMap(): ${this.type} row ${rowMap[id]} already found for item ${id} at ${i}`, 2);
-				Zotero.debug(new Error().stack, 2);
+				Trellis.debug(`WARNING: _refreshRowMap(): ${this.type} row ${rowMap[id]} already found for item ${id} at ${i}`, 2);
+				Trellis.debug(new Error().stack, 2);
 			}
 			rowMap[id] = i;
 		}
@@ -233,13 +233,13 @@ var LibraryTree = class LibraryTree extends React.Component {
 	_onSelectionChange = async () => {
 		if (!this._uninitialized && this.props.onSelectionChange) {
 			try {
-				await Zotero.Promise.resolve(this.props.onSelectionChange(this.selection));
+				await Trellis.Promise.resolve(this.props.onSelectionChange(this.selection));
 			} catch (e) {}
 		}
 		this.runListeners('select');
 	}
 	
-	_onSelectionChangeDebounced = Zotero.Utilities.debounce(this._onSelectionChange, 100)
+	_onSelectionChangeDebounced = Trellis.Utilities.debounce(this._onSelectionChange, 100)
 
 	handleTwistyMouseUp = (event, index) => {
 		this.toggleOpenState(index);
@@ -260,7 +260,7 @@ var LibraryTree = class LibraryTree extends React.Component {
 		});
 	};
 
-	updateHeightDebounced = Zotero.Utilities.debounce(this.updateHeight, 200);
+	updateHeightDebounced = Trellis.Utilities.debounce(this.updateHeight, 200);
 
 	updateFontSize() {
 		this.tree.updateFontSize();
@@ -286,7 +286,7 @@ var LibraryTree = class LibraryTree extends React.Component {
 		// the same action as the dropEffect. This allows the dropEffect setting
 		// (which we use in the tree's canDrop() and drop() to determine the desired
 		// action) to be changed, even if the cursor doesn't reflect the new setting.
-		if (Zotero.isWin || Zotero.isLinux) {
+		if (Trellis.isWin || Trellis.isLinux) {
 			event.dataTransfer.effectAllowed = effect;
 		}
 		event.dataTransfer.dropEffect = effect;
@@ -314,7 +314,7 @@ var LibraryTree = class LibraryTree extends React.Component {
 	}
 };
 
-Zotero.Utilities.Internal.makeClassEventDispatcher(LibraryTree);
+Trellis.Utilities.Internal.makeClassEventDispatcher(LibraryTree);
 
 module.exports = LibraryTree;
 

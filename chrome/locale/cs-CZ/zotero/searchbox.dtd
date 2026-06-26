@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Jméno:">
+<!ENTITY trellis.search.name "Jméno:">
 
-<!ENTITY zotero.search.searchInLibrary "Hledat v knihovně:">
+<!ENTITY trellis.search.searchInLibrary "Hledat v knihovně:">
 
-<!ENTITY zotero.search.joinMode.prefix "Odpovídá">
-<!ENTITY zotero.search.joinMode.any "některému">
-<!ENTITY zotero.search.joinMode.all "všem">
-<!ENTITY zotero.search.joinMode.suffix "z následujících pravidel:">
+<!ENTITY trellis.search.joinMode.prefix "Odpovídá">
+<!ENTITY trellis.search.joinMode.any "některému">
+<!ENTITY trellis.search.joinMode.all "všem">
+<!ENTITY trellis.search.joinMode.suffix "z následujících pravidel:">
 
-<!ENTITY zotero.search.recursive.label "Prohledat podsložky">
-<!ENTITY zotero.search.noChildren "Zobrazit pouze objekty nejvyšší úrovně">
-<!ENTITY zotero.search.includeParentsAndChildren "Zahrnout rodičovské a dceřiné položky odpovídajících položek">
+<!ENTITY trellis.search.recursive.label "Prohledat podsložky">
+<!ENTITY trellis.search.noChildren "Zobrazit pouze objekty nejvyšší úrovně">
+<!ENTITY trellis.search.includeParentsAndChildren "Zahrnout rodičovské a dceřiné položky odpovídajících položek">
 
-<!ENTITY zotero.search.textModes.phrase "Fráze">
-<!ENTITY zotero.search.textModes.phraseBinary "Fráze (vč. binárních souborů)">
-<!ENTITY zotero.search.textModes.regexp "regulární výraz">
-<!ENTITY zotero.search.textModes.regexpCS "regulární výraz (case-sensitive)">
+<!ENTITY trellis.search.textModes.phrase "Fráze">
+<!ENTITY trellis.search.textModes.phraseBinary "Fráze (vč. binárních souborů)">
+<!ENTITY trellis.search.textModes.regexp "regulární výraz">
+<!ENTITY trellis.search.textModes.regexpCS "regulární výraz (case-sensitive)">
 
-<!ENTITY zotero.search.date.units.days "dny">
-<!ENTITY zotero.search.date.units.months "měsíce">
-<!ENTITY zotero.search.date.units.years "roky">
+<!ENTITY trellis.search.date.units.days "dny">
+<!ENTITY trellis.search.date.units.months "měsíce">
+<!ENTITY trellis.search.date.units.years "roky">
 
-<!ENTITY zotero.search.search "Hledat">
-<!ENTITY zotero.search.clear "Vyčistit">
-<!ENTITY zotero.search.saveSearch "Uložit hledání">
+<!ENTITY trellis.search.search "Hledat">
+<!ENTITY trellis.search.clear "Vyčistit">
+<!ENTITY trellis.search.saveSearch "Uložit hledání">

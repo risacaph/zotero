@@ -1,194 +1,194 @@
-<!ENTITY zotero.preferences.title "Zotero nuostatos">
+<!ENTITY trellis.preferences.title "Trellis nuostatos">
 
-<!ENTITY zotero.preferences.helpButton.label "Žinynas">
+<!ENTITY trellis.preferences.helpButton.label "Žinynas">
 
-<!ENTITY zotero.preferences.default "Numatyta:">
-<!ENTITY zotero.preferences.items "įrašai">
-<!ENTITY zotero.preferences.period ".">
-<!ENTITY zotero.preferences.custom "Savita...">
+<!ENTITY trellis.preferences.default "Numatyta:">
+<!ENTITY trellis.preferences.items "įrašai">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Savita...">
 
-<!ENTITY zotero.preferences.prefpane.general "Bendrosios">
+<!ENTITY trellis.preferences.prefpane.general "Bendrosios">
 
-<!ENTITY zotero.preferences.interface "Sąsaja">
-<!ENTITY zotero.preferences.fileHandling "Rinkmenų tvarkymas">
-<!ENTITY zotero.preferences.automaticSnapshots "Kuriamiems naujiems įrašams automatiškai sukurti tinklalapių momentines kopijas">
-<!ENTITY zotero.preferences.downloadAssociatedFiles "Įrašant įrašus, automatiškai prisegti susijusius PDF dokumentus ir kitas rinkmenas">
-<!ENTITY zotero.preferences.autoRenameFiles.renameLinked "Pervadinti susietas rinkmenas">
-<!ENTITY zotero.preferences.fileHandler.openPDFsUsing "PDF atverti su">
-<!ENTITY zotero.preferences.fileHandler.systemDefault "Sistemos numatytoji">
+<!ENTITY trellis.preferences.interface "Sąsaja">
+<!ENTITY trellis.preferences.fileHandling "Rinkmenų tvarkymas">
+<!ENTITY trellis.preferences.automaticSnapshots "Kuriamiems naujiems įrašams automatiškai sukurti tinklalapių momentines kopijas">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Įrašant įrašus, automatiškai prisegti susijusius PDF dokumentus ir kitas rinkmenas">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Pervadinti susietas rinkmenas">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "PDF atverti su">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Sistemos numatytoji">
 
-<!ENTITY zotero.preferences.miscellaneous "Įvairios">
-<!ENTITY zotero.preferences.autoUpdate "Automatiškai tikrinti, ar yra transliatorių ir stilių atnaujinimų">
-<!ENTITY zotero.preferences.updateNow "Atnaujinti dabar">
-<!ENTITY zotero.preferences.reportTranslationFailure "Pranešti apie netinkamus svetainės transliatorius">
-<!ENTITY zotero.preferences.parseRISRefer "Zotero naudoti BibTeX/RIS/Refer rinkmenų parsiuntimui">
-<!ENTITY zotero.preferences.automaticTags "Įrašams automatiškai priskirti gaires su raktažodžiais ir temomis">
-<!ENTITY zotero.preferences.trashAutoEmptyDaysPre "Automatiškai šalinti šiukšlinės įrašus, senesnius nei">
-<!ENTITY zotero.preferences.trashAutoEmptyDaysPost "d.">
+<!ENTITY trellis.preferences.miscellaneous "Įvairios">
+<!ENTITY trellis.preferences.autoUpdate "Automatiškai tikrinti, ar yra transliatorių ir stilių atnaujinimų">
+<!ENTITY trellis.preferences.updateNow "Atnaujinti dabar">
+<!ENTITY trellis.preferences.reportTranslationFailure "Pranešti apie netinkamus svetainės transliatorius">
+<!ENTITY trellis.preferences.parseRISRefer "Trellis naudoti BibTeX/RIS/Refer rinkmenų parsiuntimui">
+<!ENTITY trellis.preferences.automaticTags "Įrašams automatiškai priskirti gaires su raktažodžiais ir temomis">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Automatiškai šalinti šiukšlinės įrašus, senesnius nei">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "d.">
 
-<!ENTITY zotero.preferences.reader.tabsTitle.label "Kortelių antraštės:">
-<!ENTITY zotero.preferences.reader.tabsTitle.creatorYearTitle "autorius - metai - pavadinimas">
-<!ENTITY zotero.preferences.reader.tabsTitle.titleCreatorYear "pavadinimas - autorius - metai">
-<!ENTITY zotero.preferences.reader.tabsTitle.filename "Rinkmenos vardas">
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Kortelių antraštės:">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "autorius - metai - pavadinimas">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "pavadinimas - autorius - metai">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Rinkmenos vardas">
 
-<!ENTITY zotero.preferences.groups "Grupės">
-<!ENTITY zotero.preferences.groups.whenCopyingInclude "Kopijuojant elementus tarp bibliotekų, įtraukti:">
-<!ENTITY zotero.preferences.groups.childNotes "įrašams priklausančias pastabas">
-<!ENTITY zotero.preferences.groups.childFiles "įrašams priklausančias tinklalapių momentines kopijas ir importuotas rinkmenas">
-<!ENTITY zotero.preferences.groups.annotations "anotacijas">
-<!ENTITY zotero.preferences.groups.childLinks "įrašams priklausančias nuorodas">
-<!ENTITY zotero.preferences.groups.tags "gaires">
+<!ENTITY trellis.preferences.groups "Grupės">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Kopijuojant elementus tarp bibliotekų, įtraukti:">
+<!ENTITY trellis.preferences.groups.childNotes "įrašams priklausančias pastabas">
+<!ENTITY trellis.preferences.groups.childFiles "įrašams priklausančias tinklalapių momentines kopijas ir importuotas rinkmenas">
+<!ENTITY trellis.preferences.groups.annotations "anotacijas">
+<!ENTITY trellis.preferences.groups.childLinks "įrašams priklausančias nuorodas">
+<!ENTITY trellis.preferences.groups.tags "gaires">
 
-<!ENTITY zotero.preferences.feeds "Naujienų kanalai">
-<!ENTITY zotero.preferences.feeds.sorting.label "Rikiavimas:">
-<!ENTITY zotero.preferences.feeds.sorting.newest "Naujausi pradžioje">
-<!ENTITY zotero.preferences.feeds.sorting.oldest "Seniausi pradžioje">
-<!ENTITY zotero.preferences.feeds.feedDefaults "Numatytosios kanalų parinktys">
+<!ENTITY trellis.preferences.feeds "Naujienų kanalai">
+<!ENTITY trellis.preferences.feeds.sorting.label "Rikiavimas:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Naujausi pradžioje">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Seniausi pradžioje">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Numatytosios kanalų parinktys">
 
-<!ENTITY zotero.preferences.prefpane.sync "Sinchronizavimas">
-<!ENTITY zotero.preferences.sync.username "Naudotojo vardas:">
-<!ENTITY zotero.preferences.sync.password "Slaptažodis:">
-<!ENTITY zotero.preferences.sync.createAccount "Sukurti paskyrą">
-<!ENTITY zotero.preferences.sync.lostPassword "Pamiršote slaptažodį?">
-<!ENTITY zotero.preferences.sync.syncAutomatically "Sinchronizuoti automatiškai">
-<!ENTITY zotero.preferences.sync.syncFullTextContent "Visatekstinio turinio sinchronizavimas">
-<!ENTITY zotero.preferences.sync.syncFullTextContent.desc "Zotero gali sinchronizuoti visą jūsiškės bibliotekos rinkmenų visatekstinį turinį su zotero.org ir kitais susietais įrenginiais. Tai Jums leistų greitai pasiekti savas rinkmenas kad ir kur bebūtumėte. Jūsų visatekstinis turinys nebus viešinamas.">
-<!ENTITY zotero.preferences.sync.about "Apie sinchronizavimą">
-<!ENTITY zotero.preferences.sync.fileSyncing "Rinkmenų sinchronizavimas">
-<!ENTITY zotero.preferences.sync.fileSyncing.url "URL:">
-<!ENTITY zotero.preferences.sync.fileSyncing.myLibrary "Prie savosios bibliotekos įrašų prisegtas rinkmenas sinchronizuoti per">
+<!ENTITY trellis.preferences.prefpane.sync "Sinchronizavimas">
+<!ENTITY trellis.preferences.sync.username "Naudotojo vardas:">
+<!ENTITY trellis.preferences.sync.password "Slaptažodis:">
+<!ENTITY trellis.preferences.sync.createAccount "Sukurti paskyrą">
+<!ENTITY trellis.preferences.sync.lostPassword "Pamiršote slaptažodį?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Sinchronizuoti automatiškai">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Visatekstinio turinio sinchronizavimas">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis gali sinchronizuoti visą jūsiškės bibliotekos rinkmenų visatekstinį turinį su trellis.org ir kitais susietais įrenginiais. Tai Jums leistų greitai pasiekti savas rinkmenas kad ir kur bebūtumėte. Jūsų visatekstinis turinys nebus viešinamas.">
+<!ENTITY trellis.preferences.sync.about "Apie sinchronizavimą">
+<!ENTITY trellis.preferences.sync.fileSyncing "Rinkmenų sinchronizavimas">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Prie savosios bibliotekos įrašų prisegtas rinkmenas sinchronizuoti per">
 
-<!ENTITY zotero.preferences.sync.fileSyncing.download "Rinkmenas parsiųsti">
-<!ENTITY zotero.preferences.sync.fileSyncing.download.atSyncTime "sinchronizuojant">
-<!ENTITY zotero.preferences.sync.fileSyncing.download.onDemand "pagal poreikį">
-<!ENTITY zotero.preferences.sync.fileSyncing.verifyServer "Tikrinti serverį">
-<!ENTITY zotero.preferences.sync.librariesToSync "Sinchronizuotinos bibliotekos">
-<!ENTITY zotero.preferences.sync.librariesToSync.button "Pasirinkti bibliotekas...">
-<!ENTITY zotero.preferences.sync.librariesToSync.sync "Sinchronizuoti">
-<!ENTITY zotero.preferences.sync.librariesToSync.library "Biblioteka">
-<!ENTITY zotero.preferences.sync.reset.warning1 "Tolaiu pateiktos funkcijos skirtos retiems specifiniams atvejams - jų nereikėtų naudoti įprastų nesklandumų sprendimui. Dažniausiai atkūrimas sukelia dar daugiau problemų. Daugiau informacijos rasite ">
-<!ENTITY zotero.preferences.sync.reset.warning2 "atkūrimo sinchronizuojant parinkčių">
-<!ENTITY zotero.preferences.sync.reset.warning3 " puslapyje.">
-<!ENTITY zotero.preferences.sync.reset.resetDataSyncHistory "Perrašyti duomenų sinchronizavimo žurnalą">
-<!ENTITY zotero.preferences.sync.reset.resetDataSyncHistory.desc "Apjungti vietinius duomenis su duomenimis nuotoliniame serveryje, ignoruojant duombazės informaciją apie pakeitimus">
-<!ENTITY zotero.preferences.sync.reset.restoreFromOnlineLibrary "Atkurti iš nuotolinės saugyklos">
-<!ENTITY zotero.preferences.sync.reset.restoreFromOnlineLibrary.desc "Vietinius Zotero duomenis pakeisti nuotolinės saugyklos duomenimis.">
-<!ENTITY zotero.preferences.sync.reset.restoreToOnlineLibrary "Pakeisti nuotolinėje saugykloje">
-<!ENTITY zotero.preferences.sync.reset.restoreToOnlineLibrary.desc "Nuotolinės saugyklos duomenis pakeisti vietinės saugyklos duomenimis.">
-<!ENTITY zotero.preferences.sync.reset.resetFileSyncHistory "Perrašyti rinkmenų sinchronizavimo žurnalą">
-<!ENTITY zotero.preferences.sync.reset.resetFileSyncHistory.desc "Palyginti visas pridėtas rinkmenas su esančiomis saugykloje">
-<!ENTITY zotero.preferences.sync.reset "Atkūrimas">
-<!ENTITY zotero.preferences.sync.reset.showResetOptions "Rodyti atkūrimo parinktis...">
-<!ENTITY zotero.preferences.sync.reset.button "Atkurti...">
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Rinkmenas parsiųsti">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "sinchronizuojant">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "pagal poreikį">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Tikrinti serverį">
+<!ENTITY trellis.preferences.sync.librariesToSync "Sinchronizuotinos bibliotekos">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Pasirinkti bibliotekas...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sinchronizuoti">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Biblioteka">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Tolaiu pateiktos funkcijos skirtos retiems specifiniams atvejams - jų nereikėtų naudoti įprastų nesklandumų sprendimui. Dažniausiai atkūrimas sukelia dar daugiau problemų. Daugiau informacijos rasite ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "atkūrimo sinchronizuojant parinkčių">
+<!ENTITY trellis.preferences.sync.reset.warning3 " puslapyje.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Perrašyti duomenų sinchronizavimo žurnalą">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Apjungti vietinius duomenis su duomenimis nuotoliniame serveryje, ignoruojant duombazės informaciją apie pakeitimus">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Atkurti iš nuotolinės saugyklos">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Vietinius Trellis duomenis pakeisti nuotolinės saugyklos duomenimis.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Pakeisti nuotolinėje saugykloje">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Nuotolinės saugyklos duomenis pakeisti vietinės saugyklos duomenimis.">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Perrašyti rinkmenų sinchronizavimo žurnalą">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Palyginti visas pridėtas rinkmenas su esančiomis saugykloje">
+<!ENTITY trellis.preferences.sync.reset "Atkūrimas">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Rodyti atkūrimo parinktis...">
+<!ENTITY trellis.preferences.sync.reset.button "Atkurti...">
 
 
-<!ENTITY zotero.preferences.prefpane.search "Paieška">
-<!ENTITY zotero.preferences.search.fulltextCache "Visatekstinis podėlis">
-<!ENTITY zotero.preferences.search.indexStats "Indeksavimo statistika">
+<!ENTITY trellis.preferences.prefpane.search "Paieška">
+<!ENTITY trellis.preferences.search.fulltextCache "Visatekstinis podėlis">
+<!ENTITY trellis.preferences.search.indexStats "Indeksavimo statistika">
 
-<!ENTITY zotero.preferences.search.indexStats.indexed "Suindeksuota:">
-<!ENTITY zotero.preferences.search.indexStats.partial "Dalinai:">
-<!ENTITY zotero.preferences.search.indexStats.unindexed "Nesuindeksuota:">
-<!ENTITY zotero.preferences.search.indexStats.words "Žodžių:">
+<!ENTITY trellis.preferences.search.indexStats.indexed "Suindeksuota:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Dalinai:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Nesuindeksuota:">
+<!ENTITY trellis.preferences.search.indexStats.words "Žodžių:">
 
-<!ENTITY zotero.preferences.fulltext.textMaxLength "Didžiausias rašmenų kiekis, indeksuotinas vienoje rinkmenoje:">
-<!ENTITY zotero.preferences.fulltext.pdfMaxPages "Didžiausias puslapių kiekis, indeksuotinas vienoje rinkmenoje:">
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Didžiausias rašmenų kiekis, indeksuotinas vienoje rinkmenoje:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Didžiausias puslapių kiekis, indeksuotinas vienoje rinkmenoje:">
 
-<!ENTITY zotero.preferences.prefpane.export "Eksportavimas">
+<!ENTITY trellis.preferences.prefpane.export "Eksportavimas">
 
-<!ENTITY zotero.preferences.citationOptions.caption "Citavimo parinktys">
-<!ENTITY zotero.preferences.export.citePaperJournalArticleURL "Į nuorodas įtraukti popierinių straipsnių URL adresus">
-<!ENTITY zotero.preferences.export.citePaperJournalArticleURL.description "Jei parinktis nepasirinkta, Zotero URL adresus įtrauks tik jei cituojamas žurnalo, laikraščio ar periodinio leidinio straipsnyje nenurodyti puslapiai.">
+<!ENTITY trellis.preferences.citationOptions.caption "Citavimo parinktys">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Į nuorodas įtraukti popierinių straipsnių URL adresus">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Jei parinktis nepasirinkta, Trellis URL adresus įtrauks tik jei cituojamas žurnalo, laikraščio ar periodinio leidinio straipsnyje nenurodyti puslapiai.">
 
-<!ENTITY zotero.preferences.quickCopy.caption "Greitas kopijavimas">
-<!ENTITY zotero.preferences.quickCopy.itemFormat "Įrašų formatas:">
-<!ENTITY zotero.preferences.quickCopy.noteFormat "Pastabų formatas:">
-<!ENTITY zotero.preferences.quickCopy.copyAsHTML "Kopijuoti HTML formatu">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.setings "Parinktys atskiroms svetainėms:">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.domainPath "Sritis/kelias">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.domainPath.example "(pvz., wikipedia.org)">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.format "Formatas">
-<!ENTITY zotero.preferences.quickCopy.siteEditor.locale "Kalba">
-<!ENTITY zotero.preferences.quickCopy.dragLimit "Neleisti greitai kopijuoti, jei tempiama daugiau kaip">
+<!ENTITY trellis.preferences.quickCopy.caption "Greitas kopijavimas">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Įrašų formatas:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Pastabų formatas:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopijuoti HTML formatu">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Parinktys atskiroms svetainėms:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Sritis/kelias">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(pvz., wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formatas">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Kalba">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Neleisti greitai kopijuoti, jei tempiama daugiau kaip">
 
-<!ENTITY zotero.preferences.prefpane.cite "Citavimas">
-<!ENTITY zotero.preferences.cite.wordProcessors "Tekstų rengyklės">
-<!ENTITY zotero.preferences.styleEditor "Stilių rengyklė">
-<!ENTITY zotero.preferences.stylePreview "Stilių peržiūra">
+<!ENTITY trellis.preferences.prefpane.cite "Citavimas">
+<!ENTITY trellis.preferences.cite.wordProcessors "Tekstų rengyklės">
+<!ENTITY trellis.preferences.styleEditor "Stilių rengyklė">
+<!ENTITY trellis.preferences.stylePreview "Stilių peržiūra">
 
-<!ENTITY zotero.preferences.cite.styles.styleManager "Stilių tvarkytuvė">
-<!ENTITY zotero.preferences.cite.styles.styleManager.title "Pavadinimas">
-<!ENTITY zotero.preferences.cite.styles.styleManager.updated "Atnaujinta">
-<!ENTITY zotero.preferences.cite.styles.styleManager.csl "CSL">
+<!ENTITY trellis.preferences.cite.styles.styleManager "Stilių tvarkytuvė">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Pavadinimas">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Atnaujinta">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
 
-<!ENTITY zotero.preferences.keys.saveToZotero "Įrašyti į Zotero (ženkliukas adreso juostoje)">
-<!ENTITY zotero.preferences.keys.focusLibrariesPane "Aktyvuoti bibliotekos skydelį">
-<!ENTITY zotero.preferences.keys.quicksearch "Greita paieška">
-<!ENTITY zotero.preferences.keys.newItem "Sukurti naują įrašą">
-<!ENTITY zotero.preferences.keys.newNote "Sukurti naują pastabą">
-<!ENTITY zotero.preferences.keys.toggleAllRead "Visus naujienų kanalo įrašus pažymėti skaitytais/neskaitytais">
-<!ENTITY zotero.preferences.keys.copySelectedItemCitationsToClipboard "Kopijuoti pasirinktų įrašų citavimą į iškarpinę">
-<!ENTITY zotero.preferences.keys.copySelectedItemsToClipboard "Kopijuoti pasirinktus įrašus į iškarpinę">
-<!ENTITY zotero.preferences.keys.importFromClipboard "Importuoti iš iškarpinės">
-<!ENTITY zotero.preferences.keys.changesTakeEffect "Pakeitimai įsigalios iš naujo paleidus programą">
+<!ENTITY trellis.preferences.keys.saveToTrellis "Įrašyti į Trellis (ženkliukas adreso juostoje)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Aktyvuoti bibliotekos skydelį">
+<!ENTITY trellis.preferences.keys.quicksearch "Greita paieška">
+<!ENTITY trellis.preferences.keys.newItem "Sukurti naują įrašą">
+<!ENTITY trellis.preferences.keys.newNote "Sukurti naują pastabą">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Visus naujienų kanalo įrašus pažymėti skaitytais/neskaitytais">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopijuoti pasirinktų įrašų citavimą į iškarpinę">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopijuoti pasirinktus įrašus į iškarpinę">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importuoti iš iškarpinės">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Pakeitimai įsigalios iš naujo paleidus programą">
 
-<!ENTITY zotero.preferences.prefpane.proxies "Įgaliotieji serveriai">
+<!ENTITY trellis.preferences.prefpane.proxies "Įgaliotieji serveriai">
 
-<!ENTITY zotero.preferences.proxies.proxyOptions "Įgaliotojo serverio parinktys">
-<!ENTITY zotero.preferences.proxies.desc_before_link "Zotero skaidriai nukreips užklausas per įrašytus įgaliotuosius serverius. Daugiau informacijos rasite">
-<!ENTITY zotero.preferences.proxies.desc_link "įgaliotojo serverio dokumentacijoje">
-<!ENTITY zotero.preferences.proxies.desc_after_link ".">
-<!ENTITY zotero.preferences.proxies.transparent "Įgalinti įgaliotojo serverio nukreipimą">
-<!ENTITY zotero.preferences.proxies.autoRecognize "Automatiškai aptikti įgaliotųjų serverių šaltinius">
-<!ENTITY zotero.preferences.proxies.showRedirectNotification "Rodyti perspėjimą kai nukreipiama per proxy serverį">
-<!ENTITY zotero.preferences.proxies.disableByDomain "Uždrauti įgaliotojo serverio nukreipimą, jei mano srities pavadinime yra">
-<!ENTITY zotero.preferences.proxies.configured "Sukonfigūruoti įgaliotieji serveriai">
-<!ENTITY zotero.preferences.proxies.hostname "Serveris">
-<!ENTITY zotero.preferences.proxies.scheme "Schema">
+<!ENTITY trellis.preferences.proxies.proxyOptions "Įgaliotojo serverio parinktys">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis skaidriai nukreips užklausas per įrašytus įgaliotuosius serverius. Daugiau informacijos rasite">
+<!ENTITY trellis.preferences.proxies.desc_link "įgaliotojo serverio dokumentacijoje">
+<!ENTITY trellis.preferences.proxies.desc_after_link ".">
+<!ENTITY trellis.preferences.proxies.transparent "Įgalinti įgaliotojo serverio nukreipimą">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Automatiškai aptikti įgaliotųjų serverių šaltinius">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Rodyti perspėjimą kai nukreipiama per proxy serverį">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Uždrauti įgaliotojo serverio nukreipimą, jei mano srities pavadinime yra">
+<!ENTITY trellis.preferences.proxies.configured "Sukonfigūruoti įgaliotieji serveriai">
+<!ENTITY trellis.preferences.proxies.hostname "Serveris">
+<!ENTITY trellis.preferences.proxies.scheme "Schema">
 
-<!ENTITY zotero.preferences.proxies.multiSite "Daugelio svetainių">
-<!ENTITY zotero.preferences.proxies.autoAssociate "Automatiškai susieti naujus serverius">
-<!ENTITY zotero.preferences.proxies.variables "Įgaliotojo serverio schemoje galite naudoti tokius kintamuosius:">
-<!ENTITY zotero.preferences.proxies.h_variable "&#37;h - serveris į nukreiptą svetainę (e.g., www.zotero.org)">
-<!ENTITY zotero.preferences.proxies.p_variable "&#37;p - kelias į nukreiptą puslapį be adreso pagrindo ir brūkšnio (pvz., apie/index.html)">
-<!ENTITY zotero.preferences.proxies.d_variable "&#37;d - kelias iki katalogo (pvz., apie/)">
-<!ENTITY zotero.preferences.proxies.f_variable "&#37;f - rinkmenos vardas (pvz., index.html)">
-<!ENTITY zotero.preferences.proxies.a_variable "&#37;a - bet kas">
+<!ENTITY trellis.preferences.proxies.multiSite "Daugelio svetainių">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Automatiškai susieti naujus serverius">
+<!ENTITY trellis.preferences.proxies.variables "Įgaliotojo serverio schemoje galite naudoti tokius kintamuosius:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - serveris į nukreiptą svetainę (e.g., www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - kelias į nukreiptą puslapį be adreso pagrindo ir brūkšnio (pvz., apie/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - kelias iki katalogo (pvz., apie/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - rinkmenos vardas (pvz., index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - bet kas">
 
-<!ENTITY zotero.preferences.prefpane.advanced "Kita">
-<!ENTITY zotero.preferences.advanced.filesAndFolders "Rinkmenos ir katalogai">
-<!ENTITY zotero.preferences.advanced.keys "Spartieji klavišai">
+<!ENTITY trellis.preferences.prefpane.advanced "Kita">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Rinkmenos ir katalogai">
+<!ENTITY trellis.preferences.advanced.keys "Spartieji klavišai">
 
-<!ENTITY zotero.preferences.advanced.advancedConfiguration "Išsamesnė konfigūracija">
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Išsamesnė konfigūracija">
 
-<!ENTITY zotero.preferences.prefpane.locate "Rasti vietą">
-<!ENTITY zotero.preferences.locate.locateEngineManager "Straipsnių paieškos variklių tvarkytuvė">
-<!ENTITY zotero.preferences.locate.description "Aprašas">
-<!ENTITY zotero.preferences.locate.name "Pavadinimas">
-<!ENTITY zotero.preferences.locate.addDescription "Norėdami įtraukti paieškos variklį, kurio nėra sąraše, interneto naršyklėje atverkite tos paieškos sistemos svetainę ir nuspauskite Zotero meniu mygtuką „Pridėti“.">
-<!ENTITY zotero.preferences.locate.restoreDefaults "Naudoti numatytuosius">
+<!ENTITY trellis.preferences.prefpane.locate "Rasti vietą">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Straipsnių paieškos variklių tvarkytuvė">
+<!ENTITY trellis.preferences.locate.description "Aprašas">
+<!ENTITY trellis.preferences.locate.name "Pavadinimas">
+<!ENTITY trellis.preferences.locate.addDescription "Norėdami įtraukti paieškos variklį, kurio nėra sąraše, interneto naršyklėje atverkite tos paieškos sistemos svetainę ir nuspauskite Trellis meniu mygtuką „Pridėti“.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Naudoti numatytuosius">
 
-<!ENTITY zotero.preferences.charset "Rašmenų koduotė">
-<!ENTITY zotero.preferences.charset.importCharset "Importuoti rašmenų koduotę">
-<!ENTITY zotero.preferences.charset.displayExportOption "Eksportuojant rodyti rašmenų koduotės parinktis">
+<!ENTITY trellis.preferences.charset "Rašmenų koduotė">
+<!ENTITY trellis.preferences.charset.importCharset "Importuoti rašmenų koduotę">
+<!ENTITY trellis.preferences.charset.displayExportOption "Eksportuojant rodyti rašmenų koduotės parinktis">
 
-<!ENTITY zotero.preferences.dataDir "Duomenų katalogo vieta">
-<!ENTITY zotero.preferences.dataDir.useProfile "Naudoti profilio katalogą">
-<!ENTITY zotero.preferences.dataDir.custom "Savita:">
-<!ENTITY zotero.preferences.dataDir.choose "Pasirinkti...">
-<!ENTITY zotero.preferences.dataDir.viaCommandLine "(nurodyta komandinėje eilutėje)">
-<!ENTITY zotero.preferences.dataDir.reveal "Parodyti duomenų katalogą">
-<!ENTITY zotero.preferences.dataDir.migrate "Perkelti į naują numatytąją vietą...">
+<!ENTITY trellis.preferences.dataDir "Duomenų katalogo vieta">
+<!ENTITY trellis.preferences.dataDir.useProfile "Naudoti profilio katalogą">
+<!ENTITY trellis.preferences.dataDir.custom "Savita:">
+<!ENTITY trellis.preferences.dataDir.choose "Pasirinkti...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(nurodyta komandinėje eilutėje)">
+<!ENTITY trellis.preferences.dataDir.reveal "Parodyti duomenų katalogą">
+<!ENTITY trellis.preferences.dataDir.migrate "Perkelti į naują numatytąją vietą...">
 
-<!ENTITY zotero.preferences.attachmentBaseDir.caption "Susietų priedų pagrindinis katalogas">
-<!ENTITY zotero.preferences.attachmentBaseDir.message "Rinkmenoms, kurios prisegtos prie įrašų, Zotero naudos santykinius kelius pagrindinio katalogo atžvilgiu, tad rinkmenas galėsite pasiekti bet kuriame savo kompiuteryje, žinoma, jei rinkmenų struktūra pagrindiniuose kataloguose bus tokia pati.">
-<!ENTITY zotero.preferences.attachmentBaseDir.basePath "Pagrindinis katalogas:">
-<!ENTITY zotero.preferences.attachmentBaseDir.selectBasePath "Pasirinkti...">
-<!ENTITY zotero.preferences.attachmentBaseDir.resetBasePath "Pakeisti absoliučiais keliais...">
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Susietų priedų pagrindinis katalogas">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Rinkmenoms, kurios prisegtos prie įrašų, Trellis naudos santykinius kelius pagrindinio katalogo atžvilgiu, tad rinkmenas galėsite pasiekti bet kuriame savo kompiuteryje, žinoma, jei rinkmenų struktūra pagrindiniuose kataloguose bus tokia pati.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Pagrindinis katalogas:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Pasirinkti...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Pakeisti absoliučiais keliais...">
 
-<!ENTITY zotero.preferences.dbMaintenance "Duomenų bazės priežiūra">
-<!ENTITY zotero.preferences.dbMaintenance.integrityCheck "Tikrinti duomenų bazės vientisumą">
-<!ENTITY zotero.preferences.dbMaintenance.resetTranslatorsAndStyles "Atkurti transliatorius ir stilius...">
-<!ENTITY zotero.preferences.dbMaintenance.resetTranslators "Atkurti transliatorius...">
+<!ENTITY trellis.preferences.dbMaintenance "Duomenų bazės priežiūra">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Tikrinti duomenų bazės vientisumą">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Atkurti transliatorius ir stilius...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Atkurti transliatorius...">
 
-<!ENTITY zotero.preferences.configEditor "Konfigūracijos rengyklė">
+<!ENTITY trellis.preferences.configEditor "Konfigūracijos rengyklė">

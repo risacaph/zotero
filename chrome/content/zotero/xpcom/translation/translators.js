@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -29,7 +29,7 @@
  * Singleton to handle loading and caching of translators
  * @namespace
  */
-Zotero.Translators = new function () {
+Trellis.Translators = new function () {
 	var _cache, _translators;
 	var _initialized = false;
 	var _initializationDeferred = false;
@@ -52,7 +52,7 @@ Zotero.Translators = new function () {
 		// Wait until bundled files have been updated, except when this is called by the schema update
 		// code itself
 		if (!options.fromSchemaUpdate) {
-			await Zotero.Schema.schemaUpdatePromise;
+			await Trellis.Schema.schemaUpdatePromise;
 		}
 		
 		// If an initialization has already started, a regular init() call should return the promise
@@ -68,16 +68,16 @@ Zotero.Translators = new function () {
 			}
 		}
 		
-		_initializationDeferred = Zotero.Promise.defer();
+		_initializationDeferred = Trellis.Promise.defer();
 		
-		Zotero.debug("Initializing translators");
+		Trellis.debug("Initializing translators");
 		var start = new Date;
 		
 		_cache = {"import":[], "export":[], "web":[], "webWithTargetAll":[], "search":[]};
 		_translators = {};
 		
 		var sql = "SELECT rowid, fileName, metadataJSON, lastModifiedTime FROM translatorCache";
-		var dbCacheResults = await Zotero.DB.queryAsync(sql);
+		var dbCacheResults = await Trellis.DB.queryAsync(sql);
 		var dbCache = {};
 		for (let i = 0; i < dbCacheResults.length; i++) {
 			let entry = dbCacheResults[i];
@@ -86,7 +86,7 @@ Zotero.Translators = new function () {
 		
 		var numCached = 0;
 		var filesInCache = {};
-		var translatorsDir = Zotero.getTranslatorsDirectory().path;
+		var translatorsDir = Trellis.getTranslatorsDirectory().path;
 		var iterator = new OS.File.DirectoryIterator(translatorsDir);
 		try {
 			while (true) {
@@ -130,11 +130,11 @@ Zotero.Translators = new function () {
 							);
 						}
 						catch (e) {
-							Zotero.logError(e);
-							Zotero.debug(memCacheJSON || dbCacheEntry.metadataJSON, 1);
+							Trellis.logError(e);
+							Trellis.debug(memCacheJSON || dbCacheEntry.metadataJSON, 1);
 							
 							// If JSON is invalid, clear from cache
-							await Zotero.DB.queryAsync(
+							await Trellis.DB.queryAsync(
 								"DELETE FROM translatorCache WHERE fileName=?",
 								fileName
 							);
@@ -147,7 +147,7 @@ Zotero.Translators = new function () {
 							var translator = await this.loadFromFile(path);
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 							
 							// If translator file is invalid, delete it and clear the cache entry
 							// so that the translator is reinstalled the next time it's updated.
@@ -155,14 +155,14 @@ Zotero.Translators = new function () {
 							// TODO: Reinstall the correct translator immediately
 							await OS.File.remove(path);
 							let sql = "DELETE FROM translatorCache WHERE fileName=?";
-							await Zotero.DB.queryAsync(sql, fileName);
+							await Trellis.DB.queryAsync(sql, fileName);
 							continue;
 						}
 					}
 					
 					// When can this happen?
 					if (!translator.translatorID) {
-						Zotero.debug("Translator ID for " + path + " not found");
+						Trellis.debug("Translator ID for " + path + " not found");
 						continue;
 					}
 					
@@ -208,12 +208,12 @@ Zotero.Translators = new function () {
 					
 					// add to cache
 					_translators[translator.translatorID] = translator;
-					for (let type in Zotero.Translator.TRANSLATOR_TYPES) {
-						if (translator.translatorType & Zotero.Translator.TRANSLATOR_TYPES[type]) {
+					for (let type in Trellis.Translator.TRANSLATOR_TYPES) {
+						if (translator.translatorType & Trellis.Translator.TRANSLATOR_TYPES[type]) {
 							_cache[type].push(translator);
 						}
 					}
-					if ((translator.translatorType & Zotero.Translator.TRANSLATOR_TYPES.web)
+					if ((translator.translatorType & Trellis.Translator.TRANSLATOR_TYPES.web)
 							&& translator.targetAll) {
 						_cache.webWithTargetAll.push(translator);
 					}
@@ -221,8 +221,8 @@ Zotero.Translators = new function () {
 					if (!dbCacheEntry) {
 						await this.cacheInDB(
 							fileName,
-							translator.serialize(Zotero.Translator.TRANSLATOR_REQUIRED_PROPERTIES.
-												 concat(Zotero.Translator.TRANSLATOR_OPTIONAL_PROPERTIES)),
+							translator.serialize(Trellis.Translator.TRANSLATOR_REQUIRED_PROPERTIES.
+												 concat(Trellis.Translator.TRANSLATOR_OPTIONAL_PROPERTIES)),
 							lastModifiedTime
 						);
 					}
@@ -238,7 +238,7 @@ Zotero.Translators = new function () {
 		// Remove translators from DB cache if no file
 		for (let fileName in dbCache) {
 			if (!filesInCache[fileName]) {
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					"DELETE FROM translatorCache WHERE rowid=?",
 					dbCache[fileName].rowid
 				);
@@ -246,7 +246,7 @@ Zotero.Translators = new function () {
 		}
 		
 		// Sort by priority
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		var cmp = function (a, b) {
 			if (a.priority > b.priority) {
 				return 1;
@@ -263,7 +263,7 @@ Zotero.Translators = new function () {
 		_initializationDeferred.resolve();
 		_initialized = true;
 		
-		Zotero.debug("Cached " + numCached + " translators in " + ((new Date) - start) + " ms");
+		Trellis.debug("Cached " + numCached + " translators in " + ((new Date) - start) + " ms");
 	};
 	
 	
@@ -271,7 +271,7 @@ Zotero.Translators = new function () {
 		await this.init(Object.assign({}, options, { reinit: true }));
 		this._translatorsHash = null;
 		this._sortedTranslatorHash = null;
-		Zotero.QuickCopy.init();
+		Trellis.QuickCopy.init();
 	};
 	
 	
@@ -280,15 +280,15 @@ Zotero.Translators = new function () {
 		
 		delete _translators[translatorID];
 		
-		for (let typeName in Zotero.Translator.TRANSLATOR_TYPES) {
-			if (translatorType & Zotero.Translator.TRANSLATOR_TYPES[typeName]) {
+		for (let typeName in Trellis.Translator.TRANSLATOR_TYPES) {
+			if (translatorType & Trellis.Translator.TRANSLATOR_TYPES[typeName]) {
 				let pos = _cache[typeName].findIndex(x => x.translatorID == translatorID);
 				if (pos != -1) {
 					_cache[typeName].splice(pos, 1);
 				}
 			}
 		}
-		if ((translatorType & Zotero.Translator.TRANSLATOR_TYPES.web) && targetAll) {
+		if ((translatorType & Trellis.Translator.TRANSLATOR_TYPES.web) && targetAll) {
 			let pos = _cache.webWithTargetAll.findIndex(x => x.translatorID == translatorID);
 			if (pos != -1) {
 				_cache.webWithTargetAll.splice(pos, 1);
@@ -298,7 +298,7 @@ Zotero.Translators = new function () {
 	
 	
 	async function removeFromDBCache(fileName) {
-		await Zotero.DB.queryAsync("DELETE FROM translatorCache WHERE fileName=?", fileName);
+		await Trellis.DB.queryAsync("DELETE FROM translatorCache WHERE fileName=?", fileName);
 	}
 	
 	
@@ -313,7 +313,7 @@ Zotero.Translators = new function () {
 		var info = typeof json == 'string' ? JSON.parse(json) : json;
 		info.path = path;
 		info.code = code;
-		return new Zotero.Translator(info);
+		return new Trellis.Translator(info);
 	}
 
 	/**
@@ -324,7 +324,7 @@ Zotero.Translators = new function () {
 	this.loadFromFile = async function (path) {
 		const infoRe = /^\s*{[\S\s]*?}\s*?[\r\n]/;
 		try {
-			let source = await Zotero.File.getContentsAsync(path);
+			let source = await Trellis.File.getContentsAsync(path);
 			return this.load(infoRe.exec(source)[0], path, source);
 		}
 		catch (e) {
@@ -347,7 +347,7 @@ Zotero.Translators = new function () {
 		for (let translator of translators) {
 			hashString += `${translator.translatorID}:${translator.lastUpdated},`;
 		}
-		this[prop] = Zotero.Utilities.Internal.md5(hashString);
+		this[prop] = Trellis.Utilities.Internal.md5(hashString);
 		return this[prop];
 	};
 	
@@ -358,14 +358,14 @@ Zotero.Translators = new function () {
 	 */
 	this.get = function (id) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Translators not yet loaded", 'translators');
+			throw new Trellis.Exception.UnloadedDataException("Translators not yet loaded", 'translators');
 		}
 		return _translators[id] ? _translators[id] : false;
 	}
 	
-	this.getCodeForTranslator = Zotero.Promise.method(function (translator) {
+	this.getCodeForTranslator = Trellis.Promise.method(function (translator) {
 		if (translator.code) return translator.code;
-		return Zotero.File.getContentsAsync(translator.path).then(function (code) {
+		return Trellis.File.getContentsAsync(translator.path).then(function (code) {
 			if (translator.cacheCode) {
 				// See Translator.init() for cache rules
 				translator.code = code;
@@ -405,10 +405,10 @@ Zotero.Translators = new function () {
 			var potentialTranslators = [];
 			var proxies = [];
 			
-			var rootSearchURIs = Zotero.Proxies.getPotentialProxies(rootURI);
-			var frameSearchURIs = isFrame ? Zotero.Proxies.getPotentialProxies(URI) : rootSearchURIs;
+			var rootSearchURIs = Trellis.Proxies.getPotentialProxies(rootURI);
+			var frameSearchURIs = isFrame ? Trellis.Proxies.getPotentialProxies(URI) : rootSearchURIs;
 			
-			Zotero.debug("Translators: Looking for translators for "+Object.keys(frameSearchURIs).join(', '));
+			Trellis.debug("Translators: Looking for translators for "+Object.keys(frameSearchURIs).join(', '));
 			
 			for (let translator of allTranslators) {
 				rootURIsLoop:
@@ -446,11 +446,11 @@ Zotero.Translators = new function () {
 	 * @param {String} URI to get searchURIs and converterFunctions for
 	 */
 	this.getSearchURIs = function (URI) {
-		var properURI = Zotero.Proxies.proxyToProper(URI);
+		var properURI = Trellis.Proxies.proxyToProper(URI);
 		if (properURI !== URI) {
 			// if we know this proxy, just use the proper URI for detection
 			let obj = {};
-			obj[properURI] = Zotero.Proxies.properToProxy;
+			obj[properURI] = Trellis.Proxies.properToProxy;
 			return obj;
 		}
 			
@@ -470,7 +470,7 @@ Zotero.Translators = new function () {
 				if (TLDS[hostnames[i].toLowerCase()]) {
 					var properHost = hostnames.slice(0, i+1).join(".");
 					searchURIs[m[1]+properHost+URI.substr(m[0].length)] = new function () {
-						var re = new RegExp('^https?://(?:[^/]+\\.)?'+Zotero.Utilities.quotemeta(properHost)+'(?=/)', "gi");
+						var re = new RegExp('^https?://(?:[^/]+\\.)?'+Trellis.Utilities.quotemeta(properHost)+'(?=/)', "gi");
 						var proxyHost = hostnames.slice(i+1).join(".").replace(/\$/g, "$$$$");
 						return function (uri) { return uri.replace(re, "$&."+proxyHost) };
 					};
@@ -485,7 +485,7 @@ Zotero.Translators = new function () {
 	 * @param {String} location The location for which to look for translators
 	 * @param {Function} [callback] An optional callback to be executed when translators have been
 	 *                              retrieved
-	 * @return {Promise<Zotero.Translator[]|true>} - An array of translators if no callback is specified;
+	 * @return {Promise<Trellis.Translator[]|true>} - An array of translators if no callback is specified;
 	 *     otherwise true
 	 */
 	this.getImportTranslatorsForLocation = function (location, callback) {	
@@ -515,8 +515,8 @@ Zotero.Translators = new function () {
 	 * @return	{String}
 	 */
 	this.getFileNameFromLabel = function (label, alternative) {
-		var fileName = Zotero.Utilities.removeDiacritics(
-			Zotero.File.getValidFileName(label)) + ".js";
+		var fileName = Trellis.Utilities.removeDiacritics(
+			Trellis.File.getValidFileName(label)) + ".js";
 		// Use translatorID if name still isn't ASCII (e.g., Cyrillic)
 		if (alternative && !fileName.match(/^[\x00-\x7f]+$/)) {
 			fileName = alternative + ".js";
@@ -536,7 +536,7 @@ Zotero.Translators = new function () {
 	};
 	
 	this.getTranslatorsDirectory = function () {
-		return Zotero.getTranslatorsDirectory().path;
+		return Trellis.getTranslatorsDirectory().path;
 	};
 	
 	/**
@@ -559,7 +559,7 @@ Zotero.Translators = new function () {
 	 */
 	this.stringify = function (metadata, code) {
 		if (!metadata.translatorID) {
-			throw new Error("metadata.translatorID not provided in Zotero.Translators.save()");
+			throw new Error("metadata.translatorID not provided in Trellis.Translators.save()");
 		}
 		
 		if (!metadata.translatorType) {
@@ -572,7 +572,7 @@ Zotero.Translators = new function () {
 				}
 			}
 			if (!found) {
-				throw new Error("Invalid translatorType '" + metadata.translatorType + "' in Zotero.Translators.save()");
+				throw new Error("Invalid translatorType '" + metadata.translatorType + "' in Trellis.Translators.save()");
 			}
 		}
 		
@@ -633,18 +633,18 @@ Zotero.Translators = new function () {
 		var exists = await OS.File.exists(destFile);
 		if (!sameFile && exists) {
 			var msg = `Overwriting translator with same filename '${PathUtils.filename(destFile)}'`;
-			Zotero.debug(msg, 1);
-			Zotero.debug(metadata, 1);
+			Trellis.debug(msg, 1);
+			Trellis.debug(metadata, 1);
 			Components.utils.reportError(msg);
 		}
 		
-		Zotero.debug("Saving translator '" + metadata.label + "'");
-		Zotero.debug(metadata);
-		return Zotero.File.putContentsAsync(destFile, str).then(() => destFile);
+		Trellis.debug("Saving translator '" + metadata.label + "'");
+		Trellis.debug(metadata);
+		return Trellis.File.putContentsAsync(destFile, str).then(() => destFile);
 	};
 	
 	this.cacheInDB = function (fileName, metadataJSON, lastModifiedTime) {
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			"REPLACE INTO translatorCache VALUES (?, ?, ?)",
 			[fileName, JSON.stringify(metadataJSON), lastModifiedTime]
 		);

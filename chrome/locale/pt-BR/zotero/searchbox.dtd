@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "Nome:">
+<!ENTITY trellis.search.name "Nome:">
 
-<!ENTITY zotero.search.searchInLibrary "Pesquisar na biblioteca:">
+<!ENTITY trellis.search.searchInLibrary "Pesquisar na biblioteca:">
 
-<!ENTITY zotero.search.joinMode.prefix "Corresponder a">
-<!ENTITY zotero.search.joinMode.any "qualquer um dos">
-<!ENTITY zotero.search.joinMode.all "todos os">
-<!ENTITY zotero.search.joinMode.suffix "seguintes:">
+<!ENTITY trellis.search.joinMode.prefix "Corresponder a">
+<!ENTITY trellis.search.joinMode.any "qualquer um dos">
+<!ENTITY trellis.search.joinMode.all "todos os">
+<!ENTITY trellis.search.joinMode.suffix "seguintes:">
 
-<!ENTITY zotero.search.recursive.label "Pesquisar subcoleções">
-<!ENTITY zotero.search.noChildren "Exibir apenas itens do nível mais alto">
-<!ENTITY zotero.search.includeParentsAndChildren "Incluir itens pais e filhos dos itens correspondentes">
+<!ENTITY trellis.search.recursive.label "Pesquisar subcoleções">
+<!ENTITY trellis.search.noChildren "Exibir apenas itens do nível mais alto">
+<!ENTITY trellis.search.includeParentsAndChildren "Incluir itens pais e filhos dos itens correspondentes">
 
-<!ENTITY zotero.search.textModes.phrase "Frase">
-<!ENTITY zotero.search.textModes.phraseBinary "Frase (incluindo arquivos binários)">
-<!ENTITY zotero.search.textModes.regexp "Expressão regular">
-<!ENTITY zotero.search.textModes.regexpCS "Expressão regular (dif. maiúsculas e minúsculas)">
+<!ENTITY trellis.search.textModes.phrase "Frase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (incluindo arquivos binários)">
+<!ENTITY trellis.search.textModes.regexp "Expressão regular">
+<!ENTITY trellis.search.textModes.regexpCS "Expressão regular (dif. maiúsculas e minúsculas)">
 
-<!ENTITY zotero.search.date.units.days "dias">
-<!ENTITY zotero.search.date.units.months "meses">
-<!ENTITY zotero.search.date.units.years "anos">
+<!ENTITY trellis.search.date.units.days "dias">
+<!ENTITY trellis.search.date.units.months "meses">
+<!ENTITY trellis.search.date.units.years "anos">
 
-<!ENTITY zotero.search.search "Pesquisar">
-<!ENTITY zotero.search.clear "Limpar">
-<!ENTITY zotero.search.saveSearch "Salvar pesquisa">
+<!ENTITY trellis.search.search "Pesquisar">
+<!ENTITY trellis.search.clear "Limpar">
+<!ENTITY trellis.search.saveSearch "Salvar pesquisa">

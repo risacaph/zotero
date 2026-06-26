@@ -3,22 +3,22 @@
     
     Copyright © 2020 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -31,7 +31,7 @@ var ReactDOM = require('react-dom');
 import TabBar from 'components/tabBar';
 
 // Reduce loaded tabs limit if the system has 8 GB or less memory.
-// TODO: Revise this after upgrading to Zotero 7
+// TODO: Revise this after upgrading to Trellis 7
 const MAX_LOADED_TABS = Services.sysinfo.getProperty("memsize") / 1024 / 1024 / 1024 <= 8 ? 3 : 5;
 const UNLOAD_UNUSED_AFTER = 86400; // 24h
 
@@ -39,7 +39,7 @@ const UNLOAD_UNUSED_AFTER = 86400; // 24h
 const SIDEBAR_DEFAULT_WIDTH = 240; // Pixels
 const SIDEBAR_MIN_WIDTH = 180; // Pixels
 
-var Zotero_Tabs = new function () {
+var Trellis_Tabs = new function () {
 	Object.defineProperty(this, 'selectedID', {
 		get: () => this._selectedID
 	});
@@ -65,17 +65,17 @@ var Zotero_Tabs = new function () {
 	});
 
 	Object.defineProperty(this, 'tabsMenuPanel', {
-		get: () => document.getElementById('zotero-tabs-menu-panel')
+		get: () => document.getElementById('trellis-tabs-menu-panel')
 	});
 
 	this._tabBarRef = React.createRef();
 	this._tabs = [{
-		id: 'zotero-pane',
+		id: 'trellis-pane',
 		type: 'library',
 		title: '',
 		data: {}
 	}];
-	this._selectedID = 'zotero-pane';
+	this._selectedID = 'trellis-pane';
 	this._prevSelectedID = null;
 	this._history = [];
 	this._focusOptions = {};
@@ -99,7 +99,7 @@ var Zotero_Tabs = new function () {
 	this.tabHooks = {
 		load: {
 			reader: async (tab, tabIndex, options) => {
-				let reader = await Zotero.Reader.open(tab.data.itemID, options && options.location, {
+				let reader = await Trellis.Reader.open(tab.data.itemID, options && options.location, {
 					tabID: tab.id,
 					title: tab.title,
 					tabIndex,
@@ -110,7 +110,7 @@ var Zotero_Tabs = new function () {
 				await reader._initPromise;
 			},
 			note: async (tab, tabIndex, options) => {
-				let editorInstance = await Zotero.Notes.open(tab.data.itemID, options && options.location, {
+				let editorInstance = await Trellis.Notes.open(tab.data.itemID, options && options.location, {
 					tabID: tab.id,
 					title: tab.title,
 					tabIndex,
@@ -122,15 +122,15 @@ var Zotero_Tabs = new function () {
 		},
 		focusFirst: {
 			library: async () => {
-				let collectionsPane = document.getElementById("zotero-collections-pane");
+				let collectionsPane = document.getElementById("trellis-collections-pane");
 				if (collectionsPane.getAttribute("collapsed")) {
-					document.getElementById('zotero-tb-add').focus();
+					document.getElementById('trellis-tb-add').focus();
 					return;
 				}
-				document.getElementById('zotero-tb-collection-add').focus();
+				document.getElementById('trellis-tb-collection-add').focus();
 			},
 			reader: async (tab) => {
-				let reader = Zotero.Reader.getByTabID(tab.id);
+				let reader = Trellis.Reader.getByTabID(tab.id);
 				if (reader) {
 					// Move focus to the reader and focus the toolbar
 					reader.focusFirst();
@@ -138,7 +138,7 @@ var Zotero_Tabs = new function () {
 				}
 			},
 			note: async (tab) => {
-				let noteEditor = Zotero.Notes.getByTabID(tab.id);
+				let noteEditor = Trellis.Notes.getByTabID(tab.id);
 				if (noteEditor) {
 					// Move focus to the note editor and focus the toolbar
 					noteEditor.focusToolbar();
@@ -147,7 +147,7 @@ var Zotero_Tabs = new function () {
 		},
 		refocus: {
 			library: async (tab, tabIndex, options) => {
-				// Move focus to the last focused element of zoteroPane if any or itemTree otherwise
+				// Move focus to the last focused element of trellisPane if any or itemTree otherwise
 				if (options.focusElementID) {
 					tab.lastFocusedElement = document.getElementById(options.focusElementID);
 				}
@@ -158,19 +158,19 @@ var Zotero_Tabs = new function () {
 						tab.lastFocusedElement.focus();
 					}
 					if (document.activeElement !== tab.lastFocusedElement) {
-						ZoteroPane.itemsView.focus();
+						TrellisPane.itemsView.focus();
 					}
 					tab.lastFocusedElement = null;
 				});
 			},
 			reader: async (tab, _tabIndex, _options) => {
-				let reader = Zotero.Reader.getByTabID(tab.id);
+				let reader = Trellis.Reader.getByTabID(tab.id);
 				if (reader) {
 					reader.focus();
 				}
 			},
 			note: async (tab, _tabIndex, _options) => {
-				let noteEditor = Zotero.Notes.getByTabID(tab.id);
+				let noteEditor = Trellis.Notes.getByTabID(tab.id);
 				if (noteEditor) {
 					noteEditor.focus();
 				}
@@ -178,33 +178,33 @@ var Zotero_Tabs = new function () {
 		},
 		moveToNewWindow: {
 			reader: async (tab, _tabIndex) => {
-				Zotero_Tabs.close(tab.id);
+				Trellis_Tabs.close(tab.id);
 				let { itemID, secondViewState } = tab.data;
-				await Zotero.Reader.open(itemID, null, { openInWindow: true, secondViewState });
+				await Trellis.Reader.open(itemID, null, { openInWindow: true, secondViewState });
 			},
 			note: async (tab, _tabIndex) => {
-				Zotero_Tabs.close(tab.id);
+				Trellis_Tabs.close(tab.id);
 				let { itemID } = tab.data;
-				await Zotero.Notes.open(itemID, null, { openInWindow: true });
+				await Trellis.Notes.open(itemID, null, { openInWindow: true });
 			}
 		},
 		duplicate: {
 			reader: async (tab, tabIndex) => {
 				if (tab.data.itemID) {
 					let { secondViewState } = tab.data;
-					await Zotero.Reader.open(tab.data.itemID, null, { tabIndex: tabIndex + 1, allowDuplicate: true, secondViewState });
+					await Trellis.Reader.open(tab.data.itemID, null, { tabIndex: tabIndex + 1, allowDuplicate: true, secondViewState });
 				}
 			},
 			note: async (tab, tabIndex) => {
 				if (tab.data.itemID) {
-					await Zotero.Notes.open(tab.data.itemID, null, { tabIndex: tabIndex + 1, allowDuplicate: true });
+					await Trellis.Notes.open(tab.data.itemID, null, { tabIndex: tabIndex + 1, allowDuplicate: true });
 				}
 			}
 		},
 		undoClose: {
 			reader: async (tab, _tabIndex) => {
-				if (Zotero.Items.exists(tab.data.itemID)) {
-					await Zotero.Reader.open(tab.data.itemID,
+				if (Trellis.Items.exists(tab.data.itemID)) {
+					await Trellis.Reader.open(tab.data.itemID,
 						null,
 						{
 							tabIndex: tab.index,
@@ -217,8 +217,8 @@ var Zotero_Tabs = new function () {
 				return false;
 			},
 			note: async (tab, _tabIndex) => {
-				if (Zotero.Items.exists(tab.data.itemID)) {
-					await Zotero.Notes.open(tab.data.itemID,
+				if (Trellis.Items.exists(tab.data.itemID)) {
+					await Trellis.Notes.open(tab.data.itemID,
 						null,
 						{
 							tabIndex: tab.index,
@@ -233,16 +233,16 @@ var Zotero_Tabs = new function () {
 		},
 		restoreState: {
 			library: async (tab, _tabIndex) => {
-				this.rename('zotero-pane', tab.title);
+				this.rename('trellis-pane', tab.title);
 				// At first, library tab is added without the icon data. We set it here once we know what it is
-				let libraryTab = this._getTab('zotero-pane');
+				let libraryTab = this._getTab('trellis-pane');
 				libraryTab.tab.data = tab.data || {};
 				return {
 					itemID: null,
 				};
 			},
 			reader: async (tab, tabIndex) => {
-				if (Zotero.Items.exists(tab.data.itemID)) {
+				if (Trellis.Items.exists(tab.data.itemID)) {
 					// Strip non-printable characters, which can result in DOM syntax errors
 					// ("An invalid or illegal string was specified") -- reproduced with "\u0001"
 					// in a title in session.json
@@ -263,7 +263,7 @@ var Zotero_Tabs = new function () {
 				};
 			},
 			note: async (tab, tabIndex) => {
-				if (Zotero.Items.exists(tab.data.itemID)) {
+				if (Trellis.Items.exists(tab.data.itemID)) {
 					let title = tab.title.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
 					this.add({
 						type: 'note-unloaded',
@@ -283,24 +283,24 @@ var Zotero_Tabs = new function () {
 		},
 		getTitle: {
 			reader: async (tab) => {
-				let item = Zotero.Items.get(tab.data.itemID);
+				let item = Trellis.Items.get(tab.data.itemID);
 				return item ? item.getTabTitle() : "";
 			},
 			note: async (tab) => {
-				let item = Zotero.Items.get(tab.data.itemID);
+				let item = Trellis.Items.get(tab.data.itemID);
 				if (!item) {
 					return "";
 				}
 				let title = await item.getTabTitle();
 				if (!title) {
-					return Zotero.getString("item-title-empty-note");
+					return Trellis.getString("item-title-empty-note");
 				}
 				return title;
 			}
 		},
 		toggleAudio: {
 			reader: (tab) => {
-				Zotero.Reader.getByTabID(tab.id).toggleReadAloudPaused();
+				Trellis.Reader.getByTabID(tab.id).toggleReadAloudPaused();
 			}
 		},
 	};
@@ -320,7 +320,7 @@ var Zotero_Tabs = new function () {
 		if (!type) {
 			type = this.selectedType;
 		}
-		if (type === 'zotero-pane') {
+		if (type === 'trellis-pane') {
 			return {
 				tabContentType: 'library',
 				tabState: '',
@@ -334,10 +334,10 @@ var Zotero_Tabs = new function () {
 	};
 
 	// Keep track of item modifications to update the title
-	this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'tabs');
+	this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'tabs');
 
 	// Update the title when pref of title format is changed
-	this._prefsObserverID = Zotero.Prefs.registerObserver('tabs.title.reader', async () => {
+	this._prefsObserverID = Trellis.Prefs.registerObserver('tabs.title.reader', async () => {
 		for (let tab of this._tabs) {
 			if (!tab.data.itemID) continue;
 			this.rename(tab.id);
@@ -345,8 +345,8 @@ var Zotero_Tabs = new function () {
 	});
 	
 	window.addEventListener('unload', () => {
-		Zotero.Notifier.unregisterObserver(this._notifierID);
-		Zotero.Prefs.unregisterObserver(this._prefsObserverID);
+		Trellis.Notifier.unregisterObserver(this._notifierID);
+		Trellis.Prefs.unregisterObserver(this._prefsObserverID);
 	});
 
 	this._unloadInterval = setInterval(() => {
@@ -370,17 +370,17 @@ var Zotero_Tabs = new function () {
 		// Go through all tabs and try to save their icons to tab.data
 		for (let tab of this._tabs) {
 			// Find the icon for the library tab
-			if (tab.id === 'zotero-pane') {
-				let index = ZoteroPane.collectionsView?.selection?.focused;
-				if (typeof index !== 'undefined' && ZoteroPane.collectionsView.getRow(index)) {
-					let iconName = ZoteroPane.collectionsView.getIconName(index);
+			if (tab.id === 'trellis-pane') {
+				let index = TrellisPane.collectionsView?.selection?.focused;
+				if (typeof index !== 'undefined' && TrellisPane.collectionsView.getRow(index)) {
+					let iconName = TrellisPane.collectionsView.getIconName(index);
 					tab.data.icon = iconName;
 				}
 			}
 			else if (!tab.data.icon) {
 				// Try to fetch the icon for the reader tab
 				try {
-					let item = Zotero.Items.get(tab.data.itemID);
+					let item = Trellis.Items.get(tab.data.itemID);
 					tab.data.icon = item.getItemTypeIconName(true);
 				}
 				catch {
@@ -397,7 +397,7 @@ var Zotero_Tabs = new function () {
 				title: tab.title,
 				renderTitle: tabContentType === 'reader',
 				selected: tab.id == this._selectedID,
-				isItemType: tab.id !== 'zotero-pane',
+				isItemType: tab.id !== 'trellis-pane',
 				icon: tab.data?.icon || null,
 				audioStatus: tab.audioStatus,
 			};
@@ -409,7 +409,7 @@ var Zotero_Tabs = new function () {
 		if (!tab) {
 			return;
 		}
-		document.title = (tab.title.length ? tab.title + ' - ' : '') + Zotero.appName;
+		document.title = (tab.title.length ? tab.title + ' - ' : '') + Trellis.appName;
 
 		let panel = this.tabsMenuPanel;
 		if (panel.visible) {
@@ -418,7 +418,7 @@ var Zotero_Tabs = new function () {
 	};
 
 	this.updateSidebarLayout = ({ width } = {}) => {
-		let { tabContentType: tabType } = Zotero_Tabs.parseTabType();
+		let { tabContentType: tabType } = Trellis_Tabs.parseTabType();
 		let sidebarState;
 		if (typeof width === 'number') {
 			// If width is a number, update the width and open state
@@ -440,7 +440,7 @@ var Zotero_Tabs = new function () {
 
 		if (width) {
 			let sidebarWidth = `${width}px`;
-			let placeholder = document.getElementById('zotero-reader-sidebar-pane');
+			let placeholder = document.getElementById('trellis-reader-sidebar-pane');
 			placeholder.setAttribute('collapsed', sidebarWidth ? 'false' : 'true');
 			placeholder.setAttribute('width', sidebarWidth);
 		}
@@ -485,7 +485,7 @@ var Zotero_Tabs = new function () {
 	};
 
 	this._loadSidebarState = () => {
-		let sidebarState = Zotero.Prefs.get('sidebarState') || '{}';
+		let sidebarState = Trellis.Prefs.get('sidebarState') || '{}';
 		try {
 			sidebarState = JSON.parse(sidebarState);
 			for (let tabType in sidebarState) {
@@ -518,7 +518,7 @@ var Zotero_Tabs = new function () {
 				},
 			});
 		}
-		Zotero.Prefs.set('sidebarState', sidebarState);
+		Trellis.Prefs.set('sidebarState', sidebarState);
 	};
 
 	this.getTabIDByItemID = function (itemID) {
@@ -529,7 +529,7 @@ var Zotero_Tabs = new function () {
 	this.setTabData = function (tabID, data) {
 		let { tab } = this._getTab(tabID);
 		Object.assign(tab.data, data);
-		Zotero.Session.debounceSave();
+		Trellis.Session.debounceSave();
 	};
 
 	this.init = function () {
@@ -557,7 +557,7 @@ var Zotero_Tabs = new function () {
 	this.notify = async (event, type, ids, _) => {
 		if (event !== "modify") return;
 		for (let id of ids) {
-			let item = Zotero.Items.get(id);
+			let item = Trellis.Items.get(id);
 			// If a top-level item is updated, update all tabs that have its attachments and notes
 			// Otherwise, just update the tab with the updated attachment
 			let itemIDs = [];
@@ -618,8 +618,8 @@ var Zotero_Tabs = new function () {
 		// Some items may belong to groups that are not yet loaded. Load them here so that
 		// every component related to tabs (e.g. tabs menu) does not have to handle
 		// potentially not-yet-loaded items.
-		let items = await Zotero.Items.getAsync(itemIDs);
-		await Zotero.Items.loadDataTypes(items);
+		let items = await Trellis.Items.getAsync(itemIDs);
+		await Trellis.Items.loadDataTypes(items);
 	};
 	
 	/**
@@ -648,7 +648,7 @@ var Zotero_Tabs = new function () {
 		if (onClose !== undefined && typeof onClose != 'function') {
 			throw new Error(`'onClose' should be a function (was ${typeof onClose})`);
 		}
-		id = id || 'tab-' + Zotero.Utilities.randomString();
+		id = id || 'tab-' + Trellis.Utilities.randomString();
 		var container = document.createXULElement('tab-content');
 		container.id = id;
 		this.deck.appendChild(container);
@@ -656,7 +656,7 @@ var Zotero_Tabs = new function () {
 		index = index || this._tabs.length;
 		this._tabs.splice(index, 0, tab);
 		this._update();
-		Zotero.Notifier.trigger('add', 'tab', [id], { [id]: Object.assign({}, data, { type }) }, true);
+		Trellis.Notifier.trigger('add', 'tab', [id], { [id]: Object.assign({}, data, { type }) }, true);
 		if (select) {
 			let previousID = this._selectedID;
 			this.select(id);
@@ -730,7 +730,7 @@ var Zotero_Tabs = new function () {
 		else if (!Array.isArray(ids)) {
 			ids = [ids];
 		}
-		if (ids.includes('zotero-pane')) {
+		if (ids.includes('trellis-pane')) {
 			throw new Error('Library tab cannot be closed');
 		}
 		var historyEntry = [];
@@ -780,7 +780,7 @@ var Zotero_Tabs = new function () {
 			});
 		}
 		this._history.push(historyEntry);
-		Zotero.Notifier.trigger('close', 'tab', [closedIDs], true);
+		Trellis.Notifier.trigger('close', 'tab', [closedIDs], true);
 		this._update();
 	};
 
@@ -865,11 +865,11 @@ var Zotero_Tabs = new function () {
 			// Tabs menu popup is not open
 			&& !this.tabsMenuPanel.visible
 			// Note context editor is active
-			&& ZoteroContextPane.activeEditor?.contains(document.activeElement)
+			&& TrellisContextPane.activeEditor?.contains(document.activeElement)
 			// Opened as a child note of the tab
-			&& ZoteroContextPane.activeEditor?.closest(".context-note-standalone")) {
-			let currentItem = Zotero.Items.get(tab.data.itemID);
-			let editorItem = ZoteroContextPane.activeEditor.item;
+			&& TrellisContextPane.activeEditor?.closest(".context-note-standalone")) {
+			let currentItem = Trellis.Items.get(tab.data.itemID);
+			let editorItem = TrellisContextPane.activeEditor.item;
 			// In the same library
 			if (!currentItem || editorItem.libraryID === currentItem.libraryID) {
 				isEditorFocused = true;
@@ -877,7 +877,7 @@ var Zotero_Tabs = new function () {
 		}
 
 		if (!tab || tab.id === this._selectedID) {
-			// Focus on reader or zotero pane when keepTabFocused is explicitly false
+			// Focus on reader or trellis pane when keepTabFocused is explicitly false
 			// E.g. when a tab is selected via Space or Enter
 			if (!isEditorFocused && options.keepTabFocused === false && tab?.id === this._selectedID) {
 				let refocusHook = this._getHook(tabContentType, 'refocus');
@@ -889,7 +889,7 @@ var Zotero_Tabs = new function () {
 		if (this._selectedID) {
 			selectedTab = this._getTab(this._selectedID).tab;
 			if (selectedTab) {
-				selectedTab.timeUnselected = Zotero.Date.getUnixTimestamp();
+				selectedTab.timeUnselected = Trellis.Date.getUnixTimestamp();
 			}
 		}
 
@@ -902,7 +902,7 @@ var Zotero_Tabs = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		
@@ -915,7 +915,7 @@ var Zotero_Tabs = new function () {
 			this._focusOptions.keepTabFocused = !!options.keepTabFocused;
 			this._focusOptions.itemID = tab?.data?.itemID;
 		}
-		if (this._selectedID === 'zotero-pane'
+		if (this._selectedID === 'trellis-pane'
 		&& !document.activeElement.classList.contains("tab")
 		&& document.activeElement.tagName !== 'window') {
 			// never return focus to another tab or <window>
@@ -926,10 +926,10 @@ var Zotero_Tabs = new function () {
 			tab.type = `${tabContentType}-loading`;
 			// Make sure the loading message is displayed first.
 			// Then, open reader and hide the loading message once it has loaded.
-			ZoteroContextPane.showLoadingMessage(true);
+			TrellisContextPane.showLoadingMessage(true);
 			let loadHook = this._getHook(tabContentType, 'load');
 			loadHook(tab, tabIndex, options).then(() => {
-				ZoteroContextPane.showLoadingMessage(false);
+				TrellisContextPane.showLoadingMessage(false);
 				this.markAsLoaded(tab.id);
 			});
 		}
@@ -941,7 +941,7 @@ var Zotero_Tabs = new function () {
 		this._selectedID = id;
 		this.deck.selectedIndex = Array.from(this.deck.children).findIndex(x => x.id == id);
 		this._update();
-		Zotero.Notifier.trigger('select', 'tab', [tab.id], { [tab.id]: { type: tab.type } }, true);
+		Trellis.Notifier.trigger('select', 'tab', [tab.id], { [tab.id]: { type: tab.type } }, true);
 
 		let currentTabContent = this.getTabContent(id);
 
@@ -954,8 +954,8 @@ var Zotero_Tabs = new function () {
 				let tabNode = document.querySelector(`#tab-bar-container .tab[data-id="${tab.id}"]`);
 				if (document.activeElement.getAttribute('data-id') != tabNode.getAttribute('data-id')) {
 					// Keep focus on the currently selected tab during keyboard navigation
-					if (tab.id == 'zotero-pane') {
-						// Since there is more than one zotero-pane tab (pinned and not pinned),
+					if (tab.id == 'trellis-pane') {
+						// Since there is more than one trellis-pane tab (pinned and not pinned),
 						// use moveFocus() to focus on the visible one
 						this.moveFocus('first');
 					}
@@ -966,10 +966,10 @@ var Zotero_Tabs = new function () {
 			}
 		}
 		else {
-			setTimeout(() => ZoteroContextPane.activeEditor?.focus(), 0);
+			setTimeout(() => TrellisContextPane.activeEditor?.focus(), 0);
 		}
 		
-		tab.timeSelected = Zotero.Date.getUnixTimestamp();
+		tab.timeSelected = Trellis.Date.getUnixTimestamp();
 		// Without `setTimeout` the tab closing that happens in `unloadUnusedTabs` results in
 		// tabs deck selection index bigger than the deck children count. It feels like something
 		// isn't update synchronously
@@ -1010,12 +1010,12 @@ var Zotero_Tabs = new function () {
 		}
 		let prevType = tab.type;
 		tab.type = tabContentType;
-		Zotero.Notifier.trigger("load", "tab", [id], { [id]: Object.assign({}, tab, { prevType }) }, true);
+		Trellis.Notifier.trigger("load", "tab", [id], { [id]: Object.assign({}, tab, { prevType }) }, true);
 	};
 
 	this.unloadUnusedTabs = function () {
 		for (let tab of this._tabs) {
-			if (Zotero.Date.getUnixTimestamp() - tab.timeUnselected > UNLOAD_UNUSED_AFTER) {
+			if (Trellis.Date.getUnixTimestamp() - tab.timeUnselected > UNLOAD_UNUSED_AFTER) {
 				this.unload(tab.id);
 			}
 		}
@@ -1084,7 +1084,7 @@ var Zotero_Tabs = new function () {
 	 * e.g. shift-tab from the first focusable element.
 	 */
 	this.focusBack = function () {
-		document.getElementById("zotero-tb-sync").focus();
+		document.getElementById("trellis-tb-sync").focus();
 	};
 
 	/**
@@ -1092,7 +1092,7 @@ var Zotero_Tabs = new function () {
 	 * e.g. tab from the last focusable element.
 	 */
 	this.focusForward = function () {
-		let focused = ZoteroContextPane.focus();
+		let focused = TrellisContextPane.focus();
 		// If context pane wasn't focused (e.g. it's collapsed), focus the tab bar
 		if (!focused) {
 			this.moveFocus("current");
@@ -1174,29 +1174,29 @@ var Zotero_Tabs = new function () {
 				popup.remove();
 			}
 		});
-		if (id !== 'zotero-pane') {
+		if (id !== 'trellis-pane') {
 			// Show in library
 			menuitem = document.createXULElement('menuitem');
-			menuitem.setAttribute('label', Zotero.getString('general.showInLibrary'));
+			menuitem.setAttribute('label', Trellis.getString('general.showInLibrary'));
 			menuitem.addEventListener('command', () => {
 				let { tab } = this._getTab(id);
 				let itemID = tab.data.itemID;
-				let item = Zotero.Items.get(itemID);
+				let item = Trellis.Items.get(itemID);
 				if (item && item.parentItemID) {
 					itemID = item.parentItemID;
 				}
-				ZoteroPane_Local.selectItem(itemID);
+				TrellisPane_Local.selectItem(itemID);
 			});
 			popup.appendChild(menuitem);
 			// Move tab
 			let menu = document.createXULElement('menu');
-			menu.setAttribute('label', Zotero.getString('tabs.move'));
+			menu.setAttribute('label', Trellis.getString('tabs.move'));
 			let menupopup = document.createXULElement('menupopup');
 			menu.append(menupopup);
 			popup.appendChild(menu);
 			// Move to start
 			menuitem = document.createXULElement('menuitem');
-			menuitem.setAttribute('label', Zotero.getString('tabs.moveToStart'));
+			menuitem.setAttribute('label', Trellis.getString('tabs.moveToStart'));
 			menuitem.setAttribute('disabled', tabIndex == 1);
 			menuitem.addEventListener('command', () => {
 				this.move(id, 1);
@@ -1204,7 +1204,7 @@ var Zotero_Tabs = new function () {
 			menupopup.appendChild(menuitem);
 			// Move to end
 			menuitem = document.createXULElement('menuitem');
-			menuitem.setAttribute('label', Zotero.getString('tabs.moveToEnd'));
+			menuitem.setAttribute('label', Trellis.getString('tabs.moveToEnd'));
 			menuitem.setAttribute('disabled', tabIndex == this._tabs.length - 1);
 			menuitem.addEventListener('command', () => {
 				this.move(id, this._tabs.length);
@@ -1213,7 +1213,7 @@ var Zotero_Tabs = new function () {
 			// Move to new window
 			if (this._hasHook(tabContentType, 'moveToNewWindow')) {
 				menuitem = document.createXULElement('menuitem');
-				menuitem.setAttribute('label', Zotero.getString('tabs.moveToWindow'));
+				menuitem.setAttribute('label', Trellis.getString('tabs.moveToWindow'));
 				menuitem.setAttribute('disabled', false);
 				menuitem.addEventListener('command', () => {
 					let { tabContentType } = this.parseTabType(tab.type);
@@ -1225,7 +1225,7 @@ var Zotero_Tabs = new function () {
 			// Duplicate tab
 			if (this._hasHook(tabContentType, 'duplicate')) {
 				menuitem = document.createXULElement('menuitem');
-				menuitem.setAttribute('label', Zotero.getString('tabs.duplicate'));
+				menuitem.setAttribute('label', Trellis.getString('tabs.duplicate'));
 				menuitem.addEventListener('command', () => {
 					let { tabContentType } = this.parseTabType(tab.type);
 					let duplicateHook = this._getHook(tabContentType, 'duplicate');
@@ -1237,18 +1237,18 @@ var Zotero_Tabs = new function () {
 			popup.appendChild(document.createXULElement('menuseparator'));
 		}
 		// Close
-		if (id != 'zotero-pane') {
+		if (id != 'trellis-pane') {
 			menuitem = document.createXULElement('menuitem');
-			menuitem.setAttribute('label', Zotero.getString('general.close'));
+			menuitem.setAttribute('label', Trellis.getString('general.close'));
 			menuitem.addEventListener('command', () => {
 				this.close(id);
 			});
 			popup.appendChild(menuitem);
 		}
 		// Close other tabs
-		if (!(this._tabs.length == 2 && id != 'zotero-pane')) {
+		if (!(this._tabs.length == 2 && id != 'trellis-pane')) {
 			menuitem = document.createXULElement('menuitem');
-			menuitem.setAttribute('label', Zotero.getString('tabs.closeOther'));
+			menuitem.setAttribute('label', Trellis.getString('tabs.closeOther'));
 			menuitem.addEventListener('command', () => {
 				this.close(this._tabs.slice(1).filter(x => x.id != id).map(x => x.id));
 			});
@@ -1259,7 +1259,7 @@ var Zotero_Tabs = new function () {
 			menuitem = document.createXULElement('menuitem');
 			menuitem.setAttribute(
 				'label',
-				Zotero.getString(
+				Trellis.getString(
 					'tabs.undoClose',
 					[],
 					// If not disabled, show proper plural for tabs to reopen
@@ -1273,12 +1273,12 @@ var Zotero_Tabs = new function () {
 			popup.appendChild(menuitem);
 		}
 
-		Zotero.MenuManager.updateMenuPopup(
+		Trellis.MenuManager.updateMenuPopup(
 			popup,
 			"main/tab",
 			{
 				getContext: () => {
-					let item = Zotero.Items.get(tab.data.itemID);
+					let item = Trellis.Items.get(tab.data.itemID);
 					let ret = {
 						items: [item],
 						tabType: tab.type,
@@ -1297,20 +1297,20 @@ var Zotero_Tabs = new function () {
 	// Used to move focus back or sidenav from the tabs.
 	this.focusWrapAround = function () {
 		// Focus the first focusable button of context pane sidenav when reader is opened
-		if (Zotero_Tabs.selectedIndex > 0) {
-			Services.focus.moveFocus(window, document.getElementById("zotero-context-pane-sidenav"),
+		if (Trellis_Tabs.selectedIndex > 0) {
+			Services.focus.moveFocus(window, document.getElementById("trellis-context-pane-sidenav"),
 				Services.focus.MOVEFOCUS_FORWARD, 0);
 			return;
 		}
-		let itemSideNav = document.getElementById("zotero-view-item-sidenav");
+		let itemSideNav = document.getElementById("trellis-view-item-sidenav");
 		if (itemSideNav.hidden) {
 			// If sidenav is hidden, focus the last focusable element of item pane
-			Services.focus.moveFocus(window, document.getElementById("zotero-context-splitter"),
+			Services.focus.moveFocus(window, document.getElementById("trellis-context-splitter"),
 				Services.focus.MOVEFOCUS_BACKWARD, 0);
 		}
 		else {
 			// Focus the first focusable button of item pane sidenav
-			Services.focus.moveFocus(window, document.getElementById("zotero-view-item-sidenav"),
+			Services.focus.moveFocus(window, document.getElementById("trellis-view-item-sidenav"),
 				Services.focus.MOVEFOCUS_FORWARD, 0);
 		}
 	};
@@ -1320,7 +1320,7 @@ var Zotero_Tabs = new function () {
 			visibility = !this.tabsMenuPanel.visible;
 		}
 		if (button === undefined) {
-			button = document.getElementById("zotero-tb-tabs-menu");
+			button = document.getElementById("trellis-tb-tabs-menu");
 		}
 		if (visibility) {
 			this.tabsMenuPanel.show(button);
@@ -1337,7 +1337,7 @@ var Zotero_Tabs = new function () {
 		let { tab } = this._getTab(tabID);
 		let info = Object.assign({}, tab);
 		if (info.type !== 'library') {
-			let item = Zotero.Items.get(info.data?.itemID);
+			let item = Trellis.Items.get(info.data?.itemID);
 			if (item && item.isAttachment()) {
 				info.subType = item.attachmentReaderType;
 			}

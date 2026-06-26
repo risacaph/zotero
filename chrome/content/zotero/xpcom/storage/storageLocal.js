@@ -1,4 +1,4 @@
-Zotero.Sync.Storage.Local = {
+Trellis.Sync.Storage.Local = {
 	//
 	// Constants
 	//
@@ -18,7 +18,7 @@ Zotero.Sync.Storage.Local = {
 	storageRemainingForLibrary: new Map(),
 	
 	init: function () {
-		Zotero.Notifier.registerObserver(this, ['group'], 'storageLocal');
+		Trellis.Notifier.registerObserver(this, ['group'], 'storageLocal');
 	},
 	
 	notify: async function (action, type, ids, _extraData) {
@@ -39,13 +39,13 @@ Zotero.Sync.Storage.Local = {
 		// The user must have synced for the first time before we allow storage requests.
 		// This is relevant if an account is set up for syncing but the DB file is cleared and the
 		// user double-clicks on a missing file in download-as-needed mode.
-		if (!Zotero.Users.getCurrentUserID()) {
+		if (!Trellis.Users.getCurrentUserID()) {
 			return false;
 		}
-		var libraryType = Zotero.Libraries.get(libraryID).libraryType;
+		var libraryType = Trellis.Libraries.get(libraryID).libraryType;
 		switch (libraryType) {
 		case 'user':
-			return Zotero.Prefs.get("sync.storage.enabled");
+			return Trellis.Prefs.get("sync.storage.enabled");
 		
 		// TEMP: Always sync publications files, at least until we have a better interface for
 		// setting library-specific settings
@@ -53,7 +53,7 @@ Zotero.Sync.Storage.Local = {
 			return true;
 		
 		case 'group':
-			return Zotero.Prefs.get("sync.storage.groups.enabled");
+			return Trellis.Prefs.get("sync.storage.groups.enabled");
 		
 		case 'feed':
 			return false;
@@ -64,14 +64,14 @@ Zotero.Sync.Storage.Local = {
 	},
 	
 	getClassForLibrary: function (libraryID) {
-		return Zotero.Sync.Storage.Utilities.getClassForMode(this.getModeForLibrary(libraryID));
+		return Trellis.Sync.Storage.Utilities.getClassForMode(this.getModeForLibrary(libraryID));
 	},
 	
 	getModeForLibrary: function (libraryID) {
-		var libraryType = Zotero.Libraries.get(libraryID).libraryType;
+		var libraryType = Trellis.Libraries.get(libraryID).libraryType;
 		switch (libraryType) {
 		case 'user':
-			return Zotero.Prefs.get("sync.storage.protocol") == 'webdav' ? 'webdav' : 'zfs';
+			return Trellis.Prefs.get("sync.storage.protocol") == 'webdav' ? 'webdav' : 'zfs';
 		
 		case 'publications':
 		case 'group':
@@ -85,7 +85,7 @@ Zotero.Sync.Storage.Local = {
 	},
 	
 	setModeForLibrary: function (libraryID, mode) {
-		var libraryType = Zotero.Libraries.get(libraryID).libraryType;
+		var libraryType = Trellis.Libraries.get(libraryID).libraryType;
 		
 		if (libraryType != 'user') {
 			throw new Error(`Cannot set storage mode for ${libraryType} library`);
@@ -94,7 +94,7 @@ Zotero.Sync.Storage.Local = {
 		switch (mode) {
 		case 'webdav':
 		case 'zfs':
-			Zotero.Prefs.set("sync.storage.protocol", mode);
+			Trellis.Prefs.set("sync.storage.protocol", mode);
 			break;
 		
 		default:
@@ -114,10 +114,10 @@ Zotero.Sync.Storage.Local = {
 		var pref = this._getDownloadPrefFromLibrary(libraryID);
 		var val = 'on-demand';
 		if (enable) {
-			Zotero.Prefs.set(pref, val);
+			Trellis.Prefs.set(pref, val);
 			return;
 		}
-		return Zotero.Prefs.get(pref) == val;
+		return Trellis.Prefs.get(pref) == val;
 	},
 	
 	/**
@@ -132,14 +132,14 @@ Zotero.Sync.Storage.Local = {
 		var pref = this._getDownloadPrefFromLibrary(libraryID);
 		var val = 'on-sync';
 		if (enable) {
-			Zotero.Prefs.set(pref, val);
+			Trellis.Prefs.set(pref, val);
 			return;
 		}
-		return Zotero.Prefs.get(pref) == val;
+		return Trellis.Prefs.get(pref) == val;
 	},
 	
 	_getDownloadPrefFromLibrary: function (libraryID) {
-		if (libraryID == Zotero.Libraries.userLibraryID) {
+		if (libraryID == Trellis.Libraries.userLibraryID) {
 			return 'sync.storage.downloadMode.personal';
 		}
 		// TODO: Library-specific settings
@@ -151,7 +151,7 @@ Zotero.Sync.Storage.Local = {
 	/**
 	 * Get files to check for local modifications for uploading
 	 *
-	 * This includes files previously modified or opened externally via Zotero within maxCheckAge
+	 * This includes files previously modified or opened externally via Trellis within maxCheckAge
 	 */
 	getFilesToCheck: async function (libraryID, maxCheckAge) {
 		var minTime = new Date().getTime() - (maxCheckAge * 1000);
@@ -162,19 +162,19 @@ Zotero.Sync.Storage.Local = {
 			+ "storageModTime>=?";
 		var params = [
 			libraryID,
-			Zotero.Attachments.LINK_MODE_IMPORTED_FILE,
-			Zotero.Attachments.LINK_MODE_IMPORTED_URL,
+			Trellis.Attachments.LINK_MODE_IMPORTED_FILE,
+			Trellis.Attachments.LINK_MODE_IMPORTED_URL,
 			this.SYNC_STATE_IN_SYNC,
 			minTime
 		];
-		var itemIDs = await Zotero.DB.columnQueryAsync(sql, params);
+		var itemIDs = await Trellis.DB.columnQueryAsync(sql, params);
 		
 		// Get files opened since maxCheckAge
 		itemIDs = itemIDs.concat(
 			this.uploadCheckFiles.filter(x => x.timestamp >= minTime).map(x => x.itemID)
 		);
 		
-		return Zotero.Utilities.arrayUnique(itemIDs);
+		return Trellis.Utilities.arrayUnique(itemIDs);
 	},
 	
 	
@@ -194,17 +194,17 @@ Zotero.Sync.Storage.Local = {
 	 *                   FALSE otherwise
 	 */
 	checkForUpdatedFiles: async function (libraryID, itemIDs, itemModTimes) {
-		var libraryName = Zotero.Libraries.getName(libraryID);
+		var libraryName = Trellis.Libraries.getName(libraryID);
 		var msg = "Checking for locally changed attachment files in " + libraryName;
 		
 		var memmgr = Components.classes["@mozilla.org/memory-reporter-manager;1"]
 			.getService(Components.interfaces.nsIMemoryReporterManager);
 		memmgr.init();
-		//Zotero.debug("Memory usage: " + memmgr.resident);
+		//Trellis.debug("Memory usage: " + memmgr.resident);
 		
 		if (itemIDs) {
 			if (!itemIDs.length) {
-				Zotero.debug("No files to check for local changes");
+				Trellis.debug("No files to check for local changes");
 				return false;
 			}
 		}
@@ -215,7 +215,7 @@ Zotero.Sync.Storage.Local = {
 			msg += " in download-marking mode";
 		}
 		
-		Zotero.debug(msg);
+		Trellis.debug(msg);
 		
 		var changed = false;
 		
@@ -225,7 +225,7 @@ Zotero.Sync.Storage.Local = {
 		
 		// Can only handle a certain number of bound parameters at a time
 		var numIDs = itemIDs.length;
-		var maxIDs = Zotero.DB.MAX_BOUND_PARAMETERS - 10;
+		var maxIDs = Trellis.DB.MAX_BOUND_PARAMETERS - 10;
 		var done = 0;
 		var rows = [];
 		
@@ -235,8 +235,8 @@ Zotero.Sync.Storage.Local = {
 						+ "FROM itemAttachments JOIN items USING (itemID) "
 						+ "WHERE linkMode IN (?,?) AND syncState IN (?,?)";
 			let params = [
-				Zotero.Attachments.LINK_MODE_IMPORTED_FILE,
-				Zotero.Attachments.LINK_MODE_IMPORTED_URL,
+				Trellis.Attachments.LINK_MODE_IMPORTED_FILE,
+				Trellis.Attachments.LINK_MODE_IMPORTED_URL,
 				this.SYNC_STATE_TO_UPLOAD,
 				this.SYNC_STATE_IN_SYNC
 			];
@@ -248,7 +248,7 @@ Zotero.Sync.Storage.Local = {
 				sql += " AND itemID IN (" + chunk.map(() => '?').join() + ")";
 				params = params.concat(chunk);
 			}
-			let chunkRows = await Zotero.DB.queryAsync(sql, params);
+			let chunkRows = await Trellis.DB.queryAsync(sql, params);
 			if (chunkRows) {
 				rows = rows.concat(chunkRows);
 			}
@@ -259,7 +259,7 @@ Zotero.Sync.Storage.Local = {
 		// If no files, or everything is already marked for download,
 		// we don't need to do anything
 		if (!rows.length) {
-			Zotero.debug("No in-sync or to-upload files found in " + libraryName);
+			Trellis.debug("No in-sync or to-upload files found in " + libraryName);
 			return false;
 		}
 		
@@ -280,11 +280,11 @@ Zotero.Sync.Storage.Local = {
 		rows = null;
 		
 		var t = new Date();
-		var items = await Zotero.Items.getAsync(itemIDs, { noCache: true });
+		var items = await Trellis.Items.getAsync(itemIDs, { noCache: true });
 		var numItems = items.length;
 		var updatedStates = {};
 		
-		//Zotero.debug("Memory usage: " + memmgr.resident);
+		//Trellis.debug("Memory usage: " + memmgr.resident);
 		
 		var changed = false;
 		var statesToSet = {};
@@ -301,7 +301,7 @@ Zotero.Sync.Storage.Local = {
 		}
 		// Update sync states in bulk
 		if (changed) {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				for (let state in statesToSet) {
 					await this.updateSyncStates(statesToSet[state], parseInt(state));
 				}
@@ -309,10 +309,10 @@ Zotero.Sync.Storage.Local = {
 		}
 		
 		if (!items.length) {
-			Zotero.debug("No synced files have changed locally");
+			Trellis.debug("No synced files have changed locally");
 		}
 		
-		Zotero.debug(`Checked ${numItems} files in ${libraryName} in ` + (new Date() - t) + " ms");
+		Trellis.debug(`Checked ${numItems} files in ${libraryName} in ` + (new Date() - t) + " ms");
 		
 		return changed;
 	},
@@ -320,20 +320,20 @@ Zotero.Sync.Storage.Local = {
 	
 	_checkForUpdatedFile: async function (item, attachmentData) {
 		var lk = item.libraryKey;
-		Zotero.debug("Checking attachment file for item " + lk, 4);
+		Trellis.debug("Checking attachment file for item " + lk, 4);
 		
 		var path = item.getFilePath();
 		if (!path) {
-			Zotero.debug("Marking pathless attachment " + lk + " as in-sync");
+			Trellis.debug("Marking pathless attachment " + lk + " as in-sync");
 			return this.SYNC_STATE_IN_SYNC;
 		}
 		var fileName = PathUtils.filename(path);
 		
 		try {
 			let { lastModified: fmtime } = await IOUtils.stat(path);
-			//Zotero.debug("Memory usage: " + memmgr.resident);
+			//Trellis.debug("Memory usage: " + memmgr.resident);
 			
-			//Zotero.debug("File modification time for item " + lk + " is " + fmtime);
+			//Trellis.debug("File modification time for item " + lk + " is " + fmtime);
 			
 			// If file is already marked for upload, skip check. Even if the file was changed
 			// both locally and remotely, conflicts are checked at upload time, so we don't need
@@ -341,44 +341,44 @@ Zotero.Sync.Storage.Local = {
 			//
 			// This is after stat() so that a missing file is properly marked for download.
 			if (item.attachmentSyncState == this.SYNC_STATE_TO_UPLOAD) {
-				Zotero.debug("File is already marked for upload");
+				Trellis.debug("File is already marked for upload");
 				return false;
 			}
 			
 			if (fmtime < 0) {
-				Zotero.debug("File mod time " + fmtime + " is less than 0 -- interpreting as 0", 2);
+				Trellis.debug("File mod time " + fmtime + " is less than 0 -- interpreting as 0", 2);
 				fmtime = 0;
 			}
 			
-			//Zotero.debug("Stored mtime is " + attachmentData.mtime);
-			//Zotero.debug("File mtime is " + fmtime);
+			//Trellis.debug("Stored mtime is " + attachmentData.mtime);
+			//Trellis.debug("File mtime is " + fmtime);
 			
 			let mtime = attachmentData ? attachmentData.mtime : false;
 			var same = !this.checkFileModTime(item, fmtime, mtime);
 			if (same) {
-				Zotero.debug("File has not changed");
+				Trellis.debug("File has not changed");
 				return false;
 			}
 			
 			// If file hash matches stored hash, only the mod time changed, so skip
-			let fileHash = await Zotero.Utilities.Internal.md5Async(path);
+			let fileHash = await Trellis.Utilities.Internal.md5Async(path);
 			
 			var hash = attachmentData ? attachmentData.hash : ((await this.getSyncedHash(item.id)));
 			if (hash && hash == fileHash) {
-				Zotero.debug("Mod time didn't match (" + fmtime + " != " + mtime + ") "
+				Trellis.debug("Mod time didn't match (" + fmtime + " != " + mtime + ") "
 					+ "but hash did for " + fileName + " for item " + lk
 					+ " -- updating file mod time");
 				try {
 					await IOUtils.setModificationTime(path, mtime);
 				}
 				catch (e) {
-					Zotero.File.checkFileAccessError(e, path, 'update');
+					Trellis.File.checkFileAccessError(e, path, 'update');
 				}
 				return false;
 			}
 			
 			// Mark file for upload
-			Zotero.debug("Marking attachment " + lk + " as changed "
+			Trellis.debug("Marking attachment " + lk + " as changed "
 				+ "(" + mtime + " != " + fmtime + ")");
 			return this.SYNC_STATE_TO_UPLOAD;
 		}
@@ -386,10 +386,10 @@ Zotero.Sync.Storage.Local = {
 			if (DOMException.isInstance(e)) {
 				let missing = e.name == 'NotFoundError';
 				if (missing) {
-					Zotero.debug("Marking attachment " + lk + " as missing");
+					Trellis.debug("Marking attachment " + lk + " as missing");
 					return this.SYNC_STATE_TO_DOWNLOAD;
 				}
-				Zotero.debug(e, 1);
+				Trellis.debug(e, 1);
 				throw new Error(`Error for operation '${e.operation}' for ${path}: ${e}`);
 			}
 			throw e;
@@ -398,7 +398,7 @@ Zotero.Sync.Storage.Local = {
 	
 	/**
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {Integer} fmtime - File modification time in milliseconds
 	 * @param {Integer} mtime - Remote modification time in milliseconds
 	 * @return {Boolean} - True if file modification time differs from remote mod time,
@@ -408,18 +408,18 @@ Zotero.Sync.Storage.Local = {
 		var libraryKey = item.libraryKey;
 		
 		if (fmtime == mtime) {
-			Zotero.debug(`Mod time for ${libraryKey} matches remote file -- skipping`);
+			Trellis.debug(`Mod time for ${libraryKey} matches remote file -- skipping`);
 		}
 		// Compare floored timestamps for filesystems that don't support millisecond
 		// precision (e.g., HFS+)
 		else if (Math.floor(mtime / 1000) == Math.floor(fmtime / 1000)) {
-			Zotero.debug(`File mod times for ${libraryKey} are within one-second precision `
+			Trellis.debug(`File mod times for ${libraryKey} are within one-second precision `
 				+ "(" + fmtime + " \u2248 " + mtime + ") -- skipping");
 		}
 		// Allow timestamp to be exactly one hour off to get around time zone issues
 		// -- there may be a proper way to fix this
 		else if (Math.abs(Math.floor(fmtime / 1000) - Math.floor(mtime / 1000)) == 3600) {
-			Zotero.debug(`File mod time (${fmtime}) for {$libraryKey} is exactly one hour off `
+			Trellis.debug(`File mod time (${fmtime}) for {$libraryKey} is exactly one hour off `
 				+ `remote file (${mtime}) -- assuming time zone issue and skipping`);
 		}
 		else {
@@ -433,7 +433,7 @@ Zotero.Sync.Storage.Local = {
 		// Forced downloads happen even in on-demand mode
 		var sql = "SELECT COUNT(*) FROM items JOIN itemAttachments USING (itemID) "
 			+ "WHERE libraryID=? AND syncState=?";
-		return !!((await Zotero.DB.valueQueryAsync(
+		return !!((await Trellis.DB.valueQueryAsync(
 			sql, [libraryID, this.SYNC_STATE_FORCE_DOWNLOAD]
 		)));
 	},
@@ -454,11 +454,11 @@ Zotero.Sync.Storage.Local = {
 			params.push(this.SYNC_STATE_TO_DOWNLOAD);
 		}
 		sql += ") "
-			// Skip attachments with empty path, which can't be saved, and files with .zotero*
+			// Skip attachments with empty path, which can't be saved, and files with .trellis*
 			// paths, which have somehow ended up in some users' libraries
 			+ "AND path!='' AND path NOT LIKE ?";
-		params.push('storage:.zotero%');
-		return Zotero.DB.columnQueryAsync(sql, params);
+		params.push('storage:.trellis%');
+		return Trellis.DB.columnQueryAsync(sql, params);
 	},
 	
 	
@@ -475,11 +475,11 @@ Zotero.Sync.Storage.Local = {
 			libraryID,
 			this.SYNC_STATE_TO_UPLOAD,
 			this.SYNC_STATE_FORCE_UPLOAD,
-			Zotero.Attachments.LINK_MODE_IMPORTED_FILE,
-			Zotero.Attachments.LINK_MODE_IMPORTED_URL,
-			Zotero.Attachments.LINK_MODE_EMBEDDED_IMAGE,
+			Trellis.Attachments.LINK_MODE_IMPORTED_FILE,
+			Trellis.Attachments.LINK_MODE_IMPORTED_URL,
+			Trellis.Attachments.LINK_MODE_EMBEDDED_IMAGE,
 		];
-		return Zotero.DB.columnQueryAsync(sql, params);
+		return Trellis.DB.columnQueryAsync(sql, params);
 	},
 	
 	
@@ -489,12 +489,12 @@ Zotero.Sync.Storage.Local = {
 	 */
 	getDeletedFiles: function (libraryID) {
 		var sql = "SELECT key FROM storageDeleteLog WHERE libraryID=?";
-		return Zotero.DB.columnQueryAsync(sql, libraryID);
+		return Trellis.DB.columnQueryAsync(sql, libraryID);
 	},
 	
 	
 	/**
-	 * @param {Zotero.Item[]} items
+	 * @param {Trellis.Item[]} items
 	 * @param {String|Integer} syncState
 	 * @return {Promise}
 	 */
@@ -505,14 +505,14 @@ Zotero.Sync.Storage.Local = {
 		if (typeof syncState == 'string') {
 			syncState = this["SYNC_STATE_" + syncState.toUpperCase()];
 		}
-		return Zotero.Utilities.Internal.forEachChunkAsync(
+		return Trellis.Utilities.Internal.forEachChunkAsync(
 			items,
 			1000,
 			async function (chunk) {
 				chunk.forEach((item) => {
 					item._attachmentSyncState = syncState;
 				});
-				return Zotero.DB.queryAsync(
+				return Trellis.DB.queryAsync(
 					"UPDATE itemAttachments SET syncState=? WHERE itemID IN "
 						+ "(" + chunk.map(item => item.id).join(', ') + ")",
 					syncState
@@ -533,25 +533,25 @@ Zotero.Sync.Storage.Local = {
 			throw new Error("libraryID not provided");
 		}
 		
-		return Zotero.DB.executeTransaction(async function () {
+		return Trellis.DB.executeTransaction(async function () {
 			var sql = "SELECT itemID FROM items JOIN itemAttachments USING (itemID) "
 				+ "WHERE libraryID=? AND itemTypeID=? AND linkMode IN (?, ?, ?)";
 			var params = [
 				libraryID,
-				Zotero.ItemTypes.getID('attachment'),
-				Zotero.Attachments.LINK_MODE_IMPORTED_FILE,
-				Zotero.Attachments.LINK_MODE_IMPORTED_URL,
-				Zotero.Attachments.LINK_MODE_EMBEDDED_IMAGE,
+				Trellis.ItemTypes.getID('attachment'),
+				Trellis.Attachments.LINK_MODE_IMPORTED_FILE,
+				Trellis.Attachments.LINK_MODE_IMPORTED_URL,
+				Trellis.Attachments.LINK_MODE_EMBEDDED_IMAGE,
 			];
-			var itemIDs = await Zotero.DB.columnQueryAsync(sql, params);
+			var itemIDs = await Trellis.DB.columnQueryAsync(sql, params);
 			for (let itemID of itemIDs) {
-				let item = Zotero.Items.get(itemID);
+				let item = Trellis.Items.get(itemID);
 				item._attachmentSyncState = this.SYNC_STATE_TO_UPLOAD;
 			}
 			sql = "UPDATE itemAttachments SET syncState=? WHERE itemID IN (" + sql + ")";
-			await Zotero.DB.queryAsync(sql, [this.SYNC_STATE_TO_UPLOAD].concat(params));
+			await Trellis.DB.queryAsync(sql, [this.SYNC_STATE_TO_UPLOAD].concat(params));
 			
-			var library = Zotero.Libraries.get(libraryID);
+			var library = Trellis.Libraries.get(libraryID);
 			library.storageVersion = -1;
 			await library.save();
 		}.bind(this));
@@ -561,7 +561,7 @@ Zotero.Sync.Storage.Local = {
 	/**
 	 * Extract a downloaded file and update the database metadata
 	 *
-	 * @param {Zotero.Item} data.item
+	 * @param {Trellis.Item} data.item
 	 * @param {Integer}     data.mtime
 	 * @param {String}      data.md5
 	 * @param {Boolean}     data.compressed
@@ -604,8 +604,8 @@ Zotero.Sync.Storage.Local = {
 			// If library isn't editable but filename was changed, update database without marking
 			// item as unsynced
 			try {
-				if (!Zotero.Items.isEditable(item)) {
-					Zotero.debug("File renamed without library access -- "
+				if (!Trellis.Items.isEditable(item)) {
+					Trellis.debug("File renamed without library access -- "
 						+ "updating attachment path", 3);
 					await item.relinkAttachmentFile(newPath, true);
 				}
@@ -614,7 +614,7 @@ Zotero.Sync.Storage.Local = {
 				}
 			}
 			catch (e) {
-				Zotero.File.checkFileAccessError(e, path, 'update');
+				Trellis.File.checkFileAccessError(e, path, 'update');
 			}
 			
 			path = newPath;
@@ -624,9 +624,9 @@ Zotero.Sync.Storage.Local = {
 			// This generally shouldn't happen, since if the ZIP doesn't contain the primary file,
 			// and there's only one HTML file within it, we rename it to the current filename, but
 			// it could occur if there are multiple HTML files or there's an error renaming the file.
-			Zotero.logError("File '" + item.attachmentFilename + "' not found after processing "
+			Trellis.logError("File '" + item.attachmentFilename + "' not found after processing "
 				+ "download " + item.libraryKey);
-			return new Zotero.Sync.Storage.Result({
+			return new Trellis.Sync.Storage.Result({
 				localChanges: false
 			});
 		}
@@ -641,7 +641,7 @@ Zotero.Sync.Storage.Local = {
 			await OS.File.setDates(path, null, new Date(parseInt(mtime)));
 		}
 		catch (e) {
-			Zotero.File.checkFileAccessError(e, path, 'update');
+			Trellis.File.checkFileAccessError(e, path, 'update');
 		}
 		
 		item.attachmentSyncedModificationTime = mtime;
@@ -649,79 +649,79 @@ Zotero.Sync.Storage.Local = {
 		item.attachmentSyncState = "in_sync";
 		await item.saveTx({ skipAll: true });
 		
-		return new Zotero.Sync.Storage.Result({
+		return new Trellis.Sync.Storage.Result({
 			localChanges: true
 		});
 	},
 	
 	
 	_processSingleFileDownload: async function (item) {
-		var tempFilePath = OS.Path.join(Zotero.getTempDirectory().path, item.key + '.tmp');
+		var tempFilePath = OS.Path.join(Trellis.getTempDirectory().path, item.key + '.tmp');
 		
 		if (!((await OS.File.exists(tempFilePath)))) {
-			Zotero.debug(tempFilePath, 1);
+			Trellis.debug(tempFilePath, 1);
 			throw new Error("Downloaded file not found");
 		}
 		
 		try {
-			await Zotero.Attachments.createDirectoryForItem(item);
+			await Trellis.Attachments.createDirectoryForItem(item);
 		}
 		catch (e) {
-			Zotero.File.checkFileAccessError(
-				e, Zotero.Attachments.getStorageDirectory(item).path, 'create'
+			Trellis.File.checkFileAccessError(
+				e, Trellis.Attachments.getStorageDirectory(item).path, 'create'
 			);
 		}
 		
 		var filename = item.attachmentFilename;
 		if (!filename) {
-			Zotero.debug("Empty filename for item " + item.key, 2);
+			Trellis.debug("Empty filename for item " + item.key, 2);
 		}
 		// Don't save Windows aliases
 		if (filename.endsWith('.lnk')) {
 			return false;
 		}
 		
-		var attachmentDir = Zotero.Attachments.getStorageDirectory(item).path;
+		var attachmentDir = Trellis.Attachments.getStorageDirectory(item).path;
 		var renamed = false;
 		
 		// Make sure the new filename is valid, in case an invalid character made it over
 		// (e.g., from before we checked for them)
-		var filteredFilename = Zotero.File.getValidFileName(filename);
+		var filteredFilename = Trellis.File.getValidFileName(filename);
 		if (filteredFilename != filename) {
-			Zotero.debug("Filtering filename '" + filename + "' to '" + filteredFilename + "'");
+			Trellis.debug("Filtering filename '" + filename + "' to '" + filteredFilename + "'");
 			filename = filteredFilename;
 			renamed = true;
 		}
 		var path = OS.Path.join(attachmentDir, filename);
 		
-		Zotero.debug("Moving download file " + PathUtils.filename(tempFilePath)
+		Trellis.debug("Moving download file " + PathUtils.filename(tempFilePath)
 			+ ` into attachment directory as '${filename}'`);
 		try {
-			var finalFilename = Zotero.File.createShortened(
+			var finalFilename = Trellis.File.createShortened(
 				path, Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0o644
 			);
 		}
 		catch (e) {
-			Zotero.File.checkFileAccessError(e, path, 'create');
+			Trellis.File.checkFileAccessError(e, path, 'create');
 		}
 		
 		if (finalFilename != filename) {
-			Zotero.debug("Changed filename '" + filename + "' to '" + finalFilename + "'");
+			Trellis.debug("Changed filename '" + filename + "' to '" + finalFilename + "'");
 			
 			filename = finalFilename;
 			path = OS.Path.join(attachmentDir, filename);
 			
 			// Abort if Windows path limitation would cause filenames to be overly truncated
-			if (Zotero.isWin && filename.length < 40) {
+			if (Trellis.isWin && filename.length < 40) {
 				try {
 					await OS.File.remove(path);
 				}
 				catch (e) {}
 				// TODO: localize
-				var msg = "Due to a Windows path length limitation, your Zotero data directory "
+				var msg = "Due to a Windows path length limitation, your Trellis data directory "
 					+ "is too deep in the filesystem for syncing to work reliably. "
-					+ "Please relocate your Zotero data to a higher directory.";
-				Zotero.debug(msg, 1);
+					+ "Please relocate your Trellis data to a higher directory.";
+				Trellis.debug(msg, 1);
 				throw new Error(msg);
 			}
 			
@@ -737,7 +737,7 @@ Zotero.Sync.Storage.Local = {
 			}
 			catch (e) {}
 			
-			Zotero.File.checkFileAccessError(e, path, 'create');
+			Trellis.File.checkFileAccessError(e, path, 'create');
 		}
 		
 		// processDownload() needs to know that we're renaming the file
@@ -746,11 +746,11 @@ Zotero.Sync.Storage.Local = {
 	
 	
 	_processZipDownload: async function (item) {
-		var zipFile = Zotero.getTempDirectory();
+		var zipFile = Trellis.getTempDirectory();
 		zipFile.append(item.key + '.tmp');
 		
 		if (!zipFile.exists()) {
-			Zotero.debug(zipFile.path);
+			Trellis.debug(zipFile.path);
 			throw new Error(`Downloaded ZIP file not found for item ${item.libraryKey}`);
 		}
 		
@@ -760,15 +760,15 @@ Zotero.Sync.Storage.Local = {
 			zipReader.open(zipFile);
 			zipReader.test(null);
 			
-			Zotero.debug("ZIP file is OK");
+			Trellis.debug("ZIP file is OK");
 		}
 		catch (e) {
-			Zotero.debug(zipFile.leafName + " is not a valid ZIP file", 2);
+			Trellis.debug(zipFile.leafName + " is not a valid ZIP file", 2);
 			try {
 				zipReader.close();
 			}
 			catch (e) {
-				Zotero.debug(e, 2);
+				Trellis.debug(e, 2);
 			}
 			zipReader = null
 			Cu.forceGC();
@@ -777,7 +777,7 @@ Zotero.Sync.Storage.Local = {
 				zipFile.remove(false);
 			}
 			catch (e) {
-				Zotero.File.checkFileAccessError(e, zipFile, 'delete');
+				Trellis.File.checkFileAccessError(e, zipFile, 'delete');
 			}
 			
 			// TODO: Remove prop file to trigger reuploading, in case it was an upload error?
@@ -785,9 +785,9 @@ Zotero.Sync.Storage.Local = {
 			return false;
 		}
 		
-		var parentDir = Zotero.Attachments.getStorageDirectory(item).path;
+		var parentDir = Trellis.Attachments.getStorageDirectory(item).path;
 		try {
-			await Zotero.Attachments.createDirectoryForItem(item);
+			await Trellis.Attachments.createDirectoryForItem(item);
 		}
 		catch (e) {
 			zipReader.close();
@@ -800,7 +800,7 @@ Zotero.Sync.Storage.Local = {
 		var count = 0;
 		
 		var itemFileName = item.attachmentFilename;
-		var filteredItemFileName = Zotero.File.getValidFileName(itemFileName);
+		var filteredItemFileName = Trellis.File.getValidFileName(itemFileName);
 		
 		var createdFiles = new Set();
 		var entries = zipReader.findEntries(null);
@@ -809,7 +809,7 @@ Zotero.Sync.Storage.Local = {
 			var entry = zipReader.getEntry(entryName);
 			var b64re = /%ZB64$/;
 			if (entryName.match(b64re)) {
-				var filePath = Zotero.Utilities.Internal.Base64.decode(
+				var filePath = Trellis.Utilities.Internal.Base64.decode(
 					entryName.replace(b64re, '')
 				);
 			}
@@ -817,18 +817,18 @@ Zotero.Sync.Storage.Local = {
 				var filePath = entryName;
 			}
 			
-			if (filePath.startsWith('.zotero')) {
-				Zotero.debug("Skipping " + filePath);
+			if (filePath.startsWith('.trellis')) {
+				Trellis.debug("Skipping " + filePath);
 				continue;
 			}
 			
 			if (entry.isDirectory) {
-				Zotero.debug("Skipping directory " + filePath);
+				Trellis.debug("Skipping directory " + filePath);
 				continue;
 			}
 			count++;
 			
-			Zotero.debug("Extracting " + filePath);
+			Trellis.debug("Extracting " + filePath);
 			
 			var primaryFile = itemFileName == filePath;
 			var filtered = false;
@@ -836,9 +836,9 @@ Zotero.Sync.Storage.Local = {
 			
 			// Make sure all components of the path are valid, in case an invalid character somehow made
 			// it into the ZIP (e.g., from before we checked for them)
-			var filteredPath = filePath.split('/').map(part => Zotero.File.getValidFileName(part)).join('/');
+			var filteredPath = filePath.split('/').map(part => Trellis.File.getValidFileName(part)).join('/');
 			if (filteredPath != filePath) {
-				Zotero.debug("Filtering filename '" + filePath + "' to '" + filteredPath + "'");
+				Trellis.debug("Filtering filename '" + filePath + "' to '" + filteredPath + "'");
 				filePath = filteredPath;
 				filtered = true;
 			}
@@ -852,7 +852,7 @@ Zotero.Sync.Storage.Local = {
 				if (filteredItemFileName != filePath) {
 					let msg = "Renaming single file '" + filePath + "' in ZIP to known filename '"
 						+ filteredItemFileName + "'";
-					Zotero.debug(msg, 2);
+					Trellis.debug(msg, 2);
 					Components.utils.reportError(msg);
 					filePath = filteredItemFileName;
 					destPath = OS.Path.join(PathUtils.parent(destPath), filteredItemFileName);
@@ -867,32 +867,32 @@ Zotero.Sync.Storage.Local = {
 			
 			if (await OS.File.exists(destPath)) {
 				var msg = "ZIP entry '" + filePath + "' already exists";
-				Zotero.logError(msg);
-				Zotero.debug(destPath);
+				Trellis.logError(msg);
+				Trellis.debug(destPath);
 				continue;
 			}
 			
 			let shortened;
 			try {
-				shortened = Zotero.File.createShortened(
+				shortened = Trellis.File.createShortened(
 					destPath, Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0o644
 				);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				
 				zipReader.close();
 				zipReader = null
 				Cu.forceGC();
 				
-				Zotero.File.checkFileAccessError(e, destPath, 'create');
+				Trellis.File.checkFileAccessError(e, destPath, 'create');
 			}
 			
 			if (PathUtils.filename(destPath) != shortened) {
-				Zotero.debug(`Changed filename '${PathUtils.filename(destPath)}' to '${shortened}'`);
+				Trellis.debug(`Changed filename '${PathUtils.filename(destPath)}' to '${shortened}'`);
 				
 				// Abort if Windows path limitation would cause filenames to be overly truncated
-				if (Zotero.isWin && shortened < 40) {
+				if (Trellis.isWin && shortened < 40) {
 					try {
 						await OS.File.remove(destPath);
 					}
@@ -902,10 +902,10 @@ Zotero.Sync.Storage.Local = {
 					Cu.forceGC();
 					
 					// TODO: localize
-					var msg = "Due to a Windows path length limitation, your Zotero data directory "
+					var msg = "Due to a Windows path length limitation, your Trellis data directory "
 						+ "is too deep in the filesystem for syncing to work reliably. "
-						+ "Please relocate your Zotero data to a higher directory.";
-					Zotero.debug(msg, 1);
+						+ "Please relocate your Trellis data to a higher directory.";
+					Trellis.debug(msg, 1);
 					throw new Error(msg);
 				}
 				
@@ -917,7 +917,7 @@ Zotero.Sync.Storage.Local = {
 			}
 			
 			try {
-				zipReader.extract(entryName, Zotero.File.pathToFile(destPath));
+				zipReader.extract(entryName, Trellis.File.pathToFile(destPath));
 				createdFiles.add(PathUtils.filename(destPath));
 			}
 			catch (e) {
@@ -931,8 +931,8 @@ Zotero.Sync.Storage.Local = {
 				// when the path length is close to 255.
 				if (PathUtils.filename(destPath).match(/[a-zA-Z0-9+=]{130,}/)) {
 					var msg = "Ignoring error extracting '" + destPath + "'";
-					Zotero.debug(msg, 2);
-					Zotero.debug(e, 2);
+					Trellis.debug(msg, 2);
+					Trellis.debug(e, 2);
 					Components.utils.reportError(msg + " in " + funcName);
 					continue;
 				}
@@ -941,10 +941,10 @@ Zotero.Sync.Storage.Local = {
 				zipReader = null
 				Cu.forceGC();
 				
-				Zotero.File.checkFileAccessError(e, destPath, 'create');
+				Trellis.File.checkFileAccessError(e, destPath, 'create');
 			}
 			
-			await Zotero.File.setNormalFilePermissions(destPath);
+			await Trellis.File.setNormalFilePermissions(destPath);
 			
 			// If we're renaming the main file, processDownload() needs to know
 			if (renamed) {
@@ -956,19 +956,19 @@ Zotero.Sync.Storage.Local = {
 		Cu.forceGC();
 		
 		// TEMP: Allow deleting to fail on Windows
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			try {
 				zipFile.remove(false);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				// Try again in 30 seconds
 				setTimeout(() => {
 					try {
 						zipFile.remove(false);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}, 30000);
 			}
@@ -979,17 +979,17 @@ Zotero.Sync.Storage.Local = {
 		
 		// If no extracted files match the known filename, but there's only one HTML file, rename it
 		if (!createdFiles.has(filteredItemFileName)) {
-			Zotero.debug(`${filteredItemFileName} not found among extracted files`);
+			Trellis.debug(`${filteredItemFileName} not found among extracted files`);
 			let htmlFiles = [...createdFiles].filter(x => /\.html?$/.test(x));
 			if (htmlFiles.length == 1) {
 				let destPath = PathUtils.join(parentDir, filteredItemFileName);
 				try {
-					Zotero.debug(`Renaming ${htmlFiles[0]} to ${filteredItemFileName}`);
+					Trellis.debug(`Renaming ${htmlFiles[0]} to ${filteredItemFileName}`);
 					await IOUtils.move(PathUtils.join(parentDir, htmlFiles[0]), destPath);
 					returnFile = destPath;
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}
@@ -1004,7 +1004,7 @@ Zotero.Sync.Storage.Local = {
 	getConflicts: async function (libraryID) {
 		var sql = "SELECT itemID, version FROM items JOIN itemAttachments USING (itemID) "
 			+ "WHERE libraryID=? AND syncState=?";
-		var rows = await Zotero.DB.queryAsync(
+		var rows = await Trellis.DB.queryAsync(
 			sql,
 			[
 				{ int: libraryID },
@@ -1012,10 +1012,10 @@ Zotero.Sync.Storage.Local = {
 			]
 		);
 		var keyVersionPairs = rows.map(function (row) {
-			var { libraryID, key } = Zotero.Items.getLibraryAndKeyFromID(row.itemID);
+			var { libraryID, key } = Trellis.Items.getLibraryAndKeyFromID(row.itemID);
 			return [key, row.version];
 		});
-		var cacheObjects = await Zotero.Sync.Data.Local.getCacheObjects(
+		var cacheObjects = await Trellis.Sync.Data.Local.getCacheObjects(
 			'item', libraryID, keyVersionPairs
 		);
 		if (!cacheObjects.length) return [];
@@ -1024,23 +1024,23 @@ Zotero.Sync.Storage.Local = {
 		cacheObjects.forEach(obj => cacheObjectsByKey[obj.key] = obj);
 		
 		var items = [];
-		var localItems = await Zotero.Items.getAsync(rows.map(row => row.itemID));
+		var localItems = await Trellis.Items.getAsync(rows.map(row => row.itemID));
 		for (let localItem of localItems) {
 			// Use the mtime for the dateModified field, since that's all that's shown in the
 			// CR window at the moment
 			let localItemJSON = localItem.toJSON();
-			localItemJSON.dateModified = Zotero.Date.dateToISO(
+			localItemJSON.dateModified = Trellis.Date.dateToISO(
 				new Date(await localItem.attachmentModificationTime)
 			);
 			
 			let remoteItemJSON = cacheObjectsByKey[localItem.key];
 			if (!remoteItemJSON) {
-				Zotero.logError("Cached object not found for item " + localItem.libraryKey);
+				Trellis.logError("Cached object not found for item " + localItem.libraryKey);
 				continue;
 			}
 			remoteItemJSON = remoteItemJSON.data;
 			if (remoteItemJSON.mtime) {
-				remoteItemJSON.dateModified = Zotero.Date.dateToISO(new Date(remoteItemJSON.mtime));
+				remoteItemJSON.dateModified = Trellis.Date.dateToISO(new Date(remoteItemJSON.mtime));
 			}
 			items.push({
 				libraryID,
@@ -1058,16 +1058,16 @@ Zotero.Sync.Storage.Local = {
 		var conflicts = await this.getConflicts(libraryID);
 		if (!conflicts.length) return false;
 		
-		Zotero.debug("Reconciling conflicts for " + Zotero.Libraries.get(libraryID).name);
-		Zotero.debug(conflicts);
+		Trellis.debug("Reconciling conflicts for " + Trellis.Libraries.get(libraryID).name);
+		Trellis.debug(conflicts);
 		
 		var io = {
 			dataIn: {
 				type: 'file',
 				captions: [
-					Zotero.getString('sync.storage.localFile'),
-					Zotero.getString('sync.storage.remoteFile'),
-					Zotero.getString('sync.storage.savedFile')
+					Trellis.getString('sync.storage.localFile'),
+					Trellis.getString('sync.storage.remoteFile'),
+					Trellis.getString('sync.storage.savedFile')
 				],
 				conflicts
 			}
@@ -1075,18 +1075,18 @@ Zotero.Sync.Storage.Local = {
 		
 		var wm = Services.wm;
 		var lastWin = wm.getMostRecentWindow("navigator:browser");
-		lastWin.openDialog('chrome://zotero/content/merge.xhtml', '', 'chrome,modal,centerscreen', io);
+		lastWin.openDialog('chrome://trellis/content/merge.xhtml', '', 'chrome,modal,centerscreen', io);
 		
 		if (!io.dataOut) {
 			return false;
 		}
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			for (let i = 0; i < conflicts.length; i++) {
 				let conflict = conflicts[i];
 				// TEMP
-				Zotero.debug(conflict);
-				let item = Zotero.Items.getByLibraryAndKey(libraryID, conflict.left.key);
+				Trellis.debug(conflict);
+				let item = Trellis.Items.getByLibraryAndKey(libraryID, conflict.left.key);
 				let mtime = io.dataOut[i].data.dateModified;
 				// Local
 				if (mtime == conflict.left.dateModified) {
@@ -1095,7 +1095,7 @@ Zotero.Sync.Storage.Local = {
 					// so that upload goes through without a 412.
 					//
 					// These sometimes might not be set in the cached JSON (for unclear reasons, but
-					// see https://forums.zotero.org/discussion/79011/zotero-error-report), in which
+					// see https://forums.trellis.org/discussion/79011/trellis-error-report), in which
 					// case we just ignore them and hope that the local version has null values too.
 					if (conflict.right.mtime) {
 						item.attachmentSyncedModificationTime = conflict.right.mtime;

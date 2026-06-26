@@ -15,10 +15,10 @@ libnssdbm3.so
 libsoftokn3.chk
 pingsender
 resource/*
-run-zotero.sh
+run-trellis.sh
 styles.zip
 test/*
 translators.index
 translators.zip
 xulrunner/*
-zotero.jar
+trellis.jar

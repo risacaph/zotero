@@ -3,22 +3,22 @@
     
     Copyright © 2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -32,16 +32,16 @@
  *                                                applicable (e.g. search objects)
  */
 
-Zotero.DataObject = function () {
+Trellis.DataObject = function () {
 	// Set type-derived properties on the prototype (once per subclass) rather than
 	// on each instance, to avoid duplicating identical strings across all instances
 	let proto = Object.getPrototypeOf(this);
 	if (!proto.hasOwnProperty('_ObjectType')) {
 		let objectType = this._objectType;
 		proto._ObjectType = objectType[0].toUpperCase() + objectType.substr(1);
-		proto._objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
+		proto._objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
 		proto._ObjectTypePlural = proto._objectTypePlural[0].toUpperCase() + proto._objectTypePlural.substr(1);
-		proto._ObjectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		proto._ObjectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
 	}
 
 	this._id = null;
@@ -68,46 +68,46 @@ Zotero.DataObject = function () {
 	this._clearChanged();
 };
 
-Zotero.DataObject.prototype._objectType = 'dataObject';
-Zotero.DataObject.prototype._dataTypes = ['primaryData'];
+Trellis.DataObject.prototype._objectType = 'dataObject';
+Trellis.DataObject.prototype._dataTypes = ['primaryData'];
 
-Zotero.defineProperty(Zotero.DataObject.prototype, 'objectType', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'objectType', {
 	get: function () { return this._objectType; }
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'id', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'id', {
 	get: function () { return this._id; }
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'libraryID', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'libraryID', {
 	get: function () { return this._libraryID; }
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'library', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'library', {
 	get: function () {
-		return Zotero.Libraries.get(this._libraryID);
+		return Trellis.Libraries.get(this._libraryID);
 	}
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'key', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'key', {
 	get: function () { return this._key; }
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'libraryKey', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'libraryKey', {
 	get: function () { return this._libraryID + "/" + this._key; }
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'parentKey', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'parentKey', {
 	get: function () { return this._getParentKey(); },
 	set: function (v) { return this._setParentKey(v); }
 });
-Zotero.defineProperty(Zotero.DataObject.prototype, 'parentID', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'parentID', {
 	get: function () { return this._getParentID(); },
 	set: function (v) { return this._setParentID(v); }
 });
 
-Zotero.defineProperty(Zotero.DataObject.prototype, '_canHaveParent', {
+Trellis.defineProperty(Trellis.DataObject.prototype, '_canHaveParent', {
 	value: true
 });
 
 // Define boolean properties
 for (let name of ['deleted']) {
 	let prop = '_' + name;
-	Zotero.defineProperty(Zotero.DataObject.prototype, name, {
+	Trellis.defineProperty(Trellis.DataObject.prototype, name, {
 			get: function () {
 				if (!this.id) {
 					return false;
@@ -122,21 +122,21 @@ for (let name of ['deleted']) {
 				val = !!val;
 				var oldVal = this._getLatestField(name);
 				if (oldVal == val) {
-					Zotero.debug(`Field '${name}' hasn't changed`);
+					Trellis.debug(`Field '${name}' hasn't changed`);
 					return;
 				}
-				Zotero.debug(`Field '${name}' has changed from '${oldVal}' to '${val}'`, 4);
+				Trellis.debug(`Field '${name}' has changed from '${oldVal}' to '${val}'`, 4);
 				this._markFieldChange(name, val);
 			}
 	});
 }
 
-Zotero.defineProperty(Zotero.DataObject.prototype, 'ObjectsClass', {
+Trellis.defineProperty(Trellis.DataObject.prototype, 'ObjectsClass', {
 	get: function () { return this._ObjectsClass; }
 });
 
 
-Zotero.DataObject.prototype._get = function (field) {
+Trellis.DataObject.prototype._get = function (field) {
 	if (field != 'id') this._disabledCheck();
 	
 	if (this['_' + field] !== null) {
@@ -149,7 +149,7 @@ Zotero.DataObject.prototype._get = function (field) {
 }
 
 
-Zotero.DataObject.prototype._set = function (field, value) {
+Trellis.DataObject.prototype._set = function (field, value) {
 	this._disabledCheck();
 	
 	if (field == 'id' || field == 'libraryID' || field == 'key') {
@@ -187,10 +187,10 @@ Zotero.DataObject.prototype._set = function (field, value) {
 }
 
 
-Zotero.DataObject.prototype._setIdentifier = function (field, value) {
+Trellis.DataObject.prototype._setIdentifier = function (field, value) {
 	switch (field) {
 	case 'id':
-		value = Zotero.DataObjectUtilities.checkDataID(value);
+		value = Trellis.DataObjectUtilities.checkDataID(value);
 		if (this._id) {
 			if (value === this._id) {
 				return;
@@ -203,14 +203,14 @@ Zotero.DataObject.prototype._setIdentifier = function (field, value) {
 		break;
 		
 	case 'libraryID':
-		value = Zotero.DataObjectUtilities.checkLibraryID(value);
+		value = Trellis.DataObjectUtilities.checkLibraryID(value);
 		break;
 		
 	case 'key':
 		if (this._libraryID === null) {
 			throw new Error("libraryID must be set before key");
 		}
-		value = Zotero.DataObjectUtilities.checkKey(value);
+		value = Trellis.DataObjectUtilities.checkKey(value);
 		if (this._key) {
 			if (value === this._key) {
 				return;
@@ -253,7 +253,7 @@ Zotero.DataObject.prototype._setIdentifier = function (field, value) {
  * @return {Integer|false|undefined}  The id of the parent object, false if none, or undefined
  *                                      on object types to which it doesn't apply (e.g., searches)
  */
-Zotero.DataObject.prototype._getParentID = function () {
+Trellis.DataObject.prototype._getParentID = function () {
 	if (this._parentID !== null) {
 		return this._parentID;
 	}
@@ -273,16 +273,16 @@ Zotero.DataObject.prototype._getParentID = function () {
  * @param {Number|false} [id=false]
  * @return {Boolean} True if changed, false if stayed the same
  */
-Zotero.DataObject.prototype._setParentID = function (id) {
+Trellis.DataObject.prototype._setParentID = function (id) {
 	return this._setParentKey(
 		id
-		? this.ObjectsClass.getLibraryAndKeyFromID(Zotero.DataObjectUtilities.checkDataID(id)).key
+		? this.ObjectsClass.getLibraryAndKeyFromID(Trellis.DataObjectUtilities.checkDataID(id)).key
 		: false
 	);
 }
 
 
-Zotero.DataObject.prototype._getParentKey = function () {
+Trellis.DataObject.prototype._getParentKey = function () {
 	if (!this._canHaveParent) {
 		return undefined;
 	}
@@ -295,12 +295,12 @@ Zotero.DataObject.prototype._getParentKey = function () {
  * @param {String|false} [key=false]
  * @return {Boolean} True if changed, false if stayed the same
  */
-Zotero.DataObject.prototype._setParentKey = function (key) {
+Trellis.DataObject.prototype._setParentKey = function (key) {
 	if (!this._canHaveParent) {
 		throw new Error("Cannot set parent key for " + this._objectType);
 	}
 	
-	key = Zotero.DataObjectUtilities.checkKey(key) || false;
+	key = Trellis.DataObjectUtilities.checkKey(key) || false;
 	
 	if (key === this._parentKey || (!this._parentKey && !key)) {
 		return false;
@@ -320,7 +320,7 @@ Zotero.DataObject.prototype._setParentKey = function (key) {
  *
  * @return {Object} - Object with predicates as keys and arrays of values
  */
-Zotero.DataObject.prototype.getRelations = function () {
+Trellis.DataObject.prototype.getRelations = function () {
 	this._requireData('relations');
 	
 	var relations = {};
@@ -342,7 +342,7 @@ Zotero.DataObject.prototype.getRelations = function () {
  *
  * @return {String[]} - URIs linked to this object with the given predicate
  */
-Zotero.DataObject.prototype.getRelationsByPredicate = function (predicate) {
+Trellis.DataObject.prototype.getRelationsByPredicate = function (predicate) {
 	this._requireData('relations');
 	
 	if (!predicate) {
@@ -366,7 +366,7 @@ Zotero.DataObject.prototype.getRelationsByPredicate = function (predicate) {
 /**
  * @return {Boolean} - True if the relation has been queued, false if it already exists
  */
-Zotero.DataObject.prototype.addRelation = function (predicate, object) {
+Trellis.DataObject.prototype.addRelation = function (predicate, object) {
 	this._requireData('relations');
 	
 	if (!predicate) {
@@ -379,7 +379,7 @@ Zotero.DataObject.prototype.addRelation = function (predicate, object) {
 	for (let i = 0; i < this._relations.length; i++) {
 		let rel = this._relations[i];
 		if (rel[0] == predicate && rel[1] == object) {
-			Zotero.debug("Relation " + predicate + " - " + object + " already exists for "
+			Trellis.debug("Relation " + predicate + " - " + object + " already exists for "
 				+ this._objectType + " " + this.libraryKey);
 			return false;
 		}
@@ -392,7 +392,7 @@ Zotero.DataObject.prototype.addRelation = function (predicate, object) {
 }
 
 
-Zotero.DataObject.prototype.hasRelation = function (predicate, object) {
+Trellis.DataObject.prototype.hasRelation = function (predicate, object) {
 	this._requireData('relations');
 	
 	for (let i = 0; i < this._relations.length; i++) {
@@ -405,13 +405,13 @@ Zotero.DataObject.prototype.hasRelation = function (predicate, object) {
 }
 
 
-Zotero.DataObject.prototype.removeRelation = function (predicate, object) {
+Trellis.DataObject.prototype.removeRelation = function (predicate, object) {
 	this._requireData('relations');
 	
 	for (let i = 0; i < this._relations.length; i++) {
 		let rel = this._relations[i];
 		if (rel[0] == predicate && rel[1] == object) {
-			Zotero.debug("Removing relation " + predicate + " - " + object + " from "
+			Trellis.debug("Removing relation " + predicate + " - " + object + " from "
 				+ this._objectType + " " + this.libraryKey);
 			this._markFieldChange('relations', this._relations);
 			this._changed.relations = true;
@@ -420,7 +420,7 @@ Zotero.DataObject.prototype.removeRelation = function (predicate, object) {
 		}
 	}
 	
-	Zotero.debug("Relation " + predicate + " - " + object + " did not exist for "
+	Trellis.debug("Relation " + predicate + " - " + object + " did not exist for "
 		+ this._objectType + " " + this.libraryKey);
 	return false;
 }
@@ -432,7 +432,7 @@ Zotero.DataObject.prototype.removeRelation = function (predicate, object) {
  * @param {Object} newRelations Object with predicates as keys and URI[] as values
  * @return {Boolean} True if changed, false if stayed the same
  */
-Zotero.DataObject.prototype.setRelations = function (newRelations) {
+Trellis.DataObject.prototype.setRelations = function (newRelations) {
 	this._requireData('relations');
 	
 	if (typeof newRelations != 'object') {
@@ -477,7 +477,7 @@ Zotero.DataObject.prototype.setRelations = function (newRelations) {
 	}
 	
 	if (!changed) {
-		Zotero.debug("Relations have not changed for " + this._objectType + " " + this.libraryKey, 4);
+		Trellis.debug("Relations have not changed for " + this._objectType + " " + this.libraryKey, 4);
 		return false;
 	}
 	
@@ -491,13 +491,13 @@ Zotero.DataObject.prototype.setRelations = function (newRelations) {
 /**
  * Return an object in the specified library equivalent to this object
  *
- * Use Zotero.Collection.getLinkedCollection() and Zotero.Item.getLinkedItem() instead of
+ * Use Trellis.Collection.getLinkedCollection() and Trellis.Item.getLinkedItem() instead of
  * calling this directly.
  *
  * @param {Integer} [libraryID]
- * @return {Promise<Zotero.DataObject|false>} Linked object, or false if not found
+ * @return {Promise<Trellis.DataObject|false>} Linked object, or false if not found
  */
-Zotero.DataObject.prototype._getLinkedObject = async function (libraryID, bidirectional) {
+Trellis.DataObject.prototype._getLinkedObject = async function (libraryID, bidirectional) {
 	if (!libraryID) {
 		throw new Error("libraryID not provided");
 	}
@@ -506,8 +506,8 @@ Zotero.DataObject.prototype._getLinkedObject = async function (libraryID, bidire
 		throw new Error(this._ObjectType + " is already in library " + libraryID);
 	}
 	
-	var predicate = Zotero.Relations.linkedObjectPredicate;
-	var libraryObjectPrefix = Zotero.URI.getLibraryURI(libraryID)
+	var predicate = Trellis.Relations.linkedObjectPredicate;
+	var libraryObjectPrefix = Trellis.URI.getLibraryURI(libraryID)
 		+ "/" + this._objectTypePlural + "/";
 	
 	// Try the relations with this as a subject
@@ -515,10 +515,10 @@ Zotero.DataObject.prototype._getLinkedObject = async function (libraryID, bidire
 	for (let i = 0; i < uris.length; i++) {
 		let uri = uris[i];
 		if (uri.startsWith(libraryObjectPrefix)) {
-			let obj = await Zotero.URI['getURI' + this._ObjectType](uri);
+			let obj = await Trellis.URI['getURI' + this._ObjectType](uri);
 			if (!obj) {
-				Zotero.debug("Referenced linked " + this._objectType + " '" + uri + "' not found "
-					+ "in Zotero." + this._ObjectType + "::getLinked" + this._ObjectType + "()", 2);
+				Trellis.debug("Referenced linked " + this._objectType + " '" + uri + "' not found "
+					+ "in Trellis." + this._ObjectType + "::getLinked" + this._ObjectType + "()", 2);
 				continue;
 			}
 			// Ignore items in the trash
@@ -531,14 +531,14 @@ Zotero.DataObject.prototype._getLinkedObject = async function (libraryID, bidire
 	
 	// Then try relations with this as an object
 	if (bidirectional) {
-		var thisURI = Zotero.URI['get' + this._ObjectType + 'URI'](this);
-		let objects = await Zotero.Relations.getByPredicateAndObject(
+		var thisURI = Trellis.URI['get' + this._ObjectType + 'URI'](this);
+		let objects = await Trellis.Relations.getByPredicateAndObject(
 			this._objectType, predicate, thisURI
 		);
 		for (let i = 0; i < objects.length; i++) {
 			let obj = objects[i];
 			if (obj.objectType != this._objectType) {
-				Zotero.logError("Found linked object of different type "
+				Trellis.logError("Found linked object of different type "
 					+ "(expected " + this._objectType + ", found " + obj.objectType + ")");
 				continue;
 			}
@@ -561,21 +561,21 @@ Zotero.DataObject.prototype._getLinkedObject = async function (libraryID, bidire
  *
  * A separate save() is not required.
  *
- * @param {Zotero.DataObject} object
+ * @param {Trellis.DataObject} object
  * @param {Promise<Boolean>}
  */
-Zotero.DataObject.prototype._addLinkedObject = async function (object) {
+Trellis.DataObject.prototype._addLinkedObject = async function (object) {
 	if (object.libraryID == this._libraryID) {
 		throw new Error("Can't add linked " + this._objectType + " in same library");
 	}
 	
-	var predicate = Zotero.Relations.linkedObjectPredicate;
-	var thisURI = Zotero.URI['get' + this._ObjectType + 'URI'](this);
-	var objectURI = Zotero.URI['get' + this._ObjectType + 'URI'](object);
+	var predicate = Trellis.Relations.linkedObjectPredicate;
+	var thisURI = Trellis.URI['get' + this._ObjectType + 'URI'](this);
+	var objectURI = Trellis.URI['get' + this._ObjectType + 'URI'](object);
 	
 	var exists = this.hasRelation(predicate, objectURI);
 	if (exists) {
-		Zotero.debug(this._ObjectTypePlural + " " + this.libraryKey
+		Trellis.debug(this._ObjectTypePlural + " " + this.libraryKey
 			+ " and " + object.libraryKey + " are already linked");
 		return false;
 	}
@@ -583,7 +583,7 @@ Zotero.DataObject.prototype._addLinkedObject = async function (object) {
 	// If one of the items is a personal library, store relation with that. Otherwise, use
 	// current item's library (which in calling code is the new, copied item, since that's what
 	// the user definitely has access to).
-	var userLibraryID = Zotero.Libraries.userLibraryID;
+	var userLibraryID = Trellis.Libraries.userLibraryID;
 	if (this.libraryID == userLibraryID || object.libraryID != userLibraryID) {
 		this.addRelation(predicate, objectURI);
 		await this.save({
@@ -606,9 +606,9 @@ Zotero.DataObject.prototype._addLinkedObject = async function (object) {
 //
 // Bulk data loading functions
 //
-// These are called by Zotero.DataObjects.prototype.loadDataType().
+// These are called by Trellis.DataObjects.prototype.loadDataType().
 //
-Zotero.DataObject.prototype.loadPrimaryData = async function (reload, failOnMissing) {
+Trellis.DataObject.prototype.loadPrimaryData = async function (reload, failOnMissing) {
 	if (this._loaded.primaryData && !reload) return;
 	
 	var id = this._id;
@@ -616,7 +616,7 @@ Zotero.DataObject.prototype.loadPrimaryData = async function (reload, failOnMiss
 	var libraryID = this._libraryID;
 	
 	if (!id && !key) {
-		throw new Error('ID or key not set in Zotero.' + this._ObjectType + '.loadPrimaryData()');
+		throw new Error('ID or key not set in Trellis.' + this._ObjectType + '.loadPrimaryData()');
 	}
 	
 	var columns = [], join = [], where = [];
@@ -633,7 +633,7 @@ Zotero.DataObject.prototype.loadPrimaryData = async function (reload, failOnMiss
 		return;
 	}
 	
-	// This should match Zotero.*.primaryDataSQL, but without
+	// This should match Trellis.*.primaryDataSQL, but without
 	// necessarily including all columns
 	var sql = "SELECT " + columns.join(", ") + this.ObjectsClass.primaryDataSQLFrom;
 	if (id) {
@@ -645,12 +645,12 @@ Zotero.DataObject.prototype.loadPrimaryData = async function (reload, failOnMiss
 		var params = [key, libraryID];
 	}
 	sql += (where.length ? ' AND ' + where.join(' AND ') : '');
-	var row = await Zotero.DB.rowQueryAsync(sql, params);
+	var row = await Trellis.DB.rowQueryAsync(sql, params);
 	
 	if (!row) {
 		if (failOnMissing) {
 			throw new Error(this._ObjectType + " " + (id ? id : libraryID + "/" + key)
-				+ " not found in Zotero." + this._ObjectType + ".loadPrimaryData()");
+				+ " not found in Trellis." + this._ObjectType + ".loadPrimaryData()");
 		}
 		
 		// If object doesn't exist, mark all data types as loaded
@@ -671,7 +671,7 @@ Zotero.DataObject.prototype.loadPrimaryData = async function (reload, failOnMiss
  *                                            This should be set to true for data that was
  *                                            changed externally (e.g., globally renamed tags).
  */
-Zotero.DataObject.prototype.reload = async function (dataTypes, reloadUnchanged) {
+Trellis.DataObject.prototype.reload = async function (dataTypes, reloadUnchanged) {
 	if (!this._id) {
 		return;
 	}
@@ -697,10 +697,10 @@ Zotero.DataObject.prototype.reload = async function (dataTypes, reloadUnchanged)
  * Checks whether a given data type has been loaded
  *
  * @param {String} [dataType=primaryData] Data type to check
- * @throws {Zotero.DataObjects.UnloadedDataException} If not loaded, unless the
+ * @throws {Trellis.DataObjects.UnloadedDataException} If not loaded, unless the
  *   data has not yet been "identified"
  */
-Zotero.DataObject.prototype._requireData = function (dataType) {
+Trellis.DataObject.prototype._requireData = function (dataType) {
 	if (this._loaded[dataType] === undefined) {
 		throw new Error(dataType + " is not a valid data type for " + this._ObjectType + " objects");
 	}
@@ -713,7 +713,7 @@ Zotero.DataObject.prototype._requireData = function (dataType) {
 		this._loaded[dataType] = true;
 	}
 	else if (!this._loaded[dataType]) {
-		throw new Zotero.Exception.UnloadedDataException(
+		throw new Trellis.Exception.UnloadedDataException(
 			"'" + dataType + "' not loaded for " + this._objectType + " ("
 				+ this._id + "/" + this._libraryID + "/" + this._key + ")",
 			dataType
@@ -728,11 +728,11 @@ Zotero.DataObject.prototype._requireData = function (dataType) {
  * @param {Boolean} reload
  * @param {Promise}
  */
-Zotero.DataObject.prototype.loadDataType = function (dataType, reload) {
+Trellis.DataObject.prototype.loadDataType = function (dataType, reload) {
 	return this._ObjectsClass._loadDataTypeInLibrary(dataType, this.libraryID, [this.id]);
 }
 
-Zotero.DataObject.prototype.loadAllData = async function (reload) {
+Trellis.DataObject.prototype.loadAllData = async function (reload) {
 	for (let i=0; i<this._dataTypes.length; i++) {
 		let type = this._dataTypes[i];
 		if (!this._skipDataTypeLoad[type]) {
@@ -741,31 +741,31 @@ Zotero.DataObject.prototype.loadAllData = async function (reload) {
 	}
 };
 
-Zotero.DataObject.prototype._markAllDataTypeLoadStates = function (loaded) {
+Trellis.DataObject.prototype._markAllDataTypeLoadStates = function (loaded) {
 	for (let i = 0; i < this._dataTypes.length; i++) {
 		this._loaded[this._dataTypes[i]] = loaded;
 	}
 }
 
-Zotero.DataObject.prototype._hasFieldChanged = function (field) {
+Trellis.DataObject.prototype._hasFieldChanged = function (field) {
 	return field in this._changedData;
 };
 
-Zotero.DataObject.prototype._getChangedField = function (field) {
+Trellis.DataObject.prototype._getChangedField = function (field) {
 	return this._changedData[field];
 };
 
 /**
  * Get either the unsaved value of a field or the saved value if unchanged since the last save
  */
-Zotero.DataObject.prototype._getLatestField = function (field) {
+Trellis.DataObject.prototype._getLatestField = function (field) {
 	return this._changedData[field] !== undefined ? this._changedData[field] : this['_' + field];
 };
 
 /**
  * Get either the unsaved value of a field or the saved value if unchanged since the last save
  */
-Zotero.DataObject.prototype._getLatestField = function (field) {
+Trellis.DataObject.prototype._getLatestField = function (field) {
 	return this._changedData[field] !== undefined ? this._changedData[field] : this['_' + field];
 };
 
@@ -774,7 +774,7 @@ Zotero.DataObject.prototype._getLatestField = function (field) {
  * @param {String} field
  * @param {} value - Old value for old-style 'changed' fields, and new value for 'changedData' fields
  */
-Zotero.DataObject.prototype._markFieldChange = function (field, value) {
+Trellis.DataObject.prototype._markFieldChange = function (field, value) {
 	// New method (changedData)
 	if (['deleted', 'tags'].includes(field) || field.startsWith('annotation')) {
 		if (Array.isArray(value)) {
@@ -803,7 +803,7 @@ Zotero.DataObject.prototype._markFieldChange = function (field, value) {
 }
 
 
-Zotero.DataObject.prototype.hasChanged = function () {
+Trellis.DataObject.prototype.hasChanged = function () {
 	var changed = Object.keys(this._changed).filter(dataType => this._changed[dataType])
 		.concat(Object.keys(this._changedData));
 	if (changed.length == 1
@@ -821,7 +821,7 @@ Zotero.DataObject.prototype.hasChanged = function () {
  * Clears log of changed values
  * @param {String} [dataType] data type/field to clear. Defaults to clearing everything
  */
-Zotero.DataObject.prototype._clearChanged = function (dataType) {
+Trellis.DataObject.prototype._clearChanged = function (dataType) {
 	if (dataType) {
 		delete this._changed[dataType];
 		
@@ -840,7 +840,7 @@ Zotero.DataObject.prototype._clearChanged = function (dataType) {
 						}
 					}
 					else if (dataType == 'itemData') {
-						if (Zotero.ItemFields.getID(field)) {
+						if (Trellis.ItemFields.getID(field)) {
 							toDelete.push(field);
 						}
 					}
@@ -868,7 +868,7 @@ Zotero.DataObject.prototype._clearChanged = function (dataType) {
  * Clears field change log
  * @param {String} field
  */
-Zotero.DataObject.prototype._clearFieldChange = function (field) {
+Trellis.DataObject.prototype._clearFieldChange = function (field) {
 	delete this._previousData[field];
 	delete this._changedData[field];
 }
@@ -879,12 +879,12 @@ Zotero.DataObject.prototype._clearFieldChange = function (field) {
  * before the new data is saved to the database (so that further updates during the save process don't
  * get lost), so we need to separately keep track of what changed.
  */
-Zotero.DataObject.prototype._markForReload = function (dataType) {
+Trellis.DataObject.prototype._markForReload = function (dataType) {
 	this._dataTypesToReload.add(dataType);
 }
 
 
-Zotero.DataObject.UNDO_SKIP_FIELDS = new Set(['version', 'synced', 'clientDateModified', 'dateModified']);
+Trellis.DataObject.UNDO_SKIP_FIELDS = new Set(['version', 'synced', 'clientDateModified', 'dateModified']);
 
 /**
  * Build a change record for UndoHistory from the current pending changes.
@@ -892,8 +892,8 @@ Zotero.DataObject.UNDO_SKIP_FIELDS = new Set(['version', 'synced', 'clientDateMo
  *
  * @return {Object|null} - ChangeRecord or null if nothing undoable
  */
-Zotero.DataObject.prototype._getUndoData = function () {
-	let skipFields = Zotero.DataObject.UNDO_SKIP_FIELDS;
+Trellis.DataObject.prototype._getUndoData = function () {
+	let skipFields = Trellis.DataObject.UNDO_SKIP_FIELDS;
 	let fields = {};
 
 	// Fields tracked via _previousData (old-style: old value stored)
@@ -935,13 +935,13 @@ Zotero.DataObject.prototype._getUndoData = function () {
 /**
  * Whether the object still holds the values captured in an undo snapshot for
  * the given side -- the read-and-compare counterpart of _getUndoData(). Used by
- * Zotero.UndoHistory to avoid replaying a snapshot over an external change.
+ * Trellis.UndoHistory to avoid replaying a snapshot over an external change.
  *
  * @param {Object} fields -- a change record's `fields` map (field -> { old, new })
  * @param {String} side -- 'new' (undo) or 'old' (redo)
  * @return {Boolean} -- true if every field still matches the recorded value
  */
-Zotero.DataObject.prototype.matchesUndoSnapshot = function (fields, side) {
+Trellis.DataObject.prototype.matchesUndoSnapshot = function (fields, side) {
 	for (let field of Object.keys(fields)) {
 		if (!this._undoFieldMatches(field, fields[field][side])) {
 			return false;
@@ -953,14 +953,14 @@ Zotero.DataObject.prototype.matchesUndoSnapshot = function (fields, side) {
 
 /**
  * Whether a single field still holds a recorded undo value. Overridden by
- * Zotero.Item for item-specific fields; the base handles the primary scalar
+ * Trellis.Item for item-specific fields; the base handles the primary scalar
  * fields shared by all data objects.
  *
  * @param {String} field
  * @param {*} recorded -- the recorded value for the side being checked
  * @return {Boolean}
  */
-Zotero.DataObject.prototype._undoFieldMatches = function (field, recorded) {
+Trellis.DataObject.prototype._undoFieldMatches = function (field, recorded) {
 	if (field === 'deleted') {
 		return this._deleted === recorded;
 	}
@@ -978,8 +978,8 @@ Zotero.DataObject.prototype._undoFieldMatches = function (field, recorded) {
  * @param {String} [op='edit'] - Operation to check; if not provided, check edit privileges for
  *     library
  */
-Zotero.DataObject.prototype.isEditable = function (_op = 'edit') {
-	let library = Zotero.Libraries.get(this.libraryID);
+Trellis.DataObject.prototype.isEditable = function (_op = 'edit') {
+	let library = Trellis.Libraries.get(this.libraryID);
 	if (library.libraryType == 'feed') {
 		return true;
 	}
@@ -994,7 +994,7 @@ Zotero.DataObject.prototype.isEditable = function (_op = 'edit') {
  *                                         is disabled after save
  * @param {Boolean} [options.skipDateModifiedUpdate]
  * @param {Boolean} [options.skipClientDateModifiedUpdate]
- * @param {Boolean} [options.skipNotifier] - Don't trigger Zotero.Notifier events
+ * @param {Boolean} [options.skipNotifier] - Don't trigger Trellis.Notifier events
  * @param {Boolean} [options.skipSelect] - Don't select object automatically in trees
  * @param {Boolean} [options.skipSyncedUpdate] - Don't automatically set 'synced' to false
  * @param {String} [options.undoAction] - Fluent message ID for the undo entry's action label
@@ -1005,16 +1005,16 @@ Zotero.DataObject.prototype.isEditable = function (_op = 'edit') {
  * @return {Promise<Integer|Boolean>}  Promise for itemID of new item,
  *                                     TRUE on item update, or FALSE if item was unchanged
  */
-Zotero.DataObject.prototype.save = async function (options = {}) {
+Trellis.DataObject.prototype.save = async function (options = {}) {
 	var env = {
 		options: Object.assign({}, options),
 		transactionOptions: {}
 	};
 	
-	if (!env.options.tx && !Zotero.DB.inTransaction()) {
-		Zotero.logError("save() called on Zotero." + this._ObjectType + " without a wrapping "
+	if (!env.options.tx && !Trellis.DB.inTransaction()) {
+		Trellis.logError("save() called on Trellis." + this._ObjectType + " without a wrapping "
 			+ "transaction -- use saveTx() instead");
-		Zotero.debug((new Error).stack, 2);
+		Trellis.debug((new Error).stack, 2);
 		env.options.tx = true;
 	}
 	
@@ -1034,14 +1034,14 @@ Zotero.DataObject.prototype.save = async function (options = {}) {
 		if (!proceed) return false;
 		
 		if (env.isNew) {
-			Zotero.debug('Saving data for new ' + this._objectType + ' to database', 4);
+			Trellis.debug('Saving data for new ' + this._objectType + ' to database', 4);
 		}
 		else {
-			Zotero.debug('Updating database with new ' + this._objectType + ' data', 4);
+			Trellis.debug('Updating database with new ' + this._objectType + ' data', 4);
 		}
 		
-		if (Zotero.DataObject.prototype._finalizeSave == this._finalizeSave) {
-			throw new Error("_finalizeSave not implemented for Zotero." + this._ObjectType);
+		if (Trellis.DataObject.prototype._finalizeSave == this._finalizeSave) {
+			throw new Error("_finalizeSave not implemented for Trellis." + this._ObjectType);
 		}
 		
 		env.notifierData = {};
@@ -1053,7 +1053,7 @@ Zotero.DataObject.prototype.save = async function (options = {}) {
 			env.notifierData.skipSelect = true;
 		}
 		// Pass along event-level notifier options, which become top-level extraData properties
-		for (let option of Zotero.Notifier.EVENT_LEVEL_OPTIONS) {
+		for (let option of Trellis.Notifier.EVENT_LEVEL_OPTIONS) {
 			if (env.options[option] !== undefined) {
 				env.notifierData[option] = env.options[option];
 			}
@@ -1068,21 +1068,21 @@ Zotero.DataObject.prototype.save = async function (options = {}) {
 		// Capture undo data before _saveData clears change tracking.
 		// Capture is unconditional for non-isNew saves; whether it lands on the
 		// undo stack depends on a stageAction() call within the same transaction.
-		if (Zotero.UndoHistory && !env.isNew) {
+		if (Trellis.UndoHistory && !env.isNew) {
 			env.undoData = this._getUndoData();
 		}
 
 		// Create transaction
 		let result
 		if (env.options.tx) {
-			result = await Zotero.DB.executeTransaction(async function () {
-				Zotero.DataObject.prototype._saveData.call(this, env);
+			result = await Trellis.DB.executeTransaction(async function () {
+				Trellis.DataObject.prototype._saveData.call(this, env);
 				await this._saveData(env);
-				await Zotero.DataObject.prototype._finalizeSave.call(this, env);
+				await Trellis.DataObject.prototype._finalizeSave.call(this, env);
 				if (env.undoData) {
-					Zotero.UndoHistory.stageChange(env.undoData);
+					Trellis.UndoHistory.stageChange(env.undoData);
 					if (env.options.undoAction) {
-						Zotero.UndoHistory.stageAction(env.options.undoAction, env.options.undoActionArgs);
+						Trellis.UndoHistory.stageAction(env.options.undoAction, env.options.undoActionArgs);
 					}
 				}
 				return this._finalizeSave(env);
@@ -1090,15 +1090,15 @@ Zotero.DataObject.prototype.save = async function (options = {}) {
 		}
 		// Use existing transaction
 		else {
-			Zotero.DB.requireTransaction();
-			Zotero.DataObject.prototype._saveData.call(this, env);
+			Trellis.DB.requireTransaction();
+			Trellis.DataObject.prototype._saveData.call(this, env);
 			await this._saveData(env);
-			await Zotero.DataObject.prototype._finalizeSave.call(this, env);
+			await Trellis.DataObject.prototype._finalizeSave.call(this, env);
 			result = this._finalizeSave(env);
 			if (env.undoData) {
-				Zotero.UndoHistory.stageChange(env.undoData);
+				Trellis.UndoHistory.stageChange(env.undoData);
 				if (env.options.undoAction) {
-					Zotero.UndoHistory.stageAction(env.options.undoAction, env.options.undoActionArgs);
+					Trellis.UndoHistory.stageAction(env.options.undoAction, env.options.undoActionArgs);
 				}
 			}
 		}
@@ -1108,14 +1108,14 @@ Zotero.DataObject.prototype.save = async function (options = {}) {
 	catch(e) {
 		return this._recoverFromSaveError(env, e)
 		.catch(function (e2) {
-			Zotero.debug(e2, 1);
+			Trellis.debug(e2, 1);
 		})
 		.then(function () {
 			if (env.options.errorHandler) {
 				env.options.errorHandler(e);
 			}
 			else {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			throw e;
 		})
@@ -1123,34 +1123,34 @@ Zotero.DataObject.prototype.save = async function (options = {}) {
 };
 
 
-Zotero.DataObject.prototype.saveTx = function (options = {}) {
+Trellis.DataObject.prototype.saveTx = function (options = {}) {
 	options = Object.assign({}, options);
 	options.tx = true;
 	return this.save(options);
 }
 
 
-Zotero.DataObject.prototype._initSave = async function (env) {
+Trellis.DataObject.prototype._initSave = async function (env) {
 	// Default to user library if not specified
 	if (this.libraryID === null) {
-		this._libraryID = Zotero.Libraries.userLibraryID;
+		this._libraryID = Trellis.Libraries.userLibraryID;
 	}
 	
 	env.isNew = !this.id;
 	
 	if (!this.hasChanged()) {
-		Zotero.debug(this._ObjectType + ' ' + this.id + ' has not changed', 4);
+		Trellis.debug(this._ObjectType + ' ' + this.id + ' has not changed', 4);
 		return false;
 	}
 	
 	if (!env.options.skipEditCheck) {
 		if (!this.isEditable()) {
 			throw new Error("Cannot edit " + this._objectType + " in library "
-				+ Zotero.Libraries.get(this.libraryID).name);
+				+ Trellis.Libraries.get(this.libraryID).name);
 		}
 	}
 	
-	let targetLib = Zotero.Libraries.get(this.libraryID);
+	let targetLib = Trellis.Libraries.get(this.libraryID);
 	if (!targetLib.isChildObjectAllowed(this._objectType)) {
 		throw new Error("Cannot add " + this._objectType + " to a " + targetLib.libraryType + " library");
 	}
@@ -1164,7 +1164,7 @@ Zotero.DataObject.prototype._initSave = async function (env) {
 			env.transactionOptions.onRollback = func;
 		}
 		else {
-			Zotero.DB.addCurrentCallback("rollback", func);
+			Trellis.DB.addCurrentCallback("rollback", func);
 		}
 	}
 	
@@ -1174,8 +1174,8 @@ Zotero.DataObject.prototype._initSave = async function (env) {
 	return true;
 };
 
-Zotero.DataObject.prototype._saveData = function (env) {
-	var libraryID = env.libraryID = this.libraryID || Zotero.Libraries.userLibraryID;
+Trellis.DataObject.prototype._saveData = function (env) {
+	var libraryID = env.libraryID = this.libraryID || Trellis.Libraries.userLibraryID;
 	var key = env.key = this._key = this.key ? this.key : this._generateKey();
 	
 	env.sqlColumns = [];
@@ -1209,18 +1209,18 @@ Zotero.DataObject.prototype._saveData = function (env) {
 	
 	if (env.isNew || !env.options.skipClientDateModifiedUpdate) {
 		env.sqlColumns.push('clientDateModified');
-		env.sqlValues.push(Zotero.DB.transactionDateTime);
+		env.sqlValues.push(Trellis.DB.transactionDateTime);
 	}
 	
 	if (!env.options.skipNotifier && this._changedData.deleted !== undefined) {
-		Zotero.Notifier.queue('refresh', 'trash', this.libraryID, {}, env.options.notifierQueue);
+		Trellis.Notifier.queue('refresh', 'trash', this.libraryID, {}, env.options.notifierQueue);
 		if (!env.isNew && this._changedData.deleted) {
-			Zotero.Notifier.queue('trash', this._objectType, this.id, {}, env.options.notifierQueue);
+			Trellis.Notifier.queue('trash', this._objectType, this.id, {}, env.options.notifierQueue);
 		}
 	}
 };
 
-Zotero.DataObject.prototype._finalizeSave = async function (env) {
+Trellis.DataObject.prototype._finalizeSave = async function (env) {
 	// Relations
 	if (this._changed.relations) {
 		let toAdd, toRemove;
@@ -1228,9 +1228,9 @@ Zotero.DataObject.prototype._finalizeSave = async function (env) {
 		if (this._previousData.relations) {
 			let oldRelationsJSON = this._previousData.relations.map(x => JSON.stringify(x));
 			let newRelationsJSON = this._relations.map(x => JSON.stringify(x));
-			toAdd = Zotero.Utilities.arrayDiff(newRelationsJSON, oldRelationsJSON)
+			toAdd = Trellis.Utilities.arrayDiff(newRelationsJSON, oldRelationsJSON)
 				.map(x => JSON.parse(x));
-			toRemove = Zotero.Utilities.arrayDiff(oldRelationsJSON, newRelationsJSON)
+			toRemove = Trellis.Utilities.arrayDiff(oldRelationsJSON, newRelationsJSON)
 				.map(x => JSON.parse(x));
 		}
 		else {
@@ -1242,17 +1242,17 @@ Zotero.DataObject.prototype._finalizeSave = async function (env) {
 			// Convert predicates to ids
 			let toAddConverted = [];
 			for (let rel of toAdd) {
-				let predicateID = await Zotero.RelationPredicates.add(rel[0]);
+				let predicateID = await Trellis.RelationPredicates.add(rel[0]);
 				let object = rel[1];
 				toAddConverted.push([predicateID, object]);
 			}
 			let sql = "INSERT INTO " + this._objectType + "Relations "
 				+ "(" + this._ObjectsClass.idColumn + ", predicateID, object) VALUES ";
-			await Zotero.Utilities.Internal.forEachChunkAsync(
+			await Trellis.Utilities.Internal.forEachChunkAsync(
 				toAddConverted,
-				Math.floor(Zotero.DB.MAX_BOUND_PARAMETERS / 3),
+				Math.floor(Trellis.DB.MAX_BOUND_PARAMETERS / 3),
 				async function (chunk) {
-					await Zotero.DB.queryAsync(
+					await Trellis.DB.queryAsync(
 						sql + chunk.map(x => "(?, ?, ?)").join(", "),
 						chunk.map(x => [this.id, x[0], x[1]])
 							.reduce((x, y) => x.concat(y))
@@ -1266,11 +1266,11 @@ Zotero.DataObject.prototype._finalizeSave = async function (env) {
 			for (let i = 0; i < toRemove.length; i++) {
 				let sql = "DELETE FROM " + this._objectType + "Relations "
 					+ "WHERE " + this._ObjectsClass.idColumn + "=? AND predicateID=? AND object=?";
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					sql,
 					[
 						this.id,
-						((await Zotero.RelationPredicates.add(toRemove[i][0]))),
+						((await Trellis.RelationPredicates.add(toRemove[i][0]))),
 						toRemove[i][1]
 					]
 				);
@@ -1281,7 +1281,7 @@ Zotero.DataObject.prototype._finalizeSave = async function (env) {
 	
 	if (env.isNew) {
 		if (!env.skipCache) {
-			// Register this object's identifiers in Zotero.DataObjects. This has to happen here so
+			// Register this object's identifiers in Trellis.DataObjects. This has to happen here so
 			// that the object exists for the reload() in objects' finalizeSave methods.
 			this.ObjectsClass.registerObject(this);
 		}
@@ -1291,7 +1291,7 @@ Zotero.DataObject.prototype._finalizeSave = async function (env) {
 		}
 	}
 	else if (env.skipCache) {
-		Zotero.logError("skipCache is only for new objects");
+		Trellis.logError("skipCache is only for new objects");
 	}
 };
 
@@ -1299,20 +1299,20 @@ Zotero.DataObject.prototype._finalizeSave = async function (env) {
 /**
  * Actions to perform after DB transaction
  */
-Zotero.DataObject.prototype._postSave = function (env) {
+Trellis.DataObject.prototype._postSave = function (env) {
 	for (let i = 0; i < env.relationsToRegister.length; i++) {
 		let rel = env.relationsToRegister[i];
-		Zotero.debug(rel);
-		Zotero.Relations.register(this._objectType, this.id, rel[0], rel[1]);
+		Trellis.debug(rel);
+		Trellis.Relations.register(this._objectType, this.id, rel[0], rel[1]);
 	}
 	for (let i = 0; i < env.relationsToUnregister.length; i++) {
 		let rel = env.relationsToUnregister[i];
-		Zotero.Relations.unregister(this._objectType, this.id, rel[0], rel[1]);
+		Trellis.Relations.unregister(this._objectType, this.id, rel[0], rel[1]);
 	}
 };
 
 
-Zotero.DataObject.prototype._recoverFromSaveError = async function (env) {
+Trellis.DataObject.prototype._recoverFromSaveError = async function (env) {
 	await this.reload(null, true);
 	this._clearChanged();
 };
@@ -1326,7 +1326,7 @@ Zotero.DataObject.prototype._recoverFromSaveError = async function (env) {
  * @param {Integer} version
  * @param {Boolean} [skipDB=false]
  */
-Zotero.DataObject.prototype.updateVersion = async function (version, skipDB) {
+Trellis.DataObject.prototype.updateVersion = async function (version, skipDB) {
 	if (!this.id) {
 		throw new Error("Cannot update version of unsaved " + this._objectType);
 	}
@@ -1339,7 +1339,7 @@ Zotero.DataObject.prototype.updateVersion = async function (version, skipDB) {
 	if (!skipDB) {
 		var cl = this.ObjectsClass;
 		var sql = "UPDATE " + cl.table + " SET version=? WHERE " + cl.idColumn + "=?";
-		await Zotero.DB.queryAsync(sql, [parseInt(version), this.id]);
+		await Trellis.DB.queryAsync(sql, [parseInt(version), this.id]);
 	}
 	
 	if (this._changed.primaryData && this._changed.primaryData.version) {
@@ -1360,7 +1360,7 @@ Zotero.DataObject.prototype.updateVersion = async function (version, skipDB) {
  * @param {Boolean} synced
  * @param {Boolean} [skipDB=false]
  */
-Zotero.DataObject.prototype.updateSynced = async function (synced, skipDB) {
+Trellis.DataObject.prototype.updateSynced = async function (synced, skipDB) {
 	if (!this.id) {
 		throw new Error("Cannot update sync status of unsaved " + this._objectType);
 	}
@@ -1373,7 +1373,7 @@ Zotero.DataObject.prototype.updateSynced = async function (synced, skipDB) {
 	if (!skipDB) {
 		var cl = this.ObjectsClass;
 		var sql = "UPDATE " + cl.table + " SET synced=? WHERE " + cl.idColumn + "=?";
-		await Zotero.DB.queryAsync(sql, [synced ? 1 : 0, this.id]);
+		await Trellis.DB.queryAsync(sql, [synced ? 1 : 0, this.id]);
 	}
 	
 	if (this._changed.primaryData && this._changed.primaryData.synced) {
@@ -1393,7 +1393,7 @@ Zotero.DataObject.prototype.updateSynced = async function (synced, skipDB) {
  * @param {Boolean} [options.deleteItems] - Move descendant items to trash (Collection only)
  * @param {Boolean} [options.skipDeleteLog] - Don't add to sync delete log
  */
-Zotero.DataObject.prototype.erase = async function (options = {}) {
+Trellis.DataObject.prototype.erase = async function (options = {}) {
 	if (!options || typeof options != 'object') {
 		throw new Error("'options' must be an object (" + typeof options + ")");
 	}
@@ -1402,38 +1402,38 @@ Zotero.DataObject.prototype.erase = async function (options = {}) {
 		options: Object.assign({}, options)
 	};
 	
-	if (!env.options.tx && !Zotero.DB.inTransaction()) {
-		Zotero.logError("erase() called on Zotero." + this._ObjectType + " without a wrapping "
+	if (!env.options.tx && !Trellis.DB.inTransaction()) {
+		Trellis.logError("erase() called on Trellis." + this._ObjectType + " without a wrapping "
 			+ "transaction -- use eraseTx() instead");
-		Zotero.debug((new Error).stack, 2);
+		Trellis.debug((new Error).stack, 2);
 		env.options.tx = true;
 	}
 	
 	let proceed = await this._initErase(env);
 	if (!proceed) return false;
 	
-	Zotero.debug('Deleting ' + this.objectType + ' ' + this.id);
+	Trellis.debug('Deleting ' + this.objectType + ' ' + this.id);
 	
 	if (env.options.tx) {
-		return Zotero.DB.executeTransaction(async function () {
+		return Trellis.DB.executeTransaction(async function () {
 			await this._eraseData(env);
 			await this._finalizeErase(env);
 		}.bind(this))
 	}
 	else {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		await this._eraseData(env);
 		await this._finalizeErase(env);
 	}
 };
 
-Zotero.DataObject.prototype.eraseTx = function (options) {
+Trellis.DataObject.prototype.eraseTx = function (options) {
 	options = options || {};
 	options.tx = true;
 	return this.erase(options);
 };
 
-Zotero.DataObject.prototype._initErase = function (env) {
+Trellis.DataObject.prototype._initErase = function (env) {
 	env.notifierData = {};
 	env.notifierData[this.id] = {
 		libraryID: this.libraryID,
@@ -1443,22 +1443,22 @@ Zotero.DataObject.prototype._initErase = function (env) {
 	if (!env.options.skipEditCheck) {
 		if (!this.isEditable('erase')) {
 			throw new Error(`Cannot erase ${this._objectType} in library `
-				+ Zotero.Libraries.get(this.libraryID).name);
+				+ Trellis.Libraries.get(this.libraryID).name);
 		}
 	}
 	
 	return true;
 };
 
-Zotero.DataObject.prototype._finalizeErase = async function (env) {
+Trellis.DataObject.prototype._finalizeErase = async function (env) {
 	// Delete versions from sync cache
 	if (this._objectType != 'feedItem') {
-		await Zotero.Sync.Data.Local.deleteCacheObjectVersions(
+		await Trellis.Sync.Data.Local.deleteCacheObjectVersions(
 			this.objectType, this._libraryID, this._key
 		);
 	}
 	
-	Zotero.DB.addCurrentCallback("commit", function () {
+	Trellis.DB.addCurrentCallback("commit", function () {
 		this.ObjectsClass.unload(env.deletedObjectIDs || this.id);
 	}.bind(this));
 	
@@ -1467,7 +1467,7 @@ Zotero.DataObject.prototype._finalizeErase = async function (env) {
 	}
 	
 	if (!env.options.skipNotifier) {
-		Zotero.Notifier.queue(
+		Trellis.Notifier.queue(
 			'delete',
 			this._objectType,
 			Object.keys(env.notifierData).map(id => parseInt(id)),
@@ -1478,19 +1478,19 @@ Zotero.DataObject.prototype._finalizeErase = async function (env) {
 };
 
 
-Zotero.DataObject.prototype.toResponseJSON = function (options = {}) {
-	let uri = Zotero.URI.getObjectURI(this);
+Trellis.DataObject.prototype.toResponseJSON = function (options = {}) {
+	let uri = Trellis.URI.getObjectURI(this);
 	var json = {
 		key: this.key,
 		version: this.version,
 		library: this.library.toResponseJSON({ ...options, includeGroupDetails: false }),
 		links: {
 			self: {
-				href: Zotero.URI.toAPIURL(uri, options.apiURL),
+				href: Trellis.URI.toAPIURL(uri, options.apiURL),
 				type: 'application/json'
 			},
-			alternate: Zotero.Users.getCurrentUserID() ? {
-				href: Zotero.URI.toWebURL(uri),
+			alternate: Trellis.Users.getCurrentUserID() ? {
+				href: Trellis.URI.toWebURL(uri),
 				type: 'text/html'
 			} : undefined
 		},
@@ -1502,7 +1502,7 @@ Zotero.DataObject.prototype.toResponseJSON = function (options = {}) {
 	}
 	if (this.parentID) {
 		json.links.up = {
-			href: Zotero.URI.toAPIURL(Zotero.URI.getObjectURI(this.ObjectsClass.get(this.parentID)), options.apiURL),
+			href: Trellis.URI.toAPIURL(Trellis.URI.getObjectURI(this.ObjectsClass.get(this.parentID)), options.apiURL),
 			type: 'application/json'
 		};
 	}
@@ -1512,16 +1512,16 @@ Zotero.DataObject.prototype.toResponseJSON = function (options = {}) {
 
 /**
  * Subclasses can override to provide more information that requires awaiting promises.
- * Delegates to {@link Zotero.DataObject#toResponseJSON} by default.
+ * Delegates to {@link Trellis.DataObject#toResponseJSON} by default.
  *
  * @returns {Promise<Object>}
  */
-Zotero.DataObject.prototype.toResponseJSONAsync = async function (options = {}) {
+Trellis.DataObject.prototype.toResponseJSONAsync = async function (options = {}) {
 	return this.toResponseJSON(options);
 };
 
 
-Zotero.DataObject.prototype._preToJSON = function (options) {
+Trellis.DataObject.prototype._preToJSON = function (options) {
 	var env = { options };
 	env.mode = options.mode || 'new';
 	if (env.mode == 'patch') {
@@ -1531,7 +1531,7 @@ Zotero.DataObject.prototype._preToJSON = function (options) {
 	}
 	else if (options.patchBase) {
 		if (options.mode) {
-			Zotero.debug("Zotero.Item.toJSON: ignoring provided patchBase in " + env.mode + " mode", 2);
+			Trellis.debug("Trellis.Item.toJSON: ignoring provided patchBase in " + env.mode + " mode", 2);
 		}
 		// If patchBase provided and no explicit mode, use 'patch'
 		else {
@@ -1541,14 +1541,14 @@ Zotero.DataObject.prototype._preToJSON = function (options) {
 	return env;
 }
 
-Zotero.DataObject.prototype._postToJSON = function (env) {
+Trellis.DataObject.prototype._postToJSON = function (env) {
 	var deleted = this._getLatestField('deleted');
 	if (deleted || env.options.mode == 'full') {
 		env.obj.deleted = !!deleted;
 	}
 	
 	if (env.mode == 'patch') {
-		env.obj = Zotero.DataObjectUtilities.patch(env.options.patchBase, env.obj);
+		env.obj = Trellis.DataObjectUtilities.patch(env.options.patchBase, env.obj);
 	}
 	if (env.options.includeVersion === false) {
 		delete env.obj.version;
@@ -1561,13 +1561,13 @@ Zotero.DataObject.prototype._postToJSON = function (env) {
  * Generates data object key
  * @return {String} key
  */
-Zotero.DataObject.prototype._generateKey = function () {
-	return Zotero.Utilities.generateObjectKey();
+Trellis.DataObject.prototype._generateKey = function () {
+	return Trellis.Utilities.generateObjectKey();
 }
 
-Zotero.DataObject.prototype._disabledCheck = function () {
+Trellis.DataObject.prototype._disabledCheck = function () {
 	if (this._disabled) {
-		Zotero.logError(this._ObjectType + " is disabled -- "
-			+ "use Zotero." + this._ObjectTypePlural  + ".getAsync()");
+		Trellis.logError(this._ObjectType + " is disabled -- "
+			+ "use Trellis." + this._ObjectTypePlural  + ".getAsync()");
 	}
 }

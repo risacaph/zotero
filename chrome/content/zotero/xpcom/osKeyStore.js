@@ -3,22 +3,22 @@
 
     Copyright © 2026 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
 
-    This file is part of Zotero.
+    This file is part of Trellis.
 
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
     ***** END LICENSE BLOCK *****
 */
@@ -28,7 +28,7 @@
 // on Linux). Encrypted values are returned with a versioned prefix so callers
 // can distinguish them from legacy plaintext values previously written to
 // nsILoginManager.
-Zotero.OSKeyStore = {
+Trellis.OSKeyStore = {
 	_prefix: 'oskv1:',
 	_module: null,
 
@@ -41,7 +41,7 @@ Zotero.OSKeyStore = {
 				this._module = OSKeyStore;
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				this._module = false;
 			}
 		}
@@ -58,14 +58,14 @@ Zotero.OSKeyStore = {
 
 	// Show an alert when an active write of new credentials fails (e.g., keychain unavailable)
 	alertSaveFailed: function () {
-		let win = Services.wm.getMostRecentWindow('zotero:main');
+		let win = Services.wm.getMostRecentWindow('trellis:main');
 		if (!win) {
 			return;
 		}
-		Zotero.alert(
+		Trellis.alert(
 			win,
-			Zotero.getString('general-error'),
-			Zotero.getString('os-keystore-save-failed')
+			Trellis.getString('general-error'),
+			Trellis.getString('os-keystore-save-failed')
 		);
 	},
 
@@ -78,14 +78,14 @@ Zotero.OSKeyStore = {
 			return;
 		}
 		this._migrateAlertShown = true;
-		let win = Services.wm.getMostRecentWindow('zotero:main');
+		let win = Services.wm.getMostRecentWindow('trellis:main');
 		if (!win) {
 			return;
 		}
-		Zotero.alert(
+		Trellis.alert(
 			win,
-			Zotero.getString('general-error'),
-			Zotero.getString('os-keystore-migrate-failed')
+			Trellis.getString('general-error'),
+			Trellis.getString('os-keystore-migrate-failed')
 		);
 	},
 

@@ -6,7 +6,7 @@
 
 @mixin compact {
 	$selector: &;
-	@at-root [zoteroUIDensity="compact"] {
+	@at-root [trellisUIDensity="compact"] {
 		@if $selector {
 			#{$selector} {
 				@content;
@@ -21,7 +21,7 @@
 
 @mixin comfortable {
 	$selector: &;
-	@at-root [zoteroUIDensity="comfortable"] {
+	@at-root [trellisUIDensity="comfortable"] {
 		@if $selector {
 			#{$selector} {
 				@content;
@@ -130,7 +130,7 @@
 	}
 
 	.icon {
-		height: calc(1.3333333333*var(--zotero-font-size));
+		height: calc(1.3333333333*var(--trellis-font-size));
 		padding-top: 0.25em; 
 	}
 

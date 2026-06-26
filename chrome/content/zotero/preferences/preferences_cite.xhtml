@@ -3,31 +3,31 @@
     
     Copyright © 2006–2022 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
 
-<vbox id="zotero-prefpane-cite" onload="event.waitUntil(Zotero_Preferences.Cite.init())">
+<vbox id="trellis-prefpane-cite" onload="event.waitUntil(Trellis_Preferences.Cite.init())">
 	<vbox class="main-section" id="styles">
-		<groupbox flex="1" aria-label="&zotero.preferences.cite.styles.styleManager;" aria-describedby="styleManager-intro">
+		<groupbox flex="1" aria-label="&trellis.preferences.cite.styles.styleManager;" aria-describedby="styleManager-intro">
 			<!-- HTML needs to be wrapped in an hbox to isolate from XUL box layout -->
-			<hbox><label control="styleManager-table"><html:h2>&zotero.preferences.cite.styles.styleManager;</html:h2></label></hbox>
+			<hbox><label control="styleManager-table"><html:h2>&trellis.preferences.cite.styles.styleManager;</html:h2></label></hbox>
 			<description id="styleManager-intro" data-l10n-id="preferences-styleManager-intro"/>
 			<separator class="thin"/>
 			<hbox class="virtualized-table-container" flex="1">
@@ -37,11 +37,11 @@
 			<hbox id="styleManager-buttons" align="center">
 				<button id="reset-styles-button"
 					data-l10n-id="preferences-styleManager-restore-default"
-					oncommand="Zotero_Preferences.Cite.resetStyles()"/>
+					oncommand="Trellis_Preferences.Cite.resetStyles()"/>
 				<button id="add-from-file-button" data-l10n-id="preferences-styleManager-add-from-file"
-					oncommand="Zotero_Preferences.Cite.addStyle()"/>
+					oncommand="Trellis_Preferences.Cite.addStyle()"/>
 				<button id="get-additional-styles-button" data-l10n-id="preferences-styleManager-get-additional-styles"
-					oncommand="Zotero_Preferences.Cite.openStylesPage()"/>
+					oncommand="Trellis_Preferences.Cite.openStylesPage()"/>
 			</hbox>
 		</groupbox>
 		
@@ -50,7 +50,7 @@
 			<groupbox aria-labelledby="citation-dialog-mode-label">
 				<hbox align="center">
 					<label id="citation-dialog-mode-label" data-l10n-id="preferences-citation-dialog-mode">:</label>
-					<radiogroup orient="horizontal" id="citation-dialog-mode" preference="extensions.zotero.integration.citationDialogMode">
+					<radiogroup orient="horizontal" id="citation-dialog-mode" preference="extensions.trellis.integration.citationDialogMode">
 						<radio data-l10n-id="preferences-citation-dialog-mode-last-used" value="last-used"/>
 						<radio data-l10n-id="preferences-citation-dialog-mode-library" value="library"/>
 						<radio data-l10n-id="preferences-citation-dialog-mode-list" value="list"/>
@@ -59,31 +59,31 @@
 			</groupbox>
 		</groupbox>
 
-		<groupbox aria-label="&zotero.preferences.citationOptions.caption;">
-			<label><html:h2>&zotero.preferences.citationOptions.caption;</html:h2></label>
+		<groupbox aria-label="&trellis.preferences.citationOptions.caption;">
+			<label><html:h2>&trellis.preferences.citationOptions.caption;</html:h2></label>
 			
-			<checkbox label="&zotero.preferences.export.citePaperJournalArticleURL;" preference="extensions.zotero.export.citePaperJournalArticleURL" native="true" aria-describedby="export-citePaperJournalArticleURL"/>
+			<checkbox label="&trellis.preferences.export.citePaperJournalArticleURL;" preference="extensions.trellis.export.citePaperJournalArticleURL" native="true" aria-describedby="export-citePaperJournalArticleURL"/>
 			<!-- This doesn't wrap without an explicit width, for some reason -->
 			<label id="export-citePaperJournalArticleURL" width="45em">
-				&zotero.preferences.export.citePaperJournalArticleURL.description;
+				&trellis.preferences.export.citePaperJournalArticleURL.description;
 			</label>
 		</groupbox>
 		
-		<groupbox aria-label="&zotero.general.tools;">
-			<label><html:h2>&zotero.general.tools;</html:h2></label>
+		<groupbox aria-label="&trellis.general.tools;">
+			<label><html:h2>&trellis.general.tools;</html:h2></label>
 			
 			<hbox>
 				<button id="openCSLEdit"
-					label="&zotero.preferences.styleEditor;"
-					oncommand="window.open('chrome://zotero/content/tools/csledit.xhtml', '_blank', 'chrome,width=950,height=700,resizable')"/>
+					label="&trellis.preferences.styleEditor;"
+					oncommand="window.open('chrome://trellis/content/tools/csledit.xhtml', '_blank', 'chrome,width=950,height=700,resizable')"/>
 				<button id="openCSLPreview"
-					label="&zotero.preferences.stylePreview;"
-					oncommand="window.open('chrome://zotero/content/tools/cslpreview.xhtml', '_blank', 'chrome,width=950,height=700,resizable')"/>
+					label="&trellis.preferences.stylePreview;"
+					oncommand="window.open('chrome://trellis/content/tools/cslpreview.xhtml', '_blank', 'chrome,width=950,height=700,resizable')"/>
 			</hbox>
 		</groupbox>
 	</vbox>
-	<vbox class="main-section" id="wordProcessors" aria-label="&zotero.preferences.cite.wordProcessors;" role="group">
-		<html:h1>&zotero.preferences.cite.wordProcessors;</html:h1>
+	<vbox class="main-section" id="wordProcessors" aria-label="&trellis.preferences.cite.wordProcessors;" role="group">
+		<html:h1>&trellis.preferences.cite.wordProcessors;</html:h1>
 		
 		<vbox id="wordProcessorInstallers"/>
 	</vbox>

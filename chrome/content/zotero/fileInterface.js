@@ -3,43 +3,43 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
-import { ImportCitaviAnnotatons } from 'zotero/import/citavi';
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
+import { ImportCitaviAnnotatons } from 'trellis/import/citavi';
 
 ChromeUtils.defineESModuleGetters(globalThis, {
-	HiddenBrowser: 'chrome://zotero/content/HiddenBrowser.mjs',
+	HiddenBrowser: 'chrome://trellis/content/HiddenBrowser.mjs',
 });
 
-/****Zotero_File_Exporter****
+/****Trellis_File_Exporter****
  **
  * A class to handle exporting of items, collections, or the entire library
  **/
 
 /**
- * Constructs a new Zotero_File_Exporter with defaults
+ * Constructs a new Trellis_File_Exporter with defaults
  **/
-var Zotero_File_Exporter = function () {
-	this.name = Zotero.getString("fileInterface.exportedItems");
+var Trellis_File_Exporter = function () {
+	this.name = Trellis.getString("fileInterface.exportedItems");
 	this.collection = false;
 	this.items = false;
 }
@@ -49,8 +49,8 @@ var Zotero_File_Exporter = function () {
  *
  * @return {Promise}
  **/
-Zotero_File_Exporter.prototype.save = async function () {
-	var translation = new Zotero.Translate.Export();
+Trellis_File_Exporter.prototype.save = async function () {
+	var translation = new Trellis.Translate.Export();
 	var translators = await translation.getTranslators();
 	translators.sort((a, b) => a.label.localeCompare(b.label));
 	
@@ -58,7 +58,7 @@ Zotero_File_Exporter.prototype.save = async function () {
 	let exportingNotes = false;
 	if (this.items) {
 		exportingNotes = this.items.every(item => item.isNote() || item.isAttachment());
-		// Keep only note export and Zotero RDF translators, if all items are notes or attachments
+		// Keep only note export and Trellis RDF translators, if all items are notes or attachments
 		if (exportingNotes) {
 			translators = translators.filter((translator) => {
 				return (
@@ -69,7 +69,7 @@ Zotero_File_Exporter.prototype.save = async function () {
 			
 			// Remove "Note" prefix from Note Markdown and Note HTML translators
 			let markdownTranslator = translators.find(
-				t => t.translatorID == Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN
+				t => t.translatorID == Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN
 			);
 			if (markdownTranslator) {
 				markdownTranslator.label = 'Markdown';
@@ -77,21 +77,21 @@ Zotero_File_Exporter.prototype.save = async function () {
 				translators.unshift(...translators.splice(translators.indexOf(markdownTranslator), 1));
 			}
 			let htmlTranslator = translators.find(
-				t => t.translatorID == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML
+				t => t.translatorID == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML
 			);
 			if (htmlTranslator) {
 				htmlTranslator.label = 'HTML';
 			}
 
 			if (this.items.length == 1) {
-				let noteTitle = Zotero.Utilities.Item.noteToTitle(
+				let noteTitle = Trellis.Utilities.Item.noteToTitle(
 					this.items[0].getNote(),
 					// Stop at <br/> to exclude date from annotation notes, which won't be a valid
 					// filename in many locales
 					{ stopAtLineBreak: true }
 				);
 				if (noteTitle) {
-					this.name = Zotero.File.getValidFileName(noteTitle);
+					this.name = Trellis.File.getValidFileName(noteTitle);
 				}
 			}
 		}
@@ -104,14 +104,14 @@ Zotero_File_Exporter.prototype.save = async function () {
 	
 	// present options dialog
 	var io = { translators, exportingNotes };
-	window.openDialog("chrome://zotero/content/exportOptions.xhtml",
+	window.openDialog("chrome://trellis/content/exportOptions.xhtml",
 		"_blank", "chrome,modal,centerscreen,resizable=no", io);
 	if(!io.selectedTranslator) {
 		return false;
 	}
 	
 	var fp = new FilePicker();
-	fp.init(window, Zotero.getString("fileInterface.export"), fp.modeSave);
+	fp.init(window, Trellis.getString("fileInterface.export"), fp.modeSave);
 	
 	// set file name and extension
 	if(io.displayOptions.exportFileData) {
@@ -144,39 +144,39 @@ Zotero_File_Exporter.prototype.save = async function () {
 	
 	async function _exportDone(obj, worked) {
 		// Close the items exported indicator
-		Zotero_File_Interface.Progress.close();
+		Trellis_File_Interface.Progress.close();
 		
 		if (!worked) {
-			Zotero.alert(
+			Trellis.alert(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString('fileInterface.exportError')
+				Trellis.getString('general.error'),
+				Trellis.getString('fileInterface.exportError')
 			);
-			Zotero_File_Interface.Progress.close();
+			Trellis_File_Interface.Progress.close();
 			return;
 		}
 	}
 
-	translation.setLocation(Zotero.File.pathToFile(fp.file));
+	translation.setLocation(Trellis.File.pathToFile(fp.file));
 	translation.setTranslator(io.selectedTranslator);
 	translation.setDisplayOptions(io.displayOptions);
 	translation.setHandler("itemDone", function () {
-		Zotero.updateZoteroPaneProgressMeter(translation.getProgress());
+		Trellis.updateTrellisPaneProgressMeter(translation.getProgress());
 	});
 	translation.setHandler("done", _exportDone);
-	Zotero_File_Interface.Progress.show(
-		Zotero.getString("fileInterface.itemsExported")
+	Trellis_File_Interface.Progress.show(
+		Trellis.getString("fileInterface.itemsExported")
 	);
 	translation.translate()
 };
 
 
-/****Zotero_File_Interface****
+/****Trellis_File_Interface****
  **
- * A singleton to interface with ZoteroPane to provide export/bibliography
+ * A singleton to interface with TrellisPane to provide export/bibliography
  * capabilities
  **/
-var Zotero_File_Interface = new function () {
+var Trellis_File_Interface = new function () {
 	var _unlock;
 	
 	this.exportCollection = exportCollection;
@@ -185,17 +185,17 @@ var Zotero_File_Interface = new function () {
 	this.bibliographyFromItems = bibliographyFromItems;
 	
 	/**
-	 * Creates Zotero.Translate instance and shows file picker for file export
+	 * Creates Trellis.Translate instance and shows file picker for file export
 	 *
 	 * @return {Promise}
 	 */
 	this.exportFile = async function () {
-		var exporter = new Zotero_File_Exporter();
-		exporter.libraryID = ZoteroPane_Local.getSelectedLibraryID();
+		var exporter = new Trellis_File_Exporter();
+		exporter.libraryID = TrellisPane_Local.getSelectedLibraryID();
 		if (exporter.libraryID === false) {
 			throw new Error('No library selected');
 		}
-		exporter.name = Zotero.Libraries.getName(exporter.libraryID);
+		exporter.name = Trellis.Libraries.getName(exporter.libraryID);
 		return exporter.save();
 	};
 	
@@ -203,25 +203,25 @@ var Zotero_File_Interface = new function () {
 	 * exports a collection or saved search
 	 */
 	async function exportCollection() {
-		var exporter = new Zotero_File_Exporter();
+		var exporter = new Trellis_File_Exporter();
 	
-		var collections = ZoteroPane_Local.getSelectedCollections();
+		var collections = TrellisPane_Local.getSelectedCollections();
 		if (collections.length == 1) {
 			exporter.name = collections[0].getName();
 			exporter.collection = collections[0];
 		}
 		else if (collections.length > 1) {
 			exporter.name = collections.map(c => c.getName()).join(', ');
-			exporter.items = await ZoteroPane.getUnfilteredItems();
+			exporter.items = await TrellisPane.getUnfilteredItems();
 			if (!exporter.items.length) throw ("No items to save");
 		}
 		else {
 			// find sorted items
-			exporter.items = ZoteroPane_Local.getSortedItems();
+			exporter.items = TrellisPane_Local.getSortedItems();
 			if (!exporter.items) throw ("No items to save");
 			
 			// find name
-			var search = ZoteroPane_Local.getSelectedSavedSearch();
+			var search = TrellisPane_Local.getSelectedSavedSearch();
 			if (search) {
 				exporter.name = search.name;
 			}
@@ -234,11 +234,11 @@ var Zotero_File_Interface = new function () {
 	 * exports items
 	 */
 	function exportItems() {
-		var exporter = new Zotero_File_Exporter();
-		let itemIDs = ZoteroPane_Local.getSelectedItems(true);
+		var exporter = new Trellis_File_Exporter();
+		let itemIDs = TrellisPane_Local.getSelectedItems(true);
 		// Get selected item IDs in the item tree order
-		itemIDs = ZoteroPane_Local.getSortedItems(true).filter(id => itemIDs.includes(id));
-		exporter.items = Zotero.Items.get(itemIDs);
+		itemIDs = TrellisPane_Local.getSortedItems(true).filter(id => itemIDs.includes(id));
+		exporter.items = Trellis.Items.get(itemIDs);
 		if(!exporter.items || !exporter.items.length) throw("no items currently selected");
 		
 		exporter.save();
@@ -250,7 +250,7 @@ var Zotero_File_Interface = new function () {
 	 */
 	function exportItemsToClipboard(items, format) {
 		function _translate(items, format, callback) {
-			let translation = new Zotero.Translate.Export();
+			let translation = new Trellis.Translate.Export();
 			translation.setItems(items.slice());
 			translation.setTranslator(format.id);
 			if (format.options) {
@@ -262,17 +262,17 @@ var Zotero_File_Interface = new function () {
 		
 		// If translating with virtual "Markdown + Rich Text" translator, use Note Markdown and
 		// Note HTML instead
-		if (format.id == Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
-			let markdownFormat = { mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN, options: format.markdownOptions };
-			let htmlFormat = { mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_HTML, options: format.htmlOptions };
+		if (format.id == Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+			let markdownFormat = { mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN, options: format.markdownOptions };
+			let htmlFormat = { mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_HTML, options: format.htmlOptions };
 			_translate(items, markdownFormat, (obj, worked) => {
 				if (!worked) {
-					Zotero.log(Zotero.getString('fileInterface.exportError'), 'warning');
+					Trellis.log(Trellis.getString('fileInterface.exportError'), 'warning');
 					return;
 				}
 				_translate(items, htmlFormat, (obj2, worked) => {
 					if (!worked) {
-						Zotero.log(Zotero.getString('fileInterface.exportError'), 'warning');
+						Trellis.log(Trellis.getString('fileInterface.exportError'), 'warning');
 						return;
 					}
 					
@@ -308,12 +308,12 @@ var Zotero_File_Interface = new function () {
 		else {
 			_translate(items, format, (obj, worked) => {
 				if (!worked) {
-					Zotero.log(Zotero.getString('fileInterface.exportError'), 'warning');
+					Trellis.log(Trellis.getString('fileInterface.exportError'), 'warning');
 					return;
 				}
 				let text = obj.string;
 				// For Note HTML translator use body content only
-				if (format.id == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+				if (format.id == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 					let parser = new DOMParser();
 					let doc = parser.parseFromString(text, 'text/html');
 					text = doc.body.innerHTML;
@@ -328,13 +328,13 @@ var Zotero_File_Interface = new function () {
 	
 	this.getMendeleyDirectory = function () {
 		var path = FileUtils.getDir('Home', []).path;
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			path = PathUtils.join(path, ['Library', 'Application Support', 'Mendeley Desktop']);
 		}
-		else if (Zotero.isWin) {
+		else if (Trellis.isWin) {
 			path = PathUtils.join(path, ['AppData', 'Local', 'Mendeley Ltd', 'Mendeley Desktop']);
 		}
-		else if (Zotero.isLinux) {
+		else if (Trellis.isLinux) {
 			path = PathUtils.join(path, ['.local', 'share', 'data', 'Mendeley Ltd.', 'Mendeley Desktop']);
 		}
 		else {
@@ -349,10 +349,10 @@ var Zotero_File_Interface = new function () {
 		try {
 			var dir = this.getMendeleyDirectory();
 			if (!(await OS.File.exists(dir))) {
-				Zotero.debug(`${dir} does not exist`);
+				Trellis.debug(`${dir} does not exist`);
 				return dbs;
 			}
-			await Zotero.File.iterateDirectory(dir, function (entry) {
+			await Trellis.File.iterateDirectory(dir, function (entry) {
 				if (entry.isDir) return;
 				// online.sqlite, counterintuitively, is the default database before you sign in
 				if (entry.name == 'online.sqlite' || entry.name.endsWith('@www.mendeley.com.sqlite')) {
@@ -375,20 +375,20 @@ var Zotero_File_Interface = new function () {
 			});
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		return dbs;
 	};
 	
 	
 	this.showImportWizard = function (extraArgs = {}) {
-		var libraryID = Zotero.Libraries.userLibraryID;
+		var libraryID = Trellis.Libraries.userLibraryID;
 		try {
-			let zp = Zotero.getActiveZoteroPane();
+			let zp = Trellis.getActiveTrellisPane();
 			libraryID = zp.getSelectedLibraryID();
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		var args = {
 			libraryID,
@@ -396,13 +396,13 @@ var Zotero_File_Interface = new function () {
 		};
 		args.wrappedJSObject = args;
 		
-		Services.ww.openWindow(null, "chrome://zotero/content/import/importWizard.xhtml",
+		Services.ww.openWindow(null, "chrome://trellis/content/import/importWizard.xhtml",
 			"importFile", "chrome,dialog=yes,centerscreen,modal", args);
 	};
 	
 	
 	/**
-	 * Creates Zotero.Translate instance and shows file picker for file import
+	 * Creates Trellis.Translate instance and shows file picker for file import
 	 *
 	 * @param {Object} options
 	 * @param {nsIFile|string|null} [options.file=null] - File to import, or none to show a filepicker
@@ -418,14 +418,14 @@ var Zotero_File_Interface = new function () {
 			options = {};
 		}
 		if (typeof options == 'string' || options instanceof Components.interfaces.nsIFile) {
-			Zotero.debug("WARNING: importFile() now takes a single options object -- update your code");
+			Trellis.debug("WARNING: importFile() now takes a single options object -- update your code");
 			options = {
 				file: options,
 				createNewCollection: arguments[1]
 			};
 		}
 		
-		var file = options.file ? Zotero.File.pathToFile(options.file) : null;
+		var file = options.file ? Trellis.File.pathToFile(options.file) : null;
 		var createNewCollection = options.createNewCollection;
 		var addToLibraryRoot = options.addToLibraryRoot;
 		var linkFiles = options.linkFiles;
@@ -436,17 +436,17 @@ var Zotero_File_Interface = new function () {
 		}
 		else if (!createNewCollection) {
 			try {
-				let zp = Zotero.getActiveZoteroPane();
+				let zp = Trellis.getActiveTrellisPane();
 				if (!zp.canEdit()) {
-					await zp.collectionsView.selectLibrary(Zotero.Libraries.userLibraryID);
+					await zp.collectionsView.selectLibrary(Trellis.Libraries.userLibraryID);
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		
-		var defaultNewCollectionPrefix = Zotero.getString("fileInterface.imported");
+		var defaultNewCollectionPrefix = Trellis.getString("fileInterface.imported");
 		
 		var translation;
 		
@@ -459,8 +459,8 @@ var Zotero_File_Interface = new function () {
 			translation.relinkOnly = options.relinkOnly;
 		}
 		else if (options.folder) {
-			const { Zotero_Import_Folder } = ChromeUtils.importESModule("chrome://zotero/content/import/folderImport.mjs");
-			translation = new Zotero_Import_Folder({
+			const { Trellis_Import_Folder } = ChromeUtils.importESModule("chrome://trellis/content/import/folderImport.mjs");
+			translation = new Trellis_Import_Folder({
 				folder: options.folder,
 				recreateStructure: options.recreateStructure,
 				fileTypes: options.fileTypes,
@@ -469,16 +469,16 @@ var Zotero_File_Interface = new function () {
 		}
 		else {
 			// Check if the file is an SQLite database
-			var sample = await Zotero.File.getSample(file.path);
-			if (file.path == Zotero.DataDirectory.getDatabase()) {
-				// Blacklist the current Zotero database, which would cause a hang
+			var sample = await Trellis.File.getSample(file.path);
+			if (file.path == Trellis.DataDirectory.getDatabase()) {
+				// Blacklist the current Trellis database, which would cause a hang
 			}
-			else if (Zotero.MIME.sniffForMIMEType(sample) == 'application/x-sqlite3') {
+			else if (Trellis.MIME.sniffForMIMEType(sample) == 'application/x-sqlite3') {
 				// Mendeley import doesn't use the real translation architecture, but we create a
 				// translation object with the same interface
 				translation = await _getMendeleyTranslation();
 				translation.createNewCollection = createNewCollection;
-				defaultNewCollectionPrefix = Zotero.getString(
+				defaultNewCollectionPrefix = Trellis.getString(
 					'fileInterface.appImportCollection', 'Mendeley'
 				);
 			}
@@ -489,7 +489,7 @@ var Zotero_File_Interface = new function () {
 			}
 			
 			if (!translation) {
-				translation = new Zotero.Translate.Import();
+				translation = new Trellis.Translate.Import();
 			}
 			translation.setLocation(file);
 		}
@@ -509,22 +509,22 @@ var Zotero_File_Interface = new function () {
 	 * Imports from clipboard
 	 */
 	this.importFromClipboard = async function () {
-		var str = Zotero.Utilities.Internal.getClipboard("text/plain");
+		var str = Trellis.Utilities.Internal.getClipboard("text/plain");
 		if(!str) {
 			var ps = Services.prompt;
 			ps.alert(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString('fileInterface.importClipboardNoDataError')
+				Trellis.getString('general.error'),
+				Trellis.getString('fileInterface.importClipboardNoDataError')
 			);
 		}
 		
-		var translation = new Zotero.Translate.Import();
+		var translation = new Trellis.Translate.Import();
 		translation.setString(str);
 	
 		try {
-			if (!ZoteroPane.collectionsView.editable) {
-				await ZoteroPane.collectionsView.selectLibrary();
+			if (!TrellisPane.collectionsView.editable) {
+				await TrellisPane.collectionsView.selectLibrary();
 			}
 		} catch(e) {}
 		
@@ -536,11 +536,11 @@ var Zotero_File_Interface = new function () {
 		// Select imported items
 		try {
 			if (translation.newItems) {
-				ZoteroPane.itemsView.selectItems(translation.newItems.map(item => item.id));
+				TrellisPane.itemsView.selectItems(translation.newItems.map(item => item.id));
 			}
 		}
 		catch (e) {
-			Zotero.logError(e, 2);
+			Trellis.logError(e, 2);
 		}
 	};
 	
@@ -574,23 +574,23 @@ var Zotero_File_Interface = new function () {
 				+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_IS_STRING;
 			let index = ps.confirmEx(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString("fileInterface.unsupportedFormat"),
+				Trellis.getString('general.error'),
+				Trellis.getString("fileInterface.unsupportedFormat"),
 				buttonFlags,
 				null,
-				Zotero.getString("fileInterface.viewSupportedFormats"),
+				Trellis.getString("fileInterface.viewSupportedFormats"),
 				null, null, {}
 			);
 			if (index == 1) {
-				Zotero.launchURL("https://www.zotero.org/support/kb/importing_standardized_formats");
+				Trellis.launchURL("https://www.trellis.org/support/kb/importing_standardized_formats");
 			}
 			return false;
 		}
 		
-		var libraryID = Zotero.Libraries.userLibraryID;
+		var libraryID = Trellis.Libraries.userLibraryID;
 		var importCollections = [];
 		try {
-			let zp = Zotero.getActiveZoteroPane();
+			let zp = Trellis.getActiveTrellisPane();
 			libraryID = zp.getSelectedLibraryID();
 			if (addToLibraryRoot) {
 				await zp.collectionsView.selectLibrary(libraryID);
@@ -600,7 +600,7 @@ var Zotero_File_Interface = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		if(createNewCollection) {
@@ -610,7 +610,7 @@ var Zotero_File_Interface = new function () {
 				let leafName = translation.location.leafName;
 				collectionName = (translation.location.isDirectory() || leafName.indexOf(".") === -1 ? leafName
 					: leafName.substr(0, leafName.lastIndexOf(".")));
-				let allCollections = Zotero.Collections.getByLibrary(libraryID);
+				let allCollections = Trellis.Collections.getByLibrary(libraryID);
 				for(var i=0; i<allCollections.length; i++) {
 					if(allCollections[i].name == collectionName) {
 						collectionName += " "+(new Date()).toLocaleString();
@@ -621,7 +621,7 @@ var Zotero_File_Interface = new function () {
 			else {
 				collectionName = defaultNewCollectionPrefix + " " + (new Date()).toLocaleString();
 			}
-			let importCollection = new Zotero.Collection;
+			let importCollection = new Trellis.Collection;
 			importCollection.libraryID = libraryID;
 			importCollection.name = collectionName;
 			await importCollection.saveTx();
@@ -634,10 +634,10 @@ var Zotero_File_Interface = new function () {
 		var progressWin;
 		var progress;
 		if (showProgressWindow) {
-			progressWin = new Zotero.ProgressWindow({
+			progressWin = new Trellis.ProgressWindow({
 				closeOnClick: false
 			});
-			progressWin.changeHeadline(Zotero.getString('fileInterface.importing'));
+			progressWin.changeHeadline(Trellis.getString('fileInterface.importing'));
 			progress = new progressWin.ItemProgress(
 				null, translation.path ? PathUtils.filename(translation.path) : translators[0].label
 			);
@@ -648,13 +648,13 @@ var Zotero_File_Interface = new function () {
 				progress.setProgress(translation.getProgress());
 			});
 			
-			await Zotero.Promise.delay(0);
+			await Trellis.Promise.delay(0);
 		}
 		else {
 			await onBeforeImport(translation);
 		}
 		
-		var notifierQueue = new Zotero.Notifier.Queue;
+		var notifierQueue = new Trellis.Notifier.Queue;
 		try {
 			await translation.translate({
 				libraryID,
@@ -670,16 +670,16 @@ var Zotero_File_Interface = new function () {
 			}
 			
 			progressWin.close();
-			Zotero.logError(e);
-			Zotero.alert(
+			Trellis.logError(e);
+			Trellis.alert(
 				null,
-				Zotero.getString('general.error'),
-				Zotero_File_Interface.makeImportErrorString(translation)
+				Trellis.getString('general.error'),
+				Trellis_File_Interface.makeImportErrorString(translation)
 			);
 			return false;
 		}
 		finally {
-			await Zotero.Notifier.commit(notifierQueue);
+			await Trellis.Notifier.commit(notifierQueue);
 		}
 
 		if (translators[0].label.match(/^Citavi (?:[56]) XML/i)) {
@@ -690,43 +690,43 @@ var Zotero_File_Interface = new function () {
 		
 		// Show popup on completion
 		if (showProgressWindow) {
-			progressWin.changeHeadline(Zotero.getString('fileInterface.importComplete'));
+			progressWin.changeHeadline(Trellis.getString('fileInterface.importComplete'));
 			if (numItems == 1) {
 				progress.setItemTypeAndIcon(translation.newItems[0].getItemTypeIconName());
 			}
 			else {
 				progress.setItemTypeAndIcon(null, 'unfiled');
 			}
-			let text = Zotero.getString(`fileInterface.itemsWereImported`, numItems, numItems);
+			let text = Trellis.getString(`fileInterface.itemsWereImported`, numItems, numItems);
 			progress.setText(text);
 			// For synchronous translators, which don't update progress
 			progress.setProgress(100);
 			progressWin.startCloseTimer(5000);
 		}
 		
-		Zotero.debug(`Imported ${numItems} item(s) in ${performance.now() - t} ms`);
+		Trellis.debug(`Imported ${numItems} item(s) in ${performance.now() - t} ms`);
 		
 		return true;
 	};
 	
 	
 	var _getMendeleyTranslation = async function () {
-		let Zotero_Import_Mendeley;
+		let Trellis_Import_Mendeley;
 		if (true) {
-			({ Zotero_Import_Mendeley } = ChromeUtils.importESModule("chrome://zotero/content/import/mendeley/mendeleyImport.mjs"));
+			({ Trellis_Import_Mendeley } = ChromeUtils.importESModule("chrome://trellis/content/import/mendeley/mendeleyImport.mjs"));
 		}
-		// TEMP: Load uncached from ~/zotero-client for development
+		// TEMP: Load uncached from ~/trellis-client for development
 		else {
 			const { FileUtils } = ChromeUtils.importESModule("resource://gre/modules/FileUtils.sys.mjs");
 			let file = FileUtils.getDir("Home", []);
 			file = OS.Path.join(
 				file.path,
-				'zotero-client', 'chrome', 'content', 'zotero', 'import', 'mendeley', 'mendeleyImport.mjs'
+				'trellis-client', 'chrome', 'content', 'trellis', 'import', 'mendeley', 'mendeleyImport.mjs'
 			);
 			let fileURI = OS.Path.toFileURI(file);
-			({ Zotero_Import_Mendeley } = ChromeUtils.importESModule(fileURI));
+			({ Trellis_Import_Mendeley } = ChromeUtils.importESModule(fileURI));
 		}
-		return new Zotero_Import_Mendeley();
+		return new Trellis_Import_Mendeley();
 	};
 	
 	
@@ -734,16 +734,16 @@ var Zotero_File_Interface = new function () {
 	 * Creates a bibliography from a collection or saved search
 	 */
 	this.bibliographyFromCollection = async function () {
-		var items = await ZoteroPane.getUnfilteredItems();
+		var items = await TrellisPane.getUnfilteredItems();
 		
 		// Find collection name
 		var name = false;
-		var collections = ZoteroPane.getSelectedCollections();
+		var collections = TrellisPane.getSelectedCollections();
 		if (collections.length) {
 			name = collections.map(c => c.name).join(', ');
 		}
 		else {
-			let search = ZoteroPane.getSelectedSavedSearch();
+			let search = TrellisPane.getSelectedSavedSearch();
 			if (search) {
 				name = search.name;
 			}
@@ -756,10 +756,10 @@ var Zotero_File_Interface = new function () {
 	 * Creates a bibliography from a items
 	 */
 	async function bibliographyFromItems() {
-		var items = ZoteroPane_Local.getSelectedItems();
+		var items = TrellisPane_Local.getSelectedItems();
 		if(!items || !items.length) throw("no items currently selected");
 		
-		await _doBibliographyOptions(Zotero.getString("fileInterface.untitledBibliography"), items);
+		await _doBibliographyOptions(Trellis.getString("fileInterface.untitledBibliography"), items);
 	}
 	
 	
@@ -768,8 +768,8 @@ var Zotero_File_Interface = new function () {
 	 *
 	 * Does not check that items are actual references (and not notes or attachments)
 	 *
-	 * @param {Zotero.Item[]} items
-	 * @param {String} style - Style id string (e.g., 'http://www.zotero.org/styles/apa')
+	 * @param {Trellis.Item[]} items
+	 * @param {String} style - Style id string (e.g., 'http://www.trellis.org/styles/apa')
 	 * @param {String} locale - Locale (e.g., 'en-US')
 	 * @param {Boolean} [asHTML=false] - Use HTML source for plain-text data
 	 * @param {Boolean} [asCitations=false] - Copy citation cluster instead of bibliography
@@ -782,7 +782,7 @@ var Zotero_File_Interface = new function () {
 						   createInstance(Components.interfaces.nsITransferable);
 		var clipboardService = Components.classes["@mozilla.org/widget/clipboard;1"].
 							   getService(Components.interfaces.nsIClipboard);
-		style = Zotero.Styles.get(style);
+		style = Trellis.Styles.get(style);
 		var cslEngine = style.getCiteProc(locale, 'html', { cache: true });
 		
 		if (asCitations) {
@@ -794,7 +794,7 @@ var Zotero_File_Interface = new function () {
 			var output = cslEngine.previewCitationCluster(citation, [], [], "html");
 		}
 		else {
-			var output = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "html");
+			var output = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "html");
 		}
 		
 		// add HTML
@@ -810,7 +810,7 @@ var Zotero_File_Interface = new function () {
 				output = cslEngine.previewCitationCluster(citation, [], [], "text");
 			}
 			else {
-				output = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, 'text');
+				output = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, 'text');
 			}
 		}
 		cslEngine.free();
@@ -823,7 +823,7 @@ var Zotero_File_Interface = new function () {
 		
 		clipboardService.setData(transferable, null, Components.interfaces.nsIClipboard.kGlobalClipboard);
 		
-		Zotero.debug(`Copied bibliography to clipboard in ${new Date() - d} ms`);
+		Trellis.debug(`Copied bibliography to clipboard in ${new Date() - d} ms`);
 	}
 	
 	
@@ -834,16 +834,16 @@ var Zotero_File_Interface = new function () {
 		// Limit to regular items
 		items = items.filter(item => item.isRegularItem());
 		if (!items.length) {
-			Zotero.alert(
+			Trellis.alert(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString("fileInterface.noReferencesError")
+				Trellis.getString('general.error'),
+				Trellis.getString("fileInterface.noReferencesError")
 			);
 			return;
 		}
 		
 		var io = new Object();
-		var newDialog = window.openDialog("chrome://zotero/content/bibliography.xhtml",
+		var newDialog = window.openDialog("chrome://trellis/content/bibliography.xhtml",
 			"_blank","chrome,modal,centerscreen", io);
 		
 		if(!io.method) return;
@@ -860,19 +860,19 @@ var Zotero_File_Interface = new function () {
 		// generate bibliography
 		try {
 			if(io.method == 'copy-to-clipboard') {
-				Zotero_File_Interface.copyItemsToClipboard(items, io.style, locale, false, io.mode === "citations");
+				Trellis_File_Interface.copyItemsToClipboard(items, io.style, locale, false, io.mode === "citations");
 			}
 			else {
-				var style = Zotero.Styles.get(io.style);
+				var style = Trellis.Styles.get(io.style);
 				var cslEngine = style.getCiteProc(locale, format, { cache: true });
-				var bibliography = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine,
+				var bibliography = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine,
 					items, format, io.mode === "citations");
 			}
 		} catch(e) {
-			Zotero.alert(
+			Trellis.alert(
 				null,
-				Zotero.getString('general.error'),
-				Zotero.getString("fileInterface.bibliographyGenerationError")
+				Trellis.getString('general.error'),
+				Trellis.getString("fileInterface.bibliographyGenerationError")
 			);
 			throw(e);
 		}
@@ -904,7 +904,7 @@ var Zotero_File_Interface = new function () {
 				html +='<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\n';
 				html +='<head>\n';
 				html +='<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>\n';
-				html +='<title>'+Zotero.getString("fileInterface.bibliographyHTMLTitle")+'</title>\n';
+				html +='<title>'+Trellis.getString("fileInterface.bibliographyHTMLTitle")+'</title>\n';
 				html +='</head>\n';
 				html +='<body>\n';
 				html += bibliography;
@@ -952,7 +952,7 @@ var Zotero_File_Interface = new function () {
 			var fStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
 						  createInstance(Components.interfaces.nsIFileOutputStream);
 			fStream.init(
-				Zotero.File.pathToFile(fp.file),
+				Trellis.File.pathToFile(fp.file),
 				0x02 | 0x08 | 0x20, 0o664, // write, create, truncate
 				0
 			);
@@ -966,7 +966,7 @@ var Zotero_File_Interface = new function () {
 	 * Generate an error string reporting a translation failure. Includes the
 	 * label of the running translator if available.
 	 *
-	 * @param {Zotero.Translate} [translate]
+	 * @param {Trellis.Translate} [translate]
 	 * @return {String}
 	 */
 	this.makeImportErrorString = function (translate) {
@@ -974,21 +974,21 @@ var Zotero_File_Interface = new function () {
 			&& translate.translator[0]
 			&& translate.translator[0].label;
 		return translatorLabel
-			? Zotero.getString('fileInterface.importError.translator', translatorLabel)
-			: Zotero.getString('fileInterface.importError');
+			? Trellis.getString('fileInterface.importError.translator', translatorLabel)
+			: Trellis.getString('fileInterface.importError');
 	};
 };
 
 // Handles the display of a progress indicator
-Zotero_File_Interface.Progress = new function () {
+Trellis_File_Interface.Progress = new function () {
 	this.show = show;
 	this.close = close;
 	
 	function show(headline) {
-		Zotero.showZoteroPaneProgressMeter(headline);
+		Trellis.showTrellisPaneProgressMeter(headline);
 	}
 	
 	function close() {
-		Zotero.hideZoteroPaneOverlays();
+		Trellis.hideTrellisPaneOverlays();
 	}
 }

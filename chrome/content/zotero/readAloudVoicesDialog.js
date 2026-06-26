@@ -1,10 +1,10 @@
-var Zotero_Read_Aloud_Voices = new function () {
+var Trellis_Read_Aloud_Voices = new function () {
 	let io;
 
 	this.init = function () {
 		io = window.arguments[0];
 
-		this._dialog = document.getElementById('zotero-read-aloud-voices');
+		this._dialog = document.getElementById('trellis-read-aloud-voices');
 		this._iframe = document.getElementById('read-aloud-voices-iframe');
 
 		document.addEventListener('dialogaccept', event => this.accept(event));
@@ -26,7 +26,7 @@ var Zotero_Read_Aloud_Voices = new function () {
 			onOpenLink: (url) => {
 				let win = Services.wm.getMostRecentWindow('navigator:browser');
 				if (win) {
-					win.ZoteroPane.loadURI(url);
+					win.TrellisPane.loadURI(url);
 				}
 			},
 			onPurchaseCredits: () => {

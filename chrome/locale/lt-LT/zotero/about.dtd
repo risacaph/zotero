@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "versija">
-<!ENTITY zotero.whatsNew "Naujovės">
-<!ENTITY zotero.createdby "Sukurė:">
-<!ENTITY zotero.director "Direktorius:">
-<!ENTITY zotero.directors "Direktoriai:">
-<!ENTITY zotero.developers "Programuotojai:">
-<!ENTITY zotero.alumni "Ankstesni talkininkai:">
-<!ENTITY zotero.about.localizations "Vertėjai:">
-<!ENTITY zotero.about.additionalSoftware "Trečiųjų šalių programinė įranga:">
-<!ENTITY zotero.thanks "Ypač dėkojame:">
-<!ENTITY zotero.about.close "Užverti">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Kitos padėkos">
-<!ENTITY zotero.citationProcessing "Citatų ir bibliografijos apdorojimas">
+<!ENTITY trellis.version "versija">
+<!ENTITY trellis.whatsNew "Naujovės">
+<!ENTITY trellis.createdby "Sukurė:">
+<!ENTITY trellis.director "Direktorius:">
+<!ENTITY trellis.directors "Direktoriai:">
+<!ENTITY trellis.developers "Programuotojai:">
+<!ENTITY trellis.alumni "Ankstesni talkininkai:">
+<!ENTITY trellis.about.localizations "Vertėjai:">
+<!ENTITY trellis.about.additionalSoftware "Trečiųjų šalių programinė įranga:">
+<!ENTITY trellis.thanks "Ypač dėkojame:">
+<!ENTITY trellis.about.close "Užverti">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Kitos padėkos">
+<!ENTITY trellis.citationProcessing "Citatų ir bibliografijos apdorojimas">

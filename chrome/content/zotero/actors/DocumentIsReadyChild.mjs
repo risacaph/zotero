@@ -1,4 +1,4 @@
-import { documentIsReady } from "chrome://zotero/content/actors/actorUtils.mjs";
+import { documentIsReady } from "chrome://trellis/content/actors/actorUtils.mjs";
 
 export class DocumentIsReadyChild extends JSWindowActorChild {
 	async receiveMessage({ name, data }) {

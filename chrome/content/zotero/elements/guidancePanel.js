@@ -3,22 +3,22 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -65,18 +65,18 @@ const getAnchorOffset = (anchorEl, popoverEl, padding = 5) => {
 
 		init() {
 			this.panel.addEventListener('popupshown', () => {
-				Zotero.guidanceBeingShown = true;
+				Trellis.guidanceBeingShown = true;
 			});
 
 			this.panel.addEventListener('popuphidden', () => {
-				Zotero.guidanceBeingShown = false;
+				Trellis.guidanceBeingShown = false;
 			});
 
 			if (this.getAttribute("noautohide") == 'true'
 					&& !this.hasAttribute('forward')) {
 				let dismiss = () => {
 					if (this._pref) {
-						Zotero.Prefs.set(this._pref, true);
+						Trellis.Prefs.set(this._pref, true);
 					}
 					this.panel.hidePopup();
 				};
@@ -102,7 +102,7 @@ const getAnchorOffset = (anchorEl, popoverEl, padding = 5) => {
 		 * @param {Boolean} [options.force] Show even if already shown
 		 */
 		async show(options) {
-			if (!Zotero.Prefs.get("firstRunGuidance")) return;
+			if (!Trellis.Prefs.get("firstRunGuidance")) return;
 			
 			options = options || {};
 			let text = options.text;
@@ -112,7 +112,7 @@ const getAnchorOffset = (anchorEl, popoverEl, padding = 5) => {
 			
 			if (!forEl) return;
 			// Don't show two panels at once
-			if (Zotero.guidanceBeingShown) {
+			if (Trellis.guidanceBeingShown) {
 				return;
 			}
 			
@@ -122,7 +122,7 @@ const getAnchorOffset = (anchorEl, popoverEl, padding = 5) => {
 				pref = "firstRunGuidanceShown." + about;
 				let shown = false;
 				try {
-					shown = Zotero.Prefs.get(pref);
+					shown = Trellis.Prefs.get(pref);
 				}
 				catch {}
 				if (shown && !force) {
@@ -190,7 +190,7 @@ const getAnchorOffset = (anchorEl, popoverEl, padding = 5) => {
 					x ? parseInt(x, 10) : 0, y ? parseInt(y, 10) : 0);
 
 				// On Win/Linux, the arrow appears disconnected from the panel if too close to the edge
-				const padding = Zotero.isMac ? 5 : 10;
+				const padding = Trellis.isMac ? 5 : 10;
 				const anchorOffset = getAnchorOffset(forEl, this.panel, padding);
 				this.panel.style.setProperty('--anchor-x', `${anchorOffset}px`);
 
@@ -199,7 +199,7 @@ const getAnchorOffset = (anchorEl, popoverEl, padding = 5) => {
 						this._pref = pref;
 					}
 					else {
-						Zotero.Prefs.set(pref, true);
+						Trellis.Prefs.set(pref, true);
 					}
 				}
 			};

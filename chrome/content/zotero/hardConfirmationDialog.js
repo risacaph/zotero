@@ -3,35 +3,35 @@
     
     Copyright © 2016 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.HardConfirmationDialog = {
+Trellis.HardConfirmationDialog = {
 	init: function() {
-		document.addEventListener('dialogaccept', () => Zotero.HardConfirmationDialog.onAccept());
-		document.addEventListener('dialogextra1', () => Zotero.HardConfirmationDialog.onExtra1());
-		document.addEventListener('dialogextra2', () => Zotero.HardConfirmationDialog.onExtra2());
+		document.addEventListener('dialogaccept', () => Trellis.HardConfirmationDialog.onAccept());
+		document.addEventListener('dialogextra1', () => Trellis.HardConfirmationDialog.onExtra1());
+		document.addEventListener('dialogextra2', () => Trellis.HardConfirmationDialog.onExtra2());
 
 		this.io = window.arguments[0];
 		
-		Zotero.UIProperties.registerRoot(document.documentElement);
+		Trellis.UIProperties.registerRoot(document.documentElement);
 		var dialog = document.getElementById('commonDialog');
 		var vbox = document.getElementById('infoContainer');
 		var sep = vbox.firstChild;
@@ -41,7 +41,7 @@ Zotero.HardConfirmationDialog = {
 		if (this.io.title) {
 			document.documentElement.setAttribute('title', this.io.title);
 			
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				let elem = document.getElementById('infoTitle');
 				elem.textContent = this.io.title;
 				elem.style.marginBottom = '12px';
@@ -49,13 +49,13 @@ Zotero.HardConfirmationDialog = {
 			}
 		}
 		if (this.io.checkboxLabel) {
-			var checkbox = document.getElementById('zotero-hardConfirmationDialog-checkbox');
+			var checkbox = document.getElementById('trellis-hardConfirmationDialog-checkbox');
 			checkbox.hidden = false;
 			checkbox.setAttribute('label', this.io.checkboxLabel);
 			this.onCheckbox();
 		}
 		if (this.io.confirmationText) {
-			let textbox = document.getElementById('zotero-hardConfirmationDialog-textbox');
+			let textbox = document.getElementById('trellis-hardConfirmationDialog-textbox');
 			textbox.hidden = false;
 			textbox.placeholder = this.io.confirmationText;
 			textbox.focus();
@@ -77,12 +77,12 @@ Zotero.HardConfirmationDialog = {
 	
 	onCheckbox: function(event) {
 		document.getElementById('commonDialog').getButton('accept').disabled = 
-			!document.getElementById('zotero-hardConfirmationDialog-checkbox').checked;
+			!document.getElementById('trellis-hardConfirmationDialog-checkbox').checked;
 	},
 	
 	onKeyUp: function(event) {
 		document.getElementById('commonDialog').getButton('accept').disabled = 
-			document.getElementById('zotero-hardConfirmationDialog-textbox').value != this.io.confirmationText;
+			document.getElementById('trellis-hardConfirmationDialog-textbox').value != this.io.confirmationText;
 	},
 	
 	onAccept: function() {

@@ -3,61 +3,61 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
 {
 	const { ItemPaneContainerBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneContainerBase.mjs",
+		"chrome://trellis/content/elements/itemPaneContainerBase.mjs",
 		{ global: "current" }
 	);
 
 	let lazy = {};
 	ChromeUtils.defineESModuleGetters(lazy, {
-		mergeItems: "chrome://zotero/content/mergeItems.mjs",
+		mergeItems: "chrome://trellis/content/mergeItems.mjs",
 	});
 
 	class DuplicatesMergePane extends ItemPaneContainerBase {
 		content = MozXULElement.parseXULToFragment(`
-			<vbox id="zotero-duplicates-merge-controls">
+			<vbox id="trellis-duplicates-merge-controls">
 				<groupbox>
-					<button id="zotero-duplicates-merge-button" data-l10n-id="item-pane-duplicates-merge-items" />
+					<button id="trellis-duplicates-merge-button" data-l10n-id="item-pane-duplicates-merge-items" />
 				</groupbox>
 
-				<groupbox id="zotero-duplicates-merge-version-select">
-					<description>&zotero.duplicatesMerge.versionSelect;</description>
+				<groupbox id="trellis-duplicates-merge-version-select">
+					<description>&trellis.duplicatesMerge.versionSelect;</description>
 					<hbox>
-						<richlistbox id="zotero-duplicates-merge-original-date" rows="0"/>
+						<richlistbox id="trellis-duplicates-merge-original-date" rows="0"/>
 					</hbox>
 				</groupbox>
 
-				<groupbox id="zotero-duplicates-merge-field-select">
-					<description>&zotero.duplicatesMerge.fieldSelect;</description>
+				<groupbox id="trellis-duplicates-merge-field-select">
+					<description>&trellis.duplicatesMerge.fieldSelect;</description>
 				</groupbox>
 			</vbox>
 
-			<html:div id="zotero-duplicates-merge-view-item" class="zotero-view-item" tabindex="0">
-				<info-box id="zotero-duplicates-merge-info-box" data-pane="info"/>
-				<abstract-box id="zotero-duplicates-merge-abstract-box" data-pane="abstract"/>
+			<html:div id="trellis-duplicates-merge-view-item" class="trellis-view-item" tabindex="0">
+				<info-box id="trellis-duplicates-merge-info-box" data-pane="info"/>
+				<abstract-box id="trellis-duplicates-merge-abstract-box" data-pane="abstract"/>
 			</html:div>
-		`, ['chrome://zotero/locale/zotero.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd']);
 
 		init() {
 			this._masterItem = null;
@@ -65,13 +65,13 @@
 			this._otherItems = [];
 			this._ignoreFields = ['dateAdded', 'dateModified', 'accessDate'];
 
-			this._paneParent = this.querySelector('#zotero-duplicates-merge-view-item');
-			this._infoBox = this.querySelector('#zotero-duplicates-merge-info-box');
-			this._abstractBox = this.querySelector('#zotero-duplicates-merge-abstract-box');
+			this._paneParent = this.querySelector('#trellis-duplicates-merge-view-item');
+			this._infoBox = this.querySelector('#trellis-duplicates-merge-info-box');
+			this._abstractBox = this.querySelector('#trellis-duplicates-merge-abstract-box');
 
-			this.querySelector("#zotero-duplicates-merge-button").addEventListener(
+			this.querySelector("#trellis-duplicates-merge-button").addEventListener(
 				"command", () => this.merge());
-			this.querySelector("#zotero-duplicates-merge-original-date").addEventListener(
+			this.querySelector("#trellis-duplicates-merge-original-date").addEventListener(
 				"select", event => this.setMaster(event.target.selectedIndex));
 		}
 
@@ -91,8 +91,8 @@
 				}
 				
 				if (!item.isRegularItem() || ['annotation', 'attachment', 'note'].includes(item.itemType)) {
-					let msg = Zotero.getString('pane.item.duplicates.onlyTopLevel');
-					ZoteroPane.itemPane.setItemPaneMessage(msg);
+					let msg = Trellis.getString('pane.item.duplicates.onlyTopLevel');
+					TrellisPane.itemPane.setItemPaneMessage(msg);
 					return false;
 				}
 				
@@ -104,9 +104,9 @@
 							msg = { l10nId: 'item-pane-message-items-selected', l10nArgs: { count: items.length } };
 						}
 						else {
-							msg = Zotero.getString('pane.item.duplicates.onlySameItemType');
+							msg = Trellis.getString('pane.item.duplicates.onlySameItemType');
 						}
-						ZoteroPane.itemPane.setItemPaneMessage(msg);
+						TrellisPane.itemPane.setItemPaneMessage(msg);
 						return false;
 					}
 				}
@@ -125,19 +125,19 @@
 			// Update the UI
 			//
 			
-			let button = this.querySelector('#zotero-duplicates-merge-button');
-			let versionSelect = this.querySelector('#zotero-duplicates-merge-version-select');
-			let fieldSelect = this.querySelector('#zotero-duplicates-merge-field-select');
+			let button = this.querySelector('#trellis-duplicates-merge-button');
+			let versionSelect = this.querySelector('#trellis-duplicates-merge-version-select');
+			let fieldSelect = this.querySelector('#trellis-duplicates-merge-field-select');
 			
 			let alternatives = oldestItem.multiDiff(otherItems, this._ignoreFields);
 			if (alternatives) {
 				// Populate richlistbox with Date Added values from all items
-				let dateList = this.querySelector('#zotero-duplicates-merge-original-date');
+				let dateList = this.querySelector('#trellis-duplicates-merge-original-date');
 				dateList.innerHTML = '';
 				
 				let numRows = 0;
 				for (let item of items) {
-					let date = Zotero.Date.sqlToDate(item.dateAdded, true);
+					let date = Trellis.Date.sqlToDate(item.dateAdded, true);
 					dateList.appendItem(date.toLocaleString());
 					numRows++;
 				}

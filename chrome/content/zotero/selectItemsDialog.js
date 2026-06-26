@@ -3,36 +3,36 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-import CollectionTree from 'zotero/collectionTree';
-import CollectionViewItemTree from 'zotero/collectionViewItemTree';
+import CollectionTree from 'trellis/collectionTree';
+import CollectionViewItemTree from 'trellis/collectionViewItemTree';
 
 var itemsView;
 var collectionsView;
 var loaded;
 var io;
-const isSelectItemsDialog = !!document.querySelector('#zotero-select-items-dialog');
-const isEditBibliographyDialog = !!document.querySelector('#zotero-edit-bibliography-dialog');
-const isAddEditItemsDialog = !!document.querySelector('#zotero-add-citation-dialog');
+const isSelectItemsDialog = !!document.querySelector('#trellis-select-items-dialog');
+const isEditBibliographyDialog = !!document.querySelector('#trellis-edit-bibliography-dialog');
+const isAddEditItemsDialog = !!document.querySelector('#trellis-add-citation-dialog');
 
 /*
  * window takes two arguments:
@@ -40,7 +40,7 @@ const isAddEditItemsDialog = !!document.querySelector('#zotero-add-citation-dial
  */
 var doLoad = async function () {
 	// Move the dialog button box into the items pane
-	let itemsContainer = document.getElementById('zotero-items-tree-container');
+	let itemsContainer = document.getElementById('trellis-items-tree-container');
 	// TEMP: Only if we're in the redesigned Select Items dialog, not the
 	// classic Add Citation dialog, or the Edit Bibliography dialog
 	// (until we redesign that too)
@@ -51,25 +51,25 @@ var doLoad = async function () {
 		itemsContainer.append(buttonBox);
 	}
 	
-	let searchBar = document.getElementById('zotero-tb-search');
+	let searchBar = document.getElementById('trellis-tb-search');
 	searchBar.searchTextbox.select();
 
 	// Set font size from pref
-	var sbc = document.getElementById('zotero-select-items-container');
-	Zotero.UIProperties.registerRoot(sbc);
+	var sbc = document.getElementById('trellis-select-items-container');
+	Trellis.UIProperties.registerRoot(sbc);
 	
 	io = window.arguments[0];
 	if(io.wrappedJSObject) io = io.wrappedJSObject;
 	if(io.addBorder) document.getElementsByTagName("dialog")[0].style.border = "1px solid black";
-	if(io.singleSelection) document.getElementById("zotero-items-tree").setAttribute("seltype", "single");
+	if(io.singleSelection) document.getElementById("trellis-items-tree").setAttribute("seltype", "single");
 	
-	itemsView = await CollectionViewItemTree.init(document.getElementById('zotero-items-tree'), {
+	itemsView = await CollectionViewItemTree.init(document.getElementById('trellis-items-tree'), {
 		onSelectionChange: () => {
 			if (isEditBibliographyDialog) {
-				Zotero_Bibliography_Dialog.treeItemSelected();
+				Trellis_Bibliography_Dialog.treeItemSelected();
 			}
 			else if (isAddEditItemsDialog) {
-				Zotero_Citation_Dialog.treeItemSelected();
+				Trellis_Citation_Dialog.treeItemSelected();
 			}
 		},
 		onActivate: () => {
@@ -80,13 +80,13 @@ var doLoad = async function () {
 		regularOnly: io.onlyRegularItems,
 		columnPicker: true,
 		multiSelect: io.multiSelect,
-		emptyMessage: Zotero.getString('pane.items.loading')
+		emptyMessage: Trellis.getString('pane.items.loading')
 	});
-	itemsView.setItemsPaneMessage(Zotero.getString('pane.items.loading'));
+	itemsView.setItemsPaneMessage(Trellis.getString('pane.items.loading'));
 
 	const filterLibraryIDs = false || io.filterLibraryIDs;
 	const hideSources = io.hideCollections || ['duplicates', 'trash', 'feeds'];
-	collectionsView = await CollectionTree.init(document.getElementById('zotero-collections-tree'), {
+	collectionsView = await CollectionTree.init(document.getElementById('trellis-collections-tree'), {
 		onSelectionChange: () => onCollectionSelected(),
 		filterLibraryIDs,
 		hideSources
@@ -98,16 +98,16 @@ var doLoad = async function () {
 		await collectionsView.selectItem(io.select);
 	}
 	
-	Zotero.updateQuickSearchBox(document);
+	Trellis.updateQuickSearchBox(document);
 
 	document.addEventListener('dialogaccept', doAccept);
 	
 	if (isSelectItemsDialog) {
 		// Set proper tab order. It is only needed in selectItemsDialog -- other dialogs' focus order is correct
-		document.querySelector("#zotero-tb-search").searchModePopup.parentNode.setAttribute("tabindex", 1);
-		document.querySelector("#zotero-tb-search").searchTextbox.inputField.setAttribute("tabindex", 2);
+		document.querySelector("#trellis-tb-search").searchModePopup.parentNode.setAttribute("tabindex", 1);
+		document.querySelector("#trellis-tb-search").searchTextbox.inputField.setAttribute("tabindex", 2);
 		document.querySelector("#collection-tree").setAttribute("tabindex", 3);
-		document.querySelector("#zotero-items-tree .virtualized-table").setAttribute("tabindex", 4);
+		document.querySelector("#trellis-items-tree .virtualized-table").setAttribute("tabindex", 4);
 		// On Windows, buttons are in a different order than on macOS, so set tabindex accordingly
 		let nextButtonTabindex = 5;
 		for (let button of [...document.querySelectorAll("button[dlgtype]:not([hidden])")]) {
@@ -143,14 +143,14 @@ var onCollectionSelected = async function () {
 		return;
 	}
 	collectionTreeRow.setSearch('');
-	Zotero.Prefs.set('lastViewedFolder', collectionTreeRow.id);
+	Trellis.Prefs.set('lastViewedFolder', collectionTreeRow.id);
 	
-	itemsView.setItemsPaneMessage(Zotero.getString('pane.items.loading'));
+	itemsView.setItemsPaneMessage(Trellis.getString('pane.items.loading'));
 	
 	// Load library data if necessary
-	var library = Zotero.Libraries.get(collectionTreeRow.ref.libraryID);
+	var library = Trellis.Libraries.get(collectionTreeRow.ref.libraryID);
 	if (!library.getDataLoaded('item')) {
-		Zotero.debug("Waiting for items to load for library " + library.libraryID);
+		Trellis.debug("Waiting for items to load for library " + library.libraryID);
 		await library.waitForDataLoad('item');
 	}
 	
@@ -163,7 +163,7 @@ function onSearch()
 {
 	if (itemsView)
 	{
-		var searchVal = document.getElementById('zotero-tb-search-textbox').value;
+		var searchVal = document.getElementById('trellis-tb-search-textbox').value;
 		itemsView.setFilter('search', searchVal);
 	}
 }

@@ -1,5 +1,5 @@
 describe("Item pane", function () {
-	var win, doc, ZoteroPane, Zotero_Tabs, ZoteroContextPane, itemsView;
+	var win, doc, TrellisPane, Trellis_Tabs, TrellisContextPane, itemsView;
 
 	async function waitForPreviewBoxRender(box, itemID) {
 		let res = await waitForCallback(
@@ -50,7 +50,7 @@ describe("Item pane", function () {
 				, 10, 0.5);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			// Return false if waitForCallback fails
 			return false;
 		}
@@ -58,17 +58,17 @@ describe("Item pane", function () {
 	}
 	
 	before(function* () {
-		win = yield loadZoteroPane();
+		win = yield loadTrellisPane();
 		doc = win.document;
-		ZoteroPane = win.ZoteroPane;
-		Zotero_Tabs = win.Zotero_Tabs;
-		ZoteroContextPane = win.ZoteroContextPane;
-		itemsView = win.ZoteroPane.itemsView;
+		TrellisPane = win.TrellisPane;
+		Trellis_Tabs = win.Trellis_Tabs;
+		TrellisContextPane = win.TrellisContextPane;
+		itemsView = win.TrellisPane.itemsView;
 	});
 	
 	after(function () {
-		Zotero_Tabs.select("zotero-pane");
-		Zotero_Tabs.closeAll();
+		Trellis_Tabs.select("trellis-pane");
+		Trellis_Tabs.closeAll();
 		win.close();
 	});
 
@@ -84,23 +84,23 @@ describe("Item pane", function () {
 		};
 		
 		before(async function () {
-			await Zotero.Styles.init();
+			await Trellis.Styles.init();
 		});
 		
 		after(function () {
-			Zotero.Prefs.clear('itemPaneHeader');
-			Zotero.Prefs.clear('itemPaneHeader.bibEntry.style');
-			Zotero.Prefs.clear('itemPaneHeader.bibEntry.locale');
+			Trellis.Prefs.clear('itemPaneHeader');
+			Trellis.Prefs.clear('itemPaneHeader.bibEntry.style');
+			Trellis.Prefs.clear('itemPaneHeader.bibEntry.locale');
 		});
 		
 		it("should be hidden when set to None mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'none');
+			Trellis.Prefs.set('itemPaneHeader', 'none');
 			await createDataObject('item', itemData);
 			assert.equal(doc.querySelector('item-pane-header').clientHeight, 0);
 		});
 
 		it("should show custom header elements when set to None mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'none');
+			Trellis.Prefs.set('itemPaneHeader', 'none');
 
 			// Use feed item toggle button as an example
 			let feed = await createFeed();
@@ -108,15 +108,15 @@ describe("Item pane", function () {
 			await waitForItemsLoad(win);
 
 			var item = await createDataObject('feedItem', { libraryID: feed.libraryID });
-			await ZoteroPane.selectItem(item.id);
-			let feedButton = ZoteroPane.itemPane._itemDetails.querySelector('.feed-item-toggleRead-button');
+			await TrellisPane.selectItem(item.id);
+			let feedButton = TrellisPane.itemPane._itemDetails.querySelector('.feed-item-toggleRead-button');
 			assert.exists(feedButton);
 
 			await selectLibrary(win);
 		});
 		
 		it("should show title when set to Title mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'title');
+			Trellis.Prefs.set('itemPaneHeader', 'title');
 			let item = await createDataObject('item', itemData);
 			
 			assert.isFalse(doc.querySelector('item-pane-header .title').hidden);
@@ -127,7 +127,7 @@ describe("Item pane", function () {
 		});
 		
 		it("should show title/creator/year when set to Title/Creator/Year mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'titleCreatorYear');
+			Trellis.Prefs.set('itemPaneHeader', 'titleCreatorYear');
 			let item = await createDataObject('item', itemData);
 			item.setField('date', '1962-05-01');
 			await item.saveTx();
@@ -143,8 +143,8 @@ describe("Item pane", function () {
 		});
 
 		it("should show bib entry when set to Bibliography Entry mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'bibEntry');
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.zotero.org/styles/apa');
+			Trellis.Prefs.set('itemPaneHeader', 'bibEntry');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.trellis.org/styles/apa');
 			await createDataObject('item', itemData);
 
 			assert.isFalse(doc.querySelector('item-pane-header .bib-entry').hidden);
@@ -156,8 +156,8 @@ describe("Item pane", function () {
 		});
 
 		it("should update bib entry on item change when set to Bibliography Entry mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'bibEntry');
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.zotero.org/styles/apa');
+			Trellis.Prefs.set('itemPaneHeader', 'bibEntry');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.trellis.org/styles/apa');
 			let item = await createDataObject('item', itemData);
 			
 			let bibEntryElem = doc.querySelector('item-pane-header .bib-entry').shadowRoot.firstElementChild;
@@ -184,34 +184,34 @@ describe("Item pane", function () {
 		});
 
 		it("should update bib entry on style change when set to Bibliography Entry mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'bibEntry');
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.zotero.org/styles/apa');
+			Trellis.Prefs.set('itemPaneHeader', 'bibEntry');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.trellis.org/styles/apa');
 			await createDataObject('item', itemData);
 
 			let bibEntryElem = doc.querySelector('item-pane-header .bib-entry').shadowRoot.firstElementChild;
 			
 			assert.equal(bibEntryElem.textContent.trim(), 'Hyde, G. E. (n.d.). Birds—A Primer of Ornithology (Teach Yourself Books).');
 			
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.zotero.org/styles/chicago-author-date');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.trellis.org/styles/chicago-author-date');
 			assert.equal(bibEntryElem.textContent.trim(), 'Hyde, George E. n.d. Birds - A Primer of Ornithology (Teach Yourself Books).');
 		});
 
 		it("should update bib entry on locale change when set to Bibliography Entry mode", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'bibEntry');
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.zotero.org/styles/apa');
+			Trellis.Prefs.set('itemPaneHeader', 'bibEntry');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.trellis.org/styles/apa');
 			await createDataObject('item', itemData);
 
 			let bibEntryElem = doc.querySelector('item-pane-header .bib-entry').shadowRoot.firstElementChild;
 
 			assert.equal(bibEntryElem.textContent.trim(), 'Hyde, G. E. (n.d.). Birds—A Primer of Ornithology (Teach Yourself Books).');
 
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.locale', 'de-DE');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.locale', 'de-DE');
 			assert.equal(bibEntryElem.textContent.trim(), 'Hyde, G. E. (o. J.). Birds—A Primer of Ornithology (Teach Yourself Books).');
 		});
 
 		it("should fall back to Title/Creator/Year when citation style is missing", async function () {
-			Zotero.Prefs.set('itemPaneHeader', 'bibEntry');
-			Zotero.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.zotero.org/styles/an-id-that-does-not-match-any-citation-style');
+			Trellis.Prefs.set('itemPaneHeader', 'bibEntry');
+			Trellis.Prefs.set('itemPaneHeader.bibEntry.style', 'http://www.trellis.org/styles/an-id-that-does-not-match-any-citation-style');
 			await createDataObject('item', itemData);
 
 			assert.isTrue(doc.querySelector('item-pane-header .bib-entry').hidden);
@@ -224,12 +224,12 @@ describe("Item pane", function () {
 			var item2 = await createDataObject('item', { deleted: true });
 			
 			await selectTrash(win);
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 			await waitForFrame();
 			
-			let restoreButton = win.document.querySelector('#zotero-item-message .custom-head .item-restore-button');
+			let restoreButton = win.document.querySelector('#trellis-item-message .custom-head .item-restore-button');
 			assert.exists(restoreButton);
-			assert.exists(win.document.querySelector('#zotero-item-message .custom-head .item-delete-button'));
+			assert.exists(win.document.querySelector('#trellis-item-message .custom-head .item-delete-button'));
 
 			let refreshTrashPromise = waitForNotifierEvent('refresh', 'trash');
 			await restoreButton.click();
@@ -237,10 +237,10 @@ describe("Item pane", function () {
 			await refreshTrashPromise;
 			assert.equal(ids.length, 2);
 			
-			assert.notExists(win.document.querySelector('#zotero-item-message .custom-head .item-restore-button'));
+			assert.notExists(win.document.querySelector('#trellis-item-message .custom-head .item-restore-button'));
 			
 			let promise = waitForItemEvent('delete');
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await item1.erase();
 				await item2.erase();
 			});
@@ -252,11 +252,11 @@ describe("Item pane", function () {
 	
 	describe("Info pane", function () {
 		before(async () => {
-			await activateZoteroPane();
+			await activateTrellisPane();
 		});
 		it("should place Title after Item Type and before creators", async function () {
 			var item = await createDataObject('item');
-			var itemPane = win.ZoteroPane.itemPane;
+			var itemPane = win.TrellisPane.itemPane;
 			var fields = [...itemPane.querySelectorAll('.meta-label')]
 				.map(x => x.getAttribute('fieldname'));
 			assert.equal(fields[0], 'itemType');
@@ -265,10 +265,10 @@ describe("Item pane", function () {
 		});
 		
 		it("should refresh on item update", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var id = await item.saveTx();
 			
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			var label = itemBox.querySelectorAll('[fieldname="series"]')[1];
 			assert.equal(label.value, '');
 			
@@ -280,12 +280,12 @@ describe("Item pane", function () {
 			label = itemBox.querySelectorAll('[fieldname="series"]')[1];
 			assert.equal(label.value, 'Test');
 			
-			await Zotero.Items.erase(id);
+			await Trellis.Items.erase(id);
 		});
 		
 		
 		it("should swap creator names", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setCreators([
 				{
 					firstName: "First",
@@ -295,13 +295,13 @@ describe("Item pane", function () {
 			]);
 			await item.saveTx();
 			
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			var lastName = itemBox.querySelector('#itembox-field-value-creator-0-lastName');
 			var parent = lastName.closest(".creator-type-value");
 			assert.property(parent, 'oncontextmenu');
 			assert.isFunction(parent.oncontextmenu);
 			
-			var menupopup = itemBox.querySelector('#zotero-creator-transform-menu');
+			var menupopup = itemBox.querySelector('#trellis-creator-transform-menu');
 			// Fake a right-click
 			itemBox._popupNode = parent;
 			menupopup.openPopup(
@@ -318,7 +318,7 @@ describe("Item pane", function () {
 		
 		
 		it("shouldn't show Swap Names option for single-field mode", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setCreators([
 				{
 					name: "Name",
@@ -327,10 +327,10 @@ describe("Item pane", function () {
 			]);
 			await item.saveTx();
 			
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			var label = itemBox.querySelector('#itembox-field-value-creator-0-lastName');
 			var firstlast = label.closest('.creator-type-value');
-			var menupopup = itemBox.querySelector('#zotero-creator-transform-menu');
+			var menupopup = itemBox.querySelector('#trellis-creator-transform-menu');
 			// Fake a right-click
 			itemBox._popupNode = firstlast;
 			menupopup.openPopup(
@@ -342,7 +342,7 @@ describe("Item pane", function () {
 		});
 
 		it("should reorder creators", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setCreators([
 				{
 					lastName: "One",
@@ -359,7 +359,7 @@ describe("Item pane", function () {
 			]);
 			await item.saveTx();
 			
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			// Move One to the last spot
 			itemBox.moveCreator(0, null, 3);
 			await waitForItemEvent('modify');
@@ -393,7 +393,7 @@ describe("Item pane", function () {
 		// Note: This issue applies to all context menus in the item box (text transform, name swap),
 		// though the others aren't tested. This might go away with the XUL->HTML transition.
 		it.skip("should save open field after changing creator type", function* () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setCreators([
 				{
 					firstName: "First",
@@ -403,7 +403,7 @@ describe("Item pane", function () {
 			]);
 			var id = yield item.saveTx();
 			
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			var label = itemBox.querySelector('[fieldname="place"]');
 			label.click();
 			var textbox = itemBox.querySelector('[fieldname="place"]');
@@ -417,16 +417,16 @@ describe("Item pane", function () {
 			yield waitForItemEvent('modify');
 			
 			assert.equal(item.getField('place'), 'Place');
-			assert.equal(Zotero.CreatorTypes.getName(item.getCreators()[0].creatorTypeID), 'contributor');
+			assert.equal(Trellis.CreatorTypes.getName(item.getCreators()[0].creatorTypeID), 'contributor');
 			
 			// Wait for no-op saveTx()
-			yield Zotero.Promise.delay(1);
+			yield Trellis.Promise.delay(1);
 		});
 		
 		it("should accept 'now' for Accessed", async function () {
 			var item = await createDataObject('item');
 			
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			var textbox = itemBox.querySelector('[fieldname="accessDate"]');
 			textbox.value = 'now';
 			// Blur events don't necessarily trigger if window doesn't have focus
@@ -435,14 +435,14 @@ describe("Item pane", function () {
 			await waitForItemEvent('modify');
 			
 			assert.approximately(
-				Zotero.Date.sqlToDate(item.getField('accessDate'), true).getTime(),
+				Trellis.Date.sqlToDate(item.getField('accessDate'), true).getTime(),
 				Date.now(),
 				5000
 			);
 		});
 
 		it("should persist fieldMode after hiding a creator name editor", async function () {
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			item.setCreators([
 				{
 					name: "First Last",
@@ -452,7 +452,7 @@ describe("Item pane", function () {
 			]);
 			await item.saveTx();
 			
-			let itemBox = doc.getElementById('zotero-editpane-info-box');
+			let itemBox = doc.getElementById('trellis-editpane-info-box');
 
 			itemBox.querySelector('[fieldname="creator-0-lastName"]').click();
 			itemBox.hideEditor(itemBox.querySelector('input[fieldname="creator-0-lastName"]'));
@@ -482,7 +482,7 @@ describe("Item pane", function () {
 			let promise = waitForItemEvent('modify');
 			item.saveTx();
 			await promise;
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			let creatorLastName = itemBox.querySelector(".creator-type-value editable-text");
 			creatorLastName.focus();
 			// Dispatch shift-Enter event
@@ -493,7 +493,7 @@ describe("Item pane", function () {
 			});
 			creatorLastName.ref.dispatchEvent(shiftEnter);
 			// Wait a moment for new row to be added
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// Make sure an unsaved empty creator row is focused
 			assert.exists(doc.activeElement.closest("[unsaved=true]"));
 			// Make sure it is added after the existing row
@@ -512,7 +512,7 @@ describe("Item pane", function () {
 			let promise = waitForItemEvent('modify');
 			item.saveTx();
 			await promise;
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			let creatorLastName = itemBox.querySelector(".creator-type-value editable-text");
 			creatorLastName.focus();
 			// Dispatch shift-Enter event
@@ -523,7 +523,7 @@ describe("Item pane", function () {
 			});
 			creatorLastName.ref.dispatchEvent(shiftEnter);
 			// Wait a moment for new row to be added
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// Make sure an unsaved empty creator row is focused
 			assert.exists(doc.activeElement.closest("[unsaved=true]"));
 			// Mark current creator input
@@ -533,7 +533,7 @@ describe("Item pane", function () {
 			// Dispatch shift-Enter event again
 			doc.activeElement.dispatchEvent(shiftEnter);
 			// Make sure we're still on the same field
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			assert.equal(doc.activeElement.id, "test_creator_row");
 		});
 
@@ -550,7 +550,7 @@ describe("Item pane", function () {
 			item.setCreators(creatorsArr);
 			item.saveTx();
 			await waitForItemEvent('modify');
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			let moreCreatorsLabel = itemBox.querySelector("#more-creators-label");
 			let lastVisibleCreator = moreCreatorsLabel.closest(".meta-row").previousElementSibling;
 			let lastVisibleCreatorsPosition = itemBox.getCreatorFields(lastVisibleCreator).position;
@@ -563,7 +563,7 @@ describe("Item pane", function () {
 				bubbles: true
 			});
 			creatorLastName.ref.dispatchEvent(shiftEnter);
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// Make sure a new creator row is focused
 			assert.exists(doc.activeElement.closest("[unsaved=true]"));
 			// Make sure it is located after the last focused row
@@ -587,10 +587,10 @@ describe("Item pane", function () {
 			item.setCreators(creatorsArr);
 			item.saveTx();
 			await waitForItemEvent('modify');
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			// Add a new empty creator row
-			itemBox.querySelector(".zotero-clicky-plus").click();
-			await Zotero.Promise.delay();
+			itemBox.querySelector(".trellis-clicky-plus").click();
+			await Trellis.Promise.delay();
 			assert.exists(doc.activeElement.closest("[unsaved=true]"));
 			// Press Escape
 			var escape = new KeyboardEvent('keydown', {
@@ -598,7 +598,7 @@ describe("Item pane", function () {
 				bubbles: true
 			});
 			doc.activeElement.dispatchEvent(escape);
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// Make sure the creator count has not changed and "More creators" label is still there
 			let creators = [...itemBox.querySelectorAll(".creator-type-value")];
 			assert.exists(itemBox.querySelector("#more-creators-label"));
@@ -616,58 +616,58 @@ describe("Item pane", function () {
 				}
 			]);
 			// Begin with 'single' creator mode
-			Zotero.Prefs.set('lastCreatorFieldMode', 1);
+			Trellis.Prefs.set('lastCreatorFieldMode', 1);
 			let modifyPromise = waitForItemEvent('modify');
 			item.saveTx();
 			await modifyPromise;
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 			// Click on the button to switch type to dual
-			let switchTypeBtn = itemBox.querySelector(".zotero-clicky-switch-type");
+			let switchTypeBtn = itemBox.querySelector(".trellis-clicky-switch-type");
 			assert.equal(switchTypeBtn.getAttribute("type"), "single");
 			modifyPromise = waitForItemEvent('modify');
 			switchTypeBtn.click();
 			await modifyPromise;
 			// Make sure the button was updated and the names are displayed in two separate fields
-			switchTypeBtn = itemBox.querySelector(".zotero-clicky-switch-type");
+			switchTypeBtn = itemBox.querySelector(".trellis-clicky-switch-type");
 			assert.equal(switchTypeBtn.getAttribute("type"), "dual");
 			let [lastName, firstName] = [...itemBox.querySelectorAll(".creator-name-box editable-text")];
 			assert.equal(lastName.value, "Last");
 			assert.equal(firstName.value, "First");
 
-			assert.equal(Zotero.Prefs.get('lastCreatorFieldMode'), '0');
+			assert.equal(Trellis.Prefs.get('lastCreatorFieldMode'), '0');
 
 			// Make sure if a new row is added, it is of type dual
-			itemBox.querySelector(".zotero-clicky-plus").click();
-			await Zotero.Promise.delay();
+			itemBox.querySelector(".trellis-clicky-plus").click();
+			await Trellis.Promise.delay();
 			let newCreatorRow = doc.activeElement.closest(".meta-row");
 			let fieldMode = newCreatorRow.querySelector("editable-text").getAttribute("fieldMode");
 			assert.equal(fieldMode, "0");
 		});
 
 		it("should save updated title when switching between items", async function () {
-			let itemOne = new Zotero.Item('book');
-			let itemTwo = new Zotero.Item('book');
+			let itemOne = new Trellis.Item('book');
+			let itemTwo = new Trellis.Item('book');
 			itemOne.setField('title', 'Title_one');
 			await itemOne.saveTx();
 			await itemTwo.saveTx();
-			await ZoteroPane.selectItem(itemOne.id);
+			await TrellisPane.selectItem(itemOne.id);
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let infoBox = itemDetails.getPane("info");
 
 			let titleField = infoBox.querySelector("#itembox-field-value-title");
 			titleField.focus();
 			titleField.value = "Updated title";
-			await ZoteroPane.selectItem(itemTwo.id);
+			await TrellisPane.selectItem(itemTwo.id);
 			await waitForNotifierEvent('modify', 'item');
 			assert.equal(itemOne.getDisplayTitle(), "Updated title");
 		});
 
 		it("should retain unsaved value between refreshes", async function () {
-			let itemOne = new Zotero.Item('book');
-			await ZoteroPane.selectItem(itemOne.id);
+			let itemOne = new Trellis.Item('book');
+			await TrellisPane.selectItem(itemOne.id);
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let infoBox = itemDetails.getPane("info");
 
 			// Type something into the series field without saving it
@@ -685,12 +685,12 @@ describe("Item pane", function () {
 		});
 
 		it("should not loose focus on Tab from invalid DOI", async function () {
-			var item = new Zotero.Item('journalArticle');
+			var item = new Trellis.Item('journalArticle');
 			item.setField('DOI', '10.3390/fluids10110300');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
-			var itemBox = doc.getElementById('zotero-editpane-info-box');
+			var itemBox = doc.getElementById('trellis-editpane-info-box');
 
 			// Focus the valid DOI field and tab from it
 			let doiField = itemBox.querySelector('#itembox-field-value-DOI');
@@ -724,8 +724,8 @@ describe("Item pane", function () {
 			collectionParent = await createDataObject('collection');
 			collectionChild = await createDataObject('collection', { parentID: collectionParent.id });
 			item = await createDataObject('item', { collections: [collectionParent.id, collectionChild.id] });
-			await ZoteroPane.selectItem(item.id);
-			section = ZoteroPane.itemPane._itemDetails.getPane("libraries-collections");
+			await TrellisPane.selectItem(item.id);
+			section = TrellisPane.itemPane._itemDetails.getPane("libraries-collections");
 		});
 		
 		it("should update collection's name after rename", async function () {
@@ -772,22 +772,22 @@ describe("Item pane", function () {
 		it("should mark every selected collection as current for a multiple-collection selection", async function () {
 			// Select both collections the item belongs to. Select the (sub)collection
 			// first so its row is revealed, then toggle the parent into the selection.
-			let cv = ZoteroPane.collectionsView;
+			let cv = TrellisPane.collectionsView;
 			await cv.selectByID("C" + collectionChild.id);
 			await waitForItemsLoad(win);
 			cv.selection.toggleSelect(cv.getRowIndexByID("C" + collectionParent.id));
-			await ZoteroPane.onCollectionSelected();
-			await ZoteroPane.itemsView.waitForLoad();
+			await TrellisPane.onCollectionSelected();
+			await TrellisPane.itemsView.waitForLoad();
 			// Select within the current (multi-collection) view rather than
-			// ZoteroPane.selectItem(), which would navigate and drop the selection
-			await ZoteroPane.itemsView.selectItem(item.id);
+			// TrellisPane.selectItem(), which would navigate and drop the selection
+			await TrellisPane.itemsView.selectItem(item.id);
 			// itemSelected() pushes the current selection into the item pane; force a
 			// render so the section reflects the multi-collection selection (item-pane
 			// render is skipped when the selected item itself hasn't changed)
-			await ZoteroPane.itemSelected();
-			await ZoteroPane.itemPane.render();
+			await TrellisPane.itemSelected();
+			await TrellisPane.itemPane.render();
 
-			section = ZoteroPane.itemPane._itemDetails.getPane("libraries-collections");
+			section = TrellisPane.itemPane._itemDetails.getPane("libraries-collections");
 			let parentBox = section.querySelector(`.row[data-id="C${collectionParent.id}"] .box`);
 			let childBox = section.querySelector(`.row[data-id="C${collectionChild.id}"] .box`);
 			let libraryBox = section.querySelector(`.row[data-id="L${item.libraryID}"] .box`);
@@ -805,15 +805,15 @@ describe("Item pane", function () {
 		let paneID = "attachments";
 
 		beforeEach(function () {
-			Zotero.Prefs.set("panes.attachments.open", true);
-			Zotero.Prefs.set("showAttachmentPreview", true);
-			Zotero_Tabs.select("zotero-pane");
+			Trellis.Prefs.set("panes.attachments.open", true);
+			Trellis.Prefs.set("showAttachmentPreview", true);
+			Trellis_Tabs.select("trellis-pane");
 			win.resizeTo(1000, 800);
 		});
 
 		afterEach(function () {
 			// Ensure all previews are properly discarded and cleaned up
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 			
 			// Force cleanup of any pending operations and queued tasks
@@ -822,8 +822,8 @@ describe("Item pane", function () {
 				attachmentsBox._preview.discard?.();
 			}
 
-			Zotero_Tabs.select("zotero-pane");
-			Zotero_Tabs.closeAll();
+			Trellis_Tabs.select("trellis-pane");
+			Trellis_Tabs.closeAll();
 		});
 
 		after(function () {
@@ -832,41 +832,41 @@ describe("Item pane", function () {
 
 		it("should show attachments pane in library for regular item", async function () {
 			// Regular item: show
-			let attachmentsBox = ZoteroPane.itemPane._itemDetails.getPane(paneID);
-			let item = new Zotero.Item('book');
+			let attachmentsBox = TrellisPane.itemPane._itemDetails.getPane(paneID);
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			assert.isFalse(attachmentsBox.hidden);
 
 			// Child attachment: hide
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
-			await ZoteroPane.selectItem(attachment.id);
+			await TrellisPane.selectItem(attachment.id);
 			assert.isTrue(attachmentsBox.hidden);
 
 			// Standalone attachment: hide
 			let attachment1 = await importFileAttachment('test.pdf');
-			await ZoteroPane.selectItem(attachment1.id);
+			await TrellisPane.selectItem(attachment1.id);
 			assert.isTrue(attachmentsBox.hidden);
 		});
 
 		it("should not show attachments pane preview in reader best-matched attachment item", async function () {
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
 			await item.saveTx();
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
-			await ZoteroPane.viewItems([attachment]);
-			let tabID = Zotero_Tabs.selectedID;
-			ZoteroContextPane.splitter.setAttribute("state", "open");
-			let itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			await TrellisPane.viewItems([attachment]);
+			let tabID = Trellis_Tabs.selectedID;
+			TrellisContextPane.splitter.setAttribute("state", "open");
+			let itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			let attachmentsBox = itemDetails.getPane(paneID);
 			assert.isFalse(attachmentsBox.hidden);
 
@@ -877,34 +877,34 @@ describe("Item pane", function () {
 
 		it("should not show attachments pane in reader standalone attachment item", async function () {
 			let attachment = await importFileAttachment('test.pdf');
-			await ZoteroPane.viewItems([attachment]);
-			let tabID = Zotero_Tabs.selectedID;
-			let itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			await TrellisPane.viewItems([attachment]);
+			let tabID = Trellis_Tabs.selectedID;
+			let itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			let attachmentsBox = itemDetails.getPane(paneID);
 			assert.isTrue(attachmentsBox.hidden);
 		});
 
 		it("should show attachments pane preview in reader non-best-matched attachment item", async function () {
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
 			await item.saveTx();
-			await Zotero.Attachments.importFromFile({
+			await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
-			await Zotero.Attachments.importFromFile({
+			await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 
 			let bestAttachments = await item.getBestAttachments();
-			await ZoteroPane.viewItems([bestAttachments[1]]);
+			await TrellisPane.viewItems([bestAttachments[1]]);
 			// Ensure context pane is open
-			ZoteroContextPane.splitter.setAttribute("state", "open");
+			TrellisContextPane.splitter.setAttribute("state", "open");
 			await waitForFrame();
-			let tabID = Zotero_Tabs.selectedID;
-			let itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			let tabID = Trellis_Tabs.selectedID;
+			let itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			let attachmentsBox = itemDetails.getPane(paneID);
 			assert.isFalse(attachmentsBox.hidden);
 
@@ -914,13 +914,13 @@ describe("Item pane", function () {
 		});
 
 		it("should not render attachments pane preview when show preview is disabled", async function () {
-			Zotero.Prefs.set("showAttachmentPreview", false);
+			Trellis.Prefs.set("showAttachmentPreview", false);
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			assert.isFalse(attachmentsBox.hidden);
 
 			await waitForScrollToPane(itemDetails, paneID);
@@ -933,22 +933,22 @@ describe("Item pane", function () {
 			let height = doc.documentElement.clientHeight;
 			win.resizeTo(null, 100);
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 			let preview = attachmentsBox.previewElem;
 			// Force discard previous preview
 			await preview.discard(true);
 			
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			await Zotero.Attachments.importFromFile({
+			await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			assert.isFalse(itemDetails.isPaneVisible(paneID));
 			// Do not use _isAlreadyRendered, since that changes the render flag state
 			assert.equal(attachmentsBox._syncRenderItemID, item.id);
@@ -958,7 +958,7 @@ describe("Item pane", function () {
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(attachmentsBox);
 			// TEMP: wait for a bit to ensure the preview is rendered?
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			assert.isTrue(itemDetails.isPaneVisible(paneID));
 			assert.equal(attachmentsBox._syncRenderItemID, item.id);
 			assert.equal(attachmentsBox._asyncRenderItemID, item.id);
@@ -969,9 +969,9 @@ describe("Item pane", function () {
 		});
 
 		it("should update attachments pane when attachments changed", async function () {
-			// https://forums.zotero.org/discussion/113632/zotero-7-beta-pdf-attachment-preview-and-annotations-not-refreshed-after-adding-annotations
+			// https://forums.trellis.org/discussion/113632/trellis-7-beta-pdf-attachment-preview-and-annotations-not-refreshed-after-adding-annotations
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 			let preview = attachmentsBox.previewElem;
 			// Force discard previous preview
@@ -980,10 +980,10 @@ describe("Item pane", function () {
 			// Pin the pane to ensure it's rendered
 			itemDetails.pinnedPane = paneID;
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			assert.isTrue(await waitForPreviewBoxRender(attachmentsBox));
 			// No preview
 			assert.isFalse(await isPreviewDisplayed(attachmentsBox));
@@ -993,11 +993,11 @@ describe("Item pane", function () {
 			// Add an attachment
 			let file = getTestDataDirectory();
 			file.append('test.png');
-			let _attachment1 = await Zotero.Attachments.importFromFile({
+			let _attachment1 = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await itemDetails._renderPromise;
 			await waitForPreviewBoxRender(attachmentsBox);
 			// Image preview for item with image attachment
@@ -1009,12 +1009,12 @@ describe("Item pane", function () {
 			// Add an PDF attachment, which will be best match and update the preview
 			file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment2 = await Zotero.Attachments.importFromFile({
+			let attachment2 = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 			await waitForPreviewBoxReader(attachmentsBox, attachment2.id);
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			// PDF preview
 			assert.isTrue(await isPreviewDisplayed(attachmentsBox));
 			assert.equal(preview.previewType, "pdf");
@@ -1026,7 +1026,7 @@ describe("Item pane", function () {
 
 			// Created annotations should be update in preview and attachment row
 			let annotation = await createAnnotation('highlight', attachment2);
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			// Annotation updated in preview reader
 			let readerAnnotation
 				= preview._reader._internalReader._annotationManager._annotations.find(
@@ -1042,7 +1042,7 @@ describe("Item pane", function () {
 
 			// Deleted annotations should be removed from preview and attachment row
 			await annotation.eraseTx();
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			// Annotation removed from preview reader
 			readerAnnotation
 				= preview._reader._internalReader._annotationManager._annotations.find(
@@ -1057,7 +1057,7 @@ describe("Item pane", function () {
 
 			// Delete attachment
 			await attachment2.eraseTx();
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			// Image preview for item with image attachment
 			assert.isTrue(await isPreviewDisplayed(attachmentsBox));
 			assert.equal(preview.previewType, "image");
@@ -1073,26 +1073,26 @@ describe("Item pane", function () {
 		});
 
 		it("should keep attachments pane preview status after switching tab", async function () {
-			// https://forums.zotero.org/discussion/113658/zotero-7-beta-preview-appearing-in-the-item-pane-of-the-pdf-tab
+			// https://forums.trellis.org/discussion/113658/trellis-7-beta-preview-appearing-in-the-item-pane-of-the-pdf-tab
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
 			await item.saveTx();
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 
 			// Open reader
-			await ZoteroPane.viewItems([attachment]);
-			let tabID = Zotero_Tabs.selectedID;
-			await Zotero.Reader.getByTabID(tabID)._waitForReader();
+			await TrellisPane.viewItems([attachment]);
+			let tabID = Trellis_Tabs.selectedID;
+			await Trellis.Reader.getByTabID(tabID)._waitForReader();
 			// Ensure context pane is open
-			ZoteroContextPane.splitter.setAttribute("state", "open");
+			TrellisContextPane.splitter.setAttribute("state", "open");
 			await waitForFrame();
 
-			let itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			let itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			let attachmentsBox = itemDetails.getPane(paneID);
 			assert.isFalse(attachmentsBox.hidden);
 
@@ -1100,20 +1100,20 @@ describe("Item pane", function () {
 			assert.isFalse(await isPreviewDisplayed(attachmentsBox));
 
 			// Select library tab
-			Zotero_Tabs.select("zotero-pane");
-			let libraryItemDetails = ZoteroPane.itemPane._itemDetails;
+			Trellis_Tabs.select("trellis-pane");
+			let libraryItemDetails = TrellisPane.itemPane._itemDetails;
 			let libraryAttachmentsBox = libraryItemDetails.getPane(paneID);
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(libraryItemDetails, paneID);
 			// Collapse section
 			libraryAttachmentsBox.querySelector('collapsible-section > .head').click();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			// Open section
 			libraryAttachmentsBox.querySelector('collapsible-section > .head').click();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			
 			// Select reader tab
-			Zotero_Tabs.select(tabID);
+			Trellis_Tabs.select(tabID);
 
 			// Make sure the preview status is not changed in reader
 			assert.isFalse(await isPreviewDisplayed(attachmentsBox));
@@ -1126,7 +1126,7 @@ describe("Item pane", function () {
 		 * If this test fails, it is not recommended to add timeouts as a quick fix.
 		 */
 		it("should keep attachments pane status after changing selection", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 			let preview = attachmentsBox.previewElem;
 
@@ -1134,11 +1134,11 @@ describe("Item pane", function () {
 			itemDetails.pinnedPane = paneID;
 
 			// item with attachment (1 annotation)
-			let item1 = new Zotero.Item('book');
+			let item1 = new Trellis.Item('book');
 			await item1.saveTx();
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment1 = await Zotero.Attachments.importFromFile({
+			let attachment1 = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item1.id
 			});
@@ -1160,11 +1160,11 @@ describe("Item pane", function () {
 			assert.equal(attachmentRow._annotationButton.querySelector('.label').textContent, "1");
 
 			// item with attachment (no annotation)
-			let item2 = new Zotero.Item('book');
+			let item2 = new Trellis.Item('book');
 			await item2.saveTx();
 			file = getTestDataDirectory();
 			file.append('wonderland_short.pdf');
-			let attachment2 = await Zotero.Attachments.importFromFile({
+			let attachment2 = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item2.id
 			});
@@ -1185,7 +1185,7 @@ describe("Item pane", function () {
 			// 0 annotation
 			assert.equal(attachmentRow._annotationButton.querySelector('.label').textContent, "0");
 
-			let item3 = new Zotero.Item('book');
+			let item3 = new Trellis.Item('book');
 			await item3.saveTx();
 
 			// Select item without attachment
@@ -1195,7 +1195,7 @@ describe("Item pane", function () {
 			assert.equal(attachmentsBox.querySelectorAll("attachment-row").length, 0);
 
 			// Again, select item with attachment (1 annotation)
-			await ZoteroPane.selectItem(item1.id);
+			await TrellisPane.selectItem(item1.id);
 			await itemDetails._renderPromise;
 			await waitForPreviewBoxReader(attachmentsBox, attachment1.id);
 
@@ -1217,70 +1217,70 @@ describe("Item pane", function () {
 		});
 
 		it("should open attachment on clicking attachment row", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(attachmentsBox);
 
 			let attachmentRow = attachmentsBox.querySelector(`attachment-row[attachment-id="${attachment.id}"]`);
 			attachmentRow._attachmentButton.click();
-			await Zotero.Promise.delay(100);
-			let reader = await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+			await Trellis.Promise.delay(100);
+			let reader = await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 			// Should open attachment
 			assert.equal(reader.itemID, attachment.id);
 		});
 
 		it("should select attachment on clicking annotation button of attachment row", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 			let _annotation = await createAnnotation('highlight', attachment);
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(attachmentsBox);
 
 			let attachmentRow = attachmentsBox.querySelector(`attachment-row[attachment-id="${attachment.id}"]`);
 			attachmentRow._annotationButton.click();
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			// Should select attachment
-			assert.equal(ZoteroPane.getSelectedItems(true)[0], attachment.id);
+			assert.equal(TrellisPane.getSelectedItems(true)[0], attachment.id);
 		});
 
 		it("should open attachment on double-clicking attachments pane preview", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 			let preview = attachmentsBox.previewElem;
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(attachmentsBox);
 
@@ -1290,14 +1290,14 @@ describe("Item pane", function () {
 				view: window
 			});
 			preview.dispatchEvent(event);
-			await Zotero.Promise.delay(100);
-			let reader = await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+			await Trellis.Promise.delay(100);
+			let reader = await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 			// Should open attachment
 			assert.equal(reader.itemID, attachment.id);
 		});
 
 		it("should render preview robustly after making dense calls to render and discard", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 			let preview = attachmentsBox.previewElem;
 
@@ -1305,20 +1305,20 @@ describe("Item pane", function () {
 			itemDetails.pinnedPane = paneID;
 
 			// item with attachment
-			let item1 = new Zotero.Item('book');
+			let item1 = new Trellis.Item('book');
 			await item1.saveTx();
 			let file1 = getTestDataDirectory();
 			file1.append('test.pdf');
-			let attachment1 = await Zotero.Attachments.importFromFile({
+			let attachment1 = await Trellis.Attachments.importFromFile({
 				file: file1,
 				parentItemID: item1.id
 			});
 
-			let item2 = new Zotero.Item('book');
+			let item2 = new Trellis.Item('book');
 			await item2.saveTx();
 			let file2 = getTestDataDirectory();
 			file2.append('test.pdf');
-			let attachment2 = await Zotero.Attachments.importFromFile({
+			let attachment2 = await Trellis.Attachments.importFromFile({
 				file: file2,
 				parentItemID: item2.id
 			});
@@ -1326,7 +1326,7 @@ describe("Item pane", function () {
 			let selectionMap = [item1.id, item2.id];
 			// Repeat render/discard multiple times
 			for (let i = 0; i < 10; i++) {
-				await ZoteroPane.selectItem(selectionMap[i % 2]);
+				await TrellisPane.selectItem(selectionMap[i % 2]);
 
 				// No await, since the render/discard may be triggered at any time in actual usage
 				preview.discard();
@@ -1339,11 +1339,11 @@ describe("Item pane", function () {
 				&& !preview._lastTask);
 
 			// Should be able to render the correct preview
-			await ZoteroPane.selectItem(item1.id);
+			await TrellisPane.selectItem(item1.id);
 			await waitForPreviewBoxReader(attachmentsBox, attachment1.id);
 			assert.isTrue(await isPreviewDisplayed(attachmentsBox));
 
-			await ZoteroPane.selectItem(item2.id);
+			await TrellisPane.selectItem(item2.id);
 			await waitForPreviewBoxReader(attachmentsBox, attachment2.id);
 			assert.isTrue(await isPreviewDisplayed(attachmentsBox));
 
@@ -1352,7 +1352,7 @@ describe("Item pane", function () {
 		});
 
 		it("should not load preview iframe before becoming visible", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 
 			// Resize to very small height to ensure the attachment box is not in view
@@ -1362,7 +1362,7 @@ describe("Item pane", function () {
 			let item = await createDataObject('item');
 			await importFileAttachment('test.pdf', { parentID: item.id });
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			itemDetails._paneParent.scrollTo(0, 0);
 
@@ -1385,7 +1385,7 @@ describe("Item pane", function () {
 		});
 
 		it("should discard attachments pane preview after becoming invisible", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 
 			const discardTimeout = 50;
@@ -1401,7 +1401,7 @@ describe("Item pane", function () {
 			let item = await createDataObject('item');
 			let attachment = await importFileAttachment('test.pdf', { parentID: item.id });
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxReader(attachmentsBox, attachment.id);
 
@@ -1420,9 +1420,9 @@ describe("Item pane", function () {
 		});
 
 		it("should update after attachment is trashed or restored", async function () {
-			// https://github.com/zotero/zotero/issues/4770
+			// https://github.com/trellis/trellis/issues/4770
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentsBox = itemDetails.getPane(paneID);
 
 			let item = await createDataObject('item');
@@ -1432,13 +1432,13 @@ describe("Item pane", function () {
 				return attachmentsBox.querySelector(`attachment-row[attachment-id="${attachment.id}"]`);
 			}
 
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(attachmentsBox);
 
 			// Trash the attachment
 			let trashPromise = waitForNotifierEvent('trash', 'item');
-			await Zotero.Items.trashTx([attachment.id]);
+			await Trellis.Items.trashTx([attachment.id]);
 			await trashPromise;
 
 			// Wait for the attachment row to be hidden
@@ -1464,7 +1464,7 @@ describe("Item pane", function () {
 			// is the same. We want to ensure the attachments box is rerendered after
 			// the attachments' trash/restore, even if it's already rendered with the same item.
 			trashPromise = waitForNotifierEvent('trash', 'item');
-			await Zotero.Items.trashTx([attachment.id]);
+			await Trellis.Items.trashTx([attachment.id]);
 			await trashPromise;
 
 			// Wait for the attachment row to be hidden
@@ -1476,7 +1476,7 @@ describe("Item pane", function () {
 			// At this point, the box still has the previous render with attachment row hidden
 			let item2 = await createDataObject('item');
 			let attachment2 = await importFileAttachment('test.pdf', { parentID: item2.id });
-			await ZoteroPane.selectItem(attachment2.id);
+			await TrellisPane.selectItem(attachment2.id);
 			await waitForPreviewBoxRender(itemDetails.getPane("attachment-info"));
 
 			// Restore the attachment
@@ -1486,7 +1486,7 @@ describe("Item pane", function () {
 			await restorePromise;
 
 			// Select the item with the restored attachment. A rerender should be triggered
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(attachmentsBox);
 
@@ -1510,25 +1510,25 @@ describe("Item pane", function () {
 			var item;
 			var note1;
 			var note2;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				item = createUnsavedDataObject('item');
 				await item.save();
 				
-				note1 = new Zotero.Item('note');
+				note1 = new Trellis.Item('note');
 				note1.parentID = item.id;
 				note1.setNote('A');
 				await note1.save();
 				
-				note2 = new Zotero.Item('note');
+				note2 = new Trellis.Item('note');
 				note2.parentID = item.id;
 				note2.setNote('B');
 				await note2.save();
 			});
 			
-			var body = doc.querySelector('#zotero-editpane-notes .body');
+			var body = doc.querySelector('#trellis-editpane-notes .body');
 			// Wait for note list to update
 			do {
-				await Zotero.Promise.delay(1);
+				await Trellis.Promise.delay(1);
 			}
 			while (body.querySelectorAll('.row .label').length !== 2);
 			
@@ -1538,7 +1538,7 @@ describe("Item pane", function () {
 			
 			// Wait for note list to update
 			do {
-				await Zotero.Promise.delay(1);
+				await Trellis.Promise.delay(1);
 			}
 			while ([...body.querySelectorAll('.row .label')].every(label => label.textContent != 'C'));
 		});
@@ -1547,36 +1547,36 @@ describe("Item pane", function () {
 			var item;
 			var note1;
 			var note2;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				item = createUnsavedDataObject('item');
 				await item.save();
 				
-				note1 = new Zotero.Item('note');
+				note1 = new Trellis.Item('note');
 				note1.parentID = item.id;
 				note1.setNote('A');
 				await note1.save();
 				
-				note2 = new Zotero.Item('note');
+				note2 = new Trellis.Item('note');
 				note2.parentID = item.id;
 				note2.setNote('B');
 				await note2.save();
 			});
 
-			var body = doc.querySelector('#zotero-editpane-notes .body');
+			var body = doc.querySelector('#trellis-editpane-notes .body');
 			// Wait for note list to update
 			do {
-				await Zotero.Promise.delay(1);
+				await Trellis.Promise.delay(1);
 			}
 			while (body.querySelectorAll('.row .label').length !== 2);
 			
 			// Click "-" in first note
 			var promise = waitForDialog();
-			body.querySelector(".zotero-clicky-minus").click();
+			body.querySelector(".trellis-clicky-minus").click();
 			await promise;
 			
 			// Wait for note list to update
 			do {
-				await Zotero.Promise.delay(1);
+				await Trellis.Promise.delay(1);
 			}
 			while (body.querySelectorAll('.row .label').length !== 1);
 		});
@@ -1585,25 +1585,25 @@ describe("Item pane", function () {
 			var item;
 			var note1;
 			var note2;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				item = createUnsavedDataObject('item');
 				await item.save();
 				
-				note1 = new Zotero.Item('note');
+				note1 = new Trellis.Item('note');
 				note1.parentID = item.id;
 				note1.setNote('A');
 				await note1.save();
 				
-				note2 = new Zotero.Item('note');
+				note2 = new Trellis.Item('note');
 				note2.parentID = item.id;
 				note2.setNote('B');
 				await note2.save();
 			});
 			
-			var body = doc.querySelector('#zotero-editpane-notes .body');
+			var body = doc.querySelector('#trellis-editpane-notes .body');
 			// Wait for note list to update
 			do {
-				await Zotero.Promise.delay(1);
+				await Trellis.Promise.delay(1);
 			}
 			while (body.querySelectorAll('.row .label').length !== 2);
 			
@@ -1611,7 +1611,7 @@ describe("Item pane", function () {
 			
 			// Wait for note list to update
 			do {
-				await Zotero.Promise.delay(1);
+				await Trellis.Promise.delay(1);
 			}
 			while (body.querySelectorAll('.row .label').length !== 1);
 		});
@@ -1622,14 +1622,14 @@ describe("Item pane", function () {
 		let paneID = "attachment-info";
 
 		beforeEach(function () {
-			Zotero.Prefs.set("panes.attachment-info.open", true);
-			Zotero.Prefs.set("showAttachmentPreview", true);
-			Zotero_Tabs.select("zotero-pane");
+			Trellis.Prefs.set("panes.attachment-info.open", true);
+			Trellis.Prefs.set("showAttachmentPreview", true);
+			Trellis_Tabs.select("trellis-pane");
 		});
 
 		afterEach(function () {
 			// Ensure all previews are properly discarded and cleaned up
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentBox = itemDetails.getPane(paneID);
 
 			// Force cleanup of any pending operations and queued tasks
@@ -1638,19 +1638,19 @@ describe("Item pane", function () {
 				attachmentBox._preview.discard?.();
 			}
 
-			Zotero_Tabs.select("zotero-pane");
-			Zotero_Tabs.closeAll();
+			Trellis_Tabs.select("trellis-pane");
+			Trellis_Tabs.closeAll();
 		});
 
 		it("should refresh on file rename", async function () {
 			let file = getTestDataDirectory();
 			file.append('test.png');
-			let item = await Zotero.Attachments.importFromFile({
+			let item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			let newName = 'test2.png';
 
-			let itemBox = doc.getElementById('zotero-attachment-box');
+			let itemBox = doc.getElementById('trellis-attachment-box');
 			let label = itemBox._id('fileName');
 			let promise = waitForDOMAttributes(label, 'value', (newValue) => {
 				return newValue === newName;
@@ -1659,7 +1659,7 @@ describe("Item pane", function () {
 			await item.renameAttachmentFile(newName);
 			
 			await promise;
-			let box = ZoteroPane.itemPane._itemDetails.getPane(paneID);
+			let box = TrellisPane.itemPane._itemDetails.getPane(paneID);
 			await waitForPreviewBoxRender(box, item.id);
 			assert.equal(label.value, newName);
 		});
@@ -1667,10 +1667,10 @@ describe("Item pane", function () {
 		it("should update on attachment title change", async function () {
 			let file = getTestDataDirectory();
 			file.append('test.png');
-			let item = await Zotero.Attachments.importFromFile({ file });
+			let item = await Trellis.Attachments.importFromFile({ file });
 			let newTitle = 'New Title';
 
-			let paneHeader = doc.getElementById('zotero-item-pane-header');
+			let paneHeader = doc.getElementById('trellis-item-pane-header');
 			let label = paneHeader.titleField;
 			let promise = Promise.all([
 				waitForDOMAttributes(label, 'value', (newValue) => {
@@ -1685,7 +1685,7 @@ describe("Item pane", function () {
 			await promise;
 
 			// Wait for section to finish rendering
-			let box = ZoteroPane.itemPane._itemDetails.getPane(paneID);
+			let box = TrellisPane.itemPane._itemDetails.getPane(paneID);
 			await waitForPreviewBoxRender(box, item.id);
 			
 			assert.equal(label.value, newTitle);
@@ -1693,64 +1693,64 @@ describe("Item pane", function () {
 
 		it("should show attachment pane in library for attachment item", async function () {
 			// Regular item: hide
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let box = itemDetails.getPane(paneID);
 
 			// TEMP: Force abort any pending renders
 			box._preview?.remove();
 			box._preview = null;
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			assert.isTrue(box.hidden);
 
 			// Child attachment: show
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
-			await ZoteroPane.selectItem(attachment.id);
+			await TrellisPane.selectItem(attachment.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxReader(box, attachment.id);
 			assert.isFalse(box.hidden);
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			assert.isTrue(await isPreviewDisplayed(box));
 
 			// Standalone attachment: show
 			let attachment1 = await importFileAttachment('test.pdf');
-			await ZoteroPane.selectItem(attachment1.id);
+			await TrellisPane.selectItem(attachment1.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxReader(box, attachment1.id);
 			assert.isFalse(box.hidden);
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			assert.isTrue(await isPreviewDisplayed(box));
 		});
 
 		it("should show attachment pane without preview in reader for standalone attachment item", async function () {
 			// Attachment item with parent item: hide
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
 			await item.saveTx();
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
-			await ZoteroPane.viewItems([attachment]);
-			let tabID = Zotero_Tabs.selectedID;
-			let itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			await TrellisPane.viewItems([attachment]);
+			let tabID = Trellis_Tabs.selectedID;
+			let itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			let box = itemDetails.getPane(paneID);
 			assert.isTrue(box.hidden);
 
 			// Standalone attachment item: show
 			attachment = await importFileAttachment('test.pdf');
-			await ZoteroPane.viewItems([attachment]);
-			tabID = Zotero_Tabs.selectedID;
-			itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			await TrellisPane.viewItems([attachment]);
+			tabID = Trellis_Tabs.selectedID;
+			itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			box = itemDetails.getPane(paneID);
 			assert.isFalse(box.hidden);
 
@@ -1760,14 +1760,14 @@ describe("Item pane", function () {
 		});
 
 		it("should only show attachment note container when exists", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let box = itemDetails.getPane(paneID);
 			let noteContainer = box._id("note-container");
 			let noteEditor = box._id('attachment-note-editor');
 
 			// Hide note container by default
 			let attachment = await importFileAttachment('test.pdf');
-			await ZoteroPane.selectItem(attachment.id);
+			await TrellisPane.selectItem(attachment.id);
 			await itemDetails._renderPromise;
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxRender(box);
@@ -1786,12 +1786,12 @@ describe("Item pane", function () {
 		});
 
 		it("should discard attachment pane preview after becoming invisible", async function () {
-			// TEMP: https://github.com/zotero/zotero/issues/5624
-			if (Zotero.automatedTest) {
+			// TEMP: https://github.com/trellis/trellis/issues/5624
+			if (Trellis.automatedTest) {
 				this.skip();
 				return;
 			}
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentBox = itemDetails.getPane(paneID);
 
 			const discardTimeout = 50;
@@ -1802,7 +1802,7 @@ describe("Item pane", function () {
 
 			let attachment = await importFileAttachment('test.pdf');
 
-			await ZoteroPane.selectItem(attachment.id);
+			await TrellisPane.selectItem(attachment.id);
 			await waitForScrollToPane(itemDetails, paneID);
 			await waitForPreviewBoxReader(attachmentBox, attachment.id);
 
@@ -1820,16 +1820,16 @@ describe("Item pane", function () {
 		});
 
 		it("should not transfer focused title while switching between items", async function () {
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			let attachmentOne = await importFileAttachment('test.pdf', { title: 'PDF_one', parentItemID: item.id });
 			let attachmentTwo = await importFileAttachment('test.pdf', { title: 'PDF_two', parentItemID: item.id });
-			await ZoteroPane.selectItem(attachmentOne.id);
+			await TrellisPane.selectItem(attachmentOne.id);
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentBox = itemDetails.getPane(paneID);
 
 			attachmentBox.querySelector("#title").focus();
-			await ZoteroPane.selectItem(attachmentTwo.id);
+			await TrellisPane.selectItem(attachmentTwo.id);
 			await waitForNotifierEvent('modify', 'item');
 			assert.equal(attachmentTwo.getDisplayTitle(), "PDF_two");
 		});
@@ -1839,14 +1839,14 @@ describe("Item pane", function () {
 			let attachment = await importFileAttachment('test.pdf', { title: 'PDF_one' });
 			attachment.setNote("Embedded test note");
 			await attachment.saveTx();
-			await ZoteroPane.selectItem(attachment.id);
+			await TrellisPane.selectItem(attachment.id);
 
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let attachmentBox = itemDetails.getPane(paneID);
 
 			await attachmentBox.convertAttachmentNote();
 			// Ensure that the standalone note is recorded as a related item of the attachment
-			let relatedItems = attachment.relatedItems.map(key => Zotero.Items.getByLibraryAndKey(attachment.libraryID, key));
+			let relatedItems = attachment.relatedItems.map(key => Trellis.Items.getByLibraryAndKey(attachment.libraryID, key));
 			assert.lengthOf(relatedItems, 1);
 			// Ensure that the note has the correct content
 			let note = relatedItems[0];
@@ -1860,24 +1860,24 @@ describe("Item pane", function () {
 
 	describe("File renaming", function () {
 		before(function () {
-			Zotero.Prefs.set("panes.attachment-info.open", true);
+			Trellis.Prefs.set("panes.attachment-info.open", true);
 		});
 
 		it("should hide the rename from parent button if already renamed", async function () {
 			let item = await createDataObject('item', { title: 'Lorem Ipsum' });
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file: file,
 				fileBaseName: "Lorem Ipsum", // Simulate auto-renaming, normally code would call getRenamedFileBaseNameIfAllowedType to generate fileBaseName
 				parentItemID: item.id
 			});
 
-			let zp = win.ZoteroPane;
+			let zp = win.TrellisPane;
 			await zp.selectItems([attachment.id]);
 
-			let itemBox = doc.getElementById('zotero-attachment-box');
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemBox = doc.getElementById('trellis-attachment-box');
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			await zp.selectItems([attachment.id]);
 			await itemDetails._renderPromise;
 
@@ -1896,16 +1896,16 @@ describe("Item pane", function () {
 			let item = await createDataObject('item', { title: 'Lorem Ipsum' });
 			let file = getTestDataDirectory();
 			file.append('test.txt');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file: file,
 				parentItemID: item.id
 			});
 
-			let zp = win.ZoteroPane;
-			let itemBox = doc.getElementById('zotero-attachment-box');
+			let zp = win.TrellisPane;
+			let itemBox = doc.getElementById('trellis-attachment-box');
 			let label = itemBox._id('fileName');
 			let button = itemBox._id('rename-from-parent');
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			await zp.selectItems([attachment.id]);
 			await itemDetails._renderPromise;
 			assert.isFalse(button.hidden);
@@ -1924,14 +1924,14 @@ describe("Item pane", function () {
 		it("should hide the rename from parent button for top-level items", async function () {
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let topLevelAttachment = await Zotero.Attachments.importFromFile({
+			let topLevelAttachment = await Trellis.Attachments.importFromFile({
 				file: file,
 			});
 
-			let zp = win.ZoteroPane;
-			let itemBox = doc.getElementById('zotero-attachment-box');
+			let zp = win.TrellisPane;
+			let itemBox = doc.getElementById('trellis-attachment-box');
 			let button = itemBox._id('rename-from-parent');
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			await zp.selectItems([topLevelAttachment.id]);
 			await itemDetails._renderPromise;
 
@@ -1941,24 +1941,24 @@ describe("Item pane", function () {
 
 		it("should show rename-from-parent button after parent metadata changes", async function () {
 			// Disable auto-rename so that changing parent metadata does not auto-rename the file
-			let origAutoRename = Zotero.Prefs.get('autoRenameFiles.onMetadataChange');
-			Zotero.Prefs.set('autoRenameFiles.onMetadataChange', false);
+			let origAutoRename = Trellis.Prefs.get('autoRenameFiles.onMetadataChange');
+			Trellis.Prefs.set('autoRenameFiles.onMetadataChange', false);
 
 			try {
 				// Create an item and an attachment whose filename already matches the template
 				let item = await createDataObject('item', { title: 'Lorem Ipsum' });
 				let file = getTestDataDirectory();
 				file.append('test.pdf');
-				let attachment = await Zotero.Attachments.importFromFile({
+				let attachment = await Trellis.Attachments.importFromFile({
 					file: file,
 					fileBaseName: "Lorem Ipsum",
 					parentItemID: item.id
 				});
 
-				let zp = win.ZoteroPane;
-				let itemBox = doc.getElementById('zotero-attachment-box');
+				let zp = win.TrellisPane;
+				let itemBox = doc.getElementById('trellis-attachment-box');
 				let button = itemBox._id('rename-from-parent');
-				let itemDetails = ZoteroPane.itemPane._itemDetails;
+				let itemDetails = TrellisPane.itemPane._itemDetails;
 
 				// Select the attachment -- button should be hidden since filename matches
 				await zp.selectItems([attachment.id]);
@@ -1989,7 +1989,7 @@ describe("Item pane", function () {
 				await item.eraseTx();
 			}
 			finally {
-				Zotero.Prefs.set('autoRenameFiles.onMetadataChange', origAutoRename);
+				Trellis.Prefs.set('autoRenameFiles.onMetadataChange', origAutoRename);
 			}
 		});
 	});
@@ -1997,14 +1997,14 @@ describe("Item pane", function () {
 
 	describe("Note editor", function () {
 		it("should refresh on note update", async function () {
-			var item = new Zotero.Item('note');
+			var item = new Trellis.Item('note');
 			var id = await item.saveTx();
 			
-			var noteEditor = doc.getElementById('zotero-note-editor');
+			var noteEditor = doc.getElementById('trellis-note-editor');
 			
 			// Wait for the editor if it has not been initialized yet
 			if (!noteEditor.item) {
-				await new Zotero.Promise((resolve, reject) => {
+				await new Trellis.Promise((resolve, reject) => {
 					noteEditor.onInit(() => resolve());
 				});
 				assert.equal(noteEditor._editorInstance._iframeWindow.wrappedJSObject.getDataSync(), null);
@@ -2015,7 +2015,7 @@ describe("Item pane", function () {
 			
 			// Wait for asynchronous editor update
 			do {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			} while (
 				!/<div data-schema-version=".*"><p>Test<\/p><\/div>/.test(
 					noteEditor._editorInstance._iframeWindow.wrappedJSObject.getDataSync().html.replace(/\n/g, '')
@@ -2033,13 +2033,13 @@ describe("Item pane", function () {
 				var item = await createDataObject('feedItem', { libraryID: feed.libraryID });
 				
 				// Skip timed mark-as-read
-				var stub = sinon.stub(win.ZoteroPane, 'startItemReadTimeout');
+				var stub = sinon.stub(win.TrellisPane, 'startItemReadTimeout');
 				await select(win, item);
 				
 				// Click "Mark as Read"
 				var promise = waitForItemEvent('modify');
-				var button = ZoteroPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
-				assert.equal(button.label, Zotero.getString('pane.item.markAsRead'));
+				var button = TrellisPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
+				assert.equal(button.label, Trellis.getString('pane.item.markAsRead'));
 				assert.isFalse(item.isRead);
 				button.click();
 				var ids = await promise;
@@ -2047,8 +2047,8 @@ describe("Item pane", function () {
 				assert.sameMembers(ids, [item.id]);
 				assert.isTrue(item.isRead);
 				// Button is re-created
-				button = ZoteroPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
-				assert.equal(button.label, Zotero.getString('pane.item.markAsUnread'));
+				button = TrellisPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
+				assert.equal(button.label, Trellis.getString('pane.item.markAsUnread'));
 				
 				stub.restore();
 			});
@@ -2059,7 +2059,7 @@ describe("Item pane", function () {
 				await selectLibrary(win, feed.libraryID);
 				await waitForItemsLoad(win);
 				
-				var stub = sinon.stub(win.ZoteroPane, 'startItemReadTimeout');
+				var stub = sinon.stub(win.TrellisPane, 'startItemReadTimeout');
 				var item = await createDataObject('feedItem', { libraryID: feed.libraryID });
 				// Skip timed mark-as-read
 				assert.ok(stub.called);
@@ -2067,13 +2067,13 @@ describe("Item pane", function () {
 				item.isRead = true;
 				await item.saveTx();
 				
-				let button = ZoteroPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
+				let button = TrellisPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
 				
-				assert.equal(button.label, Zotero.getString('pane.item.markAsUnread'));
+				assert.equal(button.label, Trellis.getString('pane.item.markAsUnread'));
 				await item.toggleRead(false);
 				// Button is re-created
-				button = ZoteroPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
-				assert.equal(button.label, Zotero.getString('pane.item.markAsRead'));
+				button = TrellisPane.itemPane.getCurrentPane().querySelector('.feed-item-toggleRead-button');
+				assert.equal(button.label, Trellis.getString('pane.item.markAsRead'));
 			});
 		});
 	});
@@ -2086,42 +2086,42 @@ describe("Item pane", function () {
 			var item3 = await createDataObject('item', { title: 'C' });
 			var item4 = await createDataObject('item', { title: 'D' });
 			
-			var uris = [item2, item3, item4].map(item => Zotero.URI.getItemURI(item));
+			var uris = [item2, item3, item4].map(item => Trellis.URI.getItemURI(item));
 			
 			var p;
 			
-			var zp = win.ZoteroPane;
+			var zp = win.TrellisPane;
 			await zp.selectItems([item1.id, item2.id]);
 			zp.mergeSelectedItems();
 			p = waitForItemEvent('modify');
-			doc.getElementById('zotero-duplicates-merge-button').click();
+			doc.getElementById('trellis-duplicates-merge-button').click();
 			await p;
 			
 			assert.sameMembers(
-				item1.getRelations()[Zotero.Relations.replacedItemPredicate],
+				item1.getRelations()[Trellis.Relations.replacedItemPredicate],
 				[uris[0]]
 			);
 			
 			await zp.selectItems([item3.id, item4.id]);
 			zp.mergeSelectedItems();
 			p = waitForItemEvent('modify');
-			doc.getElementById('zotero-duplicates-merge-button').click();
+			doc.getElementById('trellis-duplicates-merge-button').click();
 			await p;
 			
 			assert.sameMembers(
-				item3.getRelations()[Zotero.Relations.replacedItemPredicate],
+				item3.getRelations()[Trellis.Relations.replacedItemPredicate],
 				[uris[2]]
 			);
 			
 			await zp.selectItems([item1.id, item3.id]);
 			zp.mergeSelectedItems();
 			p = waitForItemEvent('modify');
-			doc.getElementById('zotero-duplicates-merge-button').click();
+			doc.getElementById('trellis-duplicates-merge-button').click();
 			await p;
 			
 			// Remaining item should include all other URIs
 			assert.sameMembers(
-				item1.getRelations()[Zotero.Relations.replacedItemPredicate],
+				item1.getRelations()[Trellis.Relations.replacedItemPredicate],
 				uris
 			);
 		});
@@ -2129,10 +2129,10 @@ describe("Item pane", function () {
 
 	describe("Item pane and tabs", function () {
 		it("should switch to the correct pane when switching tabs", async function () {
-			// https://github.com/zotero/zotero/issues/4531#issuecomment-2470874876
+			// https://github.com/trellis/trellis/issues/4531#issuecomment-2470874876
 			let attachment = await importFileAttachment('test.pdf');
-			Zotero_Tabs.closeAll();
-			Zotero_Tabs.add({
+			Trellis_Tabs.closeAll();
+			Trellis_Tabs.add({
 				type: 'reader-unloaded',
 				title: "Reader",
 				index: 1,
@@ -2140,11 +2140,11 @@ describe("Item pane", function () {
 					itemID: attachment.id
 				},
 			});
-			Zotero_Tabs.jump(1);
-			Zotero_Tabs.jump(0);
-			await Zotero.Promise.delay(100);
+			Trellis_Tabs.jump(1);
+			Trellis_Tabs.jump(0);
+			await Trellis.Promise.delay(100);
 			// Should not show the context pane for the reader tab
-			assert.isTrue(ZoteroContextPane.splitter.hidden);
+			assert.isTrue(TrellisContextPane.splitter.hidden);
 		});
 	});
 
@@ -2152,17 +2152,17 @@ describe("Item pane", function () {
 		let paneID = "libraries-collections";
 
 		beforeEach(function () {
-			Zotero.Prefs.set("panes.libraries-collections.open", true);
-			Zotero_Tabs.select("zotero-pane");
+			Trellis.Prefs.set("panes.libraries-collections.open", true);
+			Trellis_Tabs.select("trellis-pane");
 		});
 
 		afterEach(function () {
-			Zotero_Tabs.select("zotero-pane");
-			Zotero_Tabs.closeAll();
+			Trellis_Tabs.select("trellis-pane");
+			Trellis_Tabs.closeAll();
 		});
 
 		it("should scroll to pinned pane after selection moves from note to item", async function () {
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			let pane = itemDetails.getPane(paneID);
 
 			let item = await createDataObject('item');
@@ -2177,7 +2177,7 @@ describe("Item pane", function () {
 
 			await select(win, note);
 
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 
 			await select(win, item);
 			await waitForScrollToPane(itemDetails, paneID);
@@ -2195,13 +2195,13 @@ describe("Item pane", function () {
 	describe("Sidenav", function () {
 		async function waitForSidenav() {
 			await waitForCallback(() => {
-				return !!ZoteroPane.itemPane._itemDetails.sidenav?._initialized;
+				return !!TrellisPane.itemPane._itemDetails.sidenav?._initialized;
 			});
 		}
 
 		async function waitForSidenavActive() {
 			await waitForCallback(() => {
-				return !ZoteroPane.itemPane._itemDetails.sidenav._defaultStatus;
+				return !TrellisPane.itemPane._itemDetails.sidenav._defaultStatus;
 			});
 		}
 
@@ -2221,23 +2221,23 @@ describe("Item pane", function () {
 		}
 
 		function compareButtonOrder(order) {
-			let wrappers = ZoteroPane.itemPane._itemDetails.sidenav._enabledWrappers;
+			let wrappers = TrellisPane.itemPane._itemDetails.sidenav._enabledWrappers;
 			let buttonOrder = wrappers.map(wrapper => wrapper.querySelector('.btn').dataset.pane);
 			return compareOrder(buttonOrder, order)
 		}
 
 		function compareSectionOrder(order) {
-			let sections = ZoteroPane.itemPane._itemDetails.getEnabledPanes();
+			let sections = TrellisPane.itemPane._itemDetails.getEnabledPanes();
 			let sectionOrder = sections.map(section => section.dataset.pane);
 			return compareOrder(sectionOrder, order)
 		}
 
 		function getSidenavOrder() {
-			return Zotero.Prefs.get('sidenav.order') || ZoteroPane.itemPane._itemDetails.sidenav._builtInPanes.join(',');
+			return Trellis.Prefs.get('sidenav.order') || TrellisPane.itemPane._itemDetails.sidenav._builtInPanes.join(',');
 		}
 
 		async function clickSidenavMenu(paneIdx, menuSelector) {
-			let sidenav = ZoteroPane.itemPane._itemDetails.sidenav;
+			let sidenav = TrellisPane.itemPane._itemDetails.sidenav;
 			if (paneIdx < 0) {
 				paneIdx = sidenav._enabledWrappers.length + paneIdx;
 			}
@@ -2269,7 +2269,7 @@ describe("Item pane", function () {
 			let order = orderRaw.split(',');
 			let newOrder = order.reverse()
 			let newOrderRaw = newOrder.join(',');
-			Zotero.Prefs.set('sidenav.order', newOrderRaw);
+			Trellis.Prefs.set('sidenav.order', newOrderRaw);
 
 			// If the order is not updated, a timeout exception will be thrown to fail the test
 			await waitForCallback(() => {
@@ -2283,7 +2283,7 @@ describe("Item pane", function () {
 
 			// Create an item so that the sidenav is active
 			let item = await createDataObject('item');
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			await waitForSidenavActive();
 
@@ -2291,7 +2291,7 @@ describe("Item pane", function () {
 			let order = orderRaw.split(',');
 
 			let promise = waitForPrefsChange('sidenav.order');
-			let menuEnabled = await clickSidenavMenu(1, '.zotero-menuitem-reorder-up');
+			let menuEnabled = await clickSidenavMenu(1, '.trellis-menuitem-reorder-up');
 			assert.isTrue(menuEnabled);
 			await promise;
 
@@ -2306,7 +2306,7 @@ describe("Item pane", function () {
 			assert.deepEqual(newOrder, expectedOrder);
 
 			// Remove the temp item
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 
 		it("should move section down", async function () {
@@ -2314,14 +2314,14 @@ describe("Item pane", function () {
 
 			// Create an item so that the sidenav is active
 			let item = await createDataObject('item');
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			await waitForSidenavActive();
 
 			let orderRaw = getSidenavOrder();
 			let order = orderRaw.split(',');
 			let promise = waitForPrefsChange('sidenav.order');
-			let menuEnabled = await clickSidenavMenu(0, '.zotero-menuitem-reorder-down');
+			let menuEnabled = await clickSidenavMenu(0, '.trellis-menuitem-reorder-down');
 			assert.isTrue(menuEnabled);
 			await promise;
 
@@ -2336,7 +2336,7 @@ describe("Item pane", function () {
 			assert.deepEqual(newOrder, expectedOrder);
 
 			// Remove the temp item
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 
 		it("should not show move up menu for first section", async function () {
@@ -2344,14 +2344,14 @@ describe("Item pane", function () {
 
 			// Create an item so that the sidenav is active
 			let item = await createDataObject('item');
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			await waitForSidenavActive();
 
-			let menuEnabled = await clickSidenavMenu(0, '.zotero-menuitem-reorder-up');
+			let menuEnabled = await clickSidenavMenu(0, '.trellis-menuitem-reorder-up');
 			assert.isFalse(menuEnabled);
 
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 
 		it("should not show move down menu for last section", async function () {
@@ -2359,14 +2359,14 @@ describe("Item pane", function () {
 
 			// Create an item so that the sidenav is active
 			let item = await createDataObject('item');
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			await waitForSidenavActive();
 
-			let menuEnabled = await clickSidenavMenu(-1, '.zotero-menuitem-reorder-down');
+			let menuEnabled = await clickSidenavMenu(-1, '.trellis-menuitem-reorder-down');
 			assert.isFalse(menuEnabled);
 
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 
 		it("should unpin section if it moves to the top", async function () {
@@ -2374,7 +2374,7 @@ describe("Item pane", function () {
 
 			// Create an item so that the sidenav is active
 			let item = await createDataObject('item');
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			await waitForSidenavActive();
 
@@ -2382,31 +2382,31 @@ describe("Item pane", function () {
 			let order = orderRaw.split(',');
 
 			// Pin the second section
-			ZoteroPane.itemPane._itemDetails.pinnedPane = order[1];
+			TrellisPane.itemPane._itemDetails.pinnedPane = order[1];
 
 			let promise = waitForPrefsChange('sidenav.order');
-			let menuEnabled = await clickSidenavMenu(1, '.zotero-menuitem-reorder-up');
+			let menuEnabled = await clickSidenavMenu(1, '.trellis-menuitem-reorder-up');
 			assert.isTrue(menuEnabled);
 			await promise;
 			
-			assert.isEmpty(ZoteroPane.itemPane._itemDetails.pinnedPane);
+			assert.isEmpty(TrellisPane.itemPane._itemDetails.pinnedPane);
 
-			await Zotero.Items.erase(item.id);
+			await Trellis.Items.erase(item.id);
 		});
 
 		it("should not show reorder menu for custom section with orderable disabled", async function () {
 			await waitForSidenav();
 
-			const registeredID = Zotero.ItemPaneManager.registerSection({
+			const registeredID = Trellis.ItemPaneManager.registerSection({
 				paneID: "custom-section-example",
 				pluginID: "example@example.com",
 				header: {
 					l10nID: "example-item-pane-header",
-					icon: "chrome://zotero/skin/16/universal/note.svg",
+					icon: "chrome://trellis/skin/16/universal/note.svg",
 				},
 				sidenav: {
 					l10nID: "example-item-pane-header",
-					icon: "chrome://zotero/skin/20/universal/note.svg",
+					icon: "chrome://trellis/skin/20/universal/note.svg",
 					// Disable orderable
 					orderable: false,
 				},
@@ -2417,17 +2417,17 @@ describe("Item pane", function () {
 
 			// Create an item so that the sidenav is active
 			let item = await createDataObject('item');
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			await waitForSidenavActive();
 
-			let menuUpEnabled = await clickSidenavMenu(-1, '.zotero-menuitem-reorder-up');
+			let menuUpEnabled = await clickSidenavMenu(-1, '.trellis-menuitem-reorder-up');
 			assert.isFalse(menuUpEnabled);
-			let menuDownEnabled = await clickSidenavMenu(-1, '.zotero-menuitem-reorder-down');
+			let menuDownEnabled = await clickSidenavMenu(-1, '.trellis-menuitem-reorder-down');
 			assert.isFalse(menuDownEnabled);
 
-			await Zotero.Items.erase(item.id);
-			Zotero.ItemPaneManager.unregisterSection(registeredID);
+			await Trellis.Items.erase(item.id);
+			Trellis.ItemPaneManager.unregisterSection(registeredID);
 		});
 	});
 
@@ -2441,9 +2441,9 @@ describe("Item pane", function () {
 			let attachmentTwo = await importFileAttachment('test.pdf', { title: 'PDF', parentItemID: toplevelItemTwo.id });
 			let highlightTwo = await createAnnotation('highlight', attachmentTwo);
 
-			ZoteroPane.itemsView.expandAllRows(true);
+			TrellisPane.itemsView.expandAllRows(true);
 
-			await ZoteroPane.itemsView.selectItems([highlightOne.id, highlightTwo.id]);
+			await TrellisPane.itemsView.selectItems([highlightOne.id, highlightTwo.id]);
 
 			let sections = [...win.document.querySelectorAll("annotation-items-pane collapsible-section")];
 			// Top level items' titles are in section summaries
@@ -2462,8 +2462,8 @@ describe("Item pane", function () {
 			highlightOne.annotationText = "Annotation";
 			await highlightOne.saveTx();
 			
-			ZoteroPane.itemsView.expandAllRows(true);
-			await ZoteroPane.itemsView.selectItems([highlightOne.id]);
+			TrellisPane.itemsView.expandAllRows(true);
+			await TrellisPane.itemsView.selectItems([highlightOne.id]);
 
 			assert.equal(win.document.querySelector("annotation-items-pane annotation-row .quote").textContent, "Annotation");
 			highlightOne.annotationText = "Updated";
@@ -2474,11 +2474,11 @@ describe("Item pane", function () {
 
 	describe("Collapsing", function () {
 		function isCollapsed() {
-			if (Zotero_Tabs.selectedType === 'reader') {
-				return ZoteroContextPane.collapsed;
+			if (Trellis_Tabs.selectedType === 'reader') {
+				return TrellisContextPane.collapsed;
 			}
 			else {
-				return ZoteroPane.itemPane.collapsed;
+				return TrellisPane.itemPane.collapsed;
 			}
 		}
 		
@@ -2491,20 +2491,20 @@ describe("Item pane", function () {
 				// way but this:
 				&& (!el.closest('deck') || el.closest('deck').selectedPanel === el.closest('deck > *'));
 			
-			if (isVisible(doc.querySelector('#zotero-view-item-sidenav toolbarbutton[data-action="toggle-pane"]'))) {
+			if (isVisible(doc.querySelector('#trellis-view-item-sidenav toolbarbutton[data-action="toggle-pane"]'))) {
 				return 'item pane sidenav';
 			}
 			
-			if (isVisible(doc.querySelector('#zotero-context-pane-sidenav toolbarbutton[data-action="toggle-pane"]'))) {
+			if (isVisible(doc.querySelector('#trellis-context-pane-sidenav toolbarbutton[data-action="toggle-pane"]'))) {
 				return 'context pane sidenav';
 			}
 			
-			if (isVisible(doc.querySelector('#zotero-tb-toggle-item-pane-stacked'))) {
+			if (isVisible(doc.querySelector('#trellis-tb-toggle-item-pane-stacked'))) {
 				return 'item tree toolbar';
 			}
 			
 			if (
-				Zotero.Reader._readers.some(
+				Trellis.Reader._readers.some(
 					r => isVisible(r._iframe.contentDocument?.querySelector('.toolbar-button.context-pane-toggle'))
 				)
 			) {
@@ -2516,7 +2516,7 @@ describe("Item pane", function () {
 		
 		async function waitForToggle(togglePosition) {
 			while (getVisibleToggle() !== togglePosition) {
-				await Zotero.Promise.delay(100);
+				await Trellis.Promise.delay(100);
 			}
 		}
 		
@@ -2529,12 +2529,12 @@ describe("Item pane", function () {
 		beforeEach(() => {
 			// Make the window wide enough not to automatically enter Stacked mode
 			win.resizeTo(1000, 800);
-			Zotero.Prefs.set('layout', 'standard');
-			ZoteroPane.updateLayout();
+			Trellis.Prefs.set('layout', 'standard');
+			TrellisPane.updateLayout();
 			
-			Zotero_Tabs.select('zotero-pane');
-			ZoteroPane.itemPane.collapsed = false;
-			ZoteroContextPane.collapsed = true;
+			Trellis_Tabs.select('trellis-pane');
+			TrellisPane.itemPane.collapsed = false;
+			TrellisContextPane.collapsed = true;
 		});
 
 		it("should initially show sidenav toggle", async function () {
@@ -2544,85 +2544,85 @@ describe("Item pane", function () {
 
 		it("should still show sidenav toggle after collapse in library", function () {
 			assert.isFalse(isCollapsed());
-			ZoteroPane.itemPane.collapsed = true;
+			TrellisPane.itemPane.collapsed = true;
 			assert.isTrue(isCollapsed());
 			assert.equal(getVisibleToggle(), 'item pane sidenav');
 		});
 
 		it("should switch to item tree toolbar toggle in Stacked mode", function () {
 			assert.isFalse(isCollapsed());
-			Zotero.Prefs.set('layout', 'stacked');
+			Trellis.Prefs.set('layout', 'stacked');
 			assert.isFalse(isCollapsed());
 			assert.equal(getVisibleToggle(), 'item tree toolbar');
 		});
 
 		it("should remain visible in Stacked mode after collapsing", function () {
-			Zotero.Prefs.set('layout', 'stacked');
-			ZoteroPane.itemPane.collapsed = true;
+			Trellis.Prefs.set('layout', 'stacked');
+			TrellisPane.itemPane.collapsed = true;
 			assert.isTrue(isCollapsed());
 			assert.equal(getVisibleToggle(), 'item tree toolbar');
 		});
 
 		it("should keep collapsed state after switching from Standard to Stacked", function () {
 			assert.isFalse(isCollapsed());
-			ZoteroPane.itemPane.collapsed = true;
+			TrellisPane.itemPane.collapsed = true;
 			assert.isTrue(isCollapsed());
-			Zotero.Prefs.set('layout', 'stacked');
+			Trellis.Prefs.set('layout', 'stacked');
 			assert.isTrue(isCollapsed());
 		});
 
 		it("should keep collapsed state after switching from Stacked to Standard", function () {
-			Zotero.Prefs.set('layout', 'stacked');
+			Trellis.Prefs.set('layout', 'stacked');
 			assert.isFalse(isCollapsed());
-			ZoteroPane.itemPane.collapsed = true;
+			TrellisPane.itemPane.collapsed = true;
 			assert.isTrue(isCollapsed());
-			Zotero.Prefs.set('layout', 'standard');
+			Trellis.Prefs.set('layout', 'standard');
 			assert.isTrue(isCollapsed());
 		});
 
 		it("should show in reader toolbar when collapsed in Standard mode", async function () {
-			await ZoteroPane.viewItems([attachment]);
-			await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)._waitForReader();
+			await TrellisPane.viewItems([attachment]);
+			await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)._waitForReader();
 
 			assert.isTrue(isCollapsed());
 			await waitForToggle('reader toolbar');
 		});
 
 		it("should show in reader sidenav when expanded in Standard mode", async function () {
-			await ZoteroPane.viewItems([attachment]);
-			await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)._waitForReader();
+			await TrellisPane.viewItems([attachment]);
+			await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)._waitForReader();
 
-			ZoteroContextPane.collapsed = false;
+			TrellisContextPane.collapsed = false;
 			await waitForToggle('context pane sidenav');
 		});
 
 		it("should return to reader toolbar after collapsing in Standard mode", async function () {
-			await ZoteroPane.viewItems([attachment]);
-			await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)._waitForReader();
+			await TrellisPane.viewItems([attachment]);
+			await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)._waitForReader();
 			
-			ZoteroContextPane.collapsed = false;
-			ZoteroContextPane.collapsed = true;
+			TrellisContextPane.collapsed = false;
+			TrellisContextPane.collapsed = true;
 			await waitForToggle('reader toolbar');
 		});
 
 		it("should show in reader toolbar when collapsed in Stacked mode", async function () {
-			await ZoteroPane.viewItems([attachment]);
-			await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)._waitForReader();
+			await TrellisPane.viewItems([attachment]);
+			await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)._waitForReader();
 
 			assert.isTrue(isCollapsed());
-			Zotero.Prefs.set('layout', 'stacked');
+			Trellis.Prefs.set('layout', 'stacked');
 			assert.isTrue(isCollapsed());
 			await waitForToggle('reader toolbar');
 		});
 
 		it("should stay in reader toolbar when expanded in Stacked mode", async function () {
-			await ZoteroPane.viewItems([attachment]);
-			await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)._waitForReader();
+			await TrellisPane.viewItems([attachment]);
+			await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)._waitForReader();
 
 			assert.isTrue(isCollapsed());
-			Zotero.Prefs.set('layout', 'stacked');
+			Trellis.Prefs.set('layout', 'stacked');
 			assert.isTrue(isCollapsed());
-			ZoteroContextPane.collapsed = false;
+			TrellisContextPane.collapsed = false;
 			assert.isFalse(isCollapsed());
 			await waitForToggle('reader toolbar');
 		});
@@ -2645,11 +2645,11 @@ describe("Item pane", function () {
 		it("should enter and exit batch edit mode", async function () {
 			let item1 = await _createDataObject('item', { itemType: 'journalArticle' });
 			let item2 = await _createDataObject('item', { itemType: 'journalArticle' });
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 			await waitForFrame();
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			// Enter batch edit mode
 			assert.equal(itemPane.mode, "batch-edit-prompt");
@@ -2667,29 +2667,29 @@ describe("Item pane", function () {
 			assert.ok(header.querySelector('[data-l10n-id="item-pane-batch-editing-header"]'), "batch editing header label should be in header");
 
 			// Exit batch edit mode by changing selection to a single item
-			await ZoteroPane.selectItem(item1.id);
+			await TrellisPane.selectItem(item1.id);
 			await waitForFrame();
 
 			// Should be back in batch-edit-prompt mode when re-selecting both
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 			await waitForFrame();
 			assert.equal(itemPane.mode, "batch-edit-prompt");
 		});
 		it("should restore collapsed info section state after exiting batch edit via selection change", async function () {
 			let item1 = await _createDataObject('item', { itemType: 'journalArticle' });
 			let item2 = await _createDataObject('item', { itemType: 'journalArticle' });
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			// Select item1 and collapse the info section
-			await ZoteroPane.selectItem(item1.id);
+			await TrellisPane.selectItem(item1.id);
 			await waitForFrame();
 			let infoSection = itemDetails.querySelector('collapsible-section[data-pane="info"]');
 			infoSection.open = false;
 			assert.isFalse(infoSection.open, "info section should be collapsed");
 
 			// Select both items to enter batch edit prompt
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 			await waitForFrame();
 			assert.equal(itemPane.mode, "batch-edit-prompt");
 
@@ -2706,7 +2706,7 @@ describe("Item pane", function () {
 			assert.isTrue(twisty.hidden, "twisty should be hidden in batch edit mode");
 
 			// Change selection to just one item -- exits batch edit
-			await ZoteroPane.selectItem(item1.id);
+			await TrellisPane.selectItem(item1.id);
 			await waitForFrame();
 
 			// Info section should restore its previous collapsed state
@@ -2734,22 +2734,22 @@ describe("Item pane", function () {
 			let item4 = await _createDataObject('item', { itemType: 'journalArticle' });
 			await item4.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id, item3.id, item4.id]);
+			await TrellisPane.selectItems([item1.id, item2.id, item3.id, item4.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 			
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 			
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let pubTitleField = itemBox.querySelector('editable-text[fieldname="publicationTitle"]');
 			assert.ok(pubTitleField, "publicationTitle field should exist");
 			
 			pubTitleField._ignoredWindowInactiveBlur = false;
-			await activateZoteroPane();
-			await Zotero.Promise.delay(50);
+			await activateTrellisPane();
+			await Trellis.Promise.delay(50);
 			pubTitleField.focus();
 
 			// 2 value options + 1 "no value" option
@@ -2768,7 +2768,7 @@ describe("Item pane", function () {
 			pubTitleField.ref.dispatchEvent(new KeyboardEvent(
 				'keydown', { key: "ArrowDown", code: 'ArrowDown', keyCode: KeyboardEvent.DOM_VK_DOWN, bubbles: true, }
 			));
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			pubTitleField.ref.dispatchEvent(new KeyboardEvent(
 				'keydown', { key: "Enter", code: "Enter", keyCode: KeyboardEvent.DOM_VK_RETURN, bubbles: true }
 			));
@@ -2791,16 +2791,16 @@ describe("Item pane", function () {
 			item2.setField('DOI', '10.1234/test2');
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 
 			let urlLink = itemBox.querySelector('#itembox-field-url-link');
 			let doiLink = itemBox.querySelector('#itembox-field-DOI-link');
@@ -2819,19 +2819,19 @@ describe("Item pane", function () {
 			item2.setField('date', '2023-06-20');
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 
 			// Date field status indicator (y m d) should not be present
-			let dateStatus = itemBox.querySelector('#zotero-date-field-status');
+			let dateStatus = itemBox.querySelector('#trellis-date-field-status');
 			assert.isNull(dateStatus, "date field status should not be present in batch edit mode");
 
 			// Date field should not have a tooltip
@@ -2849,16 +2849,16 @@ describe("Item pane", function () {
 			item2.setField('label', 'Test Label');
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 
 			// Shared base field 'publisher' should appear (book: publisher, audioRecording: label)
 			let publisherField = itemBox.querySelector('editable-text[fieldname="publisher"]');
@@ -2883,26 +2883,26 @@ describe("Item pane", function () {
 			let item2 = await _createDataObject('item', { itemType: 'audioRecording' });
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 
 			// Shared field 'publisher' should use base field label
 			let publisherLabel = itemBox.querySelector('#itembox-field-publisher-label');
 			assert.ok(publisherLabel, "publisher label should exist");
-			assert.equal(publisherLabel.textContent, Zotero.ItemFields.getLocalizedString('publisher'));
+			assert.equal(publisherLabel.textContent, Trellis.ItemFields.getLocalizedString('publisher'));
 
 			// audioRecording-only field 'runningTime' should use type-specific label
 			let runningTimeLabel = itemBox.querySelector('#itembox-field-runningTime-label');
 			assert.ok(runningTimeLabel, "runningTime label should exist");
-			assert.equal(runningTimeLabel.textContent, Zotero.ItemFields.getLocalizedString('runningTime'));
+			assert.equal(runningTimeLabel.textContent, Trellis.ItemFields.getLocalizedString('runningTime'));
 		});
 		it("should show 'Multiple' placeholder for shared base-mapped fields with different values across types", async function () {
 			let item1 = await _createDataObject('item', { itemType: 'book' });
@@ -2913,22 +2913,22 @@ describe("Item pane", function () {
 			item2.setField('label', 'Audio Label');
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let publisherField = itemBox.querySelector('editable-text[fieldname="publisher"]');
 			assert.ok(publisherField, "publisher field should exist");
 			assert.isTrue(publisherField.multipleValues, "publisher should show multiple values");
 			assert.equal(
 				publisherField.placeholder,
-				Zotero.getString('item-pane-batch-editing-multiple-values-placeholder')
+				Trellis.getString('item-pane-batch-editing-multiple-values-placeholder')
 			);
 		});
 		it("should apply value to base-mapped fields across different item types", async function () {
@@ -2940,24 +2940,24 @@ describe("Item pane", function () {
 			item2.setField('label', 'Old Label');
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let publisherField = itemBox.querySelector('editable-text[fieldname="publisher"]');
 
 			// Simulate editing the field
 			publisherField._ignoredWindowInactiveBlur = false;
-			await activateZoteroPane();
-			await Zotero.Promise.delay(50);
+			await activateTrellisPane();
+			await Trellis.Promise.delay(50);
 			publisherField.focus();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 
 			// Type a new value
 			let modifyPromise = waitForItemEvent('modify');
@@ -2977,25 +2977,25 @@ describe("Item pane", function () {
 			let item2 = await _createDataObject('item', { itemType: 'book' });
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let runningTimeField = itemBox.querySelector('editable-text[fieldname="runningTime"]');
 			assert.ok(runningTimeField, "runningTime field should exist");
 
 			// Simulate editing the field
 			runningTimeField._ignoredWindowInactiveBlur = false;
-			await activateZoteroPane();
-			await Zotero.Promise.delay(50);
+			await activateTrellisPane();
+			await Trellis.Promise.delay(50);
 			runningTimeField.focus();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 
 			// Type a new value -- should not throw for book
 			let modifyPromise = waitForItemEvent('modify');
@@ -3008,8 +3008,8 @@ describe("Item pane", function () {
 		});
 		it("should show 'Multiple' for Added By in group library batch edit with different users", async function () {
 			let group = await createGroup();
-			await Zotero.Users.setName(1, 'User One');
-			await Zotero.Users.setName(2, 'User Two');
+			await Trellis.Users.setName(1, 'User One');
+			await Trellis.Users.setName(2, 'User Two');
 
 			let item1 = createUnsavedDataObject('item', { libraryID: group.libraryID });
 			item1.setField('createdByUserID', 1);
@@ -3019,16 +3019,16 @@ describe("Item pane", function () {
 			item2.setField('createdByUserID', 2);
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 
 			// "Added By" field should show "Multiple..." placeholder
 			let addedByRow = itemBox.querySelector('.meta-label[fieldname="addedBy"]');
@@ -3037,7 +3037,7 @@ describe("Item pane", function () {
 			assert.isTrue(addedByValue.multipleValues, "addedBy should have multipleValues");
 			assert.equal(
 				addedByValue.placeholder,
-				Zotero.getString('item-pane-batch-editing-multiple-values-placeholder'),
+				Trellis.getString('item-pane-batch-editing-multiple-values-placeholder'),
 				"addedBy should show Multiple placeholder"
 			);
 			assert.equal(addedByValue.value, '', "addedBy value should be empty");
@@ -3050,7 +3050,7 @@ describe("Item pane", function () {
 		});
 		it("should show user name for Added By in group library batch edit when all items have the same user", async function () {
 			let group = await createGroup();
-			await Zotero.Users.setName(1, 'Same User');
+			await Trellis.Users.setName(1, 'Same User');
 
 			let item1 = createUnsavedDataObject('item', { libraryID: group.libraryID });
 			item1.setField('createdByUserID', 1);
@@ -3060,16 +3060,16 @@ describe("Item pane", function () {
 			item2.setField('createdByUserID', 1);
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 
 			// "Added By" field should show the user name
 			let addedByRow = itemBox.querySelector('.meta-label[fieldname="addedBy"]');
@@ -3094,26 +3094,26 @@ describe("Item pane", function () {
 			item3.setField('publicationTitle', 'Journal Gamma');
 			await item3.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id, item3.id]);
-			Zotero.UndoHistory.clear();
+			await TrellisPane.selectItems([item1.id, item2.id, item3.id]);
+			Trellis.UndoHistory.clear();
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let pubTitleField = itemBox.querySelector('editable-text[fieldname="publicationTitle"]');
 			assert.ok(pubTitleField, "publicationTitle field should exist");
 
 			assert.equal(pubTitleField.value, '', "field value should be empty before edit");
-			assert.equal(pubTitleField.placeholder, Zotero.getString('item-pane-batch-editing-multiple-values-placeholder'), "field should show Multiple placeholder before edit");
+			assert.equal(pubTitleField.placeholder, Trellis.getString('item-pane-batch-editing-multiple-values-placeholder'), "field should show Multiple placeholder before edit");
 
 			pubTitleField._ignoredWindowInactiveBlur = false;
-			await activateZoteroPane();
-			await Zotero.Promise.delay(50);
+			await activateTrellisPane();
+			await Trellis.Promise.delay(50);
 			pubTitleField.focus();
 
 			// Options sorted alphabetically: Alpha, Beta, Gamma + "no value" option
@@ -3123,22 +3123,22 @@ describe("Item pane", function () {
 			pubTitleField.ref.dispatchEvent(new KeyboardEvent(
 				'keydown', { key: "ArrowDown", code: 'ArrowDown', keyCode: KeyboardEvent.DOM_VK_DOWN, bubbles: true }
 			));
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			pubTitleField.ref.dispatchEvent(new KeyboardEvent(
 				'keydown', { key: "Enter", code: "Enter", keyCode: KeyboardEvent.DOM_VK_RETURN, bubbles: true }
 			));
 			await modifyPromise;
 			// waitForItemEvent resolves during Notifier.commit, but UndoHistory's
 			// commit callback runs after -- wait a tick for it to complete.
-			await Zotero.Promise.delay(0);
+			await Trellis.Promise.delay(0);
 
 			assert.equal(item1.getField('publicationTitle'), 'Journal Alpha');
 			assert.equal(item2.getField('publicationTitle'), 'Journal Alpha');
 			assert.equal(item3.getField('publicationTitle'), 'Journal Alpha');
-			assert.isTrue(Zotero.UndoHistory.canUndo(), "should be able to undo");
+			assert.isTrue(Trellis.UndoHistory.canUndo(), "should be able to undo");
 
 			// Undo should revert all items
-			await Zotero.UndoHistory.undo();
+			await Trellis.UndoHistory.undo();
 			assert.equal(item1.getField('publicationTitle'), 'Journal Alpha',
 				"item1 should be unchanged (already had the selected value)");
 			assert.equal(item2.getField('publicationTitle'), 'Journal Beta',
@@ -3149,10 +3149,10 @@ describe("Item pane", function () {
 			// Re-query since render() rebuilds the DOM
 			pubTitleField = itemBox.querySelector('editable-text[fieldname="publicationTitle"]');
 			assert.equal(pubTitleField.value, '', "field value should be empty after undo");
-			assert.equal(pubTitleField.placeholder, Zotero.getString('item-pane-batch-editing-multiple-values-placeholder'), "field should show Multiple placeholder after undo");
+			assert.equal(pubTitleField.placeholder, Trellis.getString('item-pane-batch-editing-multiple-values-placeholder'), "field should show Multiple placeholder after undo");
 
 			// Redo should re-apply to all items
-			await Zotero.UndoHistory.redo();
+			await Trellis.UndoHistory.redo();
 			assert.equal(item1.getField('publicationTitle'), 'Journal Alpha');
 			assert.equal(item2.getField('publicationTitle'), 'Journal Alpha');
 			assert.equal(item3.getField('publicationTitle'), 'Journal Alpha');
@@ -3170,17 +3170,17 @@ describe("Item pane", function () {
 			item2.setField('title', sentenceCaseTitle);
 			await item2.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id]);
+			await TrellisPane.selectItems([item1.id, item2.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
 			// Find the title field
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let titleField = itemBox.querySelector('editable-text[fieldname="title"]');
 			assert.ok(titleField, "title field should exist");
 
@@ -3207,14 +3207,14 @@ describe("Item pane", function () {
 			let menupopup = await menuPromise;
 
 			let titleCaseMenuItem = Array.from(menupopup.querySelectorAll('menuitem'))
-				.find(item => item.getAttribute('label') === Zotero.getString('zotero.item.textTransform.titlecase'));
+				.find(item => item.getAttribute('label') === Trellis.getString('trellis.item.textTransform.titlecase'));
 			assert.ok(titleCaseMenuItem, "title case menu item should exist");
 
 			let modifyPromise = waitForItemEvent('modify');
 			titleCaseMenuItem.click();
 			// Label should not flash individual values -- it stays as "Multiple" in batch mode
 			assert.equal(titleField.value, '', "title field value should remain empty in batch mode");
-			assert.equal(titleField.placeholder, Zotero.getString('item-pane-batch-editing-multiple-values-placeholder'), "title field should still show Multiple placeholder");
+			assert.equal(titleField.placeholder, Trellis.getString('item-pane-batch-editing-multiple-values-placeholder'), "title field should still show Multiple placeholder");
 			await modifyPromise;
 
 			assert.equal(item1.getField('title'), "The Great Gatsby", "item1 should remain in title case");
@@ -3234,16 +3234,16 @@ describe("Item pane", function () {
 			item3.setField('seriesTitle', 'proceedings of the ACM conference');
 			await item3.saveTx();
 
-			await ZoteroPane.selectItems([item1.id, item2.id, item3.id]);
+			await TrellisPane.selectItems([item1.id, item2.id, item3.id]);
 
-			let itemPane = win.ZoteroPane.itemPane;
-			let itemDetails = ZoteroPane.itemPane._itemDetails;
+			let itemPane = win.TrellisPane.itemPane;
+			let itemDetails = TrellisPane.itemPane._itemDetails;
 
 			let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 			batchEditEnableBtn.click();
 			await itemDetails._renderPromise;
 
-			let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+			let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 			let optionsButton = itemBox.querySelector('#itembox-field-seriesTitle-options');
 			assert.ok(optionsButton, "options button should exist for seriesTitle");
 			assert.isFalse(optionsButton.hidden, "options button should be visible when extra items have values");
@@ -3267,7 +3267,7 @@ describe("Item pane", function () {
 			let menupopup = await menuPromise;
 
 			let titleCaseMenuItem = Array.from(menupopup.querySelectorAll('menuitem'))
-				.find(mi => mi.getAttribute('label') === Zotero.getString('zotero.item.textTransform.titlecase'));
+				.find(mi => mi.getAttribute('label') === Trellis.getString('trellis.item.textTransform.titlecase'));
 			assert.ok(titleCaseMenuItem, "title case menu item should exist");
 
 			let modifyPromise = waitForItemEvent('modify');
@@ -3291,38 +3291,38 @@ describe("Item pane", function () {
 		item2.setField('title', 'Item 2');
 		await item2.saveTx();
 		
-		await ZoteroPane.selectItems([item1.id, item2.id]);
+		await TrellisPane.selectItems([item1.id, item2.id]);
 
-		let itemPane = win.ZoteroPane.itemPane;
-		let itemDetails = ZoteroPane.itemPane._itemDetails;
+		let itemPane = win.TrellisPane.itemPane;
+		let itemDetails = TrellisPane.itemPane._itemDetails;
 
 		let batchEditEnableBtn = doc.getElementById('batch-edit-prompt-enable');
 		batchEditEnableBtn.click();
 		await itemDetails._renderPromise;
 
-		let itemBox = itemPane.querySelector('#zotero-editpane-info-box');
+		let itemBox = itemPane.querySelector('#trellis-editpane-info-box');
 		let dateModifiedField = itemBox.querySelector('editable-text[fieldname="dateModified"]');
 		assert.ok(dateModifiedField, "dateModified field should exist");
 		assert.isTrue(dateModifiedField.readOnly, "dateModified should be read-only");
 		assert.isTrue(dateModifiedField.multipleValues, "dateModified should have multiple values");
 		assert.equal(
 			dateModifiedField.placeholder,
-			Zotero.getString('item-pane-batch-editing-multiple-values-placeholder')
+			Trellis.getString('item-pane-batch-editing-multiple-values-placeholder')
 		);
 
 		// tabIndex should be -1 to prevent tab navigation
 		assert.equal(dateModifiedField.ref.tabIndex, -1, "tabIndex should be -1");
 
 		// Clicking the field should not focus it
-		await activateZoteroPane();
-		await Zotero.Promise.delay(50);
+		await activateTrellisPane();
+		await Trellis.Promise.delay(50);
 		dateModifiedField.ref.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
 		await waitForFrame();
 
 		assert.isFalse(dateModifiedField.focused, "read-only multiple-values field should not be focusable via click");
 		assert.equal(
 			dateModifiedField.placeholder,
-			Zotero.getString('item-pane-batch-editing-multiple-values-placeholder'),
+			Trellis.getString('item-pane-batch-editing-multiple-values-placeholder'),
 			"Multiple placeholder should not be cleared"
 		);
 		await item2.eraseTx();

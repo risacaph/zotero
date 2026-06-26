@@ -1,35 +1,35 @@
 /* Settings tab */
-#zotero-prefpane-account .form-grid {
+#trellis-prefpane-account .form-grid {
 	align-items: center;
 }
 
-#zotero-prefpane-account .form-grid > hbox {
+#trellis-prefpane-account .form-grid > hbox {
 	align-items: center;
 }
 
-#zotero-prefpane-account .form-grid > label:nth-child(odd)
+#trellis-prefpane-account .form-grid > label:nth-child(odd)
 {
 	text-align: end;
 }
 
-#zotero-prefpane-account .form-grid > hbox
+#trellis-prefpane-account .form-grid > hbox
 {
 	margin-inline-start: 4px;
 	display: flex;
 	align-items: center;
 }
 
-#zotero-prefpane-account .form-grid > hbox > textbox
+#trellis-prefpane-account .form-grid > hbox > textbox
 {
 	margin-inline: 3px;
 }
-#zotero-prefpane-account .form-grid > hbox > label:last-child
+#trellis-prefpane-account .form-grid > hbox > label:last-child
 {
 	margin-inline-start: 0;
 	margin-inline-end: 10px;
 }
 
-#zotero-prefpane-account .account-logged-out-status {
+#trellis-prefpane-account .account-logged-out-status {
 	font-style: italic;
 	opacity: 0.7;
 	margin-inline-start: 6px;
@@ -43,7 +43,7 @@
 	margin-inline-start: 4px;
 }
 
-#zotero-prefpane-account .account-login-pending {
+#trellis-prefpane-account .account-login-pending {
 	gap: 6px;
 
 	button {
@@ -51,7 +51,7 @@
 	}
 }
 
-#zotero-prefpane-account .account-login-status-indicator
+#trellis-prefpane-account .account-login-status-indicator
 {
 	width: 20px;
 	height: 20px;
@@ -61,12 +61,12 @@
 	background-size: contain;
 }
 
-#zotero-prefpane-account .account-login-status-indicator[verified=true]
+#trellis-prefpane-account .account-login-status-indicator[verified=true]
 {
 	@include svgicon("success", "universal", "20");
 }
 
-#zotero-prefpane-account .account-login-status-indicator[verified=false]
+#trellis-prefpane-account .account-login-status-indicator[verified=false]
 {
 	@include svgicon("error", "universal", "20");
 }
@@ -80,7 +80,7 @@
 	}
 }
 
-#zotero-prefpane-account .account-login-status-indicator[animated]
+#trellis-prefpane-account .account-login-status-indicator[animated]
 {
 	@include svgicon("sync", "universal", "20");
 	animation: rotating 2s linear infinite;

@@ -1,12 +1,12 @@
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs"
+	Trellis: "chrome://trellis/content/trellis.mjs"
 });
 
 export class FeedAbstractParent extends JSWindowActorParent {
 	async receiveMessage({ name, data }) {
 		switch (name) {
 			case "getStylesheet": {
-				return Zotero.File.getResourceAsync("chrome://zotero/skin/feedAbstract.css");
+				return Trellis.File.getResourceAsync("chrome://trellis/skin/feedAbstract.css");
 			}
 			
 			case "resize": {

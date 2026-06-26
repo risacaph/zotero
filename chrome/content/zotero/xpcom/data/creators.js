@@ -3,28 +3,28 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Creators = new function () {
+Trellis.Creators = new function () {
 	this.fields = ['firstName', 'lastName', 'fieldMode'];
 	this.totes = 0;
 	
@@ -34,7 +34,7 @@ Zotero.Creators = new function () {
 		_cache = {};
 		var repaired = false;
 		var sql = "SELECT * FROM creators";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		for (let i = 0; i < rows.length; i++) {
 			let row = rows[i];
 			try {
@@ -48,11 +48,11 @@ Zotero.Creators = new function () {
 			catch (e) {
 				// Automatically fix DB errors and try again
 				if (!repaired) {
-					Zotero.logError(e);
-					Zotero.logError("Trying integrity check to fix creator error");
-					await Zotero.Schema.integrityCheck(true);
+					Trellis.logError(e);
+					Trellis.logError("Trying integrity check to fix creator error");
+					await Trellis.Schema.integrityCheck(true);
 					repaired = true;
-					rows = await Zotero.DB.queryAsync(sql);
+					rows = await Trellis.DB.queryAsync(sql);
 					i = -1;
 					continue;
 				}
@@ -81,13 +81,13 @@ Zotero.Creators = new function () {
 	
 	this.getItemsWithCreator = function (creatorID) {
 		var sql = "SELECT DISTINCT itemID FROM itemCreators WHERE creatorID=?";
-		return Zotero.DB.columnQueryAsync(sql, creatorID);
+		return Trellis.DB.columnQueryAsync(sql, creatorID);
 	}
 	
 	
 	this.countItemAssociations = function (creatorID) {
 		var sql = "SELECT COUNT(*) FROM itemCreators WHERE creatorID=?";
-		return Zotero.DB.valueQueryAsync(sql, creatorID);
+		return Trellis.DB.valueQueryAsync(sql, creatorID);
 	}
 	
 	
@@ -100,18 +100,18 @@ Zotero.Creators = new function () {
 	 * @return {Promise<Integer>}  creatorID
 	 */
 	this.getIDFromData = async function (data, create) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		data = this.cleanData(data);
 		var sql = "SELECT creatorID FROM creators WHERE "
 			+ "firstName=? AND lastName=? AND fieldMode=?";
-		var id = await Zotero.DB.valueQueryAsync(
+		var id = await Trellis.DB.valueQueryAsync(
 			sql, [data.firstName, data.lastName, data.fieldMode]
 		);
 		if (!id && create) {
-			id = Zotero.ID.get('creators');
+			id = Trellis.ID.get('creators');
 			let sql = "INSERT INTO creators (creatorID, firstName, lastName, fieldMode) "
 				+ "VALUES (?, ?, ?, ?)";
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				sql, [id, data.firstName, data.lastName, data.fieldMode]
 			);
 			_cache[id] = data;
@@ -138,29 +138,29 @@ Zotero.Creators = new function () {
 	 * @return {Promise}
 	 */
 	this.purge = async function () {
-		if (!Zotero.Prefs.get('purge.creators')) {
+		if (!Trellis.Prefs.get('purge.creators')) {
 			return;
 		}
 		
-		Zotero.debug("Purging creator tables");
+		Trellis.debug("Purging creator tables");
 		
 		var sql = 'SELECT creatorID FROM creators WHERE creatorID NOT IN '
 			+ '(SELECT creatorID FROM itemCreators)';
-		var toDelete = await Zotero.DB.columnQueryAsync(sql);
+		var toDelete = await Trellis.DB.columnQueryAsync(sql);
 		if (toDelete.length) {
 			// Clear creator entries in internal array
 			for (let i=0; i<toDelete.length; i++) {
 				delete _cache[toDelete[i]];
 			}
 			
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				var sql = "DELETE FROM creators WHERE creatorID NOT IN "
 					+ "(SELECT creatorID FROM itemCreators)";
-				await Zotero.DB.queryAsync(sql, [], { ignoreDBLock: true });
+				await Trellis.DB.queryAsync(sql, [], { ignoreDBLock: true });
 			}, { disableForeignKeys: true });
 		}
 		
-		Zotero.Prefs.set('purge.creators', false);
+		Trellis.Prefs.set('purge.creators', false);
 	};
 	
 	
@@ -228,14 +228,14 @@ Zotero.Creators = new function () {
 		
 		var creatorType = data.creatorType || data.creatorTypeID;
 		if (creatorType) {
-			cleanedData.creatorTypeID = Zotero.CreatorTypes.getID(creatorType);
+			cleanedData.creatorTypeID = Trellis.CreatorTypes.getID(creatorType);
 			if (!cleanedData.creatorTypeID) {
 				if (options.strict) {
 					let e = new Error(`Unknown creator type '${creatorType}'`);
-					e.name = "ZoteroInvalidDataError";
+					e.name = "TrellisInvalidDataError";
 					throw e;
 				}
-				Zotero.warn(`'${creatorType}' isn't a valid creator type`);
+				Trellis.warn(`'${creatorType}' isn't a valid creator type`);
 			}
 		}
 		
@@ -252,7 +252,7 @@ Zotero.Creators = new function () {
 			obj.firstName = fields.firstName;
 			obj.lastName = fields.lastName;
 		}
-		obj.creatorType = Zotero.CreatorTypes.getName(fields.creatorTypeID);
+		obj.creatorType = Trellis.CreatorTypes.getName(fields.creatorTypeID);
 		return obj;
 	}
 }

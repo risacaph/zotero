@@ -168,13 +168,13 @@
     "message": "Speichern in der Online-Bibliothek aktivieren"
   },
   "reports_report_submitted": {
-    "message": "Ihr Fehlerbericht wurde übermittelt.\n\nBericht-ID: $1\n\nBitte erstellen Sie einen Beitrag in den Zotero-Foren mit dieser Berichts-ID, einer Beschreibung des Problems und den Schritten, die notwendig sind, um es zu reporoduzieren.\n\nFehlerberichte werden nicht überprüft, es sei denn, sie werden in den Foren erwähnt."
+    "message": "Ihr Fehlerbericht wurde übermittelt.\n\nBericht-ID: $1\n\nBitte erstellen Sie einen Beitrag in den Trellis-Foren mit dieser Berichts-ID, einer Beschreibung des Problems und den Schritten, die notwendig sind, um es zu reporoduzieren.\n\nFehlerberichte werden nicht überprüft, es sei denn, sie werden in den Foren erwähnt."
   },
   "reports_debug_output_submitted": {
     "message": "Ihr Debug-Output wurde übermittelt.\n\nDie Debug-ID lautet $1."
   },
   "reports_submission_failed": {
-    "message": "Bei der Übermittlung Ihres Berichts ist ein Fehler aufgetreten.\n\n$1\n\nBitte prüfen Sie Ihre Internetverbindung. Falls das Problem bestehen bleibt, schreiben Sie einen Beitrag im Zotero Forum."
+    "message": "Bei der Übermittlung Ihres Berichts ist ein Fehler aufgetreten.\n\n$1\n\nBitte prüfen Sie Ihre Internetverbindung. Falls das Problem bestehen bleibt, schreiben Sie einen Beitrag im Trellis Forum."
   },
   "integration_error_clientUpgrade": {
     "message": "Web-basiertes Zitieren benötigt $1 oder später."
@@ -183,10 +183,10 @@
     "message": "Die $1 war nicht in der Lage mit der $2 Desktop Applikation zu kommunizieren. $2 muss geöffnet sein zum web-basierten Zitieren."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Dieses Dokument enthält aktive Zitationen aus Zotero, die in einer heruntergeladenen Kopie als zotero.org-Links erscheinen."
+    "message": "Dieses Dokument enthält aktive Zitationen aus Trellis, die in einer heruntergeladenen Kopie als trellis.org-Links erscheinen."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
-    "message": "Um eine zum Teilen geeignete Version zu erzeugen, wählen Sie im Menü Datei den Befehl <b>Kopie erstellen…</b>, wählen Sie <b>Unlink Citations</b> aus dem Menü Zotero und laden Sie dann die unverknüpfte Version herunter. Bewahren Sie dieses Originaldokument mit den Verknüpfungen auf, falls Sie weitere Änderungen vornehmen müssen."
+    "message": "Um eine zum Teilen geeignete Version zu erzeugen, wählen Sie im Menü Datei den Befehl <b>Kopie erstellen…</b>, wählen Sie <b>Unlink Citations</b> aus dem Menü Trellis und laden Sie dann die unverknüpfte Version herunter. Bewahren Sie dieses Originaldokument mit den Verknüpfungen auf, falls Sie weitere Änderungen vornehmen müssen."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "Verknüpfte Version trotzdem herunterladen"
@@ -195,7 +195,7 @@
     "message": "$1 aktualisiert Ihr Dokument."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "$1 Integration ist nicht verfügbar, wenn Sie direkt eine Microsoft-Word- Datei (.docx) in Google Docs bearbeiten. Wählen Sie Datei → Speichern als Google Doc um diese Funktionalität zu aktivieren.<br/><br/>Wenn Sie ein Word Dokument mit $1 Zitationen in Google Docs überführen möchten, vgl. <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">Moving Documents Between Word Processors</a>."
+    "message": "$1 Integration ist nicht verfügbar, wenn Sie direkt eine Microsoft-Word- Datei (.docx) in Google Docs bearbeiten. Wählen Sie Datei → Speichern als Google Doc um diese Funktionalität zu aktivieren.<br/><br/>Wenn Sie ein Word Dokument mit $1 Zitationen in Google Docs überführen möchten, vgl. <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">Moving Documents Between Word Processors</a>."
   },
   "integration_googleDocs_documentLocked": {
     "message": "Die Zitationen im Dokument werden aktuell von einem anderen $1 Benutzer bearbeitet. Versuchen Sie es später nochmal."
@@ -219,7 +219,7 @@
     "message": "Zitation erneut verknüpfen"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Diese Zitationen wurden <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">von $1 getrennt</a>. Sie müssen sie erneut verknüpfen, damit sie aktualisiert werden oder in Ihrem Literaturverzeichnis erscheinen können."
+    "message": "Diese Zitationen wurden <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">von $1 getrennt</a>. Sie müssen sie erneut verknüpfen, damit sie aktualisiert werden oder in Ihrem Literaturverzeichnis erscheinen können."
   },
   "copyUnproxiedLink": {
     "message": "Link ohne Proxy kopieren"

@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "útgáfa">
-<!ENTITY zotero.whatsNew "Nýjustu tíðindi">
-<!ENTITY zotero.createdby "Höfundar:">
-<!ENTITY zotero.director "Stjórnandi:">
-<!ENTITY zotero.directors "Stjórnendur:">
-<!ENTITY zotero.developers "Hönnuðir:">
-<!ENTITY zotero.alumni "Fyrrum nemandi:">
-<!ENTITY zotero.about.localizations "Staðir:">
-<!ENTITY zotero.about.additionalSoftware "Forrit utanaðkomandi aðila:">
-<!ENTITY zotero.thanks "Sérstakar þakkir:">
-<!ENTITY zotero.about.close "Loka">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Viðurkenningar">
-<!ENTITY zotero.citationProcessing "Tilvísunar- og heimildavinnsla">
+<!ENTITY trellis.version "útgáfa">
+<!ENTITY trellis.whatsNew "Nýjustu tíðindi">
+<!ENTITY trellis.createdby "Höfundar:">
+<!ENTITY trellis.director "Stjórnandi:">
+<!ENTITY trellis.directors "Stjórnendur:">
+<!ENTITY trellis.developers "Hönnuðir:">
+<!ENTITY trellis.alumni "Fyrrum nemandi:">
+<!ENTITY trellis.about.localizations "Staðir:">
+<!ENTITY trellis.about.additionalSoftware "Forrit utanaðkomandi aðila:">
+<!ENTITY trellis.thanks "Sérstakar þakkir:">
+<!ENTITY trellis.about.close "Loka">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Viðurkenningar">
+<!ENTITY trellis.citationProcessing "Tilvísunar- og heimildavinnsla">

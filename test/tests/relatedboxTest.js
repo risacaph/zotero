@@ -4,9 +4,9 @@ describe("Related Box", function () {
 	var win, doc, itemsView;
 	
 	before(function* () {
-		win = yield loadZoteroPane();
+		win = yield loadTrellisPane();
 		doc = win.document;
-		itemsView = win.ZoteroPane.itemsView;
+		itemsView = win.TrellisPane.itemsView;
 	});
 	after(function () {
 		win.close();
@@ -35,13 +35,13 @@ describe("Related Box", function () {
 		
 		await relateItems(item0, item1, item2, item3);
 		
-		await win.ZoteroPane.selectItem(item0.id);
+		await win.TrellisPane.selectItem(item0.id);
 		
-		var relatedbox = doc.getElementById('zotero-editpane-related');
+		var relatedbox = doc.getElementById('trellis-editpane-related');
 		
 		// Wait for relations list to populate
 		do {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		while (!relatedbox.querySelectorAll('.row').length);
 		
@@ -64,11 +64,11 @@ describe("Related Box", function () {
 		item2.addRelatedItem(item1);
 		await item2.saveTx();
 		
-		var relatedbox = doc.getElementById('zotero-editpane-related');
+		var relatedbox = doc.getElementById('trellis-editpane-related');
 		
 		// Wait for relations list to populate
 		do {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		while (!relatedbox.querySelectorAll('.row').length);
 		
@@ -80,7 +80,7 @@ describe("Related Box", function () {
 		
 		// New title should appear in list
 		do {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		while (!relatedbox.querySelector('.body').innerHTML.includes(title1));
 	});
@@ -95,11 +95,11 @@ describe("Related Box", function () {
 		item2.addRelatedItem(item1);
 		await item2.saveTx();
 		
-		var relatedbox = doc.getElementById('zotero-editpane-related');
+		var relatedbox = doc.getElementById('trellis-editpane-related');
 		
 		// Wait for relations list to populate
 		do {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		while (!relatedbox.querySelectorAll('.row').length);
 		
@@ -109,7 +109,7 @@ describe("Related Box", function () {
 		
 		// Deleted item should be removed from list
 		do {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		while (relatedbox.querySelector('.body').innerHTML.includes(title1));
 	});
@@ -123,13 +123,13 @@ describe("Related Box", function () {
 		item3.deleted = true;
 		await item3.saveTx();
 
-		await win.ZoteroPane.selectItem(item1.id);
+		await win.TrellisPane.selectItem(item1.id);
 
-		var relatedbox = doc.getElementById('zotero-editpane-related');
+		var relatedbox = doc.getElementById('trellis-editpane-related');
 		
 		// Wait for relations list to populate
 		do {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		while (!relatedbox.querySelectorAll('.row').length);
 
@@ -145,16 +145,16 @@ describe("Related Box", function () {
 			var item1 = await createDataObject('item');
 			var item2 = await createDataObject('item');
 			
-			var relatedbox = doc.getElementById('zotero-editpane-related');
+			var relatedbox = doc.getElementById('trellis-editpane-related');
 			assert.lengthOf(relatedbox.querySelectorAll('.row'), 0);
 			
 			// Click the Add button to open the Select Items dialog
 			setTimeout(function () {
 				relatedbox.querySelector('collapsible-section .add').click();
 			});
-			var selectWin = await waitForWindow('chrome://zotero/content/selectItemsDialog.xhtml');
+			var selectWin = await waitForWindow('chrome://trellis/content/selectItemsDialog.xhtml');
 			do {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 			while (!selectWin.loaded);
 			var selectCollectionsView = selectWin.collectionsView;
@@ -168,7 +168,7 @@ describe("Related Box", function () {
 			
 			// Wait for relations list to populate
 			do {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 			while (!relatedbox.querySelectorAll('.row').length);
 			
@@ -195,19 +195,19 @@ describe("Related Box", function () {
 			item2.addRelatedItem(item1);
 			await item2.saveTx();
 			
-			var relatedbox = doc.getElementById('zotero-editpane-related');
+			var relatedbox = doc.getElementById('trellis-editpane-related');
 			
 			// Wait for relations list to populate
 			do {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 			while (!relatedbox.querySelectorAll('.row').length);
 			
-			relatedbox.querySelector('.zotero-clicky-minus').click();
+			relatedbox.querySelector('.trellis-clicky-minus').click();
 			
 			// Wait for relations list to clear
 			do {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 			while (relatedbox.querySelectorAll('.row').length);
 		})

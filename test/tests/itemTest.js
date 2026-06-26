@@ -1,20 +1,20 @@
 "use strict";
 
-describe("Zotero.Item", function () {
+describe("Trellis.Item", function () {
 	describe("#getField()", function () {
 		it("should return an empty string for valid unset fields on unsaved items", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			assert.strictEqual(item.getField('rights'), "");
 		});
 		
 		it("should return an empty string for valid unset fields on unsaved items after setting on another field", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('title', 'foo');
 			assert.strictEqual(item.getField('rights'), "");
 		});
 		
 		it("should return an empty string for invalid unset fields on unsaved items after setting on another field", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('title', 'foo');
 			assert.strictEqual(item.getField('invalid'), "");
 		});
@@ -52,11 +52,11 @@ describe("Zotero.Item", function () {
 			]);
 			assert.equal(
 				item.getField('firstCreator'),
-				Zotero.getString('general.andJoiner', ['\u2068B\u2069', '\u2068D\u2069'])
+				Trellis.getString('general.andJoiner', ['\u2068B\u2069', '\u2068D\u2069'])
 			);
 		});
 		
-		// https://github.com/zotero/zotero/issues/5720
+		// https://github.com/trellis/trellis/issues/5720
 		it("should return director as firstCreator for a videoRecording without a primary creator", async function () {
 			var item = createUnsavedDataObject('item', { itemType: 'videoRecording' });
 			item.setCreators([
@@ -90,7 +90,7 @@ describe("Zotero.Item", function () {
 			// Test unsaved - uses getFirstCreatorFromData()'s omitBidiIsolates option
 			assert.equal(
 				item.getField('firstCreator', /* unformatted */ true),
-				Zotero.getString('general.andJoiner', ['B', 'D'])
+				Trellis.getString('general.andJoiner', ['B', 'D'])
 			);
 			
 			await item.saveTx();
@@ -98,27 +98,27 @@ describe("Zotero.Item", function () {
 			// Test saved - implemented in getField()
 			assert.equal(
 				item.getField('firstCreator', /* unformatted */ true),
-				Zotero.getString('general.andJoiner', ['B', 'D'])
+				Trellis.getString('general.andJoiner', ['B', 'D'])
 			);
 		});
 	});
 	
 	describe("#setField", function () {
 		it("should throw an error if item type isn't set", function () {
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			assert.throws(() => item.setField('title', 'test'), "Item type must be set before setting field data");
 		})
 		
 		it("should mark a field as changed", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('title', 'Foo');
-			assert.isTrue(item._changed.itemData[Zotero.ItemFields.getID('title')]);
+			assert.isTrue(item._changed.itemData[Trellis.ItemFields.getID('title')]);
 			assert.isTrue(item.hasChanged());
 		})
 		
 		it("should save an integer as a string", async function () {
 			var val = 1234;
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('numPages', val);
 			await item.saveTx();
 			assert.strictEqual(item.getField('numPages'), "" + val);
@@ -128,13 +128,13 @@ describe("Zotero.Item", function () {
 			// Value should be TEXT in the DB
 			var sql = "SELECT TYPEOF(value) FROM itemData JOIN itemDataValues USING (valueID) "
 				+ "WHERE itemID=? AND fieldID=?";
-			var type = await Zotero.DB.valueQueryAsync(sql, [item.id, Zotero.ItemFields.getID('numPages')]);
+			var type = await Trellis.DB.valueQueryAsync(sql, [item.id, Trellis.ItemFields.getID('numPages')]);
 			assert.equal(type, 'text');
 		});
 		
 		it("should save integer 0 as a string", async function () {
 			var val = 0;
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('numPages', val);
 			await item.saveTx();
 			assert.strictEqual(item.getField('numPages'), "" + val);
@@ -145,8 +145,8 @@ describe("Zotero.Item", function () {
 		it('should clear an existing field when ""/null/false is passed', async function () {
 			var field = 'title';
 			var val = 'foo';
-			var fieldID = Zotero.ItemFields.getID(field);
-			var item = new Zotero.Item('book');
+			var fieldID = Trellis.ItemFields.getID(field);
+			var item = new Trellis.Item('book');
 			item.setField(field, val);
 			await item.saveTx();
 			
@@ -181,8 +181,8 @@ describe("Zotero.Item", function () {
 		it('should clear a field set to "0" when a ""/null/false is passed', async function () {
 			var field = 'title';
 			var val = "0";
-			var fieldID = Zotero.ItemFields.getID(field);
-			var item = new Zotero.Item('book');
+			var fieldID = Trellis.ItemFields.getID(field);
+			var item = new Trellis.Item('book');
 			item.setField(field, val);
 			await item.saveTx();
 			
@@ -218,30 +218,30 @@ describe("Zotero.Item", function () {
 		})
 		
 		it("should throw if value is undefined", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			assert.throws(() => item.setField('title'), "'title' value cannot be undefined");
 		})
 		
 		it("should not mark an empty field set to an empty string as changed", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('url', '');
 			assert.isUndefined(item._changed.itemData);
 		})
 		
 		it("should save version as object version", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField("version", 1);
 			var id = await item.saveTx();
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			assert.equal(item.getField("version"), 1);
 			assert.equal(item.version, 1);
 		});
 		
 		it("should save versionNumber for computerProgram", async function () {
-			var item = new Zotero.Item('computerProgram');
+			var item = new Trellis.Item('computerProgram');
 			item.setField("versionNumber", "1.0");
 			var id = await item.saveTx();
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			assert.equal(item.getField("versionNumber"), "1.0");
 		});
 		
@@ -294,19 +294,19 @@ describe("Zotero.Item", function () {
 
 	describe("#setType", function () {
 		it("should allow changing between regular item types", function () {
-			var item = new Zotero.Item('book');
-			item.setType(Zotero.ItemTypes.getID('journalArticle'));
-			assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('journalArticle'));
+			var item = new Trellis.Item('book');
+			item.setType(Trellis.ItemTypes.getID('journalArticle'));
+			assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('journalArticle'));
 		});
 
 		it("should throw when converting a regular item to an attachment", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			assert.throws(
-				() => item.setType(Zotero.ItemTypes.getID('attachment')),
+				() => item.setType(Trellis.ItemTypes.getID('attachment')),
 				/Cannot change item type from 'book' to 'attachment'/
 			);
 			assert.throws(
-				() => item.setField('itemTypeID', Zotero.ItemTypes.getID('attachment')),
+				() => item.setField('itemTypeID', Trellis.ItemTypes.getID('attachment')),
 				/Cannot change item type from 'book' to 'attachment'/
 			);
 		});
@@ -314,19 +314,19 @@ describe("Zotero.Item", function () {
 
 	describe("#dateAdded", function () {
 		it("should use current time if value was not given for a new item", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			
-			assert.closeTo(Zotero.Date.sqlToDate(item.dateAdded, true).getTime(), Date.now(), 2000);
+			assert.closeTo(Trellis.Date.sqlToDate(item.dateAdded, true).getTime(), Date.now(), 2000);
 		})
 		
 		it("should use given value for a new item", async function () {
 			var dateAdded = "2015-05-05 17:18:12";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.dateAdded = dateAdded;
 			var id = await item.saveTx();
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			assert.equal(item.dateAdded, dateAdded);
 		})
 	})
@@ -334,69 +334,69 @@ describe("Zotero.Item", function () {
 	describe("#dateModified", function () {
 		it("should use given value for a new item", async function () {
 			var dateModified = "2015-05-05 17:18:12";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.dateModified = dateModified;
 			var id = await item.saveTx();
 			assert.equal(item.dateModified, dateModified);
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			assert.equal(item.dateModified, dateModified);
 		})
 		
 		it("should use given value when skipDateModifiedUpdate is set for a new item", async function () {
 			var dateModified = "2015-05-05 17:18:12";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.dateModified = dateModified;
 			var id = await item.saveTx({
 				skipDateModifiedUpdate: true
 			});
 			assert.equal(item.dateModified, dateModified);
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			assert.equal(item.dateModified, dateModified);
 		})
 		
 		it("should use current time if value was not given for an existing item", async function () {
 			var dateModified = "2015-05-05 17:18:12";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.dateModified = dateModified;
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			
 			// Save again without changing Date Modified
 			item.setField('title', 'Test');
 			await item.saveTx()
 			
-			assert.closeTo(Zotero.Date.sqlToDate(item.dateModified, true).getTime(), Date.now(), 2000);
+			assert.closeTo(Trellis.Date.sqlToDate(item.dateModified, true).getTime(), Date.now(), 2000);
 		})
 		
 		it("should use current time if the existing value was given for an existing item", async function () {
 			var dateModified = "2015-05-05 17:18:12";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.dateModified = dateModified;
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			
 			// Set Date Modified to existing value
 			item.setField('title', 'Test');
 			item.dateModified = dateModified;
 			await item.saveTx()
-			assert.closeTo(Zotero.Date.sqlToDate(item.dateModified, true).getTime(), Date.now(), 2000);
+			assert.closeTo(Trellis.Date.sqlToDate(item.dateModified, true).getTime(), Date.now(), 2000);
 		})
 		
 		it("should use current time if value is not given when skipDateModifiedUpdate is set for a new item", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var id = await item.saveTx({
 				skipDateModifiedUpdate: true
 			});
-			item = await Zotero.Items.getAsync(id);
-			assert.closeTo(Zotero.Date.sqlToDate(item.dateModified, true).getTime(), Date.now(), 2000);
+			item = await Trellis.Items.getAsync(id);
+			assert.closeTo(Trellis.Date.sqlToDate(item.dateModified, true).getTime(), Date.now(), 2000);
 		})
 		
 		it("should keep original value when skipDateModifiedUpdate is set for an existing item", async function () {
 			var dateModified = "2015-05-05 17:18:12";
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.dateModified = dateModified;
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			
 			// Resave with skipDateModifiedUpdate
 			item.setField('title', 'Test');
@@ -414,7 +414,7 @@ describe("Zotero.Item", function () {
 			await item.saveTx();
 			assert.ok(item.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", item.id))),
 				1
 			);
@@ -430,7 +430,7 @@ describe("Zotero.Item", function () {
 			await item.saveTx();
 			assert.isFalse(item.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", item.id))),
 				0
 			);
@@ -438,7 +438,7 @@ describe("Zotero.Item", function () {
 		
 		it("should be invalid for linked-file attachments", async function () {
 			var item = await createDataObject('item', { inPublications: true });
-			var attachment = await Zotero.Attachments.linkFromFile({
+			var attachment = await Trellis.Attachments.linkFromFile({
 				file: OS.Path.join(getTestDataDirectory().path, 'test.png'),
 				parentItemID: item.id
 			});
@@ -460,14 +460,14 @@ describe("Zotero.Item", function () {
 	
 	describe("#parentID", function () {
 		it("should create a child note", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			var parentItemID = await item.saveTx();
 			
-			item = new Zotero.Item('note');
+			item = new Trellis.Item('note');
 			item.parentID = parentItemID;
 			var childItemID = await item.saveTx();
 			
-			item = await Zotero.Items.getAsync(childItemID);
+			item = await Trellis.Items.getAsync(childItemID);
 			assert.ok(item.parentID);
 			assert.equal(item.parentID, parentItemID);
 		});
@@ -483,28 +483,28 @@ describe("Zotero.Item", function () {
 	
 	describe("#parentKey", function () {
 		it("should be false for an unsaved attachment", function () {
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			assert.isFalse(item.parentKey);
 		});
 		
 		it("should be false on an unsaved non-attachment item", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			assert.isFalse(item.parentKey);
 		});
 		
 		it("should not be marked as changed setting to false on an unsaved item", function () {
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			item.attachmentLinkMode = 'linked_url';
 			item.parentKey = false;
 			assert.isUndefined(item._changed.parentKey);
 		});
 		
 		it("should not mark item as changed if false and no existing parent", async function () {
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			item.attachmentLinkMode = 'linked_url';
-			item.url = "https://www.zotero.org/";
+			item.url = "https://www.trellis.org/";
 			var id = await item.saveTx();
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			
 			item.parentKey = false;
 			assert.isFalse(item.hasChanged());
@@ -512,7 +512,7 @@ describe("Zotero.Item", function () {
 		
 		it("should not be marked as changed after a save", async function () {
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item('attachment');
+			var attachment = new Trellis.Item('attachment');
 			attachment.attachmentLinkMode = 'linked_url';
 			await attachment.saveTx();
 			
@@ -523,13 +523,13 @@ describe("Zotero.Item", function () {
 		});
 		
 		it("should move a top-level note under another item", async function () {
-			var noteItem = new Zotero.Item('note');
+			var noteItem = new Trellis.Item('note');
 			var id = await noteItem.saveTx()
-			noteItem = await Zotero.Items.getAsync(id);
+			noteItem = await Trellis.Items.getAsync(id);
 			
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			id = await item.saveTx();
-			var { libraryID, key } = Zotero.Items.getLibraryAndKeyFromID(id);
+			var { libraryID, key } = Trellis.Items.getLibraryAndKeyFromID(id);
 			
 			noteItem.parentKey = key;
 			await noteItem.saveTx();
@@ -539,19 +539,19 @@ describe("Zotero.Item", function () {
 		
 		it("should remove top-level item from collections when moving it under another item", async function () {
 			// Create a collection
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "Test";
 			var collectionID = await collection.saveTx();
 			
 			// Create a top-level note and add it to a collection
-			var noteItem = new Zotero.Item('note');
+			var noteItem = new Trellis.Item('note');
 			noteItem.addToCollection(collectionID);
 			var id = await noteItem.saveTx()
-			noteItem = await Zotero.Items.getAsync(id);
+			noteItem = await Trellis.Items.getAsync(id);
 			
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			id = await item.saveTx();
-			var { libraryID, key } = Zotero.Items.getLibraryAndKeyFromID(id);
+			var { libraryID, key } = Trellis.Items.getLibraryAndKeyFromID(id);
 			noteItem.parentKey = key;
 			await noteItem.saveTx();
 			
@@ -559,9 +559,9 @@ describe("Zotero.Item", function () {
 		})
 		
 		it("should not be settable to item itself", async function () {
-			var item = new Zotero.Item('note');
-			item.libraryID = Zotero.Libraries.userLibraryID;
-			item.key = Zotero.DataObjectUtilities.generateKey();
+			var item = new Trellis.Item('note');
+			item.libraryID = Trellis.Libraries.userLibraryID;
+			item.key = Trellis.DataObjectUtilities.generateKey();
 			item.parentKey = item.key;
 			var e = await getPromiseError(item.saveTx());
 			assert.ok(e);
@@ -623,10 +623,10 @@ describe("Zotero.Item", function () {
 				}
 			];
 			
-			var item = new Zotero.Item("journalArticle");
+			var item = new Trellis.Item("journalArticle");
 			item.setCreators(creators);
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			assert.sameDeepMembers(item.getCreatorsJSON(), creators);
 		})
 		
@@ -636,20 +636,20 @@ describe("Zotero.Item", function () {
 					firstName: "First",
 					lastName: "Last",
 					fieldMode: 0,
-					creatorTypeID: Zotero.CreatorTypes.getID('author')
+					creatorTypeID: Trellis.CreatorTypes.getID('author')
 				},
 				{
 					firstName: "",
 					lastName: "Test Name",
 					fieldMode: 1,
-					creatorTypeID: Zotero.CreatorTypes.getID('editor')
+					creatorTypeID: Trellis.CreatorTypes.getID('editor')
 				}
 			];
 			
-			var item = new Zotero.Item("journalArticle");
+			var item = new Trellis.Item("journalArticle");
 			item.setCreators(creators);
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			assert.sameDeepMembers(item.getCreators(), creators);
 		})
 		
@@ -660,7 +660,7 @@ describe("Zotero.Item", function () {
 					firstName: "First",
 					lastName: "Last",
 					fieldMode: 0,
-					creatorTypeID: Zotero.CreatorTypes.getID('author')
+					creatorTypeID: Trellis.CreatorTypes.getID('author')
 				}
 			]);
 			assert.lengthOf(item.getCreators(), 1);
@@ -677,7 +677,7 @@ describe("Zotero.Item", function () {
 					creatorType: "unknown"
 				}
 			]);
-			assert.equal(item.getCreators()[0].creatorTypeID, Zotero.CreatorTypes.getID('author'));
+			assert.equal(item.getCreators()[0].creatorTypeID, Trellis.CreatorTypes.getID('author'));
 		});
 		
 		it("should switch to primary creator type on invalid creator type for a given item type", function () {
@@ -689,7 +689,7 @@ describe("Zotero.Item", function () {
 					creatorType: "interviewee"
 				}
 			]);
-			assert.equal(item.getCreators()[0].creatorTypeID, Zotero.CreatorTypes.getID('author'));
+			assert.equal(item.getCreators()[0].creatorTypeID, Trellis.CreatorTypes.getID('author'));
 		});
 		
 		it("should throw on unknown creator type in strict mode", function () {
@@ -746,7 +746,7 @@ describe("Zotero.Item", function () {
 			assert.sameMembers(item.getCollections(), [collection2.id]);
 			
 			// Simulate a restart
-			await Zotero.Items.get(item.id).reload(null, true);
+			await Trellis.Items.get(item.id).reload(null, true);
 			
 			// Make sure the deleted collection is not back in item's cache
 			assert.sameMembers(item.getCollections(), [collection2.id]);
@@ -765,7 +765,7 @@ describe("Zotero.Item", function () {
 			assert.sameMembers(item.getCollections(true), [collection1.id, collection2.id]);
 			
 			// Simulate a restart
-			await Zotero.Items.get(item.id).reload(null, true);
+			await Trellis.Items.get(item.id).reload(null, true);
 			
 			assert.sameMembers(item.getCollections(true), [collection1.id, collection2.id]);
 		});
@@ -774,8 +774,8 @@ describe("Zotero.Item", function () {
 	
 	describe("#setCollections()", function () {
 		it("should add a collection with an all-numeric key", async function () {
-			var col = new Zotero.Collection();
-			col.libraryID = Zotero.Libraries.userLibraryID;
+			var col = new Trellis.Collection();
+			col.libraryID = Trellis.Libraries.userLibraryID;
 			col.key = '23456789';
 			await col.loadPrimaryData();
 			col.name = 'Test';
@@ -820,9 +820,9 @@ describe("Zotero.Item", function () {
 	describe("#getAttachments()", function () {
 		it("#should return child attachments", async function () {
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item("attachment");
+			var attachment = new Trellis.Item("attachment");
 			attachment.parentID = item.id;
-			attachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			attachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			await attachment.saveTx();
 			
 			var attachments = item.getAttachments();
@@ -836,7 +836,7 @@ describe("Zotero.Item", function () {
 			var titles = ['B', 'C', 'A'];
 			var attachments = [];
 			for (let title of titles) {
-				let attachment = new Zotero.Item("attachment");
+				let attachment = new Trellis.Item("attachment");
 				attachment.attachmentLinkMode = 'linked_url';
 				attachment.parentID = item.id;
 				attachment.setField('title', title);
@@ -844,7 +844,7 @@ describe("Zotero.Item", function () {
 				attachments.push(attachment);
 			}
 			
-			attachments = item.getAttachments().map(id => Zotero.Items.get(id));
+			attachments = item.getAttachments().map(id => Trellis.Items.get(id));
 			assert.equal(attachments[0].getField('title'), 'A');
 			assert.equal(attachments[1].getField('title'), 'B');
 			assert.equal(attachments[2].getField('title'), 'C');
@@ -856,7 +856,7 @@ describe("Zotero.Item", function () {
 			var titles = ['B', 'C', 'A'];
 			var attachments = [];
 			for (let title of titles) {
-				let attachment = new Zotero.Item("attachment");
+				let attachment = new Trellis.Item("attachment");
 				attachment.attachmentLinkMode = 'linked_url';
 				attachment.parentID = item.id;
 				attachment.setField('title', title);
@@ -867,7 +867,7 @@ describe("Zotero.Item", function () {
 			attachments[0].setField('title', 'D');
 			await attachments[0].saveTx();
 			
-			attachments = item.getAttachments().map(id => Zotero.Items.get(id));
+			attachments = item.getAttachments().map(id => Trellis.Items.get(id));
 			assert.equal(attachments[0].getField('title'), 'A');
 			assert.equal(attachments[1].getField('title'), 'C');
 			assert.equal(attachments[2].getField('title'), 'D');
@@ -875,9 +875,9 @@ describe("Zotero.Item", function () {
 		
 		it("#should ignore trashed child attachments by default", async function () {
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item("attachment");
+			var attachment = new Trellis.Item("attachment");
 			attachment.parentID = item.id;
-			attachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			attachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			attachment.deleted = true;
 			await attachment.saveTx();
 			
@@ -887,9 +887,9 @@ describe("Zotero.Item", function () {
 		
 		it("#should include trashed child attachments if includeTrashed=true", async function () {
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item("attachment");
+			var attachment = new Trellis.Item("attachment");
 			attachment.parentID = item.id;
-			attachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			attachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			attachment.deleted = true;
 			await attachment.saveTx();
 			
@@ -900,9 +900,9 @@ describe("Zotero.Item", function () {
 		
 		it("should update after an attachment is moved to the trash", async function () {
 			var item = await createDataObject('item');
-			var attachment = new Zotero.Item("attachment");
+			var attachment = new Trellis.Item("attachment");
 			attachment.parentID = item.id;
-			attachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			attachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			await attachment.saveTx();
 			
 			// Attachment should show up initially
@@ -927,7 +927,7 @@ describe("Zotero.Item", function () {
 		it("should update after an attachment is moved to another item", async function () {
 			var item1 = await createDataObject('item');
 			var item2 = await createDataObject('item');
-			var item3 = new Zotero.Item('attachment');
+			var item3 = new Trellis.Item('attachment');
 			item3.parentID = item1.id;
 			item3.attachmentLinkMode = 'linked_url';
 			item3.setField('url', 'http://example.com');
@@ -990,7 +990,7 @@ describe("Zotero.Item", function () {
 	describe("#getNotes()", function () {
 		it("#should return child notes", async function () {
 			var item = await createDataObject('item');
-			var note = new Zotero.Item("note");
+			var note = new Trellis.Item("note");
 			note.parentID = item.id;
 			await note.saveTx();
 			
@@ -1001,7 +1001,7 @@ describe("Zotero.Item", function () {
 		
 		it("#should ignore trashed child notes by default", async function () {
 			var item = await createDataObject('item');
-			var note = new Zotero.Item("note");
+			var note = new Trellis.Item("note");
 			note.parentID = item.id;
 			note.deleted = true;
 			await note.saveTx();
@@ -1012,7 +1012,7 @@ describe("Zotero.Item", function () {
 		
 		it("#should include trashed child notes if includeTrashed=true", async function () {
 			var item = await createDataObject('item');
-			var note = new Zotero.Item("note");
+			var note = new Trellis.Item("note");
 			note.parentID = item.id;
 			note.deleted = true;
 			await note.saveTx();
@@ -1049,19 +1049,19 @@ describe("Zotero.Item", function () {
 			var note = await createDataObject('item', { itemType: 'note' });
 			
 			var path = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var imageData = await Zotero.File.getBinaryContentsAsync(path);
+			var imageData = await Trellis.File.getBinaryContentsAsync(path);
 			var array = new Uint8Array(imageData.length);
 			for (let i = 0; i < imageData.length; i++) {
 				array[i] = imageData.charCodeAt(i);
 			}
 			
 			var blob = new Blob([array], { type: 'image/png' });
-			var attachment = await Zotero.Attachments.importEmbeddedImage({
+			var attachment = await Trellis.Attachments.importEmbeddedImage({
 				blob,
 				parentItemID: note.id
 			});
 			
-			var storageDir = Zotero.getStorageDirectory().path;
+			var storageDir = Trellis.getStorageDirectory().path;
 			assert.equal(
 				OS.Path.join(storageDir, attachment.key, 'image.png'),
 				attachment.getFilePath()
@@ -1073,18 +1073,18 @@ describe("Zotero.Item", function () {
 	describe("#attachmentCharset", function () {
 		it("should get and set a value", async function () {
 			var charset = 'utf-8';
-			var item = new Zotero.Item("attachment");
-			item.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			var item = new Trellis.Item("attachment");
+			item.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			item.attachmentCharset = charset;
 			var itemID = await item.saveTx();
 			assert.equal(item.attachmentCharset, charset);
-			item = await Zotero.Items.getAsync(itemID);
+			item = await Trellis.Items.getAsync(itemID);
 			assert.equal(item.attachmentCharset, charset);
 		})
 		
 		it("should not allow a numerical value", async function () {
 			var charset = 1;
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			try {
 				item.attachmentCharset = charset;
 			}
@@ -1097,11 +1097,11 @@ describe("Zotero.Item", function () {
 		
 		it("should not be marked as changed if not changed", async function () {
 			var charset = 'utf-8';
-			var item = new Zotero.Item("attachment");
-			item.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			var item = new Trellis.Item("attachment");
+			item.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			item.attachmentCharset = charset;
 			var itemID = await item.saveTx();
-			item = await Zotero.Items.getAsync(itemID);
+			item = await Trellis.Items.getAsync(itemID);
 			
 			// Set charset to same value
 			item.attachmentCharset = charset
@@ -1111,20 +1111,20 @@ describe("Zotero.Item", function () {
 	
 	describe("#attachmentFilename", function () {
 		afterEach(function () {
-			Zotero.Prefs.set('saveRelativeAttachmentPath', false)
-			Zotero.Prefs.clear('baseAttachmentPath')
+			Trellis.Prefs.set('saveRelativeAttachmentPath', false)
+			Trellis.Prefs.clear('baseAttachmentPath')
 		});
 		
 		it("should get and set a filename for a stored file", async function () {
 			var filename = "test.txt";
 			
 			// Create parent item
-			var item = new Zotero.Item("book");
+			var item = new Trellis.Item("book");
 			var parentItemID = await item.saveTx();
 			
 			// Create attachment item
-			var item = new Zotero.Item("attachment");
-			item.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			var item = new Trellis.Item("attachment");
+			item.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			item.parentID = parentItemID;
 			var itemID = await item.saveTx();
 			
@@ -1134,13 +1134,13 @@ describe("Zotero.Item", function () {
 			// Set filename
 			item.attachmentFilename = filename;
 			await item.saveTx();
-			item = await Zotero.Items.getAsync(itemID);
+			item = await Trellis.Items.getAsync(itemID);
 			
 			// Check filename
 			assert.equal(item.attachmentFilename, filename);
 			
 			// Check full path
-			var file = Zotero.Attachments.getStorageDirectory(item);
+			var file = Trellis.Attachments.getStorageDirectory(item);
 			file.append(filename);
 			assert.equal(item.getFilePath(), file.path);
 		});
@@ -1150,8 +1150,8 @@ describe("Zotero.Item", function () {
 			
 			var item = await createDataObject('item');
 			
-			var attachment = new Zotero.Item("attachment");
-			attachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_FILE;
+			var attachment = new Trellis.Item("attachment");
+			attachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_FILE;
 			attachment.parentID = item.id;
 			attachment.attachmentFilename = filename;
 			await attachment.saveTx();
@@ -1161,12 +1161,12 @@ describe("Zotero.Item", function () {
 		
 		it("should get a filename for a base-dir-relative file", function () {
 			var dir = getTestDataDirectory().path;
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true)
-			Zotero.Prefs.set('baseAttachmentPath', dir)
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true)
+			Trellis.Prefs.set('baseAttachmentPath', dir)
 			
 			var file = OS.Path.join(dir, 'test.png');
 			
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			item.attachmentLinkMode = 'linked_file';
 			item.attachmentPath = file;
 			
@@ -1176,12 +1176,12 @@ describe("Zotero.Item", function () {
 		it("should get a filename for a base-dir-relative file in a subdirectory", function () {
 			var dir = getTestDataDirectory().path;
 			var baseDir = OS.Path.dirname(dir);
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true)
-			Zotero.Prefs.set('baseAttachmentPath', baseDir)
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true)
+			Trellis.Prefs.set('baseAttachmentPath', baseDir)
 			
 			var file = OS.Path.join(dir, 'test.png');
 			
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			item.attachmentLinkMode = 'linked_file';
 			item.attachmentPath = file;
 			
@@ -1191,21 +1191,21 @@ describe("Zotero.Item", function () {
 	
 	describe("#attachmentPath", function () {
 		afterEach(function () {
-			Zotero.Prefs.set('saveRelativeAttachmentPath', false)
-			Zotero.Prefs.clear('baseAttachmentPath')
+			Trellis.Prefs.set('saveRelativeAttachmentPath', false)
+			Trellis.Prefs.clear('baseAttachmentPath')
 		});
 		
 		it("should return an absolute path for a linked attachment", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.linkFromFile({ file });
+			var item = await Trellis.Attachments.linkFromFile({ file });
 			assert.equal(item.attachmentPath, file.path);
 		})
 		
 		it("should return a prefixed path for an imported file", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			
 			assert.equal(item.attachmentPath, "storage:test.png");
 		})
@@ -1213,12 +1213,12 @@ describe("Zotero.Item", function () {
 		it("should set a prefixed relative path for a path within the defined base directory", async function () {
 			var dir = getTestDataDirectory().path;
 			var baseDir = OS.Path.dirname(dir);
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true)
-			Zotero.Prefs.set('baseAttachmentPath', baseDir)
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true)
+			Trellis.Prefs.set('baseAttachmentPath', baseDir)
 			
 			var file = OS.Path.join(dir, 'test.png');
 			
-			var item = new Zotero.Item('attachment');
+			var item = new Trellis.Item('attachment');
 			item.attachmentLinkMode = 'linked_file';
 			item.attachmentPath = file;
 			
@@ -1228,13 +1228,13 @@ describe("Zotero.Item", function () {
 		it("should return a prefixed path for a linked attachment within the defined base directory", async function () {
 			var dir = getTestDataDirectory().path;
 			var baseDir = OS.Path.dirname(dir);
-			Zotero.Prefs.set('saveRelativeAttachmentPath', true)
-			Zotero.Prefs.set('baseAttachmentPath', baseDir)
+			Trellis.Prefs.set('saveRelativeAttachmentPath', true)
+			Trellis.Prefs.set('baseAttachmentPath', baseDir)
 			
 			var file = OS.Path.join(dir, 'test.png');
 			
-			var item = await Zotero.Attachments.linkFromFile({
-				file: Zotero.File.pathToFile(file)
+			var item = await Trellis.Attachments.linkFromFile({
+				file: Trellis.File.pathToFile(file)
 			});
 			
 			assert.equal(item.attachmentPath, "attachments:data/test.png");
@@ -1261,7 +1261,7 @@ describe("Zotero.Item", function () {
 		it("should rename an attached file", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			var newName = 'test2.png';
@@ -1273,7 +1273,7 @@ describe("Zotero.Item", function () {
 			
 			// File should be flagged for upload
 			// DEBUG: Is this necessary?
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD);
 			assert.isNull(item.attachmentSyncedHash);
 		});
 		
@@ -1281,7 +1281,7 @@ describe("Zotero.Item", function () {
 		it("should rename an attached file with a case-only change (Mac)", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({
+			var item = await Trellis.Attachments.importFromFile({
 				file: file
 			});
 			var newName = 'Test.png';
@@ -1300,7 +1300,7 @@ describe("Zotero.Item", function () {
 			var tmpFile = OS.Path.join(tmpDir, filename);
 			await OS.File.copy(file.path, tmpFile);
 			
-			var item = await Zotero.Attachments.linkFromFile({
+			var item = await Trellis.Attachments.linkFromFile({
 				file: tmpFile
 			});
 			var newName = 'test2.png';
@@ -1318,7 +1318,7 @@ describe("Zotero.Item", function () {
 			var parentItem = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var childItem = await Zotero.Attachments.importFromFile({
+			var childItem = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: parentItem.id
 			});
@@ -1333,7 +1333,7 @@ describe("Zotero.Item", function () {
 			var parentItem = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var childItem = await Zotero.Attachments.importFromFile({
+			var childItem = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: parentItem.id
 			});
@@ -1359,7 +1359,7 @@ describe("Zotero.Item", function () {
 			var parentItem = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var childItem = await Zotero.Attachments.importFromFile({
+			var childItem = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: parentItem.id
 			});
@@ -1391,7 +1391,7 @@ describe("Zotero.Item", function () {
 			var parentItem = await createDataObject('item');
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var childItem = await Zotero.Attachments.importFromFile({
+			var childItem = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: parentItem.id
 			});
@@ -1403,7 +1403,7 @@ describe("Zotero.Item", function () {
 				{ type: 'image', exists: true, key: childItem.key }
 			);
 
-			await Zotero.Items.trashTx([childItem.id]);
+			await Trellis.Items.trashTx([childItem.id]);
 			childItem._updateAttachmentStates(true);
 			assert.deepEqual(parentItem.getBestAttachmentStateCached(), { type: null });
 		});
@@ -1414,7 +1414,7 @@ describe("Zotero.Item", function () {
 		it("should cache state for an existing file", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			await item.fileExists();
 			assert.equal(item.fileExistsCached(), true);
 		})
@@ -1422,7 +1422,7 @@ describe("Zotero.Item", function () {
 		it("should cache state for a missing file", async function () {
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			let path = await item.getFilePathAsync();
 			await OS.File.remove(path);
 			await item.fileExists();
@@ -1441,7 +1441,7 @@ describe("Zotero.Item", function () {
 			await OS.File.copy(file.path, tmpFile);
 			file = OS.Path.join(tmpDir, filename);
 			
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			let path = await item.getFilePathAsync();
 			await OS.File.remove(path);
 			await OS.File.removeEmptyDir(OS.Path.dirname(path));
@@ -1461,7 +1461,7 @@ describe("Zotero.Item", function () {
 			
 			// Make sure we're actually testing something -- the test string should be differently
 			// normalized from what's done in getValidFileName
-			assert.notEqual(filename, Zotero.File.getValidFileName(filename));
+			assert.notEqual(filename, Trellis.File.getValidFileName(filename));
 			
 			var newPath = OS.Path.join(dir, filename);
 			await OS.File.move(path, newPath);
@@ -1485,7 +1485,7 @@ describe("Zotero.Item", function () {
 			assert.equal(attachment.attachmentLastProcessedModificationTime, mtime);
 			
 			var sql = "SELECT lastProcessedModificationTime FROM itemAttachments WHERE itemID=?";
-			var dbmtime = await Zotero.DB.valueQueryAsync(sql, attachment.id);
+			var dbmtime = await Trellis.DB.valueQueryAsync(sql, attachment.id);
 			
 			assert.equal(mtime, dbmtime);
 		});
@@ -1512,7 +1512,7 @@ describe("Zotero.Item", function () {
 			it("should discard invalid page index", async function () {
 				var attachment = await importFileAttachment('test.pdf');
 				var id = attachment._getLastPageIndexSettingKey();
-				await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, id, '"1"');
+				await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, id, '"1"');
 				assert.isNull(attachment.getAttachmentLastPageIndex());
 			});
 		});
@@ -1521,9 +1521,9 @@ describe("Zotero.Item", function () {
 			var attachment = await importFileAttachment('test.pdf');
 			await attachment.setAttachmentLastPageIndex(2);
 			var id = attachment._getLastPageIndexSettingKey();
-			assert.equal(2, Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, id));
+			assert.equal(2, Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, id));
 			await attachment.eraseTx();
-			assert.isNull(Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, id));
+			assert.isNull(Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, id));
 		});
 	});
 	
@@ -1558,9 +1558,9 @@ describe("Zotero.Item", function () {
 			var attachment = await importFileAttachment('test.pdf');
 			await attachment.setAttachmentLastReadAloudPosition({ pageIndex: 7 });
 			var id = attachment._getLastReadAloudPositionSettingKey();
-			assert.deepEqual({ pageIndex: 7 }, Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, id));
+			assert.deepEqual({ pageIndex: 7 }, Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, id));
 			await attachment.eraseTx();
-			assert.isNull(Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, id));
+			assert.isNull(Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, id));
 		});
 	});
 
@@ -1576,12 +1576,12 @@ describe("Zotero.Item", function () {
 		
 		describe("#annotationType", function () {
 			it("should throw an invalid-data error if unknown type", function () {
-				var a = new Zotero.Item('annotation');
+				var a = new Trellis.Item('annotation');
 				try {
 					a.annotationType = 'foo';
 				}
 				catch (e) {
-					assert.equal(e.name, 'ZoteroInvalidDataError');
+					assert.equal(e.name, 'TrellisInvalidDataError');
 					assert.equal(e.message, "Unknown annotation type 'foo'");
 					return;
 				}
@@ -1591,7 +1591,7 @@ describe("Zotero.Item", function () {
 		
 		describe("#annotationText", function () {
 			it("should not be changeable", async function () {
-				var a = new Zotero.Item('annotation');
+				var a = new Trellis.Item('annotation');
 				a.annotationType = 'highlight';
 				assert.doesNotThrow(() => a.annotationType = 'highlight');
 				assert.doesNotThrow(() => a.annotationType = 'underline');
@@ -1601,15 +1601,15 @@ describe("Zotero.Item", function () {
 		
 		describe("#annotationText", function () {
 			it("should only be allowed for highlights", async function () {
-				var a = new Zotero.Item('annotation');
+				var a = new Trellis.Item('annotation');
 				a.annotationType = 'highlight';
 				assert.doesNotThrow(() => a.annotationText = "This is highlighted text.");
 				
-				a = new Zotero.Item('annotation');
+				a = new Trellis.Item('annotation');
 				a.annotationType = 'note';
 				assert.throws(() => a.annotationText = "This is highlighted text.");
 				
-				a = new Zotero.Item('annotation');
+				a = new Trellis.Item('annotation');
 				a.annotationType = 'image';
 				assert.throws(() => a.annotationText = "This is highlighted text.");
 			});
@@ -1638,11 +1638,11 @@ describe("Zotero.Item", function () {
 			it("should enforce the parent attachment's sortIndex format", async function () {
 				let file = getTestDataDirectory();
 				file.append('stub.epub');
-				let attachmentEPUB = await Zotero.Attachments.linkFromFile({ file });
+				let attachmentEPUB = await Trellis.Attachments.linkFromFile({ file });
 
 				file = getTestDataDirectory();
 				file.append('test.html');
-				let attachmentHTML = await Zotero.Attachments.linkFromFile({ file });
+				let attachmentHTML = await Trellis.Attachments.linkFromFile({ file });
 
 				let annotation = await createAnnotation('highlight', attachment);
 				assert.doesNotThrow(() => annotation.annotationSortIndex = sortIndexPDF);
@@ -1672,7 +1672,7 @@ describe("Zotero.Item", function () {
 		
 		describe("#saveTx()", function () {
 			it("should save a highlight annotation", async function () {
-				var annotation = new Zotero.Item('annotation');
+				var annotation = new Trellis.Item('annotation');
 				annotation.libraryID = attachment.libraryID;
 				annotation.parentID = attachment.id;
 				annotation.annotationType = 'highlight';
@@ -1690,7 +1690,7 @@ describe("Zotero.Item", function () {
 			});
 			
 			it("should assign a default color", async function () {
-				var annotation = new Zotero.Item('annotation');
+				var annotation = new Trellis.Item('annotation');
 				annotation.libraryID = attachment.libraryID;
 				annotation.parentID = attachment.id;
 				annotation.annotationType = 'highlight';
@@ -1707,7 +1707,7 @@ describe("Zotero.Item", function () {
 			});
 			
 			it("should save a note annotation", async function () {
-				var annotation = new Zotero.Item('annotation');
+				var annotation = new Trellis.Item('annotation');
 				annotation.libraryID = attachment.libraryID;
 				annotation.parentID = attachment.id;
 				annotation.annotationType = 'note';
@@ -1726,13 +1726,13 @@ describe("Zotero.Item", function () {
 			it("should save an image annotation", async function () {
 				// Create a Blob from a PNG
 				var path = OS.Path.join(getTestDataDirectory().path, 'test.png');
-				var imageData = await Zotero.File.getBinaryContentsAsync(path);
+				var imageData = await Trellis.File.getBinaryContentsAsync(path);
 				var array = new Uint8Array(imageData.length);
 				for (let i = 0; i < imageData.length; i++) {
 					array[i] = imageData.charCodeAt(i);
 				}
 				
-				var annotation = new Zotero.Item('annotation');
+				var annotation = new Trellis.Item('annotation');
 				annotation.libraryID = attachment.libraryID;
 				annotation.parentID = attachment.id;
 				annotation.annotationType = 'image';
@@ -1749,13 +1749,13 @@ describe("Zotero.Item", function () {
 				assert.isFalse(annotation.hasChanged());
 				
 				var blob = new Blob([array], { type: 'image/png' });
-				await Zotero.Annotations.saveCacheImage(annotation, blob);
+				await Trellis.Annotations.saveCacheImage(annotation, blob);
 				
-				var imagePath = Zotero.Annotations.getCacheImagePath(annotation);
+				var imagePath = Trellis.Annotations.getCacheImagePath(annotation);
 				assert.ok(imagePath);
 				assert.equal(OS.Path.basename(imagePath), annotation.key + '.png');
 				assert.equal(
-					await Zotero.File.getBinaryContentsAsync(imagePath),
+					await Trellis.File.getBinaryContentsAsync(imagePath),
 					imageData
 				);
 			});
@@ -1766,7 +1766,7 @@ describe("Zotero.Item", function () {
 				
 				// Get Blob from file and attach it
 				var blob = await getImageBlob();
-				var file = await Zotero.Annotations.saveCacheImage(annotation, blob);
+				var file = await Trellis.Annotations.saveCacheImage(annotation, blob);
 				
 				assert.isTrue(await OS.File.exists(file));
 				
@@ -1833,13 +1833,13 @@ describe("Zotero.Item", function () {
 			var groupAnnotation3;
 			
 			before(async function () {
-				await Zotero.Users.setCurrentUserID(1);
-				await Zotero.Users.setName(1, 'Abc');
-				await Zotero.Users.setName(12345, 'Def');
+				await Trellis.Users.setCurrentUserID(1);
+				await Trellis.Users.setName(1, 'Abc');
+				await Trellis.Users.setName(12345, 'Def');
 				group = await createGroup();
 				groupAttachment = await importFileAttachment('test.pdf', { libraryID: group.libraryID });
 				groupAnnotation1 = await createAnnotation('highlight', groupAttachment);
-				groupAnnotation2 = await createAnnotation('highlight', groupAttachment, { createdByUserID: Zotero.Users.getCurrentUserID() });
+				groupAnnotation2 = await createAnnotation('highlight', groupAttachment, { createdByUserID: Trellis.Users.getCurrentUserID() });
 				groupAnnotation3 = await createAnnotation('highlight', groupAttachment, { createdByUserID: 12345 });
 			});
 			
@@ -1897,10 +1897,10 @@ describe("Zotero.Item", function () {
 					tag: "B"
 				}
 			];
-			var item = new Zotero.Item('journalArticle');
+			var item = new Trellis.Item('journalArticle');
 			item.setTags(tags);
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			assert.sameDeepMembers(item.getTags(tags), tags);
 		})
 		
@@ -1913,10 +1913,10 @@ describe("Zotero.Item", function () {
 					tag: "B"
 				}
 			];
-			var item = new Zotero.Item('journalArticle');
+			var item = new Trellis.Item('journalArticle');
 			item.setTags(tags);
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			item.setTags(tags);
 			assert.isFalse(item.hasChanged());
 		})
@@ -1930,10 +1930,10 @@ describe("Zotero.Item", function () {
 					tag: "B"
 				}
 			];
-			var item = new Zotero.Item('journalArticle');
+			var item = new Trellis.Item('journalArticle');
 			item.setTags(tags);
 			var id = await item.saveTx();
-			item = Zotero.Items.get(id);
+			item = Trellis.Items.get(id);
 			item.setTags(tags.slice(0));
 			await item.saveTx();
 			assert.sameDeepMembers(item.getTags(tags), tags.slice(0));
@@ -2007,10 +2007,10 @@ describe("Zotero.Item", function () {
 					tag: "not included"
 				}
 			];
-			await Zotero.Tags.setColor(Zotero.Libraries.userLibraryID, "colored tag one", "#990000");
-			await Zotero.Tags.setColor(Zotero.Libraries.userLibraryID, "colored tag two", "#FF6666");
+			await Trellis.Tags.setColor(Trellis.Libraries.userLibraryID, "colored tag one", "#990000");
+			await Trellis.Tags.setColor(Trellis.Libraries.userLibraryID, "colored tag two", "#FF6666");
 
-			var item = new Zotero.Item('journalArticle');
+			var item = new Trellis.Item('journalArticle');
 			item.setTags(tags);
 			await item.saveTx();
 
@@ -2038,9 +2038,9 @@ describe("Zotero.Item", function () {
 			item1.addRelatedItem(item2);
 			await item1.saveTx();
 			
-			var rels = item1.getRelationsByPredicate(Zotero.Relations.relatedItemPredicate);
+			var rels = item1.getRelationsByPredicate(Trellis.Relations.relatedItemPredicate);
 			assert.lengthOf(rels, 1);
-			assert.equal(rels[0], Zotero.URI.getItemURI(item2));
+			assert.equal(rels[0], Trellis.URI.getItemURI(item2));
 		})
 		
 		it("should allow an unsaved item to be related to an item in the user library", async function () {
@@ -2049,9 +2049,9 @@ describe("Zotero.Item", function () {
 			item2.addRelatedItem(item1);
 			await item2.saveTx();
 			
-			var rels = item2.getRelationsByPredicate(Zotero.Relations.relatedItemPredicate);
+			var rels = item2.getRelationsByPredicate(Trellis.Relations.relatedItemPredicate);
 			assert.lengthOf(rels, 1);
-			assert.equal(rels[0], Zotero.URI.getItemURI(item1));
+			assert.equal(rels[0], Trellis.URI.getItemURI(item1));
 		})
 		
 		it("should throw an error for a relation in a different library", async function () {
@@ -2072,7 +2072,7 @@ describe("Zotero.Item", function () {
 	
 	describe("#save()", function () {
 		it("should throw an error for an empty item without an item type", async function () {
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			var e = await getPromiseError(item.saveTx());
 			assert.ok(e);
 			assert.equal(e.message, "Item type must be set before saving");
@@ -2116,10 +2116,10 @@ describe("Zotero.Item", function () {
 		it("should reload child items for parent items", async function () {
 			var item = await createDataObject('item');
 			var attachment = await importFileAttachment('test.png', { parentItemID: item.id });
-			var note1 = new Zotero.Item('note');
+			var note1 = new Trellis.Item('note');
 			note1.parentItemID = item.id;
 			await note1.saveTx();
-			var note2 = new Zotero.Item('note');
+			var note2 = new Trellis.Item('note');
 			note2.parentItemID = item.id;
 			await note2.saveTx();
 			
@@ -2160,13 +2160,13 @@ describe("Zotero.Item", function () {
 			var item = await createDataObject('item', { itemType: 'book' });
 
 			var promise = waitForNotifierEvent('modify', 'item');
-			item.setType(Zotero.ItemTypes.getID('journalArticle'));
+			item.setType(Trellis.ItemTypes.getID('journalArticle'));
 			await item.saveTx();
 			var { ids, extraData } = await promise;
 			assert.propertyVal(extraData[ids[0]].changed, 'itemType', 'book');
 
 			promise = waitForNotifierEvent('modify', 'item');
-			item.setType(Zotero.ItemTypes.getID('case'));
+			item.setType(Trellis.ItemTypes.getID('case'));
 			await item.saveTx();
 			({ ids, extraData } = await promise);
 			// Without clearing the 'itemType' alias from _previousData after the prior save,
@@ -2208,7 +2208,7 @@ describe("Zotero.Item", function () {
 			var attachment = await importFileAttachment('test.pdf');
 			var annotation = await createAnnotation('highlight', attachment);
 			
-			var annotationIDs = await Zotero.DB.columnQueryAsync(
+			var annotationIDs = await Trellis.DB.columnQueryAsync(
 				"SELECT itemID FROM itemAnnotations WHERE parentItemID=?", attachment.id
 			);
 			assert.lengthOf(annotationIDs, 1);
@@ -2216,23 +2216,23 @@ describe("Zotero.Item", function () {
 			attachment.attachmentLastProcessedModificationTime = Math.floor(Date.now() / 1000);
 			await attachment.saveTx();
 			
-			annotationIDs = await Zotero.DB.columnQueryAsync(
+			annotationIDs = await Trellis.DB.columnQueryAsync(
 				"SELECT itemID FROM itemAnnotations WHERE parentItemID=?", attachment.id
 			);
 			assert.lengthOf(annotationIDs, 1);
 		});
 		
 		it("should set username as name if not set for library item", async function () {
-			await Zotero.Users.setCurrentUserID(1);
-			var username = Zotero.Utilities.randomString();
-			await Zotero.Users.setCurrentUsername(username);
-			await Zotero.DB.queryAsync("DELETE FROM users");
+			await Trellis.Users.setCurrentUserID(1);
+			var username = Trellis.Utilities.randomString();
+			await Trellis.Users.setCurrentUsername(username);
+			await Trellis.DB.queryAsync("DELETE FROM users");
 			
 			var group = await createGroup();
 			var libraryID = group.libraryID;
 			var item = await createDataObject('item', { libraryID });
 			
-			assert.equal(Zotero.Users.getCurrentName(), username);
+			assert.equal(Trellis.Users.getCurrentName(), username);
 		});
 		
 		it("should save a group attachment's attachmentLastRead to the database", async function () {
@@ -2243,7 +2243,7 @@ describe("Zotero.Item", function () {
 			attachment.attachmentLastRead = 1674668111;
 			await attachment.saveTx();
 
-			let dbVal = await Zotero.DB.valueQueryAsync(
+			let dbVal = await Trellis.DB.valueQueryAsync(
 				"SELECT lastRead FROM itemAttachments WHERE itemID=?", attachment.id
 			);
 			assert.equal(dbVal, attachment.attachmentLastRead);
@@ -2264,7 +2264,7 @@ describe("Zotero.Item", function () {
 			
 			assert.lengthOf(item2.relatedItems, 0);
 			assert.equal(
-				await Zotero.DB.valueQueryAsync("SELECT COUNT(*) FROM itemRelations WHERE itemID=?", item2.id),
+				await Trellis.DB.valueQueryAsync("SELECT COUNT(*) FROM itemRelations WHERE itemID=?", item2.id),
 				0
 			);
 		});
@@ -2289,13 +2289,13 @@ describe("Zotero.Item", function () {
 			
 			// Get Blob from file and attach it
 			var path = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var imageData = await Zotero.File.getBinaryContentsAsync(path);
+			var imageData = await Trellis.File.getBinaryContentsAsync(path);
 			var array = new Uint8Array(imageData.length);
 			for (let i = 0; i < imageData.length; i++) {
 				array[i] = imageData.charCodeAt(i);
 			}
 			var blob = new Blob([array], { type: 'image/png' });
-			var file = await Zotero.Annotations.saveCacheImage(annotation, blob);
+			var file = await Trellis.Annotations.saveCacheImage(annotation, blob);
 			
 			assert.isTrue(await OS.File.exists(file));
 			await annotation.eraseTx();
@@ -2338,7 +2338,7 @@ describe("Zotero.Item", function () {
 	describe("#clone()", function () {
 		// TODO: Expand to other data
 		it("should copy creators", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setCreators([
 				{
 					firstName: "A",
@@ -2383,7 +2383,7 @@ describe("Zotero.Item", function () {
 			var attachment1 = await importFileAttachment('test.png', { parentID: item.id });
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var attachment2 = await Zotero.Attachments.linkFromFile({
+			var attachment2 = await Trellis.Attachments.linkFromFile({
 				file,
 				parentItemID: item.id
 			});
@@ -2398,13 +2398,13 @@ describe("Zotero.Item", function () {
 			var newItem = await item.moveToLibrary(group.libraryID);
 			
 			// Old items and file should be gone
-			assert.isTrue(originalIDs.every(id => !Zotero.Items.get(id)));
+			assert.isTrue(originalIDs.every(id => !Trellis.Items.get(id)));
 			assert.isFalse(await OS.File.exists(originalAttachmentFile));
 			
 			// New items and stored file should exist; linked file should be gone
 			assert.equal(newItem.libraryID, group.libraryID);
 			assert.lengthOf(newItem.getAttachments(), 1);
-			var newAttachment = Zotero.Items.get(newItem.getAttachments()[0]);
+			var newAttachment = Trellis.Items.get(newItem.getAttachments()[0]);
 			assert.equal(await newAttachment.attachmentHash, originalAttachmentHash);
 			assert.lengthOf(newItem.getNotes(), 1);
 		});
@@ -2426,7 +2426,7 @@ describe("Zotero.Item", function () {
 			var newItem = await item.moveToLibrary(group.libraryID);
 			
 			// Old items and file should be gone
-			assert.isTrue(originalIDs.every(id => !Zotero.Items.get(id)));
+			assert.isTrue(originalIDs.every(id => !Trellis.Items.get(id)));
 			assert.isFalse(await OS.File.exists(originalAttachmentFile));
 			
 			// Parent should exist, but attachment should not
@@ -2441,10 +2441,10 @@ describe("Zotero.Item", function () {
 				var itemType = "book";
 				var title = "Test";
 				
-				var item = new Zotero.Item(itemType);
+				var item = new Trellis.Item(itemType);
 				item.setField("title", title);
 				var id = await item.saveTx();
-				item = Zotero.Items.get(id);
+				item = Trellis.Items.get(id);
 				var json = item.toJSON();
 				
 				assert.equal(json.itemType, itemType);
@@ -2457,13 +2457,13 @@ describe("Zotero.Item", function () {
 				it.skip("should output attachment fields from file", function* () {
 					var file = getTestDataDirectory();
 					file.append('test.png');
-					var item = yield Zotero.Attachments.importFromFile({ file });
+					var item = yield Trellis.Attachments.importFromFile({ file });
 					
-					yield Zotero.DB.executeTransaction(function* () {
-						yield Zotero.Sync.Storage.Local.setSyncedModificationTime(
+					yield Trellis.DB.executeTransaction(function* () {
+						yield Trellis.Sync.Storage.Local.setSyncedModificationTime(
 							item.id, new Date().getTime()
 						);
-						yield Zotero.Sync.Storage.Local.setSyncedHash(
+						yield Trellis.Sync.Storage.Local.setSyncedHash(
 							item.id, 'b32e33f529942d73bea4ed112310f804'
 						);
 					});
@@ -2479,7 +2479,7 @@ describe("Zotero.Item", function () {
 				it("should omit storage values with .skipStorageProperties", async function () {
 					var file = getTestDataDirectory();
 					file.append('test.png');
-					var item = await Zotero.Attachments.importFromFile({ file });
+					var item = await Trellis.Attachments.importFromFile({ file });
 					
 					item.attachmentSyncedModificationTime = new Date().getTime();
 					item.attachmentSyncedHash = 'b32e33f529942d73bea4ed112310f804';
@@ -2493,7 +2493,7 @@ describe("Zotero.Item", function () {
 				});
 				
 				it("should output synced storage values with .syncedStorageProperties", async function () {
-					var item = new Zotero.Item('attachment');
+					var item = new Trellis.Item('attachment');
 					item.attachmentLinkMode = 'imported_file';
 					item.fileName = 'test.txt';
 					await item.saveTx();
@@ -2513,7 +2513,7 @@ describe("Zotero.Item", function () {
 				})
 				
 				it.skip("should output unset storage properties as null", function* () {
-					var item = new Zotero.Item('attachment');
+					var item = new Trellis.Item('attachment');
 					item.attachmentLinkMode = 'imported_file';
 					item.fileName = 'test.txt';
 					var id = yield item.saveTx();
@@ -2524,9 +2524,9 @@ describe("Zotero.Item", function () {
 				})
 				
 				it("shouldn't include filename, path, or PDF properties for linked_url attachments", async function () {
-					var item = new Zotero.Item('attachment');
+					var item = new Trellis.Item('attachment');
 					item.attachmentLinkMode = 'linked_url';
-					item.url = "https://www.zotero.org/";
+					item.url = "https://www.trellis.org/";
 					var json = item.toJSON();
 					assert.notProperty(json, "filename");
 					assert.notProperty(json, "path");
@@ -2666,7 +2666,7 @@ describe("Zotero.Item", function () {
 			});
 			
 			it("should include inPublications=false for personal-library items not in My Publications in full mode", async function () {
-				var item = createUnsavedDataObject('item', { libraryID: Zotero.Libraries.userLibraryID });
+				var item = createUnsavedDataObject('item', { libraryID: Trellis.Libraries.userLibraryID });
 				var json = item.toJSON({ mode: 'full' });
 				assert.property(json, "inPublications", false);
 			});
@@ -2684,10 +2684,10 @@ describe("Zotero.Item", function () {
 				var itemType = "book";
 				var title = "Test";
 				
-				var item = new Zotero.Item(itemType);
+				var item = new Trellis.Item(itemType);
 				item.setField("title", title);
 				var id = await item.saveTx();
-				item = await Zotero.Items.getAsync(id);
+				item = await Trellis.Items.getAsync(id);
 				var json = item.toJSON({ mode: 'full' });
 				assert.equal(json.title, title);
 				assert.equal(json.date, "");
@@ -2701,10 +2701,10 @@ describe("Zotero.Item", function () {
 				var title = "Test";
 				var date = "2015-05-12";
 				
-				var item = new Zotero.Item(itemType);
+				var item = new Trellis.Item(itemType);
 				item.setField("title", title);
 				var id = await item.saveTx();
-				item = await Zotero.Items.getAsync(id);
+				item = await Trellis.Items.getAsync(id);
 				var patchBase = item.toJSON();
 				
 				item.setField("date", date);
@@ -2724,7 +2724,7 @@ describe("Zotero.Item", function () {
 			
 			it("should set 'parentItem' to false when cleared", async function () {
 				var item = await createDataObject('item');
-				var note = new Zotero.Item('note');
+				var note = new Trellis.Item('note');
 				note.parentID = item.id;
 				// Create initial JSON with parentItem
 				var patchBase = note.toJSON();
@@ -2741,7 +2741,7 @@ describe("Zotero.Item", function () {
 				var item4 = await createDataObject('item');
 				
 				var relateItems = async function (i1, i2) {
-					await Zotero.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(async function () {
 						i1.addRelatedItem(i2);
 						await i1.save({
 							skipDateModifiedUpdate: true
@@ -2769,7 +2769,7 @@ describe("Zotero.Item", function () {
 			});
 			
 			it("shouldn't clear storage properties from original in .skipStorageProperties mode", async function () {
-				var item = new Zotero.Item('attachment');
+				var item = new Trellis.Item('attachment');
 				item.attachmentLinkMode = 'imported_file';
 				item.attachmentFilename = 'test.txt';
 				item.attachmentContentType = 'text/plain';
@@ -2784,7 +2784,7 @@ describe("Zotero.Item", function () {
 					patchBase,
 					skipStorageProperties: true
 				});
-				Zotero.debug(json);
+				Trellis.debug(json);
 				assert.equal(json.note, "Test");
 				assert.notProperty(json, "md5");
 				assert.notProperty(json, "mtime");
@@ -2794,7 +2794,7 @@ describe("Zotero.Item", function () {
 	
 	describe("#fromJSON()", function () {
 		it("should clear missing fields", async function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setField('title', 'Test');
 			item.setField('date', '2016');
 			item.setField('accessDate', '2015-06-07T20:56:00Z');
@@ -2826,7 +2826,7 @@ describe("Zotero.Item", function () {
 		});
 
 		it("should remove missing creators and change existing", function () {
-			var item = new Zotero.Item('book');
+			var item = new Trellis.Item('book');
 			item.setCreators(
 				[
 					{
@@ -2910,7 +2910,7 @@ describe("Zotero.Item", function () {
 				title: "Test",
 				extra: `DOI: ${doi}`
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
 			assert.equal(item.getField('DOI'), doi);
 			assert.equal(item.getField('extra'), '');
@@ -2925,7 +2925,7 @@ describe("Zotero.Item", function () {
 				DOI: doi1,
 				extra: `doi: ${doi2}`
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
 			assert.equal(item.getField('DOI'), doi1);
 			assert.equal(item.getField('extra'), `doi: ${doi2}`);
@@ -2940,7 +2940,7 @@ describe("Zotero.Item", function () {
 				DOI: doi1,
 				extra: `doi: ${doi2}`
 			};
-			var item = new Zotero.Item('journalArticle');
+			var item = new Trellis.Item('journalArticle');
 			item.setField('DOI', doi1);
 			item.fromJSON(json);
 			assert.equal(item.getField('DOI'), doi1);
@@ -2953,9 +2953,9 @@ describe("Zotero.Item", function () {
 				pages: "123",
 				extra: "Type: song"
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
-			assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('audioRecording'));
+			assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('audioRecording'));
 			// A field valid for the old item type should be moved to Extra
 			assert.equal(item.getField('extra'), 'Pages: 123');
 		});
@@ -2965,9 +2965,9 @@ describe("Zotero.Item", function () {
 				itemType: "report",
 				extra: "Type: article"
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
-			assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'report');
+			assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'report');
 			assert.equal(item.getField('extra'), 'Type: article');
 		});
 		
@@ -2976,7 +2976,7 @@ describe("Zotero.Item", function () {
 				itemType: "journalArticle",
 				extra: "Author: Name"
 			};
-			var item = new Zotero.Item();
+			var item = new Trellis.Item();
 			item.fromJSON(json);
 			assert.lengthOf(item.getCreatorsJSON(), 0);
 			assert.equal(item.getField('extra'), json.extra);
@@ -2989,7 +2989,7 @@ describe("Zotero.Item", function () {
 					title: "Test",
 					extra: "Here's some extra text"
 				};
-				var item = new Zotero.Item();
+				var item = new Trellis.Item();
 				item.fromJSON(json);
 				assert.equal(item.getField('extra'), json.extra);
 			});
@@ -3001,7 +3001,7 @@ describe("Zotero.Item", function () {
 					fooBar: "123",
 					testField: "test value"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('title'), 'Test');
 				assert.equal(item.getField('extra'), 'Foo Bar: 123\nTest Field: test value');
@@ -3014,7 +3014,7 @@ describe("Zotero.Item", function () {
 					foo: "BBB",
 					extra: "Foo: AAA\nBar: CCC"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('title'), 'Test');
 				assert.equal(item.getField('extra'), 'Foo: BBB\nBar: CCC');
@@ -3026,7 +3026,7 @@ describe("Zotero.Item", function () {
 					title: "Test",
 					medium: "123"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('title'), 'Test');
 				assert.equal(item.getField('extra'), 'Medium: 123');
@@ -3038,7 +3038,7 @@ describe("Zotero.Item", function () {
 					publisher: "Foo", // Valid for 'document'
 					company: "Bar" // Not valid for 'document', but mapped to base field 'publisher'
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('publisher'), 'Foo');
 				assert.equal(item.getField('extra'), '');
@@ -3052,7 +3052,7 @@ describe("Zotero.Item", function () {
 					company: "C", // Invalid base-mapped field, which should be ignored
 					foo: "D" // Invalid other field, which should be added to Extra
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('label'), 'B');
 				assert.equal(item.getField('extra'), 'Foo: D');
@@ -3065,7 +3065,7 @@ describe("Zotero.Item", function () {
 					company: "Foo", // Invalid base-mapped field
 					label: "Foo" // Invaid base-mapped field
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('extra'), 'Publisher: Foo');
 			});
@@ -3077,24 +3077,24 @@ describe("Zotero.Item", function () {
 					websiteType: "Foo" // Invaid base-mapped field
 				};
 				// Confirm that 'type' is still invalid for 'document', in case this changes
-				assert.isFalse(Zotero.ItemFields.isValidForType(
-					Zotero.ItemFields.getID('type'),
-					Zotero.ItemTypes.getID('audioRecording')
+				assert.isFalse(Trellis.ItemFields.isValidForType(
+					Trellis.ItemFields.getID('type'),
+					Trellis.ItemTypes.getID('audioRecording')
 				));
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('extra'), '');
 			});
 			
-			it("should use a Zotero item type stored in Extra", async function () {
+			it("should use a Trellis item type stored in Extra", async function () {
 				var json = {
 					itemType: "document",
 					title: "Test",
 					extra: "Type: dataset\nCitation Key: abc123\nFoo: Bar"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
-				assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'dataset');
+				assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'dataset');
 				// Move a valid field out of Extra
 				assert.equal(item.getField('citationKey'), 'abc123');
 				assert.equal(item.getField('extra'), 'Foo: Bar');
@@ -3106,9 +3106,9 @@ describe("Zotero.Item", function () {
 					title: "Test",
 					extra: "Type: song"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('audioRecording'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('audioRecording'));
 			});
 			
 			it("should move a now-invalid existing field to Extra when using Type from Extra", async function () {
@@ -3118,9 +3118,9 @@ describe("Zotero.Item", function () {
 					pages: "123",
 					extra: "Type: audioRecording"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('audioRecording'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('audioRecording'));
 				// 'pages' should've been moved to Extra, since it's not valid for the new type
 				assert.equal(item.getField('extra'), 'Pages: 123');
 			});
@@ -3131,7 +3131,7 @@ describe("Zotero.Item", function () {
 					edition: "1",
 					versionNumber: "1"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('edition'), "1");
 				assert.equal(item.getField('extra'), '');
@@ -3141,7 +3141,7 @@ describe("Zotero.Item", function () {
 					meetingName: "Foo",
 					conferenceName: "Foo"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('meetingName'), "Foo");
 				assert.equal(item.getField('extra'), '');
@@ -3151,7 +3151,7 @@ describe("Zotero.Item", function () {
 					publicationTitle: "Foo",
 					reporter: "Foo"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('publicationTitle'), "Foo");
 				assert.equal(item.getField('extra'), '');
@@ -3161,7 +3161,7 @@ describe("Zotero.Item", function () {
 					proceedingsTitle: "Foo",
 					reporter: "Foo"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json);
 				assert.equal(item.getField('proceedingsTitle'), "Foo");
 				assert.equal(item.getField('extra'), '');
@@ -3175,7 +3175,7 @@ describe("Zotero.Item", function () {
 					title: "Test",
 					foo: "Bar"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				var f = () => {
 					item.fromJSON(json, { strict: true });
 				};
@@ -3188,7 +3188,7 @@ describe("Zotero.Item", function () {
 					title: "Test",
 					numPages: "123"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				var f = () => {
 					item.fromJSON(json, { strict: true });
 				};
@@ -3207,7 +3207,7 @@ describe("Zotero.Item", function () {
 						}
 					]
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				var f = () => {
 					item.fromJSON(json, { strict: true });
 				};
@@ -3226,7 +3226,7 @@ describe("Zotero.Item", function () {
 						}
 					]
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				var f = () => {
 					item.fromJSON(json, { strict: true });
 				};
@@ -3239,7 +3239,7 @@ describe("Zotero.Item", function () {
 					title: "",
 					extra: "Type: preprint"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json, { strict: true });
 				assert.equal(item.getField('extra'), "Type: preprint");
 			});
@@ -3250,7 +3250,7 @@ describe("Zotero.Item", function () {
 					title: "",
 					extra: "DOI: 10.1234/abcd"
 				};
-				var item = new Zotero.Item;
+				var item = new Trellis.Item;
 				item.fromJSON(json, { strict: true });
 				assert.equal(item.getField('extra'), "DOI: 10.1234/abcd");
 			});
@@ -3263,7 +3263,7 @@ describe("Zotero.Item", function () {
 				dateAdded: "2015-06-07T20:57:00Z",
 				dateModified: "2015-06-07T20:58:00Z",
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
 			assert.equal(item.getField('accessDate'), '2015-06-07 20:56:00');
 			assert.equal(item.dateAdded, '2015-06-07 20:57:00');
@@ -3277,7 +3277,7 @@ describe("Zotero.Item", function () {
 				dateAdded: "2015-06-07T20:57:00Z",
 				dateModified: "2015-06-07T20:58:00Z",
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
 			assert.equal(item.getField('accessDate'), '2015-06-07');
 			assert.equal(item.dateAdded, '2015-06-07 20:57:00');
@@ -3291,7 +3291,7 @@ describe("Zotero.Item", function () {
 				dateAdded: "2015-06-07 20:57:00",
 				dateModified: "2015-06-07 20:58:00",
 			};
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
 			assert.strictEqual(item.getField('accessDate'), '');
 			// DEBUG: Should these be null, or empty string like other fields from getField()?
@@ -3315,14 +3315,14 @@ describe("Zotero.Item", function () {
 				]
 			};
 			
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON(json);
 			var id = await item.saveTx();
 			assert.sameDeepMembers(item.getCreatorsJSON(), json.creators);
 		})
 		
 		it("should map a base field to an item-specific field", async function () {
-			var item = new Zotero.Item("bookSection");
+			var item = new Trellis.Item("bookSection");
 			item.fromJSON({
 				"itemType":"bookSection",
 				"publicationTitle":"Publication Title"
@@ -3339,8 +3339,8 @@ describe("Zotero.Item", function () {
 				contentType,
 				path
 			};
-			var item = new Zotero.Item();
-			item.libraryID = Zotero.Libraries.userLibraryID;
+			var item = new Trellis.Item();
+			item.libraryID = Trellis.Libraries.userLibraryID;
 			item.fromJSON(json, { strict: true });
 			assert.propertyVal(item, 'attachmentContentType', contentType);
 			assert.propertyVal(item, 'attachmentPath', path);
@@ -3355,8 +3355,8 @@ describe("Zotero.Item", function () {
 				charset: 'utf-8',
 				path: 'attachments:test.txt'
 			};
-			var item = new Zotero.Item();
-			item.libraryID = Zotero.Libraries.userLibraryID;
+			var item = new Trellis.Item();
+			item.libraryID = Trellis.Libraries.userLibraryID;
 			item.fromJSON(json, { strict: true });
 			assert.propertyVal(item, 'attachmentCharset', 'utf-8');
 		});
@@ -3364,7 +3364,7 @@ describe("Zotero.Item", function () {
 		it("should import annotation fields", async function () {
 			var attachment = await importPDFAttachment();
 			
-			var item = new Zotero.Item();
+			var item = new Trellis.Item();
 			item.libraryID = attachment.libraryID;
 			var json = {
 				itemType: "annotation",
@@ -3403,9 +3403,9 @@ describe("Zotero.Item", function () {
 	describe("#toResponseJSONAsync()", function () {
 		it("should not throw when attachment path is invalid", async function () {
 			let item = await createDataObject('item');
-			let attachment = new Zotero.Item('attachment');
+			let attachment = new Trellis.Item('attachment');
 			attachment.parentItemID = item.id;
-			attachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_LINKED_FILE;
+			attachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_LINKED_FILE;
 			attachment.attachmentPath = '\\Invalid//Path/:C:/Users/Bad/\\Documents\\./paper.pdf';
 			await attachment.saveTx();
 
@@ -3423,7 +3423,7 @@ describe("Zotero.Item", function () {
 		it("should set createdByUserID for new group item", async function () {
 			let item = createUnsavedDataObject('item', { libraryID: group.libraryID });
 			await item.saveTx();
-			assert.equal(item.createdByUserID, Zotero.Users.getCurrentUserID());
+			assert.equal(item.createdByUserID, Trellis.Users.getCurrentUserID());
 		});
 
 		it("should set lastModifiedByUserID when modifying group item", async function () {
@@ -3432,7 +3432,7 @@ describe("Zotero.Item", function () {
 
 			item.setField('title', 'Modified');
 			await item.saveTx();
-			assert.equal(item.lastModifiedByUserID, Zotero.Users.getCurrentUserID());
+			assert.equal(item.lastModifiedByUserID, Trellis.Users.getCurrentUserID());
 		});
 
 		it("should not set lastModifiedByUserID with skipDateModifiedUpdate", async function () {

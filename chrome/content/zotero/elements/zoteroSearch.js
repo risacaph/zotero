@@ -3,22 +3,22 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -30,22 +30,22 @@
 		get stylesheets() {
 			return [
 				'chrome://global/skin/global.css',
-				'chrome://zotero-platform/content/zoteroSearch.css'
+				'chrome://trellis-platform/content/trellisSearch.css'
 			];
 		}
 	}
 
-	class ZoteroSearch extends SearchElementBase {
+	class TrellisSearch extends SearchElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<search-condition-group root="true"/>
 			<vbox id="search-binding-hint" hidden="true"/>
 			<hbox id="search-option-checkboxes">
-				<checkbox id="recursiveCheckbox" label="&zotero.search.recursive.label;" native="true"/>
+				<checkbox id="recursiveCheckbox" label="&trellis.search.recursive.label;" native="true"/>
 			</hbox>
 			<hbox id="search-legacy-options" align="center" hidden="true">
-				<checkbox id="includeParentsAndChildrenCheckbox" label="&zotero.search.includeParentsAndChildren;" native="true"/>
+				<checkbox id="includeParentsAndChildrenCheckbox" label="&trellis.search.includeParentsAndChildren;" native="true"/>
 			</hbox>
-		`, ['chrome://zotero/locale/zotero.dtd', 'chrome://zotero/locale/searchbox.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
 
 		get search() {
 			return this.searchRef;
@@ -190,11 +190,11 @@
 			for (let row of this.rootGroup.conditionsContainer.children) {
 				// Skip rows the user hasn't filled in yet, so a freshly added (or just-retyped)
 				// condition doesn't trigger the hint until it actually has a value
-				if (row.localName != 'zoterosearchcondition' || !row.isPopulated()) {
+				if (row.localName != 'trellissearchcondition' || !row.isPopulated()) {
 					continue;
 				}
 				let level = row.conditionLevel;
-				if (Zotero.Search._isAncestorLevel(resultLevel, level)) {
+				if (Trellis.Search._isAncestorLevel(resultLevel, level)) {
 					counts[level] = (counts[level] || 0) + 1;
 				}
 			}
@@ -273,7 +273,7 @@
 				flat.push({ condition: 'resultLevel', operator: group.resultLevel, value: null });
 			}
 			for (let child of group.conditionsContainer.children) {
-				if (child.localName == 'zoterosearchcondition') {
+				if (child.localName == 'trellissearchcondition') {
 					let data = child.getConditionData();
 					if (data) {
 						flat.push(data);
@@ -307,10 +307,10 @@
 		updateRemoveButtons() {
 			var rootContainer = this.rootGroup.conditionsContainer;
 			var loneRootCondition = rootContainer.childElementCount == 1
-					&& rootContainer.firstElementChild.localName == 'zoterosearchcondition'
+					&& rootContainer.firstElementChild.localName == 'trellissearchcondition'
 				? rootContainer.firstElementChild
 				: null;
-			for (let row of this.querySelectorAll('zoterosearchcondition')) {
+			for (let row of this.querySelectorAll('trellissearchcondition')) {
 				if (row == loneRootCondition && !row.isPopulated()) {
 					row.disableRemoveButton();
 				}
@@ -350,7 +350,7 @@
 				let next = rows[index] || rows[rows.length - 1];
 				// A nested group may now hold that slot; focus its first condition
 				if (next && next.localName == 'search-condition-group') {
-					next = next.querySelector('zoterosearchcondition');
+					next = next.querySelector('trellissearchcondition');
 				}
 				if (next) {
 					let button = next.querySelector('#remove');
@@ -408,7 +408,7 @@
 			setTimeout(() => menu.focus({ focusVisible: true }));
 		}
 	}
-	customElements.define("zoterosearch", ZoteroSearch);
+	customElements.define("trellissearch", TrellisSearch);
 
 	class SearchConditionGroup extends SearchElementBase {
 		content = MozXULElement.parseXULToFragment(`
@@ -424,22 +424,22 @@
 							<menuitem value="annotation" data-l10n-id="advanced-search-result-level-annotation"/>
 						</menupopup>
 					</menulist>
-					<label class="join-mode-prefix" value="&zotero.search.joinMode.prefix;"/>
-					<menulist class="join-mode-menu" native="true" aria-label="&zotero.search.joinMode.prefix;">
+					<label class="join-mode-prefix" value="&trellis.search.joinMode.prefix;"/>
+					<menulist class="join-mode-menu" native="true" aria-label="&trellis.search.joinMode.prefix;">
 						<menupopup>
-							<menuitem label="&zotero.search.joinMode.any;" value="any"/>
-							<menuitem label="&zotero.search.joinMode.all;" value="all" selected="true"/>
+							<menuitem label="&trellis.search.joinMode.any;" value="any"/>
+							<menuitem label="&trellis.search.joinMode.all;" value="all" selected="true"/>
 						</menupopup>
 					</menulist>
 					<label class="join-mode-following" data-l10n-id="advanced-search-of-the-following" hidden="true"/>
 					<menulist class="binding-menu" native="true" hidden="true" data-l10n-id="advanced-search-binding-menu">
 						<menupopup/>
 					</menulist>
-					<label class="join-mode-suffix" value="&zotero.search.joinMode.suffix;"/>
+					<label class="join-mode-suffix" value="&trellis.search.joinMode.suffix;"/>
 					<spacer flex="1"/>
 					<hbox class="group-actions">
-						<toolbarbutton class="remove-group zotero-clicky zotero-clicky-minus" tabindex="0" hidden="true" data-l10n-id="advanced-search-remove-group-btn" onclick="this.closest('search-condition-group').onRemoveGroupClicked()"/>
-						<toolbarbutton class="add-condition zotero-clicky zotero-clicky-plus" tabindex="0" data-l10n-id="advanced-search-add-btn" onclick="this.closest('search-condition-group').onAddSiblingClicked()"/>
+						<toolbarbutton class="remove-group trellis-clicky trellis-clicky-minus" tabindex="0" hidden="true" data-l10n-id="advanced-search-remove-group-btn" onclick="this.closest('search-condition-group').onRemoveGroupClicked()"/>
+						<toolbarbutton class="add-condition trellis-clicky trellis-clicky-plus" tabindex="0" data-l10n-id="advanced-search-add-btn" onclick="this.closest('search-condition-group').onAddSiblingClicked()"/>
 						<html:div class="group-action-placeholder"/>
 					</hbox>
 				</caption>
@@ -448,7 +448,7 @@
 					<description/>
 				</hbox>
 			</groupbox>
-		`, ['chrome://zotero/locale/zotero.dtd', 'chrome://zotero/locale/searchbox.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
 
 		init() {
 			this.joinMenu = this.querySelector('.join-mode-menu');
@@ -512,7 +512,7 @@
 		}
 
 		get searchElement() {
-			return this.closest('zoterosearch');
+			return this.closest('trellissearch');
 		}
 
 		get search() {
@@ -565,11 +565,11 @@
 			for (let row of this.conditionsContainer.children) {
 				// Skip rows the user hasn't filled in yet, so a freshly added (or just-retyped)
 				// condition doesn't trigger the hint until it actually has a value
-				if (row.localName != 'zoterosearchcondition' || !row.isPopulated()) {
+				if (row.localName != 'trellissearchcondition' || !row.isPopulated()) {
 					continue;
 				}
 				let level = row.conditionLevel;
-				if (Zotero.Search._isAncestorLevel(resultLevel, level)) {
+				if (Trellis.Search._isAncestorLevel(resultLevel, level)) {
 					counts[level] = (counts[level] || 0) + 1;
 				}
 			}
@@ -643,7 +643,7 @@
 			// empty row doesn't warn until it's filled in) or a nested group's binding. 'any'
 			// combines with anything, so drop it.
 			let childLevels = [...this.conditionsContainer.children].map((child) => {
-				if (child.localName == 'zoterosearchcondition') {
+				if (child.localName == 'trellissearchcondition') {
 					return child.isPopulated() ? child.conditionLevel : null;
 				}
 				if (child.localName == 'search-condition-group') {
@@ -705,7 +705,7 @@
 		// Two levels combine if one is an ancestor of the other (or equal); 'any' matches any.
 		levelsCombine(a, b) {
 			return a == 'any' || b == 'any' || a == b
-				|| Zotero.Search._isAncestorLevel(a, b) || Zotero.Search._isAncestorLevel(b, a);
+				|| Trellis.Search._isAncestorLevel(a, b) || Trellis.Search._isAncestorLevel(b, a);
 		}
 
 		// Wrap this group's direct condition rows that match `level` into a new child group
@@ -714,7 +714,7 @@
 		// wipes its contents.
 		bindSameEntity(level) {
 			let rows = [...this.conditionsContainer.children].filter(
-				row => row.localName == 'zoterosearchcondition' && row.conditionLevel == level);
+				row => row.localName == 'trellissearchcondition' && row.conditionLevel == level);
 			if (rows.length < 2) {
 				return;
 			}
@@ -724,7 +724,7 @@
 				let data = row.getConditionData();
 				let ref;
 				if (data) {
-					let [condition, mode] = Zotero.SearchConditions.parseCondition(data.condition);
+					let [condition, mode] = Trellis.SearchConditions.parseCondition(data.condition);
 					ref = { id: undefined, condition, mode, operator: data.operator, value: data.value };
 				}
 				newGroup.addCondition(ref);
@@ -750,7 +750,7 @@
 		// Add a condition row to this group. Inserts before `beforeNode` if given (e.g.
 		// right after the row whose "+" was clicked), otherwise appends.
 		addCondition(ref, beforeNode) {
-			var condition = document.createXULElement('zoterosearchcondition');
+			var condition = document.createXULElement('trellissearchcondition');
 			condition.setAttribute('flex', '1');
 			this.conditionsContainer.insertBefore(condition, beforeNode || null);
 
@@ -796,31 +796,31 @@
 	}
 	customElements.define("search-condition-group", SearchConditionGroup);
 
-	class ZoteroSearchCondition extends XULElementBase {
+	class TrellisSearchCondition extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<html:div class="search-condition">
 				<popupset id="condition-tooltips"/>
 				
-				<menulist id="conditionsmenu" oncommand="this.closest('zoterosearchcondition').onConditionSelected(event.target.value); event.stopPropagation()" native="true">
-					<menupopup onpopupshown="this.closest('zoterosearchcondition').revealSelectedCondition()">
-						<menu id="more-conditions-menu" label="&zotero.general.more;">
+				<menulist id="conditionsmenu" oncommand="this.closest('trellissearchcondition').onConditionSelected(event.target.value); event.stopPropagation()" native="true">
+					<menupopup onpopupshown="this.closest('trellissearchcondition').revealSelectedCondition()">
+						<menu id="more-conditions-menu" label="&trellis.general.more;">
 							<menupopup/>
 						</menu>
 					</menupopup>
 				</menulist>
-				<menulist id="operatorsmenu" oncommand="this.closest('zoterosearchcondition').onOperatorSelected(); event.stopPropagation()" native="true">
+				<menulist id="operatorsmenu" oncommand="this.closest('trellissearchcondition').onOperatorSelected(); event.stopPropagation()" native="true">
 					<menupopup/>
 				</menulist>
-				<zoterosearchtextbox id="valuefield" class="valuefield"/>
+				<trellissearchtextbox id="valuefield" class="valuefield"/>
 				<menulist id="valuemenu" class="valuemenu" hidden="true" native="true">
 					<menupopup/>
 				</menulist>
-				<zoterosearchagefield id="value-date-age" class="value-date-age" hidden="true"/>
-				<toolbarbutton id="remove" tabindex="0" data-l10n-id="advanced-search-remove-btn" class="zotero-clicky zotero-clicky-minus" value="-" onclick="this.closest('zoterosearchcondition').onRemoveClicked(event)"/>
-				<toolbarbutton id="add" tabindex="0" data-l10n-id="advanced-search-add-btn" class="zotero-clicky zotero-clicky-plus" value="+" onclick="this.closest('zoterosearchcondition').onAddClicked(event)"/>
-				<toolbarbutton id="group" tabindex="0" data-l10n-id="advanced-search-group-btn" class="zotero-clicky search-group-button" onclick="this.closest('zoterosearchcondition').onGroupClicked(event)"/>
+				<trellissearchagefield id="value-date-age" class="value-date-age" hidden="true"/>
+				<toolbarbutton id="remove" tabindex="0" data-l10n-id="advanced-search-remove-btn" class="trellis-clicky trellis-clicky-minus" value="-" onclick="this.closest('trellissearchcondition').onRemoveClicked(event)"/>
+				<toolbarbutton id="add" tabindex="0" data-l10n-id="advanced-search-add-btn" class="trellis-clicky trellis-clicky-plus" value="+" onclick="this.closest('trellissearchcondition').onAddClicked(event)"/>
+				<toolbarbutton id="group" tabindex="0" data-l10n-id="advanced-search-group-btn" class="trellis-clicky search-group-button" onclick="this.closest('trellissearchcondition').onGroupClicked(event)"/>
 			</html:div>
-		`, ['chrome://zotero/locale/zotero.dtd', 'chrome://zotero/locale/searchbox.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
 
 		init() {
 			var operators = [
@@ -840,7 +840,7 @@
 			// Build operator menu
 			for (let operator of operators) {
 				operatorsList.appendItem(
-					Zotero.getString('searchOperator.' + operator),
+					Trellis.getString('searchOperator.' + operator),
 					operator
 				);
 			}
@@ -848,7 +848,7 @@
 			// Build conditions menu
 			var conditionsMenu = this.querySelector('#conditionsmenu');
 			var moreConditionsMenu = this.querySelector('#more-conditions-menu');
-			var conditions = Zotero.SearchConditions.getStandardConditions();
+			var conditions = Trellis.SearchConditions.getStandardConditions();
 
 			// Cache the (alphabetically sorted) condition list and set up
 			// find-as-you-type on the closed menu
@@ -873,7 +873,7 @@
 				
 				var baseFields = null;
 				try {
-					baseFields = Zotero.ItemFields.getTypeFieldsFromBase(condition.name);
+					baseFields = Trellis.ItemFields.getTypeFieldsFromBase(condition.name);
 				}
 				catch {}
 				
@@ -882,7 +882,7 @@
 					if (!this.querySelector('#' + condition.name + '-tooltip')) {
 						var fieldName = null;
 						try {
-							fieldName = Zotero.ItemFields.getLocalizedString(condition.name);
+							fieldName = Trellis.ItemFields.getLocalizedString(condition.name);
 						}
 						catch {}
 						
@@ -895,8 +895,8 @@
 						}
 						
 						for (let baseField of baseFields) {
-							var str = Zotero.SearchConditions.getLocalizedName(
-								Zotero.ItemFields.getName(baseField)
+							var str = Trellis.SearchConditions.getLocalizedName(
+								Trellis.ItemFields.getName(baseField)
 							);
 							
 							if (localized.indexOf(str) == -1) {
@@ -912,7 +912,7 @@
 						var hbox = document.createXULElement('hbox');
 						
 						var label = document.createXULElement('label');
-						label.setAttribute('value', Zotero.getString('search-conditions-tooltip-fields'));
+						label.setAttribute('value', Trellis.getString('search-conditions-tooltip-fields'));
 						hbox.appendChild(label);
 						var vbox = document.createXULElement('vbox');
 						for (let str of localized) {
@@ -970,7 +970,7 @@
 			this.selectedCondition = conditionName;
 			this.selectedOperator = operatorsList.value;
 			
-			var condition = Zotero.SearchConditions.get(conditionName);
+			var condition = Trellis.SearchConditions.get(conditionName);
 			var operators = condition.operators;
 			
 			conditionsMenu.value = conditionName;
@@ -984,7 +984,7 @@
 				conditionsMenu.selectedIndex = -1;
 				conditionsMenu.setAttribute(
 					'label',
-					Zotero.SearchConditions.getLocalizedName(conditionName)
+					Trellis.SearchConditions.getLocalizedName(conditionName)
 				);
 			}
 			
@@ -1012,7 +1012,7 @@
 					var libraryID = this.parent.search.libraryID;
 
 					// Add collections
-					let cols = Zotero.Collections.getByLibrary(libraryID, true);
+					let cols = Trellis.Collections.getByLibrary(libraryID, true);
 					for (let col of cols) {
 						// Indent subcollections
 						var indent = '';
@@ -1023,20 +1023,20 @@
 							indent += '- ';
 						}
 						rows.push({
-							name: indent + Zotero.Utilities.trimInternal(col.name),
+							name: indent + Trellis.Utilities.trimInternal(col.name),
 							value: 'C' + col.key,
-							image: Zotero.Collection.prototype.treeViewImage
+							image: Trellis.Collection.prototype.treeViewImage
 						});
 					}
 
 					// Add saved searches
-					let searches = Zotero.Searches.getByLibrary(libraryID);
+					let searches = Trellis.Searches.getByLibrary(libraryID);
 					for (let search of searches) {
 						if (search.id != this.parent.search.id) {
 							rows.push({
 								name: search.name,
 								value: 'S' + search.key,
-								image: Zotero.Search.prototype.treeViewImage
+								image: Trellis.Search.prototype.treeViewImage
 							});
 						}
 					}
@@ -1045,13 +1045,13 @@
 				}
 				case 'itemType':
 				{
-					let rows = Zotero.ItemTypes.getTypes().map(type => ({
-						name: Zotero.ItemTypes.getLocalizedString(type.id),
+					let rows = Trellis.ItemTypes.getTypes().map(type => ({
+						name: Trellis.ItemTypes.getLocalizedString(type.id),
 						value: type.name
 					}));
 					
 					// Sort by localized name
-					let collation = Zotero.getLocaleCollation();
+					let collation = Trellis.getLocaleCollation();
 					rows.sort((a, b) => collation.compareString(1, a.name, b.name));
 					
 					this.createValueMenu(rows);
@@ -1059,13 +1059,13 @@
 				}
 				case 'fileTypeID':
 				{
-					let rows = Zotero.FileTypes.getTypes().map(type => ({
-						name: Zotero.getString('file-type-' + type.name),
+					let rows = Trellis.FileTypes.getTypes().map(type => ({
+						name: Trellis.getString('file-type-' + type.name),
 						value: type.id
 					}));
 					
 					// Sort by localized name
-					let collation = Zotero.getLocaleCollation();
+					let collation = Trellis.getLocaleCollation();
 					rows.sort((a, b) => collation.compareString(1, a.name, b.name));
 					
 					this.createValueMenu(rows);
@@ -1220,9 +1220,9 @@
 				if ((condition.condition == 'accessDate'
 						|| condition.condition == 'dateAdded'
 						|| condition.condition == 'dateModified')
-						&& Zotero.Date.isSQLDateTime(condition.value)) {
+						&& Trellis.Date.isSQLDateTime(condition.value)) {
 					condition.value
-						= Zotero.Date.dateToSQL(Zotero.Date.sqlToDate(condition.value, true));
+						= Trellis.Date.dateToSQL(Trellis.Date.sqlToDate(condition.value, true));
 				}
 				
 				this.mode = condition.mode;
@@ -1237,7 +1237,7 @@
 		}
 
 		// Return this row's current {condition, operator, value} for serialization.
-		// The owning <zoterosearch> collects these across the tree and rebuilds the
+		// The owning <trellissearch> collects these across the tree and rebuilds the
 		// search from scratch. Returns null while the row is still being set up.
 		getConditionData() {
 			if (!(this.parent && this.parent.search) || this.dontupdate) {
@@ -1257,8 +1257,8 @@
 					case 'accessDate':
 					case 'dateAdded':
 					case 'dateModified':
-						if (Zotero.Date.isSQLDateTime(value)) {
-							value = Zotero.Date.dateToSQL(Zotero.Date.sqlToDate(value), true);
+						if (Trellis.Date.isSQLDateTime(value)) {
+							value = Trellis.Date.dateToSQL(Trellis.Date.sqlToDate(value), true);
 						}
 				}
 
@@ -1456,7 +1456,7 @@
 			var ref;
 			var data = this.getConditionData();
 			if (data) {
-				let [condition, mode] = Zotero.SearchConditions.parseCondition(data.condition);
+				let [condition, mode] = Trellis.SearchConditions.parseCondition(data.condition);
 				ref = { id: undefined, condition, mode, operator: data.operator, value: data.value };
 			}
 			var newGroup = document.createXULElement('search-condition-group');
@@ -1472,7 +1472,7 @@
 		// The item level this condition matches at ('item' by default), used to decide
 		// cross-level binding in a group
 		get conditionLevel() {
-			let data = this.selectedCondition && Zotero.SearchConditions.get(this.selectedCondition);
+			let data = this.selectedCondition && Trellis.SearchConditions.get(this.selectedCondition);
 			return (data && data.level) || 'item';
 		}
 
@@ -1500,12 +1500,12 @@
 		enableRemoveButton() {
 			var button = this.querySelector("#remove");
 			button.setAttribute('disabled', false);
-			button.setAttribute('onclick', "this.closest('zoterosearchcondition').onRemoveClicked(event)");
+			button.setAttribute('onclick', "this.closest('trellissearchcondition').onRemoveClicked(event)");
 		}
 	}
-	customElements.define("zoterosearchcondition", ZoteroSearchCondition);
+	customElements.define("trellissearchcondition", TrellisSearchCondition);
 
-	class ZoteroSearchTextbox extends XULElementBase {
+	class TrellisSearchTextbox extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<xul:stack
 					xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -1513,7 +1513,7 @@
 					flex="1">
 				<html:input id="search-textbox"
 					is="shadow-autocomplete-input"
-					autocompletesearch="zotero"
+					autocompletesearch="trellis"
 					autocompletepopup="search-autocomplete-popup"
 					timeout="250"
 					type="search"
@@ -1525,14 +1525,14 @@
 						type="menu">
 					<dropmarker type="menu" class="toolbarbutton-menu-dropmarker"/>
 					<xul:menupopup id="textbox-fulltext-menu">
-						<xul:menuitem type="radio" label="&zotero.search.textModes.phrase;"/>
-						<xul:menuitem type="radio" label="&zotero.search.textModes.phraseBinary;"/>
-						<xul:menuitem type="radio" label="&zotero.search.textModes.regexp;"/>
-						<xul:menuitem type="radio" label="&zotero.search.textModes.regexpCS;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.phrase;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.phraseBinary;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.regexp;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.regexpCS;"/>
 					</xul:menupopup>
 				</xul:toolbarbutton>
 			</xul:stack>
-		`, ['chrome://zotero/locale/zotero.dtd', 'chrome://zotero/locale/searchbox.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
 
 		get value() {
 			return this.querySelector('#search-textbox').value;
@@ -1647,21 +1647,21 @@
 			}
 		}
 	}
-	customElements.define("zoterosearchtextbox", ZoteroSearchTextbox);
+	customElements.define("trellissearchtextbox", TrellisSearchTextbox);
 
-	class ZoteroSearchAgeField extends XULElementBase {
+	class TrellisSearchAgeField extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<html:div class="search-in-the-last">
 				<html:input class="input"/>
 				<menulist class="age-list" native="true">
 					<menupopup>
-						<menuitem label="&zotero.search.date.units.days;" value="days" selected="true"/>
-						<menuitem label="&zotero.search.date.units.months;" value="months"/>
-						<menuitem label="&zotero.search.date.units.years;" value="years"/>
+						<menuitem label="&trellis.search.date.units.days;" value="days" selected="true"/>
+						<menuitem label="&trellis.search.date.units.months;" value="months"/>
+						<menuitem label="&trellis.search.date.units.years;" value="years"/>
 					</menupopup>
 				</menulist>
 			</html:div>
-		`, ['chrome://zotero/locale/zotero.dtd', 'chrome://zotero/locale/searchbox.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
 
 		get value() {
 			var input = this.querySelector('.input');
@@ -1691,5 +1691,5 @@
 			menulist.selectedItem.setAttribute('checked', true);
 		}
 	}
-	customElements.define("zoterosearchagefield", ZoteroSearchAgeField);
+	customElements.define("trellissearchagefield", TrellisSearchAgeField);
 }

@@ -3,29 +3,29 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Libraries = new function () {
+Trellis.Libraries = new function () {
 	let _userLibraryID;
-	Zotero.defineProperty(this, 'userLibraryID', {
+	Trellis.defineProperty(this, 'userLibraryID', {
 		get: function () { 
 			if (_userLibraryID === undefined) {
 				throw new Error("Library data not yet loaded");
@@ -34,9 +34,9 @@ Zotero.Libraries = new function () {
 		}
 	});
 	
-	Zotero.defineProperty(this, 'userLibrary', {
+	Trellis.defineProperty(this, 'userLibrary', {
 		get: function () {
-			return Zotero.Libraries.get(_userLibraryID);
+			return Trellis.Libraries.get(_userLibraryID);
 		}
 	})
 	
@@ -50,8 +50,8 @@ Zotero.Libraries = new function () {
 	}
 	
 	this.register = function (library) {
-		if (!this._cache) throw new Error("Zotero.Libraries cache is not initialized");
-		Zotero.debug("Zotero.Libraries: Registering library " + library.libraryID, 5);
+		if (!this._cache) throw new Error("Trellis.Libraries cache is not initialized");
+		Trellis.debug("Trellis.Libraries: Registering library " + library.libraryID, 5);
 		this._addToCache(this._cache, library);
 	};
 	
@@ -61,8 +61,8 @@ Zotero.Libraries = new function () {
 	}
 	
 	this.unregister = function (libraryID) {
-		if (!this._cache) throw new Error("Zotero.Libraries cache is not initialized");
-		Zotero.debug("Zotero.Libraries: Unregistering library " + libraryID, 5);
+		if (!this._cache) throw new Error("Trellis.Libraries cache is not initialized");
+		Trellis.debug("Trellis.Libraries: Unregistering library " + libraryID, 5);
 		delete this._cache[libraryID];
 	};
 	
@@ -77,17 +77,17 @@ Zotero.Libraries = new function () {
 		let libTypes = ['library'].concat(specialLoading);
 		let newCaches = {};
 		for (let i=0; i<libTypes.length; i++) {
-			let objs = Zotero.DataObjectUtilities.getObjectsClassForObjectType(libTypes[i]);
+			let objs = Trellis.DataObjectUtilities.getObjectsClassForObjectType(libTypes[i]);
 			delete objs._cache;
 			
 			newCaches[libTypes[i]] = objs._makeCache();
 		}
 		
-		let sql = Zotero.Library._rowSQL
+		let sql = Trellis.Library._rowSQL
 			// Exclude libraries that require special loading
 			+ " WHERE type NOT IN "
 			+ "(" + Array(specialLoading.length).fill('?').join(',') + ")";
-		let rows = await Zotero.DB.queryAsync(sql, specialLoading);
+		let rows = await Trellis.DB.queryAsync(sql, specialLoading);
 		
 		for (let i=0; i<rows.length; i++) {
 			let row = rows[i];
@@ -95,7 +95,7 @@ Zotero.Libraries = new function () {
 			let library;
 			switch (row._libraryType) {
 				case 'user':
-					library = new Zotero.Library();
+					library = new Trellis.Library();
 					library._loadDataFromRow(row); // Does not call save()
 					break;
 				default:
@@ -112,21 +112,21 @@ Zotero.Libraries = new function () {
 		// Load other libraries
 		for (let i=0; i<specialLoading.length; i++) {
 			let libType = specialLoading[i];
-			let LibType = Zotero.Utilities.capitalize(libType);
+			let LibType = Trellis.Utilities.capitalize(libType);
 			
-			let libs = await Zotero.DB.queryAsync(Zotero[LibType]._rowSQL);
+			let libs = await Trellis.DB.queryAsync(Trellis[LibType]._rowSQL);
 			for (let j=0; j<libs.length; j++) {
-				let lib = new Zotero[LibType]();
+				let lib = new Trellis[LibType]();
 				lib._loadDataFromRow(libs[j]);
 				
 				this._addToCache(newCaches.library, lib);
-				Zotero[lib._ObjectTypePlural]._addToCache(newCaches[libType], lib);
+				Trellis[lib._ObjectTypePlural]._addToCache(newCaches[libType], lib);
 			}
 		}
 		
 		// Set new caches
 		for (let libType in newCaches) {
-			Zotero.DataObjectUtilities.getObjectsClassForObjectType(libType)
+			Trellis.DataObjectUtilities.getObjectsClassForObjectType(libType)
 				._cache = newCaches[libType];
 		}
 	};
@@ -136,7 +136,7 @@ Zotero.Libraries = new function () {
 	 * @return {Boolean}
 	 */
 	this.exists = function (libraryID) {
-		if (!this._cache) throw new Error("Zotero.Libraries cache is not initialized");
+		if (!this._cache) throw new Error("Trellis.Libraries cache is not initialized");
 		return this._cache[libraryID] !== undefined;
 	}
 	
@@ -149,12 +149,12 @@ Zotero.Libraries = new function () {
 	
 	
 	/**
-	 * @return {Zotero.Library[]} - All libraries
+	 * @return {Trellis.Library[]} - All libraries
 	 */
 	this.getAll = function () {
-		if (!this._cache) throw new Error("Zotero.Libraries cache is not initialized");
-		var libraries = Object.keys(this._cache).map(v => Zotero.Libraries.get(parseInt(v)));
-		var collation = Zotero.getLocaleCollation();
+		if (!this._cache) throw new Error("Trellis.Libraries cache is not initialized");
+		var libraries = Object.keys(this._cache).map(v => Trellis.Libraries.get(parseInt(v)));
+		var collation = Trellis.getLocaleCollation();
 		// Sort My Library, then others by name
 		libraries.sort(function (a, b) {
 			if (a.libraryID == _userLibraryID) return -1;
@@ -169,7 +169,7 @@ Zotero.Libraries = new function () {
 	 * Get an existing library
 	 *
 	 * @param {Integer} libraryID
-	 * @return {Zotero.Library[] | Zotero.Library}
+	 * @return {Trellis.Library[] | Trellis.Library}
 	 */
 	this.get = function (libraryID) {
 		return this._cache[libraryID] || false;
@@ -180,9 +180,9 @@ Zotero.Libraries = new function () {
 	 * @deprecated
 	 */
 	this.getName = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.getName() is deprecated. Use Zotero.Library.prototype.name instead");
+		Trellis.debug("Trellis.Libraries.getName() is deprecated. Use Trellis.Library.prototype.name instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).name;
+		return Trellis.Libraries.get(libraryID).name;
 	}
 	
 	
@@ -190,9 +190,9 @@ Zotero.Libraries = new function () {
 	 * @deprecated
 	 */
 	this.getType = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.getType() is deprecated. Use Zotero.Library.prototype.libraryType instead");
+		Trellis.debug("Trellis.Libraries.getType() is deprecated. Use Trellis.Library.prototype.libraryType instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).libraryType;
+		return Trellis.Libraries.get(libraryID).libraryType;
 	}
 	
 	
@@ -203,9 +203,9 @@ Zotero.Libraries = new function () {
 	 * @return {Integer}
 	 */
 	this.getVersion = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.getVersion() is deprecated. Use Zotero.Library.prototype.libraryVersion instead");
+		Trellis.debug("Trellis.Libraries.getVersion() is deprecated. Use Trellis.Library.prototype.libraryVersion instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).libraryVersion;
+		return Trellis.Libraries.get(libraryID).libraryVersion;
 	}
 	
 	
@@ -217,10 +217,10 @@ Zotero.Libraries = new function () {
 	 * @return {Promise}
 	 */
 	this.setVersion = function (libraryID, version) {
-		Zotero.debug("Zotero.Libraries.setVersion() is deprecated. Use Zotero.Library.prototype.libraryVersion instead");
+		Trellis.debug("Trellis.Libraries.setVersion() is deprecated. Use Trellis.Library.prototype.libraryVersion instead");
 		this._ensureExists(libraryID);
 		
-		let library = Zotero.Libraries.get(libraryID);
+		let library = Trellis.Libraries.get(libraryID);
 		library.libraryVersion = version;
 		return library.saveTx();
 	};
@@ -229,9 +229,9 @@ Zotero.Libraries = new function () {
 	 * @deprecated
 	 */
 	this.getLastSyncTime = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.getLastSyncTime() is deprecated. Use Zotero.Library.prototype.lastSync instead");
+		Trellis.debug("Trellis.Libraries.getLastSyncTime() is deprecated. Use Trellis.Library.prototype.lastSync instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).lastSync;
+		return Trellis.Libraries.get(libraryID).lastSync;
 	};
 	
 	
@@ -243,10 +243,10 @@ Zotero.Libraries = new function () {
 	 * @return {Promise}
 	 */
 	this.setLastSyncTime = function (libraryID, lastSyncTime) {
-		Zotero.debug("Zotero.Libraries.setLastSyncTime() is deprecated. Use Zotero.Library.prototype.lastSync instead");
+		Trellis.debug("Trellis.Libraries.setLastSyncTime() is deprecated. Use Trellis.Library.prototype.lastSync instead");
 		this._ensureExists(libraryID);
 		
-		let library = Zotero.Libraries.get(libraryID);
+		let library = Trellis.Libraries.get(libraryID);
 		library.lastSync = lastSyncTime;
 		return library.saveTx();
 	};
@@ -255,9 +255,9 @@ Zotero.Libraries = new function () {
 	 * @deprecated
 	 */
 	this.isEditable = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.isEditable() is deprecated. Use Zotero.Library.prototype.editable instead");
+		Trellis.debug("Trellis.Libraries.isEditable() is deprecated. Use Trellis.Library.prototype.editable instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).editable;
+		return Trellis.Libraries.get(libraryID).editable;
 	}
 	
 	/**
@@ -266,10 +266,10 @@ Zotero.Libraries = new function () {
 	 * @return {Promise}
 	 */
 	this.setEditable = async function (libraryID, editable) {
-		Zotero.debug("Zotero.Libraries.setEditable() is deprecated. Use Zotero.Library.prototype.editable instead");
+		Trellis.debug("Trellis.Libraries.setEditable() is deprecated. Use Trellis.Library.prototype.editable instead");
 		this._ensureExists(libraryID);
 		
-		let library = Zotero.Libraries.get(libraryID);
+		let library = Trellis.Libraries.get(libraryID);
 		library.editable = editable;
 		return library.saveTx();
 	};
@@ -278,9 +278,9 @@ Zotero.Libraries = new function () {
 	 * @deprecated
 	 */
 	this.isFilesEditable = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.isFilesEditable() is deprecated. Use Zotero.Library.prototype.filesEditable instead");
+		Trellis.debug("Trellis.Libraries.isFilesEditable() is deprecated. Use Trellis.Library.prototype.filesEditable instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).filesEditable;
+		return Trellis.Libraries.get(libraryID).filesEditable;
 	};
 	
 	/**
@@ -289,10 +289,10 @@ Zotero.Libraries = new function () {
 	 * @return {Promise}
 	 */
 	this.setFilesEditable = async function (libraryID, filesEditable) {
-		Zotero.debug("Zotero.Libraries.setFilesEditable() is deprecated. Use Zotero.Library.prototype.filesEditable instead");
+		Trellis.debug("Trellis.Libraries.setFilesEditable() is deprecated. Use Trellis.Library.prototype.filesEditable instead");
 		this._ensureExists(libraryID);
 		
-		let library = Zotero.Libraries.get(libraryID);
+		let library = Trellis.Libraries.get(libraryID);
 		library.filesEditable = filesEditable;
 		return library.saveTx();
 	};
@@ -301,28 +301,28 @@ Zotero.Libraries = new function () {
 	 * @deprecated
 	 */
 	this.isGroupLibrary = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.isGroupLibrary() is deprecated. Use Zotero.Library.prototype.isGroup instead");
+		Trellis.debug("Trellis.Libraries.isGroupLibrary() is deprecated. Use Trellis.Library.prototype.isGroup instead");
 		this._ensureExists(libraryID);
-		return !!Zotero.Libraries.get(libraryID).isGroup;
+		return !!Trellis.Libraries.get(libraryID).isGroup;
 	}
 	
 	/**
 	 * @deprecated
 	 */
 	this.hasTrash = function (libraryID) {
-		Zotero.debug("Zotero.Libraries.hasTrash() is deprecated. Use Zotero.Library.prototype.hasTrash instead");
+		Trellis.debug("Trellis.Libraries.hasTrash() is deprecated. Use Trellis.Library.prototype.hasTrash instead");
 		this._ensureExists(libraryID);
-		return Zotero.Libraries.get(libraryID).hasTrash;
+		return Trellis.Libraries.get(libraryID).hasTrash;
 	}
 	
 	/**
 	 * @deprecated
 	 */
 	this.updateLastSyncTime = async function (libraryID) {
-		Zotero.debug("Zotero.Libraries.updateLastSyncTime() is deprecated. Use Zotero.Library.prototype.updateLastSyncTime instead");
+		Trellis.debug("Trellis.Libraries.updateLastSyncTime() is deprecated. Use Trellis.Library.prototype.updateLastSyncTime instead");
 		this._ensureExists(libraryID);
 		
-		let library = Zotero.Libraries.get(libraryID);
+		let library = Trellis.Libraries.get(libraryID);
 		library.updateLastSyncTime();
 		await library.saveTx();
 	}

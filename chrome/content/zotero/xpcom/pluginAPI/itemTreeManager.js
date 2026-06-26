@@ -5,40 +5,40 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
 
 
-import { COLUMNS } from 'zotero/itemTreeColumns';
+import { COLUMNS } from 'trellis/itemTreeColumns';
 
 
 {
-	const PluginAPIBase = ChromeUtils.importESModule("chrome://zotero/content/xpcom/pluginAPI/pluginAPIBase.mjs").PluginAPIBase;
+	const PluginAPIBase = ChromeUtils.importESModule("chrome://trellis/content/xpcom/pluginAPI/pluginAPIBase.mjs").PluginAPIBase;
 
 
 	/**
-	 * @namespace Zotero
+	 * @namespace Trellis
 	 */
 
 
 	/**
 	 * @typedef {function} ItemTreeColumnDataProvider
-	 * @param {Zotero.Item} item - The item to get data from
+	 * @param {Trellis.Item} item - The item to get data from
 	 * @param {string} dataKey - The dataKey of the column
 	 * @returns {string} - The data to display in the column
 	 */
@@ -143,7 +143,7 @@ import { COLUMNS } from 'zotero/itemTreeColumns';
 						optional: true,
 						fallbackReturn: null,
 					},
-					zoteroPersist: {
+					trellisPersist: {
 						type: "array",
 						optional: true,
 					},
@@ -181,9 +181,9 @@ import { COLUMNS } from 'zotero/itemTreeColumns';
 	/**
 	 * Manages item tree APIs.
 	 *
-	 * @memberof Zotero
+	 * @memberof Trellis
 	 */
-	Zotero.ItemTreeManager = {
+	Trellis.ItemTreeManager = {
 		_columnManager: new ItemTreeColumnManagerInternal(),
 
 		/**
@@ -213,14 +213,14 @@ import { COLUMNS } from 'zotero/itemTreeColumns';
 		 * @param {boolean} [option.primary] - Should only be one column at the time. Title is the primary column
 		 * @param {ItemTreeColumnDataProvider} [option.dataProvider] - Custom data provider that is called when rendering cells
 		 * @param {ItemTreeColumnRenderCell} [option.renderCell] - The cell renderer function
-		 * @param {string[]} [option.zoteroPersist] - Which column properties should be persisted between zotero close
+		 * @param {string[]} [option.trellisPersist] - Which column properties should be persisted between trellis close
 		 * @returns {string | false} - The dataKey of the added column or false if no column is added
 		 *
 		 * @example
 		 * A minimal custom column:
 		 * ```javascript
-		 * // You can unregister the column later with Zotero.ItemTreeManager.unregisterColumn(registeredDataKey);
-		 * const registeredDataKey = Zotero.ItemTreeManager.registerColumn(
+		 * // You can unregister the column later with Trellis.ItemTreeManager.unregisterColumn(registeredDataKey);
+		 * const registeredDataKey = Trellis.ItemTreeManager.registerColumn(
 		 * {
 		 *     dataKey: 'rtitle',
 		 *     label: 'Reversed Title',
@@ -234,7 +234,7 @@ import { COLUMNS } from 'zotero/itemTreeColumns';
 		 * A custom column using all available options.
 		 * Note that the column will only be shown in the main item tree.
 		 * ```javascript
-		 * const registeredDataKey = Zotero.ItemTreeManager.registerColumn(
+		 * const registeredDataKey = Trellis.ItemTreeManager.registerColumn(
 		 * {
 		 *     dataKey: 'rtitle',
 		 *     label: 'Reversed Title',
@@ -245,7 +245,7 @@ import { COLUMNS } from 'zotero/itemTreeColumns';
 		 *     fixedWidth: true, // don't allow user to resize
 		 *     staticWidth: true, // don't allow column to be resized when the tree is resized
 		 *     minWidth: 50, // minimum width in pixels
-		 *     iconPath: 'chrome://zotero/skin/tick.png', // icon to show in the column header
+		 *     iconPath: 'chrome://trellis/skin/tick.png', // icon to show in the column header
 		 *     htmlLabel: '<span style="color: red;">reversed title</span>', // use HTML in the label. This will override the label and iconPath property
 		 *     showInColumnPicker: true, // show in the column picker
 		 *     columnPickerSubMenu: true, // show in the column picker submenu
@@ -269,7 +269,7 @@ import { COLUMNS } from 'zotero/itemTreeColumns';
 		 *         cell.style.color = 'red';
 		 *         return cell;
 		 *     },
-		 *     zoteroPersist: ['width', 'hidden', 'sortDirection'], // persist the column properties
+		 *     trellisPersist: ['width', 'hidden', 'sortDirection'], // persist the column properties
 		 * });
 		 * ```
 		 */

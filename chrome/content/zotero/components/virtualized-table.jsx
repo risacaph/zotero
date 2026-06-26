@@ -3,22 +3,22 @@
 	
 	Copyright © 2019 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.	If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.	If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -329,7 +329,7 @@ class VirtualizedTable extends React.Component {
 			resizing: null
 		};
 		this._typingString = "";
-		this._jsWindowID = `virtualized-table-list-${Zotero.Utilities.randomString(5)}`;
+		this._jsWindowID = `virtualized-table-list-${Trellis.Utilities.randomString(5)}`;
 		this._containerWidth = props.containerWidth || window.innerWidth;
 		this.className = props.className || "";
 		this.firstColumnExtraWidth = (props.firstColumnExtraWidth) - (COLUMN_PADDING / 2); // missing left-padding of the content cell
@@ -370,7 +370,7 @@ class VirtualizedTable extends React.Component {
 		getColumnPrefs: () => ({}),
 		storeColumnPrefs: noop,
 		staticColumns: false,
-		alternatingRowColors: Zotero.isMac ? ['-moz-OddTreeRow', '-moz-EvenTreeRow'] : null,
+		alternatingRowColors: Trellis.isMac ? ['-moz-OddTreeRow', '-moz-EvenTreeRow'] : null,
 
 		firstColumnExtraWidth: 0,
 
@@ -422,7 +422,7 @@ class VirtualizedTable extends React.Component {
 		renderItem: PropTypes.func.isRequired,
 		// Row height specified as lines of text per row. Defaults to 1
 		linesPerRow: PropTypes.number,
-		// Do not adjust for Zotero-defined font scaling
+		// Do not adjust for Trellis-defined font scaling
 		disableFontSizeScaling: PropTypes.bool,
 		// An array of two elements for alternating row colors
 		alternatingRowColors: PropTypes.array,
@@ -577,7 +577,7 @@ class VirtualizedTable extends React.Component {
 		if (e.altKey) return;
 		
 		const shiftSelect = e.shiftKey;
-		const moveFocused = Zotero.isMac ? e.metaKey : e.ctrlKey;
+		const moveFocused = Trellis.isMac ? e.metaKey : e.ctrlKey;
 		const toggleSelection = shiftSelect && moveFocused;
 		const rowCount = this.props.getRowCount();
 
@@ -609,7 +609,7 @@ class VirtualizedTable extends React.Component {
 			break;
 			
 		case "PageUp":
-			if (!Zotero.isMac) {
+			if (!Trellis.isMac) {
 				this._onJumpSelect(-1, shiftSelect, toggleSelection, e.repeat);
 			}
 			else {
@@ -618,7 +618,7 @@ class VirtualizedTable extends React.Component {
 			break;
 			
 		case "PageDown":
-			if (!Zotero.isMac) {
+			if (!Trellis.isMac) {
 				this._onJumpSelect(1, shiftSelect, toggleSelection, e.repeat);
 			}
 			else {
@@ -630,7 +630,7 @@ class VirtualizedTable extends React.Component {
 		case "a":
 			if (this.props.multiSelect
 					&& !e.shiftKey
-					&& (Zotero.isMac ? (e.metaKey && !e.ctrlKey) : e.ctrlKey)) {
+					&& (Trellis.isMac ? (e.metaKey && !e.ctrlKey) : e.ctrlKey)) {
 				this.selection.selectAll();
 			}
 			break;
@@ -665,7 +665,7 @@ class VirtualizedTable extends React.Component {
 		if (shiftSelect || moveFocused) return;
 		
 		switch (e.key) {
-		case Zotero.arrowPreviousKey:
+		case Trellis.arrowPreviousKey:
 			const parentIndex = this.props.getParentIndex(this.selection.focused);
 			if (this.props.isContainer(this.selection.focused)
 					&& !this.props.isContainerEmpty(this.selection.focused)
@@ -677,7 +677,7 @@ class VirtualizedTable extends React.Component {
 			}
 			break;
 
-		case Zotero.arrowNextKey:
+		case Trellis.arrowNextKey:
 			if (this.props.isContainer(this.selection.focused)
 					&& !this.props.isContainerEmpty(this.selection.focused)) {
 				if (!this.props.isContainerOpen(this.selection.focused)) {
@@ -745,8 +745,8 @@ class VirtualizedTable extends React.Component {
 		// causing a collection change on dragend, so we add a delay here. It shouldn't cause any issues
 		// because isMouseDrag is only used in mouseup handler to exactly prevent from accidentally switching
 		// selection after dragend.
-		if (Zotero.isMac) {
-			await Zotero.Promise.delay(500);
+		if (Trellis.isMac) {
+			await Trellis.Promise.delay(500);
 		}
 		this._isMouseDrag = false;
 	}
@@ -918,7 +918,7 @@ class VirtualizedTable extends React.Component {
 		const bRect = b.getBoundingClientRect();
 		const resizingRect = resizing.getBoundingClientRect();
 		let offset = aRect.left;
-		if (aColumn.dataKey != resizingColumn.dataKey && !Zotero.rtl) {
+		if (aColumn.dataKey != resizingColumn.dataKey && !Trellis.rtl) {
 			offset += resizingRect.width;
 		}
 		const widthSum = aRect.width + bRect.width;
@@ -974,7 +974,7 @@ class VirtualizedTable extends React.Component {
 				return;
 			}
 		}
-		if (Zotero.rtl) {
+		if (Trellis.rtl) {
 			return [bColumn, aColumn, resizingColumn];
 		}
 		return [aColumn, bColumn, resizingColumn];
@@ -1310,7 +1310,7 @@ class VirtualizedTable extends React.Component {
 			// XUL's chromedir attribute doesn't work with CSS :dir selectors,
 			// so we'll manually propagate the locale's script direction to the
 			// table.
-			dir: Zotero.Locale.defaultScriptDirection(Zotero.locale),
+			dir: Trellis.Locale.defaultScriptDirection(Trellis.locale),
 		};
 		if (this.props.hide) {
 			props.style = { display: "none" };
@@ -1531,7 +1531,7 @@ class VirtualizedTable extends React.Component {
 	
 	updateFontSize = () => {
 		if (this.props.disableFontSizeScaling) {
-			Zotero.warn("Attempting to update font size on a VirtualizedTable with a font scaling "
+			Trellis.warn("Attempting to update font size on a VirtualizedTable with a font scaling "
 				+ "disabled. Change the prop instead.");
 			return;
 		}
@@ -1556,19 +1556,19 @@ class VirtualizedTable extends React.Component {
 		}
 		let rowHeight = this.props.linesPerRow * this._renderedTextHeight;
 		if (!this.props.disableFontSizeScaling) {
-			rowHeight *= Zotero.Prefs.get('fontSize');
+			rowHeight *= Trellis.Prefs.get('fontSize');
 		}
 		
-		rowHeight += Zotero.Prefs.get('uiDensity') === 'comfortable' ? 11 : 5;
+		rowHeight += Trellis.Prefs.get('uiDensity') === 'comfortable' ? 11 : 5;
 
 		// @TODO: Check row height across platforms and remove commented code below
 		// padding
 		// This is weird, but Firefox trees always had different amount of padding on
 		// different OSes
-		// if (Zotero.isMac) {
+		// if (Trellis.isMac) {
 		// 	rowHeight *= 1.4;
 		// }
-		// else if (Zotero.isWin) {
+		// else if (Trellis.isWin) {
 		// 	rowHeight *= 1.2;
 		// }
 		// else {
@@ -1582,14 +1582,14 @@ class VirtualizedTable extends React.Component {
 		let div = document.createElement('div');
 		div.style.visibility = "hidden";
 		div.style.lineHeight = "1.3333333333333333";
-		div.textContent = "Zotero";
+		div.textContent = "Trellis";
 		document.documentElement.appendChild(div);
 		let height = window.getComputedStyle(div).height;
 		document.documentElement.removeChild(div);
 		return parseFloat(height.split('px')[0]);
 	}
 	
-	_debouncedRerender = Zotero.Utilities.debounce(this.rerender, 200);
+	_debouncedRerender = Trellis.Utilities.debounce(this.rerender, 200);
 	
 	_updateWidth() {
 		if (!this.props.showHeader) return;
@@ -1919,7 +1919,7 @@ var Columns = class {
 	}
 
 	_getColumnPrefsToPersist(column) {
-		let persistKeys = new Set(column.zoteroPersist); 
+		let persistKeys = new Set(column.trellisPersist); 
 		if (!persistKeys) persistKeys = new Set();
 		// Always persist
 		['ordinal', 'hidden', 'sortDirection'].forEach(k => persistKeys.add(k));
@@ -1983,7 +1983,7 @@ var Columns = class {
 				width -= columnPadding;
 				this._stylesheet.sheet.cssRules[styleIndex].style.setProperty('flex-basis', `calc(var(--extra-width, 0px) + ${cssWidth}px`);
 			}
-			Zotero.debug(`Columns ${dataKey} width ${width}`);
+			Trellis.debug(`Columns ${dataKey} width ${width}`);
 			if (storePrefs) {
 				column.width = width;
 				prefs[dataKey] = this._getColumnPrefsToPersist(column);
@@ -2039,7 +2039,7 @@ var Columns = class {
 		// "title" column is never restored.
 		let hasPrimaryColumn = this._columns.some(c => c.primary && !c.hidden);
 		if (!hasPrimaryColumn) {
-			Zotero.debug(`VirtualizedTable: Missing primary column, re-enabling the "title" column.`);
+			Trellis.debug(`VirtualizedTable: Missing primary column, re-enabling the "title" column.`);
 			this._columns.find(c => c.dataKey === 'title').hidden = false;
 		}
 		
@@ -2214,8 +2214,8 @@ function makeRowRenderer(getRowData) {
 					div.appendChild(renderCell(index, rowData[column.dataKey], column));
 				}
 				let columnName = column.label;
-				if (column.label in Zotero.Intl.strings) {
-					columnName = Zotero.getString(column.label);
+				if (column.label in Trellis.Intl.strings) {
+					columnName = Trellis.getString(column.label);
 				}
 				if (typeof rowData[column.dataKey] === "string") {
 					ariaLabel += `${columnName}: ${rowData[column.dataKey]} `;
@@ -2235,13 +2235,13 @@ function makeRowRenderer(getRowData) {
 }
 
 function formatColumnName(column) {
-	if (column.label in Zotero.Intl.strings) {
-		return Zotero.getString(column.label);
+	if (column.label in Trellis.Intl.strings) {
+		return Trellis.getString(column.label);
 	}
 	// Dotted keys (.properties) or hyphenated keys with 3+ segments (Fluent)
 	else if (/^[^\s]+\w\.\w[^\s]+$/.test(column.label) || /^\w+(-\w+){2,}$/.test(column.label)) {
 		try {
-			let labelString = Zotero.getString(column.label);
+			let labelString = Trellis.getString(column.label);
 			if (labelString !== column.label) {
 				return labelString;
 			}

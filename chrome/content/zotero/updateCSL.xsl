@@ -165,7 +165,7 @@
        addition to the type conditional, test with match="all" (the default
        attribute value) and carry additional conditionals are split into a
        nested conditional (an example of this case is given at
-       http://forums.zotero.org/discussion/11960/item-type-testing-in-csl-10-and-fallbacks/#Comment_58392
+       http://forums.trellis.org/discussion/11960/item-type-testing-in-csl-10-and-fallbacks/#Comment_58392
        ). -->
   <xsl:template match="cs:if|cs:else-if">
     <xsl:copy>
@@ -309,7 +309,7 @@
   <!-- * The text-case attribute can no longer be used on cs:name. In cases
          where text-case was used on cs:name, the attribute and its value are
          transferred to the "family" and "given" cs:name-part children.
-       * The Zotero and Mendeley CSL 0.8.1 processors ignored name-as-sort-order
+       * The Trellis and Mendeley CSL 0.8.1 processors ignored name-as-sort-order
          when sort-separator was not set. In CSL 1.0, name-as-sort-order always
          takes effect, with a default value of ", " for sort-separator. To
          correct for this change in behavior, the name-as-sort-order attribute

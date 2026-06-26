@@ -1,10 +1,10 @@
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 export function mergeItems(item, otherItems) {
-	Zotero.debug("Merging items");
+	Trellis.debug("Merging items");
 	
-	return Zotero.DB.executeTransaction(async function () {
-		Zotero.UndoHistory.stageAction(
+	return Trellis.DB.executeTransaction(async function () {
+		Trellis.UndoHistory.stageAction(
 			'undo-action-merge-items',
 			{ count: otherItems.length + 1 }
 		);
@@ -30,10 +30,10 @@ export function mergeItems(item, otherItems) {
 			// Move notes to master
 			var noteIDs = otherItem.getNotes(true);
 			for (let id of noteIDs) {
-				var note = await Zotero.Items.getAsync(id);
+				var note = await Trellis.Items.getAsync(id);
 				note.parentItemID = item.id;
-				Zotero.Notes.replaceItemKey(note, otherItem.key, item.key);
-				Zotero.Notes.replaceAllItemKeys(note, remapAttachmentKeys);
+				Trellis.Notes.replaceItemKey(note, otherItem.key, item.key);
+				Trellis.Notes.replaceAllItemKeys(note, remapAttachmentKeys);
 				toSave[note.id] = note;
 			}
 
@@ -74,7 +74,7 @@ export function mergeItems(item, otherItems) {
 
 		// Hack to remove master item from duplicates view without recalculating duplicates
 		// Pass force = true so observers will be notified before this transaction is committed
-		await Zotero.Notifier.trigger('removeDuplicatesMaster', 'item', item.id, null, true);
+		await Trellis.Notifier.trigger('removeDuplicatesMaster', 'item', item.id, null, true);
 
 		for (let item of Object.values(toSave)) {
 			await item.save();
@@ -83,7 +83,7 @@ export function mergeItems(item, otherItems) {
 }
 
 async function mergePDFAttachments(item, otherItems) {
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 
 	let remapAttachmentKeys = new Map();
 	let masterAttachmentHashes = await hashItem(item, 'bytes');
@@ -95,7 +95,7 @@ async function mergePDFAttachments(item, otherItems) {
 		let doMerge = async (fromAttachment, toAttachment) => {
 			mergedMasterAttachments.add(toAttachment.id);
 
-			await Zotero.Items.moveChildItems(
+			await Trellis.Items.moveChildItems(
 				fromAttachment,
 				toAttachment,
 				{
@@ -114,15 +114,15 @@ async function mergePDFAttachments(item, otherItems) {
 			remapAttachmentKeys.set(fromAttachment.key, toAttachment.key);
 
 			// Items can only have one replaced item predicate
-			if (!toAttachment.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate)) {
-				toAttachment.addRelation(Zotero.Relations.replacedItemPredicate,
-					Zotero.URI.getItemURI(fromAttachment));
+			if (!toAttachment.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate)) {
+				toAttachment.addRelation(Trellis.Relations.replacedItemPredicate,
+					Trellis.URI.getItemURI(fromAttachment));
 			}
 
 			await toAttachment.save();
 		};
 
-		for (let otherAttachment of await Zotero.Items.getAsync(otherItem.getAttachments(true))) {
+		for (let otherAttachment of await Trellis.Items.getAsync(otherItem.getAttachments(true))) {
 			if (!otherAttachment.isPDFAttachment()) {
 				continue;
 			}
@@ -154,16 +154,16 @@ async function mergePDFAttachments(item, otherItems) {
 			}
 
 			if (!masterAttachmentID || mergedMasterAttachments.has(masterAttachmentID)) {
-				Zotero.debug(`No unmerged match for attachment ${otherAttachment.key} in master item - moving`);
+				Trellis.debug(`No unmerged match for attachment ${otherAttachment.key} in master item - moving`);
 				otherAttachment.parentItemID = item.id;
 				await otherAttachment.save();
 				continue;
 			}
 
-			let masterAttachment = await Zotero.Items.getAsync(masterAttachmentID);
+			let masterAttachment = await Trellis.Items.getAsync(masterAttachmentID);
 
 			if (masterAttachment.attachmentContentType !== otherAttachment.attachmentContentType) {
-				Zotero.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
+				Trellis.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
 					+ 'but content types differ - keeping both');
 				otherAttachment.parentItemID = item.id;
 				await otherAttachment.save();
@@ -172,7 +172,7 @@ async function mergePDFAttachments(item, otherItems) {
 
 			if (!((masterAttachment.isImportedAttachment() && otherAttachment.isImportedAttachment())
 				|| (masterAttachment.isLinkedFileAttachment() && otherAttachment.isLinkedFileAttachment()))) {
-				Zotero.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
+				Trellis.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
 					+ 'but link modes differ - keeping both');
 				otherAttachment.parentItemID = item.id;
 				await otherAttachment.save();
@@ -182,21 +182,21 @@ async function mergePDFAttachments(item, otherItems) {
 			// Check whether master and other have embedded annotations
 			// Error -> be safe and assume the item does have embedded annotations
 			let logAndBeSafe = (e) => {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				return true;
 			};
 
 			if (await otherAttachment.hasEmbeddedAnnotations().catch(logAndBeSafe)) {
 				// Other yes, master yes -> keep both
 				if (await masterAttachment.hasEmbeddedAnnotations().catch(logAndBeSafe)) {
-					Zotero.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
+					Trellis.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
 						+ 'but both have embedded annotations - keeping both');
 					otherAttachment.parentItemID = item.id;
 					await otherAttachment.save();
 				}
 				// Other yes, master no -> keep other
 				else {
-					Zotero.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
+					Trellis.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key}, `
 						+ 'but other has embedded annotations - merging into other');
 					await doMerge(masterAttachment, otherAttachment);
 					otherAttachment.parentItemID = item.id;
@@ -207,7 +207,7 @@ async function mergePDFAttachments(item, otherItems) {
 			// Other no, master yes -> keep master
 			// Other no, master no -> keep master
 
-			Zotero.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key} - merging into master`);
+			Trellis.debug(`Master attachment ${masterAttachment.key} matches ${otherAttachment.key} - merging into master`);
 			await doMerge(otherAttachment, masterAttachment);
 		}
 	}
@@ -216,18 +216,18 @@ async function mergePDFAttachments(item, otherItems) {
 }
 
 async function mergeWebAttachments(item, otherItems) {
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 
-	let masterAttachments = (await Zotero.Items.getAsync(item.getAttachments()))
+	let masterAttachments = (await Trellis.Items.getAsync(item.getAttachments()))
 		.filter(attachment => attachment.isWebAttachment());
 	let masterAttachmentFilesExist = await Promise.all(masterAttachments.map(
-		attachment => attachment.attachmentLinkMode === Zotero.Attachments.LINK_MODE_LINKED_URL
+		attachment => attachment.attachmentLinkMode === Trellis.Attachments.LINK_MODE_LINKED_URL
 			|| attachment.fileExists()
 	));
 	masterAttachments = masterAttachments.filter((_, i) => masterAttachmentFilesExist[i]);
 
 	for (let otherItem of otherItems) {
-		for (let otherAttachment of await Zotero.Items.getAsync(otherItem.getAttachments(true))) {
+		for (let otherAttachment of await Trellis.Items.getAsync(otherItem.getAttachments(true))) {
 			if (!otherAttachment.isWebAttachment()) {
 				continue;
 			}
@@ -249,7 +249,7 @@ async function mergeWebAttachments(item, otherItems) {
 			);
 
 			if (!masterAttachment) {
-				Zotero.debug(`No match for web attachment ${otherAttachment.key} in master item - moving`);
+				Trellis.debug(`No match for web attachment ${otherAttachment.key} in master item - moving`);
 				otherAttachment.parentItemID = item.id;
 				await otherAttachment.save();
 				continue;
@@ -259,8 +259,8 @@ async function mergeWebAttachments(item, otherItems) {
 			await moveRelations(otherAttachment, masterAttachment);
 			await otherAttachment.save();
 
-			masterAttachment.addRelation(Zotero.Relations.replacedItemPredicate,
-				Zotero.URI.getItemURI(otherAttachment));
+			masterAttachment.addRelation(Trellis.Relations.replacedItemPredicate,
+				Trellis.URI.getItemURI(otherAttachment));
 			await masterAttachment.save();
 
 			// Don't match with this attachment again
@@ -270,10 +270,10 @@ async function mergeWebAttachments(item, otherItems) {
 }
 
 async function mergeOtherAttachments(item, otherItems) {
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 
 	for (let otherItem of otherItems) {
-		for (let otherAttachment of await Zotero.Items.getAsync(otherItem.getAttachments(true))) {
+		for (let otherAttachment of await Trellis.Items.getAsync(otherItem.getAttachments(true))) {
 			if (otherAttachment.isPDFAttachment() || otherAttachment.isWebAttachment()) {
 				continue;
 			}
@@ -288,7 +288,7 @@ async function mergeOtherAttachments(item, otherItems) {
  * Hash each attachment of the provided item. Return a map from hashes to
  * attachment IDs.
  *
- * @param {Zotero.Item} item
+ * @param {Trellis.Item} item
  * @param {String} hashType 'bytes' or 'text'
  * @return {Promise<Map<String, String>>}
  */
@@ -297,7 +297,7 @@ async function hashItem(item, hashType) {
 		throw new Error('Invalid hash type');
 	}
 
-	let attachments = (await Zotero.Items.getAsync(item.getAttachments()))
+	let attachments = (await Trellis.Items.getAsync(item.getAttachments()))
 		.filter(attachment => attachment.isFileAttachment());
 	let hashes = new Map();
 	await Promise.all(attachments.map(async (attachment) => {
@@ -314,7 +314,7 @@ async function hashItem(item, hashType) {
 
 /**
  * Hash an attachment by the most common words in its text.
- * @param {Zotero.Item} attachment
+ * @param {Trellis.Item} attachment
  * @return {Promise<String>}
  */
 // Exported for testing
@@ -325,14 +325,14 @@ export async function hashAttachmentText(attachment) {
 	}
 	catch (e) {
 		if (e.name === 'NotFoundError') {
-			Zotero.debug('hashAttachmentText: Attachment not found');
+			Trellis.debug('hashAttachmentText: Attachment not found');
 			return null;
 		}
-		Zotero.logError(e);
+		Trellis.logError(e);
 		return null;
 	}
 	if (fileInfo.size > 5e8) {
-		Zotero.debug('hashAttachmentText: Attachment too large');
+		Trellis.debug('hashAttachmentText: Attachment too large');
 		return null;
 	}
 
@@ -341,19 +341,19 @@ export async function hashAttachmentText(attachment) {
 		text = await attachment.attachmentText;
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 	}
 	if (!text) {
-		Zotero.debug('hashAttachmentText: Attachment has no text');
+		Trellis.debug('hashAttachmentText: Attachment has no text');
 		return null;
 	}
 
 	let mostCommonWords = getMostCommonWords(text, 50);
 	if (mostCommonWords.length < 10) {
-		Zotero.debug('hashAttachmentText: Not enough unique words');
+		Trellis.debug('hashAttachmentText: Not enough unique words');
 		return null;
 	}
-	return Zotero.Utilities.Internal.md5(mostCommonWords.sort().join(' '));
+	return Trellis.Utilities.Internal.md5(mostCommonWords.sort().join(' '));
 }
 
 /**
@@ -396,7 +396,7 @@ function getMostCommonWords(s, n) {
 
 	// Break ties in locale order.
 	return [...freqs.keys()]
-		.sort((a, b) => (freqs.get(b) - freqs.get(a)) || Zotero.localeCompare(a, b))
+		.sort((a, b) => (freqs.get(b) - freqs.get(a)) || Trellis.localeCompare(a, b))
 		.slice(0, n);
 }
 
@@ -407,17 +407,17 @@ function getMostCommonWords(s, n) {
  * Requires a transaction.
  */
 async function moveEmbeddedNote(fromItem, toItem) {
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 
 	if (fromItem.getNote()) {
 		let noteItem = toItem;
 		if (toItem.getNote()) {
-			noteItem = new Zotero.Item('note');
+			noteItem = new Trellis.Item('note');
 			noteItem.parentItemID = toItem.parentItemID;
 		}
 		noteItem.setNote(fromItem.getNote());
 		fromItem.setNote('');
-		Zotero.Notes.replaceItemKey(noteItem, fromItem.key, toItem.key);
+		Trellis.Notes.replaceItemKey(noteItem, fromItem.key, toItem.key);
 		await noteItem.save();
 	}
 }
@@ -426,16 +426,16 @@ async function moveEmbeddedNote(fromItem, toItem) {
  * Move fromItem's relations to toItem as part of a merge.
  * Requires a transaction.
  *
- * @param {Zotero.Item} fromItem
- * @param {Zotero.Item} toItem
+ * @param {Trellis.Item} fromItem
+ * @param {Trellis.Item} toItem
  * @return {Promise}
  */
 async function moveRelations(fromItem, toItem) {
-	Zotero.DB.requireTransaction();
+	Trellis.DB.requireTransaction();
 
-	let replPred = Zotero.Relations.replacedItemPredicate;
-	let fromURI = Zotero.URI.getItemURI(fromItem);
-	let toURI = Zotero.URI.getItemURI(toItem);
+	let replPred = Trellis.Relations.replacedItemPredicate;
+	let fromURI = Trellis.URI.getItemURI(fromItem);
+	let toURI = Trellis.URI.getItemURI(toItem);
 
 	// Add relations to toItem
 	let oldRelations = fromItem.getRelations();
@@ -457,7 +457,7 @@ async function moveRelations(fromItem, toItem) {
 
 	// Update relations on items in the library that point to the other item
 	// to point to the master instead
-	let rels = await Zotero.Relations.getByObject('item', fromURI);
+	let rels = await Trellis.Relations.getByObject('item', fromURI);
 	for (let rel of rels) {
 		// Skip merge-tracking relations, which are dealt with above
 		if (rel.predicate == replPred) continue;

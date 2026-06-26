@@ -3,22 +3,22 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -26,7 +26,7 @@
 var { HttpServer } = ChromeUtils.importESModule("chrome://remote/content/server/httpd.sys.mjs");
 var { NetUtil } = ChromeUtils.importESModule("resource://gre/modules/NetUtil.sys.mjs");
 
-Zotero.Server = new function () {
+Trellis.Server = new function () {
 	var _onlineObserverRegistered, serv;
 	this.responseCodes = {
 		200:"OK",
@@ -59,32 +59,32 @@ Zotero.Server = new function () {
 	 */
 	this.init = function (port) {
 		if (serv) {
-			Zotero.debug("Already listening on port " + serv.port);
+			Trellis.debug("Already listening on port " + serv.port);
 			return;
 		}
 		
-		port = port || Zotero.Prefs.get('httpServer.port');
+		port = port || Trellis.Prefs.get('httpServer.port');
 		try {
 			serv = new HttpServer();
 			serv.registerPrefixHandler('/', this.handleRequest)
 			serv.start(port);
 			
-			Zotero.debug(`HTTP server listening on 127.0.0.1:${serv.identity.primaryPort}`);
+			Trellis.debug(`HTTP server listening on 127.0.0.1:${serv.identity.primaryPort}`);
 				
-			// Close port on Zotero shutdown (doesn't apply to translation-server)
-			if (Zotero.addShutdownListener) {
-				Zotero.addShutdownListener(this.close.bind(this));
+			// Close port on Trellis shutdown (doesn't apply to translation-server)
+			if (Trellis.addShutdownListener) {
+				Trellis.addShutdownListener(this.close.bind(this));
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.debug("Not initializing HTTP server");
+			Trellis.logError(e);
+			Trellis.debug("Not initializing HTTP server");
 			serv = undefined;
 		}
 	};
 	
 	this.handleRequest = function (request, response) {
-		let requestHandler = new Zotero.Server.RequestHandler(request, response);
+		let requestHandler = new Trellis.Server.RequestHandler(request, response);
 		return requestHandler.handleRequest();
 	}
 	
@@ -114,7 +114,7 @@ Zotero.Server = new function () {
 
 
 // A proxy headers class to make header retrieval case-insensitive
-Zotero.Server.Headers = class {
+Trellis.Server.Headers = class {
 	constructor() {
 		return new Proxy(this, {
 			get(target, name, receiver) {
@@ -137,9 +137,9 @@ Zotero.Server.Headers = class {
 };
 
 
-Zotero.Server.networkStreamToString = function (stream, length) {
+Trellis.Server.networkStreamToString = function (stream, length) {
 	let data = NetUtil.readInputStreamToString(stream, length);
-	return Zotero.Utilities.Internal.decodeUTF8(data);
+	return Trellis.Utilities.Internal.decodeUTF8(data);
 };
 
 /**
@@ -149,7 +149,7 @@ Zotero.Server.networkStreamToString = function (stream, length) {
  * @param {String} value - Header value to decode
  * @return {String} Decoded header value
  */
-Zotero.Server.decodeRFC2047 = function (value) {
+Trellis.Server.decodeRFC2047 = function (value) {
 	// RFC 2047-decode the result.
 	// Process encoded words anywhere in the header value, as per RFC 2047 section 5
 	// which allows ordinary ASCII text and encoded words to appear together.
@@ -180,7 +180,7 @@ Zotero.Server.decodeRFC2047 = function (value) {
 			}
 			// TextDecoder constructor threw - unrecognized encoding.
 			catch {
-				Zotero.debug(`decodeRFC2047: Unrecognized encoding: ${encoding}`, 1);
+				Trellis.debug(`decodeRFC2047: Unrecognized encoding: ${encoding}`, 1);
 			}
 		}
 		return value;
@@ -208,14 +208,14 @@ Zotero.Server.decodeRFC2047 = function (value) {
 				text = atob(text);
 			}
 			catch {
-				Zotero.debug(`decodeRFC2047: Invalid base64: ${text}`, 1);
+				Trellis.debug(`decodeRFC2047: Invalid base64: ${text}`, 1);
 			}
 			return textDecode(charset, text);
 		}
 	);
 };
 
-Zotero.Server.RequestHandler = function (request, response) {
+Trellis.Server.RequestHandler = function (request, response) {
 	this.body = "";
 	this.bodyLength = 0;
 	
@@ -227,7 +227,7 @@ Zotero.Server.RequestHandler = function (request, response) {
 /*
  * checks to see if Content-Length bytes of body have been read and, if so, processes the body
  */
-Zotero.Server.RequestHandler.prototype._bodyData = function () {
+Trellis.Server.RequestHandler.prototype._bodyData = function () {
 	const PLAIN_TEXT_CONTENT_TYPES = new Set([
 		'text/plain',
 		'application/json',
@@ -237,7 +237,7 @@ Zotero.Server.RequestHandler.prototype._bodyData = function () {
 	let data = null;
 	if (this.bodyLength > 0) {
 		if (PLAIN_TEXT_CONTENT_TYPES.has(this.contentType)) {
-			this.body = data = Zotero.Server.networkStreamToString(this.request.bodyInputStream, this.bodyLength);
+			this.body = data = Trellis.Server.networkStreamToString(this.request.bodyInputStream, this.bodyLength);
 		}
 		else if (this.contentType === 'multipart/form-data') {
 			data = NetUtil.readInputStreamToString(this.request.bodyInputStream, this.bodyLength);
@@ -256,7 +256,7 @@ Zotero.Server.RequestHandler.prototype._bodyData = function () {
 		if (this.body != '{}'
 				&& PLAIN_TEXT_CONTENT_TYPES.has(this.contentType)
 				&& !noLogEndpoints.includes(this.pathname)) {
-			Zotero.debug(Zotero.Utilities.ellipsize(this.body, 1000, false, true), 5);
+			Trellis.debug(Trellis.Utilities.ellipsize(this.body, 1000, false, true), 5);
 		}
 	}
 	// handle envelope
@@ -267,15 +267,15 @@ Zotero.Server.RequestHandler.prototype._bodyData = function () {
 /**
  * Generates the response to an HTTP request
  */
-Zotero.Server.RequestHandler.prototype._generateResponse = function (status, contentTypeOrHeaders, body) {
-	var response = "HTTP/1.0 "+status+" "+Zotero.Server.responseCodes[status]+"\r\n";
-	response += "X-Zotero-Version: "+Zotero.version+"\r\n";
-	response += "X-Zotero-Connector-API-Version: "+CONNECTOR_API_VERSION+"\r\n";
+Trellis.Server.RequestHandler.prototype._generateResponse = function (status, contentTypeOrHeaders, body) {
+	var response = "HTTP/1.0 "+status+" "+Trellis.Server.responseCodes[status]+"\r\n";
+	response += "X-Trellis-Version: "+Trellis.version+"\r\n";
+	response += "X-Trellis-Connector-API-Version: "+CONNECTOR_API_VERSION+"\r\n";
 		
-	if (this.origin === ZOTERO_CONFIG.BOOKMARKLET_ORIGIN) {
+	if (this.origin === TRELLIS_CONFIG.BOOKMARKLET_ORIGIN) {
 		response += "Access-Control-Allow-Origin: " + this.origin + "\r\n";
 		response += "Access-Control-Allow-Methods: POST, GET, OPTIONS\r\n";
-		response += "Access-Control-Allow-Headers: Content-Type,X-Zotero-Connector-API-Version,X-Zotero-Version\r\n";
+		response += "Access-Control-Allow-Headers: Content-Type,X-Trellis-Connector-API-Version,X-Trellis-Version\r\n";
 	}
 	
 	if (contentTypeOrHeaders) {
@@ -298,7 +298,7 @@ Zotero.Server.RequestHandler.prototype._generateResponse = function (status, con
 	return response;
 }
 
-Zotero.Server.RequestHandler.prototype.handleRequest = async function () {
+Trellis.Server.RequestHandler.prototype.handleRequest = async function () {
 	const request = this.request;
 	const response = this.response;
 	// Tell httpd that we will be constructing our own response
@@ -307,15 +307,15 @@ Zotero.Server.RequestHandler.prototype.handleRequest = async function () {
 
 	let requestDebug = `${request.method} ${request.path} HTTP/${request.httpVersion}\n`
 	// Parse headers into this.headers with lowercase names
-	this.headers = new Zotero.Server.Headers();
+	this.headers = new Trellis.Server.Headers();
 	for (let { data: name } of request.headers) {
 		let headerValue = request.getHeader(name);
 		requestDebug += `${name}: ${headerValue}\n`;
 		// Decode RFC 2047 encoded header values
-		this.headers[name.toLowerCase()] = Zotero.Server.decodeRFC2047(headerValue);
+		this.headers[name.toLowerCase()] = Trellis.Server.decodeRFC2047(headerValue);
 	}
 	
-	Zotero.debug(requestDebug, 5);
+	Trellis.debug(requestDebug, 5);
 	
 	// Make sure the Host header is set to localhost or 127.0.0.1 to prevent DNS rebinding attacks
 	let host = this.headers.host;
@@ -339,12 +339,12 @@ Zotero.Server.RequestHandler.prototype.handleRequest = async function () {
 	}
 	
 	this.pathParams = {};
-	if (Zotero.Server.Endpoints[this.pathname]) {
-		this.endpoint = Zotero.Server.Endpoints[this.pathname];
+	if (Trellis.Server.Endpoints[this.pathname]) {
+		this.endpoint = Trellis.Server.Endpoints[this.pathname];
 	}
 	else {
-		let router = new Zotero.Router(this.pathParams);
-		for (let [potentialTemplate, endpoint] of Object.entries(Zotero.Server.Endpoints)) {
+		let router = new Trellis.Router(this.pathParams);
+		for (let [potentialTemplate, endpoint] of Object.entries(Trellis.Server.Endpoints)) {
 			if (!potentialTemplate.includes(':')) continue;
 			router.add(potentialTemplate, () => {
 				this.pathParams._endpoint = endpoint;
@@ -389,7 +389,7 @@ Zotero.Server.RequestHandler.prototype.handleRequest = async function () {
  *
  * Note: postData contains raw bytes and should be decoded before use
  */
-Zotero.Server.RequestHandler.prototype._processEndpoint = async function (method, postData) {
+Trellis.Server.RequestHandler.prototype._processEndpoint = async function (method, postData) {
 	try {
 		var endpoint = new this.endpoint;
 		
@@ -407,14 +407,14 @@ Zotero.Server.RequestHandler.prototype._processEndpoint = async function (method
 				// Allow endpoints to explicitly opt into allowing browser requests
 				// if they really want to
 				&& !endpoint.allowRequestsFromUnsafeWebContent
-				&& !this.headers['x-zotero-connector-api-version']
-				&& !this.headers['zotero-allowed-request']
+				&& !this.headers['x-trellis-connector-api-version']
+				&& !this.headers['trellis-allowed-request']
 				// Allow browser requests to test endpoints
 				&& !this.pathname.startsWith('/test/')
 				// Allow browser requests to /connector/ping as long as they come
 				// from navigation, not XHR/fetch()/resource loading
 				&& !(this.pathname === '/connector/ping' && this.headers['sec-fetch-mode'] === 'navigate')) {
-			Zotero.debug('Preventing request from browser');
+			Trellis.debug('Preventing request from browser');
 			this._cancelResponse();
 			return;
 		}
@@ -440,7 +440,7 @@ Zotero.Server.RequestHandler.prototype._processEndpoint = async function (method
 				}
 			}
 			else if (this.contentType === "application/x-www-form-urlencoded") {
-				data = Zotero.Server.decodeQueryString(postData);
+				data = Trellis.Server.decodeQueryString(postData);
 			}
 			else if (postData) {
 				data = postData;
@@ -501,7 +501,7 @@ Zotero.Server.RequestHandler.prototype._processEndpoint = async function (method
 			endpoint.init(url, data, sendResponseCallback);
 		}
 	} catch(e) {
-		Zotero.debug(e);
+		Trellis.debug(e);
 		this._requestFinished(this._generateResponse(500), "text/plain", "An error occurred\n");
 		throw e;
 	}
@@ -510,9 +510,9 @@ Zotero.Server.RequestHandler.prototype._processEndpoint = async function (method
 /*
  * returns HTTP data from a request
  */
-Zotero.Server.RequestHandler.prototype._requestFinished = function (responseBody, options) {
+Trellis.Server.RequestHandler.prototype._requestFinished = function (responseBody, options) {
 	if (this._responseSent) {
-		Zotero.debug("Request already finished; not sending another response");
+		Trellis.debug("Request already finished; not sending another response");
 		return;
 	}
 	this._responseSent = true;
@@ -526,7 +526,7 @@ Zotero.Server.RequestHandler.prototype._requestFinished = function (responseBody
 		intlStream.init(this.response.bodyOutputStream, "UTF-8", 1024, "?".charCodeAt(0));
 		
 		// Filter logged response
-		if (Zotero.Debug.enabled) {
+		if (Trellis.Debug.enabled) {
 			let maxLogLength = 2000;
 			let str = responseBody;
 			if (options && options.logFilter) {
@@ -535,7 +535,7 @@ Zotero.Server.RequestHandler.prototype._requestFinished = function (responseBody
 			if (str.length > maxLogLength) {
 				str = str.substr(0, maxLogLength) + `\u2026 (${responseBody.length} chars)`;
 			}
-			Zotero.debug(str, 5);
+			Trellis.debug(str, 5);
 		}
 		
 		intlStream.writeString(responseBody);
@@ -545,23 +545,23 @@ Zotero.Server.RequestHandler.prototype._requestFinished = function (responseBody
 	}
 };
 
-Zotero.Server.RequestHandler.prototype._cancelResponse = function () {
+Trellis.Server.RequestHandler.prototype._cancelResponse = function () {
 	// Close the connection without sending anything back, so web content can't
-	// get any information about whether Zotero is running.
+	// get any information about whether Trellis is running.
 	//
 	// This causes fetch() to throw a TypeError with the message
 	// "NetworkError when attempting to fetch resource.", exactly the same as
 	// when no server is running on our port.
 	if (this._responseSent) {
-		Zotero.debug('Request already finished; not cancelling');
+		Trellis.debug('Request already finished; not cancelling');
 		return;
 	}
-	Zotero.debug('Cancelling without sending a response');
+	Trellis.debug('Cancelling without sending a response');
 	this._responseSent = true;
 	this.response.finish();
 };
 
-Zotero.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
+Trellis.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
 	const contentDispositionRe = /^Content-Disposition:\s*(.*)$/i;
 	const contentTypeRe = /^Content-Type:\s*(.*)$/i
 
@@ -569,7 +569,7 @@ Zotero.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
 	
 	let boundary = /boundary=([^\s]*)/i.exec(this.headers['content-type']);
 	if (!boundary) {
-		Zotero.debug('Invalid boundary: ' + this.headers['content-type'], 1);
+		Trellis.debug('Invalid boundary: ' + this.headers['content-type'], 1);
 		return this._requestFinished(this._generateResponse(400, "text/plain", "Invalid multipart/form-data provided\n"));
 	}
 	boundary = '--' + boundary[1];
@@ -590,7 +590,7 @@ Zotero.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
 			fieldData.body = field.slice(windowsHeaderBoundary+4).trim();
 		} else {
 			// Only log first 200 characters in case the part is large
-			Zotero.debug('Malformed multipart/form-data body: ' + field.substr(0, 200), 1);
+			Trellis.debug('Malformed multipart/form-data body: ' + field.substr(0, 200), 1);
 			throw new Error('Malformed multipart/form-data body');
 		}
 		
@@ -616,7 +616,7 @@ Zotero.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
 						let nameVal = param.trim().split('=');
 						// Apply RFC 2047 decoding to parameter values
 						let paramValue = nameVal[1].trim().slice(1, -1);
-						fieldData.params[nameVal[0]] = Zotero.Server.decodeRFC2047(paramValue);
+						fieldData.params[nameVal[0]] = Trellis.Server.decodeRFC2047(paramValue);
 					}
 				}
 			}
@@ -626,7 +626,7 @@ Zotero.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
 				let contentType = header.split(':');
 				if (contentType.length > 1) {
 					// Apply RFC 2047 decoding to content type
-					fieldData.params.contentType = Zotero.Server.decodeRFC2047(contentType[1].trim());
+					fieldData.params.contentType = Trellis.Server.decodeRFC2047(contentType[1].trim());
 				}
 			}
 		}
@@ -649,4 +649,4 @@ Zotero.Server.RequestHandler.prototype._decodeMultipartData = function (data) {
  *
  * See connector/server_connector.js for examples
  */
-Zotero.Server.Endpoints = {}
+Trellis.Server.Endpoints = {}

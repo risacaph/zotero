@@ -7,7 +7,7 @@
 <script type="text/javascript" src="locale.js"></script>
 <script type="text/javascript">
 	tinymce.init({
-		body_id: "zotero-tinymce-note",
+		body_id: "trellis-tinymce-note",
 		content_css: "css/note-content.css",
 		
 		browser_spellcheck: true,
@@ -198,22 +198,22 @@
 		},
 		
 		init_instance_callback: function (editor) {
-			zoteroInit(editor);
+			trellisInit(editor);
 			
 			['Change', 'KeyDown', 'KeyPress', 'Undo', 'Redo'].forEach(eventName =>
-				editor.on(eventName, event => zoteroHandleEvent(event))
+				editor.on(eventName, event => trellisHandleEvent(event))
 			);
 			
 			["Cut", "Copy", "Paste"].forEach(function (command) {
 				let cmd = command;
 				editor.addCommand(command, function (ui, value) {
-					zoteroExecCommand(editor.getDoc(), cmd, ui, value);
+					trellisExecCommand(editor.getDoc(), cmd, ui, value);
 				});
 			});
 			
-			["ZoteroLinkClick"].forEach(function (command) {
+			["TrellisLinkClick"].forEach(function (command) {
 				editor.addCommand(command, function (ui, value) {
-					zoteroHandleEvent({
+					trellisHandleEvent({
 						type: command,
 						value
 					});

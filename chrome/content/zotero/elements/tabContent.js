@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -36,7 +36,7 @@
 		}
 
 		get tabData() {
-			return Zotero_Tabs._getTab(this.tabID);
+			return Trellis_Tabs._getTab(this.tabID);
 		}
 
 		/**
@@ -44,7 +44,7 @@
 		 * @description The width of the sidebar in pixels.
 		 */
 		get sidebarWidth() {
-			let state = Zotero_Tabs.getSidebarState(this.tabData.type);
+			let state = Trellis_Tabs.getSidebarState(this.tabData.type);
 			if (state) {
 				return state.width || 0;
 			}
@@ -52,7 +52,7 @@
 		}
 
 		set sidebarWidth(width) {
-			Zotero_Tabs.updateSidebarLayout({ width });
+			Trellis_Tabs.updateSidebarLayout({ width });
 		}
 
 		async init() {
@@ -63,7 +63,7 @@
 
 		/**
 		 * Notify the tab content that the tab has been selected or deselected.
-		 * Triggered by the Zotero_Tabs when a tab is selected or deselected.
+		 * Triggered by the Trellis_Tabs when a tab is selected or deselected.
 		 * @param {boolean} selected - Whether this tab is currently selected.
 		 */
 		onTabSelectionChanged(selected) {

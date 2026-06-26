@@ -52,7 +52,7 @@ Copyright (c) 2009-2019 Frank Bennett
 
 // Potential skip words:
 // under; along; out; between; among; outside; inside; amid; amidst; against; toward; towards.
-// See https://forums.zotero.org/discussion/30484/?Focus=159613#Comment_159613
+// See https://forums.trellis.org/discussion/30484/?Focus=159613#Comment_159613
 
 'use strict';
 
@@ -4278,7 +4278,7 @@ CSL.Engine.prototype.retrieveItem = function (id) {
         this.opt.development_extensions.normalize_lang_keys_to_lowercase = 100;
     }
 
-    //Zotero.debug("XXX === ITERATION " + CSL.ITERATION + " "+ id +" ===");
+    //Trellis.debug("XXX === ITERATION " + CSL.ITERATION + " "+ id +" ===");
     CSL.ITERATION += 1;
 
     Item = JSON.parse(JSON.stringify(this.sys.retrieveItem("" + id)));
@@ -4785,7 +4785,7 @@ CSL.Doppeler = function(rexStr, stringMangler) {
             }
             var tag = match[i];
             if (tag === "\'" && split[i+1].length > 0) {
-                // Fixes https://forums.zotero.org/discussion/comment/294317
+                // Fixes https://forums.trellis.org/discussion/comment/294317
                 split[i+1] = match[i] + split[i+1];
                 match[i] = "";
             }
@@ -5332,7 +5332,7 @@ CSL.Output.Queue.prototype.append = function (str, tokname, notSerious, ignorePr
     if ("string" === typeof str && str.length) {
 
         // Source (;?!»«): http://en.wikipedia.org/wiki/Space_(punctuation)#Breaking_and_non-breaking_spaces
-        // Source (:): http://forums.zotero.org/discussion/4933/localized-quotes/#Comment_88384
+        // Source (:): http://forums.trellis.org/discussion/4933/localized-quotes/#Comment_88384
         str = str.replace(/ ([:;?!\u00bb])/g, "\u202f$1").replace(/\u00ab /g, "\u00ab\u202f");
 
         this.last_char_rendered = str.slice(-1);
@@ -6215,7 +6215,7 @@ CSL.Output.Queue.adjust = function (punctInQuote) {
                     // If we have decorations, drill down to see if there are quotes below.
                     // If so, we allow migration anyway.
                     // Original discussion is here:
-                    // https://forums.zotero.org/discussion/37091/citeproc-bug-punctuation-in-quotes/
+                    // https://forums.trellis.org/discussion/37091/citeproc-bug-punctuation-in-quotes/
                     var parentChar = parentStrings.suffix.slice(0, 1);
 
                     // Hmm.
@@ -7350,7 +7350,7 @@ CSL.Engine.prototype.processCitationCluster = function (citation, citationsPre, 
                 }
                 // Set the following:
                 //
-                // (1) position as required (as per current Zotero)
+                // (1) position as required (as per current Trellis)
                 // (2) first-reference-note-number as required (on onecitation item)
                 // (3) near-note as required (on onecitation item, according to
                 //     state.opt["near-note-distance"] parameter)
@@ -13472,7 +13472,7 @@ CSL.NameOutput.prototype._renderInstitutionName = function (v, name, slot, j) {
 			secondary = this.fixupInstitution(secondary, v, j);
         }
 	}
-    //Zotero.debug("XXX [2] secondary: "+secondary["long"].literal+", slot.secondary: "+slot.secondary);
+    //Trellis.debug("XXX [2] secondary: "+secondary["long"].literal+", slot.secondary: "+slot.secondary);
 	tertiary = false;
 	if (slot.tertiary) {
         res = this.getName(name, slot.tertiary, false, usedOrig);
@@ -13878,7 +13878,7 @@ CSL.NameOutput.prototype._renderOnePersonalName = function (value, pos, i, j) {
         }
 
         // XXX Needs a more robust solution than this
-        // XXX See https://forums.zotero.org/discussion/30974/any-idea-why-an-a-author-comes-last-in-the-bibliography/#Item_30
+        // XXX See https://forums.trellis.org/discussion/30974/any-idea-why-an-a-author-comes-last-in-the-bibliography/#Item_30
 
         //if (["always", "display-and-sort"].indexOf(this.state.opt["demote-non-dropping-particle"]) > -1 && !has_hyphenated_non_dropping_particle) {
         if (["always", "display-and-sort"].indexOf(this.state.opt["demote-non-dropping-particle"]) > -1) {
@@ -15035,7 +15035,7 @@ CSL.Node.names = {
                 if (!CSL.STARTSWITH_ROMANESQUE_REGEXP.test(this.etal_term)) {
                     // Not sure what the correct treatment is here, but we should not suppress
                     // a comma-space.
-                    // https://forums.zotero.org/discussion/76679/delimiter-precedes-et-al-always-dose-not-work-in-locale-zh-cn
+                    // https://forums.trellis.org/discussion/76679/delimiter-precedes-et-al-always-dose-not-work-in-locale-zh-cn
                     if (this.etal_prefix_single === " ") {
                         this.etal_prefix_single = "";
                     }
@@ -15111,7 +15111,7 @@ CSL.Node.names = {
                 //
                 // This was enough to fix the issue reported here:
                 //
-                //   http://forums.zotero.org/discussion/25223/citeproc-bug-substitute-doesnt-work-correctly-for-title-macro/
+                //   http://forums.trellis.org/discussion/25223/citeproc-bug-substitute-doesnt-work-correctly-for-title-macro/
                 //
                 // The remainder of the changes applied in the same patch
                 // relate to a label assignments, which were found to be
@@ -18350,7 +18350,7 @@ CSL.Transform = function (state) {
                 secondary_tok = res.token;
                 if (family_var && !res.found_variant_ok) {
                     if (secondary) {
-                        // The abbreviate() function could use a cleanup, after Zotero correct to use title-short
+                        // The abbreviate() function could use a cleanup, after Trellis correct to use title-short
                         secondary = abbreviate(state, secondary_tok, Item, false, secondary, family_var, true);
                     }
                 }
@@ -18363,7 +18363,7 @@ CSL.Transform = function (state) {
                 tertiary_tok = res.token;
                 if (family_var && !res.found_variant_ok) {
                     if (tertiary) {
-                        // The abbreviate() function could use a cleanup, after Zotero correct to use title-short
+                        // The abbreviate() function could use a cleanup, after Trellis correct to use title-short
                         tertiary = abbreviate(state, tertiary_tok, Item, false, tertiary, family_var, true);
                     }
                 }
@@ -19091,7 +19091,7 @@ CSL.Util.Names.unInitialize = function (state, name) {
         //    && namelist[i] !== namelist[i].toUpperCase()) {
 
             // More or less like this, to address the following fault report:
-            // http://forums.zotero.org/discussion/17610/apsa-problems-with-capitalization-of-mc-mac-etc/
+            // http://forums.trellis.org/discussion/17610/apsa-problems-with-capitalization-of-mc-mac-etc/
 
             // Leaving the name string untouched because name capitalization is varied and wonderful.
             // https://github.com/Juris-M/citeproc-js/issues/43
@@ -19901,7 +19901,7 @@ CSL.Util.substituteEnd = function (state, target) {
             }
             // The logic of these two is not obvious. The effect is to enable placeholder substitution
             // on a text macro name substitution, without printing both the text macro AND the placeholder.
-            // See https://forums.zotero.org/discussion/comment/350407
+            // See https://forums.trellis.org/discussion/comment/350407
             if (this.variables_real && substitution_name === "names") {
                 return;
             }
@@ -22534,7 +22534,7 @@ CSL.Output.Formats.prototype.rtf = {
 
 /*
 
-    This does not seem to work in Zotero plugins. For some reason the scope of the link does not
+    This does not seem to work in Trellis plugins. For some reason the scope of the link does not
     close when interpreted by the LibreOffice. Perhaps this creates a field within a field,
     and that is not allowed?
 

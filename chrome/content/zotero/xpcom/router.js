@@ -1,22 +1,22 @@
-const { PathParser } = ChromeUtils.importESModule("resource://zotero/pathparser.mjs");
-Zotero.Router = PathParser;
+const { PathParser } = ChromeUtils.importESModule("resource://trellis/pathparser.mjs");
+Trellis.Router = PathParser;
 
-Zotero.Router.Utilities = {
+Trellis.Router.Utilities = {
 	convertControllerToObjectType: function (params) {
 		if (params.controller !== undefined) {
-			params.objectType = Zotero.DataObjectUtilities.getObjectTypeSingular(params.controller);
+			params.objectType = Trellis.DataObjectUtilities.getObjectTypeSingular(params.controller);
 			delete params.controller;
 		}
 	}
 };
 
 
-Zotero.Router.InvalidPathException = function (path) {
+Trellis.Router.InvalidPathException = function (path) {
 	this.path = path;
 }
 
 
-Zotero.Router.InvalidPathException.prototype = {
+Trellis.Router.InvalidPathException.prototype = {
 	name: "InvalidPathException",
 	toString: function () {
 		return "Path '" + this.path + "' could not be parsed";

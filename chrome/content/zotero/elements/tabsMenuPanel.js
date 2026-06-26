@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -32,16 +32,16 @@
 	const XULPanelElement = customElements.get("panel");
 	class TabsMenuPanel extends XULElementMixin(XULPanelElement) {
 		content = MozXULElement.parseXULToFragment(`
-		<vbox id="zotero-tabs-menu-wrapper" class="focus-states-target">
-			<html:input id="zotero-tabs-menu-filter"
+		<vbox id="trellis-tabs-menu-wrapper" class="focus-states-target">
+			<html:input id="trellis-tabs-menu-filter"
 				tabindex="0"
 				role="combobox"
 				aria-expanded="true"
-				aria-owns="zotero-tabs-menu-list"
-				aria-controls="zotero-tabs-menu-list"
-				data-l10n-id="zotero-tabs-menu-filter"
+				aria-owns="trellis-tabs-menu-list"
+				aria-controls="trellis-tabs-menu-list"
+				data-l10n-id="trellis-tabs-menu-filter"
 			/>
-			<vbox id="zotero-tabs-menu-list"
+			<vbox id="trellis-tabs-menu-list"
 				role="listbox"
 				tooltip="html-tooltip"></vbox>
 		</vbox>
@@ -68,9 +68,9 @@
 		}
 
 		init() {
-			this._wrapper = this.querySelector("#zotero-tabs-menu-wrapper");
-			this._tabsList = this.querySelector("#zotero-tabs-menu-list");
-			this._filterInput = this.querySelector("#zotero-tabs-menu-filter");
+			this._wrapper = this.querySelector("#trellis-tabs-menu-wrapper");
+			this._tabsList = this.querySelector("#trellis-tabs-menu-list");
+			this._filterInput = this.querySelector("#trellis-tabs-menu-filter");
 
 			this.addEventListener("popupshowing", this._handleShowing);
 			this.addEventListener("popupshown", this._handleShown);
@@ -110,7 +110,7 @@
 
 			let selectedIndex = null;
 			let index = 0;
-			let validTabs = Zotero_Tabs._tabs.filter(
+			let validTabs = Trellis_Tabs._tabs.filter(
 				(tab) => {
 					// Filter tabs that do not match the filter
 					return tab.title.toLowerCase().includes(this._filterText);
@@ -118,7 +118,7 @@
 			);
 			let tabsCount = validTabs.length;
 
-			let selectedTabID = Zotero_Tabs.selectedID;
+			let selectedTabID = Trellis_Tabs.selectedID;
 			if (!options.ignorePreviousSelection) {
 				let prevTabID = this._tabsList.querySelector(".selected")?.dataset.tabId;
 				if (prevTabID && validTabs.some(tab => tab.id == prevTabID)) {
@@ -132,13 +132,13 @@
 			// If no tabs are open, show an empty row with a message
 			if (tabsCount === 0) {
 				let row = document.createElement('div');
-				row.id = "zotero-tabs-menu-row-empty";
+				row.id = "trellis-tabs-menu-row-empty";
 				row.classList.add("row");
 				row.dataset.l10nId = "tabs-menu-row-empty";
 				row.role = "option";
 
 				let tabName = document.createElement('div');
-				tabName.classList.add("zotero-tabs-menu-entry");
+				tabName.classList.add("trellis-tabs-menu-entry");
 				tabName.setAttribute('tabindex', "-1");
 				tabName.dataset.l10nId = "tabs-menu-row-empty-label";
 				row.appendChild(tabName);
@@ -153,7 +153,7 @@
 				// Top-level entry of the opened tabs array
 				let row = document.createElement('div');
 				row.classList = "row";
-				row.id = `zotero-tabs-menu-row-${tab.id}`;
+				row.id = `trellis-tabs-menu-row-${tab.id}`;
 				row.dataset.tabId = tab.id;
 				row.setAttribute("index", index);
 				row.setAttribute("draggable", true);
@@ -170,23 +170,23 @@
 				// Title of the tab
 				let tabName = document.createElement('div');
 				tabName.setAttribute('flex', '1');
-				tabName.setAttribute('class', 'zotero-tabs-menu-entry title');
+				tabName.setAttribute('class', 'trellis-tabs-menu-entry title');
 				tabName.setAttribute('tabindex', "-1");
 				tabName.setAttribute('aria-label', tab.title);
 				tabName.setAttribute('title', tab.title);
 
 				// Cross button to close a tab
 				let closeButton = document.createElement('div');
-				closeButton.className = "zotero-tabs-menu-entry close";
+				closeButton.className = "trellis-tabs-menu-entry close";
 				let closeIcon = document.createElement('span');
 				closeIcon.setAttribute('class', 'icon icon-css icon-x-8 icon-16');
 				closeButton.setAttribute('role', 'button');
-				closeButton.dataset.l10nId = 'zotero-tabs-menu-close-button';
+				closeButton.dataset.l10nId = 'trellis-tabs-menu-close-button';
 				closeButton.appendChild(closeIcon);
 				closeButton.addEventListener("click", this._handleCloseClick);
 
 				// Library tab has no close button
-				if (tab.id == "zotero-pane") {
+				if (tab.id == "trellis-pane") {
 					closeButton.hidden = true;
 				}
 
@@ -195,17 +195,17 @@
 				// Item type icon
 				let span = document.createElement("span");
 				span.className = "icon icon-css tab-icon";
-				if (tab.id == 'zotero-pane') {
+				if (tab.id == 'trellis-pane') {
 					// Determine which icon from the collection view rows to use (same as in _update())
-					let index = ZoteroPane.collectionsView?.selection?.focused;
-					if (typeof index !== 'undefined' && ZoteroPane.collectionsView.getRow(index)) {
-						let iconName = ZoteroPane.collectionsView.getIconName(index);
+					let index = TrellisPane.collectionsView?.selection?.focused;
+					if (typeof index !== 'undefined' && TrellisPane.collectionsView.getRow(index)) {
+						let iconName = TrellisPane.collectionsView.getIconName(index);
 						span.classList.add(`icon-${iconName}`);
 					}
 				}
 				else {
 					span.classList.add("icon-item-type");
-					let item = Zotero.Items.get(tab.data.itemID);
+					let item = Trellis.Items.get(tab.data.itemID);
 					let dataTypeLabel = item.getItemTypeIconName(true);
 					span.setAttribute("data-item-type", dataTypeLabel);
 				}
@@ -251,7 +251,7 @@
 		 */
 		createLabel(title) {
 			let desc = document.createElement('label');
-			let regex = new RegExp(`(${Zotero.Utilities.quotemeta(this._filterText)})`, 'gi');
+			let regex = new RegExp(`(${Trellis.Utilities.quotemeta(this._filterText)})`, 'gi');
 			let matches = title.matchAll(regex);
 	
 			let lastIndex = 0;
@@ -406,14 +406,14 @@
 
 			// On windows, getBoundingClientRect does not give us correct top and bottom values
 			// until popupshown, so instead use the anchor's position
-			if (Zotero.isWin) {
-				let anchor = document.getElementById("zotero-tb-tabs-menu");
+			if (Trellis.isWin) {
+				let anchor = document.getElementById("trellis-tb-tabs-menu");
 				let anchorRect = anchor.getBoundingClientRect();
 				absoluteTabsMenuTop = window.screenY - panelRect.height + anchorRect.top;
 				absoluteTabsMenuBottom = window.screenY + panelRect.height + anchorRect.bottom;
 			}
 			// screen.availTop is not always right on Linux, so ignore it
-			let availableTop = Zotero.isLinux ? 0 : screen.availTop;
+			let availableTop = Trellis.isLinux ? 0 : screen.availTop;
 
 			// Check if the end of the tabs menu is close to the edge of the screen
 			let atTopScreenEdge = valuesAreWithinMargin(absoluteTabsMenuTop, availableTop, gapBeforeScreenEdge);
@@ -423,10 +423,10 @@
 			// Limit max height of the menu to leave the specified gap till the screen's edge.
 			// Due to screen.availTop behavior on linux, the menu can go outside of what is supposed
 			// to be the available screen area, so special treatment for those edge cases.
-			if (atTopScreenEdge || (Zotero.isLinux && absoluteTabsMenuTop < 0)) {
+			if (atTopScreenEdge || (Trellis.isLinux && absoluteTabsMenuTop < 0)) {
 				gap = gapBeforeScreenEdge - (absoluteTabsMenuTop - availableTop);
 			}
-			if (atBottomScreenEdge || (Zotero.isLinux && absoluteTabsMenuBottom > screen.availHeight)) {
+			if (atBottomScreenEdge || (Trellis.isLinux && absoluteTabsMenuBottom > screen.availHeight)) {
 				gap = gapBeforeScreenEdge - (screen.availHeight + availableTop - absoluteTabsMenuBottom);
 			}
 			if (gap) {
@@ -499,13 +499,13 @@
 			}
 			else if (event.key === "Enter") {
 				event.preventDefault();
-				if (event.target.classList.contains("zotero-tabs-menu-entry")) {
+				if (event.target.classList.contains("trellis-tabs-menu-entry")) {
 					event.target.click();
 					return;
 				}
 				this._tabsList.querySelector(".selected > .title")?.click();
 			}
-			else if (event.key == "f" && (Zotero.isMac ? event.metaKey : event.ctrlKey)) {
+			else if (event.key == "f" && (Trellis.isMac ? event.metaKey : event.ctrlKey)) {
 				this.moveSelection("first");
 				event.preventDefault();
 				event.stopPropagation();
@@ -557,7 +557,7 @@
 		_handleTitleClick = (event) => {
 			let tabID = event.target.closest(".row").dataset.tabId;
 			this.hidePopup();
-			Zotero_Tabs.select(tabID);
+			Trellis_Tabs.select(tabID);
 		};
 
 		_handleCloseClick = (event) => {
@@ -567,7 +567,7 @@
 				return;
 			}
 			this.resetFocus();
-			Zotero_Tabs.close(tabID);
+			Trellis_Tabs.close(tabID);
 			this._prevFocusClass = null;
 		};
 
@@ -575,7 +575,7 @@
 			let row = event.target.closest(".row");
 			let tabID = row.dataset.tabId;
 			// No drag-drop on the cross button or the library tab
-			if (tabID == 'zotero-pane' || event.target.classList.contains("close")) {
+			if (tabID == 'trellis-pane' || event.target.classList.contains("close")) {
 				event.preventDefault();
 				event.stopPropagation();
 				return;
@@ -586,10 +586,10 @@
 				event.stopPropagation();
 				return;
 			}
-			event.dataTransfer.setData('zotero/tab', tabID);
+			event.dataTransfer.setData('trellis/tab', tabID);
 			setTimeout(() => {
 				// row.classList.remove("hover");
-				row.setAttribute("id", "zotero-tabs-menu-dragged");
+				row.setAttribute("id", "trellis-tabs-menu-dragged");
 			});
 		};
 
@@ -597,14 +597,14 @@
 			let row = event.target.closest(".row");
 			let rowTabId = row.dataset.tabId;
 			event.preventDefault();
-			let tabId = event.dataTransfer.getData("zotero/tab");
-			if (!tabId || rowTabId == "zotero-pane") {
+			let tabId = event.dataTransfer.getData("trellis/tab");
+			if (!tabId || rowTabId == "trellis-pane") {
 				return false;
 			}
-			if (row.getAttribute("id") == "zotero-tabs-menu-dragged") {
+			if (row.getAttribute("id") == "trellis-tabs-menu-dragged") {
 				return true;
 			}
-			let placeholder = document.getElementById("zotero-tabs-menu-dragged");
+			let placeholder = document.getElementById("trellis-tabs-menu-dragged");
 			if (row.previousSibling?.id == placeholder.id) {
 				// If the placeholder exists before the row, swap the placeholder and the row
 				row.parentNode.insertBefore(row, placeholder);
@@ -620,15 +620,15 @@
 
 		_handleRowDrop = (event) => {
 			let row = event.target.closest(".row");
-			let tabId = event.dataTransfer.getData("zotero/tab");
+			let tabId = event.dataTransfer.getData("trellis/tab");
 			let rowIndex = parseInt(row.getAttribute("index"));
 			if (rowIndex == 0) return;
-			Zotero_Tabs.move(tabId, rowIndex);
+			Trellis_Tabs.move(tabId, rowIndex);
 		};
 
 		_handleRowDragEnd = (_event) => {
 			// If this.move() wasn't called, just re-render the menu
-			if (document.getElementById("zotero-tabs-menu-dragged")) {
+			if (document.getElementById("trellis-tabs-menu-dragged")) {
 				this.refreshList();
 			}
 			this.resetFocus();

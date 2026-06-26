@@ -4,22 +4,22 @@
 
 	Copyright © 2026 Corporation for Digital Scholarship
 	                 Vienna, Virginia, USA
-	                 https://www.zotero.org
+	                 https://www.trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -47,7 +47,7 @@
  * immediately after each winapi_abi call. Using an explicit GetLastError() declaration would be
  * unreliable because intervening ctypes machinery can reset the thread error.
  */
-Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
+Object.assign(Trellis.Sync.Storage.FileChangeWatcher, {
 	_kernel32: null,
 	_ctypes: null,
 	_dirHandle: null,
@@ -320,7 +320,7 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 					}
 					if (err === this._ERROR_NOTIFY_ENUM_DIR) {
 						// Buffer overflow -- signal full scan
-						Zotero.debug("FileChangeWatcher: RDCW buffer overflow"
+						Trellis.debug("FileChangeWatcher: RDCW buffer overflow"
 							+ " -- signaling full scan");
 						this._rdcwAccumulatedKeys.clear();
 						// Re-arm for future notifications
@@ -328,13 +328,13 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 							this._rdcwArm();
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 							this._rdcwPending = false;
 						}
 						return null;
 					}
 					// Other error -- log and signal full scan
-					Zotero.debug("FileChangeWatcher: GetOverlappedResult failed"
+					Trellis.debug("FileChangeWatcher: GetOverlappedResult failed"
 						+ " (error " + err + ")");
 					this._rdcwPending = false;
 					return null;
@@ -344,14 +344,14 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 				let bytes = bytesTransferred.value;
 				if (bytes === 0) {
 					// Zero bytes means overflow -- signal full scan
-					Zotero.debug("FileChangeWatcher: RDCW returned 0 bytes"
+					Trellis.debug("FileChangeWatcher: RDCW returned 0 bytes"
 						+ " -- signaling full scan");
 					this._rdcwAccumulatedKeys.clear();
 					try {
 						this._rdcwArm();
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 						this._rdcwPending = false;
 					}
 					return null;
@@ -364,7 +364,7 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 					this._rdcwArm();
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					this._rdcwPending = false;
 					break;
 				}

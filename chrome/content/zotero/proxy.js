@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     
     Utilities based in part on code taken from Piggy Bank 2.1.1 (BSD-licensed)
@@ -30,7 +30,7 @@
  * Interface for proxy.xul add proxy confirmation dialog
  * @namespace
  */
-var Zotero_Proxy_Dialog = new function() {
+var Trellis_Proxy_Dialog = new function() {
 	var halfSecondsRemaining = 4;
 	var acceptButton;
 	var addString;
@@ -39,11 +39,11 @@ var Zotero_Proxy_Dialog = new function() {
 	 * Initializes dialog
 	 */
 	this.init = function() {
-		document.getElementById("description").firstChild.nodeValue = Zotero.getString("proxies.recognized.message",
+		document.getElementById("description").firstChild.nodeValue = Trellis.getString("proxies.recognized.message",
 			[window.arguments[0].site, window.arguments[0].proxy]);
 		acceptButton = document.documentElement.getButton("accept")
 		acceptButton.disabled = true;
-		addString = Zotero.getString("proxies.recognized.add");
+		addString = Trellis.getString("proxies.recognized.add");
 		var prefs = Components.classes["@mozilla.org/preferences-service;1"]
 							  .getService(Components.interfaces.nsIPrefBranch);
 		halfSecondsRemaining = Math.round(prefs.getIntPref("security.dialog_enable_delay")/500)+1;

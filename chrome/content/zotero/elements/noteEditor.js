@@ -3,22 +3,22 @@
     
     Copyright © 2021 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -49,7 +49,7 @@
 				<html:div class="custom-head empty"></html:div>
 				<box flex="1" tooltip="html-tooltip" style="display: flex; flex-grow: 1" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 					<div id="note-editor" style="display: flex;flex-direction: column;flex-grow: 1;" xmlns="http://www.w3.org/1999/xhtml">
-						<iframe id="editor-view" style="border: 0;width: 100%;flex-grow: 1;" src="resource://zotero/note-editor/editor.html" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" type="content" context="textbox-contextmenu"/>
+						<iframe id="editor-view" style="border: 0;width: 100%;flex-grow: 1;" src="resource://trellis/note-editor/editor.html" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" type="content" context="textbox-contextmenu"/>
 						<div id="links-container">
 							<links-box id="links-box" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"/>
 						</div>
@@ -58,7 +58,7 @@
 				<popupset xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 					<menupopup id="editor-menu"/>					
 				</popupset>
-			`, ['chrome://zotero/locale/zotero.dtd']);
+			`, ['chrome://trellis/locale/trellis.dtd']);
 		}
 		
 		connectedCallback() {
@@ -70,7 +70,7 @@
 			
 			// var s1 = document.createElement("link");
 			// s1.rel = "stylesheet";
-			// s1.href = "chrome://zotero-platform/content/zotero.css";
+			// s1.href = "chrome://trellis-platform/content/trellis.css";
 			// shadow.append(s1);
 
 			let content = document.importNode(this.content, true);
@@ -78,15 +78,15 @@
 			this._iframe.addEventListener('DOMContentLoaded', (_event) => {
 				// For iframes without chrome priviledges, for unknown reasons,
 				// dataTransfer.getData() returns empty value for `drop` event
-				// when dragging something from the outside of Zotero.
+				// when dragging something from the outside of Trellis.
 				// Update: Since fx102 non-standard data types don't work when dragging into an§ iframe,
 				// while the original problem probably no longer exists
 				this._iframe.contentWindow.addEventListener('drop', (event) => {
 					this._iframe.contentWindow.wrappedJSObject.droppedData = Components.utils.cloneInto({
 						'text/plain': event.dataTransfer.getData('text/plain'),
 						'text/html': event.dataTransfer.getData('text/html'),
-						'zotero/annotation': event.dataTransfer.getData('zotero/annotation'),
-						'zotero/item': event.dataTransfer.getData('zotero/item')
+						'trellis/annotation': event.dataTransfer.getData('trellis/annotation'),
+						'trellis/item': event.dataTransfer.getData('trellis/item')
 					}, this._iframe.contentWindow);
 				}, true);
 				this._iframe.docShell.windowDraggingAllowed = true;
@@ -94,7 +94,7 @@
 			});
 			this.append(content);
 
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item', 'file'], 'noteEditor');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item', 'file'], 'noteEditor');
 			this.notitle = !!this.getAttribute('notitle');
 			window.goBuildEditContextMenu();
 		}
@@ -106,7 +106,7 @@
 			this._destroyed = true;
 			this._editorInstance?.uninit();
 			
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 		}
 		
 		disconnectedCallback() {
@@ -136,10 +136,10 @@
 			// Automatically upgrade editable v1 note before it's loaded
 			// TODO: Remove this at some point
 			if (this._mode == 'edit') {
-				await Zotero.Notes.upgradeSchemaV1(this._item);
+				await Trellis.Notes.upgradeSchemaV1(this._item);
 			}
 
-			this._editorInstance = new Zotero.EditorInstance();
+			this._editorInstance = new Trellis.EditorInstance();
 			await this._editorInstance.init({
 				state,
 				item: this._item,
@@ -280,7 +280,7 @@
 
 			var parentKey = this._item.parentKey;
 			if (parentKey) {
-				this.parentItem = Zotero.Items.getByLibraryAndKey(this._item.libraryID, parentKey);
+				this.parentItem = Trellis.Items.getByLibraryAndKey(this._item.libraryID, parentKey);
 			}
 
 			this._id('links-box').item = this._item;
@@ -294,7 +294,7 @@
 					if (n >= 1000) {
 						throw new Error('Waiting for noteeditor initialization failed');
 					}
-					await Zotero.Promise.delay(10);
+					await Trellis.Promise.delay(10);
 					n++;
 				}
 
@@ -322,7 +322,7 @@
 		async focus() {
 			let n = 0;
 			while (!this._editorInstance && n++ < 100) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			await this._editorInstance._initPromise;
 			this._iframe.focus();
@@ -333,7 +333,7 @@
 			try {
 				let n = 0;
 				while (!this._editorInstance && n++ < 100) {
-					await Zotero.Promise.delay(10);
+					await Trellis.Promise.delay(10);
 				}
 				await this._editorInstance._initPromise;
 				this._iframe.focus();
@@ -406,12 +406,12 @@
 			this.content = MozXULElement.parseXULToFragment(`
 <!--
 				<html:div id="parent-label" class="label" hidden="true"/>
-				<html:div id="parent-value" class="value zotero-clicky" hidden="true"/>
+				<html:div id="parent-value" class="value trellis-clicky" hidden="true"/>
 -->
 				<tags-box id="tags"/>
 				<libraries-collections-box id="libraries-collections"/>
 				<related-box id="related"/>
-			`, ['chrome://zotero/locale/zotero.dtd']);
+			`, ['chrome://trellis/locale/trellis.dtd']);
 		}
 
 		connectedCallback() {

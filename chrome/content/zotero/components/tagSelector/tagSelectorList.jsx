@@ -5,20 +5,20 @@
                      Vienna, Virginia, USA
                      https://digitalscholar.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -33,7 +33,7 @@ var tagPaddingLeft = 4;
 var tagPaddingRight = 4;
 var tagSpaceBetweenX = 2;
 var tagSpaceBetweenY = 2;
-var panePaddingTop = 8 + 1; // extra 1px offset for margin-bottom: -1px in #zotero-tags-splitter
+var panePaddingTop = 8 + 1; // extra 1px offset for margin-bottom: -1px in #trellis-tags-splitter
 var panePaddingLeft = 8;
 var panePaddingRight = 2; // + scrollbar width (but no less than 8px total)
 // var panePaddingBottom = 8; // configurable in _tag-selector.scss
@@ -103,7 +103,7 @@ class TagList extends React.PureComponent {
 	updatePositions() {
 		const tagPaddingTop = this.props.uiDensity === 'comfortable' ? 2 : 1;
 		const tagPaddingBottom = tagPaddingTop;
-		this.scrollbarWidth = Math.max(Zotero.Utilities.Internal.getScrollbarWidth(), 6);
+		this.scrollbarWidth = Math.max(Trellis.Utilities.Internal.getScrollbarWidth(), 6);
 
 		var tagMaxWidth = this.props.width - minHorizontalPadding - this.scrollbarWidth;
 		var rowHeight = tagPaddingTop + this.props.lineHeight + tagPaddingBottom + tagSpaceBetweenY;
@@ -125,7 +125,7 @@ class TagList extends React.PureComponent {
 				forceNewLine = true;
 			}
 			// size of the colored dot + space between the dot and the tag name always sums up to fontSize (e.g., 8px + 3px at 11px fontSize)
-			const tagColorWidth = (tag.color && !Zotero.Utilities.Internal.containsEmoji(tag.name)) ? this.props.fontSize : 0;
+			const tagColorWidth = (tag.color && !Trellis.Utilities.Internal.containsEmoji(tag.name)) ? this.props.fontSize : 0;
 			let tagWidth = tagPaddingLeft + Math.min(tag.width, tagMaxWidth) + tagPaddingRight + tagColorWidth;
 			// If first row or cell fits, add to current row
 			if (!forceNewLine && (i == 0 || ((rowX + tagWidth) < (this.props.width - panePaddingRight - this.scrollbarWidth)))) {
@@ -175,7 +175,7 @@ class TagList extends React.PureComponent {
 		if (tag.disabled) {
 			className += ' disabled';
 		}
-		if (Zotero.Utilities.Internal.containsEmoji(tag.name)) {
+		if (Trellis.Utilities.Internal.containsEmoji(tag.name)) {
 			className += ' emoji';
 		}
 		
@@ -328,21 +328,21 @@ class TagList extends React.PureComponent {
 	}
 	
 	render() {
-		Zotero.debug("Rendering tag list");
+		Trellis.debug("Rendering tag list");
 		const tagCount = this.props.tags.length;
 		
 		var tagList;
 		if (!this.props.loaded) {
 			tagList = (
 				<div className="tag-selector-message">
-					{Zotero.getString('zotero.tagSelector.loadingTags')}
+					{Trellis.getString('trellis.tagSelector.loadingTags')}
 				</div>
 			);
 		}
 		else if (tagCount == 0) {
 			tagList = (
 				<div className="tag-selector-message">
-					{Zotero.getString('zotero.tagSelector.noTagsToDisplay')}
+					{Trellis.getString('trellis.tagSelector.noTagsToDisplay')}
 				</div>
 			);
 		}
@@ -363,7 +363,7 @@ class TagList extends React.PureComponent {
 					verticalOverscanSize={300}
 					width={this.props.width}
 					height={this.props.height - filterBarHeight}
-					aria-label={document.querySelector("#zotero-tag-selector").getAttribute("label") || ""}
+					aria-label={document.querySelector("#trellis-tag-selector").getAttribute("label") || ""}
 					onSectionRendered={this.handleSectionRendered}
 					scrollToCell={Number.isInteger(this.state.scrollToCell) ? this.state.scrollToCell : undefined}
 				/>

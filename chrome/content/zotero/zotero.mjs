@@ -3,22 +3,22 @@
     
     Copyright © 2023 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -31,7 +31,7 @@ const Cu = Components.utils;
 
 /** XPCOM files to be loaded for all modes **/
 const xpcomFilesAll = [
-	'zotero',
+	'trellis',
 	'commandLineHandler',
 	'intl',
 	'prefs',
@@ -43,7 +43,7 @@ const xpcomFilesAll = [
 	'utilities/utilities_item',
 	'utilities/openurl',
 	'utilities/xregexp-all',
-	'utilities/xregexp-unicode-zotero',
+	'utilities/xregexp-unicode-trellis',
 	'utilities_internal',
 	'translate/src/utilities_translate',
 	'file',
@@ -163,45 +163,45 @@ const xpcomFilesLocal = [
 	'translation/translators',
 ];
 
-import { CommandLineOptions } from "chrome://zotero/content/modules/commandLineOptions.mjs";
+import { CommandLineOptions } from "chrome://trellis/content/modules/commandLineOptions.mjs";
 
 var instanceID = (new Date()).getTime();
 var isFirstLoadThisSession = true;
 var zContext = null;
 var initCallbacks = [];
 
-// Cu.import('resource://zotero/require.js');
+// Cu.import('resource://trellis/require.js');
 // Not using Cu.import here since we don't want the require module to be cached
-// for includes within ZoteroPane or other code, where we want the window instance available to modules.
+// for includes within TrellisPane or other code, where we want the window instance available to modules.
 Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
 	.getService(Components.interfaces.mozIJSSubScriptLoader)
-	.loadSubScript('resource://zotero/require.js');
+	.loadSubScript('resource://trellis/require.js');
 
-var ZoteroContext = function () {}
-ZoteroContext.prototype = {
+var TrellisContext = function () {}
+TrellisContext.prototype = {
 	/**
-	 * Shuts down Zotero, calls a callback (that may return a promise),
-	 * then reinitializes Zotero. Returns a promise that is resolved
+	 * Shuts down Trellis, calls a callback (that may return a promise),
+	 * then reinitializes Trellis. Returns a promise that is resolved
 	 * when this process completes.
 	 */
 	reinit: function (cb, options = {}) {
-		Services.obs.notifyObservers(zContext.Zotero, "zotero-before-reload");
-		return zContext.Zotero.shutdown().then(function () {
+		Services.obs.notifyObservers(zContext.Trellis, "trellis-before-reload");
+		return zContext.Trellis.shutdown().then(function () {
 			// Unregister custom protocol handler
-			Services.io.unregisterProtocolHandler('zotero');
+			Services.io.unregisterProtocolHandler('trellis');
 			
 			return cb ? cb() : false;
 		}).finally(function () {
-			makeZoteroContext();
+			makeTrellisContext();
 			var o = {};
 			Object.assign(o, CommandLineOptions);
 			Object.assign(o, options);
-			return zContext.Zotero.init(o);
+			return zContext.Trellis.init(o);
 		});
 	}
 };
 
-ChromeUtils.defineESModuleGetters(ZoteroContext.prototype, {
+ChromeUtils.defineESModuleGetters(TrellisContext.prototype, {
 	setTimeout: "resource://gre/modules/Timer.sys.mjs",
 	clearTimeout: "resource://gre/modules/Timer.sys.mjs",
 	setInterval: "resource://gre/modules/Timer.sys.mjs",
@@ -211,33 +211,33 @@ ChromeUtils.defineESModuleGetters(ZoteroContext.prototype, {
 });
 
 /**
- * The class from which the Zotero global XPCOM context is constructed
+ * The class from which the Trellis global XPCOM context is constructed
  *
  * @constructor
- * This runs when ZoteroService is first requested to load all applicable scripts and initialize
- * Zotero. Calls to other XPCOM components must be in here rather than in top-level code, as other
+ * This runs when TrellisService is first requested to load all applicable scripts and initialize
+ * Trellis. Calls to other XPCOM components must be in here rather than in top-level code, as other
  * components may not have yet been initialized.
  */
-function makeZoteroContext() {
+function makeTrellisContext() {
 	var subscriptLoader = Cc["@mozilla.org/moz/jssubscript-loader;1"].getService(Ci.mozIJSSubScriptLoader);
 	
 	if(zContext) {
 		// Swap out old zContext
 		var oldzContext = zContext;
 		// Create new zContext
-		zContext = new ZoteroContext();
-		// Swap in old Zotero object, so that references don't break, but empty it
-		zContext.Zotero = oldzContext.Zotero;
-		for(var key in zContext.Zotero) delete zContext.Zotero[key];
+		zContext = new TrellisContext();
+		// Swap in old Trellis object, so that references don't break, but empty it
+		zContext.Trellis = oldzContext.Trellis;
+		for(var key in zContext.Trellis) delete zContext.Trellis[key];
 	} else {
-		zContext = new ZoteroContext();
-		zContext.Zotero = function () {};
+		zContext = new TrellisContext();
+		zContext.Trellis = function () {};
 
-		// Override Date prototype to follow Zotero configured locale (#3880).
+		// Override Date prototype to follow Trellis configured locale (#3880).
 		// Patch this module scope, every open chrome window, and each chrome
 		// window opened in the future. Each require loader sandbox is patched
 		// separately in require.js.
-		let dateOverridesURL = "chrome://zotero/content/dateOverrides.js";
+		let dateOverridesURL = "chrome://trellis/content/dateOverrides.js";
 		subscriptLoader.loadSubScript(dateOverridesURL);
 		for (let win of Services.wm.getEnumerator(null)) {
 			subscriptLoader.loadSubScript(dateOverridesURL, win);
@@ -254,27 +254,27 @@ function makeZoteroContext() {
 		});
 	}
 	
-	// Load zotero.js first
-	subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/" + xpcomFilesAll[0] + ".js", zContext, 'utf-8');
+	// Load trellis.js first
+	subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/" + xpcomFilesAll[0] + ".js", zContext, 'utf-8');
 	
-	// Load CiteProc into Zotero.CiteProc namespace
-	zContext.Zotero.CiteProc = {"Zotero":zContext.Zotero};
-	subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/citeproc.js", zContext.Zotero.CiteProc, 'utf-8');
+	// Load CiteProc into Trellis.CiteProc namespace
+	zContext.Trellis.CiteProc = {"Trellis":zContext.Trellis};
+	subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/citeproc.js", zContext.Trellis.CiteProc, 'utf-8');
 	
-	// Load XRegExp object into Zotero.XRegExp
+	// Load XRegExp object into Trellis.XRegExp
 	const xregexpFiles = [
 		/**Core functions**/
 		'xregexp-all',
-		'xregexp-unicode-zotero'				//adds support for some Unicode categories used in Zotero
+		'xregexp-unicode-trellis'				//adds support for some Unicode categories used in Trellis
 	];
 	for (var i=0; i<xregexpFiles.length; i++) {
-		subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/utilities/" + xregexpFiles[i] + ".js", zContext, 'utf-8');
+		subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/utilities/" + xregexpFiles[i] + ".js", zContext, 'utf-8');
 	}
 	
 	// Load remaining xpcomFiles
 	for (var i=1; i<xpcomFilesAll.length; i++) {
 		try {
-			subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/" + xpcomFilesAll[i] + ".js", zContext, 'utf-8');
+			subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/" + xpcomFilesAll[i] + ".js", zContext, 'utf-8');
 		}
 		catch (e) {
 			Components.utils.reportError("Error loading " + xpcomFilesAll[i] + ".js");
@@ -285,7 +285,7 @@ function makeZoteroContext() {
 	// Load xpcomFiles for specific mode
 	for (let xpcomFile of xpcomFilesLocal) {
 		try {
-			subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/" + xpcomFile + ".js", zContext, "utf-8");
+			subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/" + xpcomFile + ".js", zContext, "utf-8");
 		}
 		catch (e) {
 			dump("Error loading " + xpcomFile + ".js\n\n");
@@ -305,7 +305,7 @@ function makeZoteroContext() {
 		if (backendFile) {
 			try {
 				subscriptLoader.loadSubScript(
-					"chrome://zotero/content/xpcom/" + backendFile + ".js", zContext, "utf-8"
+					"chrome://trellis/content/xpcom/" + backendFile + ".js", zContext, "utf-8"
 				);
 			}
 			catch (e) {
@@ -316,7 +316,7 @@ function makeZoteroContext() {
 		}
 	}
 
-	// Load RDF files into Zotero.RDF.AJAW namespace (easier than modifying all of the references)
+	// Load RDF files into Trellis.RDF.AJAW namespace (easier than modifying all of the references)
 	const rdfXpcomFiles = [
 		'rdf/init',
 		'rdf/uri',
@@ -326,51 +326,51 @@ function makeZoteroContext() {
 		'rdf/rdfparser',
 		'rdf/serialize'
 	];
-	zContext.Zotero.RDF = {Zotero:zContext.Zotero};
+	zContext.Trellis.RDF = {Trellis:zContext.Trellis};
 	for (var i=0; i<rdfXpcomFiles.length; i++) {
-		subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/translate/src/" + rdfXpcomFiles[i] + ".js", zContext.Zotero.RDF, 'utf-8');
+		subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/translate/src/" + rdfXpcomFiles[i] + ".js", zContext.Trellis.RDF, 'utf-8');
 	}
 	
-	subscriptLoader.loadSubScript("chrome://zotero/content/xpcom/standalone.js", zContext);
+	subscriptLoader.loadSubScript("chrome://trellis/content/xpcom/standalone.js", zContext);
 	
 	// add connector-related properties
-	zContext.Zotero.instanceID = instanceID;
-	zContext.Zotero.__defineGetter__("isFirstLoadThisSession", function () { return isFirstLoadThisSession; });
+	zContext.Trellis.instanceID = instanceID;
+	zContext.Trellis.__defineGetter__("isFirstLoadThisSession", function () { return isFirstLoadThisSession; });
 };
 
 /**
- * The class representing the Zotero service, and affiliated XPCOM goop
+ * The class representing the Trellis service, and affiliated XPCOM goop
  */
 try {
 	var start = Date.now();
 	
 	if(isFirstLoadThisSession) {
-		makeZoteroContext(false);
-		zContext.Zotero.init(CommandLineOptions)
+		makeTrellisContext(false);
+		zContext.Trellis.init(CommandLineOptions)
 		.catch(function (e) {
 			dump(e + "\n\n");
 			Components.utils.reportError(e);
-			if (!zContext.Zotero.startupError) {
-				zContext.Zotero.startupError = e.stack || e;
+			if (!zContext.Trellis.startupError) {
+				zContext.Trellis.startupError = e.stack || e;
 			}
 		})
 		.then(async function () {
-			if (zContext.Zotero.startupErrorHandler || zContext.Zotero.startupError) {
-				if (zContext.Zotero.startupErrorHandler) {
-					await zContext.Zotero.startupErrorHandler();
+			if (zContext.Trellis.startupErrorHandler || zContext.Trellis.startupError) {
+				if (zContext.Trellis.startupErrorHandler) {
+					await zContext.Trellis.startupErrorHandler();
 				}
-				else if (zContext.Zotero.startupError) {
+				else if (zContext.Trellis.startupError) {
 					// Try to repair the DB on the next startup, in case it helps resolve
 					// the error
 					try {
-						zContext.Zotero.Schema.setIntegrityCheckRequired(true);
+						zContext.Trellis.Schema.setIntegrityCheckRequired(true);
 					}
 					catch (e) {}
 					
 					try {
-						zContext.Zotero.startupError =
-							zContext.Zotero.Utilities.Internal.filterStack(
-								zContext.Zotero.startupError
+						zContext.Trellis.startupError =
+							zContext.Trellis.Utilities.Internal.filterStack(
+								zContext.Trellis.startupError
 							);
 					}
 					catch (e) {}
@@ -383,7 +383,7 @@ try {
 					let quitStr = "Quit";
 					let checkForUpdateStr = "Check for Update";
 					try {
-						let src = 'chrome://zotero/locale/zotero.properties';
+						let src = 'chrome://trellis/locale/trellis.properties';
 						let stringBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
 							.getService(Components.interfaces.nsIStringBundleService);
 						let stringBundle = stringBundleService.createBundle(src);
@@ -395,7 +395,7 @@ try {
 					let index = ps.confirmEx(
 						null,
 						errorStr,
-						zContext.Zotero.startupError,
+						zContext.Trellis.startupError,
 						buttonFlags,
 						checkForUpdateStr,
 						quitStr,
@@ -406,23 +406,23 @@ try {
 					if (index == 0) {
 						Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 							.getService(Components.interfaces.nsIWindowWatcher)
-							.openWindow(null, 'chrome://zotero/content/update/updates.xhtml',
+							.openWindow(null, 'chrome://trellis/content/update/updates.xhtml',
 								'updateChecker', 'chrome,centerscreen,modal', null);
 					}
 				}
-				zContext.Zotero.Utilities.Internal.quitZotero();
+				zContext.Trellis.Utilities.Internal.quitTrellis();
 			}
 		});
 		
 		let cb;
 		while (cb = initCallbacks.shift()) {
-			cb(zContext.Zotero);
+			cb(zContext.Trellis);
 		}
 	}
 	else {
-		zContext.Zotero.debug("Already initialized");
+		zContext.Trellis.debug("Already initialized");
 	}
-	//this.wrappedJSObject = zContext.Zotero;
+	//this.wrappedJSObject = zContext.Trellis;
 }
 catch (e) {
 	var msg = e instanceof Error
@@ -434,8 +434,8 @@ catch (e) {
 }
 
 function addInitCallback(callback) {
-	if (zContext && zContext.Zotero) {
-		callback(zContext.Zotero);
+	if (zContext && zContext.Trellis) {
+		callback(zContext.Trellis);
 	}
 	else {
 		initCallbacks.push(callback);
@@ -443,7 +443,7 @@ function addInitCallback(callback) {
 }
 
 /**
- * Determine whether Zotero Standalone is running
+ * Determine whether Trellis Standalone is running
  */
 function isStandalone() {
 	return true;
@@ -466,4 +466,4 @@ function isLinux() {
 }
 
 
-export const Zotero = zContext.Zotero;
+export const Trellis = zContext.Trellis;

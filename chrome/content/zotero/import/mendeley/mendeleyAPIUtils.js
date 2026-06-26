@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 var mendeleyAPIUtils = (function () {
-const ZOTERO_OAUTH_URL = 'https://www.zotero.org/utils/mendeley/oauth';
+const TRELLIS_OAUTH_URL = 'https://www.trellis.org/utils/mendeley/oauth';
 const OAUTH_URL = 'https://api.mendeley.com/oauth/token';
 const MENDELEY_API_URL = 'https://api.mendeley.com';
 const CLIENT_ID = '6';
@@ -17,16 +17,16 @@ const getTokens = async (url, bodyProps, headers = {}, options = {}) => {
 
 	headers = { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' };
 	
-	if (!Zotero.Prefs.get('import.mendeleyUseOAuth')) {
+	if (!Trellis.Prefs.get('import.mendeleyUseOAuth')) {
 		headers['User-Agent'] = USER_AGENT;
 	}
 
 	options = { ...options, body, headers, timeout: API_TOKEN_TIMEOUT };
-	const response = await Zotero.HTTP.request('POST', url, options);
+	const response = await Trellis.HTTP.request('POST', url, options);
 	const parsedResponse = JSON.parse(response.responseText);
 	
 	return {
-		kind: Zotero.Prefs.get('import.mendeleyUseOAuth') ? 'oauth' : 'direct',
+		kind: Trellis.Prefs.get('import.mendeleyUseOAuth') ? 'oauth' : 'direct',
 		accessToken: parsedResponse.access_token, // eslint-disable-line camelcase
 		refreshToken: parsedResponse.refresh_token // eslint-disable-line camelcase
 	};
@@ -52,7 +52,7 @@ const codeAuth = async (code, headers = {}, options = {}) => {
 		code,
 	};
 
-	return getTokens(ZOTERO_OAUTH_URL, bodyProps, headers, options);
+	return getTokens(TRELLIS_OAUTH_URL, bodyProps, headers, options);
 };
 
 const refreshAuth = async (refreshToken, headers = {}, options = {}) => {
@@ -61,13 +61,13 @@ const refreshAuth = async (refreshToken, headers = {}, options = {}) => {
 		refresh_token: refreshToken, // eslint-disable-line camelcase
 	};
 
-	if (!Zotero.Prefs.get('import.mendeleyUseOAuth')) {
+	if (!Trellis.Prefs.get('import.mendeleyUseOAuth')) {
 		bodyProps.client_id = CLIENT_ID; // eslint-disable-line camelcase
 		bodyProps.client_secret = CLIENT_NOT_VERY_SECRET; // eslint-disable-line camelcase
 	}
 
 	return getTokens(
-		Zotero.Prefs.get('import.mendeleyUseOAuth') ? ZOTERO_OAUTH_URL : OAUTH_URL,
+		Trellis.Prefs.get('import.mendeleyUseOAuth') ? TRELLIS_OAUTH_URL : OAUTH_URL,
 		bodyProps, headers, options
 	);
 };
@@ -93,7 +93,7 @@ const apiFetchUrl = async (tokens, url, headers = {}, options = {}) => {
 
 	// Run the request. If we see 401 or 403, try to refresh tokens and run the request again
 	try {
-		return await Zotero.HTTP.request(method, url, options);
+		return await Trellis.HTTP.request(method, url, options);
 	}
 	catch (e) {
 		if (e.status === 401 || e.status === 403) {
@@ -112,7 +112,7 @@ const apiFetchUrl = async (tokens, url, headers = {}, options = {}) => {
 		}
 	}
 
-	return Zotero.HTTP.request(method, url, options);
+	return Trellis.HTTP.request(method, url, options);
 };
 
 const apiFetch = async (tokens, endPoint, params = {}, headers = {}, options = {}) => {
@@ -157,8 +157,8 @@ const getAll = async (tokens, endPoint, params = {}, headers = {}, options = {},
  * @throws {Error} - Throws an error if login fails, or if the access token cannot be obtained.
  */
 const obtainReferenceManagerToken = async (login, password) => {
-	let { HiddenBrowser } = ChromeUtils.importESModule("chrome://zotero/content/HiddenBrowser.mjs");
-	let cookieContext = Zotero.HTTP.newCookieContext();
+	let { HiddenBrowser } = ChromeUtils.importESModule("chrome://trellis/content/HiddenBrowser.mjs");
+	let cookieContext = Trellis.HTTP.newCookieContext();
 	let browser = new HiddenBrowser({
 		userContextId: cookieContext.id,
 		docShell: {
@@ -177,9 +177,9 @@ const obtainReferenceManagerToken = async (login, password) => {
 				QueryInterface: ChromeUtils.generateQI([Ci.nsIWebProgressListener, Ci.nsISupportsWeakReference]),
 				async onLocationChange() {
 					let url = browser.currentURI.spec;
-					Zotero.debug(`Obtain Mendeley access token, visiting "${url}"`, 5);
+					Trellis.debug(`Obtain Mendeley access token, visiting "${url}"`, 5);
 					if (url.startsWith("https://id.elsevier.com/as/authorization.oauth2")) {
-						Zotero.debug("Logging in to Mendeley Reference Manager");
+						Trellis.debug("Logging in to Mendeley Reference Manager");
 						if (!hasEnteredLogin) {
 							hasEnteredLogin = await browser.browsingContext.currentWindowGlobal
 								.getActor("MendeleyAuth")
@@ -191,7 +191,7 @@ const obtainReferenceManagerToken = async (login, password) => {
 						}
 					}
 					else if (url.match(/https:\/\/id.elsevier.com\/as\/(.*?)\/resume\/as/)) {
-						Zotero.debug("Entering password to the Mendeley Reference Manager");
+						Trellis.debug("Entering password to the Mendeley Reference Manager");
 						if (!hasEnteredPassword) {
 							hasEnteredPassword = await browser.browsingContext.currentWindowGlobal
 								.getActor("MendeleyAuth")
@@ -217,13 +217,13 @@ const obtainReferenceManagerToken = async (login, password) => {
 						resolve(accessToken);
 					}
 					else {
-						Zotero.debug(`Ignoring unexpected URL while obtaining Mendeley access token: ${url}`);
+						Trellis.debug(`Ignoring unexpected URL while obtaining Mendeley access token: ${url}`);
 					}
 				}
 			}, Ci.nsIWebProgress.NOTIFY_LOCATION);
 
 			browser.load("https://www.mendeley.com/sign-in?routeTo=https://www.mendeley.com/reference-manager/library/");
-			Zotero.Promise.delay(ACCESS_TOKEN_TIMEOUT).then(() => {
+			Trellis.Promise.delay(ACCESS_TOKEN_TIMEOUT).then(() => {
 				browser.destroy();
 				reject(new Error("Timed out while obtaining Mendeley access token"));
 			});
@@ -243,7 +243,7 @@ const obtainReferenceManagerTokenWithRetry = async (login, password, tries = 3) 
 			if (i === tries - 1) {
 				throw e;
 			}
-			Zotero.debug(`Failed to obtain Reference Manager token on attempt ${i + 1}. Retrying...`);
+			Trellis.debug(`Failed to obtain Reference Manager token on attempt ${i + 1}. Retrying...`);
 		}
 	}
 	return null;

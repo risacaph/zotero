@@ -3,77 +3,77 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Duplicates = function (libraryID) {
+Trellis.Duplicates = function (libraryID) {
 	if (typeof libraryID == 'undefined') {
-		throw ("libraryID not provided in Zotero.Duplicates constructor");
+		throw ("libraryID not provided in Trellis.Duplicates constructor");
 	}
 	
 	if (!libraryID) {
-		libraryID = Zotero.Libraries.userLibraryID;
+		libraryID = Trellis.Libraries.userLibraryID;
 	}
 	
 	this._libraryID = libraryID;
 }
 
 
-Zotero.Duplicates.prototype.__defineGetter__('name', function () { return Zotero.getString('pane.collections.duplicate'); });
-Zotero.Duplicates.prototype.__defineGetter__('libraryID', function () { return this._libraryID; });
+Trellis.Duplicates.prototype.__defineGetter__('name', function () { return Trellis.getString('pane.collections.duplicate'); });
+Trellis.Duplicates.prototype.__defineGetter__('libraryID', function () { return this._libraryID; });
 
 /**
  * Get duplicates, populate a temporary table, and return a search based
  * on that table
  *
- * @return {Zotero.Search}
+ * @return {Trellis.Search}
  */
-Zotero.Duplicates.prototype.getSearchObject = async function () {
-	var table = 'tmpDuplicates_' + Zotero.Utilities.randomString();
+Trellis.Duplicates.prototype.getSearchObject = async function () {
+	var table = 'tmpDuplicates_' + Trellis.Utilities.randomString();
 	
 	await this._findDuplicates();
 	var ids = this._sets.findAll(true);
 	
-	// Zotero.CollectionTreeRow::getSearchObject() extracts the table name and creates an
+	// Trellis.CollectionTreeRow::getSearchObject() extracts the table name and creates an
 	// unload listener that drops the table when the ItemTreeView is unregistered
 	var sql = `CREATE TEMPORARY TABLE ${table} (id INTEGER PRIMARY KEY)`;
-	await Zotero.DB.queryAsync(sql);
+	await Trellis.DB.queryAsync(sql);
 	
 	if (ids.length) {
-		Zotero.debug("Inserting rows into temp table");
+		Trellis.debug("Inserting rows into temp table");
 		sql = `INSERT INTO ${table} VALUES `;
-		await Zotero.Utilities.Internal.forEachChunkAsync(
+		await Trellis.Utilities.Internal.forEachChunkAsync(
 			ids,
-			Zotero.DB.MAX_BOUND_PARAMETERS,
+			Trellis.DB.MAX_BOUND_PARAMETERS,
 			async function (chunk) {
 				let idStr = '(' + chunk.join('), (') + ')';
-				await Zotero.DB.queryAsync(sql + idStr, false, { debug: false });
+				await Trellis.DB.queryAsync(sql + idStr, false, { debug: false });
 			}
 		);
-		Zotero.debug("Done");
+		Trellis.debug("Done");
 	}
 	else {
-		Zotero.debug("No duplicates found");
+		Trellis.debug("No duplicates found");
 	}
 	
-	var s = new Zotero.Search;
+	var s = new Trellis.Search;
 	s.libraryID = this._libraryID;
 	s.addCondition('tempTable', 'is', table);
 	return s;
@@ -86,26 +86,26 @@ Zotero.Duplicates.prototype.getSearchObject = async function () {
  * @param {Integer} itemID
  * @return {Integer[]}  Array of itemIDs
  */
-Zotero.Duplicates.prototype.getSetItemsByItemID = function (itemID) {
+Trellis.Duplicates.prototype.getSetItemsByItemID = function (itemID) {
 	return this._sets.findAllInSet(this._getObjectFromID(itemID), true);
 }
 
 
-Zotero.Duplicates.prototype._getObjectFromID = function (id) {
+Trellis.Duplicates.prototype._getObjectFromID = function (id) {
 	return {
 		get id() { return id; }
 	}
 }
 
 
-Zotero.Duplicates.prototype._findDuplicates = async function () {
-	Zotero.debug("Finding duplicates");
+Trellis.Duplicates.prototype._findDuplicates = async function () {
+	Trellis.debug("Finding duplicates");
 	
 	var start = Date.now();
 	
 	var self = this;
 	
-	this._sets = new Zotero.DisjointSetForest;
+	this._sets = new Trellis.DisjointSetForest;
 	var sets = this._sets;
 	
 	function normalizeString(str) {
@@ -116,7 +116,7 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 			return "";
 		}
 		
-		str = Zotero.Utilities.removeDiacritics(str)
+		str = Trellis.Utilities.removeDiacritics(str)
 			.replace(/[ !-/:-@[-`{-~]+/g, ' ') // Convert (ASCII) punctuation to spaces
 			.trim()
 			.toLowerCase();
@@ -196,12 +196,12 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 				+ "JOIN itemDataValues USING (valueID) "
 				+ "WHERE libraryID=? AND itemTypeID=? AND fieldID=? "
 				+ "AND itemID NOT IN (SELECT itemID FROM deletedItems)";
-	var rows = await Zotero.DB.queryAsync(
+	var rows = await Trellis.DB.queryAsync(
 		sql,
 		[
 			this._libraryID,
-			Zotero.ItemTypes.getID('book'),
-			Zotero.ItemFields.getID('ISBN')
+			Trellis.ItemTypes.getID('book'),
+			Trellis.ItemFields.getID('ISBN')
 		]
 	);
 	var isbnCache = {};
@@ -209,7 +209,7 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 		let newRows = [];
 		for (let i = 0; i < rows.length; i++) {
 			let row = rows[i];
-			let newVal = Zotero.Utilities.cleanISBN('' + row.value);
+			let newVal = Trellis.Utilities.cleanISBN('' + row.value);
 			if (!newVal) continue;
 			isbnCache[row.itemID] = newVal;
 			newRows.push({
@@ -226,11 +226,11 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 				+ "JOIN itemDataValues USING (valueID) "
 				+ "WHERE libraryID=? AND fieldID=? AND value LIKE ? "
 				+ "AND itemID NOT IN (SELECT itemID FROM deletedItems)";
-	var rows = await Zotero.DB.queryAsync(
+	var rows = await Trellis.DB.queryAsync(
 		sql,
 		[
 			this._libraryID,
-			Zotero.ItemFields.getID('DOI'),
+			Trellis.ItemFields.getID('DOI'),
 			'10.%'
 		]
 	);
@@ -252,8 +252,8 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 	}
 	
 	// Get years
-	var dateFields = [Zotero.ItemFields.getID('date')].concat(
-		Zotero.ItemFields.getTypeFieldsFromBase('date')
+	var dateFields = [Trellis.ItemFields.getID('date')].concat(
+		Trellis.ItemFields.getTypeFieldsFromBase('date')
 	);
 	var sql = "SELECT itemID, SUBSTR(value, 1, 4) AS year FROM items "
 				+ "JOIN itemData USING (itemID) "
@@ -263,26 +263,26 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 				+ "AND SUBSTR(value, 1, 4) != '0000' "
 				+ "AND itemID NOT IN (SELECT itemID FROM deletedItems) "
 				+ "ORDER BY value";
-	var rows = await Zotero.DB.queryAsync(sql, [this._libraryID].concat(dateFields));
+	var rows = await Trellis.DB.queryAsync(sql, [this._libraryID].concat(dateFields));
 	var yearCache = {};
 	for (let i = 0; i < rows.length; i++) {
 		let row = rows[i];
 		yearCache[row.itemID] = row.year;
 	}
 	
-	var itemTypeAttachment = Zotero.ItemTypes.getID('attachment');
-	var itemTypeNote = Zotero.ItemTypes.getID('note');
+	var itemTypeAttachment = Trellis.ItemTypes.getID('attachment');
+	var itemTypeNote = Trellis.ItemTypes.getID('note');
 	
 	// Match on normalized title
-	var titleIDs = Zotero.ItemFields.getTypeFieldsFromBase('title');
-	titleIDs.push(Zotero.ItemFields.getID('title'));
+	var titleIDs = Trellis.ItemFields.getTypeFieldsFromBase('title');
+	titleIDs.push(Trellis.ItemFields.getID('title'));
 	var sql = "SELECT itemID, value FROM items JOIN itemData USING (itemID) "
 				+ "JOIN itemDataValues USING (valueID) "
 				+ "WHERE libraryID=? AND fieldID IN "
 				+ "(" + titleIDs.join(', ') + ") "
 				+ `AND itemTypeID NOT IN (${itemTypeAttachment}, ${itemTypeNote}) `
 				+ "AND itemID NOT IN (SELECT itemID FROM deletedItems)";
-	var rows = await Zotero.DB.queryAsync(sql, [this._libraryID]);
+	var rows = await Trellis.DB.queryAsync(sql, [this._libraryID]);
 	if (rows.length) {
 		//normalize all values ahead of time
 		rows = rows.map(function (row) {
@@ -305,7 +305,7 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 			+ `WHERE libraryID=? AND itemTypeID NOT IN (${itemTypeAttachment}, ${itemTypeNote}) AND `
 			+ "itemID NOT IN (SELECT itemID FROM deletedItems)"
 			+ "ORDER BY itemID, orderIndex";
-		let creatorRows = await Zotero.DB.queryAsync(sql, this._libraryID);
+		let creatorRows = await Trellis.DB.queryAsync(sql, this._libraryID);
 		let lastItemID;
 		let itemCreators = [];
 		for (let i = 0; i < creatorRows.length; i++) {
@@ -409,11 +409,11 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
 					+ "WHERE libraryID=? AND fieldID=? "
 					+ "AND itemID NOT IN (SELECT itemID FROM deletedItems) "
 					+ "ORDER BY value";
-		var rows = yield Zotero.DB.queryAsync(sql, [this._libraryID, Zotero.ItemFields.getID(field)]);
+		var rows = yield Trellis.DB.queryAsync(sql, [this._libraryID, Trellis.ItemFields.getID(field)]);
 		processRows(rows);
 	}*/
 	
-	Zotero.debug("Found duplicates in " + (Date.now() - start) + " ms");
+	Trellis.debug("Found duplicates in " + (Date.now() - start) + " ms");
 };
 
 
@@ -426,11 +426,11 @@ Zotero.Duplicates.prototype._findDuplicates = async function () {
  * Objects passed should have .id properties that uniquely identify them
  */
 
-Zotero.DisjointSetForest = function () {
+Trellis.DisjointSetForest = function () {
 	this._objects = {};
 }
 
-Zotero.DisjointSetForest.prototype.find = function (x) {
+Trellis.DisjointSetForest.prototype.find = function (x) {
 	var id = x.id;
 	
 	// If we've seen this object before, use the existing copy,
@@ -455,7 +455,7 @@ Zotero.DisjointSetForest.prototype.find = function (x) {
 }
 
 
-Zotero.DisjointSetForest.prototype.union = function (x, y) {
+Trellis.DisjointSetForest.prototype.union = function (x, y) {
 	var xRoot = this.find(x);
 	var yRoot = this.find(y);
 	
@@ -477,12 +477,12 @@ Zotero.DisjointSetForest.prototype.union = function (x, y) {
 }
 
 
-Zotero.DisjointSetForest.prototype.sameSet = function (x, y) {
+Trellis.DisjointSetForest.prototype.sameSet = function (x, y) {
     return this.find(x) == this.find(y);
 }
 
 
-Zotero.DisjointSetForest.prototype.findAll = function (asIDs) {
+Trellis.DisjointSetForest.prototype.findAll = function (asIDs) {
 	var objects = [];
 	for (let i in this._objects) {
 		let obj = this._objects[i];
@@ -492,7 +492,7 @@ Zotero.DisjointSetForest.prototype.findAll = function (asIDs) {
 }
 
 
-Zotero.DisjointSetForest.prototype.findAllInSet = function (x, asIDs) {
+Trellis.DisjointSetForest.prototype.findAllInSet = function (x, asIDs) {
 	var xRoot = this.find(x);
 	var objects = [];
 	for (let i in this._objects) {
@@ -505,7 +505,7 @@ Zotero.DisjointSetForest.prototype.findAllInSet = function (x, asIDs) {
 }
 
 
-Zotero.DisjointSetForest.prototype._makeSet = function (x) {
+Trellis.DisjointSetForest.prototype._makeSet = function (x) {
 	x.parent = x;
 	x.rank = 0;
 }

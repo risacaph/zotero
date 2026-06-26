@@ -3,29 +3,29 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-Zotero.QuickCopy = new function () {
+Trellis.QuickCopy = new function () {
 	this.lastActiveURL = null;
 	
 	var _initialized = false;
@@ -38,24 +38,24 @@ Zotero.QuickCopy = new function () {
 			return;
 		}
 		
-		Zotero.debug("Initializing Quick Copy");
+		Trellis.debug("Initializing Quick Copy");
 		
 		_initialized = true;
 
 		// Make sure export translator code is loaded whenever the output format changes
 		this._prefObserverIDs = [
-			Zotero.Prefs.registerObserver(
+			Trellis.Prefs.registerObserver(
 				"export.quickCopy.setting", _loadOutputFormat
 			),
-			Zotero.Prefs.registerObserver(
+			Trellis.Prefs.registerObserver(
 				"export.noteQuickCopy.setting", _loadNoteOutputFormat
 			),
 		];
 		
-		Zotero.Schema.schemaUpdatePromise.then(async () => {
+		Trellis.Schema.schemaUpdatePromise.then(async () => {
 			// Avoid random translator initialization during tests, which can result in timeouts
 			// if an export format is selected
-			if (Zotero.test) return;
+			if (Trellis.test) return;
 
 			// Unfortunate, but we need to keep checking this to prevent race conditions
 			if (_initCancelled) return;
@@ -71,14 +71,14 @@ Zotero.QuickCopy = new function () {
 	this.uninit = function () {
 		_initialized = false;
 		_initCancelled = true;
-		this._prefObserverIDs.forEach(id => Zotero.Prefs.unregisterObserver(id));
+		this._prefObserverIDs.forEach(id => Trellis.Prefs.unregisterObserver(id));
 	};
 	
 	
 	this.loadSiteSettings = async function () {
 		var sql = "SELECT key AS domainPath, value AS format FROM settings "
 			+ "WHERE setting='quickCopySite'";
-		var rows = await Zotero.DB.queryAsync(sql);
+		var rows = await Trellis.DB.queryAsync(sql);
 		// Unproxify storage row
 		_siteSettings = rows.map(row => {
 			return {
@@ -100,7 +100,7 @@ Zotero.QuickCopy = new function () {
 	/*
 	 * Return Quick Copy setting object from string, stringified object, or object
 	 * 
-	 * Example string format: "bibliography/html=http://www.zotero.org/styles/apa"
+	 * Example string format: "bibliography/html=http://www.trellis.org/styles/apa"
 	 *
 	 * Quick Copy setting object has the following properties:
 	 * - "mode": "bibliography" (for styles) or "export" (for export translators)
@@ -158,13 +158,13 @@ Zotero.QuickCopy = new function () {
 	};
 	
 	this.getNoteFormat = function () {
-		var pref = Zotero.Prefs.get('export.noteQuickCopy.setting');
+		var pref = Trellis.Prefs.get('export.noteQuickCopy.setting');
 		pref = JSON.stringify(this.unserializeSetting(pref));
 		return pref;
 	};
 	
 	this.getFormatFromURL = function (url) {
-		var quickCopyPref = Zotero.Prefs.get("export.quickCopy.setting");
+		var quickCopyPref = Trellis.Prefs.get("export.quickCopy.setting");
 		quickCopyPref = JSON.stringify(this.unserializeSetting(quickCopyPref));
 		
 		if (!url) {
@@ -187,7 +187,7 @@ Zotero.QuickCopy = new function () {
 		}
 		
 		if (!_siteSettings) {
-			Zotero.debug("Quick Copy site settings not loaded", 2);
+			Trellis.debug("Quick Copy site settings not loaded", 2);
 			return quickCopyPref;
 		}
 		
@@ -236,14 +236,14 @@ Zotero.QuickCopy = new function () {
 	/*
 	 * Get text and (when applicable) HTML content from items
 	 *
-	 * |items| is an array of Zotero.Item objects
+	 * |items| is an array of Trellis.Item objects
 	 *
 	 * |format| may be a Quick Copy format string
-	 * (e.g. "bibliography=http://www.zotero.org/styles/apa")
+	 * (e.g. "bibliography=http://www.trellis.org/styles/apa")
 	 * or an Quick Copy format object
 	 *
 	 * |callback| is only necessary if using an export format and should be
-	 * a function suitable for Zotero.Translate.setHandler, taking parameters
+	 * a function suitable for Trellis.Translate.setHandler, taking parameters
 	 * |obj| and |worked|. The generated content should be placed in obj.string
 	 * and |worked| should be true if the operation is successful.
 	 *
@@ -251,15 +251,15 @@ Zotero.QuickCopy = new function () {
 	 * contain properties 'text' and 'html' is returned.
 	 */
 	this.getContentFromItems = function (items, format, callback, modified) {
-		if (items.length > Zotero.Prefs.get('export.quickCopy.dragLimit')) {
-			Zotero.debug("Skipping quick copy for " + items.length + " items");
+		if (items.length > Trellis.Prefs.get('export.quickCopy.dragLimit')) {
+			Trellis.debug("Skipping quick copy for " + items.length + " items");
 			return false;
 		}
 		
 		format = this.unserializeSetting(format);
 		
 		if (format.mode == 'export') {
-			var translation = new Zotero.Translate.Export;
+			var translation = new Trellis.Translate.Export;
 			translation.noWait = true;	// needed not to break drags
 			// Allow to reuse items array
 			translation.setItems(items.slice());
@@ -278,7 +278,7 @@ Zotero.QuickCopy = new function () {
 			
 			// Copy citations if shift key pressed
 			if (modified) {
-				var csl = Zotero.Styles.get(format.id).getCiteProc(locale, "text", { cache: true });
+				var csl = Trellis.Styles.get(format.id).getCiteProc(locale, "text", { cache: true });
 				csl.updateItems(items.map(item => item.id));
 				var citation = {
 					citationItems: items.map(item => ({ id: item.id })),
@@ -289,12 +289,12 @@ Zotero.QuickCopy = new function () {
 				csl.free();
 			}
 			else {
-				var style = Zotero.Styles.get(format.id);
+				var style = Trellis.Styles.get(format.id);
 				var cslEngine = style.getCiteProc(locale, 'html', { cache: true });
- 				var html = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "html");
+ 				var html = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "html");
  				cslEngine.free();
 				cslEngine = style.getCiteProc(locale, 'text', { cache: true });
-				var text = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "text");
+				var text = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "text");
 				cslEngine.free();
 			}
 			
@@ -304,26 +304,26 @@ Zotero.QuickCopy = new function () {
 			};
 		}
 		
-		throw ("Invalid mode '" + format.mode + "' in Zotero.QuickCopy.getContentFromItems()");
+		throw ("Invalid mode '" + format.mode + "' in Trellis.QuickCopy.getContentFromItems()");
 	};
 
 	/**
 	 * Generate a note item to pass to getContentFromItems() from an array of annotations
 	 *
-	 * @param {Zotero.Item[]|Object[]} annotations - An array of Zotero.Item annotations or JSON
-	 *    annotations from Zotero.Annotations.toJSON()
-	 * @return {Zotero.Item} - A note item with the annotations serialized as HTML
+	 * @param {Trellis.Item[]|Object[]} annotations - An array of Trellis.Item annotations or JSON
+	 *    annotations from Trellis.Annotations.toJSON()
+	 * @return {Trellis.Item} - A note item with the annotations serialized as HTML
 	 */
 	this.annotationsToNote = function (annotations) {
 		let jsonAnnotations = [];
 		for (let annotation of annotations) {
-			if (annotation instanceof Zotero.Item) {
+			if (annotation instanceof Trellis.Item) {
 				// Skip ink and image annotations because fetching them
-				// requires awaiting Zotero.Annotations.toJSON()
+				// requires awaiting Trellis.Annotations.toJSON()
 				if (["ink", "image"].includes(annotation.type)) {
 					continue;
 				}
-				let json = Zotero.Annotations.toJSONSync(annotation);
+				let json = Trellis.Annotations.toJSONSync(annotation);
 				json.attachmentItemID = annotation.parentItemID;
 				jsonAnnotations.push(json);
 			}
@@ -337,9 +337,9 @@ Zotero.QuickCopy = new function () {
 				delete annotation.image;
 			}
 		}
-		let { html } = Zotero.EditorInstanceUtilities.serializeAnnotations(jsonAnnotations);
-		let tmpNote = new Zotero.Item('note');
-		tmpNote.libraryID = Zotero.Libraries.userLibraryID;
+		let { html } = Trellis.EditorInstanceUtilities.serializeAnnotations(jsonAnnotations);
+		let tmpNote = new Trellis.Item('note');
+		tmpNote.libraryID = Trellis.Libraries.userLibraryID;
 		tmpNote.setNote(html);
 		return tmpNote;
 	};
@@ -351,45 +351,45 @@ Zotero.QuickCopy = new function () {
 	 * @return {Promise}
 	 */
 	var _loadOutputFormat = async function () {
-		var format = Zotero.Prefs.get("export.quickCopy.setting");
+		var format = Trellis.Prefs.get("export.quickCopy.setting");
 		return _preloadFormat(format);
 	};
 	
 	
 	var _loadNoteOutputFormat = async function () {
-		var format = Zotero.Prefs.get("export.noteQuickCopy.setting");
-		format = Zotero.QuickCopy.unserializeSetting(format);
+		var format = Trellis.Prefs.get("export.noteQuickCopy.setting");
+		format = Trellis.QuickCopy.unserializeSetting(format);
 		
 		// Always preload Note Markdown and Note HTML translators. They're both needed for note
 		// dragging if the format is "Markdown + Rich Text", HTML is needed for note dragging if
 		// the format is "HTML", and they're both needed for copying or dragging from the note
 		// editor, which uses `noWait`.
-		await _preloadFormat({ mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN });
-		await _preloadFormat({ mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_HTML });
+		await _preloadFormat({ mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN });
+		await _preloadFormat({ mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_HTML });
 		
 		// If there's another format, preload it for note item dragging
-		if (format.id != Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT
-				&& format.id != Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+		if (format.id != Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT
+				&& format.id != Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 			await _preloadFormat(format);
 		}
 	};
 	
 	
 	var _preloadFormat = async function (format) {
-		format = Zotero.QuickCopy.unserializeSetting(format);
+		format = Trellis.QuickCopy.unserializeSetting(format);
 		if (format.mode == 'export') {
-			Zotero.debug(`Preloading ${format.id} for Quick Copy`);
-			await Zotero.Translators.init();
-			let translator = Zotero.Translators.get(format.id);
+			Trellis.debug(`Preloading ${format.id} for Quick Copy`);
+			await Trellis.Translators.init();
+			let translator = Trellis.Translators.get(format.id);
 			if (!translator) {
-				Zotero.logError(`Translator ${format.id} not found`);
+				Trellis.logError(`Translator ${format.id} not found`);
 				return;
 			}
 			translator.cacheCode = true;
-			await Zotero.Translators.getCodeForTranslator(translator);
+			await Trellis.Translators.getCodeForTranslator(translator);
 		}
 		else if (format.mode === 'bibliography') {
-			let style = Zotero.Styles.get(format.id);
+			let style = Trellis.Styles.get(format.id);
 			let locale = _getLocale(format);
 			// Cache a single CiteProc instance (format-independent)
 			style.getCiteProc(locale, 'html', { cache: true });
@@ -398,19 +398,19 @@ Zotero.QuickCopy = new function () {
 	
 	
 	function _getLocale(format) {
-		return format.locale || Zotero.Prefs.get('export.quickCopy.locale');
+		return format.locale || Trellis.Prefs.get('export.quickCopy.locale');
 	}
 	
 	var _loadFormattedNames = async function () {
 		var t = new Date;
-		Zotero.debug("Loading formatted names for Quick Copy");
+		Trellis.debug("Loading formatted names for Quick Copy");
 		
-		var translation = new Zotero.Translate.Export;
+		var translation = new Trellis.Translate.Export;
 		var translators = await translation.getTranslators();
 		
 		// add styles to list
 		_formattedNames = {};
-		var styles = Zotero.Styles.getVisible();
+		var styles = Trellis.Styles.getVisible();
 		for (let style of styles) {
 			_formattedNames['bibliography=' + style.styleID] = style.title;
 		}
@@ -425,6 +425,6 @@ Zotero.QuickCopy = new function () {
 			_formattedNames['export=' + translators[i].translatorID] = translators[i].label;
 		}
 		
-		Zotero.debug("Loaded formatted names for Quick Copy in " + (new Date - t) + " ms");
+		Trellis.debug("Loaded formatted names for Quick Copy in " + (new Date - t) + " ms");
 	};
 }

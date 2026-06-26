@@ -52,9 +52,9 @@ mv x86_64 x64
 
 $mach python "$GECKO_PATH/toolkit/mozapps/installer/unify.py" x64/*.app aarch64/*.app
 
-cp x64/$fx_app_name/Contents/MacOS/firefox zotero
-xz zotero
-mv zotero.xz "$APP_ROOT_DIR/mac/zotero.xz"
+cp x64/$fx_app_name/Contents/MacOS/firefox trellis
+xz trellis
+mv trellis.xz "$APP_ROOT_DIR/mac/trellis.xz"
 
 # Save a copy of XUL
 #cp x64/$fx_app_name/Contents/MacOS/XUL "$APP_ROOT_DIR/mac/XUL"

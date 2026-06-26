@@ -3,22 +3,22 @@
 	
 	Copyright © 2023 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -46,7 +46,7 @@
 		attributeChangedCallback(name, oldValue, newValue) {
 			switch (name) {
 				case 'annotation-id':
-					this._annotation = Zotero.Items.get(newValue);
+					this._annotation = Trellis.Items.get(newValue);
 					break;
 				case 'action':
 					this.action = newValue;
@@ -90,29 +90,29 @@
 		render() {
 			if (!this.initialized || !this._annotation) return;
 
-			this._title.textContent = Zotero.getString('pdfReader.page') + ' '
+			this._title.textContent = Trellis.getString('pdfReader.page') + ' '
 				+ (this._annotation.annotationPageLabel || '-');
 			
 			let type = this._annotation.annotationType;
 			if (type == 'image') {
 				type = 'area';
 			}
-			this.querySelector('.icon').src = 'chrome://zotero/skin/16/universal/annotate-' + type + '.svg';
+			this.querySelector('.icon').src = 'chrome://trellis/skin/16/universal/annotate-' + type + '.svg';
 			this.querySelector('.action').replaceChildren();
 			if (this.action) {
 				let icon = document.createXULElement('toolbarbutton');
-				icon.classList.add('zotero-clicky');
-				icon.classList.add('zotero-clicky-' + this.action);
+				icon.classList.add('trellis-clicky');
+				icon.classList.add('trellis-clicky-' + this.action);
 				icon.setAttribute('action', this.action);
 				this.querySelector('.action').append(icon);
 			}
 			this._body.replaceChildren();
 			
 			if (['image', 'ink'].includes(this._annotation.annotationType)) {
-				let imagePath = Zotero.Annotations.getCacheImagePath(this._annotation);
+				let imagePath = Trellis.Annotations.getCacheImagePath(this._annotation);
 				if (imagePath) {
 					let img = document.createElement('img');
-					img.src = Zotero.File.pathToFileURI(imagePath);
+					img.src = Trellis.File.pathToFileURI(imagePath);
 					img.draggable = false;
 					this._body.append(img);
 					// if the image could not be loaded for some reason (e.g. file is not there),
@@ -148,15 +148,15 @@
 			
 			let tags = this._annotation.getTags();
 			this._tags.hidden = !tags.length;
-			this._tags.textContent = tags.map(tag => tag.tag).sort(Zotero.localeCompare).join(Zotero.getString('punctuation.comma') + ' ');
+			this._tags.textContent = tags.map(tag => tag.tag).sort(Trellis.localeCompare).join(Trellis.getString('punctuation.comma') + ' ');
 			
 			this.style.setProperty('--annotation-color', this._annotation.annotationColor);
 			// A11y - make focusable + add screen reader's labels
 			this.setAttribute("tabindex", 0);
-			let annotationTypeStr = Zotero.getString(`reader-${this.annotation.annotationType}-annotation`);
-			let a11yLabel = this._annotation.annotationText ? `${Zotero.getString('pdfReader.annotationText')}: ${this._annotation.annotationText}.` : annotationTypeStr;
-			let ariaComment = this._annotation.annotationComment ? `${Zotero.getString('pdfReader.annotationComment')}: ${this._annotation.annotationComment}.` : '';
-			let ariaTags = tags.length ? `${Zotero.getString('itemFields.tags')}: ${tags.map(tag => tag.tag).join(', ')}.` : '';
+			let annotationTypeStr = Trellis.getString(`reader-${this.annotation.annotationType}-annotation`);
+			let a11yLabel = this._annotation.annotationText ? `${Trellis.getString('pdfReader.annotationText')}: ${this._annotation.annotationText}.` : annotationTypeStr;
+			let ariaComment = this._annotation.annotationComment ? `${Trellis.getString('pdfReader.annotationComment')}: ${this._annotation.annotationComment}.` : '';
+			let ariaTags = tags.length ? `${Trellis.getString('itemFields.tags')}: ${tags.map(tag => tag.tag).join(', ')}.` : '';
 			let a11yDescription = `${ariaComment} ${ariaTags}`;
 			this.setAttribute("aria-label", a11yLabel);
 			this.setAttribute("aria-description", a11yDescription);

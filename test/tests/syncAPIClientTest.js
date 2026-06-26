@@ -1,8 +1,8 @@
 "use strict";
 
-describe("Zotero.Sync.APIClient", function () {
-	var apiKey = Zotero.Utilities.randomString(24);
-	var baseURL = "http://local.zotero/";
+describe("Trellis.Sync.APIClient", function () {
+	var apiKey = Trellis.Utilities.randomString(24);
+	var baseURL = "http://local.trellis/";
 	var server, client;
 	
 	function setResponse(response) {
@@ -10,25 +10,25 @@ describe("Zotero.Sync.APIClient", function () {
 	}
 	
 	before(function () {
-		Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+		Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 	});
 	
 	beforeEach(function () {
-		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 		var caller = new ConcurrentCaller(1);
-		caller.setLogger(msg => Zotero.debug(msg));
+		caller.setLogger(msg => Trellis.debug(msg));
 		caller.stopOnError = true;
 		caller.onError = function (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			if (e.fatal) {
 				caller.stop();
 				throw e;
 			}
 		};
 		
-		client = new Zotero.Sync.APIClient({
+		client = new Trellis.Sync.APIClient({
 			baseURL,
-			apiVersion: ZOTERO_CONFIG.API_VERSION,
+			apiVersion: TRELLIS_CONFIG.API_VERSION,
 			apiKey,
 			caller
 		})
@@ -38,7 +38,7 @@ describe("Zotero.Sync.APIClient", function () {
 	})
 	
 	after(function () {
-		Zotero.HTTP.mock = null;
+		Trellis.HTTP.mock = null;
 	})
 	
 	
@@ -47,19 +47,19 @@ describe("Zotero.Sync.APIClient", function () {
 			sinon.restore();
 		});
 		
-		it("should send Zotero-Schema-Version", async function () {
+		it("should send Trellis-Schema-Version", async function () {
 			server.respond(function (req) {
 				if (req.method == "GET" && req.url == baseURL + "test-schema-version") {
 					assert.propertyVal(
 						req.requestHeaders,
-						'Zotero-Schema-Version',
-						Zotero.Schema.globalSchemaVersion.toString()
+						'Trellis-Schema-Version',
+						Trellis.Schema.globalSchemaVersion.toString()
 					);
 					
 					req.respond(200, {}, "");
 				}
 			});
-			var spy = sinon.spy(Zotero.HTTP, "request");
+			var spy = sinon.spy(Trellis.HTTP, "request");
 			await client.makeRequest("GET", baseURL + "test-schema-version");
 			assert.isTrue(spy.calledOnce);
 		});
@@ -141,8 +141,8 @@ describe("Zotero.Sync.APIClient", function () {
 		var delayDelay = 100;
 		
 		before(function () {
-			delayStub = sinon.stub(Zotero.Promise, "delay").callsFake(() => {
-				return new Zotero.Promise((resolve) => {
+			delayStub = sinon.stub(Trellis.Promise, "delay").callsFake(() => {
+				return new Trellis.Promise((resolve) => {
 					setTimeout(resolve, delayDelay);
 				});
 			});
@@ -185,7 +185,7 @@ describe("Zotero.Sync.APIClient", function () {
 				}
 				called++;
 			});
-			spy = sinon.spy(Zotero.HTTP, "request");
+			spy = sinon.spy(Trellis.HTTP, "request");
 			var d = new Date();
 			await client.makeRequest("GET", baseURL + "error");
 			// Make sure we've paused for the expected delay twice

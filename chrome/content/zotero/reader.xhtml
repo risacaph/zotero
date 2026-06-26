@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css" type="text/css"?>
 
 <!DOCTYPE window [
-	<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://zotero/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
-	<!ENTITY % standaloneDTD SYSTEM "chrome://zotero/locale/standalone.dtd" > %standaloneDTD;
-	<!ENTITY % zoteroDTD SYSTEM "chrome://zotero/locale/zotero.dtd"> %zoteroDTD;
+	<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://trellis/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
+	<!ENTITY % standaloneDTD SYSTEM "chrome://trellis/locale/standalone.dtd" > %standaloneDTD;
+	<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
 ]>
 
 <window
 	id="pdf-reader"
-	windowtype="zotero:reader"
+	windowtype="trellis:reader"
 	orient="vertical"
 	width="1300"
 	height="800"
@@ -26,24 +26,24 @@
 		<html:link rel="localization" href="browser/menubar.ftl"/>
 		<html:link rel="localization" href="browser/browserSets.ftl"/>
 		<html:link rel="localization" href="toolkit/global/textActions.ftl"/>
-		<html:link rel="localization" href="zotero.ftl" />
+		<html:link rel="localization" href="trellis.ftl" />
 		<html:link rel="localization" href="reader.ftl" />
 	</linkset>
 
 	<script type="application/javascript">
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/platformKeys.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/browserWindowShim.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/platformKeys.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/browserWindowShim.js", this);
 
 		// Mozilla scripts
 		Services.scriptloader.loadSubScript("chrome://global/content/globalOverlay.js", this);
 		Services.scriptloader.loadSubScript("chrome://global/content/contentAreaUtils.js", this);
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			Services.scriptloader.loadSubScript("chrome://global/content/macWindowMenu.js", this);
 		}
 
-		Services.scriptloader.loadSubScript("chrome://zotero/content/editMenuOverlay.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/editMenuOverlay.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 	</script>
 
 	<commandset id="mainCommandSet">
@@ -54,7 +54,7 @@
 		<!--EDIT-->
 		<commandset id="editMenuCommands"/>
 		<command id="cmd_find"
-			oncommand="document.getElementById('zotero-tb-search').select()"/>
+			oncommand="document.getElementById('trellis-tb-search').select()"/>
 
 		<!--WINDOW-->
 		<command id="minimizeWindow"
@@ -99,7 +99,7 @@
 				<menuitem
 						id="menu_transferFromPDF"
 						class="menu-type-reader pdf"
-						label="&zotero.pdfReader.transferFromPDF;"
+						label="&trellis.pdfReader.transferFromPDF;"
 						oncommand="reader.transferFromPDF()"
 				/>
 				<menuitem
@@ -109,9 +109,9 @@
 					oncommand="reader.importFromEPUB()"
 				/>
 				<menuseparator class="menu-type-reader pdf"/>
-				<menuitem class="menu-type-reader pdf" label="&zotero.general.saveAs;" oncommand="reader.export()"/>
+				<menuitem class="menu-type-reader pdf" label="&trellis.general.saveAs;" oncommand="reader.export()"/>
 				<menuitem data-l10n-id="menu-print" oncommand="reader.print()"/>
-				<menuitem label="&zotero.items.menu.showInLibrary;" oncommand="reader.showInLibrary()"/>
+				<menuitem label="&trellis.items.menu.showInLibrary;" oncommand="reader.showInLibrary()"/>
 				<menuseparator/>
 				<menuitem id="menu_close" label="&closeCmd.label;" key="key_close"
 						  accesskey="&closeCmd.accesskey;" command="cmd_close"/>
@@ -148,13 +148,13 @@
 				<menuitem
 						id="edit-menuitem-rotate-left"
 						class="menu-type-reader pdf"
-						label="&zotero.pdfReader.rotatePageLeft;"
+						label="&trellis.pdfReader.rotatePageLeft;"
 						oncommand="reader.rotatePageLeft()"
 				/>
 				<menuitem
 						id="edit-menuitem-rotate-right"
 						class="menu-type-reader pdf"
-						label="&zotero.pdfReader.rotatePageRight;"
+						label="&trellis.pdfReader.rotatePageRight;"
 						oncommand="reader.rotatePageRight()"
 				/>
 			</menupopup>
@@ -170,7 +170,7 @@
 				<menuitem
 					id="view-menuitem-hand-tool"
 					class="menu-type-reader pdf"
-					label="&zotero.pdfReader.handTool;"
+					label="&trellis.pdfReader.handTool;"
 					type="checkbox"
 					oncommand="reader.toggleHandTool()"
 				/>
@@ -178,21 +178,21 @@
 				<menuitem
 					id="view-menuitem-vertical-scrolling"
 					class="menu-type-reader pdf"
-					label="&zotero.pdfReader.verticalScrolling;"
+					label="&trellis.pdfReader.verticalScrolling;"
 					type="checkbox"
 					oncommand="reader.scrollMode = 0"
 				/>
 				<menuitem
 					id="view-menuitem-horizontal-scrolling"
 					class="menu-type-reader pdf"
-					label="&zotero.pdfReader.horizontalScrolling;"
+					label="&trellis.pdfReader.horizontalScrolling;"
 					type="checkbox"
 					oncommand="reader.scrollMode = 1"
 				/>
 				<menuitem
 					id="view-menuitem-wrapped-scrolling"
 					class="menu-type-reader pdf"
-					label="&zotero.pdfReader.wrappedScrolling;"
+					label="&trellis.pdfReader.wrappedScrolling;"
 					type="checkbox"
 					oncommand="reader.scrollMode = 2"
 				/>
@@ -200,21 +200,21 @@
 				<menuitem
 					id="view-menuitem-no-spreads"
 					class="menu-type-reader pdf epub"
-					label="&zotero.pdfReader.noSpreads;"
+					label="&trellis.pdfReader.noSpreads;"
 					type="checkbox"
 					oncommand="reader.spreadMode = 0"
 				/>
 				<menuitem
 					id="view-menuitem-odd-spreads"
 					class="menu-type-reader pdf epub"
-					label="&zotero.pdfReader.oddSpreads;"
+					label="&trellis.pdfReader.oddSpreads;"
 					type="checkbox"
 					oncommand="reader.spreadMode = 1"
 				/>
 				<menuitem
 					id="view-menuitem-even-spreads"
 					class="menu-type-reader pdf"
-					label="&zotero.pdfReader.evenSpreads;"
+					label="&trellis.pdfReader.evenSpreads;"
 					type="checkbox"
 					oncommand="reader.spreadMode = 2"
 				/>
@@ -223,54 +223,54 @@
 					id="view-menuitem-scrolled"
 					class="menu-type-reader epub"
 					type="checkbox"
-					label="&zotero.pdfReader.scrolled;"
+					label="&trellis.pdfReader.scrolled;"
 					oncommand="reader.flowMode = 'scrolled'"
 				/>
 				<menuitem
 					id="view-menuitem-paginated"
 					class="menu-type-reader epub"
 					type="checkbox"
-					label="&zotero.pdfReader.paginated;"
+					label="&trellis.pdfReader.paginated;"
 					oncommand="reader.flowMode = 'paginated'"
 				/>
 				<menuseparator class="menu-type-reader pdf epub"/>
 				<menuitem
 					id="view-menuitem-zoom-in"
 					class="menu-type-reader"
-					label="&zotero.pdfReader.zoomIn;"
+					label="&trellis.pdfReader.zoomIn;"
 					oncommand="reader.zoomIn()"
 				/>
 				<menuitem
 					id="view-menuitem-zoom-out"
 					class="menu-type-reader"
-					label="&zotero.pdfReader.zoomOut;"
+					label="&trellis.pdfReader.zoomOut;"
 					oncommand="reader.zoomOut()"
 				/>
 				<menuitem
 					id="view-menuitem-zoom-reset"
 					class="menu-type-reader epub snapshot"
-					label="&zotero.pdfReader.zoomReset;"
+					label="&trellis.pdfReader.zoomReset;"
 					oncommand="reader.zoomReset()"
 				/>
 				<menuitem
 					id="view-menuitem-zoom-auto"
 					class="menu-type-reader pdf"
 					type="checkbox"
-					label="&zotero.pdfReader.zoomAuto;"
+					label="&trellis.pdfReader.zoomAuto;"
 					oncommand="reader.zoomAuto()"
 				/>
 				<menuitem
 					id="view-menuitem-zoom-page-width"
 					class="menu-type-reader pdf"
 					type="checkbox"
-					label="&zotero.pdfReader.zoomPageWidth;"
+					label="&trellis.pdfReader.zoomPageWidth;"
 					oncommand="reader.zoomPageWidth()"
 				/>
 				<menuitem
 					id="view-menuitem-zoom-page-height"
 					class="menu-type-reader pdf"
 					type="checkbox"
-					label="&zotero.pdfReader.zoomPageHeight;"
+					label="&trellis.pdfReader.zoomPageHeight;"
 					oncommand="reader.zoomPageHeight()"
 				/>
 				<menuseparator class="menu-type-reader"/>
@@ -278,14 +278,14 @@
 					id="view-menuitem-split-horizontally"
 					class="menu-type-reader"
 					type="checkbox"
-					label="&zotero.pdfReader.splitHorizontally;"
+					label="&trellis.pdfReader.splitHorizontally;"
 					oncommand="reader.toggleHorizontalSplit()"
 				/>
 				<menuitem
 					id="view-menuitem-split-vertically"
 					class="menu-type-reader"
 					type="checkbox"
-					label="&zotero.pdfReader.splitVertically;"
+					label="&trellis.pdfReader.splitVertically;"
 					oncommand="reader.toggleVerticalSplit()"
 				/>
 			</menupopup>
@@ -300,26 +300,26 @@
 				<menuitem 
 					id="go-menuitem-first-page"
 					class="menu-type-reader pdf epub"
-					label="&zotero.pdfReader.firstPage;"
+					label="&trellis.pdfReader.firstPage;"
 					oncommand="reader.navigateToFirstPage()"
 				/>
 				<menuitem
 					id="go-menuitem-last-page"
 					class="menu-type-reader pdf epub"
-					label="&zotero.pdfReader.lastPage;"
+					label="&trellis.pdfReader.lastPage;"
 					oncommand="reader.navigateToLastPage()"
 				/>
 				<menuseparator class="menu-type-reader"/>
 				<menuitem
 					id="go-menuitem-back"
 					class="menu-type-reader"
-					label="&zotero.pdfReader.back;"
+					label="&trellis.pdfReader.back;"
 					oncommand="reader.navigateBack()"
 				/>
 				<menuitem
 					id="go-menuitem-forward"
 					class="menu-type-reader"
-					label="&zotero.pdfReader.forward;"
+					label="&trellis.pdfReader.forward;"
 					oncommand="reader.navigateForward()"
 				/>
 			</menupopup>
@@ -339,15 +339,15 @@
 	</menubar>
 
 	<hbox flex="1">
-		<vbox id="zotero-reader" flex="1">
+		<vbox id="trellis-reader" flex="1">
 			<browser id="reader"
 					 tooltip="iframeTooltip"
 					 type="content"
 					 primary="true"
 					 transparent="transparent"
-					 src="resource://zotero/reader/reader.html"
+					 src="resource://trellis/reader/reader.html"
 					 flex="1"/>
-			<popupset id="zotero-reader-popupset">
+			<popupset id="trellis-reader-popupset">
 			</popupset>
 		</vbox>
 	</hbox>

@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@ import { getCSSItemTypeIcon } from 'components/icons';
 
 window.isPristine = true;
 
-var Zotero_Bibliography_Dialog = new function () {
+var Trellis_Bibliography_Dialog = new function () {
 	var bibEditInterface;
 	var _lastSelectedItemID = false;
 	var _lastSelectedIndex = false;
@@ -50,15 +50,15 @@ var Zotero_Bibliography_Dialog = new function () {
 		_removeButton = document.getElementById("remove");
 		_itemList = document.getElementById("item-list");
 		
-		_revertAllButton.label = Zotero.getString("integration.revertAll.button");
+		_revertAllButton.label = Trellis.getString("integration.revertAll.button");
 		_revertAllButton.disabled = bibEditInterface.isAnyEdited();
-		_revertAllButton.addEventListener('command', () => Zotero_Bibliography_Dialog.revertAll());
-		_revertButton.label = Zotero.getString("integration.revert.button");
+		_revertAllButton.addEventListener('command', () => Trellis_Bibliography_Dialog.revertAll());
+		_revertButton.label = Trellis.getString("integration.revert.button");
 		_revertButton.disabled = true;
-		_revertButton.addEventListener('command', () => Zotero_Bibliography_Dialog.revert());
+		_revertButton.addEventListener('command', () => Trellis_Bibliography_Dialog.revert());
 
-		window.addEventListener('dialogaccept', () => Zotero_Bibliography_Dialog.accept());
-		window.addEventListener('dialogcancel', () => Zotero_Bibliography_Dialog.close());
+		window.addEventListener('dialogaccept', () => Trellis_Bibliography_Dialog.accept());
+		window.addEventListener('dialogcancel', () => Trellis_Bibliography_Dialog.close());
 
 		_editor = document.querySelector('#editor').contentWindow.editor;
 		
@@ -172,8 +172,8 @@ var Zotero_Bibliography_Dialog = new function () {
 		var out = {};
 		var regenerate = promptService.confirmEx(
 			window,
-			Zotero.getString('integration.revertAll.title'),
-			Zotero.getString('integration.revertAll.body'),
+			Trellis.getString('integration.revertAll.title'),
+			Trellis.getString('integration.revertAll.body'),
 			promptService.STD_OK_CANCEL_BUTTONS+promptService.BUTTON_POS_1_DEFAULT,
 			null, null, null, null, out
 		);
@@ -196,8 +196,8 @@ var Zotero_Bibliography_Dialog = new function () {
 		var out = {};
 		var regenerate = promptService.confirmEx(
 			window,
-			Zotero.getString('integration.revert.title'),
-			Zotero.getString('integration.revert.body'),
+			Trellis.getString('integration.revert.title'),
+			Trellis.getString('integration.revert.body'),
 			promptService.STD_OK_CANCEL_BUTTONS+promptService.BUTTON_POS_1_DEFAULT,
 			null, null, null, null, out
 		);
@@ -229,8 +229,8 @@ var Zotero_Bibliography_Dialog = new function () {
 			var out = {};
 			var regenerate = promptService.confirmEx(
 				window,
-				Zotero.getString('integration.removeBibEntry.title'),
-				Zotero.getString('integration.removeBibEntry.body'),
+				Trellis.getString('integration.removeBibEntry.title'),
+				Trellis.getString('integration.removeBibEntry.body'),
 				promptService.STD_OK_CANCEL_BUTTONS+promptService.BUTTON_POS_1_DEFAULT,
 				null, null, null, null, out
 			);
@@ -328,7 +328,7 @@ var Zotero_Bibliography_Dialog = new function () {
 	 */
 	function _loadItems() {
 		var itemIDs = bibEditInterface.bib[0].entry_ids;
-		var items = itemIDs.map(itemID => Zotero.Cite.getItem(itemID[0]));
+		var items = itemIDs.map(itemID => Trellis.Cite.getItem(itemID[0]));
 		
 		// delete all existing items from list
 		var itemList = document.getElementById("item-list");
@@ -351,4 +351,4 @@ var Zotero_Bibliography_Dialog = new function () {
 	}
 }
 
-window.cancel = Zotero_Bibliography_Dialog.close;
+window.cancel = Trellis_Bibliography_Dialog.close;

@@ -1,10 +1,10 @@
 /* global mendeleyDBMaps:false, mendeleyOnlineMappings:false, mendeleyAPIUtils:false */
-import { OS } from "chrome://zotero/content/osfile.mjs";
+import { OS } from "chrome://trellis/content/osfile.mjs";
 
-Services.scriptloader.loadSubScript("chrome://zotero/content/include.js");
-Services.scriptloader.loadSubScript("chrome://zotero/content/import/mendeley/mendeleyOnlineMappings.js");
-Services.scriptloader.loadSubScript("chrome://zotero/content/import/mendeley/mendeleyAPIUtils.js");
-Services.scriptloader.loadSubScript("chrome://zotero/content/import/mendeley/mendeleySchemaMap.js");
+Services.scriptloader.loadSubScript("chrome://trellis/content/include.js");
+Services.scriptloader.loadSubScript("chrome://trellis/content/import/mendeley/mendeleyOnlineMappings.js");
+Services.scriptloader.loadSubScript("chrome://trellis/content/import/mendeley/mendeleyAPIUtils.js");
+Services.scriptloader.loadSubScript("chrome://trellis/content/import/mendeley/mendeleySchemaMap.js");
 
 const importerVersion = 1;
 const { apiTypeToDBType, apiFieldToDBField } = mendeleyOnlineMappings;
@@ -22,7 +22,7 @@ colorMap.set('#d3c2ff', '#a28ae5');
 colorMap.set('rgb(220, 255, 176)', '#5fb236');
 colorMap.set('#dcffb0', '#5fb236');
 
-export var Zotero_Import_Mendeley = function () {
+export var Trellis_Import_Mendeley = function () {
 	this.createNewCollection = null;
 	this.linkFiles = null;
 	this.newItems = [];
@@ -64,11 +64,11 @@ export var Zotero_Import_Mendeley = function () {
 	};
 };
 
-Zotero_Import_Mendeley.prototype.setLocation = function (file) {
+Trellis_Import_Mendeley.prototype.setLocation = function (file) {
 	this._file = file.path || file;
 };
 
-Zotero_Import_Mendeley.prototype.setHandler = function (name, handler) {
+Trellis_Import_Mendeley.prototype.setHandler = function (name, handler) {
 	switch (name) {
 		case 'itemDone':
 			this._itemDone = handler;
@@ -76,19 +76,19 @@ Zotero_Import_Mendeley.prototype.setHandler = function (name, handler) {
 	}
 };
 
-Zotero_Import_Mendeley.prototype.getProgress = function () {
+Trellis_Import_Mendeley.prototype.getProgress = function () {
 	return this._progress / this._progressMax * 100;
 };
 
-Zotero_Import_Mendeley.prototype.getTranslators = async function () {
+Trellis_Import_Mendeley.prototype.getTranslators = async function () {
 	return [{
-		label: Zotero.getString('fileInterface.appDatabase', 'Mendeley')
+		label: Trellis.getString('fileInterface.appDatabase', 'Mendeley')
 	}];
 };
 
-Zotero_Import_Mendeley.prototype.setTranslator = function () {};
+Trellis_Import_Mendeley.prototype.setTranslator = function () {};
 
-Zotero_Import_Mendeley.prototype.translate = async function (options = {}) {
+Trellis_Import_Mendeley.prototype.translate = async function (options = {}) {
 	this._linkFiles = options.linkFiles;
 	this._saveOptions = {
 		skipSelect: true,
@@ -97,12 +97,12 @@ Zotero_Import_Mendeley.prototype.translate = async function (options = {}) {
 
 	this.newItemsOnly = this.newItemsOnly || this.relinkOnly;
 	
-	const libraryID = options.libraryID || Zotero.Libraries.userLibraryID;
+	const libraryID = options.libraryID || Trellis.Libraries.userLibraryID;
 	const { key: rootCollectionKey } = options.collections
-		? Zotero.Collections.getLibraryAndKeyFromID(options.collections[0])
+		? Trellis.Collections.getLibraryAndKeyFromID(options.collections[0])
 		: {};
 
-	Zotero.debug(`Begining Mendeley import at ${this._started}. libraryID: ${libraryID}, linkFiles: ${this.linkFiles}, rootCollectionKey: ${rootCollectionKey}, newItemsOnly: ${this.newItemsOnly}, relinkOnly: ${this.relinkOnly}`);
+	Trellis.debug(`Begining Mendeley import at ${this._started}. libraryID: ${libraryID}, linkFiles: ${this.linkFiles}, rootCollectionKey: ${rootCollectionKey}, newItemsOnly: ${this.newItemsOnly}, relinkOnly: ${this.relinkOnly}`);
 	
 	// TODO: Get appropriate version based on schema version
 	const mapVersion = 83;
@@ -111,10 +111,10 @@ Zotero_Import_Mendeley.prototype.translate = async function (options = {}) {
 	const mendeleyGroupID = 0;
 	
 	// Disable syncing while we're importing
-	var resumeSync = Zotero.Sync.Runner.delayIndefinite();
+	var resumeSync = Trellis.Sync.Runner.delayIndefinite();
 	
 	if (this._file) {
-		this._db = new Zotero.DBConnection(this._file);
+		this._db = new Trellis.DBConnection(this._file);
 	}
 
 	try {
@@ -348,13 +348,13 @@ Zotero_Import_Mendeley.prototype.translate = async function (options = {}) {
 					let existingItem = await this._getItemByRelation(libraryID, predicate, uuid);
 
 					if (this.newItemsOnly && existingItem) {
-						Zotero.debug(`Skipping import of notebook "${uuid}" as it already exists in Zotero as "${existingItem.key}" and newItemsOnly is set`, 5);
+						Trellis.debug(`Skipping import of notebook "${uuid}" as it already exists in Trellis as "${existingItem.key}" and newItemsOnly is set`, 5);
 						continue;
 					}
 
 					const isMappedToExisting = !!existingItem;
-					Zotero.debug(isMappedToExisting ? `Updating existing notebook "${uuid}" -> "${existingItem.key}"` : `Importing new notebook "${uuid}"`, 5);
-					let item = isMappedToExisting ? existingItem : new Zotero.Item('note');
+					Trellis.debug(isMappedToExisting ? `Updating existing notebook "${uuid}" -> "${existingItem.key}"` : `Importing new notebook "${uuid}"`, 5);
+					let item = isMappedToExisting ? existingItem : new Trellis.Item('note');
 					item.libraryID = libraryID;
 					item.setNote(noteContent);
 					item.addRelation(predicate, uuid);
@@ -369,22 +369,22 @@ Zotero_Import_Mendeley.prototype.translate = async function (options = {}) {
 			}
 		}
 		else {
-			Zotero.debug(`Skipping import of Mendeley notebooks: ${this.skipNotebooks ? `skipNotebooks = ${this.skipNotebooks}` : 'No reference manager credentials provided'}`);
+			Trellis.debug(`Skipping import of Mendeley notebooks: ${this.skipNotebooks ? `skipNotebooks = ${this.skipNotebooks}` : 'No reference manager credentials provided'}`);
 			this._progress += 5; // we've assigned 5 arbitrary "ticks" for importing notebooks task, advance progress since we cannot import notebooks
 		}
 
 		if (this.newItemsOnly && rootCollectionKey && this.newItems.length === 0) {
-			Zotero.debug(`Mendeley Import detected no new items, removing import collection containing ${this.newCollections.length} collections created during the import`);
-			const rootCollection = await Zotero.Collections.getAsync(options.collections[0]);
+			Trellis.debug(`Mendeley Import detected no new items, removing import collection containing ${this.newCollections.length} collections created during the import`);
+			const rootCollection = await Trellis.Collections.getAsync(options.collections[0]);
 			await rootCollection.eraseTx(this._saveOptions);
 		}
 		
-		await Zotero.DB.queryAsync("REPLACE INTO settings VALUES ('mendeleyImport', 'version', ?)", importerVersion);
+		await Trellis.DB.queryAsync("REPLACE INTO settings VALUES ('mendeleyImport', 'version', ?)", importerVersion);
 		
-		Zotero.debug(`Completed Mendeley import in ${Math.round((Date.now() - this._started) / 1000)}s. (Started: ${this._started})`);
+		Trellis.debug(`Completed Mendeley import in ${Math.round((Date.now() - this._started) / 1000)}s. (Started: ${this._started})`);
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 	}
 	finally {
 		try {
@@ -392,21 +392,21 @@ Zotero_Import_Mendeley.prototype.translate = async function (options = {}) {
 				await this._db.closeDatabase();
 			}
 			if (this._tokens) {
-				Zotero.debug(`Clearing ${this._tmpFilesToDelete.length} temporary files after Mendeley import`);
+				Trellis.debug(`Clearing ${this._tmpFilesToDelete.length} temporary files after Mendeley import`);
 				await Promise.all(
 					this._tmpFilesToDelete.map(f => this._removeTemporaryFile(f))
 				);
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		resumeSync();
 	}
 };
 
-Zotero_Import_Mendeley.prototype.interrupt = function () {
+Trellis_Import_Mendeley.prototype.interrupt = function () {
 	this._interrupted = true;
 	
 	if (this._caller) {
@@ -414,17 +414,17 @@ Zotero_Import_Mendeley.prototype.interrupt = function () {
 	}
 };
 
-Zotero_Import_Mendeley.prototype._removeTemporaryFile = async function (file) {
+Trellis_Import_Mendeley.prototype._removeTemporaryFile = async function (file) {
 	try {
-		await Zotero.File.removeIfExists(file);
+		await Trellis.File.removeIfExists(file);
 	}
 	catch (e) {
-		Zotero.logError("Error while removing temporary file " + file + ": " + e);
+		Trellis.logError("Error while removing temporary file " + file + ": " + e);
 	}
 };
 
 
-Zotero_Import_Mendeley.prototype._isValidDatabase = async function () {
+Trellis_Import_Mendeley.prototype._isValidDatabase = async function () {
 	var tables = [
 		'DocumentContributors',
 		'DocumentFiles',
@@ -449,7 +449,7 @@ Zotero_Import_Mendeley.prototype._isValidDatabase = async function () {
 //
 // Collections
 //
-Zotero_Import_Mendeley.prototype._getFoldersDB = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getFoldersDB = async function (groupID) {
 	return this._db.queryAsync(
 		`SELECT F.id, F.uuid, F.name, `
 			// Top-level folders can have a parentId of 0 instead of -1 (by mistake?)
@@ -462,7 +462,7 @@ Zotero_Import_Mendeley.prototype._getFoldersDB = async function (groupID) {
 	);
 };
 
-Zotero_Import_Mendeley.prototype._getFoldersAPI = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getFoldersAPI = async function (groupID) {
 	const params = {};
 	const headers = { Accept: 'application/vnd.mendeley-folder.1+json' };
 
@@ -483,12 +483,12 @@ Zotero_Import_Mendeley.prototype._getFoldersAPI = async function (groupID) {
  *
  * The returned objects include an extra 'id' property for matching collections to documents.
  */
-Zotero_Import_Mendeley.prototype._foldersToAPIJSON = function (folderRows, parentKey) {
+Trellis_Import_Mendeley.prototype._foldersToAPIJSON = function (folderRows, parentKey) {
 	var maxDepth = 50;
 	return this._getFolderDescendents(-1, parentKey, folderRows, maxDepth);
 };
 
-Zotero_Import_Mendeley.prototype._getFolderDescendents = function (folderID, folderKey, folderRows, maxDepth) {
+Trellis_Import_Mendeley.prototype._getFolderDescendents = function (folderID, folderKey, folderRows, maxDepth) {
 	if (maxDepth == 0) return [];
 	var descendents = [];
 	var children = folderRows
@@ -497,7 +497,7 @@ Zotero_Import_Mendeley.prototype._getFolderDescendents = function (folderID, fol
 			let c = {
 				folderID: f.id,
 				remoteUUID: f.remoteUuid,
-				key: Zotero.DataObjectUtilities.generateKey(),
+				key: Trellis.DataObjectUtilities.generateKey(),
 				name: f.name,
 				parentCollection: folderKey
 			};
@@ -518,7 +518,7 @@ Zotero_Import_Mendeley.prototype._getFolderDescendents = function (folderID, fol
 	return descendents;
 };
 
-Zotero_Import_Mendeley.prototype._getFolderKeys = function (collections) {
+Trellis_Import_Mendeley.prototype._getFolderKeys = function (collections) {
 	var map = new Map();
 	for (let collection of collections) {
 		map.set(collection.folderID, collection.key);
@@ -530,7 +530,7 @@ Zotero_Import_Mendeley.prototype._getFolderKeys = function (collections) {
  * @param {Integer} libraryID
  * @param {Object[]} json
  */
-Zotero_Import_Mendeley.prototype._saveCollections = async function (libraryID, json, folderKeys) {
+Trellis_Import_Mendeley.prototype._saveCollections = async function (libraryID, json, folderKeys) {
 	var keyMap = new Map();
 	for (let i = 0; i < json.length; i++) {
 		let collectionJSON = json[i];
@@ -545,11 +545,11 @@ Zotero_Import_Mendeley.prototype._saveCollections = async function (libraryID, j
 			// Update any child collections to point to the existing collection's key instead of
 			// the new generated one
 			this._updateParentKeys('collection', json, i + 1, collectionJSON.key, collection.key);
-			// And update the map of Mendeley folderIDs to Zotero collection keys
+			// And update the map of Mendeley folderIDs to Trellis collection keys
 			folderKeys.set(collectionJSON.folderID, collection.key);
 		}
 		else {
-			collection = new Zotero.Collection;
+			collection = new Trellis.Collection;
 			collection.libraryID = libraryID;
 			if (collectionJSON.key) {
 				collection.key = collectionJSON.key;
@@ -569,7 +569,7 @@ Zotero_Import_Mendeley.prototype._saveCollections = async function (libraryID, j
 };
 
 
-Zotero_Import_Mendeley.prototype._findExistingCollection = async function (libraryID, collectionJSON, parentCollection) {
+Trellis_Import_Mendeley.prototype._findExistingCollection = async function (libraryID, collectionJSON, parentCollection) {
 	// Don't use existing collections if the import is creating a top-level collection
 	if (this.createNewCollection || !collectionJSON.relations) {
 		return false;
@@ -578,7 +578,7 @@ Zotero_Import_Mendeley.prototype._findExistingCollection = async function (libra
 	var predicate = 'mendeleyDB:remoteFolderUUID';
 	var uuid = collectionJSON.relations[predicate];
 	
-	var collections = (await Zotero.Relations.getByPredicateAndObject('collection', predicate, uuid))
+	var collections = (await Trellis.Relations.getByPredicateAndObject('collection', predicate, uuid))
 		.filter((c) => {
 			if (c.libraryID != libraryID) {
 				return false;
@@ -590,7 +590,7 @@ Zotero_Import_Mendeley.prototype._findExistingCollection = async function (libra
 		return false;
 	}
 	
-	Zotero.debug(`Found existing collection ${collections[0].libraryKey} for `
+	Trellis.debug(`Found existing collection ${collections[0].libraryKey} for `
 		+ `${predicate} ${collectionJSON.relations[predicate]}`);
 	return collections[0];
 };
@@ -599,7 +599,7 @@ Zotero_Import_Mendeley.prototype._findExistingCollection = async function (libra
 //
 // Items
 //
-Zotero_Import_Mendeley.prototype._getDocumentsDB = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getDocumentsDB = async function (groupID) {
 	return this._db.queryAsync(
 		`SELECT D.*, RD.remoteUuid FROM Documents D `
 			+ `JOIN RemoteDocuments RD ON (D.id=RD.documentId) `
@@ -608,7 +608,7 @@ Zotero_Import_Mendeley.prototype._getDocumentsDB = async function (groupID) {
 	);
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentsAPI = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getDocumentsAPI = async function (groupID) {
 	const params = { view: 'all' };
 	const headers = { Accept: 'application/vnd.mendeley-document-with-files-list+json' };
 
@@ -637,7 +637,7 @@ Zotero_Import_Mendeley.prototype._getDocumentsAPI = async function (groupID) {
  *
  * @return {Map<Number,String[]>}
  */
-Zotero_Import_Mendeley.prototype._getDocumentURLsDB = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getDocumentURLsDB = async function (groupID) {
 	var rows = await this._db.queryAsync(
 		`SELECT documentId, CAST(url AS TEXT) AS url FROM DocumentUrls DU `
 			+ `JOIN RemoteDocuments USING (documentId) `
@@ -654,7 +654,7 @@ Zotero_Import_Mendeley.prototype._getDocumentURLsDB = async function (groupID) {
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentURLsAPI = async function (documents) {
+Trellis_Import_Mendeley.prototype._getDocumentURLsAPI = async function (documents) {
 	return new Map(documents.map(d => ([d.id, d.websites])));
 };
 
@@ -662,9 +662,9 @@ Zotero_Import_Mendeley.prototype._getDocumentURLsAPI = async function (documents
  * Get a Map of document ids to arrays of creator API JSON
  *
  * @param {Integer} groupID
- * @param {Object} creatorTypeMap - Mapping of Mendeley creator types to Zotero creator types
+ * @param {Object} creatorTypeMap - Mapping of Mendeley creator types to Trellis creator types
  */
-Zotero_Import_Mendeley.prototype._getDocumentCreatorsDB = async function (groupID, creatorTypeMap) {
+Trellis_Import_Mendeley.prototype._getDocumentCreatorsDB = async function (groupID, creatorTypeMap) {
 	var rows = await this._db.queryAsync(
 		`SELECT * FROM DocumentContributors `
 			+ `JOIN RemoteDocuments USING (documentId) `
@@ -685,7 +685,7 @@ Zotero_Import_Mendeley.prototype._getDocumentCreatorsDB = async function (groupI
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentCreatorsAPI = async function (documents) {
+Trellis_Import_Mendeley.prototype._getDocumentCreatorsAPI = async function (documents) {
 	var map = new Map();
 	for (let doc of documents) {
 		const authors = (doc.authors || []).map(c => this._makeCreator('author', c.first_name, c.last_name));
@@ -694,7 +694,7 @@ Zotero_Import_Mendeley.prototype._getDocumentCreatorsAPI = async function (docum
 		const creators = [...authors, ...editors, ...translators];
 		const validCreators = creators.filter(c => c.name || c.firstName || c.lastName);
 		if (creators.length !== validCreators.length) {
-			Zotero.debug(`Discarding ${creators.length - validCreators.length} invalid creators for document ${doc.id}`);
+			Trellis.debug(`Discarding ${creators.length - validCreators.length} invalid creators for document ${doc.id}`);
 		}
 		map.set(doc.id, validCreators);
 	}
@@ -704,7 +704,7 @@ Zotero_Import_Mendeley.prototype._getDocumentCreatorsAPI = async function (docum
 /**
  * Get a Map of document ids to arrays of tag API JSON
  */
-Zotero_Import_Mendeley.prototype._getDocumentTagsDB = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getDocumentTagsDB = async function (groupID) {
 	var rows = await this._db.queryAsync(
 		// Manual tags
 		`SELECT documentId, tag, 0 AS type FROM DocumentTags `
@@ -732,7 +732,7 @@ Zotero_Import_Mendeley.prototype._getDocumentTagsDB = async function (groupID) {
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentTagsAPI = async function (documents) {
+Trellis_Import_Mendeley.prototype._getDocumentTagsAPI = async function (documents) {
 	var map = new Map();
 	for (let doc of documents) {
 		const tags = [
@@ -747,7 +747,7 @@ Zotero_Import_Mendeley.prototype._getDocumentTagsAPI = async function (documents
 /**
  * Get a Map of document ids to arrays of collection keys
  */
-Zotero_Import_Mendeley.prototype._getDocumentCollectionsDB = async function (groupID, documents, rootCollectionKey, folderKeys) {
+Trellis_Import_Mendeley.prototype._getDocumentCollectionsDB = async function (groupID, documents, rootCollectionKey, folderKeys) {
 	var rows = await this._db.queryAsync(
 		`SELECT documentId, folderId FROM DocumentFolders DF `
 			+ `JOIN RemoteDocuments USING (documentId) `
@@ -763,7 +763,7 @@ Zotero_Import_Mendeley.prototype._getDocumentCollectionsDB = async function (gro
 		if (!keys) keys = [];
 		let key = folderKeys.get(row.folderId);
 		if (!key) {
-			Zotero.debug(`Document folder ${row.folderId} not found -- skipping`, 2);
+			Trellis.debug(`Document folder ${row.folderId} not found -- skipping`, 2);
 			continue;
 		}
 		keys.push(key);
@@ -772,13 +772,13 @@ Zotero_Import_Mendeley.prototype._getDocumentCollectionsDB = async function (gro
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentCollectionsAPI = async function (documents, rootCollectionKey, folderKeys) {
+Trellis_Import_Mendeley.prototype._getDocumentCollectionsAPI = async function (documents, rootCollectionKey, folderKeys) {
 	return new Map(
 		documents.map((d) => {
 			const keys = (d.folder_uuids || []).map((fuuid) => {
 				const key = folderKeys.get(fuuid);
 				if (!key) {
-					Zotero.debug(`Document folder ${fuuid} not found -- skipping`, 2);
+					Trellis.debug(`Document folder ${fuuid} not found -- skipping`, 2);
 				}
 				return key;
 			}).filter(Boolean);
@@ -793,7 +793,7 @@ Zotero_Import_Mendeley.prototype._getDocumentCollectionsAPI = async function (do
  *
  * @return {Map<Number,Object[]>}
  */
-Zotero_Import_Mendeley.prototype._getDocumentFilesDB = async function (groupID) {
+Trellis_Import_Mendeley.prototype._getDocumentFilesDB = async function (groupID) {
 	var rows = await this._db.queryAsync(
 		`SELECT documentId, hash, localUrl FROM DocumentFiles `
 			+ `JOIN Files USING (hash) `
@@ -806,7 +806,7 @@ Zotero_Import_Mendeley.prototype._getDocumentFilesDB = async function (groupID) 
 		let docFiles = map.get(row.documentId);
 		if (!docFiles) docFiles = [];
 		if (typeof row.localUrl != 'string') {
-			Zotero.debug(`Skipping invalid localUrl '${row.localUrl}' for document ${row.documentId}`);
+			Trellis.debug(`Skipping invalid localUrl '${row.localUrl}' for document ${row.documentId}`);
 			continue;
 		}
 		docFiles.push({
@@ -818,12 +818,12 @@ Zotero_Import_Mendeley.prototype._getDocumentFilesDB = async function (groupID) 
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._fetchFile = async function (fileID, filePath) {
+Trellis_Import_Mendeley.prototype._fetchFile = async function (fileID, filePath) {
 	const fileDir = PathUtils.parent(filePath);
-	await Zotero.File.createDirectoryIfMissingAsync(fileDir);
+	await Trellis.File.createDirectoryIfMissingAsync(fileDir);
 	const xhr = await apiFetch(this._tokens, `files/${fileID}`, {}, {}, { responseType: 'blob', followRedirects: false });
 	const uri = xhr.getResponseHeader('location');
-	await Zotero.HTTP.download(uri, filePath);
+	await Trellis.HTTP.download(uri, filePath);
 
 	this._progress += 1;
 	if (this._itemDone) {
@@ -831,26 +831,26 @@ Zotero_Import_Mendeley.prototype._fetchFile = async function (fileID, filePath) 
 	}
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentFilesAPI = async function (documents) {
+Trellis_Import_Mendeley.prototype._getDocumentFilesAPI = async function (documents) {
 	const map = new Map();
 	
 	this._totalSize = 0;
 
-	const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+	const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 	this._caller = new ConcurrentCaller({
 		numConcurrent: 6,
-		onError: e => Zotero.logError(e),
-		logger: Zotero.debug
+		onError: e => Trellis.logError(e),
+		logger: Trellis.debug
 	});
 
 	for (let doc of documents) {
 		const files = [];
 		for (let file of (doc.files || [])) {
 			// Most filesystems limit filename to 255 bytes
-			let fileName = Zotero.File.truncateFileName(Zotero.File.getValidFileName(file.file_name || 'file'), 255);
+			let fileName = Trellis.File.truncateFileName(Trellis.File.getValidFileName(file.file_name || 'file'), 255);
 			let ext = fileName.includes('.') ? fileName.split('.').pop() : '';
 			let fileBaseName = ext === '' ? fileName : fileName.slice(0, -ext.length - 1);
-			let tmpFile = OS.Path.join(Zotero.getTempDirectory().path, `m-api-${file.id}.${ext}`);
+			let tmpFile = OS.Path.join(Trellis.getTempDirectory().path, `m-api-${file.id}.${ext}`);
 			
 			this._tmpFilesToDelete.push(tmpFile);
 			this._caller.add(this._fetchFile.bind(this, file.id, tmpFile));
@@ -876,7 +876,7 @@ Zotero_Import_Mendeley.prototype._getDocumentFilesAPI = async function (document
 /**
  * Get a Map of document ids to arrays of annotations
  */
-Zotero_Import_Mendeley.prototype._getDocumentAnnotationsDB = async function (groupID, profileID = null) {
+Trellis_Import_Mendeley.prototype._getDocumentAnnotationsDB = async function (groupID, profileID = null) {
 	var map = new Map();
 	
 	// Highlights
@@ -957,7 +957,7 @@ Zotero_Import_Mendeley.prototype._getDocumentAnnotationsDB = async function (gro
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._getDocumentAnnotationsAPI = async function (groupID, profileID = null) {
+Trellis_Import_Mendeley.prototype._getDocumentAnnotationsAPI = async function (groupID, profileID = null) {
 	const params = {};
 
 	if (groupID && groupID !== 0) {
@@ -1023,14 +1023,14 @@ Zotero_Import_Mendeley.prototype._getDocumentAnnotationsAPI = async function (gr
 	return map;
 };
 
-Zotero_Import_Mendeley.prototype._getGroupsAPI = async function () {
+Trellis_Import_Mendeley.prototype._getGroupsAPI = async function () {
 	const params = { type: 'all' };
 	const headers = { Accept: 'application/vnd.mendeley-group-list+json' };
 	
 	return getAll(this._tokens, 'groups/v2', params, headers, {}, this._interruptChecker);
 };
 
-Zotero_Import_Mendeley.prototype._getGroupsDB = async function () {
+Trellis_Import_Mendeley.prototype._getGroupsDB = async function () {
 	const rows = await this._db.queryAsync(
 		"SELECT id, remoteUUid, name, isOwner FROM Groups WHERE remoteUuID != ?", ['']
 	);
@@ -1038,14 +1038,14 @@ Zotero_Import_Mendeley.prototype._getGroupsDB = async function () {
 };
 
 
-Zotero_Import_Mendeley.prototype._getProfileAPI = async function () {
+Trellis_Import_Mendeley.prototype._getProfileAPI = async function () {
 	const params = { };
 	const headers = { Accept: 'application/vnd.mendeley-profiles.2+json' };
 	
 	return get(this._tokens, 'profiles/v2/me', params, headers);
 };
 
-Zotero_Import_Mendeley.prototype._getProfileDB = async function () {
+Trellis_Import_Mendeley.prototype._getProfileDB = async function () {
 	const rows = await this._db.queryAsync(
 		"SELECT uuid as id, firstName, lastName, displayName FROM Profiles ORDER BY ROWID LIMIT 1"
 	);
@@ -1053,7 +1053,7 @@ Zotero_Import_Mendeley.prototype._getProfileDB = async function () {
 	return rows[0];
 };
 
-Zotero_Import_Mendeley.prototype._getNotebooksAPI = async function () {
+Trellis_Import_Mendeley.prototype._getNotebooksAPI = async function () {
 	let params = { };
 	let headers = { Accept: 'application/json' };
 	this._progress += 1; // progress one arbitrary "tick" assigned to importing notebooks task, we have 3 more left
@@ -1069,8 +1069,8 @@ Zotero_Import_Mendeley.prototype._getNotebooksAPI = async function () {
 	return Promise.all(notebookPromises);
 };
 
-Zotero_Import_Mendeley.prototype._translateNotebookToNoteContent = async function (libraryID, mendeleyNotebook) {
-	let zoteroNoteBlocks = await Promise.all(mendeleyNotebook.blocks.map(async (block) => {
+Trellis_Import_Mendeley.prototype._translateNotebookToNoteContent = async function (libraryID, mendeleyNotebook) {
+	let trellisNoteBlocks = await Promise.all(mendeleyNotebook.blocks.map(async (block) => {
 		switch (block.type) {
 			case 'freetext':
 				return block.freetext?.value?.text ? `<p>${block.freetext?.value?.text}</p>` : '';
@@ -1086,12 +1086,12 @@ Zotero_Import_Mendeley.prototype._translateNotebookToNoteContent = async functio
 							annotationUUID
 						);
 						if (annotation) {
-							let attachmentItem = Zotero.Items.get(annotation.parentID);
-							let jsonAnnotation = await Zotero.Annotations.toJSON(annotation);
+							let attachmentItem = Trellis.Items.get(annotation.parentID);
+							let jsonAnnotation = await Trellis.Annotations.toJSON(annotation);
 							jsonAnnotation.attachmentItemID = attachmentItem.id;
 							jsonAnnotation.id = annotation.key;
 
-							const { html } = Zotero.EditorInstanceUtilities.serializeAnnotations([jsonAnnotation]);
+							const { html } = Trellis.EditorInstanceUtilities.serializeAnnotations([jsonAnnotation]);
 							return html;
 						}
 					}
@@ -1101,30 +1101,30 @@ Zotero_Import_Mendeley.prototype._translateNotebookToNoteContent = async functio
 		return '';
 	}));
 	if (mendeleyNotebook.title) {
-		zoteroNoteBlocks.unshift(`<h1>${mendeleyNotebook.title}</h1>`);
+		trellisNoteBlocks.unshift(`<h1>${mendeleyNotebook.title}</h1>`);
 	}
 
-	return zoteroNoteBlocks.join("\n");
+	return trellisNoteBlocks.join("\n");
 };
 
 /**
  * Create API JSON array with item and any child attachments or notes
  */
-Zotero_Import_Mendeley.prototype._documentToAPIJSON = async function (map, documentRow, urls, creators, tags, collections) {
+Trellis_Import_Mendeley.prototype._documentToAPIJSON = async function (map, documentRow, urls, creators, tags, collections) {
 	var parent = {
-		key: Zotero.DataObjectUtilities.generateKey()
+		key: Trellis.DataObjectUtilities.generateKey()
 	};
 	var children = [];
 	
 	parent.itemType = map.itemTypes[documentRow.type];
 	if (!parent.itemType) {
-		Zotero.warn(`Unmapped item type ${documentRow.type}`);
+		Trellis.warn(`Unmapped item type ${documentRow.type}`);
 	}
 	if (!parent.itemType || parent.itemType == 'document') {
 		parent.itemType = this._guessItemType(documentRow);
-		Zotero.debug(`Guessing type ${parent.itemType}`);
+		Trellis.debug(`Guessing type ${parent.itemType}`);
 	}
-	var itemTypeID = Zotero.ItemTypes.getID(parent.itemType);
+	var itemTypeID = Trellis.ItemTypes.getID(parent.itemType);
 	
 	for (let [mField, zField] of Object.entries(map.fields)) {
 		// If not mapped, skip
@@ -1192,15 +1192,15 @@ Zotero_Import_Mendeley.prototype._documentToAPIJSON = async function (map, docum
 		}
 		
 		// Move unknown/invalid fields to Extra
-		let fieldID = Zotero.ItemFields.getID(field)
-			&& Zotero.ItemFields.getFieldIDFromTypeAndBase(parent.itemType, field);
+		let fieldID = Trellis.ItemFields.getID(field)
+			&& Trellis.ItemFields.getFieldIDFromTypeAndBase(parent.itemType, field);
 		if (!fieldID) {
-			Zotero.warn(`Moving '${field}' to Extra for type ${parent.itemType}`);
+			Trellis.warn(`Moving '${field}' to Extra for type ${parent.itemType}`);
 			parent.extra = this._addExtraField(parent.extra, field, parent[field]);
 			delete parent[field];
 			continue;
 		}
-		let newField = Zotero.ItemFields.getName(fieldID);
+		let newField = Trellis.ItemFields.getName(fieldID);
 		if (field != newField) {
 			parent[newField] = parent[field];
 			delete parent[field];
@@ -1216,8 +1216,8 @@ Zotero_Import_Mendeley.prototype._documentToAPIJSON = async function (map, docum
 		parent.creators = [...creators, ...(parent.creators || [])];
 		
 		// If item type has a different primary type, use that for author to prevent a warning
-		let primaryCreatorType = Zotero.CreatorTypes.getName(
-			Zotero.CreatorTypes.getPrimaryIDForType(itemTypeID)
+		let primaryCreatorType = Trellis.CreatorTypes.getName(
+			Trellis.CreatorTypes.getPrimaryIDForType(itemTypeID)
 		);
 		if (primaryCreatorType != 'author') {
 			for (let creator of parent.creators) {
@@ -1230,8 +1230,8 @@ Zotero_Import_Mendeley.prototype._documentToAPIJSON = async function (map, docum
 		for (let creator of parent.creators) {
 			// seriesEditor isn't valid on some item types (e.g., book)
 			if (creator.creatorType == 'seriesEditor'
-					&& !Zotero.CreatorTypes.isValidForItemType(
-						Zotero.CreatorTypes.getID('seriesEditor'), itemTypeID)) {
+					&& !Trellis.CreatorTypes.isValidForItemType(
+						Trellis.CreatorTypes.getID('seriesEditor'), itemTypeID)) {
 				creator.creatorType = 'editor';
 			}
 		}
@@ -1283,14 +1283,14 @@ Zotero_Import_Mendeley.prototype._documentToAPIJSON = async function (map, docum
 	parent.documentID = documentRow.id;
 	
 	var json = [parent, ...children];
-	//Zotero.debug(json);
+	//Trellis.debug(json);
 	return json;
 };
 
 /**
  * Try to figure out item type based on available fields
  */
-Zotero_Import_Mendeley.prototype._guessItemType = function (documentRow) {
+Trellis_Import_Mendeley.prototype._guessItemType = function (documentRow) {
 	if (documentRow.issn || documentRow.issue) {
 		return 'journalArticle';
 	}
@@ -1300,12 +1300,12 @@ Zotero_Import_Mendeley.prototype._guessItemType = function (documentRow) {
 	return 'document';
 };
 
-Zotero_Import_Mendeley.prototype._extractSubfield = function (field) {
+Trellis_Import_Mendeley.prototype._extractSubfield = function (field) {
 	var sub = field.match(/([a-z]+)\[([^\]]+)]/);
 	return sub ? { field: sub[1], subfield: sub[2] } : { field };
 };
 
-Zotero_Import_Mendeley.prototype._processField = function (parent, children, zField, val) {
+Trellis_Import_Mendeley.prototype._processField = function (parent, children, zField, val) {
 	var { field, subfield } = this._extractSubfield(zField);
 	if (subfield) {
 		// Combine 'city' and 'country' into 'place'
@@ -1332,13 +1332,13 @@ Zotero_Import_Mendeley.prototype._processField = function (parent, children, zFi
 			// Convert unix timestamps to ISO dates
 			if (subfield.startsWith('fromUnixtime')) {
 				let [, zField] = subfield.split(':');
-				parent[zField] = Zotero.Date.dateToISO(new Date(val));
+				parent[zField] = Trellis.Date.dateToISO(new Date(val));
 			}
 			// If 'pages' isn't valid for itemType, use 'numPages' instead
 			else if (subfield == 'pages') {
-				let itemTypeID = Zotero.ItemTypes.getID(parent.itemType);
-				if (!Zotero.ItemFields.isValidForType('pages', itemTypeID)
-						&& Zotero.ItemFields.isValidForType('numPages', itemTypeID)) {
+				let itemTypeID = Trellis.ItemTypes.getID(parent.itemType);
+				if (!Trellis.ItemFields.isValidForType('pages', itemTypeID)
+						&& Trellis.ItemFields.isValidForType('numPages', itemTypeID)) {
 					zField = 'numPages';
 				}
 				else {
@@ -1355,11 +1355,11 @@ Zotero_Import_Mendeley.prototype._processField = function (parent, children, zFi
 				});
 			}
 			else {
-				Zotero.warn(`Unknown function subfield: ${subfield}`);
+				Trellis.warn(`Unknown function subfield: ${subfield}`);
 			}
 		}
 		else {
-			Zotero.warn(`Unknown field: ${field}[${subfield}]`);
+			Trellis.warn(`Unknown field: ${field}[${subfield}]`);
 		}
 	}
 	else {
@@ -1371,7 +1371,7 @@ Zotero_Import_Mendeley.prototype._processField = function (parent, children, zFi
 	}
 };
 
-Zotero_Import_Mendeley.prototype._makeCreator = function (creatorType, firstName, lastName) {
+Trellis_Import_Mendeley.prototype._makeCreator = function (creatorType, firstName, lastName) {
 	var creator = { creatorType };
 	if (firstName) {
 		creator.firstName = firstName;
@@ -1383,7 +1383,7 @@ Zotero_Import_Mendeley.prototype._makeCreator = function (creatorType, firstName
 	return creator;
 };
 
-Zotero_Import_Mendeley.prototype._addExtraField = function (extra, field, val) {
+Trellis_Import_Mendeley.prototype._addExtraField = function (extra, field, val) {
 	// Strip the field if it appears at the beginning of the value (to avoid "DOI: DOI: 10...")
 	if (typeof val == 'string') {
 		val = val.replace(new RegExp(`^${field}:\\s*`, 'i'), "");
@@ -1397,7 +1397,7 @@ Zotero_Import_Mendeley.prototype._addExtraField = function (extra, field, val) {
 	return extra + `${field}: ${val}`;
 };
 
-Zotero_Import_Mendeley.prototype._convertNote = function (note) {
+Trellis_Import_Mendeley.prototype._convertNote = function (note) {
 	return note
 		// Add newlines after <br>
 		.replace(/<br\s*\/>/g, '<br/>\n')
@@ -1418,7 +1418,7 @@ Zotero_Import_Mendeley.prototype._convertNote = function (note) {
 		.replace(/<\/m:underline>/g, '</span>');
 };
 
-Zotero_Import_Mendeley.prototype._saveItems = async function (libraryID, json) {
+Trellis_Import_Mendeley.prototype._saveItems = async function (libraryID, json) {
 	var idMap = new Map();
 	
 	var lastExistingParentItem;
@@ -1440,14 +1440,14 @@ Zotero_Import_Mendeley.prototype._saveItems = async function (libraryID, json) {
 				
 				// Leave item in any collections it's in
 				itemJSON.collections = item.getCollections()
-					.map(id => Zotero.Collections.getLibraryAndKeyFromID(id).key)
+					.map(id => Trellis.Collections.getLibraryAndKeyFromID(id).key)
 					.concat(itemJSON.collections || []);
 			}
 		}
 		else {
 			lastExistingParentItem = null;
 			
-			item = new Zotero.Item;
+			item = new Trellis.Item;
 			item.libraryID = libraryID;
 			if (itemJSON.key) {
 				item.key = itemJSON.key;
@@ -1476,7 +1476,7 @@ Zotero_Import_Mendeley.prototype._saveItems = async function (libraryID, json) {
 			const existingRels = item.getRelationsByPredicate(predicate);
 			const newRel = toSave.relations[predicate];
 			if (existingRels.length && newRel && existingRels[0] !== newRel) {
-				Zotero.debug(`Migrating relation ${predicate} for existing item ${item.key} from ${existingRels[0]} to ${newRel}`);
+				Trellis.debug(`Migrating relation ${predicate} for existing item ${item.key} from ${existingRels[0]} to ${newRel}`);
 				item.removeRelation(predicate, existingRels[0]);
 				item.addRelation(predicate, newRel);
 			}
@@ -1493,7 +1493,7 @@ Zotero_Import_Mendeley.prototype._saveItems = async function (libraryID, json) {
 };
 
 
-Zotero_Import_Mendeley.prototype._findExistingItem = async function (libraryID, itemJSON, existingParentItem) {
+Trellis_Import_Mendeley.prototype._findExistingItem = async function (libraryID, itemJSON, existingParentItem) {
 	var predicate;
 	
 	//
@@ -1509,12 +1509,12 @@ Zotero_Import_Mendeley.prototype._findExistingItem = async function (libraryID, 
 			let parentUUID = itemJSON.relations['mendeleyDB:relatedDocumentUUID'];
 			let parentRemoteUUID = itemJSON.relations['mendeleyDB:relatedRemoteDocumentUUID'];
 			if (parentUUID) {
-				let notes = existingParentItem.getNotes().map(id => Zotero.Items.get(id));
+				let notes = existingParentItem.getNotes().map(id => Trellis.Items.get(id));
 				for (let note of notes) {
 					predicate = 'mendeleyDB:relatedDocumentUUID';
 					let rels = note.getRelationsByPredicate(predicate);
 					if (rels.length && rels[0] == parentUUID) {
-						Zotero.debug(`Found existing item ${note.libraryKey} for `
+						Trellis.debug(`Found existing item ${note.libraryKey} for `
 								+ `${predicate} ${parentUUID}`);
 						return note;
 					}
@@ -1522,7 +1522,7 @@ Zotero_Import_Mendeley.prototype._findExistingItem = async function (libraryID, 
 						predicate = 'mendeleyDB:relatedRemoteDocumentUUID';
 						rels = note.getRelationsByPredicate(predicate);
 						if (rels.length && rels[0] == parentRemoteUUID) {
-							Zotero.debug(`Found existing item ${note.libraryKey} for `
+							Trellis.debug(`Found existing item ${note.libraryKey} for `
 								+ `${predicate} ${parentRemoteUUID}`);
 							return note;
 						}
@@ -1534,11 +1534,11 @@ Zotero_Import_Mendeley.prototype._findExistingItem = async function (libraryID, 
 		else if (itemJSON.itemType == 'attachment') {
 			// Linked-URL attachments (other attachments are handled in _saveFilesAndAnnotations())
 			if (itemJSON.linkMode == 'linked_url') {
-				let attachments = existingParentItem.getAttachments().map(id => Zotero.Items.get(id));
+				let attachments = existingParentItem.getAttachments().map(id => Trellis.Items.get(id));
 				for (let attachment of attachments) {
-					if (attachment.attachmentLinkMode == Zotero.Attachments.LINK_MODE_LINKED_URL
+					if (attachment.attachmentLinkMode == Trellis.Attachments.LINK_MODE_LINKED_URL
 							&& attachment.getField('url') == itemJSON.url) {
-						Zotero.debug(`Found existing link attachment ${attachment.libraryKey}`);
+						Trellis.debug(`Found existing link attachment ${attachment.libraryKey}`);
 						return attachment;
 					}
 				}
@@ -1577,14 +1577,14 @@ Zotero_Import_Mendeley.prototype._findExistingItem = async function (libraryID, 
 	if (!existingItem) {
 		return false;
 	}
-	Zotero.debug(`Found existing item ${existingItem.libraryKey} for `
+	Trellis.debug(`Found existing item ${existingItem.libraryKey} for `
 		+ `${predicate} ${itemJSON.relations[predicate]}`);
 	return existingItem;
 };
 
 
-Zotero_Import_Mendeley.prototype._getItemByRelation = async function (libraryID, predicate, object) {
-	var items = (await Zotero.Relations.getByPredicateAndObject('item', predicate, object))
+Trellis_Import_Mendeley.prototype._getItemByRelation = async function (libraryID, predicate, object) {
+	var items = (await Trellis.Relations.getByPredicateAndObject('item', predicate, object))
 		.filter(item => item.libraryID == libraryID && !item.deleted);
 	if (!items.length) {
 		return false;
@@ -1596,7 +1596,7 @@ Zotero_Import_Mendeley.prototype._getItemByRelation = async function (libraryID,
 /**
  * Saves attachments and annotations for a given document
  */
-Zotero_Import_Mendeley.prototype._saveFilesAndAnnotations = async function (files, libraryID, parentItemID, annotations) {
+Trellis_Import_Mendeley.prototype._saveFilesAndAnnotations = async function (files, libraryID, parentItemID, annotations) {
 	for (let file of files) {
 		try {
 			if (!file.fileURL) continue;
@@ -1625,18 +1625,18 @@ Zotero_Import_Mendeley.prototype._saveFilesAndAnnotations = async function (file
 							options.title = file.title;
 							options.url = file.url;
 							options.singleFile = true;
-							attachment = await Zotero.Attachments.importSnapshotFromFile(options);
+							attachment = await Trellis.Attachments.importSnapshotFromFile(options);
 						}
 						else {
 							if (file.fileBaseName) {
 								options.fileBaseName = file.fileBaseName;
 							}
-							attachment = await Zotero.Attachments.importFromFile(options);
+							attachment = await Trellis.Attachments.importFromFile(options);
 						}
 					}
 					// Otherwise link it
 					else {
-						attachment = await Zotero.Attachments.linkFromFile(options);
+						attachment = await Trellis.Attachments.linkFromFile(options);
 					}
 					attachment.setRelations({
 						'mendeleyDB:fileHash': file.hash
@@ -1645,7 +1645,7 @@ Zotero_Import_Mendeley.prototype._saveFilesAndAnnotations = async function (file
 				}
 			}
 			else {
-				Zotero.warn(path + " not found -- not importing");
+				Trellis.warn(path + " not found -- not importing");
 			}
 			
 			if (annotations) {
@@ -1660,21 +1660,21 @@ Zotero_Import_Mendeley.prototype._saveFilesAndAnnotations = async function (file
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 };
 
 
-Zotero_Import_Mendeley.prototype._findExistingFile = function (parentItemID, file) {
-	var item = Zotero.Items.get(parentItemID);
+Trellis_Import_Mendeley.prototype._findExistingFile = function (parentItemID, file) {
+	var item = Trellis.Items.get(parentItemID);
 	var attachmentIDs = item.getAttachments();
 	for (let attachmentID of attachmentIDs) {
-		let attachment = Zotero.Items.get(attachmentID);
+		let attachment = Trellis.Items.get(attachmentID);
 		let predicate = 'mendeleyDB:fileHash';
 		let rels = attachment.getRelationsByPredicate(predicate);
 		if (rels.includes(file.hash)) {
-			Zotero.debug(`Found existing file ${attachment.libraryKey} for `
+			Trellis.debug(`Found existing file ${attachment.libraryKey} for `
 				+ `${predicate} ${file.hash}`);
 			return attachment;
 		}
@@ -1682,7 +1682,7 @@ Zotero_Import_Mendeley.prototype._findExistingFile = function (parentItemID, fil
 	return false;
 };
 
-Zotero_Import_Mendeley.prototype._isDownloadedFile = function (path) {
+Trellis_Import_Mendeley.prototype._isDownloadedFile = function (path) {
 	var parentDir = PathUtils.parent(path);
 	return parentDir.endsWith(OS.Path.join('Application Support', 'Mendeley Desktop', 'Downloaded'))
 		|| parentDir.endsWith(OS.Path.join('Local', 'Mendeley Ltd', 'Mendeley Desktop', 'Downloaded'))
@@ -1690,8 +1690,8 @@ Zotero_Import_Mendeley.prototype._isDownloadedFile = function (path) {
 		|| parentDir.endsWith(OS.Path.join('data', 'Mendeley Ltd.', 'Mendeley Desktop', 'Downloaded'));
 };
 
-Zotero_Import_Mendeley.prototype._isTempDownloadedFile = function (path) {
-	return path.startsWith(OS.Path.join(Zotero.getTempDirectory().path, 'm-api'));
+Trellis_Import_Mendeley.prototype._isTempDownloadedFile = function (path) {
+	return path.startsWith(OS.Path.join(Trellis.getTempDirectory().path, 'm-api'));
 };
 
 /**
@@ -1702,7 +1702,7 @@ Zotero_Import_Mendeley.prototype._isTempDownloadedFile = function (path) {
  *
  * @return {String|false}
  */
-Zotero_Import_Mendeley.prototype._getRealFilePath = async function (path) {
+Trellis_Import_Mendeley.prototype._getRealFilePath = async function (path) {
 	if (await OS.File.exists(path)) {
 		return path;
 	}
@@ -1720,13 +1720,13 @@ Zotero_Import_Mendeley.prototype._getRealFilePath = async function (path) {
 	return false;
 };
 
-Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations, parentItemID, attachmentItemID, fileHash) {
+Trellis_Import_Mendeley.prototype._saveAnnotations = async function (annotations, parentItemID, attachmentItemID, fileHash) {
 	if (!annotations.length) return;
 	var noteStrings = [];
-	var parentItem = Zotero.Items.get(parentItemID);
+	var parentItem = Trellis.Items.get(parentItemID);
 	var libraryID = parentItem.libraryID;
 	if (attachmentItemID) {
-		var attachmentItem = Zotero.Items.get(attachmentItemID);
+		var attachmentItem = Trellis.Items.get(attachmentItemID);
 		
 		if (attachmentItem) {
 			let file = await attachmentItem.getFilePathAsync();
@@ -1734,14 +1734,14 @@ Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations,
 				// Fix blank PDF attachment MIME type from previous imports
 				let type = 'application/pdf';
 				if (!attachmentItem.attachmentContentType || attachmentItem.attachmentContentType === 'application/octet-stream') {
-					if (Zotero.MIME.sniffForMIMEType(await Zotero.File.getSample(file)) == type) {
+					if (Trellis.MIME.sniffForMIMEType(await Trellis.File.getSample(file)) == type) {
 						attachmentItem.attachmentContentType = type;
 						await attachmentItem.saveTx(this._saveOptions);
 					}
 				}
 
 				if (attachmentItem.attachmentContentType !== type) {
-					Zotero.debug(`Skipping ${annotations.length} annotations for non-PDF (${attachmentItem.attachmentContentType}) file ${file}`);
+					Trellis.debug(`Skipping ${annotations.length} annotations for non-PDF (${attachmentItem.attachmentContentType}) file ${file}`);
 					// do not attempt to import annotations for non-PDF files
 					return;
 				}
@@ -1765,14 +1765,14 @@ Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations,
 					: annotation.color
 				));
 				// Returns 'id', 'position', 'type', 'pageLabel', 'sortIndex', 'text' (for highlight)
-				Zotero.debug("Processing annotations in " + file);
-				annotations = await Zotero.PDFWorker.processMendeleyAnnotations(file, annotations);
-				Zotero.debug("Done processing annotations");
+				Trellis.debug("Processing annotations in " + file);
+				annotations = await Trellis.PDFWorker.processMendeleyAnnotations(file, annotations);
+				Trellis.debug("Done processing annotations");
 				
 				for (let annotation of annotations) {
 					// Ignore empty highlights
 					if (annotation.type == 'highlight' && !annotation.text) {
-						Zotero.debug(`Skipping empty highlight with uuid ${annotation.uuid}`, 5);
+						Trellis.debug(`Skipping empty highlight with uuid ${annotation.uuid}`, 5);
 						continue;
 					}
 					
@@ -1788,8 +1788,8 @@ Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations,
 					);
 					let key = existingItem
 						? existingItem.key
-						: Zotero.DataObjectUtilities.generateKey();
-					await Zotero.Annotations.saveFromJSON(
+						: Trellis.DataObjectUtilities.generateKey();
+					await Trellis.Annotations.saveFromJSON(
 						attachmentItem,
 						{
 							key,
@@ -1820,7 +1820,7 @@ Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations,
 		
 		let linkStr = `note on p. ${annotation.page}`;
 		noteStrings.push(
-			Zotero.Utilities.text2html(annotation.note.trim())
+			Trellis.Utilities.text2html(annotation.note.trim())
 				+ `<p class="pdf-link" style="margin-top: -0.5em; margin-bottom: 2em; font-size: .9em; text-align: right;">(${linkStr})</p>`
 		);
 	}
@@ -1828,20 +1828,20 @@ Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations,
 	if (!noteStrings.length) return;
 	
 	// Look for an existing note
-	var existingNotes = parentItem.getNotes().map(id => Zotero.Items.get(id));
+	var existingNotes = parentItem.getNotes().map(id => Trellis.Items.get(id));
 	var predicate = 'mendeleyDB:relatedFileHash';
 	var note;
 	for (let n of existingNotes) {
 		let rels = n.getRelationsByPredicate(predicate);
 		if (rels.length && rels[0] == fileHash) {
-			Zotero.debug(`Found existing note ${n.libraryKey} for ${predicate} ${fileHash}`);
+			Trellis.debug(`Found existing note ${n.libraryKey} for ${predicate} ${fileHash}`);
 			note = n;
 			break;
 		}
 	}
 	// If not found, create new one
 	if (!note) {
-		note = new Zotero.Item('note');
+		note = new Trellis.Item('note');
 		note.libraryID = libraryID;
 		note.parentItemID = parentItemID;
 		
@@ -1850,12 +1850,12 @@ Zotero_Import_Mendeley.prototype._saveAnnotations = async function (annotations,
 			'mendeleyDB:relatedFileHash': fileHash
 		});
 	}
-	note.setNote('<h1>' + Zotero.getString('extractedAnnotations') + '</h1>\n' + noteStrings.join('\n'));
+	note.setNote('<h1>' + Trellis.getString('extractedAnnotations') + '</h1>\n' + noteStrings.join('\n'));
 	await note.saveTx(this._saveOptions);
 };
 
 
-Zotero_Import_Mendeley.prototype._updateParentKeys = function (objectType, json, i, oldKey, newKey) {
+Trellis_Import_Mendeley.prototype._updateParentKeys = function (objectType, json, i, oldKey, newKey) {
 	var prop = 'parent' + objectType[0].toUpperCase() + objectType.substr(1);
 	
 	for (; i < json.length; i++) {
@@ -1873,19 +1873,19 @@ Zotero_Import_Mendeley.prototype._updateParentKeys = function (objectType, json,
 //
 // Clean up extra files created <5.0.51
 //
-Zotero_Import_Mendeley.prototype.hasImportedFiles = async function () {
-	return !!(await Zotero.DB.valueQueryAsync(
+Trellis_Import_Mendeley.prototype.hasImportedFiles = async function () {
+	return !!(await Trellis.DB.valueQueryAsync(
 		"SELECT itemID FROM itemRelations JOIN relationPredicates USING (predicateID) "
 			+ "WHERE predicate='mendeleyDB:fileHash' LIMIT 1"
 	));
 };
 
-Zotero_Import_Mendeley.prototype.queueFileCleanup = async function () {
-	await Zotero.DB.queryAsync("INSERT INTO settings VALUES ('mImport', 'cleanup', 1)");
+Trellis_Import_Mendeley.prototype.queueFileCleanup = async function () {
+	await Trellis.DB.queryAsync("INSERT INTO settings VALUES ('mImport', 'cleanup', 1)");
 };
 
-Zotero_Import_Mendeley.prototype.deleteNonPrimaryFiles = async function () {
-	var rows = await Zotero.DB.queryAsync(
+Trellis_Import_Mendeley.prototype.deleteNonPrimaryFiles = async function () {
+	var rows = await Trellis.DB.queryAsync(
 		"SELECT key, path FROM itemRelations "
 			+ "JOIN relationPredicates USING (predicateID) "
 			+ "JOIN items USING (itemID) "
@@ -1893,27 +1893,27 @@ Zotero_Import_Mendeley.prototype.deleteNonPrimaryFiles = async function () {
 			+ "WHERE predicate='mendeleyDB:fileHash' AND linkMode=1" // imported_url
 	);
 	for (let row of rows) {
-		let dir = (Zotero.Attachments.getStorageDirectoryByLibraryAndKey(1, row.key)).path;
+		let dir = (Trellis.Attachments.getStorageDirectoryByLibraryAndKey(1, row.key)).path;
 		if (!row.path.startsWith('storage:')) {
-			Zotero.logError(row.path + " does not start with 'storage:'");
+			Trellis.logError(row.path + " does not start with 'storage:'");
 			continue;
 		}
 		let filename = row.path.substr(8);
 		
-		Zotero.debug(`Checking for extra files in ${dir}`);
-		await Zotero.File.iterateDirectory(dir, async function (entry) {
-			if (entry.name.startsWith('.zotero') || entry.name == filename) {
+		Trellis.debug(`Checking for extra files in ${dir}`);
+		await Trellis.File.iterateDirectory(dir, async function (entry) {
+			if (entry.name.startsWith('.trellis') || entry.name == filename) {
 				return;
 			}
-			Zotero.debug(`Deleting ${entry.path}`);
+			Trellis.debug(`Deleting ${entry.path}`);
 			try {
 				await OS.File.remove(entry.path);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		});
 	}
 	
-	await Zotero.DB.queryAsync("DELETE FROM settings WHERE setting='mImport' AND key='cleanup'");
+	await Trellis.DB.queryAsync("DELETE FROM settings WHERE setting='mImport' AND key='cleanup'");
 };

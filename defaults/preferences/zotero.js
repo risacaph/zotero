@@ -1,254 +1,254 @@
 // These are DEFAULT prefs for the install.
 //
 // Add new user-adjustable hidden preferences to
-// http://www.zotero.org/documentation/hidden_prefs
+// http://www.trellis.org/documentation/hidden_prefs
 
-pref("extensions.zotero.firstRun2", true);
-pref("extensions.zotero.undoHistory.steps", 100);
+pref("extensions.trellis.firstRun2", true);
+pref("extensions.trellis.undoHistory.steps", 100);
 
-pref("extensions.zotero.saveRelativeAttachmentPath", false);
-pref("extensions.zotero.baseAttachmentPath", "");
-pref("extensions.zotero.useDataDir", false);
-pref("extensions.zotero.dataDir", "");
-pref("extensions.zotero.warnOnUnsafeDataDir", true);
-pref("extensions.zotero.debug.log",false);
-pref("extensions.zotero.debug.log.slowTime", 250);
-pref("extensions.zotero.debug.stackTrace", false);
-pref("extensions.zotero.debug.store",false);
-pref("extensions.zotero.debug.store.limit",500000);
-pref("extensions.zotero.debug.store.submitSize",10000000);
-pref("extensions.zotero.debug.store.submitLineLength",10000);
-pref("extensions.zotero.debug.level",5);
-pref("extensions.zotero.automaticScraperUpdates",true);
-pref("extensions.zotero.triggerProxyAuthentication", true);
+pref("extensions.trellis.saveRelativeAttachmentPath", false);
+pref("extensions.trellis.baseAttachmentPath", "");
+pref("extensions.trellis.useDataDir", false);
+pref("extensions.trellis.dataDir", "");
+pref("extensions.trellis.warnOnUnsafeDataDir", true);
+pref("extensions.trellis.debug.log",false);
+pref("extensions.trellis.debug.log.slowTime", 250);
+pref("extensions.trellis.debug.stackTrace", false);
+pref("extensions.trellis.debug.store",false);
+pref("extensions.trellis.debug.store.limit",500000);
+pref("extensions.trellis.debug.store.submitSize",10000000);
+pref("extensions.trellis.debug.store.submitLineLength",10000);
+pref("extensions.trellis.debug.level",5);
+pref("extensions.trellis.automaticScraperUpdates",true);
+pref("extensions.trellis.triggerProxyAuthentication", true);
 // Proxy auth URLs should respond successfully to HEAD requests over HTTP and HTTPS (in case of forced HTTPS requests)
-pref("extensions.zotero.proxyAuthenticationURLs", "https://www.acm.org,https://www.ebscohost.com,https://www.sciencedirect.com,https://ieeexplore.ieee.org,https://www.jstor.org,http://www.ovid.com,https://link.springer.com,https://www.tandfonline.com");
-pref("extensions.zotero.openURL.resolver","");
-pref("extensions.zotero.automaticSnapshots",true);
-pref("extensions.zotero.downloadAssociatedFiles",true);
-pref("extensions.zotero.findPDFs.resolvers", '[]');
-pref("extensions.zotero.reportTranslationFailure",true);
-pref("extensions.zotero.automaticTags",true);
-pref("extensions.zotero.hideContextAnnotationRows", true);
-pref("extensions.zotero.fontSize", "1.00");
-pref("extensions.zotero.layout", "standard");
-pref("extensions.zotero.recursiveCollections", false);
-pref("extensions.zotero.autoRecognizeFiles", true);
-pref("extensions.zotero.autoRenameFiles", true);
-pref("extensions.zotero.autoRenameFiles.linked", false);
-pref("extensions.zotero.autoRenameFiles.fileTypes", "application/pdf,application/epub+zip");
-pref("extensions.zotero.autoRenameFiles.onMetadataChange", true);
-pref("extensions.zotero.autoRenameFiles.done", true);
-pref("extensions.zotero.autoRenameFiles.bannerShown", true);
-pref("extensions.zotero.showAttachmentFilenames", false);
-pref("extensions.zotero.capitalizeTitles", false);
-pref("extensions.zotero.launchNonNativeFiles", false);
-pref("extensions.zotero.naturalSorting", true);
-pref("extensions.zotero.sortNotesChronologically", false);
-pref("extensions.zotero.sortNotesChronologically.reader", true);
-pref("extensions.zotero.sortAttachmentsChronologically", false);
-pref("extensions.zotero.showTrashWhenEmpty", true);
-pref("extensions.zotero.trashAutoEmptyDays", 30);
-pref("extensions.zotero.viewOnDoubleClick", true);
-pref("extensions.zotero.firstRunGuidance", true);
-pref("extensions.zotero.firstRunGuidanceShown.readAloud", true);
-pref("extensions.zotero.showPostUpgradeBanner", true);
-pref("extensions.zotero.showConnectorVersionWarning", true);
+pref("extensions.trellis.proxyAuthenticationURLs", "https://www.acm.org,https://www.ebscohost.com,https://www.sciencedirect.com,https://ieeexplore.ieee.org,https://www.jstor.org,http://www.ovid.com,https://link.springer.com,https://www.tandfonline.com");
+pref("extensions.trellis.openURL.resolver","");
+pref("extensions.trellis.automaticSnapshots",true);
+pref("extensions.trellis.downloadAssociatedFiles",true);
+pref("extensions.trellis.findPDFs.resolvers", '[]');
+pref("extensions.trellis.reportTranslationFailure",true);
+pref("extensions.trellis.automaticTags",true);
+pref("extensions.trellis.hideContextAnnotationRows", true);
+pref("extensions.trellis.fontSize", "1.00");
+pref("extensions.trellis.layout", "standard");
+pref("extensions.trellis.recursiveCollections", false);
+pref("extensions.trellis.autoRecognizeFiles", true);
+pref("extensions.trellis.autoRenameFiles", true);
+pref("extensions.trellis.autoRenameFiles.linked", false);
+pref("extensions.trellis.autoRenameFiles.fileTypes", "application/pdf,application/epub+zip");
+pref("extensions.trellis.autoRenameFiles.onMetadataChange", true);
+pref("extensions.trellis.autoRenameFiles.done", true);
+pref("extensions.trellis.autoRenameFiles.bannerShown", true);
+pref("extensions.trellis.showAttachmentFilenames", false);
+pref("extensions.trellis.capitalizeTitles", false);
+pref("extensions.trellis.launchNonNativeFiles", false);
+pref("extensions.trellis.naturalSorting", true);
+pref("extensions.trellis.sortNotesChronologically", false);
+pref("extensions.trellis.sortNotesChronologically.reader", true);
+pref("extensions.trellis.sortAttachmentsChronologically", false);
+pref("extensions.trellis.showTrashWhenEmpty", true);
+pref("extensions.trellis.trashAutoEmptyDays", 30);
+pref("extensions.trellis.viewOnDoubleClick", true);
+pref("extensions.trellis.firstRunGuidance", true);
+pref("extensions.trellis.firstRunGuidanceShown.readAloud", true);
+pref("extensions.trellis.showPostUpgradeBanner", true);
+pref("extensions.trellis.showConnectorVersionWarning", true);
 
-pref("extensions.zotero.groups.copyChildLinks", true);
-pref("extensions.zotero.groups.copyChildFileAttachments", true);
-pref("extensions.zotero.groups.copyAnnotations", true);
-pref("extensions.zotero.groups.copyChildNotes", true);
-pref("extensions.zotero.groups.copyTags", true);
+pref("extensions.trellis.groups.copyChildLinks", true);
+pref("extensions.trellis.groups.copyChildFileAttachments", true);
+pref("extensions.trellis.groups.copyAnnotations", true);
+pref("extensions.trellis.groups.copyChildNotes", true);
+pref("extensions.trellis.groups.copyTags", true);
 
-pref("extensions.zotero.feeds.sortAscending", false);
-pref("extensions.zotero.feeds.defaultTTL", 1);
-pref("extensions.zotero.feeds.defaultCleanupReadAfter", 3);
-pref("extensions.zotero.feeds.defaultCleanupUnreadAfter", 30);
+pref("extensions.trellis.feeds.sortAscending", false);
+pref("extensions.trellis.feeds.defaultTTL", 1);
+pref("extensions.trellis.feeds.defaultCleanupReadAfter", 3);
+pref("extensions.trellis.feeds.defaultCleanupUnreadAfter", 30);
 
-pref("extensions.zotero.backup.numBackups", 2);
-pref("extensions.zotero.backup.interval", 1440);
+pref("extensions.trellis.backup.numBackups", 2);
+pref("extensions.trellis.backup.interval", 1440);
 
-pref("extensions.zotero.vacuum.interval", 14);  // days
-pref("extensions.zotero.vacuum.freelistThreshold", 10);  // percentage of free pages to trigger
+pref("extensions.trellis.vacuum.interval", 14);  // days
+pref("extensions.trellis.vacuum.freelistThreshold", 10);  // percentage of free pages to trigger
 
-pref("extensions.zotero.lastCreatorFieldMode",0);
-pref("extensions.zotero.lastAbstractExpand", true);
-pref("extensions.zotero.lastRenameAssociatedFile", false);
-pref("extensions.zotero.lastLongTagMode", 0);
-pref("extensions.zotero.lastLongTagDelimiter", ";");
+pref("extensions.trellis.lastCreatorFieldMode",0);
+pref("extensions.trellis.lastAbstractExpand", true);
+pref("extensions.trellis.lastRenameAssociatedFile", false);
+pref("extensions.trellis.lastLongTagMode", 0);
+pref("extensions.trellis.lastLongTagDelimiter", ";");
 
-pref("extensions.zotero.fallbackSort", "firstCreator,date,title,dateAdded");
-pref("extensions.zotero.sortCreatorAsString", false);
+pref("extensions.trellis.fallbackSort", "firstCreator,date,title,dateAdded");
+pref("extensions.trellis.sortCreatorAsString", false);
 
-pref("extensions.zotero.uiDensity", "comfortable");
+pref("extensions.trellis.uiDensity", "comfortable");
 
-pref("extensions.zotero.itemPaneHeader", "title");
-pref("extensions.zotero.itemPaneHeader.bibEntry.style", "http://www.zotero.org/styles/apa");
-pref("extensions.zotero.itemPaneHeader.bibEntry.locale", "");
+pref("extensions.trellis.itemPaneHeader", "title");
+pref("extensions.trellis.itemPaneHeader.bibEntry.style", "http://www.trellis.org/styles/apa");
+pref("extensions.trellis.itemPaneHeader.bibEntry.locale", "");
 
 //Tag Selector
-pref("extensions.zotero.tagSelector.showAutomatic", true);
-pref("extensions.zotero.tagSelector.displayAllTags", false);
+pref("extensions.trellis.tagSelector.showAutomatic", true);
+pref("extensions.trellis.tagSelector.displayAllTags", false);
 
-pref("extensions.zotero.browserRequest.onLoadTimeout", 3000);
-pref("extensions.zotero.browserRequest.timeout", 60000);
+pref("extensions.trellis.browserRequest.onLoadTimeout", 3000);
+pref("extensions.trellis.browserRequest.timeout", 60000);
 
 // Keyboard shortcuts
-pref("extensions.zotero.keys.saveToZotero", "S");
-pref("extensions.zotero.keys.newItem", "N");
-pref("extensions.zotero.keys.newNote", "O");
-pref("extensions.zotero.keys.library", "L");
-pref("extensions.zotero.keys.quicksearch", "K");
-pref("extensions.zotero.keys.copySelectedItemCitationsToClipboard", "A");
-pref("extensions.zotero.keys.copySelectedItemsToClipboard", "C");
-pref("extensions.zotero.keys.sync", "Y");
-pref("extensions.zotero.keys.toggleAllRead", "R");
-pref("extensions.zotero.keys.toggleRead", "`");
-pref("extensions.zotero.keys.showTabsMenu", ";");
+pref("extensions.trellis.keys.saveToTrellis", "S");
+pref("extensions.trellis.keys.newItem", "N");
+pref("extensions.trellis.keys.newNote", "O");
+pref("extensions.trellis.keys.library", "L");
+pref("extensions.trellis.keys.quicksearch", "K");
+pref("extensions.trellis.keys.copySelectedItemCitationsToClipboard", "A");
+pref("extensions.trellis.keys.copySelectedItemsToClipboard", "C");
+pref("extensions.trellis.keys.sync", "Y");
+pref("extensions.trellis.keys.toggleAllRead", "R");
+pref("extensions.trellis.keys.toggleRead", "`");
+pref("extensions.trellis.keys.showTabsMenu", ";");
 
-pref("extensions.zotero.search.quicksearch-mode", "fields");
+pref("extensions.trellis.search.quicksearch-mode", "fields");
 
 // Fulltext indexing
-pref("extensions.zotero.fulltext.textMaxLength", 500000);
-pref("extensions.zotero.fulltext.pdfMaxPages", 100);
-pref("extensions.zotero.search.useLeftBound", true);
+pref("extensions.trellis.fulltext.textMaxLength", 500000);
+pref("extensions.trellis.fulltext.pdfMaxPages", 100);
+pref("extensions.trellis.search.useLeftBound", true);
 
 // Notes
-pref("extensions.zotero.note.fontFamily", "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif");
-pref("extensions.zotero.note.fontSize", "14");
-pref("extensions.zotero.note.tabFontSize", "16");
-pref("extensions.zotero.note.css", "");
-pref("extensions.zotero.note.smartQuotes", true);
+pref("extensions.trellis.note.fontFamily", "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif");
+pref("extensions.trellis.note.fontSize", "14");
+pref("extensions.trellis.note.tabFontSize", "16");
+pref("extensions.trellis.note.css", "");
+pref("extensions.trellis.note.smartQuotes", true);
 
 // Reports
-pref("extensions.zotero.report.includeAllChildItems", true);
-pref("extensions.zotero.report.combineChildItems", true);
+pref("extensions.trellis.report.includeAllChildItems", true);
+pref("extensions.trellis.report.combineChildItems", true);
 
 // Export and citation settings
-pref("extensions.zotero.export.lastTranslator", "14763d24-8ba0-45df-8f52-b8d1108e7ac9");
-pref("extensions.zotero.export.translatorSettings", "true,false");
-pref("extensions.zotero.export.lastNoteTranslator", "1412e9e2-51e1-42ec-aa35-e036a895534b");
-pref("extensions.zotero.export.noteTranslatorSettings", "");
-pref("extensions.zotero.export.lastStyle", "http://www.zotero.org/styles/chicago-shortened-notes-bibliography");
-pref("extensions.zotero.export.bibliographySettings", "save-as-rtf");
-pref("extensions.zotero.export.displayCharsetOption", true);
-pref("extensions.zotero.export.citePaperJournalArticleURL", false);
-pref("extensions.zotero.cite.automaticJournalAbbreviations", true);
-pref("extensions.zotero.cite.useCiteprocRs", false);
-pref("extensions.zotero.import.createNewCollection.fromFileOpenHandler", true);
-pref("extensions.zotero.rtfScan.lastInputFile", "");
-pref("extensions.zotero.rtfScan.lastOutputFile", "");
+pref("extensions.trellis.export.lastTranslator", "14763d24-8ba0-45df-8f52-b8d1108e7ac9");
+pref("extensions.trellis.export.translatorSettings", "true,false");
+pref("extensions.trellis.export.lastNoteTranslator", "1412e9e2-51e1-42ec-aa35-e036a895534b");
+pref("extensions.trellis.export.noteTranslatorSettings", "");
+pref("extensions.trellis.export.lastStyle", "http://www.trellis.org/styles/chicago-shortened-notes-bibliography");
+pref("extensions.trellis.export.bibliographySettings", "save-as-rtf");
+pref("extensions.trellis.export.displayCharsetOption", true);
+pref("extensions.trellis.export.citePaperJournalArticleURL", false);
+pref("extensions.trellis.cite.automaticJournalAbbreviations", true);
+pref("extensions.trellis.cite.useCiteprocRs", false);
+pref("extensions.trellis.import.createNewCollection.fromFileOpenHandler", true);
+pref("extensions.trellis.rtfScan.lastInputFile", "");
+pref("extensions.trellis.rtfScan.lastOutputFile", "");
 
-pref("extensions.zotero.export.quickCopy.setting", "bibliography=http://www.zotero.org/styles/chicago-shortened-notes-bibliography");
-pref("extensions.zotero.export.quickCopy.dragLimit", 50);
+pref("extensions.trellis.export.quickCopy.setting", "bibliography=http://www.trellis.org/styles/chicago-shortened-notes-bibliography");
+pref("extensions.trellis.export.quickCopy.dragLimit", 50);
 
-pref("extensions.zotero.export.noteQuickCopy.setting", '{"mode":"export","id":"a45eca67-1ee8-45e5-b4c6-23fb8a852873","markdownOptions":{"includeAppLinks":true},"htmlOptions":{"includeAppLinks":false}}');
+pref("extensions.trellis.export.noteQuickCopy.setting", '{"mode":"export","id":"a45eca67-1ee8-45e5-b4c6-23fb8a852873","markdownOptions":{"includeAppLinks":true},"htmlOptions":{"includeAppLinks":false}}');
 
 // Integration settings
-pref("extensions.zotero.integration.port", 50001);
-pref("extensions.zotero.integration.autoRegenerate", -1);	// -1 = ask; 0 = no; 1 = yes
-pref("extensions.zotero.integration.useClassicAddCitationDialog", false);
-pref("extensions.zotero.integration.keepAddCitationDialogRaised", false);
-pref("extensions.zotero.integration.upgradeTemplateDelayedOn", 0);
-pref("extensions.zotero.integration.dontPromptMendeleyImport", false);
-pref("extensions.zotero.integration.citationDialogMode", "last-used");
-pref("extensions.zotero.integration.citationDialogShowLocatorTip", true);
-pref("extensions.zotero.integration.annotationDialogIncludeComments", true);
-pref("extensions.zotero.integration.citationPreviewShown", true);
+pref("extensions.trellis.integration.port", 50001);
+pref("extensions.trellis.integration.autoRegenerate", -1);	// -1 = ask; 0 = no; 1 = yes
+pref("extensions.trellis.integration.useClassicAddCitationDialog", false);
+pref("extensions.trellis.integration.keepAddCitationDialogRaised", false);
+pref("extensions.trellis.integration.upgradeTemplateDelayedOn", 0);
+pref("extensions.trellis.integration.dontPromptMendeleyImport", false);
+pref("extensions.trellis.integration.citationDialogMode", "last-used");
+pref("extensions.trellis.integration.citationDialogShowLocatorTip", true);
+pref("extensions.trellis.integration.annotationDialogIncludeComments", true);
+pref("extensions.trellis.integration.citationPreviewShown", true);
 
 // Connector settings
-pref("extensions.zotero.httpServer.enabled", true);
-pref("extensions.zotero.httpServer.port", 23119);	// ascii "ZO"
-pref("extensions.zotero.httpServer.localAPI.enabled", false);
+pref("extensions.trellis.httpServer.enabled", true);
+pref("extensions.trellis.httpServer.port", 23119);	// ascii "ZO"
+pref("extensions.trellis.httpServer.localAPI.enabled", false);
 
 // Zeroconf
-pref("extensions.zotero.zeroconf.server.enabled", false);
+pref("extensions.trellis.zeroconf.server.enabled", false);
 
 // Streaming server
-pref("extensions.zotero.streaming.enabled", true);
+pref("extensions.trellis.streaming.enabled", true);
 
 // Sync
-pref("extensions.zotero.sync.autoSync", true);
-pref("extensions.zotero.sync.server.username", "");
-pref("extensions.zotero.sync.server.compressData", true);
-pref("extensions.zotero.sync.storage.enabled", true);
-pref("extensions.zotero.sync.storage.protocol", "zotero");
-pref("extensions.zotero.sync.storage.verified", false);
-pref("extensions.zotero.sync.storage.scheme", "https");
-pref("extensions.zotero.sync.storage.url", "");
-pref("extensions.zotero.sync.storage.username", "");
-pref("extensions.zotero.sync.storage.maxDownloads", 4);
-pref("extensions.zotero.sync.storage.maxUploads", 2);
-pref("extensions.zotero.sync.storage.deleteDelayDays", 30);
-pref("extensions.zotero.sync.storage.groups.enabled", true);
-pref("extensions.zotero.sync.storage.downloadMode.personal", "on-sync");
-pref("extensions.zotero.sync.storage.downloadMode.groups", "on-sync");
-pref("extensions.zotero.sync.fulltext.enabled", true);
-pref("extensions.zotero.sync.reminder.setUp.enabled", true);
-pref("extensions.zotero.sync.reminder.setUp.lastDisplayed", 0);
-pref("extensions.zotero.sync.reminder.autoSync.enabled", true);
-pref("extensions.zotero.sync.reminder.autoSync.lastDisplayed", 0);
+pref("extensions.trellis.sync.autoSync", true);
+pref("extensions.trellis.sync.server.username", "");
+pref("extensions.trellis.sync.server.compressData", true);
+pref("extensions.trellis.sync.storage.enabled", true);
+pref("extensions.trellis.sync.storage.protocol", "trellis");
+pref("extensions.trellis.sync.storage.verified", false);
+pref("extensions.trellis.sync.storage.scheme", "https");
+pref("extensions.trellis.sync.storage.url", "");
+pref("extensions.trellis.sync.storage.username", "");
+pref("extensions.trellis.sync.storage.maxDownloads", 4);
+pref("extensions.trellis.sync.storage.maxUploads", 2);
+pref("extensions.trellis.sync.storage.deleteDelayDays", 30);
+pref("extensions.trellis.sync.storage.groups.enabled", true);
+pref("extensions.trellis.sync.storage.downloadMode.personal", "on-sync");
+pref("extensions.trellis.sync.storage.downloadMode.groups", "on-sync");
+pref("extensions.trellis.sync.fulltext.enabled", true);
+pref("extensions.trellis.sync.reminder.setUp.enabled", true);
+pref("extensions.trellis.sync.reminder.setUp.lastDisplayed", 0);
+pref("extensions.trellis.sync.reminder.autoSync.enabled", true);
+pref("extensions.trellis.sync.reminder.autoSync.lastDisplayed", 0);
 
 // Proxy
-pref("extensions.zotero.proxies.autoRecognize", true);
-pref("extensions.zotero.proxies.transparent", true);
-pref("extensions.zotero.proxies.disableByDomain", false);
-pref("extensions.zotero.proxies.disableByDomainString", ".edu");
-pref("extensions.zotero.proxies.showRedirectNotification", true);
+pref("extensions.trellis.proxies.autoRecognize", true);
+pref("extensions.trellis.proxies.transparent", true);
+pref("extensions.trellis.proxies.disableByDomain", false);
+pref("extensions.trellis.proxies.disableByDomainString", ".edu");
+pref("extensions.trellis.proxies.showRedirectNotification", true);
 
 // Data layer purging
-pref("extensions.zotero.purge.creators", false);
-pref("extensions.zotero.purge.fulltext", false);
-pref("extensions.zotero.purge.items", false);
-pref("extensions.zotero.purge.tags", false);
+pref("extensions.trellis.purge.creators", false);
+pref("extensions.trellis.purge.fulltext", false);
+pref("extensions.trellis.purge.items", false);
+pref("extensions.trellis.purge.tags", false);
 
-// Zotero pane persistent data
-pref("extensions.zotero.pane.persist", "");
-pref("extensions.zotero.showAttachmentPreview", true);
+// Trellis pane persistent data
+pref("extensions.trellis.pane.persist", "");
+pref("extensions.trellis.showAttachmentPreview", true);
 
-pref("extensions.zotero.fileHandler.pdf", "");
-pref("extensions.zotero.fileHandler.epub", "");
-pref("extensions.zotero.fileHandler.snapshot", "");
-pref("extensions.zotero.openReaderInNewWindow", false);
+pref("extensions.trellis.fileHandler.pdf", "");
+pref("extensions.trellis.fileHandler.epub", "");
+pref("extensions.trellis.fileHandler.snapshot", "");
+pref("extensions.trellis.openReaderInNewWindow", false);
 
-pref("extensions.zotero.openNoteInNewWindow", false);
+pref("extensions.trellis.openNoteInNewWindow", false);
 
 // File/URL opening executable if launch() fails
-pref("extensions.zotero.fallbackLauncher.unix", "/usr/bin/xdg-open");
-pref("extensions.zotero.fallbackLauncher.windows", "");
+pref("extensions.trellis.fallbackLauncher.unix", "/usr/bin/xdg-open");
+pref("extensions.trellis.fallbackLauncher.windows", "");
 
 //Translators
-pref("extensions.zotero.translators.attachSupplementary", false);
-pref("extensions.zotero.translators.supplementaryAsLink", false);
-pref("extensions.zotero.translators.RIS.import.ignoreUnknown", true);
-pref("extensions.zotero.translators.RIS.import.keepID", false);
+pref("extensions.trellis.translators.attachSupplementary", false);
+pref("extensions.trellis.translators.supplementaryAsLink", false);
+pref("extensions.trellis.translators.RIS.import.ignoreUnknown", true);
+pref("extensions.trellis.translators.RIS.import.keepID", false);
 
 // Retracted Items
-pref("extensions.zotero.retractions.enabled", true);
-pref("extensions.zotero.retractions.recentItems", "[]");
+pref("extensions.trellis.retractions.enabled", true);
+pref("extensions.trellis.retractions.recentItems", "[]");
 
 // Annotations
-pref("extensions.zotero.annotations.noteTemplates.title", "<h1>{{title}}<br/>({{date}})</h1>");
-pref("extensions.zotero.annotations.noteTemplates.highlight", "<p>{{highlight}} {{citation}} {{comment}}</p>");
-pref("extensions.zotero.annotations.noteTemplates.note", "<p>{{citation}} {{comment}}</p>");
+pref("extensions.trellis.annotations.noteTemplates.title", "<h1>{{title}}<br/>({{date}})</h1>");
+pref("extensions.trellis.annotations.noteTemplates.highlight", "<p>{{highlight}} {{citation}} {{comment}}</p>");
+pref("extensions.trellis.annotations.noteTemplates.note", "<p>{{citation}} {{comment}}</p>");
 
 // Scaffold
-pref("extensions.zotero.scaffold.eslint.enabled", true);
+pref("extensions.trellis.scaffold.eslint.enabled", true);
 
 // Tabs
-pref("extensions.zotero.tabs.title.reader", "titleCreatorYear");
+pref("extensions.trellis.tabs.title.reader", "titleCreatorYear");
 
 // Reader
-pref("extensions.zotero.reader.textSelectionAnnotationMode", "highlight");
-pref("extensions.zotero.reader.lightTheme", "");
-pref("extensions.zotero.reader.darkTheme", "dark");
-pref("extensions.zotero.reader.ebookFontFamily", "Georgia, serif");
-pref("extensions.zotero.reader.ebookHyphenate", true);
-pref("extensions.zotero.reader.autoDisableTool.note", true);
-pref("extensions.zotero.reader.autoDisableTool.text", true);
-pref("extensions.zotero.reader.autoDisableTool.image", true);
-pref("extensions.zotero.reader.lastSidebarTab", "annotations");
+pref("extensions.trellis.reader.textSelectionAnnotationMode", "highlight");
+pref("extensions.trellis.reader.lightTheme", "");
+pref("extensions.trellis.reader.darkTheme", "dark");
+pref("extensions.trellis.reader.ebookFontFamily", "Georgia, serif");
+pref("extensions.trellis.reader.ebookHyphenate", true);
+pref("extensions.trellis.reader.autoDisableTool.note", true);
+pref("extensions.trellis.reader.autoDisableTool.text", true);
+pref("extensions.trellis.reader.autoDisableTool.image", true);
+pref("extensions.trellis.reader.lastSidebarTab", "annotations");
 
 // Set color scheme to auto by default
 pref("browser.theme.toolbar-theme", 2);

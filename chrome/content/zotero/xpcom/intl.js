@@ -3,26 +3,26 @@
 	
 	Copyright © 2018 Center for History and New Media
 					George Mason University, Fairfax, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
-Zotero.Intl = new function () {
+Trellis.Intl = new function () {
 	let bundle;
 	let collation;
 	let intlProps;
@@ -30,10 +30,10 @@ Zotero.Intl = new function () {
 	let pluralFormNumForms;
 	let ftl;
 
-	// Get settings from language pack (extracted by zotero-build/locale/merge_mozilla_files)
+	// Get settings from language pack (extracted by trellis-build/locale/merge_mozilla_files)
 	this.init = function () {
-		var prevMatchOS = Zotero.Prefs.get('intl.locale.matchOS', true);
-		var prevLocale = Zotero.Prefs.get('general.useragent.locale', true);
+		var prevMatchOS = Trellis.Prefs.get('intl.locale.matchOS', true);
+		var prevLocale = Trellis.Prefs.get('general.useragent.locale', true);
 		
 		if (prevMatchOS !== undefined || prevLocale !== undefined) {
 			let restart = false;
@@ -46,61 +46,61 @@ Zotero.Intl = new function () {
 					// Don't panic if the value is not a valid locale code
 				}
 			}
-			Zotero.Prefs.clear('intl.locale.matchOS', true);
-			Zotero.Prefs.clear('general.useragent.locale', true);
+			Trellis.Prefs.clear('intl.locale.matchOS', true);
+			Trellis.Prefs.clear('general.useragent.locale', true);
 			if (restart) {
-				Zotero.Utilities.Internal.quitZotero(true);
+				Trellis.Utilities.Internal.quitTrellis(true);
 				return;
 			}
 		}
 		
-		const { PluralForm } = ChromeUtils.importESModule("resource://zotero/PluralForm.mjs");
+		const { PluralForm } = ChromeUtils.importESModule("resource://trellis/PluralForm.mjs");
 
 		// Exposed for tests
-		this._bundle = bundle = Services.strings.createBundle('chrome://zotero/locale/zotero.properties');
-		intlProps = Services.strings.createBundle('chrome://zotero/locale/mozilla/intl.properties');
+		this._bundle = bundle = Services.strings.createBundle('chrome://trellis/locale/trellis.properties');
+		intlProps = Services.strings.createBundle('chrome://trellis/locale/mozilla/intl.properties');
 
 		[pluralFormGet, pluralFormNumForms] = PluralForm.makeGetter(parseInt(getIntlProp('pluralRule', 1)));
 		setOrClearIntlPref('intl.accept_languages', 'string');
 
-		Zotero.locale = Zotero.Utilities.Internal.resolveLocale(
+		Trellis.locale = Trellis.Utilities.Internal.resolveLocale(
 			Services.locale.requestedLocale,
 			Services.locale.availableLocales
 		);
 
 		// Also load the brand as appName
-		Zotero.appName = Services.strings
+		Trellis.appName = Services.strings
 			.createBundle('chrome://branding/locale/brand.properties')
 			.GetStringFromName('brandShortName');
 		
-		// Set the locale direction to Zotero.dir
-		Zotero.dir = Zotero.Locale.defaultScriptDirection(Zotero.locale);
-		Zotero.rtl = (Zotero.dir === 'rtl');
-		Zotero.arrowPreviousKey = Zotero.rtl ? 'ArrowRight' : 'ArrowLeft';
-		Zotero.arrowNextKey = Zotero.rtl ? 'ArrowLeft' : 'ArrowRight';
+		// Set the locale direction to Trellis.dir
+		Trellis.dir = Trellis.Locale.defaultScriptDirection(Trellis.locale);
+		Trellis.rtl = (Trellis.dir === 'rtl');
+		Trellis.arrowPreviousKey = Trellis.rtl ? 'ArrowRight' : 'ArrowLeft';
+		Trellis.arrowNextKey = Trellis.rtl ? 'ArrowLeft' : 'ArrowRight';
 		
 		// Provide synchronous access to Fluent strings for getString()
 		ftl = new Localization([
 			'branding/brand.ftl',
-			'zotero.ftl',
+			'trellis.ftl',
 			'reader.ftl',
 			'integration.ftl',
 			'note-editor.ftl',
 			'preferences.ftl',
 			// More FTL files can be hardcoded here, or added later with
-			// Zotero.ftl.addResourceIds(['...'])
+			// Trellis.ftl.addResourceIds(['...'])
 		], true);
-		Zotero.ftl = ftl;
+		Trellis.ftl = ftl;
 	};
 
 
 	ChromeUtils.defineLazyGetter(this, 'strings', () => {
-		const intlFiles = ['zotero.dtd', 'preferences.dtd', 'mozilla/editMenuOverlay.dtd'];
+		const intlFiles = ['trellis.dtd', 'preferences.dtd', 'mozilla/editMenuOverlay.dtd'];
 
 		let strings = [];
 		let { documentElement: elem } = new DOMParser().parseFromString('<root></root>', 'application/xml');
 		for (let intlFile of intlFiles) {
-			let localeXML = Zotero.File.getContentsFromURL(`chrome://zotero/locale/${intlFile}`);
+			let localeXML = Trellis.File.getContentsFromURL(`chrome://trellis/locale/${intlFile}`);
 			let regexp = /<!ENTITY ([^\s]+)\s+"([^"]+)/g;
 			let regexpResult;
 			while ((regexpResult = regexp.exec(localeXML))) {
@@ -140,10 +140,10 @@ Zotero.Intl = new function () {
 					return ftlString;
 				}
 				// TEMP: The this.strings check prevents "TypeError: this.strings is undefined"
-				// from an early Zotero.getString() call, but I'm not sure why. this.strings is
+				// from an early Trellis.getString() call, but I'm not sure why. this.strings is
 				// set using defineLazyGetter, but lazy doesn't mean asynchronous...
 				//
-				// https://forums.zotero.org/discussion/117812/issue-with-installing-zotero-7
+				// https://forums.trellis.org/discussion/117812/issue-with-installing-trellis-7
 				else if (this.strings && this.strings[name]) {
 					return this.strings[name];
 				}
@@ -166,17 +166,17 @@ Zotero.Intl = new function () {
 		}
 		catch (e){
 			if (e.name == 'NS_ERROR_ILLEGAL_VALUE') {
-				Zotero.debug(params, 1);
+				Trellis.debug(params, 1);
 			}
 			else if (e.name != 'NS_ERROR_FAILURE') {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			let msg = 'Localized string not available for ' + name;
-			if (Zotero.locale == 'en-US') {
+			if (Trellis.locale == 'en-US') {
 				throw new Error(msg);
 			}
 			// In non-English locales, just return key if string is unavailable
-			Zotero.debug(msg, 1);
+			Trellis.debug(msg, 1);
 			return name;
 		}
 		return l10n;
@@ -228,7 +228,7 @@ Zotero.Intl = new function () {
 			return intlProps.GetStringFromName(name);
 		}
 		catch (e) {
-			Zotero.logError(`Couldn't load ${name} from intl.properties`);
+			Trellis.logError(`Couldn't load ${name} from intl.properties`);
 			return fallback;
 		}
 	}
@@ -239,15 +239,15 @@ Zotero.Intl = new function () {
 			if (type == 'boolean') {
 				val = val == 'true';
 			}
-			Zotero.Prefs.set(name, val, true);
+			Trellis.Prefs.set(name, val, true);
 		}
 		else {
-			Zotero.Prefs.clear(name, true);
+			Trellis.Prefs.clear(name, true);
 		}
 	}
 
 	function getLocaleCollation() {
-		var naturalSorting = Zotero.Prefs.get('naturalSorting');
+		var naturalSorting = Trellis.Prefs.get('naturalSorting');
 		
 		try {
 			// DEBUG: Is this necessary, or will Intl.Collator just default to the same locales we're
@@ -259,18 +259,18 @@ Zotero.Intl = new function () {
 			});
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 
 			// Fall back to en-US sorting
 			try {
-				Zotero.logError("Falling back to en-US sorting");
+				Trellis.logError("Falling back to en-US sorting");
 				collator = new Intl.Collator(['en-US'], {
 					numeric: naturalSorting,
 					sensitivity: 'base'
 				});
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 
 				// If there's still an error, just skip sorting
 				collator = {

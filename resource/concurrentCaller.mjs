@@ -3,28 +3,28 @@
     
     Copyright © 2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-import { BluebirdShimPromise as Promise } from 'chrome://zotero/content/xpcom/bluebirdShim.mjs';
-import { CanceledException } from 'chrome://zotero/content/modules/errors.mjs';
+import { BluebirdShimPromise as Promise } from 'chrome://trellis/content/xpcom/bluebirdShim.mjs';
+import { CanceledException } from 'chrome://trellis/content/modules/errors.mjs';
 
 /**
  * Call a fixed number of functions at once, queueing the rest until slots
@@ -55,7 +55,7 @@ import { CanceledException } from 'chrome://zotero/content/modules/errors.mjs';
  * @param {Integer} [options.interval] - Interval between the end of one function run and the
  *     beginning of another, in milliseconds
  * @param {Function} [options.logger]
- * @param {Object} [options.Promise] The Zotero instance of Promise to allow
+ * @param {Object} [options.Promise] The Trellis instance of Promise to allow
  *		stubbing/spying in tests
  */
 export var ConcurrentCaller = function (options = {}) {

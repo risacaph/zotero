@@ -16,13 +16,13 @@ async function start() {
 		scrolling = false;
 	};
 	
-	sysInfo = await Zotero.getSystemInfo();
+	sysInfo = await Trellis.getSystemInfo();
 	await updateErrors()
 	
 	if (stopping) return;
 	
 	addInitialOutput();
-	Zotero.Debug.addConsoleViewerListener(addLine)
+	Trellis.Debug.addConsoleViewerListener(addLine)
 	intervalID = setInterval(() => updateErrors(), interval);
 }
 
@@ -32,13 +32,13 @@ function stop() {
 		clearInterval(intervalID);
 		intervalID = null;
 	}
-	Zotero.Debug.removeConsoleViewerListener()
+	Trellis.Debug.removeConsoleViewerListener()
 }
 
 function updateErrors() {
 	if (stopping) return;
 	
-	var errors = Zotero.getErrors(true);
+	var errors = Trellis.getErrors(true);
 	var errorStr = errors.length ? errors.join('\n\n') + '\n\n' : '';
 	
 	document.getElementById('errors').textContent = errorStr + sysInfo;
@@ -49,7 +49,7 @@ function updateErrors() {
 }
 
 function addInitialOutput() {
-	Zotero.Debug.getConsoleViewerOutput().forEach(function (line) {
+	Trellis.Debug.getConsoleViewerOutput().forEach(function (line) {
 		addLine(line);
 	});
 }
@@ -79,19 +79,19 @@ function scrollToPageBottom() {
 }
 
 function submit(button) {
-	const { ZOTERO_CONFIG } = ChromeUtils.importESModule('resource://zotero/config.mjs');
+	const { TRELLIS_CONFIG } = ChromeUtils.importESModule('resource://trellis/config.mjs');
 	
 	button.setAttribute('disabled', '');
 	clearSubmitStatus();
 	
-	var url = ZOTERO_CONFIG.REPOSITORY_URL + "report?debug=1";
+	var url = TRELLIS_CONFIG.REPOSITORY_URL + "report?debug=1";
 	var output = document.getElementById('errors').textContent
 		+ "\n\n" + "=========================================================\n\n"
 		+ Array.from(document.getElementById('output').childNodes).map(p => p.textContent).join("\n\n");
 	var pm = document.getElementById('submit-progress');
 	pm.removeAttribute('hidden');
 	
-	Zotero.HTTP.request(
+	Trellis.HTTP.request(
 		"POST",
 		url,
 		{
@@ -176,7 +176,7 @@ function showSubmitError(e) {
 	elem.removeAttribute('hidden');
 	elem.textContent = "Error submitting output";
 	Components.utils.reportError(e);
-	Zotero.debug(e, 1);
+	Trellis.debug(e, 1);
 }
 
 function clearSubmitStatus() {

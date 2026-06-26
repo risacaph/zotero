@@ -1,10 +1,10 @@
-/* global Zotero_Import_Folder: false */
+/* global Trellis_Import_Folder: false */
 
-describe('Zotero_Import_Folder', function () {
-	const { Zotero_Import_Folder } = ChromeUtils.importESModule("chrome://zotero/content/import/folderImport.mjs");
+describe('Trellis_Import_Folder', function () {
+	const { Trellis_Import_Folder } = ChromeUtils.importESModule("chrome://trellis/content/import/folderImport.mjs");
 
 	var tmpDir;
-	const uc = name => 'Zotero_Import_Folder_' + name;
+	const uc = name => 'Trellis_Import_Folder_' + name;
 
 	before(async () => {
 		tmpDir = await getTempDirectory();
@@ -48,59 +48,59 @@ describe('Zotero_Import_Folder', function () {
 			// @TODO: re-enable when folder import is ready
 			this.skip();
 			this.timeout(30000);
-			if (Zotero.automatedTest) {
+			if (Trellis.automatedTest) {
 				this.skip();
 			}
 			
-			const importer = new Zotero_Import_Folder({
+			const importer = new Trellis_Import_Folder({
 				folder: tmpDir,
 				recreateStructure: true,
 			});
 			
 			await importer.translate({
-				libraryID: Zotero.Libraries.userLibraryID,
+				libraryID: Trellis.Libraries.userLibraryID,
 				linkFiles: true,
 			});
 
 			assert.equal(importer.newItems.length, 2);
 
 			const firstPDFAttachment = importer.newItems.find(ni => ni.getField('title') === 'recognizePDF_test_arXiv.pdf');
-			const firstPDFItem = await Zotero.Items.getAsync(firstPDFAttachment.parentID);
-			const firstPDFCollections = await Zotero.Collections.getAsync(firstPDFItem.getCollections());
+			const firstPDFItem = await Trellis.Items.getAsync(firstPDFAttachment.parentID);
+			const firstPDFCollections = await Trellis.Collections.getAsync(firstPDFItem.getCollections());
 			assert.equal(firstPDFItem.getField('title'), 'Scaling study of an improved fermion action on quenched lattices');
 			assert.equal(firstPDFCollections.length, 1);
 			assert.equal(firstPDFCollections[0].name, uc('subdir1'));
-			assert.equal((await Zotero.Collections.getAsync(firstPDFCollections[0].parentID)).name, uc('dir1'));
+			assert.equal((await Trellis.Collections.getAsync(firstPDFCollections[0].parentID)).name, uc('dir1'));
 
 			const secondPDFAttachment = importer.newItems.find(ni => ni.getField('title') === 'recognizePDF_test_title.pdf');
-			const secondPDFItem = await Zotero.Items.getAsync(secondPDFAttachment.parentID);
-			const secondPDFCollections = await Zotero.Collections.getAsync(secondPDFItem.getCollections());
+			const secondPDFItem = await Trellis.Items.getAsync(secondPDFAttachment.parentID);
+			const secondPDFCollections = await Trellis.Collections.getAsync(secondPDFItem.getCollections());
 			assert.equal(secondPDFItem.getField('title'), 'Bitcoin: A Peer-to-Peer Electronic Cash System');
 			assert.equal(secondPDFCollections.length, 2);
 			assert.sameMembers(secondPDFCollections.map(c => c.name), [uc('dir1'), uc('dir2')]);
 
 			assert.sameMembers(
-				Zotero.Collections.getByLibrary(Zotero.Libraries.userLibraryID, true)
+				Trellis.Collections.getByLibrary(Trellis.Libraries.userLibraryID, true)
 					.map(c => c.name)
-					.filter(c => c.startsWith('Zotero_Import_Folder')),
+					.filter(c => c.startsWith('Trellis_Import_Folder')),
 				[uc('dir1'), uc('dir2'), uc('subdir1')]
 			);
 
-			const importer2 = new Zotero_Import_Folder({
+			const importer2 = new Trellis_Import_Folder({
 				folder: tmpDir,
 				recreateStructure: true,
 			});
 			
 			await importer2.translate({
-				libraryID: Zotero.Libraries.userLibraryID,
+				libraryID: Trellis.Libraries.userLibraryID,
 				linkFiles: true,
 			});
 
 			assert.lengthOf(importer2.newItems, 0);
 			assert.sameMembers(
-				Zotero.Collections.getByLibrary(Zotero.Libraries.userLibraryID, true)
+				Trellis.Collections.getByLibrary(Trellis.Libraries.userLibraryID, true)
 					.map(c => c.name)
-					.filter(c => c.startsWith('Zotero_Import_Folder')),
+					.filter(c => c.startsWith('Trellis_Import_Folder')),
 				[uc('dir1'), uc('dir2'), uc('subdir1')]
 			);
 		});
@@ -109,10 +109,10 @@ describe('Zotero_Import_Folder', function () {
 			// @TODO: re-enable when folder import is ready
 			this.skip();
 			this.timeout(30000);
-			if (Zotero.automatedTest) {
+			if (Trellis.automatedTest) {
 				this.skip();
 			}
-			const importer = new Zotero_Import_Folder({
+			const importer = new Trellis_Import_Folder({
 				folder: tmpDir,
 				recreateStructure: false,
 				fileTypes: '*.png,*.TXT', // should match case-insensitively
@@ -120,7 +120,7 @@ describe('Zotero_Import_Folder', function () {
 			});
 			
 			await importer.translate({
-				libraryID: Zotero.Libraries.userLibraryID,
+				libraryID: Trellis.Libraries.userLibraryID,
 				linkFiles: true,
 			});
 

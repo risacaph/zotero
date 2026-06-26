@@ -3,31 +3,31 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
-var { CanceledException } = ChromeUtils.importESModule("chrome://zotero/content/modules/errors.mjs");
+var { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
+var { CanceledException } = ChromeUtils.importESModule("chrome://trellis/content/modules/errors.mjs");
 
-if (!Zotero.Sync.Storage) {
-	Zotero.Sync.Storage = {};
+if (!Trellis.Sync.Storage) {
+	Trellis.Sync.Storage = {};
 }
 
 /**
@@ -40,7 +40,7 @@ if (!Zotero.Sync.Storage) {
  * @param {Function} [onError] - Function to run on error
  * @param {Boolean} [stopOnError]
  */
-Zotero.Sync.Storage.Engine = function (options) {
+Trellis.Sync.Storage.Engine = function (options) {
 	if (options.libraryID == undefined) {
 		throw new Error("options.libraryID not set");
 	}
@@ -52,14 +52,14 @@ Zotero.Sync.Storage.Engine = function (options) {
 	this.firstInSession = options.firstInSession;
 	this.lastFullFileCheck = options.lastFullFileCheck;
 	this.libraryID = options.libraryID;
-	this.library = Zotero.Libraries.get(options.libraryID);
+	this.library = Trellis.Libraries.get(options.libraryID);
 	this.controller = options.controller;
 	
 	this.numRequests = 0;
 	this.requestsRemaining = 0;
 	
-	this.local = Zotero.Sync.Storage.Local;
-	this.utils = Zotero.Sync.Storage.Utilities;
+	this.local = Trellis.Sync.Storage.Local;
+	this.utils = Trellis.Sync.Storage.Utilities;
 	
 	this.setStatus = options.setStatus || function () {};
 	this.onError = options.onError || function (e) {};
@@ -70,29 +70,29 @@ Zotero.Sync.Storage.Engine = function (options) {
 	['download', 'upload'].forEach(function (type) {
 		this.queues[type] = new ConcurrentCaller({
 			id: `${this.libraryID}/${type}`,
-			numConcurrent: Zotero.Prefs.get(
-				'sync.storage.max' + Zotero.Utilities.capitalize(type) + 's'
+			numConcurrent: Trellis.Prefs.get(
+				'sync.storage.max' + Trellis.Utilities.capitalize(type) + 's'
 			),
 			onError: this.onError,
 			stopOnError: this.stopOnError,
-			logger: Zotero.debug
+			logger: Trellis.debug
 		});
 	}.bind(this))
 	
 	this.maxCheckAge = 10800; // maximum age in seconds for upload modification check (3 hours)
 }
 
-Zotero.Sync.Storage.Engine.prototype.start = async function () {
+Trellis.Sync.Storage.Engine.prototype.start = async function () {
 	var libraryID = this.libraryID;
-	if (!Zotero.Sync.Storage.Local.getEnabledForLibrary(libraryID)) {
-		Zotero.debug("File sync is not enabled for " + this.library.name);
+	if (!Trellis.Sync.Storage.Local.getEnabledForLibrary(libraryID)) {
+		Trellis.debug("File sync is not enabled for " + this.library.name);
 		return false;
 	}
 	
-	Zotero.debug("Starting file sync for " + this.library.name);
+	Trellis.debug("Starting file sync for " + this.library.name);
 	
 	if (!this.controller.verified) {
-		Zotero.debug(`${this.controller.name} file sync is not active -- verifying`);
+		Trellis.debug(`${this.controller.name} file sync is not active -- verifying`);
 		
 		try {
 			await this.controller.checkServer();
@@ -104,18 +104,18 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 			
 			let success = await this.controller.handleVerificationError(e, lastWin, true);
 			if (!success) {
-				Zotero.debug(this.controller.name + " verification failed", 2);
+				Trellis.debug(this.controller.name + " verification failed", 2);
 				
-				throw new Zotero.Error(
-					Zotero.getString('sync.storage.error.verificationFailed', this.controller.name),
+				throw new Trellis.Error(
+					Trellis.getString('sync.storage.error.verificationFailed', this.controller.name),
 					0,
 					{
-						dialogButtonText: Zotero.getString('sync.openSyncPreferences'),
+						dialogButtonText: Trellis.getString('sync.openSyncPreferences'),
 						dialogButtonCallback: function () {
 							let wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
 									   .getService(Components.interfaces.nsIWindowMediator);
 							let lastWin = wm.getMostRecentWindow("navigator:browser");
-							lastWin.ZoteroPane.openPreferences('zotero-prefpane-account');
+							lastWin.TrellisPane.openPreferences('trellis-prefpane-account');
 						}
 					}
 				);
@@ -132,29 +132,29 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 	//
 	// TODO: If files are persistently missing, don't try to download them each time
 	
-	var filesEditable = Zotero.Libraries.get(libraryID).filesEditable;
+	var filesEditable = Trellis.Libraries.get(libraryID).filesEditable;
 	this.requestsRemaining = 0;
 	
 	// Clear over-quota flag on manual sync
-	if (!this.background && Zotero.Sync.Storage.Local.storageRemainingForLibrary.has(libraryID)) {
-		Zotero.debug("Clearing over-quota flag for " + this.library.name);
-		Zotero.Sync.Storage.Local.storageRemainingForLibrary.delete(libraryID)
+	if (!this.background && Trellis.Sync.Storage.Local.storageRemainingForLibrary.has(libraryID)) {
+		Trellis.debug("Clearing over-quota flag for " + this.library.name);
+		Trellis.Sync.Storage.Local.storageRemainingForLibrary.delete(libraryID)
 	}
 	
 	// Check for updated files to upload
 	if (!filesEditable) {
-		Zotero.debug("No file editing access -- skipping file modification check for "
+		Trellis.debug("No file editing access -- skipping file modification check for "
 			+ this.library.name);
 	}
 	// If the file change watcher is active, files that actually changed on disk were already
 	// checked and marked in the database when the sync runner took the watcher snapshot at the
 	// start of file syncing, so the scan can be skipped entirely unless this library needs a
 	// full scan (not yet scanned, watcher fallback, daily refresh, or manual sync)
-	else if (Zotero.Sync.Storage.FileChangeWatcher.available) {
-		if (Zotero.Sync.Storage.FileChangeWatcher.needsFullScan(libraryID, this.background)) {
+	else if (Trellis.Sync.Storage.FileChangeWatcher.available) {
+		if (Trellis.Sync.Storage.FileChangeWatcher.needsFullScan(libraryID, this.background)) {
 			this.local.lastFullFileCheck[libraryID] = new Date().getTime();
 			await this.local.checkForUpdatedFiles(libraryID);
-			Zotero.Sync.Storage.FileChangeWatcher.recordFullScan(libraryID);
+			Trellis.Sync.Storage.FileChangeWatcher.recordFullScan(libraryID);
 		}
 	}
 	// If this is a background sync, it's not the first sync of the session, the library has had
@@ -163,7 +163,7 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 	// recently
 	else if (this.background
 			// TEMP: Don't check all files at startup
-			// https://github.com/zotero/zotero/issues/5025
+			// https://github.com/trellis/trellis/issues/5025
 			//&& !this.firstInSession
 			&& this.local.lastFullFileCheck[libraryID]
 			&& (this.local.lastFullFileCheck[libraryID]
@@ -185,7 +185,7 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 	// changed (meaning nothing else has uploaded files since the last successful file sync)
 	if (downloadAll && !downloadForced) {
 		if (this.library.storageVersion == this.library.libraryVersion) {
-			Zotero.debug("No remote storage changes for " + this.library.name
+			Trellis.debug("No remote storage changes for " + this.library.name
 				+ " -- skipping file downloads");
 			downloadAll = false;
 		}
@@ -195,15 +195,15 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 	if (downloadAll || downloadForced) {
 		let itemIDs = await this.local.getFilesToDownload(libraryID, !downloadAll);
 		if (itemIDs.length) {
-			Zotero.debug(itemIDs.length + " file" + (itemIDs.length == 1 ? '' : 's') + " to "
+			Trellis.debug(itemIDs.length + " file" + (itemIDs.length == 1 ? '' : 's') + " to "
 				+ "download for " + this.library.name);
 			for (let itemID of itemIDs) {
-				let item = await Zotero.Items.getAsync(itemID);
+				let item = await Trellis.Items.getAsync(itemID);
 				await this.queueItem(item);
 			}
 		}
 		else {
-			Zotero.debug("No files to download for " + this.library.name);
+			Trellis.debug("No files to download for " + this.library.name);
 		}
 	}
 	
@@ -211,19 +211,19 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 	if (filesEditable) {
 		let itemIDs = await this.local.getFilesToUpload(libraryID);
 		if (itemIDs.length) {
-			Zotero.debug(itemIDs.length + " file" + (itemIDs.length == 1 ? '' : 's') + " to "
+			Trellis.debug(itemIDs.length + " file" + (itemIDs.length == 1 ? '' : 's') + " to "
 				+ "upload for " + this.library.name);
 			for (let itemID of itemIDs) {
-				let item = await Zotero.Items.getAsync(itemID, { noCache: true });
+				let item = await Trellis.Items.getAsync(itemID, { noCache: true });
 				await this.queueItem(item);
 			}
 		}
 		else {
-			Zotero.debug("No files to upload for " + this.library.name);
+			Trellis.debug("No files to upload for " + this.library.name);
 		}
 	}
 	else {
-		Zotero.debug("No file editing access -- skipping file uploads for " + this.library.name);
+		Trellis.debug("No file editing access -- skipping file uploads for " + this.library.name);
 	}
 	
 	var promises = {
@@ -233,7 +233,7 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 	
 	// Process the results
 	var downloadSuccessful = false;
-	var changes = new Zotero.Sync.Storage.Result;
+	var changes = new Trellis.Sync.Storage.Result;
 	for (let type of ['download', 'upload']) {
 		let results = await Promise.allSettled(await promises[type]);
 		let successfulResults = [];
@@ -250,20 +250,20 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 				if (e instanceof CanceledException) {
 					continue;
 				}
-				if (e instanceof Zotero.HTTP.CancelledException) {
-					Zotero.debug(`File ${type} sync cancelled for ${this.library.name} `
+				if (e instanceof Trellis.HTTP.CancelledException) {
+					Trellis.debug(`File ${type} sync cancelled for ${this.library.name} `
 						+ `(${succeeded} succeeded, ${failed} failed)`);
-					throw new Zotero.Sync.UserCancelledException();
+					throw new Trellis.Sync.UserCancelledException();
 				}
 				if (this.stopOnError) {
-					Zotero.debug(`File ${type} sync failed for ${this.library.name}`);
+					Trellis.debug(`File ${type} sync failed for ${this.library.name}`);
 					throw e;
 				}
 				failed++;
 			}
 		}
 		
-		Zotero.debug(`File ${type} sync finished for ${this.library.name} `
+		Trellis.debug(`File ${type} sync finished for ${this.library.name} `
 			+ `(${succeeded} succeeded, ${failed} failed)`);
 		
 		changes.updateFromResults(successfulResults);
@@ -289,7 +289,7 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 		await this.controller.purgeDeletedStorageFiles(libraryID);
 	}
 	catch (e) {
-		Zotero.logError(e);
+		Trellis.logError(e);
 	}
 	
 	// If WebDAV sync, purge orphaned files
@@ -298,15 +298,15 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 			await this.controller.purgeOrphanedStorageFiles(libraryID);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 	
 	if (!changes.localChanges) {
-		Zotero.debug("No local changes made during file sync");
+		Trellis.debug("No local changes made during file sync");
 	}
 	
-	Zotero.debug("Done with file sync for " + this.library.name);
+	Trellis.debug("Done with file sync for " + this.library.name);
 	
 	return changes;
 }
@@ -315,35 +315,35 @@ Zotero.Sync.Storage.Engine.prototype.start = async function () {
 /**
  * @param {String} [queueToStop] - 'upload' or 'download'; if not specified, stop all queues
  */
-Zotero.Sync.Storage.Engine.prototype.stop = function (queueToStop) {
+Trellis.Sync.Storage.Engine.prototype.stop = function (queueToStop) {
 	if (queueToStop) {
-		Zotero.debug(`Stopping file sync ${queueToStop} queue for ` + this.library.name);
+		Trellis.debug(`Stopping file sync ${queueToStop} queue for ` + this.library.name);
 		this.queues[queueToStop].stop();
 	}
 	else {
-		Zotero.debug("Stopping file sync for " + this.library.name);
+		Trellis.debug("Stopping file sync for " + this.library.name);
 		for (let type in this.queues) {
 			this.queues[type].stop();
 		}
 	}
 }
 
-Zotero.Sync.Storage.Engine.prototype.queueItem = async function (item) {
+Trellis.Sync.Storage.Engine.prototype.queueItem = async function (item) {
 	switch (item.attachmentSyncState) {
-		case Zotero.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD:
-		case Zotero.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD:
+		case Trellis.Sync.Storage.Local.SYNC_STATE_TO_DOWNLOAD:
+		case Trellis.Sync.Storage.Local.SYNC_STATE_FORCE_DOWNLOAD:
 			var type = 'download';
 			var fn = 'downloadFile';
 			break;
 		
-		case Zotero.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD:
-		case Zotero.Sync.Storage.Local.SYNC_STATE_FORCE_UPLOAD:
+		case Trellis.Sync.Storage.Local.SYNC_STATE_TO_UPLOAD:
+		case Trellis.Sync.Storage.Local.SYNC_STATE_FORCE_UPLOAD:
 			var type = 'upload';
 			var fn = 'uploadFile';
 			break;
 		
 		case false:
-			Zotero.debug("Sync state for item " + item.id + " not found", 2);
+			Trellis.debug("Sync state for item " + item.id + " not found", 2);
 			return;
 		
 		default:
@@ -353,12 +353,12 @@ Zotero.Sync.Storage.Engine.prototype.queueItem = async function (item) {
 	
 	if (type == 'upload') {
 		if (!((await item.fileExists()))) {
-			Zotero.debug("File " + item.libraryKey + " not available to upload -- skipping");
+			Trellis.debug("File " + item.libraryKey + " not available to upload -- skipping");
 			return;
 		}
 	}
 	this.queues[type].add(() => {
-		var request = new Zotero.Sync.Storage.Request({
+		var request = new Trellis.Sync.Storage.Request({
 			type,
 			engine: this,
 			libraryID: this.libraryID,

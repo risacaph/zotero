@@ -3,30 +3,30 @@
  
  Copyright © 2009 Center for History and New Media
  George Mason University, Fairfax, Virginia, USA
- http://zotero.org
+ http://trellis.org
  
- This file is part of Zotero.
+ This file is part of Trellis.
  
- Zotero is free software: you can redistribute it and/or modify
+ Trellis is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
  
- Zotero is distributed in the hope that it will be useful,
+ Trellis is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU Affero General Public License for more details.
  
  You should have received a copy of the GNU Affero General Public License
- along with Zotero. If not, see <http://www.gnu.org/licenses/>.
+ along with Trellis. If not, see <http://www.gnu.org/licenses/>.
  
  ***** END LICENSE BLOCK *****
 */
 
-Zotero.Attachments = new function () {
-	const { HiddenBrowser } = ChromeUtils.importESModule("chrome://zotero/content/HiddenBrowser.mjs");
+Trellis.Attachments = new function () {
+	const { HiddenBrowser } = ChromeUtils.importESModule("chrome://trellis/content/HiddenBrowser.mjs");
 	
-	// Keep in sync with Zotero.Schema.integrityCheck() and this.linkModeToName()
+	// Keep in sync with Trellis.Schema.integrityCheck() and this.linkModeToName()
 	this.LINK_MODE_IMPORTED_FILE = 0;
 	this.LINK_MODE_IMPORTED_URL = 1;
 	this.LINK_MODE_LINKED_FILE = 2;
@@ -52,14 +52,14 @@ Zotero.Attachments = new function () {
 	 * @param {String} [options.fileBaseName]
 	 * @param {String} [options.contentType]
 	 * @param {String} [options.charset]
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.importFromFile = async function (options) {
-		Zotero.debug('Importing attachment from file');
+		Trellis.debug('Importing attachment from file');
 		
 		var libraryID = options.libraryID;
-		var file = Zotero.File.pathToFile(options.file);
+		var file = Trellis.File.pathToFile(options.file);
 		var path = file.path;
 		var leafName = file.leafName;
 		var parentItemID = options.parentItemID;
@@ -71,11 +71,11 @@ Zotero.Attachments = new function () {
 		var saveOptions = options.saveOptions;
 		
 		if (fileBaseName) {
-			let ext = Zotero.File.getExtension(path);
+			let ext = Trellis.File.getExtension(path);
 			var newName = fileBaseName + (ext != '' ? '.' + ext : '');
 		}
 		else {
-			var newName = Zotero.File.getValidFileName(leafName);
+			var newName = Trellis.File.getValidFileName(leafName);
 		}
 		
 		if (leafName.endsWith(".lnk")) {
@@ -87,12 +87,12 @@ Zotero.Attachments = new function () {
 		
 		var attachmentItem, newFile, destDir;
 		try {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				// Create a new attachment
-				attachmentItem = new Zotero.Item('attachment');
+				attachmentItem = new Trellis.Item('attachment');
 				if (parentItemID) {
 					let {libraryID: parentLibraryID, key: parentKey} =
-						Zotero.Items.getLibraryAndKeyFromID(parentItemID);
+						Trellis.Items.getLibraryAndKeyFromID(parentItemID);
 					attachmentItem.libraryID = parentLibraryID;
 				}
 				else if (libraryID) {
@@ -119,17 +119,17 @@ Zotero.Attachments = new function () {
 				
 				// Copy or move file to unique filename, which automatically shortens long filenames
 				if (options.moveFile) {
-					const newFilePath = await Zotero.File.moveToUnique(file.path, newFile);
-					newFile = Zotero.File.pathToFile(newFilePath);
+					const newFilePath = await Trellis.File.moveToUnique(file.path, newFile);
+					newFile = Trellis.File.pathToFile(newFilePath);
 				}
 				else {
-					newFile = Zotero.File.copyToUnique(file, newFile);
+					newFile = Trellis.File.copyToUnique(file, newFile);
 				}
 				
-				await Zotero.File.setNormalFilePermissions(newFile.path);
+				await Trellis.File.setNormalFilePermissions(newFile.path);
 				
 				if (!contentType) {
-					contentType = await Zotero.MIME.getMIMETypeFromFile(newFile);
+					contentType = await Trellis.MIME.getMIMETypeFromFile(newFile);
 				}
 				attachmentItem.attachmentContentType = contentType;
 				if (charset) {
@@ -145,12 +145,12 @@ Zotero.Attachments = new function () {
 				await _postProcessFile(attachmentItem);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.logError("Failed importing file " + file.path);
+			Trellis.logError(e);
+			Trellis.logError("Failed importing file " + file.path);
 			
 			// Clean up
 			try {
@@ -159,7 +159,7 @@ Zotero.Attachments = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			
 			throw e;
@@ -176,17 +176,17 @@ Zotero.Attachments = new function () {
 	 * @param {Integer[]} [options.collections] - Collection keys or ids to add new item to
 	 * @param {String} [options.contentType] - Content type
 	 * @param {String} [options.charset] - Character set
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.linkFromFile = async function (options) {
-		Zotero.debug('Linking attachment from file');
+		Trellis.debug('Linking attachment from file');
 		
-		var file = Zotero.File.pathToFile(options.file);
+		var file = Trellis.File.pathToFile(options.file);
 		var parentItemID = options.parentItemID;
 		var title = options.title;
 		var collections = options.collections;
-		var contentType = options.contentType || ((await Zotero.MIME.getMIMETypeFromFile(file)));
+		var contentType = options.contentType || ((await Trellis.MIME.getMIMETypeFromFile(file)));
 		var charset = options.charset;
 		var saveOptions = options.saveOptions;
 		
@@ -208,7 +208,7 @@ Zotero.Attachments = new function () {
 			await _postProcessFile(item);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		return item;
 	};
@@ -220,11 +220,11 @@ Zotero.Attachments = new function () {
 	 * @param {String} options.contentType
 	 * @param {Integer[]|String[]} [options.parentItemID] - Parent item to add item to
 	 * @param {Integer[]} [options.collections] - Collection keys or ids to add new item to
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.linkFromFileWithRelativePath = async function (options) {
-		Zotero.debug('Linking attachment from file in base directory');
+		Trellis.debug('Linking attachment from file in base directory');
 		
 		var path = options.path;
 		var title = options.title;
@@ -253,7 +253,7 @@ Zotero.Attachments = new function () {
 			throw new Error("parentItemID and collections cannot both be provided");
 		}
 		
-		path = Zotero.Attachments.BASE_PATH_PLACEHOLDER + path;
+		path = Trellis.Attachments.BASE_PATH_PLACEHOLDER + path;
 		var item = await _addToDB({
 			file: path,
 			title,
@@ -272,7 +272,7 @@ Zotero.Attachments = new function () {
 				await _postProcessFile(item);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		
@@ -282,17 +282,17 @@ Zotero.Attachments = new function () {
 	
 	/**
 	 * @param {Object} options - 'file', 'url', 'title', 'contentType', 'charset', 'libraryID', 'parentItemID', 'singleFile'
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.importSnapshotFromFile = async function (options) {
-		Zotero.debug('Importing snapshot from file');
+		Trellis.debug('Importing snapshot from file');
 		
-		var file = Zotero.File.pathToFile(options.file);
+		var file = Trellis.File.pathToFile(options.file);
 		// TODO: Fix main filename when copying directory, though in that case it's probably
 		// from our own export and already clean
 		var fileName = options.singleFile
-			? Zotero.File.getValidFileName(file.leafName)
+			? Trellis.File.getValidFileName(file.leafName)
 			: file.leafName;
 		var url = options.url;
 		var title = options.title;
@@ -303,7 +303,7 @@ Zotero.Attachments = new function () {
 		var saveOptions = options.saveOptions;
 		
 		if (parentItemID) {
-			libraryID = Zotero.Items.getLibraryAndKeyFromID(parentItemID).libraryID;
+			libraryID = Trellis.Items.getLibraryAndKeyFromID(parentItemID).libraryID;
 		}
 		else if (contentType == 'text/html') {
 			throw new Error("parentItemID not provided");
@@ -316,9 +316,9 @@ Zotero.Attachments = new function () {
 		
 		var attachmentItem, itemID, destDir, newPath;
 		try {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				// Create a new attachment
-				attachmentItem = new Zotero.Item('attachment');
+				attachmentItem = new Trellis.Item('attachment');
 				if (libraryID) {
 					attachmentItem.libraryID = libraryID;
 				}
@@ -335,7 +335,7 @@ Zotero.Attachments = new function () {
 				// translate.js, which sets the metadata fields itself
 				itemID = await attachmentItem.save(saveOptions);
 				
-				var storageDir = Zotero.getStorageDirectory();
+				var storageDir = Trellis.getStorageDirectory();
 				destDir = this.getStorageDirectory(attachmentItem);
 				await IOUtils.remove(destDir.path, { recursive: true, ignoreAbsent: true });
 				newPath = OS.Path.join(destDir.path, fileName);
@@ -346,7 +346,7 @@ Zotero.Attachments = new function () {
 						await OS.File.move(file.path, newPath);
 					}
 					else {
-						await Zotero.File.copyFile(file.path, newPath);
+						await Trellis.File.copyFile(file.path, newPath);
 					}
 				}
 				// Copy entire parent directory (for HTML snapshots)
@@ -358,11 +358,11 @@ Zotero.Attachments = new function () {
 				await _postProcessFile(attachmentItem);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			
 			// Clean up
 			try {
@@ -371,7 +371,7 @@ Zotero.Attachments = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e, 1);
+				Trellis.logError(e, 1);
 			}
 			
 			throw e;
@@ -389,11 +389,11 @@ Zotero.Attachments = new function () {
 	 * @param {Object} params
 	 * @param {Blob} params.blob - Image to save
 	 * @param {Integer} params.parentItemID - Note or annotation item to add item to
-	 * @param {Object} [params.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Object} [params.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.importEmbeddedImage = async function ({ blob, parentItemID, saveOptions }) {
-		Zotero.debug('Importing embedded image');
+		Trellis.debug('Importing embedded image');
 		
 		if (!parentItemID) {
 			throw new Error("parentItemID must be provided");
@@ -434,10 +434,10 @@ Zotero.Attachments = new function () {
 		var attachmentItem;
 		var destDir;
 		try {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				// Create a new attachment
-				attachmentItem = new Zotero.Item('attachment');
-				let { libraryID: parentLibraryID } = Zotero.Items.getLibraryAndKeyFromID(parentItemID);
+				attachmentItem = new Trellis.Item('attachment');
+				let { libraryID: parentLibraryID } = Trellis.Items.getLibraryAndKeyFromID(parentItemID);
 				attachmentItem.libraryID = parentLibraryID;
 				attachmentItem.parentID = parentItemID;
 				attachmentItem.attachmentLinkMode = this.LINK_MODE_EMBEDDED_IMAGE;
@@ -448,12 +448,12 @@ Zotero.Attachments = new function () {
 				// Write blob to file in attachment directory
 				destDir = await this.createDirectoryForItem(attachmentItem);
 				let file = OS.Path.join(destDir, filename);
-				await Zotero.File.putContentsAsync(file, blob);
-				await Zotero.File.setNormalFilePermissions(file);
+				await Trellis.File.putContentsAsync(file, blob);
+				await Trellis.File.setNormalFilePermissions(file);
 			}.bind(this));
 		}
 		catch (e) {
-			Zotero.logError("Failed importing image:\n\n" + e);
+			Trellis.logError("Failed importing image:\n\n" + e);
 			
 			// Clean up
 			try {
@@ -462,7 +462,7 @@ Zotero.Attachments = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			
 			throw e;
@@ -476,13 +476,13 @@ Zotero.Attachments = new function () {
 	 * Copy an image from one note to another
 	 *
 	 * @param {Object} params
-	 * @param {Zotero.Item} params.attachment - Image attachment to copy
-	 * @param {Zotero.Item} params.note - Note item to add attachment to
-	 * @param {Object} [params.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Trellis.Item} params.attachment - Image attachment to copy
+	 * @param {Trellis.Item} params.note - Note item to add attachment to
+	 * @param {Object} [params.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.copyEmbeddedImage = async function ({ attachment, note, saveOptions }) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		if (!attachment.isEmbeddedImageAttachment()) {
 			throw new Error("'attachment' must be an embedded image");
@@ -498,9 +498,9 @@ Zotero.Attachments = new function () {
 		newAttachment.parentID = note.id;
 		await newAttachment.save(saveOptions);
 		
-		let dir = Zotero.Attachments.getStorageDirectory(attachment);
-		let newDir = await Zotero.Attachments.createDirectoryForItem(newAttachment);
-		await Zotero.File.copyDirectory(dir, newDir);
+		let dir = Trellis.Attachments.getStorageDirectory(attachment);
+		let newDir = await Trellis.Attachments.createDirectoryForItem(newAttachment);
+		await Trellis.File.copyDirectory(dir, newDir);
 		
 		return newAttachment;
 	};
@@ -517,8 +517,8 @@ Zotero.Attachments = new function () {
 	 * @param {Boolean} [options.renameIfAllowedType=false]
 	 * @param {String} [options.contentType]
 	 * @param {String} [options.referrer]
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>} - A promise for the created attachment item
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>} - A promise for the created attachment item
 	 */
 	this.importFromURL = async function (options) {
 		var libraryID = options.libraryID;
@@ -532,7 +532,7 @@ Zotero.Attachments = new function () {
 		var referrer = options.referrer;
 		var saveOptions = options.saveOptions;
 		
-		Zotero.debug('Importing attachment from URL ' + url);
+		Trellis.debug('Importing attachment from URL ' + url);
 		
 		if (parentItemID && collections) {
 			throw new Error("parentItemID and collections cannot both be provided");
@@ -555,7 +555,7 @@ Zotero.Attachments = new function () {
 					docShell: { allowImages: true },
 				});
 				await browser.load(url, { requireSuccessfulStatus: true });
-				return await Zotero.Attachments.importFromDocument({
+				return await Trellis.Attachments.importFromDocument({
 					libraryID,
 					browser,
 					parentItemID,
@@ -565,7 +565,7 @@ Zotero.Attachments = new function () {
 				});
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				throw e;
 			}
 			finally {
@@ -577,7 +577,7 @@ Zotero.Attachments = new function () {
 		var externalHandlerImport = async function (contentType) {
 			// Rename attachment
 			if (renameIfAllowedType && !fileBaseName && this.isRenameAllowedForType(contentType, libraryID)) {
-				let parentItem = Zotero.Items.get(parentItemID);
+				let parentItem = Trellis.Items.get(parentItemID);
 				fileBaseName = this.getFileBaseNameFromItem(parentItem, { attachmentTitle: title });
 			}
 			if (fileBaseName) {
@@ -602,7 +602,7 @@ Zotero.Attachments = new function () {
 					tmpFile,
 					{
 						referrer,
-						enforceFileType: Zotero.Attachments.FIND_AVAILABLE_FILE_TYPES.includes(contentType),
+						enforceFileType: Trellis.Attachments.FIND_AVAILABLE_FILE_TYPES.includes(contentType),
 						shouldDisplayCaptcha: true
 					}
 				);
@@ -626,7 +626,7 @@ Zotero.Attachments = new function () {
 					}
 				}
 				catch (e) {
-					Zotero.debug(e, 1);
+					Trellis.debug(e, 1);
 				}
 				throw e;
 			}
@@ -646,10 +646,10 @@ Zotero.Attachments = new function () {
 		}
 		
 		if (contentType) {
-			return process(contentType, Zotero.MIME.hasNativeHandler(contentType));
+			return process(contentType, Trellis.MIME.hasNativeHandler(contentType));
 		}
 		
-		var args = await Zotero.MIME.getMIMETypeFromURL(url);
+		var args = await Trellis.MIME.getMIMETypeFromURL(url);
 		return process(...args);
 	};
 	
@@ -671,8 +671,8 @@ Zotero.Attachments = new function () {
 	 * @param {String} [options.title]
 	 * @param {String} options.contentType
 	 * @param {String[]} [options.collections]
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Zotero.Item}
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Trellis.Item}
 	 */
 	this.createURLAttachmentFromTemporaryStorageDirectory = async function (options) {
 		if (!options.directory) throw new Error("'directory' not provided");
@@ -682,8 +682,8 @@ Zotero.Attachments = new function () {
 		if (!options.contentType) throw new Error("'contentType' not provided");
 		
 		var notifierQueue = (options.saveOptions && options.saveOptions.notifierQueue)
-				|| new Zotero.Notifier.Queue;
-		var attachmentItem = new Zotero.Item('attachment');
+				|| new Trellis.Notifier.Queue;
+		var attachmentItem = new Trellis.Item('attachment');
 		try {
 			// Create DB item
 			if (options.libraryID) {
@@ -691,14 +691,14 @@ Zotero.Attachments = new function () {
 			}
 			else if (options.parentItemID) {
 				let {libraryID: parentLibraryID, key: parentKey} =
-					Zotero.Items.getLibraryAndKeyFromID(options.parentItemID);
+					Trellis.Items.getLibraryAndKeyFromID(options.parentItemID);
 				attachmentItem.libraryID = parentLibraryID;
 			}
 			attachmentItem.setField('title', options.title != undefined ? options.title : options.filename);
 			attachmentItem.setField('url', options.url);
 			attachmentItem.setField('accessDate', "CURRENT_TIMESTAMP");
 			attachmentItem.parentID = options.parentItemID;
-			attachmentItem.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_URL;
+			attachmentItem.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_URL;
 			attachmentItem.attachmentContentType = options.contentType;
 			if (options.collections) {
 				attachmentItem.setCollections(options.collections);
@@ -722,10 +722,10 @@ Zotero.Attachments = new function () {
 			}
 		}
 		finally {
-			await Zotero.Notifier.commit(notifierQueue);
+			await Trellis.Notifier.commit(notifierQueue);
 		}
 		
-		await Zotero.FullText.queueItem(attachmentItem);
+		await Trellis.FullText.queueItem(attachmentItem);
 		
 		return attachmentItem;
 	};
@@ -735,11 +735,11 @@ Zotero.Attachments = new function () {
 	 * Create a link attachment from a URL
 	 *
 	 * @param {Object} options - 'url', 'parentItemID', 'contentType', 'title', 'collections'
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>} - A promise for the created attachment item
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>} - A promise for the created attachment item
 	 */
 	this.linkFromURL = async function (options) {
-		Zotero.debug('Linking attachment from URL');
+		Trellis.debug('Linking attachment from URL');
 	 
 		var url = options.url;
 		var parentItemID = options.parentItemID;
@@ -787,7 +787,7 @@ Zotero.Attachments = new function () {
 		
 		// Override MIME type to application/pdf if extension is .pdf --
 		// workaround for sites that respond to the HEAD request with an
-		// invalid MIME type (https://www.zotero.org/trac/ticket/460)
+		// invalid MIME type (https://www.trellis.org/trac/ticket/460)
 		var ext = this._getExtensionFromURL(url);
 		if (ext == 'pdf') {
 			contentType = 'application/pdf';
@@ -809,11 +809,11 @@ Zotero.Attachments = new function () {
 	 * TODO: what if called on file:// document?
 	 *
 	 * @param {Object} options - 'document', 'parentItemID', 'collections'
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>}
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>}
 	 */
 	this.linkFromDocument = async function (options) {
-		Zotero.debug('Linking attachment from document');
+		Trellis.debug('Linking attachment from document');
 		
 		var document = options.document;
 		var parentItemID = options.parentItemID;
@@ -839,8 +839,8 @@ Zotero.Attachments = new function () {
 			saveOptions,
 		});
 		
-		if (Zotero.MIME.isTextType(document.contentType)) {
-			await Zotero.Fulltext.indexDocument(document, item.id);
+		if (Trellis.MIME.isTextType(document.contentType)) {
+			await Trellis.Fulltext.indexDocument(document, item.id);
 		}
 		
 		return item;
@@ -851,11 +851,11 @@ Zotero.Attachments = new function () {
 	 * Save a snapshot from a Document
 	 *
 	 * @param {Object} options - 'libraryID', 'document', 'browser', 'parentItemID', 'forceTitle', 'collections'
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>} - A promise for the created attachment item
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>} - A promise for the created attachment item
 	 */
 	this.importFromDocument = async function (options) {
-		Zotero.debug('Importing attachment from ' + (options.document ? 'document' : 'browser'));
+		Trellis.debug('Importing attachment from ' + (options.document ? 'document' : 'browser'));
 		
 		var libraryID = options.libraryID;
 		var document = options.document;
@@ -876,13 +876,13 @@ Zotero.Attachments = new function () {
 		var url = document ? document.location.href : browser.currentURI.spec;
 		title = title ? title : (document ? document.title : browser.contentTitle);
 		var contentType = document ? document.contentType : browser.documentContentType;
-		if (document ? Zotero.Attachments.isPDFJSDocument(document) : Zotero.Attachments.isPDFJSBrowser(browser)) {
+		if (document ? Trellis.Attachments.isPDFJSDocument(document) : Trellis.Attachments.isPDFJSBrowser(browser)) {
 			contentType = "application/pdf";
 		}
 		
 		var tmpDir = ((await this.createTemporaryStorageDirectory())).path;
 		try {
-			var fileName = Zotero.File.truncateFileName(this._getFileNameFromURL(url, contentType), 100);
+			var fileName = Trellis.File.truncateFileName(this._getFileNameFromURL(url, contentType), 100);
 			var tmpFile = OS.Path.join(tmpDir, fileName);
 			
 			// If we're using the title from the document, make some adjustments
@@ -893,50 +893,50 @@ Zotero.Attachments = new function () {
 					title = title.replace(/(.+ \([^,]+, [0-9]+x[0-9]+[^\)]+\)) - .+/, "$1" );
 				}
 				// If not native type, strip mime type data in parens
-				else if (!Zotero.MIME.hasNativeHandler(contentType, this._getExtensionFromURL(url))) {
+				else if (!Trellis.MIME.hasNativeHandler(contentType, this._getExtensionFromURL(url))) {
 					title = title.replace(/(.+) \([a-z]+\/[^\)]+\)/, "$1" );
 				}
 			}
 			
 			if ((contentType === 'text/html' || contentType === 'application/xhtml+xml')
 					// Documents from XHR don't work here
-					&& (browser || Zotero.Translate.DOMWrapper.unwrap(document) instanceof Document)) {
+					&& (browser || Trellis.Translate.DOMWrapper.unwrap(document) instanceof Document)) {
 				if (browser) {
 					// If we have a full hidden browser, use SingleFile
-					Zotero.debug('Getting snapshot with HiddenBrowser.snapshot()');
+					Trellis.debug('Getting snapshot with HiddenBrowser.snapshot()');
 					let snapshotContent = await browser.snapshot();
 
 					// Write main HTML file to disk
-					await Zotero.File.putContentsAsync(tmpFile, snapshotContent);
+					await Trellis.File.putContentsAsync(tmpFile, snapshotContent);
 				}
 				else {
 					// Fallback to nsIWebBrowserPersist
-					Zotero.debug('Saving document with saveDocument()');
-					await Zotero.Utilities.Internal.saveDocument(document, tmpFile);
+					Trellis.debug('Saving document with saveDocument()');
+					await Trellis.Utilities.Internal.saveDocument(document, tmpFile);
 				}
 			}
 			else {
-				await Zotero.HTTP.download(url, tmpFile);
+				await Trellis.HTTP.download(url, tmpFile);
 			}
 			
 			var attachmentItem;
 			var destDir;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				// Create a new attachment
-				attachmentItem = new Zotero.Item('attachment');
+				attachmentItem = new Trellis.Item('attachment');
 				if (libraryID) {
 					attachmentItem.libraryID = libraryID;
 				}
 				else if (parentItemID) {
 					let {libraryID: parentLibraryID, key: parentKey} =
-						Zotero.Items.getLibraryAndKeyFromID(parentItemID);
+						Trellis.Items.getLibraryAndKeyFromID(parentItemID);
 					attachmentItem.libraryID = parentLibraryID;
 				}
 				attachmentItem.setField('title', title);
 				attachmentItem.setField('url', url);
 				attachmentItem.setField('accessDate', "CURRENT_TIMESTAMP");
 				attachmentItem.parentID = parentItemID;
-				attachmentItem.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_URL;
+				attachmentItem.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_URL;
 				attachmentItem.attachmentCharset = 'utf-8'; // WPD will output UTF-8
 				attachmentItem.attachmentContentType = contentType;
 				if (collections && collections.length) {
@@ -949,10 +949,10 @@ Zotero.Attachments = new function () {
 				await OS.File.move(tmpDir, destDir);
 			}.bind(this));
 			
-			await Zotero.FullText.queueItem(attachmentItem);
+			await Trellis.FullText.queueItem(attachmentItem);
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 			
 			// Clean up
 			try {
@@ -964,7 +964,7 @@ Zotero.Attachments = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.debug(e, 1);
+				Trellis.debug(e, 1);
 			}
 			
 			throw e;
@@ -987,15 +987,15 @@ Zotero.Attachments = new function () {
 	 * 			Either options.libraryID or options.parentItemID are mandatory
 	 * @param {Array<String|Integer>} [options.collections] Collection ids or keys
 	 * @param {String} [options.title]
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>} - A promise for the created attachment item
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>} - A promise for the created attachment item
 	 */
 	this.importFromNetworkStream = async (options) => {
 		if (!options.url) throw new Error("'url' not provided");
 		if (!options.stream) throw new Error("'stream' not provided");
 		if (!options.byteCount) throw new Error("'byteCount' not provided");
 		if (!options.contentType) throw new Error("'contentType' not provided");
-		Zotero.debug("Importing attachment item from network stream");
+		Trellis.debug("Importing attachment item from network stream");
 
 		let url = options.url;
 		let stream = options.stream;
@@ -1013,13 +1013,13 @@ Zotero.Attachments = new function () {
 		// Create a temporary file
 		let filename;
 		if (parentItemID) {
-			let parentItem = Zotero.Items.get(parentItemID);
+			let parentItem = Trellis.Items.get(parentItemID);
 			let fileBaseName = this.getFileBaseNameFromItem(parentItem, { attachmentTitle: title });
 			let ext = this._getExtensionFromURL(url, contentType);
 			filename = fileBaseName + (ext != '' ? '.' + ext : '');
 		}
 		else {
-			filename = Zotero.File.truncateFileName(this._getFileNameFromURL(url, contentType), 100);
+			filename = Trellis.File.truncateFileName(this._getFileNameFromURL(url, contentType), 100);
 		}
 		
 		let tmpDirectory = (await this.createTemporaryStorageDirectory()).path;
@@ -1027,7 +1027,7 @@ Zotero.Attachments = new function () {
 		let attachmentItem;
 		try {
 			let tmpFile = OS.Path.join(tmpDirectory, filename);
-			await Zotero.File.putNetworkStream(tmpFile, stream, options.byteCount);
+			await Trellis.File.putNetworkStream(tmpFile, stream, options.byteCount);
 
 			attachmentItem = await this.createURLAttachmentFromTemporaryStorageDirectory({
 				directory: tmpDirectory,
@@ -1042,7 +1042,7 @@ Zotero.Attachments = new function () {
 			});
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 
 			// Clean up
 			try {
@@ -1054,7 +1054,7 @@ Zotero.Attachments = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.debug(e, 1);
+				Trellis.debug(e, 1);
 			}
 
 			throw e;
@@ -1073,11 +1073,11 @@ Zotero.Attachments = new function () {
 	 * @param {Integer} [options.parentItemID]
 	 * @param {Integer[]} [options.collections]
 	 * @param {String} [options.title]
-	 * @param {Object} [options.saveOptions] - Options to pass to Zotero.Item::save()
-	 * @return {Promise<Zotero.Item>} - A promise for the created attachment item
+	 * @param {Object} [options.saveOptions] - Options to pass to Trellis.Item::save()
+	 * @return {Promise<Trellis.Item>} - A promise for the created attachment item
 	 */
 	this.importFromSnapshotContent = async (options) => {
-		Zotero.debug("Importing attachment item from Snapshot Content");
+		Trellis.debug("Importing attachment item from Snapshot Content");
 
 		let url = options.url;
 		let snapshotContent = options.snapshotContent;
@@ -1103,9 +1103,9 @@ Zotero.Attachments = new function () {
 		let destDirectory;
 		let attachmentItem;
 		try {
-			let fileName = Zotero.File.truncateFileName(this._getFileNameFromURL(url, contentType), 100);
+			let fileName = Trellis.File.truncateFileName(this._getFileNameFromURL(url, contentType), 100);
 			let tmpFile = OS.Path.join(tmpDirectory, fileName);
-			await Zotero.File.putContentsAsync(tmpFile, snapshotContent);
+			await Trellis.File.putContentsAsync(tmpFile, snapshotContent);
 
 			// If we're using the title from the document, make some adjustments
 			// Remove e.g. " - Scaled (-17%)" from end of images saved from links,
@@ -1114,7 +1114,7 @@ Zotero.Attachments = new function () {
 				title = title.replace(/(.+ \([^,]+, [0-9]+x[0-9]+[^\)]+\)) - .+/, "$1" );
 			}
 			// If not native type, strip mime type data in parens
-			else if (!Zotero.MIME.hasNativeHandler(contentType, this._getExtensionFromURL(url))) {
+			else if (!Trellis.MIME.hasNativeHandler(contentType, this._getExtensionFromURL(url))) {
 				title = title.replace(/(.+) \([a-z]+\/[^\)]+\)/, "$1" );
 			}
 
@@ -1122,7 +1122,7 @@ Zotero.Attachments = new function () {
 				file: 'storage:' + fileName,
 				title,
 				url,
-				linkMode: Zotero.Attachments.LINK_MODE_IMPORTED_URL,
+				linkMode: Trellis.Attachments.LINK_MODE_IMPORTED_URL,
 				parentItemID,
 				charset: 'utf-8',
 				contentType,
@@ -1133,10 +1133,10 @@ Zotero.Attachments = new function () {
 			destDirectory = this.getStorageDirectory(attachmentItem).path;
 			await OS.File.move(tmpDirectory, destDirectory);
 			
-			await Zotero.FullText.queueItem(attachmentItem);
+			await Trellis.FullText.queueItem(attachmentItem);
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 			
 			// Clean up
 			try {
@@ -1148,7 +1148,7 @@ Zotero.Attachments = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.debug(e, 1);
+				Trellis.debug(e, 1);
 			}
 			
 			throw e;
@@ -1167,14 +1167,14 @@ Zotero.Attachments = new function () {
 	 * @param {Boolean} [options.shouldDisplayCaptcha]
 	 */
 	this.downloadFile = async function (url, path, options = {}) {
-		Zotero.debug(`Downloading file from ${url}`);
+		Trellis.debug(`Downloading file from ${url}`);
 		
 		try {
 			let headers = {};
 			if (options.referrer) {
 				headers.Referer = options.referrer;
 			}
-			await Zotero.HTTP.download(
+			await Trellis.HTTP.download(
 				url,
 				path,
 				{
@@ -1191,7 +1191,7 @@ Zotero.Attachments = new function () {
 				await OS.File.remove(path, { ignoreAbsent: true });
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			// Custom handling for files that are bot-guarded via a JS redirect and/or that require
 			// a CAPTCHA
@@ -1199,9 +1199,9 @@ Zotero.Attachments = new function () {
 					// Thrown by _enforceFileType()
 					&& (e instanceof this.InvalidPDFException
 						// Thrown by HTTP.download()
-						|| (e instanceof Zotero.HTTP.UnexpectedStatusException && e.status == 403))) {
-				if (Zotero.BrowserRequest.getEntryForURL(url)) {
-					return Zotero.BrowserRequest.downloadPDF(url, path, options);
+						|| (e instanceof Trellis.HTTP.UnexpectedStatusException && e.status == 403))) {
+				if (Trellis.BrowserRequest.getEntryForURL(url)) {
+					return Trellis.BrowserRequest.downloadPDF(url, path, options);
 				}
 			}
 			throw e;
@@ -1212,13 +1212,13 @@ Zotero.Attachments = new function () {
 	 * Make sure a file is a type we want
 	 */
 	async function _enforceFileType(path) {
-		var sample = await Zotero.File.getContentsAsync(path, null, 1000);
-		if (!Zotero.Attachments.FIND_AVAILABLE_FILE_TYPES.includes(Zotero.MIME.sniffForMIMEType(sample))) {
-			Zotero.debug("Downloaded file was not a supported type", 2);
-			if (Zotero.Debug.enabled) {
-				Zotero.debug(
-					Zotero.Utilities.ellipsize(
-						await Zotero.File.getContentsAsync(path),
+		var sample = await Trellis.File.getContentsAsync(path, null, 1000);
+		if (!Trellis.Attachments.FIND_AVAILABLE_FILE_TYPES.includes(Trellis.MIME.sniffForMIMEType(sample))) {
+			Trellis.debug("Downloaded file was not a supported type", 2);
+			if (Trellis.Debug.enabled) {
+				Trellis.debug(
+					Trellis.Utilities.ellipsize(
+						await Trellis.File.getContentsAsync(path),
 						20000,
 						false,
 						true
@@ -1226,7 +1226,7 @@ Zotero.Attachments = new function () {
 					3
 				);
 			}
-			throw new Zotero.Attachments.InvalidPDFException();
+			throw new Trellis.Attachments.InvalidPDFException();
 		}
 	}
 	
@@ -1250,7 +1250,7 @@ Zotero.Attachments = new function () {
 	 * @deprecated Use canFindFileForItem()
 	 */
 	this.canFindPDFForItem = function (item) {
-		Zotero.warn('Zotero.Attachments.canFindPDFForItem() is deprecated -- use canFindFileForItem()');
+		Trellis.warn('Trellis.Attachments.canFindPDFForItem() is deprecated -- use canFindFileForItem()');
 		return this.canFindFileForItem(item);
 	};
 	
@@ -1258,7 +1258,7 @@ Zotero.Attachments = new function () {
 	/**
 	 * Get the file resolvers that can be used for a given item based on the available fields
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {String[]} [methods=['doi', 'url', 'oa', 'custom']]
 	 * @param {Boolean} [automatic=false] - Only include custom resolvers with `automatic: true`
 	 * @return {Object[]} - An array of urlResolvers (see downloadFirstAvailableFile())
@@ -1275,7 +1275,7 @@ Zotero.Attachments = new function () {
 		
 		var resolvers = [];
 		var doi = item.getField('DOI') || item.getExtraField('DOI');
-		doi = Zotero.Utilities.cleanDOI(doi);
+		doi = Trellis.Utilities.cleanDOI(doi);
 		var pmcid = item.getField('PMCID');
 		if (pmcid) {
 			let matches = pmcid.match(/\bPMC\d+\b/i);
@@ -1283,7 +1283,7 @@ Zotero.Attachments = new function () {
 		}
 		
 		if (useDOI && doi) {
-			doi = Zotero.Utilities.cleanDOI(doi);
+			doi = Trellis.Utilities.cleanDOI(doi);
 			if (doi) {
 				resolvers.push({
 					pageURL: 'https://doi.org/' + doi,
@@ -1295,7 +1295,7 @@ Zotero.Attachments = new function () {
 		if (useURL) {
 			let url = item.getField('url');
 			if (url) {
-				url = Zotero.Utilities.cleanURL(url);
+				url = Trellis.Utilities.cleanURL(url);
 				if (url) {
 					resolvers.push({
 						pageURL: url,
@@ -1314,7 +1314,7 @@ Zotero.Attachments = new function () {
 		
 		if (useOA && doi) {
 			resolvers.push(async function () {
-				let urls = await Zotero.Utilities.Internal.getOpenAccessPDFURLs(doi);
+				let urls = await Trellis.Utilities.Internal.getOpenAccessPDFURLs(doi);
 				return urls.map((o) => {
 					return {
 						url: o.url,
@@ -1329,14 +1329,14 @@ Zotero.Attachments = new function () {
 		if (useCustom && doi) {
 			let customResolvers;
 			try {
-				customResolvers = Zotero.Prefs.get('findPDFs.resolvers');
+				customResolvers = Trellis.Prefs.get('findPDFs.resolvers');
 				if (customResolvers) {
 					customResolvers = JSON.parse(customResolvers);
 				}
 			}
 			catch (e) {
-				Zotero.debug("Error parsing custom file resolvers", 2);
-				Zotero.debug(e, 2);
+				Trellis.debug("Error parsing custom file resolvers", 2);
+				Trellis.debug(e, 2);
 			}
 			if (customResolvers) {
 				// Handle single object instead of array
@@ -1387,9 +1387,9 @@ Zotero.Attachments = new function () {
 							url = url.replace(/\{doi}/, doi);
 							
 							resolvers.push(async function () {
-								Zotero.debug(`Looking for files for ${doi} via ${name}`);
+								Trellis.debug(`Looking for files for ${doi} via ${name}`);
 								
-								var req = await Zotero.HTTP.request(
+								var req = await Trellis.HTTP.request(
 									method.toUpperCase(),
 									url,
 									{
@@ -1421,7 +1421,7 @@ Zotero.Attachments = new function () {
 									}];
 								}
 								else if (mode == 'json') {
-									let jspath = require('resource://zotero/jspath.js');
+									let jspath = require('resource://trellis/jspath.js');
 									let json = req.response;
 									let results = jspath.apply(selector, json);
 									// If mappings for 'url' and 'pageURL' are supplied,
@@ -1461,9 +1461,9 @@ Zotero.Attachments = new function () {
 							});
 						}
 						catch (e) {
-							Zotero.debug("Error parsing file resolver", 2);
-							Zotero.debug(e, 2);
-							Zotero.debug(resolver, 2);
+							Trellis.debug("Error parsing file resolver", 2);
+							Trellis.debug(e, 2);
+							Trellis.debug(resolver, 2);
 						}
 					}
 				}
@@ -1478,7 +1478,7 @@ Zotero.Attachments = new function () {
 	 * @deprecated Use getFileResolvers()
 	 */
 	this.getPDFResolvers = function (item, methods) {
-		Zotero.warn('Zotero.Attachments.getPDFResolvers() is deprecated -- use getFileResolvers()');
+		Trellis.warn('Trellis.Attachments.getPDFResolvers() is deprecated -- use getFileResolvers()');
 		return this.getFileResolvers(item, methods);
 	};
 	
@@ -1486,7 +1486,7 @@ Zotero.Attachments = new function () {
 	/**
 	 * Look for available files for items and add as attachments
 	 *
-	 * @param {Zotero.Item[]} items
+	 * @param {Trellis.Item[]} items
 	 * @param {Object} [options]
 	 * @param {String[]} [options.methods] - See getFileResolvers()
 	 * @param {Number} [options.sameDomainRequestDelay=1000] - Minimum number of milliseconds
@@ -1511,9 +1511,9 @@ Zotero.Attachments = new function () {
 			return domainInfo;
 		}
 		
-		var progressQueue = Zotero.ProgressQueues.get('findFile');
+		var progressQueue = Trellis.ProgressQueues.get('findFile');
 		if (!progressQueue) {
-			progressQueue = Zotero.ProgressQueues.create({
+			progressQueue = Trellis.ProgressQueues.create({
 				id: 'findFile',
 				title: 'pane.items.menu.findAvailableFile',
 				columns: [
@@ -1564,12 +1564,12 @@ Zotero.Attachments = new function () {
 		
 		// If no eligible items, just show a popup saying no files were found
 		if (!queue.length) {
-			let progressWin = new Zotero.ProgressWindow();
-			let title = Zotero.getString('pane.items.menu.findAvailableFile');
+			let progressWin = new Trellis.ProgressWindow();
+			let title = Trellis.getString('pane.items.menu.findAvailableFile');
 			progressWin.changeHeadline(title);
 			let itemProgress = new progressWin.ItemProgress(
 				'attachmentPDF',
-				Zotero.getString('findPDF.noFilesFound')
+				Trellis.getString('findPDF.noFilesFound')
 			);
 			progressWin.show();
 			itemProgress.setProgress(100);
@@ -1587,7 +1587,7 @@ Zotero.Attachments = new function () {
 		}
 		
 		var queueResolve;
-		_findFileQueuePromise = new Zotero.Promise((resolve) => {
+		_findFileQueuePromise = new Trellis.Promise((resolve) => {
 			queueResolve = resolve;
 		});
 		
@@ -1595,14 +1595,14 @@ Zotero.Attachments = new function () {
 		// Process items in the queue
 		//
 		var i = 0;
-		await new Zotero.Promise((resolve) => {
+		await new Trellis.Promise((resolve) => {
 			var processNextItem = function () {
 				var current = queue[i++];
 				
 				// We reached the end of the queue
 				if (!current) {
 					// If all entries are resolved, we're done
-					if (queue.every(x => x.result instanceof Zotero.Item || x.result === false)) {
+					if (queue.every(x => x.result instanceof Trellis.Item || x.result === false)) {
 						resolve();
 						return;
 					}
@@ -1643,7 +1643,7 @@ Zotero.Attachments = new function () {
 					current.result = false;
 					progressQueue.updateRow(
 						current.item.id,
-						Zotero.ProgressQueue.ROW_FAILED,
+						Trellis.ProgressQueue.ROW_FAILED,
 						""
 					);
 					processNextItem();
@@ -1678,7 +1678,7 @@ Zotero.Attachments = new function () {
 							let nextRequestTime = domainInfo.nextRequestTime;
 							if (!noDelay && nextRequestTime > Date.now()) {
 								return new Promise((resolve, reject) => {
-									Zotero.debug(`Delaying request to ${domain} for ${nextRequestTime - Date.now()} ms`);
+									Trellis.debug(`Delaying request to ${domain} for ${nextRequestTime - Date.now()} ms`);
 									current.domain = domain;
 									current.continuation = () => {
 										if (domainInfo.consecutiveFailures < MAX_CONSECUTIVE_DOMAIN_FAILURES) {
@@ -1712,7 +1712,7 @@ Zotero.Attachments = new function () {
 						onRequestError: function (e) {
 							const maxDelay = 3600;
 							
-							if (e instanceof Zotero.HTTP.UnexpectedStatusException) {
+							if (e instanceof Trellis.HTTP.UnexpectedStatusException) {
 								let domain = urlToDomain(e.url);
 								let domainInfo = getDomainInfo(domain);
 								domainInfo.consecutiveFailures++;
@@ -1723,25 +1723,25 @@ Zotero.Attachments = new function () {
 								if (status == 429 || status == 503) {
 									let retryAfter = e.xmlhttp.getResponseHeader('Retry-After');
 									if (retryAfter) {
-										Zotero.debug("Got Retry-After: " + retryAfter);
+										Trellis.debug("Got Retry-After: " + retryAfter);
 										if (parseInt(retryAfter) == retryAfter) {
 											if (retryAfter > maxDelay) {
-												Zotero.debug("Retry-After is too long -- skipping request");
+												Trellis.debug("Retry-After is too long -- skipping request");
 												return false;
 											}
 											domainInfo.nextRequestTime = Date.now() + retryAfter * 1000;
 											return true;
 										}
-										else if (Zotero.Date.isHTTPDate(retryAfter)) {
+										else if (Trellis.Date.isHTTPDate(retryAfter)) {
 											let d = new Date(val);
 											if (d > Date.now() + maxDelay * 1000) {
-												Zotero.debug("Retry-After is too long -- skipping request");
+												Trellis.debug("Retry-After is too long -- skipping request");
 												return false;
 											}
 											domainInfo.nextRequestTime = d.getTime();
 											return true;
 										}
-										Zotero.debug("Invalid Retry-After value -- skipping request");
+										Trellis.debug("Invalid Retry-After value -- skipping request");
 										return false;
 									}
 								}
@@ -1762,20 +1762,20 @@ Zotero.Attachments = new function () {
 					progressQueue.updateRow(
 						current.item.id,
 						attachment
-							? Zotero.ProgressQueue.ROW_SUCCEEDED
-							: Zotero.ProgressQueue.ROW_FAILED,
+							? Trellis.ProgressQueue.ROW_SUCCEEDED
+							: Trellis.ProgressQueue.ROW_FAILED,
 						attachment
 							? attachment.getField('title')
-							: Zotero.getString('findPDF.noFileFound')
+							: Trellis.getString('findPDF.noFileFound')
 					);
 				})
 				.catch((e) => {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					current.result = false;
 					progressQueue.updateRow(
 						current.item.id,
-						Zotero.ProgressQueue.ROW_FAILED,
-						Zotero.getString('general.failed')
+						Trellis.ProgressQueue.ROW_FAILED,
+						Trellis.getString('general.failed')
 					);
 				})
 				// finally() isn't implemented until Firefox 58, but then() is the same here
@@ -1795,7 +1795,7 @@ Zotero.Attachments = new function () {
 		dialog.setStatus(
 			numFiles
 				? { l10nId: 'find-pdf-files-added', l10nArgs: { count: numFiles } }
-				: Zotero.getString('findPDF.noFilesFound')
+				: Trellis.getString('findPDF.noFilesFound')
 		);
 		_findFileQueue = [];
 		queueResolve();
@@ -1807,7 +1807,7 @@ Zotero.Attachments = new function () {
 	 * @deprecated Use addAvailableFiles()
 	 */
 	this.addAvailablePDFs = function (items, options) {
-		Zotero.warn('Zotero.Attachments.addAvailablePDFs() is deprecated -- use addAvailableFiles()');
+		Trellis.warn('Trellis.Attachments.addAvailablePDFs() is deprecated -- use addAvailableFiles()');
 		return this.addAvailableFiles(items, options);
 	};
 	
@@ -1820,13 +1820,13 @@ Zotero.Attachments = new function () {
 	/**
 	 * Look for an available PDF for an item and add it as an attachment
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {Object} [options]
 	 * @param {String[]} [options.methods] - See getPDFResolvers()
-	 * @return {Zotero.Item|false} - New Zotero.Item, or false if unsuccessful
+	 * @return {Trellis.Item|false} - New Trellis.Item, or false if unsuccessful
 	 */
 	this.addAvailableFile = async function (item, options = {}) {
-		Zotero.debug("Looking for available files");
+		Trellis.debug("Looking for available files");
 		return this.addFileFromURLs(item, this.getFileResolvers(item, options.methods));
 	};
 	
@@ -1835,7 +1835,7 @@ Zotero.Attachments = new function () {
 	 * @deprecated Use addAvailableFile()
 	 */
 	this.addAvailablePDF = function (item, options) {
-		Zotero.warn('Zotero.Attachments.addAvailablePDF() is deprecated -- use addAvailableFile()');
+		Trellis.warn('Trellis.Attachments.addAvailablePDF() is deprecated -- use addAvailableFile()');
 		return this.addAvailableFile(item, options);
 	};
 	
@@ -1843,12 +1843,12 @@ Zotero.Attachments = new function () {
 	/**
 	 * Try to add a file attachment to an item from a set of URL resolvers
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {(String|Object|Function)[]} urlResolvers - See downloadFirstAvailableFile()
 	 * @param {Object} [options]
 	 * @param {Function} [options.onAccessMethodStart] - Function to run when a new access method
 	 *     is started, taking the access method name as an argument
-	 * @return {Zotero.Item|false} - New Zotero.Item, or false if unsuccessful
+	 * @return {Trellis.Item|false} - New Trellis.Item, or false if unsuccessful
 	 */
 	this.addFileFromURLs = async function (item, urlResolvers, options = {}) {
 		var tmpDir;
@@ -1870,15 +1870,15 @@ Zotero.Attachments = new function () {
 			);
 			if (url) {
 				if (!mimeType) {
-					mimeType = await Zotero.MIME.getMIMETypeFromFile(tmpFile);
+					mimeType = await Trellis.MIME.getMIMETypeFromFile(tmpFile);
 				}
 				if (!this.FIND_AVAILABLE_FILE_TYPES.includes(mimeType)) {
 					throw new Error(`Resolved file is unsupported type ${mimeType}`);
 				}
 				title = title || _getTitleFromVersion(props.articleVersion);
 				let fileBaseName = this.getFileBaseNameFromItem(item, { attachmentTitle: title });
-				let ext = Zotero.MIME.getPrimaryExtension(mimeType) || 'dat';
-				let filename = await Zotero.File.rename(tmpFile, `${fileBaseName}.${ext}`);
+				let ext = Trellis.MIME.getPrimaryExtension(mimeType) || 'dat';
+				let filename = await Trellis.File.rename(tmpFile, `${fileBaseName}.${ext}`);
 				attachmentItem = await this.createURLAttachmentFromTemporaryStorageDirectory({
 					directory: tmpDir,
 					libraryID: item.libraryID,
@@ -1908,7 +1908,7 @@ Zotero.Attachments = new function () {
 	 * @deprecated Use addFileFromURLs()
 	 */
 	this.addPDFFromURLs = function (item, urlResolvers, options) {
-		Zotero.warn('Zotero.Attachments.addPDFFromURLs() is deprecated -- use addFileFromURLs()');
+		Trellis.warn('Trellis.Attachments.addPDFFromURLs() is deprecated -- use addFileFromURLs()');
 		return this.addFileFromURLs(item, urlResolvers, options);
 	};
 	
@@ -1932,7 +1932,7 @@ Zotero.Attachments = new function () {
 			str = 'fullText';
 		}
 		
-		return Zotero.getString('attachment.' + str);
+		return Trellis.getString('attachment.' + str);
 	}
 	
 	
@@ -2012,7 +2012,7 @@ Zotero.Attachments = new function () {
 					urlResolver = await urlResolver();
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					urlResolver = [];
 				}
 				
@@ -2020,7 +2020,7 @@ Zotero.Attachments = new function () {
 				// Among other things, this ignores Unpaywall rows that have a huge number of
 				// URLs by mistake (as of August 2018).
 				if (urlResolver.length > maxURLs) {
-					Zotero.debug(`Keeping ${maxURLs} URLs`);
+					Trellis.debug(`Keeping ${maxURLs} URLs`);
 					urlResolver = urlResolver.slice(0, maxURLs);
 				}
 				
@@ -2039,18 +2039,18 @@ Zotero.Attachments = new function () {
 			let pageURL = urlResolver.pageURL;
 			
 			// Force URLs to HTTPS. If a request fails because of that, too bad.
-			if (!Zotero.test) {
+			if (!Trellis.test) {
 				if (url) url = url.replace(schemeRE, 'https://');
 				if (pageURL) pageURL = pageURL.replace(schemeRE, 'https://');
 			}
 			
 			// Ignore URLs we've already tried
 			if (url && isTriedURL(url)) {
-				Zotero.debug(`File at ${url} was already tried -- skipping`);
+				Trellis.debug(`File at ${url} was already tried -- skipping`);
 				url = null;
 			}
 			if (pageURL && isTriedURL(pageURL)) {
-				Zotero.debug(`Page at ${pageURL} was already tried -- skipping`);
+				Trellis.debug(`Page at ${pageURL} was already tried -- skipping`);
 				pageURL = null;
 			}
 			
@@ -2079,7 +2079,7 @@ Zotero.Attachments = new function () {
 						return { url, props: urlResolver };
 					}
 					catch (e) {
-						Zotero.debug(`Error downloading ${url}: ${e}\n\n${e.stack}`);
+						Trellis.debug(`Error downloading ${url}: ${e}\n\n${e.stack}`);
 						if (handleRequestError(e)) {
 							continue;
 						}
@@ -2095,7 +2095,7 @@ Zotero.Attachments = new function () {
 				let mimeType = null;
 				let responseURL;
 				try {
-					Zotero.debug(`Looking for file on ${pageURL}`);
+					Trellis.debug(`Looking for file on ${pageURL}`);
 					
 					let nextURL = pageURL;
 					let req;
@@ -2108,7 +2108,7 @@ Zotero.Attachments = new function () {
 					let redirectURLTries = new Map();
 					while (true) {
 						if (redirectLimit == 0) {
-							Zotero.debug("Too many redirects -- stopping");
+							Trellis.debug("Too many redirects -- stopping");
 							skip = true;
 							break;
 						}
@@ -2122,7 +2122,7 @@ Zotero.Attachments = new function () {
 						while (tries-- > 0) {
 							try {
 								await beforeRequest(nextURL, noDelay);
-								req = await Zotero.HTTP.request(
+								req = await Trellis.HTTP.request(
 									'GET',
 									nextURL,
 									{
@@ -2157,7 +2157,7 @@ Zotero.Attachments = new function () {
 							
 							nextURL = Services.io.newURI(nextURL, null, null).resolve(location);
 							if (isTriedURL(nextURL)) {
-								Zotero.debug("Redirect URL has already been tried -- skipping");
+								Trellis.debug("Redirect URL has already been tried -- skipping");
 								skip = true;
 								break;
 							}
@@ -2166,7 +2166,7 @@ Zotero.Attachments = new function () {
 							let maxTriesPerRedirectURL = 2;
 							let tries = (redirectURLTries.get(currentURL) || 0) + 1;
 							if (tries > maxTriesPerRedirectURL) {
-								Zotero.debug(`Too many redirects to ${currentURL} -- stopping`);
+								Trellis.debug(`Too many redirects to ${currentURL} -- stopping`);
 								skip = true;
 								break;
 							}
@@ -2179,18 +2179,18 @@ Zotero.Attachments = new function () {
 						blob = req.response;
 						responseURL = req.responseURL;
 						if (pageURL != responseURL) {
-							Zotero.debug("Redirected to " + responseURL);
+							Trellis.debug("Redirected to " + responseURL);
 						}
 						
 						contentType = req.getResponseHeader('Content-Type');
 						if (contentType.startsWith('text/html')) {
-							doc = await Zotero.Utilities.Internal.blobToHTMLDocument(blob, responseURL);
+							doc = await Trellis.Utilities.Internal.blobToHTMLDocument(blob, responseURL);
 							
 							// Check for a meta redirect on HTML pages
-							let refreshURL = Zotero.HTTP.getHTMLMetaRefreshURL(doc, responseURL);
+							let refreshURL = Trellis.HTTP.getHTMLMetaRefreshURL(doc, responseURL);
 							if (refreshURL) {
 								if (isTriedURL(refreshURL)) {
-									Zotero.debug("Meta refresh URL has already been tried -- skipping");
+									Trellis.debug("Meta refresh URL has already been tried -- skipping");
 									skip = true;
 									break;
 								}
@@ -2216,7 +2216,7 @@ Zotero.Attachments = new function () {
 						// redirect that's hopefully a decent indication that a file will be found
 						// the first time around.
 						//
-						// [1] https://forums.zotero.org/discussion/81182
+						// [1] https://forums.trellis.org/discussion/81182
 						addTriedURL(responseURL);
 						
 						break;
@@ -2227,26 +2227,26 @@ Zotero.Attachments = new function () {
 					
 					// If DOI resolves directly to a file, save it to disk
 					if (contentType && this.FIND_AVAILABLE_FILE_TYPES.some(type => contentType.startsWith(type))) {
-						Zotero.debug("URL resolves directly to file");
-						await Zotero.File.putContentsAsync(path, blob);
+						Trellis.debug("URL resolves directly to file");
+						await Trellis.File.putContentsAsync(path, blob);
 						await _enforceFileType(path);
 						return { url: responseURL, props: urlResolver };
 					}
 					// Otherwise translate the Document we parsed above
 					else if (doc) {
-						({ title, mimeType, url } = await Zotero.Utilities.Internal.getFileFromDocument(doc));
+						({ title, mimeType, url } = await Trellis.Utilities.Internal.getFileFromDocument(doc));
 					}
 				}
 				catch (e) {
-					Zotero.debug(`Error getting file from ${pageURL}: ${e}\n\n${e.stack}`);
+					Trellis.debug(`Error getting file from ${pageURL}: ${e}\n\n${e.stack}`);
 					continue;
 				}
 				if (!url) {
-					Zotero.debug(`No file found on ${responseURL || pageURL}`);
+					Trellis.debug(`No file found on ${responseURL || pageURL}`);
 					continue;
 				}
 				if (isTriedURL(url)) {
-					Zotero.debug(`File at ${url} was already tried -- skipping`);
+					Trellis.debug(`File at ${url} was already tried -- skipping`);
 					continue;
 				}
 				// Don't try this file URL again
@@ -2264,7 +2264,7 @@ Zotero.Attachments = new function () {
 						return { title, mimeType, url, props: urlResolver };
 					}
 					catch (e) {
-						Zotero.debug(`Error downloading ${url}: ${e}\n\n${e.stack}`);
+						Trellis.debug(`Error downloading ${url}: ${e}\n\n${e.stack}`);
 						if (handleRequestError(e)) {
 							continue;
 						}
@@ -2278,11 +2278,11 @@ Zotero.Attachments = new function () {
 
 
 	/**
-	 * @deprecated Use Zotero.Utilities.cleanURL instead
+	 * @deprecated Use Trellis.Utilities.cleanURL instead
 	 */
 	this.cleanAttachmentURI = function (uri, tryHttp) {
-		Zotero.warn("Zotero.Attachments.cleanAttachmentURI() is deprecated -- use Zotero.Utilities.cleanURL");
-		return Zotero.Utilities.cleanURL(uri, tryHttp);
+		Trellis.warn("Trellis.Attachments.cleanAttachmentURI() is deprecated -- use Trellis.Utilities.cleanURL");
+		return Trellis.Utilities.cleanURL(uri, tryHttp);
 	}
 	
 	
@@ -2293,26 +2293,26 @@ Zotero.Attachments = new function () {
 	 * (Optional) |formatString| specifies the format string -- otherwise
 	 * the 'attachmentRenameTemplate' synced setting for the user's library is used
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {String} formatString
 	 */
 	this.getFileBaseNameFromItem = function (item, options = {}) {
-		if (!(item instanceof Zotero.Item)) {
-			throw new Error("'item' must be a Zotero.Item");
+		if (!(item instanceof Trellis.Item)) {
+			throw new Error("'item' must be a Trellis.Item");
 		}
 		if (!item.libraryID) {
 			throw new Error("Item must have a libraryID");
 		}
 		if (typeof options === 'string') {
-			Zotero.warn("Zotero.Attachments.getFileBaseNameFromItem(item, formatString) is deprecated -- use Zotero.Attachments.getFileBaseNameFromItem(item, options)");
+			Trellis.warn("Trellis.Attachments.getFileBaseNameFromItem(item, formatString) is deprecated -- use Trellis.Attachments.getFileBaseNameFromItem(item, options)");
 			options = { formatString: options };
 		}
 
 		let { formatString = null, attachmentTitle = '' } = options;
 
 		if (!formatString) {
-			const { DEFAULT_ATTACHMENT_RENAME_TEMPLATE } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
-			formatString = Zotero.SyncedSettings.get(item.libraryID, 'attachmentRenameTemplate') ?? DEFAULT_ATTACHMENT_RENAME_TEMPLATE;
+			const { DEFAULT_ATTACHMENT_RENAME_TEMPLATE } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
+			formatString = Trellis.SyncedSettings.get(item.libraryID, 'attachmentRenameTemplate') ?? DEFAULT_ATTACHMENT_RENAME_TEMPLATE;
 		}
 
 		let chunks = [];
@@ -2324,10 +2324,10 @@ Zotero.Attachments = new function () {
 			let creatorTypeIDs;
 			switch (creatorType) {
 				case 'authors':
-					creatorTypeIDs = [Zotero.CreatorTypes.getPrimaryIDForType(item.itemTypeID)];
+					creatorTypeIDs = [Trellis.CreatorTypes.getPrimaryIDForType(item.itemTypeID)];
 					break;
 				case 'editors':
-					creatorTypeIDs = [Zotero.CreatorTypes.getID('editor'), Zotero.CreatorTypes.getID('seriesEditor')];
+					creatorTypeIDs = [Trellis.CreatorTypes.getID('editor'), Trellis.CreatorTypes.getID('seriesEditor')];
 					break;
 				default:
 				case 'creators':
@@ -2429,7 +2429,7 @@ Zotero.Attachments = new function () {
 					value = value.slice(0, 1).toUpperCase() + value.slice(1);
 					break;
 				case 'title':
-					value = Zotero.Utilities.capitalizeTitle(value, true);
+					value = Trellis.Utilities.capitalizeTitle(value, true);
 					break;
 				case 'hyphen':
 					value = value.replace(/\s+-/g, '-').replace(/-\s+/g, '-');
@@ -2481,7 +2481,7 @@ Zotero.Attachments = new function () {
 				.join(join);
 		};
 
-		const fields = Zotero.ItemFields.getAll()
+		const fields = Trellis.ItemFields.getAll()
 			.map(f => f.name)
 			.filter(f => f !== 'accessDate')
 			.reduce((obj, name) => {
@@ -2494,7 +2494,7 @@ Zotero.Attachments = new function () {
 		const year = (args) => {
 			let value = item.getField('date', true, true);
 			if (value) {
-				value = Zotero.Date.multipartToSQL(value).substr(0, 4);
+				value = Trellis.Date.multipartToSQL(value).substr(0, 4);
 				if (value == '0000') {
 					value = '';
 				}
@@ -2503,7 +2503,7 @@ Zotero.Attachments = new function () {
 		};
 
 		const itemType = ({ localize = false, ...rest }) => common(
-			localize ? Zotero.ItemTypes.getLocalizedString(item.itemType) : item.itemType, rest
+			localize ? Trellis.ItemTypes.getLocalizedString(item.itemType) : item.itemType, rest
 		);
 
 		const creatorFields = ['authors', 'editors', 'creators'].reduce((obj, name) => {
@@ -2538,7 +2538,7 @@ Zotero.Attachments = new function () {
 				return common(stringDate, rest);
 			}
 			catch (e) {
-				Zotero.warn(`Error converting date "${value}" to timezone "${timeZone}" for ${item.key}: ${e}`);
+				Trellis.warn(`Error converting date "${value}" to timezone "${timeZone}" for ${item.key}: ${e}`);
 				return common(value, rest);
 			}
 		};
@@ -2548,7 +2548,7 @@ Zotero.Attachments = new function () {
 		// Final name is generated twice. In the first pass we collect all affixed values and determine protected literals.
 		// This is done in order to remove repeated suffixes, except if these appear in the value or the format string itself.
 		// See "should suppress suffixes where they would create a repeat character" test for edge cases.
-		let formatted = Zotero.Utilities.Internal.generateHTMLFromTemplate(formatString, vars);
+		let formatted = Trellis.Utilities.Internal.generateHTMLFromTemplate(formatString, vars);
 		
 		let replacePairs = new Map();
 		for (let chunk of chunks) {
@@ -2571,7 +2571,7 @@ Zotero.Attachments = new function () {
 			);
 		}
 
-		formatted = Zotero.Utilities.Internal.generateHTMLFromTemplate(formatString, vars);
+		formatted = Trellis.Utilities.Internal.generateHTMLFromTemplate(formatString, vars);
 		if (replacePairs.size > 0) {
 			formatted = formatted.replace(
 				new RegExp(`(${Array.from(replacePairs.keys()).map(replace => `(?<!\\\\)${replace}(?!//)`).join('|')})`, 'g'),
@@ -2579,8 +2579,8 @@ Zotero.Attachments = new function () {
 			);
 		}
 		
-		formatted = Zotero.Utilities.cleanTags(formatted);
-		formatted = Zotero.File.getValidFileName(formatted);
+		formatted = Trellis.Utilities.cleanTags(formatted);
+		formatted = Trellis.File.getValidFileName(formatted);
 		return formatted;
 	};
 
@@ -2593,22 +2593,22 @@ Zotero.Attachments = new function () {
 		if (!path) {
 			return '';
 		}
-		let ext = Zotero.File.getExtension(path);
-		ext = Zotero.File.isLikeExtension(ext) ? ext : '';
+		let ext = Trellis.File.getExtension(path);
+		ext = Trellis.File.isLikeExtension(ext) ? ext : '';
 		if (ext === '') {
-			ext = Zotero.MIME.getPrimaryExtension(attachment.attachmentContentType);
-			Zotero.Debug.log(`Attachment "${path}": Invalid or missing extension. Guessing from content type: ${ext}`);
+			ext = Trellis.MIME.getPrimaryExtension(attachment.attachmentContentType);
+			Trellis.Debug.log(`Attachment "${path}": Invalid or missing extension. Guessing from content type: ${ext}`);
 		}
 		return ext;
 	};
 	
 	this.isAutoRenameFilesEnabledForLibrary = function (libraryID) {
 		// For user library, check preference
-		if (libraryID === Zotero.Libraries.userLibraryID) {
-			return Zotero.Prefs.get('autoRenameFiles');
+		if (libraryID === Trellis.Libraries.userLibraryID) {
+			return Trellis.Prefs.get('autoRenameFiles');
 		}
 		// For other libraries, check synced setting
-		const syncedSettingValue = Zotero.SyncedSettings.get(libraryID, 'autoRenameFiles');
+		const syncedSettingValue = Trellis.SyncedSettings.get(libraryID, 'autoRenameFiles');
 		
 		// To preserve automatic file renaming ON by default in 8.0, where it is controlled by a synced setting, return true if the synced setting is unset
 		if (syncedSettingValue === null) {
@@ -2620,8 +2620,8 @@ Zotero.Attachments = new function () {
 	
 	this.shouldAutoRenameFile = function (isLink, libraryID = null) {
 		if (libraryID === null) {
-			Zotero.debug('Calling Zotero.Attachments.shouldAutoRenameFile without a libraryID is deprecated. Assuming user library.');
-			libraryID = Zotero.Libraries.userLibraryID;
+			Trellis.debug('Calling Trellis.Attachments.shouldAutoRenameFile without a libraryID is deprecated. Assuming user library.');
+			libraryID = Trellis.Libraries.userLibraryID;
 		}
 		
 		if (!this.isAutoRenameFilesEnabledForLibrary(libraryID)) {
@@ -2630,7 +2630,7 @@ Zotero.Attachments = new function () {
 
 		if (isLink) {
 			// Linked files may only be renamed in the user library, where it's based on the preference (in group libraries, it's always false)
-			return libraryID === Zotero.Libraries.userLibraryID ? Zotero.Prefs.get('autoRenameFiles.linked') : false;
+			return libraryID === Trellis.Libraries.userLibraryID ? Trellis.Prefs.get('autoRenameFiles.linked') : false;
 		}
 		return true;
 	}
@@ -2639,14 +2639,14 @@ Zotero.Attachments = new function () {
 	this.isRenameAllowedForType = function (contentType, libraryID = null) {
 		let typePrefixes;
 		if (libraryID === null) {
-			Zotero.debug('Calling Zotero.Attachments.isRenameAllowedForType without a libraryID is deprecated. Assuming user library.');
-			libraryID = Zotero.Libraries.userLibraryID;
+			Trellis.debug('Calling Trellis.Attachments.isRenameAllowedForType without a libraryID is deprecated. Assuming user library.');
+			libraryID = Trellis.Libraries.userLibraryID;
 		}
 
 		
-		if (libraryID === Zotero.Libraries.userLibraryID) {
+		if (libraryID === Trellis.Libraries.userLibraryID) {
 			try {
-				typePrefixes = Zotero.Prefs.get('autoRenameFiles.fileTypes')
+				typePrefixes = Trellis.Prefs.get('autoRenameFiles.fileTypes')
 					.split(',')
 					.filter(Boolean);
 			}
@@ -2656,12 +2656,12 @@ Zotero.Attachments = new function () {
 		}
 		else {
 			try {
-				typePrefixes = Zotero.SyncedSettings.get(libraryID, 'autoRenameFilesFileTypes')
+				typePrefixes = Trellis.SyncedSettings.get(libraryID, 'autoRenameFilesFileTypes')
 					.split(',')
 					.filter(Boolean);
 			}
 			catch (e) { // eslint-disable-line no-unused-vars
-				const { DEFAULT_AUTO_RENAME_FILE_TYPES } = ChromeUtils.importESModule("chrome://zotero/content/renameFiles.mjs");
+				const { DEFAULT_AUTO_RENAME_FILE_TYPES } = ChromeUtils.importESModule("chrome://trellis/content/renameFiles.mjs");
 				typePrefixes = DEFAULT_AUTO_RENAME_FILE_TYPES
 					.split(',')
 					.filter(Boolean);
@@ -2676,8 +2676,8 @@ Zotero.Attachments = new function () {
 	 * @deprecated
 	 */
 	this.getRenamedFileTypes = function () {
-		Zotero.debug('Zotero.Attachments.getRenamedFileTypes() is deprecated -- use isRenameAllowedForType()');
-		return Zotero.Prefs.get('autoRenameFiles.fileTypes')
+		Trellis.debug('Trellis.Attachments.getRenamedFileTypes() is deprecated -- use isRenameAllowedForType()');
+		return Trellis.Prefs.get('autoRenameFiles.fileTypes')
 			.split(',')
 			// Don't include prefixes
 			.filter(type => /.+\/.+/.test(type));
@@ -2685,8 +2685,8 @@ Zotero.Attachments = new function () {
 	
 	
 	this.shouldAutoRenameAttachment = function (attachment) {
-		return Zotero.Attachments.shouldAutoRenameFile(attachment.isLinkedFileAttachment(), attachment.libraryID)
-			&& Zotero.Attachments.isRenameAllowedForType(attachment.attachmentContentType, attachment.libraryID)
+		return Trellis.Attachments.shouldAutoRenameFile(attachment.isLinkedFileAttachment(), attachment.libraryID)
+			&& Trellis.Attachments.isRenameAllowedForType(attachment.attachmentContentType, attachment.libraryID)
 			&& !attachment.isSnapshotAttachment();
 	};
 	
@@ -2699,7 +2699,7 @@ Zotero.Attachments = new function () {
 		var contentType = file.endsWith('.pdf')
 			// Don't bother reading file if there's a .pdf extension
 			? 'application/pdf'
-			: await Zotero.MIME.getMIMETypeFromFile(file);
+			: await Trellis.MIME.getMIMETypeFromFile(file);
 		if (!this.isRenameAllowedForType(contentType, parentItem.libraryID)) {
 			return false;
 		}
@@ -2716,13 +2716,13 @@ Zotero.Attachments = new function () {
 	 * @return {Promise<String>} - Path of new directory
 	 */
 	this.createDirectoryForItem = async function (item) {
-		if (!(item instanceof Zotero.Item)) {
-			throw new Error("'item' must be a Zotero.Item");
+		if (!(item instanceof Trellis.Item)) {
+			throw new Error("'item' must be a Trellis.Item");
 		}
 		var dir = this.getStorageDirectory(item).path;
 		// Testing for directories in OS.File, used by removeDir(), is broken on Travis, so use nsIFile
-		if (Zotero.automatedTest) {
-			let nsIFile = Zotero.File.pathToFile(dir);
+		if (Trellis.automatedTest) {
+			let nsIFile = Trellis.File.pathToFile(dir);
 			if (nsIFile.exists()) {
 				nsIFile.remove(true);
 			}
@@ -2730,14 +2730,14 @@ Zotero.Attachments = new function () {
 		else {
 			await OS.File.removeDir(dir, { ignoreAbsent: true });
 		}
-		await Zotero.File.createDirectoryIfMissingAsync(dir);
+		await Trellis.File.createDirectoryIfMissingAsync(dir);
 		return dir;
 	};
 	
 	
 	this.getStorageDirectory = function (item) {
-		if (!(item instanceof Zotero.Item)) {
-			throw new Error("'item' must be a Zotero.Item");
+		if (!(item instanceof Trellis.Item)) {
+			throw new Error("'item' must be a Trellis.Item");
 		}
 		if (!item.key) {
 			throw new Error("Item key must be set");
@@ -2750,11 +2750,11 @@ Zotero.Attachments = new function () {
 		if (!itemID) {
 			throw new Error("itemID not provided");
 		}
-		var {libraryID, key} = Zotero.Items.getLibraryAndKeyFromID(itemID);
+		var {libraryID, key} = Trellis.Items.getLibraryAndKeyFromID(itemID);
 		if (!key) {
 			throw new Error("Item " + itemID + " not found");
 		}
-		var dir = Zotero.getStorageDirectory();
+		var dir = Trellis.getStorageDirectory();
 		dir.append(key);
 		return dir;
 	}
@@ -2762,18 +2762,18 @@ Zotero.Attachments = new function () {
 	
 	this.getStorageDirectoryByLibraryAndKey = function (libraryID, key) {
 		if (typeof key != 'string' || !key.match(/^[A-Z0-9]{8}$/)) {
-			Zotero.debug(key, 1);
+			Trellis.debug(key, 1);
 			throw new Error('key must be an 8-character string');
 		}
-		var dir = Zotero.getStorageDirectory();
+		var dir = Trellis.getStorageDirectory();
 		dir.append(key);
 		return dir;
 	}
 	
 	
 	this.createTemporaryStorageDirectory = async function () {
-		var tmpDir = Zotero.getStorageDirectory();
-		tmpDir.append("tmp-" + Zotero.Utilities.randomString(6));
+		var tmpDir = Trellis.getStorageDirectory();
+		tmpDir.append("tmp-" + Trellis.Utilities.randomString(6));
 		await OS.File.makeDir(tmpDir.path, {
 			unixMode: 0o755
 		});
@@ -2790,12 +2790,12 @@ Zotero.Attachments = new function () {
 			return path;
 		}
 		
-		var basePath = Zotero.Prefs.get('baseAttachmentPath');
+		var basePath = Trellis.Prefs.get('baseAttachmentPath');
 		if (!basePath) {
 			return path;
 		}
 		
-		if (Zotero.File.directoryContains(basePath, path)) {
+		if (Trellis.File.directoryContains(basePath, path)) {
 			// Since stored paths can be synced to other platforms, use forward slashes for consistency.
 			// resolveRelativePath() will convert to the appropriate platform-specific slash on use.
 			basePath = OS.Path.normalize(basePath).replace(/\\/g, "/");
@@ -2818,13 +2818,13 @@ Zotero.Attachments = new function () {
 	 * @return {String|false} - Absolute path, or FALSE if no path
 	 */
 	this.resolveRelativePath = function (path) {
-		if (!path.startsWith(Zotero.Attachments.BASE_PATH_PLACEHOLDER)) {
+		if (!path.startsWith(Trellis.Attachments.BASE_PATH_PLACEHOLDER)) {
 			return false;
 		}
 		
-		var basePath = Zotero.Prefs.get('baseAttachmentPath');
+		var basePath = Trellis.Prefs.get('baseAttachmentPath');
 		if (!basePath) {
-			Zotero.debug("No base attachment path set -- can't resolve '" + path + "'", 2);
+			Trellis.debug("No base attachment path set -- can't resolve '" + path + "'", 2);
 			return false;
 		}
 		
@@ -2833,13 +2833,13 @@ Zotero.Attachments = new function () {
 		
 		return PathUtils.joinRelative(
 			basePath,
-			path.substr(Zotero.Attachments.BASE_PATH_PLACEHOLDER.length)
+			path.substr(Trellis.Attachments.BASE_PATH_PLACEHOLDER.length)
 		);
 	}
 	
 	
 	this.fixPathSlashes = function (path) {
-		return path.replace(Zotero.isWin ? /\//g : /\\/g, Zotero.isWin ? "\\" : "/");
+		return path.replace(Trellis.isWin ? /\//g : /\\/g, Trellis.isWin ? "\\" : "/");
 	}
 	
 	
@@ -2850,11 +2850,11 @@ Zotero.Attachments = new function () {
 		
 		var linkMode = item.attachmentLinkMode;
 		switch (linkMode) {
-			case Zotero.Attachments.LINK_MODE_IMPORTED_URL:
-			case Zotero.Attachments.LINK_MODE_IMPORTED_FILE:
+			case Trellis.Attachments.LINK_MODE_IMPORTED_URL:
+			case Trellis.Attachments.LINK_MODE_IMPORTED_FILE:
 				break;
 			
-			case Zotero.Attachments.LINK_MODE_EMBEDDED_IMAGE:
+			case Trellis.Attachments.LINK_MODE_EMBEDDED_IMAGE:
 				return false;
 			
 			default:
@@ -2896,7 +2896,7 @@ Zotero.Attachments = new function () {
 	 *
 	 * Only counts if MIME type is text/html
 	 *
-	 * @param	{Zotero.Item}	item	Attachment item
+	 * @param	{Trellis.Item}	item	Attachment item
 	 */
 	this.getNumFiles = async function (item) {
 		if (!item.isAttachment()) {
@@ -2905,8 +2905,8 @@ Zotero.Attachments = new function () {
 		
 		var linkMode = item.attachmentLinkMode;
 		switch (linkMode) {
-			case Zotero.Attachments.LINK_MODE_IMPORTED_URL:
-			case Zotero.Attachments.LINK_MODE_IMPORTED_FILE:
+			case Trellis.Attachments.LINK_MODE_IMPORTED_URL:
+			case Trellis.Attachments.LINK_MODE_IMPORTED_FILE:
 				break;
 			
 			default:
@@ -2941,7 +2941,7 @@ Zotero.Attachments = new function () {
 	
 	
 	/**
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {Boolean} [skipHidden=true] - Don't count hidden files
 	 * @return {Promise<Integer>} - Promise for the total file size in bytes
 	 */
@@ -2952,9 +2952,9 @@ Zotero.Attachments = new function () {
 		
 		var linkMode = item.attachmentLinkMode;
 		switch (linkMode) {
-			case Zotero.Attachments.LINK_MODE_IMPORTED_URL:
-			case Zotero.Attachments.LINK_MODE_IMPORTED_FILE:
-			case Zotero.Attachments.LINK_MODE_LINKED_FILE:
+			case Trellis.Attachments.LINK_MODE_IMPORTED_URL:
+			case Trellis.Attachments.LINK_MODE_IMPORTED_FILE:
+			case Trellis.Attachments.LINK_MODE_LINKED_FILE:
 				break;
 			
 			default:
@@ -2966,7 +2966,7 @@ Zotero.Attachments = new function () {
 			throw new Error("File not found");
 		}
 		
-		if (linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
+		if (linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
 			return ((await OS.File.stat(path))).size;
 		}
 		
@@ -3010,7 +3010,7 @@ Zotero.Attachments = new function () {
 			throw new Error("Attachment is already in library " + libraryID);
 		}
 		
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		var newAttachment = attachment.clone(libraryID);
 		if (attachment.isStoredFileAttachment()) {
@@ -3033,8 +3033,8 @@ Zotero.Attachments = new function () {
 				//
 				// Testing for directories in OS.File, used by removeDir(), is broken on Travis,
 				// so use nsIFile
-				if (Zotero.automatedTest) {
-					let nsIFile = Zotero.File.pathToFile(newDir);
+				if (Trellis.automatedTest) {
+					let nsIFile = Trellis.File.pathToFile(newDir);
 					if (nsIFile.exists()) {
 						nsIFile.remove(true);
 					}
@@ -3056,7 +3056,7 @@ Zotero.Attachments = new function () {
 					await OS.File.move(newDir, oldDir);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			throw e;
@@ -3069,14 +3069,14 @@ Zotero.Attachments = new function () {
 	/**
 	 * Copy attachment item, including file, to another library
 	 *
-	 * @return {Zotero.Item} - The new attachment
+	 * @return {Trellis.Item} - The new attachment
 	 */
 	this.copyAttachmentToLibrary = async function (attachment, libraryID, parentItemID) {
 		if (attachment.libraryID == libraryID) {
 			throw new Error("Attachment is already in library " + libraryID);
 		}
 		
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		var newAttachment = attachment.clone(libraryID);
 		if (attachment.isStoredFileAttachment()) {
@@ -3090,9 +3090,9 @@ Zotero.Attachments = new function () {
 		
 		// Copy over files if they exist
 		if (newAttachment.isStoredFileAttachment() && ((await attachment.fileExists()))) {
-			let dir = Zotero.Attachments.getStorageDirectory(attachment);
-			let newDir = await Zotero.Attachments.createDirectoryForItem(newAttachment);
-			await Zotero.File.copyDirectory(dir, newDir);
+			let dir = Trellis.Attachments.getStorageDirectory(attachment);
+			let newDir = await Trellis.Attachments.createDirectoryForItem(newAttachment);
+			await Trellis.File.copyDirectory(dir, newDir);
 		}
 		
 		await newAttachment.addLinkedItem(attachment);
@@ -3107,7 +3107,7 @@ Zotero.Attachments = new function () {
 		
 		var file = await item.getFilePathAsync();
 		if (!file) {
-			Zotero.debug("Linked file not found at " + file);
+			Trellis.debug("Linked file not found at " + file);
 			return false;
 		}
 		
@@ -3115,17 +3115,17 @@ Zotero.Attachments = new function () {
 		json.linkMode = 'imported_file';
 		delete json.path;
 		json.filename = PathUtils.filename(file);
-		var newItem = new Zotero.Item('attachment');
+		var newItem = new Trellis.Item('attachment');
 		newItem.libraryID = item.libraryID;
 		newItem.fromJSON(json);
 		await newItem.saveTx();
 		
 		// Move child annotations and embedded-image attachments
-		await Zotero.DB.executeTransaction(async function () {
-			await Zotero.Items.moveChildItems(item, newItem);
+		await Trellis.DB.executeTransaction(async function () {
+			await Trellis.Items.moveChildItems(item, newItem);
 		});
 		// Copy relations pointing to the old item
-		await Zotero.Relations.copyObjectSubjectRelations(item, newItem);
+		await Trellis.Relations.copyObjectSubjectRelations(item, newItem);
 		
 		var newFile;
 		try {
@@ -3133,27 +3133,27 @@ Zotero.Attachments = new function () {
 			let destDir = await this.createDirectoryForItem(newItem);
 			newFile = OS.Path.join(destDir, json.filename);
 			if (options.move) {
-				newFile = await Zotero.File.moveToUnique(file, newFile);
+				newFile = await Trellis.File.moveToUnique(file, newFile);
 			}
 			// Copy file to unique filename, which automatically shortens long filenames
 			else {
-				newFile = Zotero.File.copyToUnique(file, newFile);
+				newFile = Trellis.File.copyToUnique(file, newFile);
 				// TEMP: copyToUnique returns an nsIFile
 				newFile = newFile.path;
-				await Zotero.File.setNormalFilePermissions(newFile);
+				await Trellis.File.setNormalFilePermissions(newFile);
 				let mtime = (await OS.File.stat(file)).lastModificationDate;
 				await OS.File.setDates(newFile, null, mtime);
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			// Delete new file
 			if (newFile) {
 				try {
-					await Zotero.File.removeIfExists(newFile);
+					await Trellis.File.removeIfExists(newFile);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 			// Delete new item
@@ -3161,22 +3161,22 @@ Zotero.Attachments = new function () {
 				await newItem.eraseTx();
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			return false;
 		}
 		
 		try {
-			await Zotero.DB.executeTransaction(async function () {
-				await Zotero.Fulltext.transferItemIndex(item, newItem);
+			await Trellis.DB.executeTransaction(async function () {
+				await Trellis.Fulltext.transferItemIndex(item, newItem);
 			});
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		
 		if (newFile && json.filename != PathUtils.filename(newFile)) {
-			Zotero.debug("Filename was changed");
+			Trellis.debug("Filename was changed");
 			newItem.attachmentFilename = PathUtils.filename(newFile);
 			await newItem.saveTx();
 		}
@@ -3188,10 +3188,10 @@ Zotero.Attachments = new function () {
 	
 	
 	this._getFileNameFromURL = function (url, contentType) {
-		url = Zotero.Utilities.Internal.parseURL(url);
+		url = Trellis.Utilities.Internal.parseURL(url);
 		
 		var fileBaseName = url.fileBaseName;
-		var fileExt = Zotero.MIME.getPrimaryExtension(contentType, url.fileExtension);
+		var fileExt = Trellis.MIME.getPrimaryExtension(contentType, url.fileExtension);
 		
 		if (!fileBaseName) {
 			let matches = url.pathname.match(/\/([^\/]+)\/$/);
@@ -3213,7 +3213,7 @@ Zotero.Attachments = new function () {
 			if (e.name == 'URIError') {
 				// If we got a 'malformed URI sequence' while decoding,
 				// use MD5 of fileBaseName
-				fileBaseName = Zotero.Utilities.Internal.md5(fileBaseName, false);
+				fileBaseName = Trellis.Utilities.Internal.md5(fileBaseName, false);
 			}
 			else {
 				throw e;
@@ -3224,7 +3224,7 @@ Zotero.Attachments = new function () {
 		
 		// Pass unencoded name to getValidFileName() so that percent-encoded
 		// characters aren't stripped to just numbers
-		return Zotero.File.getValidFileName(decodeURIComponent(fileName));
+		return Trellis.File.getValidFileName(decodeURIComponent(fileName));
 	}
 	
 	
@@ -3239,7 +3239,7 @@ Zotero.Attachments = new function () {
 			// The URI is not a URL
 			fileExtension = '';
 		}
-		return Zotero.MIME.getPrimaryExtension(contentType, fileExtension);
+		return Trellis.MIME.getPrimaryExtension(contentType, fileExtension);
 	}
 	
 	
@@ -3256,7 +3256,7 @@ Zotero.Attachments = new function () {
 	 * @param {Number} [parentItemID]
 	 * @param {String[]|Number[]} [collections]
 	 * @param {Object} [saveOptions]
-	 * @return {Promise<Zotero.Item>} - A promise for the new attachment
+	 * @return {Promise<Trellis.Item>} - A promise for the new attachment
 	 */
 	function _addToDB(options) {
 		var file = options.file;
@@ -3269,13 +3269,13 @@ Zotero.Attachments = new function () {
 		var collections = options.collections;
 		var saveOptions = options.saveOptions;
 		
-		return Zotero.DB.executeTransaction(async function () {
-			var attachmentItem = new Zotero.Item('attachment');
+		return Trellis.DB.executeTransaction(async function () {
+			var attachmentItem = new Trellis.Item('attachment');
 			if (parentItemID) {
 				let {libraryID: parentLibraryID, key: parentKey} =
-					Zotero.Items.getLibraryAndKeyFromID(parentItemID);
-				if (parentLibraryID != Zotero.Libraries.userLibraryID
-						&& linkMode == Zotero.Attachments.LINK_MODE_LINKED_FILE) {
+					Trellis.Items.getLibraryAndKeyFromID(parentItemID);
+				if (parentLibraryID != Trellis.Libraries.userLibraryID
+						&& linkMode == Trellis.Attachments.LINK_MODE_LINKED_FILE) {
 					throw new Error("Cannot save linked file in non-local library");
 				}
 				attachmentItem.libraryID = parentLibraryID;
@@ -3320,7 +3320,7 @@ Zotero.Attachments = new function () {
 	 * @return {Promise}
 	 */
 	var _postProcessFile = async function (item) {
-		return Zotero.Fulltext.indexItems([item.id]);
+		return Trellis.Fulltext.indexItems([item.id]);
 	};
 	
 	

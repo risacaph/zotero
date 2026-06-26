@@ -3,22 +3,22 @@
     
     Copyright © 2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -26,7 +26,7 @@
 /**
  * @namespace
  */
-Zotero.SyncedSettings = (function () {
+Trellis.SyncedSettings = (function () {
 	var _cache = {};
 	
 	//
@@ -71,7 +71,7 @@ Zotero.SyncedSettings = (function () {
 		},
 		
 		loadAll: async function (libraryID) {
-			Zotero.debug("Loading synced settings for library " + libraryID);
+			Trellis.debug("Loading synced settings for library " + libraryID);
 			
 			_cache[libraryID] = {};
 			
@@ -79,7 +79,7 @@ Zotero.SyncedSettings = (function () {
 			
 			var sql = "SELECT setting, value, synced, version FROM syncedSettings "
 				+ "WHERE libraryID=?";
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				sql,
 				libraryID,
 				{
@@ -120,7 +120,7 @@ Zotero.SyncedSettings = (function () {
 				// Invalid tag
 				tagColors = tagColors.filter((color) => {
 					if (typeof color != 'object' || typeof color.name != 'string' || typeof color.color != 'string') {
-						Zotero.logError("Removing invalid colored tag: " + JSON.stringify(color));
+						Trellis.logError("Removing invalid colored tag: " + JSON.stringify(color));
 						tagsFixed = true;
 						return false;
 					}
@@ -147,7 +147,7 @@ Zotero.SyncedSettings = (function () {
 		 */
 		get: function (libraryID, setting) {
 			if (!_cache[libraryID]) {
-				throw new Zotero.Exception.UnloadedDataException(
+				throw new Trellis.Exception.UnloadedDataException(
 					"Synced settings not loaded for library " + libraryID,
 					"syncedSettings"
 				);
@@ -167,7 +167,7 @@ Zotero.SyncedSettings = (function () {
 		 */
 		getMetadata: function (libraryID, setting) {
 			if (!_cache[libraryID]) {
-				throw new Zotero.Exception.UnloadedDataException(
+				throw new Trellis.Exception.UnloadedDataException(
 					"Synced settings not loaded for library " + libraryID,
 					"syncedSettings"
 				);
@@ -185,7 +185,7 @@ Zotero.SyncedSettings = (function () {
 		
 		getUnsynced: async function (libraryID) {
 			var sql = "SELECT setting, value FROM syncedSettings WHERE synced=0 AND libraryID=?";
-			var rows = await Zotero.DB.queryAsync(sql, libraryID);
+			var rows = await Trellis.DB.queryAsync(sql, libraryID);
 			var obj = {};
 			rows.forEach(row => obj[row.setting] = JSON.parse(row.value));
 			return obj;
@@ -194,7 +194,7 @@ Zotero.SyncedSettings = (function () {
 		markAsSynced: async function (libraryID, settings, version) {
 			var sql = "UPDATE syncedSettings SET synced=1, version=? WHERE libraryID=? AND setting IN "
 				+ "(" + settings.map(x => '?').join(', ') + ")";
-			await Zotero.DB.queryAsync(sql, [version, libraryID].concat(settings));
+			await Trellis.DB.queryAsync(sql, [version, libraryID].concat(settings));
 			for (let key of settings) {
 				let setting = _cache[libraryID][key];
 				setting.synced = true;
@@ -207,7 +207,7 @@ Zotero.SyncedSettings = (function () {
 		 */
 		markAllAsUnsynced: async function (libraryID) {
 			var sql = "UPDATE syncedSettings SET synced=0, version=0 WHERE libraryID=?";
-			await Zotero.DB.queryAsync(sql, libraryID);
+			await Trellis.DB.queryAsync(sql, libraryID);
 			for (let key in _cache[libraryID]) {
 				let setting = _cache[libraryID][key];
 				setting.synced = false;
@@ -266,12 +266,12 @@ Zotero.SyncedSettings = (function () {
 				if (version > 0) {
 					args.unshift(version)
 				}
-				await Zotero.DB.queryAsync(sql, args);
+				await Trellis.DB.queryAsync(sql, args);
 			}
 			else {
 				var sql = "INSERT INTO syncedSettings "
 					+ "(setting, libraryID, value, version, synced) VALUES (?, ?, ?, ?, ?)";
-				await Zotero.DB.queryAsync(
+				await Trellis.DB.queryAsync(
 					sql, [setting, libraryID, JSON.stringify(value), version, synced]
 				);
 			}
@@ -288,7 +288,7 @@ Zotero.SyncedSettings = (function () {
 			if (version > 0) {
 				await this.onSyncDownload.trigger(libraryID, setting, currentValue, value, conflict);
 			}
-			await Zotero.Notifier.trigger(event, 'setting', [id], extraData);
+			await Trellis.Notifier.trigger(event, 'setting', [id], extraData);
 			return true;
 		},
 		
@@ -315,11 +315,11 @@ Zotero.SyncedSettings = (function () {
 			}
 			
 			var sql = "DELETE FROM syncedSettings WHERE setting=? AND libraryID=?";
-			await Zotero.DB.queryAsync(sql, [setting, libraryID]);
+			await Trellis.DB.queryAsync(sql, [setting, libraryID]);
 			
 			delete _cache[libraryID][setting];
 			
-			await Zotero.Notifier.trigger('delete', 'setting', [id], extraData);
+			await Trellis.Notifier.trigger('delete', 'setting', [id], extraData);
 			return true;
 		}
 	};

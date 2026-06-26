@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "버전">
-<!ENTITY zotero.whatsNew "새로워진 점">
-<!ENTITY zotero.createdby "제작자:">
-<!ENTITY zotero.director "책임자:">
-<!ENTITY zotero.directors "책임자:">
-<!ENTITY zotero.developers "개발자:">
-<!ENTITY zotero.alumni "역대 참여자:">
-<!ENTITY zotero.about.localizations "지역화 담당자:">
-<!ENTITY zotero.about.additionalSoftware "타사 소프트웨어:">
-<!ENTITY zotero.thanks "감사드릴 분들:">
-<!ENTITY zotero.about.close "닫기">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Zotero 프로젝트에 기여한 분들">
-<!ENTITY zotero.citationProcessing "인용 &amp; 서지 처리">
+<!ENTITY trellis.version "버전">
+<!ENTITY trellis.whatsNew "새로워진 점">
+<!ENTITY trellis.createdby "제작자:">
+<!ENTITY trellis.director "책임자:">
+<!ENTITY trellis.directors "책임자:">
+<!ENTITY trellis.developers "개발자:">
+<!ENTITY trellis.alumni "역대 참여자:">
+<!ENTITY trellis.about.localizations "지역화 담당자:">
+<!ENTITY trellis.about.additionalSoftware "타사 소프트웨어:">
+<!ENTITY trellis.thanks "감사드릴 분들:">
+<!ENTITY trellis.about.close "닫기">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Trellis 프로젝트에 기여한 분들">
+<!ENTITY trellis.citationProcessing "인용 &amp; 서지 처리">

@@ -62,7 +62,7 @@ module.exports.getCSSIcon = function (key) {
 			if (type == 'image') {
 				type = 'area';
 			}
-			img.src = 'chrome://zotero/skin/16/universal/annotate-' + type + '.svg';
+			img.src = 'chrome://trellis/skin/16/universal/annotate-' + type + '.svg';
 			img.style.fill = annotationColor;
 			cssIconsCache.set(key, img);
 			return img;

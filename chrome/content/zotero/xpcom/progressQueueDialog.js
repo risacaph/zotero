@@ -3,30 +3,30 @@
     
     Copyright © 2018 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.ProgressQueueDialog = function (progressQueue) {
-	const SUCCESS_IMAGE = 'chrome://zotero/skin/tick.png';
-	const FAILURE_IMAGE = 'chrome://zotero/skin/cross.png';
-	const LOADING_IMAGE = 'chrome://zotero/skin/arrow_refresh.png';
+Trellis.ProgressQueueDialog = function (progressQueue) {
+	const SUCCESS_IMAGE = 'chrome://trellis/skin/tick.png';
+	const FAILURE_IMAGE = 'chrome://trellis/skin/cross.png';
+	const LOADING_IMAGE = 'chrome://trellis/skin/arrow_refresh.png';
 	
 	let _progressQueue = this.progressQueue = progressQueue;
 	
@@ -44,11 +44,11 @@ Zotero.ProgressQueueDialog = function (progressQueue) {
 		
 		let win = Services.wm.getMostRecentWindow("navigator:browser");
 		if (win) {
-			_progressWindow = win.openDialog("chrome://zotero/content/progressQueueDialog.xhtml",
+			_progressWindow = win.openDialog("chrome://trellis/content/progressQueueDialog.xhtml",
 				"", "chrome,close=yes,resizable=yes,dependent,dialog,centerscreen", _io);
 		}
 		else {
-			_progressWindow = Services.ww.openWindow(null, "chrome://zotero/content/progressQueueDialog.xhtml",
+			_progressWindow = Services.ww.openWindow(null, "chrome://trellis/content/progressQueueDialog.xhtml",
 				"", "chrome,close=yes,resizable=yes,dependent,dialog,centerscreen", _io);
 		}
 		
@@ -89,7 +89,7 @@ Zotero.ProgressQueueDialog = function (progressQueue) {
 	
 	function _onWindowLoaded() {
 		var rootElement = _progressWindow.document.getElementById('progress-queue-root');
-		Zotero.UIProperties.registerRoot(rootElement);
+		Trellis.UIProperties.registerRoot(rootElement);
 		
 		_progressIndicator = _progressWindow.document.getElementById('progress-indicator');
 		_progressWindow.document.getElementById('cancel-button')
@@ -148,13 +148,13 @@ Zotero.ProgressQueueDialog = function (progressQueue) {
 			_progressWindow.document.getElementById("cancel-button").hidden = true;
 			_progressWindow.document.getElementById("minimize-button").hidden = true;
 			_progressWindow.document.getElementById("close-button").hidden = false;
-			_progressWindow.document.getElementById("label").value = _status || Zotero.getString('general.finished');
+			_progressWindow.document.getElementById("label").value = _status || Trellis.getString('general.finished');
 		}
 		else {
 			_progressWindow.document.getElementById("cancel-button").hidden = false;
 			_progressWindow.document.getElementById("minimize-button").hidden = !_showMinimize;
 			_progressWindow.document.getElementById("close-button").hidden = true;
-			_progressWindow.document.getElementById("label").value = _status || Zotero.getString('general.processing');
+			_progressWindow.document.getElementById("label").value = _status || Trellis.getString('general.processing');
 		}
 	}
 };

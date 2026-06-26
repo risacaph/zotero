@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "версия">
-<!ENTITY zotero.whatsNew "Что нового">
-<!ENTITY zotero.createdby "Создатели:">
-<!ENTITY zotero.director "Директор:">
-<!ENTITY zotero.directors "Руководители:">
-<!ENTITY zotero.developers "Разработчики:">
-<!ENTITY zotero.alumni "Бывшие разработчики:">
-<!ENTITY zotero.about.localizations "Локализации:">
-<!ENTITY zotero.about.additionalSoftware "ПО третьих сторон:">
-<!ENTITY zotero.thanks "Особая благодарность:">
-<!ENTITY zotero.about.close "Закрыть">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Больше сведений об участниках и благодарности">
-<!ENTITY zotero.citationProcessing "Обработка цитат и библиографии">
+<!ENTITY trellis.version "версия">
+<!ENTITY trellis.whatsNew "Что нового">
+<!ENTITY trellis.createdby "Создатели:">
+<!ENTITY trellis.director "Директор:">
+<!ENTITY trellis.directors "Руководители:">
+<!ENTITY trellis.developers "Разработчики:">
+<!ENTITY trellis.alumni "Бывшие разработчики:">
+<!ENTITY trellis.about.localizations "Локализации:">
+<!ENTITY trellis.about.additionalSoftware "ПО третьих сторон:">
+<!ENTITY trellis.thanks "Особая благодарность:">
+<!ENTITY trellis.about.close "Закрыть">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Больше сведений об участниках и благодарности">
+<!ENTITY trellis.citationProcessing "Обработка цитат и библиографии">

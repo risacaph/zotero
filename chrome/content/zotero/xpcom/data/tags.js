@@ -3,31 +3,31 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
 /*
- * Same structure as Zotero.Creators -- make changes in both places if possible
+ * Same structure as Trellis.Creators -- make changes in both places if possible
  */
-Zotero.Tags = new function () {
+Trellis.Tags = new function () {
 	this.MAX_COLORED_TAGS = 9;
 	this.MAX_SYNC_LENGTH = 255;
 	
@@ -42,7 +42,7 @@ Zotero.Tags = new function () {
 	this.init = async function () {
 		_tagsByID.clear();
 		_idsByTag.clear();
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			"SELECT tagID, name FROM tags",
 			false,
 			{
@@ -69,7 +69,7 @@ Zotero.Tags = new function () {
 	 */
 	this.getName = function (tagID) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Tags not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Tags not yet loaded");
 		}
 		
 		var name = _tagsByID.get(tagID);
@@ -85,10 +85,10 @@ Zotero.Tags = new function () {
 	 */
 	this.getID = function (name) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Tags not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Tags not yet loaded");
 		}
 		if (arguments.length > 1) {
-			throw new Error("Zotero.Tags.getID() no longer takes a second parameter -- use Zotero.Tags.create()");
+			throw new Error("Trellis.Tags.getID() no longer takes a second parameter -- use Trellis.Tags.create()");
 		}
 		
 		data = this.cleanData({
@@ -109,18 +109,18 @@ Zotero.Tags = new function () {
 	 */
 	this.create = async function (name) {
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Tags not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Tags not yet loaded");
 		}
 		
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		data = this.cleanData({
 			tag: name
 		});
 		var id = this.getID(data.tag);
 		if (!id) {
-			id = Zotero.ID.get('tags');
+			id = Trellis.ID.get('tags');
 			let sql = "INSERT INTO tags (tagID, name) VALUES (?, ?)";
-			await Zotero.DB.queryAsync(sql, [id, data.tag]);
+			await Trellis.DB.queryAsync(sql, [id, data.tag]);
 			_tagsByID.set(id, data.tag);
 			_idsByTag.set(data.tag, id);
 		}
@@ -133,7 +133,7 @@ Zotero.Tags = new function () {
 			+ "JOIN itemTags USING (tagID) "
 			+ "JOIN items USING (itemID) "
 			+ "WHERE libraryID=? AND LENGTH(name)>?"
-		return await Zotero.DB.columnQueryAsync(sql, [libraryID, this.MAX_SYNC_LENGTH]);
+		return await Trellis.DB.columnQueryAsync(sql, [libraryID, this.MAX_SYNC_LENGTH]);
 	};
 	
 	
@@ -192,11 +192,11 @@ Zotero.Tags = new function () {
 		// Not a perfect locale sort, but speeds up the sort in the tag selector later without any
 		// discernible performance cost
 		sql += "ORDER BY name COLLATE NOCASE";
-		var rows = await Zotero.DB.columnQueryAsync(sql, params, { noCache: !!tmpTable || !!tagIDs });
+		var rows = await Trellis.DB.columnQueryAsync(sql, params, { noCache: !!tmpTable || !!tagIDs });
 		return rows.map((row) => {
 			var [tagID, type] = row.split(':');
 			return this.cleanData({
-				tag: Zotero.Tags.getName(parseInt(tagID)),
+				tag: Trellis.Tags.getName(parseInt(tagID)),
 				type: type
 			});
 		});
@@ -212,7 +212,7 @@ Zotero.Tags = new function () {
 	this.getTagItems = function (libraryID, tagID) {
 		var sql = "SELECT itemID FROM itemTags JOIN items USING (itemID) "
 			+ "WHERE tagID=? AND libraryID=?";
-		return Zotero.DB.columnQueryAsync(sql, [tagID, libraryID]);
+		return Trellis.DB.columnQueryAsync(sql, [tagID, libraryID]);
 	}
 	
 	
@@ -221,7 +221,7 @@ Zotero.Tags = new function () {
 		if (str) {
 			sql += ' WHERE name LIKE ?';
 		}
-		var rows = await Zotero.DB.queryAsync(sql, str ? '%' + str + '%' : undefined);
+		var rows = await Trellis.DB.queryAsync(sql, str ? '%' + str + '%' : undefined);
 		return rows.map((row) => this.cleanData(row));
 	};
 
@@ -242,23 +242,23 @@ Zotero.Tags = new function () {
 				let sql = "SELECT COUNT(itemID) "
 					+ "FROM tags JOIN itemTags USING (tagID) JOIN items USING (itemID) "
 					+ `WHERE tagID = ? AND type = ? AND libraryID = ?`;
-				numItems = await Zotero.DB.valueQueryAsync(sql, [this.getID(tag.tag), tag.type, libraryID]);
+				numItems = await Trellis.DB.valueQueryAsync(sql, [this.getID(tag.tag), tag.type, libraryID]);
 			}
 			else {
 				let sql = "SELECT COUNT(itemID) "
 					+ "FROM tags JOIN itemTags USING (tagID) JOIN items USING (itemID) "
 					+ `WHERE tagID = ? AND libraryID = ?`;
-				numItems = await Zotero.DB.valueQueryAsync(sql, [this.getID(tag.tag), libraryID]);
+				numItems = await Trellis.DB.valueQueryAsync(sql, [this.getID(tag.tag), libraryID]);
 			}
-			let uri = Zotero.URI.getTagURI(libraryID, tag.tag);
+			let uri = Trellis.URI.getTagURI(libraryID, tag.tag);
 			return {
 				tag: tag.tag,
 				links: {
 					self: {
-						href: Zotero.URI.toAPIURL(uri),
+						href: Trellis.URI.toAPIURL(uri),
 						type: 'application/json'
 					},
-					alternate: Zotero.Users.getCurrentUserID() ? {
+					alternate: Trellis.Users.getCurrentUserID() ? {
 						href: uri, // No toWebURL - match dataserver behavior
 						type: 'text/html'
 					} : undefined
@@ -280,13 +280,13 @@ Zotero.Tags = new function () {
 	 * @return {Promise}
 	 */
 	this.rename = async function (libraryID, oldName, newName) {
-		Zotero.debug("Renaming tag '" + oldName + "' to '" + newName + "' in library " + libraryID);
+		Trellis.debug("Renaming tag '" + oldName + "' to '" + newName + "' in library " + libraryID);
 		
 		oldName = oldName.trim();
 		newName = newName.trim();
 		
 		if (oldName == newName) {
-			Zotero.debug("Tag name hasn't changed", 2);
+			Trellis.debug("Tag name hasn't changed", 2);
 			return;
 		}
 		
@@ -299,30 +299,30 @@ Zotero.Tags = new function () {
 		// we can assign it to the new name
 		var oldColorData = this.getColor(libraryID, oldName);
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			var oldItemIDs = await this.getTagItems(libraryID, oldTagID);
 			var newTagID = await this.create(newName);
 			
-			await Zotero.Utilities.Internal.forEachChunkAsync(
+			await Trellis.Utilities.Internal.forEachChunkAsync(
 				oldItemIDs,
-				Zotero.DB.MAX_BOUND_PARAMETERS - 2,
+				Trellis.DB.MAX_BOUND_PARAMETERS - 2,
 				async function (chunk) {
 					let placeholders = chunk.map(() => '?').join(',');
 					
 					// This is ugly, but it's much faster than doing replaceTag() for each item
 					let sql = 'UPDATE OR REPLACE itemTags SET tagID=?, type=0 '
 						+ 'WHERE tagID=? AND itemID IN (' + placeholders + ')';
-					await Zotero.DB.queryAsync(
+					await Trellis.DB.queryAsync(
 						sql, [newTagID, oldTagID].concat(chunk), { noCache: true }
 					);
 					
 					sql = 'UPDATE items SET synced=0, clientDateModified=? '
 						+ 'WHERE itemID IN (' + placeholders + ')'
-					await Zotero.DB.queryAsync(
-						sql, [Zotero.DB.transactionDateTime].concat(chunk), { noCache: true }
+					await Trellis.DB.queryAsync(
+						sql, [Trellis.DB.transactionDateTime].concat(chunk), { noCache: true }
 					);
 					
-					await Zotero.Items.reload(oldItemIDs, ['primaryData', 'tags'], true);
+					await Trellis.Items.reload(oldItemIDs, ['primaryData', 'tags'], true);
 				}
 			);
 			
@@ -336,7 +336,7 @@ Zotero.Tags = new function () {
 				}
 			};
 			
-			Zotero.Notifier.queue(
+			Trellis.Notifier.queue(
 				'modify',
 				'item-tag',
 				oldItemIDs.map(itemID => itemID + '-' + newTagID),
@@ -347,7 +347,7 @@ Zotero.Tags = new function () {
 		}.bind(this));
 		
 		if (oldColorData) {
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				// Remove color from old tag
 				await this.setColor(libraryID, oldName);
 				
@@ -383,11 +383,11 @@ Zotero.Tags = new function () {
 		var colors = this.getColors(libraryID);
 		var done = 0;
 		
-		await Zotero.Utilities.Internal.forEachChunkAsync(
+		await Trellis.Utilities.Internal.forEachChunkAsync(
 			tagIDs,
 			100,
 			async function (chunk) {
-				await Zotero.DB.executeTransaction(async function () {
+				await Trellis.DB.executeTransaction(async function () {
 					var rowIDs = [];
 					var itemIDs = [];
 					var uniqueTags = new Set();
@@ -403,7 +403,7 @@ Zotero.Tags = new function () {
 						sql += 'AND type IN (' + types.join(', ') + ') ';
 					}
 					sql += 'ORDER BY tagID, type';
-					var rows = await Zotero.DB.queryAsync(sql, [libraryID, ...chunk]);
+					var rows = await Trellis.DB.queryAsync(sql, [libraryID, ...chunk]);
 					for (let { rowID, tagID, itemID, type } of rows) {
 						uniqueTags.add(tagID);
 						
@@ -430,26 +430,26 @@ Zotero.Tags = new function () {
 						}
 					}
 					if (itemIDs.length) {
-						Zotero.Notifier.queue('remove', 'item-tag', notifierIDs, notifierData);
+						Trellis.Notifier.queue('remove', 'item-tag', notifierIDs, notifierData);
 					}
 					
 					sql = "DELETE FROM itemTags WHERE ROWID IN (" + rowIDs.join(", ") + ")";
-					await Zotero.DB.queryAsync(sql, false, { noCache: true });
+					await Trellis.DB.queryAsync(sql, false, { noCache: true });
 					
 					await this.purge(chunk);
 					
 					// Update internal timestamps on all items that had these tags
-					await Zotero.Utilities.Internal.forEachChunkAsync(
-						Zotero.Utilities.arrayUnique(itemIDs),
-						Zotero.DB.MAX_BOUND_PARAMETERS - 1,
+					await Trellis.Utilities.Internal.forEachChunkAsync(
+						Trellis.Utilities.arrayUnique(itemIDs),
+						Trellis.DB.MAX_BOUND_PARAMETERS - 1,
 						async function (chunk) {
 							var sql = 'UPDATE items SET synced=0, clientDateModified=? '
 								+ 'WHERE itemID IN (' + Array(chunk.length).fill('?').join(',') + ')';
-							await Zotero.DB.queryAsync(
-								sql, [Zotero.DB.transactionDateTime].concat(chunk), { noCache: true }
+							await Trellis.DB.queryAsync(
+								sql, [Trellis.DB.transactionDateTime].concat(chunk), { noCache: true }
 							);
 							
-							await Zotero.Items.reload(itemIDs, ['primaryData', 'tags'], true);
+							await Trellis.Items.reload(itemIDs, ['primaryData', 'tags'], true);
 						}
 					);
 					
@@ -461,7 +461,7 @@ Zotero.Tags = new function () {
 			}.bind(this)
 		);
 		
-		Zotero.debug(`Removed ${tagIDs.length} ${Zotero.Utilities.pluralize(tagIDs.length, 'tag')} `
+		Trellis.debug(`Removed ${tagIDs.length} ${Trellis.Utilities.pluralize(tagIDs.length, 'tag')} `
 			+ `in ${new Date() - d} ms`);
 	};
 	
@@ -473,7 +473,7 @@ Zotero.Tags = new function () {
 	this.getAutomaticInLibrary = function (libraryID) {
 		var sql = "SELECT DISTINCT tagID FROM itemTags JOIN items USING (itemID) "
 			+ "WHERE type=1 AND libraryID=?"
-		return Zotero.DB.columnQueryAsync(sql, libraryID);
+		return Trellis.DB.columnQueryAsync(sql, libraryID);
 	};
 	
 	
@@ -500,34 +500,34 @@ Zotero.Tags = new function () {
 		var d = new Date();
 		
 		if (!_initialized) {
-			throw new Zotero.Exception.UnloadedDataException("Tags not yet loaded");
+			throw new Trellis.Exception.UnloadedDataException("Tags not yet loaded");
 		}
 		
-		if (!tagIDs && !Zotero.Prefs.get('purge.tags')) {
+		if (!tagIDs && !Trellis.Prefs.get('purge.tags')) {
 			return;
 		}
 		
 		if (tagIDs) {
-			tagIDs = Zotero.flattenArguments(tagIDs);
+			tagIDs = Trellis.flattenArguments(tagIDs);
 		}
 		
 		if (tagIDs && !tagIDs.length) {
 			return;
 		}
 		
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
 		var sql;
 		
 		// Use given tags, as long as they're orphaned
 		if (tagIDs) {
 			sql = "CREATE TEMPORARY TABLE tagDelete (tagID INT PRIMARY KEY)";
-			await Zotero.DB.queryAsync(sql);
-			await Zotero.Utilities.Internal.forEachChunkAsync(
+			await Trellis.DB.queryAsync(sql);
+			await Trellis.Utilities.Internal.forEachChunkAsync(
 				tagIDs,
-				Zotero.DB.MAX_BOUND_PARAMETERS,
+				Trellis.DB.MAX_BOUND_PARAMETERS,
 				function (chunk) {
-					return Zotero.DB.queryAsync(
+					return Trellis.DB.queryAsync(
 						"INSERT OR IGNORE INTO tagDelete VALUES "
 							+ Array(chunk.length).fill('(?)').join(', '),
 						chunk,
@@ -540,26 +540,26 @@ Zotero.Tags = new function () {
 			
 			// Skip tags that are still linked to items
 			sql = "DELETE FROM tagDelete WHERE tagID IN (SELECT tagID FROM itemTags)";
-			await Zotero.DB.queryAsync(sql);
+			await Trellis.DB.queryAsync(sql);
 			
 			sql = "SELECT tagID AS id, name FROM tagDelete JOIN tags USING (tagID)";
-			var toDelete = await Zotero.DB.queryAsync(sql);
+			var toDelete = await Trellis.DB.queryAsync(sql);
 		}
 		// Look for orphaned tags
 		else {
 			sql = "CREATE TEMPORARY TABLE tagDelete AS "
 				+ "SELECT tagID FROM tags WHERE tagID NOT IN (SELECT tagID FROM itemTags)";
-			await Zotero.DB.queryAsync(sql);
+			await Trellis.DB.queryAsync(sql);
 			
 			sql = "CREATE INDEX tagDelete_tagID ON tagDelete(tagID)";
-			await Zotero.DB.queryAsync(sql);
+			await Trellis.DB.queryAsync(sql);
 			
 			sql = "SELECT tagID AS id, name FROM tagDelete JOIN tags USING (tagID)";
-			var toDelete = await Zotero.DB.queryAsync(sql);
+			var toDelete = await Trellis.DB.queryAsync(sql);
 		}
 		
 		if (!toDelete.length) {
-			return Zotero.DB.queryAsync("DROP TABLE tagDelete");
+			return Trellis.DB.queryAsync("DROP TABLE tagDelete");
 		}
 		
 		var ids = [];
@@ -567,7 +567,7 @@ Zotero.Tags = new function () {
 		for (let i=0; i<toDelete.length; i++) {
 			let row = toDelete[i];
 			
-			Zotero.DB.addCurrentCallback('commit', () => {
+			Trellis.DB.addCurrentCallback('commit', () => {
 				_tagsByID.delete(row.id);
 				_idsByTag.delete(row.name);
 			});
@@ -581,16 +581,16 @@ Zotero.Tags = new function () {
 		}
 		
 		sql = "DELETE FROM tags WHERE tagID IN (SELECT tagID FROM tagDelete);";
-		await Zotero.DB.queryAsync(sql);
+		await Trellis.DB.queryAsync(sql);
 		
 		sql = "DROP TABLE tagDelete";
-		await Zotero.DB.queryAsync(sql);
+		await Trellis.DB.queryAsync(sql);
 		
-		Zotero.Notifier.queue('delete', 'tag', ids, notifierData);
+		Trellis.Notifier.queue('delete', 'tag', ids, notifierData);
 		
-		Zotero.Prefs.set('purge.tags', false);
+		Trellis.Prefs.set('purge.tags', false);
 		
-		Zotero.debug(`Purged ${toDelete.length} ${Zotero.Utilities.pluralize(toDelete.length, 'tag')} `
+		Trellis.debug(`Purged ${toDelete.length} ${Trellis.Utilities.pluralize(toDelete.length, 'tag')} `
 			+ `in ${new Date() - d} ms`);
 	};
 	
@@ -642,7 +642,7 @@ Zotero.Tags = new function () {
 			return _libraryColorsByName[libraryID];
 		}
 		
-		var tagColors = Zotero.SyncedSettings.get(libraryID, 'tagColors') || [];
+		var tagColors = Trellis.SyncedSettings.get(libraryID, 'tagColors') || [];
 		// Normalize tags from DB, which might not have been normalized properly previously
 		tagColors.forEach(x => x.name = x.name.normalize());
 		_libraryColors[libraryID] = tagColors;
@@ -722,10 +722,10 @@ Zotero.Tags = new function () {
 		}
 		
 		if (tagColors.length) {
-			return Zotero.SyncedSettings.set(libraryID, 'tagColors', tagColors);
+			return Trellis.SyncedSettings.set(libraryID, 'tagColors', tagColors);
 		}
 		else {
-			return Zotero.SyncedSettings.clear(libraryID, 'tagColors');
+			return Trellis.SyncedSettings.clear(libraryID, 'tagColors');
 		}
 	};
 	
@@ -752,7 +752,7 @@ Zotero.Tags = new function () {
 			delete _libraryColorsByName[libraryID];
 			
 			// Get the tag colors for each library in which they were modified
-			let tagColors = Zotero.SyncedSettings.get(libraryID, 'tagColors');
+			let tagColors = Trellis.SyncedSettings.get(libraryID, 'tagColors');
 			if (!tagColors) {
 				tagColors = [];
 			}
@@ -769,7 +769,7 @@ Zotero.Tags = new function () {
 			
 			// Get all items linked to previous or current tag colors
 			var tagNames = tagColors.concat(previousTagColors).map(val => val.name);
-			tagNames = Zotero.Utilities.arrayUnique(tagNames);
+			tagNames = Trellis.Utilities.arrayUnique(tagNames);
 			if (tagNames.length) {
 				for (let i=0; i<tagNames.length; i++) {
 					let tagID = this.getID(tagNames[i]);
@@ -783,7 +783,7 @@ Zotero.Tags = new function () {
 			}
 			
 			if (affectedItems.length) {
-				await Zotero.Notifier.trigger('redraw', 'item', affectedItems, { column: 'title' });
+				await Trellis.Notifier.trigger('redraw', 'item', affectedItems, { column: 'title' });
 			}
 		}
 	};
@@ -797,10 +797,10 @@ Zotero.Tags = new function () {
 		// Color setting can exist without tag. If missing, we have to add the tag.
 		var tagID = this.getID(tagName);
 		
-		return Zotero.DB.executeTransaction(async function () {
+		return Trellis.DB.executeTransaction(async function () {
 			// If all items already have the tag, remove it from all items
 			if (tagID && items.every(x => x.hasTag(tagName))) {
-				Zotero.UndoHistory.stageAction(
+				Trellis.UndoHistory.stageAction(
 					'undo-action-remove-tag',
 					{ count: items.length }
 				);
@@ -809,11 +809,11 @@ Zotero.Tags = new function () {
 						await item.save();
 					}
 				}
-				Zotero.Prefs.set('purge.tags', true);
+				Trellis.Prefs.set('purge.tags', true);
 			}
 			// Otherwise add to all items
 			else {
-				Zotero.UndoHistory.stageAction(
+				Trellis.UndoHistory.stageAction(
 					'undo-action-add-tag',
 					{ count: items.length }
 				);
@@ -828,12 +828,12 @@ Zotero.Tags = new function () {
 	
 	
 	/**
-	 * @param {Zotero.Item[]}
+	 * @param {Trellis.Item[]}
 	 * @return {Promise}
 	 */
 	this.removeColoredTagsFromItems = async function (items) {
-		return Zotero.DB.executeTransaction(async function () {
-			Zotero.UndoHistory.stageAction(
+		return Trellis.DB.executeTransaction(async function () {
+			Trellis.UndoHistory.stageAction(
 				'undo-action-remove-tag',
 				{ count: items.length }
 			);
@@ -869,7 +869,7 @@ Zotero.Tags = new function () {
 	// Then order tags with emojis alphabetically.
 	// Then order all remaining tags alphabetically
 	this.compareTagsOrder = function (libraryID, tagA, tagB) {
-		var collation = Zotero.getLocaleCollation();
+		var collation = Trellis.getLocaleCollation();
 		let tagColors = this.getColors(libraryID);
 		let colorForA = tagColors.get(tagA);
 		let colorForB = tagColors.get(tagB);
@@ -878,8 +878,8 @@ Zotero.Tags = new function () {
 		if (colorForA && colorForB) {
 			return colorForA.position - colorForB.position;
 		}
-		let emojiForA = Zotero.Utilities.Internal.containsEmoji(tagA);
-		let emojiForB = Zotero.Utilities.Internal.containsEmoji(tagB);
+		let emojiForA = Trellis.Utilities.Internal.containsEmoji(tagA);
+		let emojiForB = Trellis.Utilities.Internal.containsEmoji(tagB);
 		if (emojiForA && !emojiForB) return -1;
 		if (!emojiForA && emojiForB) return 1;
 		return collation.compareString(1, tagA, tagB);

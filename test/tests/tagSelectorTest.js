@@ -4,9 +4,9 @@ describe("Tag Selector", function () {
 	var libraryID, win, doc, collectionsView, tagSelectorElem, tagSelector;
 	
 	var clearTagColors = async function (libraryID) {
-		var tagColors = Zotero.Tags.getColors(libraryID);
+		var tagColors = Trellis.Tags.getColors(libraryID);
 		for (let name of tagColors.keys()) {
-			await Zotero.Tags.setColor(libraryID, name, false);
+			await Trellis.Tags.setColor(libraryID, name, false);
 		}
 	};
 	
@@ -28,16 +28,16 @@ describe("Tag Selector", function () {
 	
 	
 	before(function* () {
-		libraryID = Zotero.Libraries.userLibraryID;
+		libraryID = Trellis.Libraries.userLibraryID;
 		
-		win = yield loadZoteroPane();
+		win = yield loadTrellisPane();
 		doc = win.document;
-		collectionsView = win.ZoteroPane.collectionsView;
-		tagSelectorElem = doc.getElementById('zotero-tag-selector');
-		tagSelector = win.ZoteroPane.tagSelector;
+		collectionsView = win.TrellisPane.collectionsView;
+		tagSelectorElem = doc.getElementById('trellis-tag-selector');
+		tagSelector = win.TrellisPane.tagSelector;
 		
 		// Wait for things to settle
-		yield Zotero.Promise.delay(100);
+		yield Trellis.Promise.delay(100);
 	});
 	
 	beforeEach(async function () {
@@ -48,7 +48,7 @@ describe("Tag Selector", function () {
 		tagSelector.selectedTags = new Set();
 		tagSelector.handleSearch('');
 		tagSelector.onItemViewChanged({
-			collectionTreeRows: win.ZoteroPane.getCollectionTreeRows(),
+			collectionTreeRows: win.TrellisPane.getCollectionTreeRows(),
 			libraryID
 		});
 		await waitForTagSelector(win);
@@ -62,9 +62,9 @@ describe("Tag Selector", function () {
 		var collection = await createDataObject('collection');
 		await select(win, collection);
 		
-		await Zotero.Tags.setColor(libraryID, "B", '#AAAAAA', 1);
-		await Zotero.Tags.setColor(libraryID, "A", '#BBBBBB', 2);
-		await Zotero.Tags.setColor(libraryID, "C", '#CCCCCC', 3);
+		await Trellis.Tags.setColor(libraryID, "B", '#AAAAAA', 1);
+		await Trellis.Tags.setColor(libraryID, "A", '#BBBBBB', 2);
+		await Trellis.Tags.setColor(libraryID, "C", '#CCCCCC', 3);
 		
 		var item = createUnsavedDataObject('item', { collections: [collection.id] });
 		await item.setTags(["A", "B"]);
@@ -87,7 +87,7 @@ describe("Tag Selector", function () {
 		var item2 = createUnsavedDataObject('item', { collections: [collection.id] });
 		item2.setTags(["A", "B"]);	
 		var promise = waitForTagSelector(win);
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			await item1.save();
 			await item2.save();
 		});
@@ -103,7 +103,7 @@ describe("Tag Selector", function () {
 		var item = await createDataObject('item', { collections: [collection.id] });
 		var attachment = await importPDFAttachment(item);
 		var annotation = await createAnnotation('highlight', attachment);
-		var tag = Zotero.Utilities.randomString();
+		var tag = Trellis.Utilities.randomString();
 		annotation.addTag(tag);
 		var promise = waitForTagSelector(win)
 		await annotation.saveTx();
@@ -125,7 +125,7 @@ describe("Tag Selector", function () {
 			
 			promise = waitForTagSelector(win);
 			tagSelector.handleSearch('a');
-			await Zotero.Promise.delay(500);
+			await Trellis.Promise.delay(500);
 			
 			await promise;
 			
@@ -133,7 +133,7 @@ describe("Tag Selector", function () {
 			assert.sameMembers(tags, ['a']);
 
 			tagSelector.handleSearch('');
-			await Zotero.Promise.delay(500);
+			await Trellis.Promise.delay(500);
 			
 			await item.eraseTx();
 		});
@@ -165,7 +165,7 @@ describe("Tag Selector", function () {
 				}
 			]);
 			var promise = waitForTagSelector(win);
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await item1.save();
 				await item2.save();
 				await item3.save();
@@ -185,9 +185,9 @@ describe("Tag Selector", function () {
 		it("should show all tags in library when true", async function () {
 			tagSelector.displayAllTags = true;
 			
-			var tag1 = 'A ' + Zotero.Utilities.randomString();
-			var tag2 = 'B ' + Zotero.Utilities.randomString();
-			var tag3 = 'C ' + Zotero.Utilities.randomString();
+			var tag1 = 'A ' + Trellis.Utilities.randomString();
+			var tag2 = 'B ' + Trellis.Utilities.randomString();
+			var tag3 = 'C ' + Trellis.Utilities.randomString();
 			
 			var collection = await createDataObject('collection');
 			await select(win, collection);
@@ -198,7 +198,7 @@ describe("Tag Selector", function () {
 			var item3 = createUnsavedDataObject('item', { collections: [collection.id] });
 			item3.setTags([tag3]);
 			var promise = waitForTagSelector(win);
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await item1.save();
 				await item2.save();
 				await item3.save();
@@ -230,9 +230,9 @@ describe("Tag Selector", function () {
 			}
 			
 			// Add item with tags to library root
-			var tag1 = 'A ' + Zotero.Utilities.randomString();
-			var tag2 = 'M ' + Zotero.Utilities.randomString();
-			var tag3 = 'Z ' + Zotero.Utilities.randomString();
+			var tag1 = 'A ' + Trellis.Utilities.randomString();
+			var tag2 = 'M ' + Trellis.Utilities.randomString();
+			var tag3 = 'Z ' + Trellis.Utilities.randomString();
 			
 			var item = createUnsavedDataObject('item');
 			item.setTags([
@@ -293,9 +293,9 @@ describe("Tag Selector", function () {
 		});
 		
 		it("should update colored tag disabled state when items are added to and removed from collection", async function () {
-			var tag1 = 'A ' + Zotero.Utilities.randomString();
-			var tag2 = 'B ' + Zotero.Utilities.randomString();
-			var tag3 = 'C ' + Zotero.Utilities.randomString();
+			var tag1 = 'A ' + Trellis.Utilities.randomString();
+			var tag2 = 'B ' + Trellis.Utilities.randomString();
+			var tag3 = 'C ' + Trellis.Utilities.randomString();
 			
 			// Add collection
 			var promise = waitForTagSelector(win);
@@ -306,9 +306,9 @@ describe("Tag Selector", function () {
 			var elems = getColoredTagElements();
 			assert.lengthOf(elems, 0);
 			
-			await Zotero.Tags.setColor(libraryID, tag1, '#AAAAAA', 1);
-			await Zotero.Tags.setColor(libraryID, tag2, '#BBBBBB', 2);
-			await Zotero.Tags.setColor(libraryID, tag3, '#CCCCCC', 3);
+			await Trellis.Tags.setColor(libraryID, tag1, '#AAAAAA', 1);
+			await Trellis.Tags.setColor(libraryID, tag2, '#BBBBBB', 2);
+			await Trellis.Tags.setColor(libraryID, tag3, '#CCCCCC', 3);
 			
 			await waitForTagSelector(win);
 			// Colored tags should appear initially as disabled
@@ -322,7 +322,7 @@ describe("Tag Selector", function () {
 			promise = waitForTagSelector(win)
 			var item1;
 			var item2;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				item1 = createUnsavedDataObject('item', { collections: [collection.id], tags: [tag1, tag2] });
 				item2 = createUnsavedDataObject('item', { collections: [collection.id], tags: [tag2] });
 				await item1.save();
@@ -353,23 +353,23 @@ describe("Tag Selector", function () {
 		});
 		
 		it("should update colored tag disabled state when tags are added to and removed from items", async function () {
-			var tag1 = 'A ' + Zotero.Utilities.randomString();
-			var tag2 = 'B ' + Zotero.Utilities.randomString();
-			var tag3 = 'C ' + Zotero.Utilities.randomString();
+			var tag1 = 'A ' + Trellis.Utilities.randomString();
+			var tag2 = 'B ' + Trellis.Utilities.randomString();
+			var tag3 = 'C ' + Trellis.Utilities.randomString();
 			
 			var elems = getColoredTagElements();
 			assert.lengthOf(elems, 0);
 			
-			await Zotero.Tags.setColor(libraryID, tag1, '#AAAAAA', 1);
-			await Zotero.Tags.setColor(libraryID, tag2, '#BBBBBB', 2);
-			await Zotero.Tags.setColor(libraryID, tag3, '#CCCCCC', 3);
+			await Trellis.Tags.setColor(libraryID, tag1, '#AAAAAA', 1);
+			await Trellis.Tags.setColor(libraryID, tag2, '#BBBBBB', 2);
+			await Trellis.Tags.setColor(libraryID, tag3, '#CCCCCC', 3);
 			
 			// Add items to collection
 			var item1 = await createDataObject('item');
 			var item2 = await createDataObject('item');
 			
 			var promise = waitForTagSelector(win)
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				item1.setTags([tag1, tag2]);
 				item2.setTags([tag1]);
 				await item1.save();
@@ -435,7 +435,7 @@ describe("Tag Selector", function () {
 			var tagElems = tagSelectorElem.querySelectorAll('.tag-selector-item');
 			var count = tagElems.length;
 
-			await Zotero.Tags.setColor(libraryID, "Top", '#AAAAAA');
+			await Trellis.Tags.setColor(libraryID, "Top", '#AAAAAA');
 			await waitForTagSelector(win);
 
 			tagElems = tagSelectorElem.querySelectorAll('.tag-selector-item');
@@ -444,8 +444,8 @@ describe("Tag Selector", function () {
 		
 		it("shouldn't re-insert a new tag that matches an existing color", async function () {
 			// Add A and B as colored tags without any items
-			await Zotero.Tags.setColor(libraryID, "A", '#CC9933', 1);
-			await Zotero.Tags.setColor(libraryID, "B", '#990000', 2);
+			await Trellis.Tags.setColor(libraryID, "A", '#CC9933', 1);
+			await Trellis.Tags.setColor(libraryID, "B", '#990000', 2);
 			
 			// Add A to an item to make it a real tag
 			var item = createUnsavedDataObject('item');
@@ -534,7 +534,7 @@ describe("Tag Selector", function () {
 		it("shouldn't remove a tag when a tag is removed from an item in a collection in displayAllTags mode", async function () {
 			tagSelector.displayAllTags = true;
 			
-			var tag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
 			
 			// Add item with tag not in collection
 			var promise = waitForTagSelector(win);
@@ -599,12 +599,12 @@ describe("Tag Selector", function () {
 		it("should deselect a tag when removed from the last item in this view", async function () {
 			await selectLibrary(win);
 			
-			var tag1 = Zotero.Utilities.randomString();
-			var tag2 = Zotero.Utilities.randomString();
+			var tag1 = Trellis.Utilities.randomString();
+			var tag2 = Trellis.Utilities.randomString();
 			var item1 = createUnsavedDataObject('item', { tags: [{ tag: tag1 }] });
 			var item2 = createUnsavedDataObject('item', { tags: [{ tag: tag2 }] });
 			var promise = waitForTagSelector(win);
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await item1.save();
 				await item2.save();
 			});
@@ -635,11 +635,11 @@ describe("Tag Selector", function () {
 			await selectLibrary(win);
 			
 			var promise = waitForTagSelector(win, 2);
-			var tag1 = Zotero.Utilities.randomString();
-			var tag2 = Zotero.Utilities.randomString();
+			var tag1 = Trellis.Utilities.randomString();
+			var tag2 = Trellis.Utilities.randomString();
 			var item1 = await createDataObject('item', { tags: [{ tag: tag1 }] });
 			var item2 = await createDataObject('item', { tags: [{ tag: tag2 }] });
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await item1.save();
 				await item2.save();
 			});
@@ -655,7 +655,7 @@ describe("Tag Selector", function () {
 			
 			// Remove tag from library
 			promise = waitForTagSelector(win, 2);
-			await Zotero.Tags.removeFromLibrary(libraryID, Zotero.Tags.getID(tag1));
+			await Trellis.Tags.removeFromLibrary(libraryID, Trellis.Tags.getID(tag1));
 			await promise;
 			
 			// Deleted tag should no longer be shown or selected
@@ -670,8 +670,8 @@ describe("Tag Selector", function () {
 		it("should rename a tag and update the tag selector", async function () {
 			await selectLibrary(win);
 			
-			var tag = Zotero.Utilities.randomString();
-			var newTag = Zotero.Utilities.randomString();
+			var tag = Trellis.Utilities.randomString();
+			var newTag = Trellis.Utilities.randomString();
 			var item = createUnsavedDataObject('item');
 			item.setTags([
 				{
@@ -699,11 +699,11 @@ describe("Tag Selector", function () {
 		it("should rename a non-matching colored tag and update the tag selector", async function () {
 			await selectLibrary(win);
 			
-			var oldTag = Zotero.Utilities.randomString();
-			var newTag = Zotero.Utilities.randomString();
+			var oldTag = Trellis.Utilities.randomString();
+			var newTag = Trellis.Utilities.randomString();
 			
 			var promise = waitForTagSelector(win);
-			await Zotero.Tags.setColor(libraryID, oldTag, "#F3F3F3");
+			await Trellis.Tags.setColor(libraryID, oldTag, "#F3F3F3");
 			await promise;
 			
 			waitForDialog(function (dialogWindow, dialog) {
@@ -723,7 +723,7 @@ describe("Tag Selector", function () {
 	describe("#openColorPickerWindow()", function () {
 		it("should assign a color to a tag", async function () {
 			await selectLibrary(win);
-			var tag = "b " + Zotero.Utilities.randomString();
+			var tag = "b " + Trellis.Utilities.randomString();
 			var item = createUnsavedDataObject('item');
 			item.setTags([
 				{
@@ -740,7 +740,7 @@ describe("Tag Selector", function () {
 			
 			assert.include(getRegularTags(), "a");
 			
-			var dialogPromise = waitForDialog(false, undefined, 'chrome://zotero/content/tagColorChooser.xhtml');
+			var dialogPromise = waitForDialog(false, undefined, 'chrome://trellis/content/tagColorChooser.xhtml');
 			var tagSelectorPromise = waitForTagSelector(win);
 			tagSelector.contextTag = {name: tag};
 			await tagSelector.openColorPickerWindow();
@@ -801,18 +801,18 @@ describe("Tag Selector", function () {
 			await cv.selectByID("C" + userCollection.id);
 			await waitForItemsLoad(win);
 			cv.selection.toggleSelect(cv.getRowIndexByID("C" + groupCollection.id));
-			await win.ZoteroPane.onCollectionSelected();
-			await win.ZoteroPane.itemsView.waitForLoad();
+			await win.TrellisPane.onCollectionSelected();
+			await win.TrellisPane.itemsView.waitForLoad();
 			tagSelector.onItemViewChanged({
-				collectionTreeRows: win.ZoteroPane.getCollectionTreeRows(),
-				libraryID: win.ZoteroPane.getSelectedLibraryID()
+				collectionTreeRows: win.TrellisPane.getCollectionTreeRows(),
+				libraryID: win.TrellisPane.getSelectedLibraryID()
 			});
 			await waitForTagSelector(win);
 		}
 		
 		it("should show tags from all selected libraries", async function () {
-			let userTag = 'U ' + Zotero.Utilities.randomString();
-			let groupTag = 'G ' + Zotero.Utilities.randomString();
+			let userTag = 'U ' + Trellis.Utilities.randomString();
+			let groupTag = 'G ' + Trellis.Utilities.randomString();
 			let userCollection = await createDataObject('collection');
 			let groupCollection = await createDataObject('collection', { libraryID: groupLibraryID });
 			let userItem = createUnsavedDataObject('item', { collections: [userCollection.id] });
@@ -821,7 +821,7 @@ describe("Tag Selector", function () {
 				'item', { libraryID: groupLibraryID, collections: [groupCollection.id] }
 			);
 			groupItem.setTags([groupTag]);
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await userItem.save();
 				await groupItem.save();
 			});
@@ -834,18 +834,18 @@ describe("Tag Selector", function () {
 		});
 		
 		it("shouldn't show colored tags in the selector across libraries", async function () {
-			let coloredTag = 'C ' + Zotero.Utilities.randomString();
+			let coloredTag = 'C ' + Trellis.Utilities.randomString();
 			let userCollection = await createDataObject('collection');
 			let groupCollection = await createDataObject('collection', { libraryID: groupLibraryID });
 			// Color the tag in the user library and apply it to an item there
-			await Zotero.Tags.setColor(libraryID, coloredTag, '#990000', 0);
+			await Trellis.Tags.setColor(libraryID, coloredTag, '#990000', 0);
 			let userItem = createUnsavedDataObject('item', { collections: [userCollection.id] });
 			userItem.setTags([coloredTag]);
 			let groupItem = createUnsavedDataObject(
 				'item', { libraryID: groupLibraryID, collections: [groupCollection.id] }
 			);
-			groupItem.setTags(['G ' + Zotero.Utilities.randomString()]);
-			await Zotero.DB.executeTransaction(async function () {
+			groupItem.setTags(['G ' + Trellis.Utilities.randomString()]);
+			await Trellis.DB.executeTransaction(async function () {
 				await userItem.save();
 				await groupItem.save();
 			});
@@ -856,7 +856,7 @@ describe("Tag Selector", function () {
 			assert.include(getRegularTags(), coloredTag);
 			assert.notInclude(getColoredTags(), coloredTag);
 			
-			await Zotero.Tags.setColor(libraryID, coloredTag, false);
+			await Trellis.Tags.setColor(libraryID, coloredTag, false);
 		});
 		
 		it("should disable rename, color, and split but allow delete", async function () {
@@ -879,7 +879,7 @@ describe("Tag Selector", function () {
 		});
 		
 		it("should delete a tag from all selected libraries", async function () {
-			let sharedTag = 'shared ' + Zotero.Utilities.randomString();
+			let sharedTag = 'shared ' + Trellis.Utilities.randomString();
 			let userCollection = await createDataObject('collection');
 			let groupCollection = await createDataObject('collection', { libraryID: groupLibraryID });
 			let userItem = createUnsavedDataObject('item', { collections: [userCollection.id] });
@@ -888,7 +888,7 @@ describe("Tag Selector", function () {
 				'item', { libraryID: groupLibraryID, collections: [groupCollection.id] }
 			);
 			groupItem.setTags([sharedTag]);
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				await userItem.save();
 				await groupItem.save();
 			});
@@ -910,7 +910,7 @@ describe("Tag Selector", function () {
 			// _safeGetTags wraps collectionTreeRow.getTags(), which calls getSearchResults().
 			// If the underlying search query fails, getSearchResults() throws SearchError.
 			// The tag selector should catch this and return [] rather than throwing upwards and breaking the UI.
-			var collectionTreeRow = win.ZoteroPane.getCollectionTreeRow();
+			var collectionTreeRow = win.TrellisPane.getCollectionTreeRow();
 			collectionTreeRow.clearCache();
 			var stub = sinon.stub(collectionTreeRow, 'getSearchObject').resolves({
 				search: () => { throw new Error('simulated search failure'); }

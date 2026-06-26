@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/overlay.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css" type="text/css"?>
 
 <!DOCTYPE window [
-		<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://zotero/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
-		<!ENTITY % standaloneDTD SYSTEM "chrome://zotero/locale/standalone.dtd" > %standaloneDTD;
-		<!ENTITY % zoteroDTD SYSTEM "chrome://zotero/locale/zotero.dtd"> %zoteroDTD;
+		<!ENTITY % editMenuOverlayDTD SYSTEM "chrome://trellis/locale/mozilla/editMenuOverlay.dtd" > %editMenuOverlayDTD;
+		<!ENTITY % standaloneDTD SYSTEM "chrome://trellis/locale/standalone.dtd" > %standaloneDTD;
+		<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
 ]>
 
 <window
-    id="zotero-note-window"
+    id="trellis-note-window"
     orient="vertical"
 	width="400"
 	height="350"
-	title="&zotero.items.menu.attach.note;"
+	title="&trellis.items.menu.attach.note;"
 	persist="screenX screenY width height"
-	windowtype="zotero:note"
+	windowtype="trellis:note"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
 >
@@ -26,23 +26,23 @@
 		<html:link rel="localization" href="browser/menubar.ftl"/>
 		<html:link rel="localization" href="browser/browserSets.ftl"/>
 		<html:link rel="localization" href="toolkit/global/textActions.ftl"/>
-		<html:link rel="localization" href="zotero.ftl" />
+		<html:link rel="localization" href="trellis.ftl" />
 	</linkset>
 
 	<script>
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/platformKeys.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/platformKeys.js", this);
 
 		// Mozilla scripts
 		Services.scriptloader.loadSubScript("chrome://global/content/globalOverlay.js", this);
 		Services.scriptloader.loadSubScript("chrome://global/content/contentAreaUtils.js", this);
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			Services.scriptloader.loadSubScript("chrome://global/content/macWindowMenu.js", this);
 		}
 
-		Services.scriptloader.loadSubScript("chrome://zotero/content/editMenuOverlay.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/note.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/editMenuOverlay.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/note.js", this);
 	</script>
 
 	<commandset id="mainCommandSet">
@@ -75,7 +75,7 @@
 	<menubar>
 		<menu id="fileMenu" label="&fileMenu.label;" accesskey="&fileMenu.accesskey;">
 			<menupopup id="menu_FilePopup">
-				<menuitem label="&zotero.items.menu.showInLibrary;" oncommand="showInLibrary()"/>
+				<menuitem label="&trellis.items.menu.showInLibrary;" oncommand="showInLibrary()"/>
 				<menuseparator/>
 				<menuitem id="menu_close" label="&closeCmd.label;" key="key_close"
 						  accesskey="&closeCmd.accesskey;" command="cmd_close"/>
@@ -142,5 +142,5 @@
 		</menu>
 	</menubar>
 
-	<note-editor id="zotero-note-editor" flex="1" onerror="return;onEditorError()"/>
+	<note-editor id="trellis-note-editor" flex="1" onerror="return;onEditorError()"/>
 </window>

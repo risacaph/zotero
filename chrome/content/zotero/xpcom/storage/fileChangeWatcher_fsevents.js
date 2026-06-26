@@ -4,22 +4,22 @@
 
 	Copyright © 2026 Corporation for Digital Scholarship
 	                 Vienna, Virginia, USA
-	                 https://www.zotero.org
+	                 https://www.trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -28,10 +28,10 @@
  * FSEvents backend for FileChangeWatcher (macOS)
  *
  * Uses the macOS FSEvents persistent event journal to detect which storage files have changed
- * since the last sync. The event ID is saved to a pref so changes that occur while Zotero is
+ * since the last sync. The event ID is saved to a pref so changes that occur while Trellis is
  * closed are still detected.
  */
-Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
+Object.assign(Trellis.Sync.Storage.FileChangeWatcher, {
 	_ctypes: null,
 	_objcLib: null,
 	_coreServicesLib: null,
@@ -154,14 +154,14 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 		);
 
 		// Check for data directory change since last run
-		let savedPath = Zotero.Prefs.get(
+		let savedPath = Trellis.Prefs.get(
 			"sync.storage.watcher.fsEventsStoragePath"
 		);
 		if (savedPath && savedPath !== this._storageRoot) {
-			Zotero.debug("FileChangeWatcher: Storage path changed -- clearing saved event ID");
-			Zotero.Prefs.clear("sync.storage.watcher.fsEventsEventID");
+			Trellis.debug("FileChangeWatcher: Storage path changed -- clearing saved event ID");
+			Trellis.Prefs.clear("sync.storage.watcher.fsEventsEventID");
 		}
-		Zotero.Prefs.set("sync.storage.watcher.fsEventsStoragePath", this._storageRoot);
+		Trellis.Prefs.set("sync.storage.watcher.fsEventsStoragePath", this._storageRoot);
 	},
 
 	_cls(name) {
@@ -184,15 +184,15 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 		let ctypes = this._ctypes;
 
 		// If no saved event ID, record baseline and signal full scan
-		let savedIdStr = Zotero.Prefs.get(
+		let savedIdStr = Trellis.Prefs.get(
 			"sync.storage.watcher.fsEventsEventID"
 		);
 		if (!savedIdStr) {
 			let currentId = this._FSEventsGetCurrentEventId();
-			Zotero.Prefs.set(
+			Trellis.Prefs.set(
 				"sync.storage.watcher.fsEventsEventID", currentId.toString()
 			);
-			Zotero.debug("FileChangeWatcher: No saved event ID -- recorded baseline "
+			Trellis.debug("FileChangeWatcher: No saved event ID -- recorded baseline "
 				+ currentId + ", signaling full scan");
 			return null;
 		}
@@ -265,7 +265,7 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 		);
 
 		if (stream.isNull()) {
-			Zotero.debug("FileChangeWatcher: FSEventStreamCreate returned null");
+			Trellis.debug("FileChangeWatcher: FSEventStreamCreate returned null");
 			return null;
 		}
 
@@ -278,7 +278,7 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 
 			let started = this._FSEventStreamStart(stream);
 			if (!started) {
-				Zotero.debug("FileChangeWatcher: FSEventStreamStart failed");
+				Trellis.debug("FileChangeWatcher: FSEventStreamStart failed");
 				return null;
 			}
 
@@ -291,14 +291,14 @@ Object.assign(Zotero.Sync.Storage.FileChangeWatcher, {
 		}
 
 		let newEventId = this._FSEventsGetCurrentEventId();
-		Zotero.Prefs.set(
+		Trellis.Prefs.set(
 			"sync.storage.watcher.fsEventsEventID", newEventId.toString()
 		);
 
 		if (droppedEvents) {
 			// The full scans triggered by the fallback cover everything up to now, so the
 			// advanced event ID baseline above remains valid
-			Zotero.debug("FileChangeWatcher: FSEvents reported dropped or coalesced events"
+			Trellis.debug("FileChangeWatcher: FSEvents reported dropped or coalesced events"
 				+ " -- signaling full scan");
 			return null;
 		}

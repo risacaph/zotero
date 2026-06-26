@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "نسخه">
-<!ENTITY zotero.whatsNew "چه خبر؟">
-<!ENTITY zotero.createdby "محصولی از:">
-<!ENTITY zotero.director "مدیر:">
-<!ENTITY zotero.directors "مدیران:">
-<!ENTITY zotero.developers "توسعه‌دهندگان:">
-<!ENTITY zotero.alumni "دانش‌آموختگان:">
-<!ENTITY zotero.about.localizations "بومی‌سازی:">
-<!ENTITY zotero.about.additionalSoftware "Third-Party Software:">
-<!ENTITY zotero.thanks "تشکر ویژه از:">
-<!ENTITY zotero.about.close "بستن">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "سایر همکاران و سپاسگزاری">
-<!ENTITY zotero.citationProcessing "پردازش استناد و کتابنامه">
+<!ENTITY trellis.version "نسخه">
+<!ENTITY trellis.whatsNew "چه خبر؟">
+<!ENTITY trellis.createdby "محصولی از:">
+<!ENTITY trellis.director "مدیر:">
+<!ENTITY trellis.directors "مدیران:">
+<!ENTITY trellis.developers "توسعه‌دهندگان:">
+<!ENTITY trellis.alumni "دانش‌آموختگان:">
+<!ENTITY trellis.about.localizations "بومی‌سازی:">
+<!ENTITY trellis.about.additionalSoftware "Third-Party Software:">
+<!ENTITY trellis.thanks "تشکر ویژه از:">
+<!ENTITY trellis.about.close "بستن">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "سایر همکاران و سپاسگزاری">
+<!ENTITY trellis.citationProcessing "پردازش استناد و کتابنامه">

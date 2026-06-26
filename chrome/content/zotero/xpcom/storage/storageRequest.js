@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -28,7 +28,7 @@
  * Transfer request for storage sync
  *
  * @param {Object} options
- * @param {Zotero.Sync.Storage.Engine} options.engine
+ * @param {Trellis.Sync.Storage.Engine} options.engine
  * @param {String} options.type
  * @param {Integer} options.libraryID
  * @param {String} options.name - Identifier for request (e.g., "[libraryID]/[key]")
@@ -36,24 +36,24 @@
  * @param {Function|Function[]} [options.onProgress]
  * @param {Function|Function[]} [options.onStop]
  */
-Zotero.Sync.Storage.Request = function (options) {
+Trellis.Sync.Storage.Request = function (options) {
 	if (!options.type) throw new Error("type must be provided");
 	if (!options.libraryID) throw new Error("libraryID must be provided");
 	if (!options.name) throw new Error("name must be provided");
 	['engine', 'type', 'libraryID', 'name'].forEach(x => this[x] = options[x]);
 	
-	Zotero.debug(`Initializing ${this.type} request ${this.name}`);
+	Trellis.debug(`Initializing ${this.type} request ${this.name}`);
 	
 	this.callbacks = ['onStart', 'onProgress', 'onStop'];
 	
-	this.Type = Zotero.Utilities.capitalize(this.type);
+	this.Type = Trellis.Utilities.capitalize(this.type);
 	this.engine = options.engine;
 	this.channel = null;
 	this.queue = null;
 	this.progress = 0;
 	this.progressMax = 0;
 	
-	this._deferred = Zotero.Promise.defer();
+	this._deferred = Trellis.Promise.defer();
 	this._running = false;
 	this._stopping = false;
 	this._progressUpdated = false;
@@ -69,7 +69,7 @@ Zotero.Sync.Storage.Request = function (options) {
 }
 
 
-Zotero.Sync.Storage.Request.prototype.setMaxSize = function (size) {
+Trellis.Sync.Storage.Request.prototype.setMaxSize = function (size) {
 	this._maxSize = size;
 };
 
@@ -77,7 +77,7 @@ Zotero.Sync.Storage.Request.prototype.setMaxSize = function (size) {
 /**
  * Add callbacks from another request to this request
  */
-Zotero.Sync.Storage.Request.prototype.importCallbacks = function (request) {
+Trellis.Sync.Storage.Request.prototype.importCallbacks = function (request) {
 	for (let name of this.callbacks) {
 		name = '_' + name;
 		if (request[name]) {
@@ -91,7 +91,7 @@ Zotero.Sync.Storage.Request.prototype.importCallbacks = function (request) {
 			for (let newFunc of request[name]) {
 				for (let currentFunc of this[name]) {
 					if (newFunc.toString() === currentFunc.toString()) {
-						Zotero.debug("Callback already exists in request -- not importing");
+						Trellis.debug("Callback already exists in request -- not importing");
 						add = false;
 						break;
 					}
@@ -105,7 +105,7 @@ Zotero.Sync.Storage.Request.prototype.importCallbacks = function (request) {
 }
 
 
-Zotero.Sync.Storage.Request.prototype.__defineGetter__('percentage', function () {
+Trellis.Sync.Storage.Request.prototype.__defineGetter__('percentage', function () {
 	if (this._finished) {
 		return 100;
 	}
@@ -116,38 +116,38 @@ Zotero.Sync.Storage.Request.prototype.__defineGetter__('percentage', function ()
 	
 	var percentage = Math.round((this.progress / this.progressMax) * 100);
 	if (percentage < this._percentage) {
-		Zotero.debug(percentage + " is less than last percentage of "
+		Trellis.debug(percentage + " is less than last percentage of "
 			+ this._percentage + " for request " + this.name, 2);
-		Zotero.debug(this.progress);
-		Zotero.debug(this.progressMax);
+		Trellis.debug(this.progress);
+		Trellis.debug(this.progressMax);
 		percentage = this._percentage;
 	}
 	else if (percentage > 100) {
-		Zotero.debug(percentage + " is greater than 100 for "
+		Trellis.debug(percentage + " is greater than 100 for "
 			+ "request " + this.name, 2);
-		Zotero.debug(this.progress);
-		Zotero.debug(this.progressMax);
+		Trellis.debug(this.progress);
+		Trellis.debug(this.progressMax);
 		percentage = 100;
 	}
 	else {
 		this._percentage = percentage;
 	}
-	//Zotero.debug("Request '" + this.name + "' percentage is " + percentage);
+	//Trellis.debug("Request '" + this.name + "' percentage is " + percentage);
 	return percentage;
 });
 
 
-Zotero.Sync.Storage.Request.prototype.__defineGetter__('remaining', function () {
+Trellis.Sync.Storage.Request.prototype.__defineGetter__('remaining', function () {
 	if (this._finished) {
 		return 0;
 	}
 	
 	if (!this.progressMax) {
 		if (this.type == 'upload' && this._maxSize) {
-			return Math.round(Zotero.Sync.Storage.compressionTracker.ratio * this._maxSize);
+			return Math.round(Trellis.Sync.Storage.compressionTracker.ratio * this._maxSize);
 		}
 		
-		//Zotero.debug("Remaining not yet available for request '" + this.name + "'");
+		//Trellis.debug("Remaining not yet available for request '" + this.name + "'");
 		return 0;
 	}
 	
@@ -156,28 +156,28 @@ Zotero.Sync.Storage.Request.prototype.__defineGetter__('remaining', function () 
 		this._remaining = remaining;
 	}
 	else if (remaining > this._remaining) {
-		Zotero.debug(remaining + " is greater than the last remaining amount of "
+		Trellis.debug(remaining + " is greater than the last remaining amount of "
 				+ this._remaining + " for request " + this.name);
 		remaining = this._remaining;
 	}
 	else if (remaining < 0) {
-		Zotero.debug(remaining + " is less than 0 for request " + this.name);
+		Trellis.debug(remaining + " is less than 0 for request " + this.name);
 	}
 	else {
 		this._remaining = remaining;
 	}
-	//Zotero.debug("Request '" + this.name + "' remaining is " + remaining);
+	//Trellis.debug("Request '" + this.name + "' remaining is " + remaining);
 	return remaining;
 });
 
 
-Zotero.Sync.Storage.Request.prototype.setChannel = function (channel) {
+Trellis.Sync.Storage.Request.prototype.setChannel = function (channel) {
 	this.channel = channel;
 }
 
 
-Zotero.Sync.Storage.Request.prototype.start = async function () {
-	Zotero.debug("Starting " + this.type + " request " + this.name);
+Trellis.Sync.Storage.Request.prototype.start = async function () {
+	Trellis.debug("Starting " + this.type + " request " + this.name);
 	
 	if (this._running) {
 		throw new Error(this.type + " request " + this.name + " already running");
@@ -196,15 +196,15 @@ Zotero.Sync.Storage.Request.prototype.start = async function () {
 	try {
 		var results = await Promise.all(this._onStart.map(f => f(this)));
 		
-		var result = new Zotero.Sync.Storage.Result;
+		var result = new Trellis.Sync.Storage.Result;
 		result.updateFromResults(results);
 		
-		Zotero.debug(this.Type + " request " + this.name + " finished");
+		Trellis.debug(this.Type + " request " + this.name + " finished");
 		
 		return result;
 	}
 	catch (e) {
-		Zotero.logError(this.Type + " request " + this.name + " failed");
+		Trellis.logError(this.Type + " request " + this.name + " failed");
 		throw e;
 	}
 	finally {
@@ -214,7 +214,7 @@ Zotero.Sync.Storage.Request.prototype.start = async function () {
 		// Clear the progress bar if it was set previously or we were told not to
 		// (e.g., by zfs.js on a 404)
 		if (this._progressUpdated || !this.skipProgressBarUpdate) {
-			Zotero.Sync.Storage.setItemDownloadPercentage(this.name, false);
+			Trellis.Sync.Storage.setItemDownloadPercentage(this.name, false);
 		}
 		
 		if (this._onStop) {
@@ -223,19 +223,19 @@ Zotero.Sync.Storage.Request.prototype.start = async function () {
 
 		if (this.progress == this.progressMax) {
 			var [libraryID, key] = this.name.split('/');
-			var item = Zotero.Items.getByLibraryAndKey(libraryID, key);
-			Zotero.Notifier.trigger('download', 'file', item.id);
+			var item = Trellis.Items.getByLibraryAndKey(libraryID, key);
+			Trellis.Notifier.trigger('download', 'file', item.id);
 		}
 	}
 };
 
 
-Zotero.Sync.Storage.Request.prototype.isRunning = function () {
+Trellis.Sync.Storage.Request.prototype.isRunning = function () {
 	return this._running;
 }
 
 
-Zotero.Sync.Storage.Request.prototype.isFinished = function () {
+Trellis.Sync.Storage.Request.prototype.isFinished = function () {
 	return this._finished;
 }
 
@@ -250,12 +250,12 @@ Zotero.Sync.Storage.Request.prototype.isFinished = function () {
  * @param	{Integer}		progressMax		Max progress value for this request
  *												(usually total bytes)
  */
-Zotero.Sync.Storage.Request.prototype.onProgress = function (progress, progressMax) {
-	//Zotero.debug(progress + "/" + progressMax + " for request " + this.name);
+Trellis.Sync.Storage.Request.prototype.onProgress = function (progress, progressMax) {
+	//Trellis.debug(progress + "/" + progressMax + " for request " + this.name);
 	
 	if (!this._running) {
-		Zotero.debug("Trying to update finished request " + this.name + " in "
-				+ "Zotero.Sync.Storage.Request.onProgress() "
+		Trellis.debug("Trying to update finished request " + this.name + " in "
+				+ "Trellis.Sync.Storage.Request.onProgress() "
 				+ "(" + progress + "/" + progressMax + ")", 2);
 		return;
 	}
@@ -263,13 +263,13 @@ Zotero.Sync.Storage.Request.prototype.onProgress = function (progress, progressM
 	// Workaround for invalid progress values (possibly related to
 	// https://bugzilla.mozilla.org/show_bug.cgi?id=451991 and fixed in 3.1)
 	if (progress < this.progress) {
-		Zotero.debug("Invalid progress for request '"
+		Trellis.debug("Invalid progress for request '"
 			+ this.name + "' (" + progress + " < " + this.progress + ")");
 		return;
 	}
 	
 	if (this.progressMax && progressMax != this.progressMax) {
-		Zotero.debug("progressMax has changed from " + this.progressMax
+		Trellis.debug("progressMax has changed from " + this.progressMax
 			+ " to " + progressMax + " for request '" + this.name + "'", 2);
 	}
 	
@@ -280,7 +280,7 @@ Zotero.Sync.Storage.Request.prototype.onProgress = function (progress, progressM
 		// Update progress bar if we didn't skip to 100 on the first step (which might indicate a
 		// request failure)
 		if (this._progressUpdated || progress != progressMax) {
-			Zotero.Sync.Storage.setItemDownloadPercentage(this.name, this.percentage);
+			Trellis.Sync.Storage.setItemDownloadPercentage(this.name, this.percentage);
 			this._progressUpdated = true;
 		}
 	}
@@ -296,16 +296,16 @@ Zotero.Sync.Storage.Request.prototype.onProgress = function (progress, progressM
 /**
  * Stop the request's underlying network request, if there is one
  */
-Zotero.Sync.Storage.Request.prototype.stop = function (force) {
+Trellis.Sync.Storage.Request.prototype.stop = function (force) {
 	if (this.channel && this.channel.isPending()) {
 		this._stopping = true;
 		
 		try {
-			Zotero.debug(`Stopping ${this.type} request '${this.name} '`);
+			Trellis.debug(`Stopping ${this.type} request '${this.name} '`);
 			this.channel.cancel(0x804b0002); // NS_BINDING_ABORTED
 		}
 		catch (e) {
-			Zotero.debug(e, 1);
+			Trellis.debug(e, 1);
 		}
 	}
 }

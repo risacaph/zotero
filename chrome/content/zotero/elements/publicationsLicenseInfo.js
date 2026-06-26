@@ -3,22 +3,22 @@
 	
 	Copyright © 2022 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -37,27 +37,27 @@
 			case 'reserved':
 				url = null;
 				name = 'All rights reserved';
-				img = 'chrome://zotero/skin/licenses/reserved.png';
+				img = 'chrome://trellis/skin/licenses/reserved.png';
 				id = null;
 				break;
 			case 'cc':
 				url = 'https://creativecommons.org/';
 				name = 'Creative Commons';
-				img = 'chrome://zotero/skin/licenses/cc-srr.png';
+				img = 'chrome://trellis/skin/licenses/cc-srr.png';
 				id = null;
 				break;
 
 			case 'cc0':
 				url = "https://creativecommons.org/publicdomain/zero/1.0/";
 				name = null;
-				img = 'chrome://zotero/skin/licenses/' + license + ".svg";
+				img = 'chrome://trellis/skin/licenses/' + license + ".svg";
 				id = 'licenses-cc-0';
 				break;
 
 			default:
 				url = 'https://creativecommons.org/licenses/' + license.replace(/^cc-/, '') + '/4.0/';
 				name = null;
-				img = 'chrome://zotero/skin/licenses/' + license + ".svg";
+				img = 'chrome://trellis/skin/licenses/' + license + ".svg";
 				id = `licenses-${license}`;
 				break;
 		}
@@ -92,7 +92,7 @@
 		get stylesheets() {
 			return [
 				'chrome://global/skin/global.css',
-				'chrome://zotero/skin/elements/license-info.css'
+				'chrome://trellis/skin/elements/license-info.css'
 			];
 		}
 
@@ -112,7 +112,7 @@
 
 		set license(val) {
 			if (!this.validLicenses.has(val)) {
-				throw new Zotero.Error(`"${val}" is invalid value for attribute "license" in <licenseinfo>`);
+				throw new Trellis.Error(`"${val}" is invalid value for attribute "license" in <licenseinfo>`);
 			}
 			this._license = val;
 			this.update();
@@ -141,7 +141,7 @@
 			const aEl = ev.target.closest('[href]');
 			if (aEl && (ev.type === 'click' || (ev.type === 'keydown' && ev.key === ' '))) {
 				ev.preventDefault();
-				Zotero.launchURL(aEl.getAttribute('href'));
+				Trellis.launchURL(aEl.getAttribute('href'));
 			}
 		}
 	}

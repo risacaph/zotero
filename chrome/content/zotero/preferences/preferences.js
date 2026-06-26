@@ -3,34 +3,34 @@
     
     Copyright © 2006–2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-var Zotero_Preferences = {
+var Trellis_Preferences = {
 	panes: new Map(),
 	
-	_firstPaneLoadDeferred: Zotero.Promise.defer(),
+	_firstPaneLoadDeferred: Trellis.Promise.defer(),
 	
-	_paneSelectDeferred: Zotero.Promise.defer(),
+	_paneSelectDeferred: Trellis.Promise.defer(),
 	
 	_observerSymbols: new Map(),
 	
@@ -55,11 +55,11 @@ var Zotero_Preferences = {
 
 		this.searchField.focus();
 		
-		Zotero.PreferencePanes.builtInPanes.forEach(pane => this._addPane(pane));
-		if (Zotero.PreferencePanes.pluginPanes.length) {
+		Trellis.PreferencePanes.builtInPanes.forEach(pane => this._addPane(pane));
+		if (Trellis.PreferencePanes.pluginPanes.length) {
 			this.navigation.append(document.createElement('hr'));
-			Zotero.PreferencePanes.pluginPanes
-				.sort((a, b) => Zotero.localeCompare(a.rawLabel, b.rawLabel))
+			Trellis.PreferencePanes.pluginPanes
+				.sort((a, b) => Trellis.localeCompare(a.rawLabel, b.rawLabel))
 				.forEach(pane => this._addPane(pane));
 		}
 
@@ -75,21 +75,21 @@ var Zotero_Preferences = {
 			}
 		}
 		else if (document.location.hash == "#cite") {
-			this.navigation.value = 'zotero-prefpane-cite';
+			this.navigation.value = 'trellis-prefpane-cite';
 		}
 
 		if (!this.navigation.value) {
-			this.navigation.value = Zotero.Prefs.get('lastSelectedPrefPane');
+			this.navigation.value = Trellis.Prefs.get('lastSelectedPrefPane');
 			// If no last selected pane or ID is invalid, select General
 			if (!this.navigation.value) {
-				this.navigation.value = 'zotero-prefpane-general';
+				this.navigation.value = 'trellis-prefpane-general';
 			}
 		}
 	},
 	
 	onUnload: function () {
 		for (let symbol of this._observerSymbols.values()) {
-			Zotero.Prefs.unregisterObserver(symbol);
+			Trellis.Prefs.unregisterObserver(symbol);
 		}
 		this._observerSymbols.clear();
 
@@ -156,7 +156,7 @@ var Zotero_Preferences = {
 	openHelpLink: function () {
 		let helpURL = this.panes.get(this.navigation.value)?.helpURL;
 		if (helpURL) {
-			Zotero.launchURL(helpURL);
+			Trellis.launchURL(helpURL);
 		}
 	},
 
@@ -194,7 +194,7 @@ var Zotero_Preferences = {
 			this.content.scrollTop = 0;
 
 			this._paneSelectDeferred.resolve(pane);
-			this._paneSelectDeferred = Zotero.Promise.defer();
+			this._paneSelectDeferred = Trellis.Promise.defer();
 
 			for (let child of this.content.children) {
 				if (child !== this.helpContainer && child !== pane.container) {
@@ -209,7 +209,7 @@ var Zotero_Preferences = {
 			document.getElementById('prefs-subpane-back-button').hidden = !pane.parent;
 
 			if (!pane.parent) {
-				Zotero.Prefs.set('lastSelectedPrefPane', paneID);
+				Trellis.Prefs.set('lastSelectedPrefPane', paneID);
 			}
 		}
 		else {
@@ -264,11 +264,11 @@ var Zotero_Preferences = {
 		else {
 			let labelElem = document.createXULElement('label');
 			if (!rawLabel) {
-				if (Zotero.Intl.strings.hasOwnProperty(label)) {
-					rawLabel = Zotero.Intl.strings[label];
+				if (Trellis.Intl.strings.hasOwnProperty(label)) {
+					rawLabel = Trellis.Intl.strings[label];
 				}
 				else {
-					rawLabel = Zotero.getString(label);
+					rawLabel = Trellis.getString(label);
 				}
 			}
 			labelElem.value = rawLabel;
@@ -308,7 +308,7 @@ var Zotero_Preferences = {
 		
 		let rest = async () => {
 			// Hack - make sure the following code does not run synchronously so we can set loadPromise immediately
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			
 			if (pane.scripts) {
 				pane.scope = new Cu.Sandbox(window, {
@@ -328,10 +328,10 @@ var Zotero_Preferences = {
 					);
 				}
 			}
-			let markup = Zotero.File.getContentsFromURL(pane.src);
+			let markup = Trellis.File.getContentsFromURL(pane.src);
 			let dtdFiles = [
-				'chrome://zotero/locale/zotero.dtd',
-				'chrome://zotero/locale/preferences.dtd',
+				'chrome://trellis/locale/trellis.dtd',
+				'chrome://trellis/locale/preferences.dtd',
 			];
 			let contentFragment = pane.defaultXUL
 				? MozXULElement.parseXULToFragment(markup, dtdFiles)
@@ -358,7 +358,7 @@ var Zotero_Preferences = {
 				// Some element had invalid l10n attributes, but elements with valid l10n attributes were
 				// translated successfully, so no need to treat this as fatal
 				// The error will be undefined for some reason, so make our own
-				Zotero.logError(new Error(`document.l10n.translateFragment() failed -- invalid data-l10n-id in pane '${pane.id}'?`));
+				Trellis.logError(new Error(`document.l10n.translateFragment() failed -- invalid data-l10n-id in pane '${pane.id}'?`));
 			}
 			await this._initImportedNodesPostInsert(pane.container);
 
@@ -444,7 +444,7 @@ ${str}
 	},
 
 	_syncFromPref(elem, preference, force = false) {
-		let value = Zotero.Prefs.get(preference, true);
+		let value = Trellis.Prefs.get(preference, true);
 		if (this._useChecked(elem)) {
 			value = !!value;
 			if (!force && elem.checked === value) {
@@ -471,7 +471,7 @@ ${str}
 			value = elem.value;
 		}
 		elem.dispatchEvent(new Event('beforesynctopreference'));
-		Zotero.Prefs.set(preference, value, true);
+		Trellis.Prefs.set(preference, value, true);
 		elem.dispatchEvent(new Event('synctopreference'));
 	},
 
@@ -491,14 +491,14 @@ ${str}
 			let preference = elem.getAttribute('preference');
 			try {
 				if (container.querySelector('preferences > preference#' + preference)) {
-					Zotero.warn('<preference> is deprecated -- `preference` attribute values '
+					Trellis.warn('<preference> is deprecated -- `preference` attribute values '
 						+ 'should be full preference keys, not <preference> IDs');
 					preference = container.querySelector('preferences > preference#' + preference)
 						.getAttribute('name');
 					elem.setAttribute('preference', preference);
 				}
 				else if (!preference.includes('.')) {
-					Zotero.warn('`preference` attribute value `' + preference + '` looks like a <preference> ID, '
+					Trellis.warn('`preference` attribute value `' + preference + '` looks like a <preference> ID, '
 						+ 'although no element with that ID exists. Its value should be a preference key.');
 				}
 			}
@@ -506,7 +506,7 @@ ${str}
 				// Ignore
 			}
 
-			let symbol = Zotero.Prefs.registerObserver(
+			let symbol = Trellis.Prefs.registerObserver(
 				preference,
 				() => this._syncFromPref(elem, preference),
 				true
@@ -518,11 +518,11 @@ ${str}
 				// (If we set elem.value before the corresponding item is added, the label won't be updated when it
 				//  does get added, unless we do this)
 				let mutationObserver = new MutationObserver((mutations) => {
-					let value = Zotero.Prefs.get(preference, true);
+					let value = Trellis.Prefs.get(preference, true);
 					for (let mutation of mutations) {
 						for (let node of mutation.addedNodes) {
 							if (node.tagName === 'menuitem' && node.value === value) {
-								Zotero.debug(`Preferences: menulist attached to ${preference} has new item matching current pref value '${value}'`);
+								Trellis.debug(`Preferences: menulist attached to ${preference} has new item matching current pref value '${value}'`);
 								// Set selectedItem so the menulist updates its label, icon, and description
 								// The selectedItem setter fires select and ValueChange, but we don't listen to either
 								// of those events
@@ -553,7 +553,7 @@ ${str}
 		
 		let detachFromPreference = (elem) => {
 			if (this._observerSymbols.has(elem)) {
-				Zotero.Prefs.unregisterObserver(this._observerSymbols.get(elem));
+				Trellis.Prefs.unregisterObserver(this._observerSymbols.get(elem));
 				this._observerSymbols.delete(elem);
 			}
 			if (this._mutationObservers.has(elem)) {
@@ -639,7 +639,7 @@ ${str}
 	 *
 	 * @param {String} [term]
 	 */
-	_search: Zotero.Utilities.Internal.serial(async function (term) {
+	_search: Trellis.Utilities.Internal.serial(async function (term) {
 		// Initial housekeeping:
 
 		// Clear existing highlights
@@ -696,7 +696,7 @@ ${str}
 
 		// Clean the search term but keep the original -
 		//displaying with diacritics removed is confusing
-		let termForDisplay = Zotero.Utilities.trimInternal(term).toLowerCase();
+		let termForDisplay = Trellis.Utilities.trimInternal(term).toLowerCase();
 		term = this._normalizeSearch(term);
 
 		for (let paneContainer of this.content.querySelectorAll(':scope > .pane-container')) {
@@ -834,15 +834,15 @@ ${str}
 
 						// If we didn't, try strings from DTDs and properties
 						let key = stringKeys[i];
-						if (Zotero.Intl.strings.hasOwnProperty(key)) {
-							return [Zotero.Intl.strings[key]];
+						if (Trellis.Intl.strings.hasOwnProperty(key)) {
+							return [Trellis.Intl.strings[key]];
 						}
 						try {
-							return [Zotero.getString(key)];
+							return [Trellis.getString(key)];
 						}
 						catch (e) {
 							// Don't let one missing string abort the entire search
-							Zotero.logError(e);
+							Trellis.logError(e);
 							return [];
 						}
 					}).filter(Boolean)
@@ -867,8 +867,8 @@ ${str}
 	 * @return {String}
 	 */
 	_normalizeSearch(s) {
-		return Zotero.Utilities.removeDiacritics(
-			Zotero.Utilities.trimInternal(s).toLowerCase(),
+		return Trellis.Utilities.removeDiacritics(
+			Trellis.Utilities.trimInternal(s).toLowerCase(),
 			true);
 	},
 
@@ -903,10 +903,10 @@ ${str}
 	},
 	
 	/**
-	 * @deprecated Use {@link Zotero.launchURL}
+	 * @deprecated Use {@link Trellis.launchURL}
 	 */
 	openURL: function (url) {
-		Zotero.warn("Zotero_Preferences.openURL() is deprecated -- use Zotero.launchURL()");
-		Zotero.launchURL(url);
+		Trellis.warn("Trellis_Preferences.openURL() is deprecated -- use Trellis.launchURL()");
+		Trellis.launchURL(url);
 	}
 };

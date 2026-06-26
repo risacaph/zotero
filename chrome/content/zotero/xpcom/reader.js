@@ -5,27 +5,27 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
-const { BlockingObserver } = ChromeUtils.importESModule("chrome://zotero/content/BlockingObserver.mjs");
+const { BlockingObserver } = ChromeUtils.importESModule("chrome://trellis/content/BlockingObserver.mjs");
 
 const ZipReader = Components.Constructor(
 	"@mozilla.org/libjar/zip-reader;1",
@@ -40,18 +40,18 @@ const ARRAYBUFFER_MAX_LENGTH = Services.appinfo.is64Bit
 	? Math.pow(2, 33)
 	: Math.pow(2, 32) - 1;
 
-const READ_ALOUD_ENABLED_VOICES_PATH = PathUtils.join(Zotero.Profile.dir, 'readAloudEnabledVoices.json');
-const READ_ALOUD_VOICE_DEFAULTS_PATH = PathUtils.join(Zotero.Profile.dir, 'readAloudVoiceDefaults.json');
+const READ_ALOUD_ENABLED_VOICES_PATH = PathUtils.join(Trellis.Profile.dir, 'readAloudEnabledVoices.json');
+const READ_ALOUD_VOICE_DEFAULTS_PATH = PathUtils.join(Trellis.Profile.dir, 'readAloudVoiceDefaults.json');
 
 // Whether the Read Aloud audio cache has been pruned of stale versions this session
 let readAloudCachePruned = false;
 
 class ReaderInstance {
 	constructor(options) {
-		this.stateFileName = '.zotero-reader-state';
+		this.stateFileName = '.trellis-reader-state';
 		this.annotationItemIDs = [];
 		this._item = options.item;
-		this._instanceID = Zotero.Utilities.randomString();
+		this._instanceID = Trellis.Utilities.randomString();
 		this._window = null;
 		this._iframeWindow = null;
 		this._title = '';
@@ -131,12 +131,12 @@ class ReaderInstance {
 		if (!updatedAnnotations.length) {
 			return false;
 		}
-		Zotero.debug('Migrating Mendeley colors');
-		let notifierQueue = new Zotero.Notifier.Queue();
+		Trellis.debug('Migrating Mendeley colors');
+		let notifierQueue = new Trellis.Notifier.Queue();
 		try {
 			for (let annotation of updatedAnnotations) {
 				let { id: key, color } = annotation;
-				let item = Zotero.Items.getByLibraryAndKey(libraryID, key);
+				let item = Trellis.Items.getByLibraryAndKey(libraryID, key);
 				if (item && item.isEditable()) {
 					item.annotationColor = color;
 					await item.saveTx({
@@ -147,14 +147,14 @@ class ReaderInstance {
 			}
 		}
 		finally {
-			await Zotero.Notifier.commit(notifierQueue);
+			await Trellis.Notifier.commit(notifierQueue);
 		}
 		return true;
 	}
 
 	displayError(error) {
 		if (this._internalReader) {
-			let errorMessage = `${Zotero.getString('general.error')}: '${error.message}'`;
+			let errorMessage = `${Trellis.getString('general.error')}: '${error.message}'`;
 			this._internalReader.setErrorMessage(errorMessage);
 		}
 	}
@@ -163,14 +163,14 @@ class ReaderInstance {
 		// Set `ReaderTab` title as fast as possible
 		this.updateTitle();
 
-		await Zotero.SyncedSettings.loadAll(Zotero.Libraries.userLibraryID);
+		await Trellis.SyncedSettings.loadAll(Trellis.Libraries.userLibraryID);
 
 		let data = await this._getData();
 		let annotationItems = this._item.getAnnotations();
 		let annotations = (await Promise.all(annotationItems.map(x => this._getAnnotation(x)))).filter(x => x);
 
 		// TODO: Remove after some time
-		// Migrate Mendeley colors to Zotero PDF reader colors
+		// Migrate Mendeley colors to Trellis PDF reader colors
 		let migrated = await this.migrateMendeleyColors(this._item.libraryID, annotations);
 		if (migrated) {
 			annotationItems = this._item.getAnnotations();
@@ -193,7 +193,7 @@ class ReaderInstance {
 				append(...Components.utils.cloneInto(args, this._iframeWindow, { wrapReflectors: true, cloneFunctions: true }));
 			};
 			data.reader = this;
-			Zotero.Reader._dispatchEvent(data);
+			Trellis.Reader._dispatchEvent(data);
 		};
 		this._iframeWindow.addEventListener('customEvent', this._customEventHandler);
 
@@ -216,13 +216,13 @@ class ReaderInstance {
 		let locales = Services.locale.appLocalesAsBCP47.reverse();
 		let ftlURLs = locales.flatMap(locale => [
 			`resource://app/localization/${locale}/branding/brand.ftl`,
-			`resource://app/localization/${locale}/zotero.ftl`,
+			`resource://app/localization/${locale}/trellis.ftl`,
 			`resource://app/localization/${locale}/reader.ftl`,
 		]);
 		let ftl = [];
 		for (let ftlURL of ftlURLs) {
 			try {
-				ftl.push(Zotero.File.getContentsFromURL(ftlURL));
+				ftl.push(Trellis.File.getContentsFromURL(ftlURL));
 			}
 			catch {
 				// Ignore
@@ -238,32 +238,32 @@ class ReaderInstance {
 			location,
 			readOnly: this._isReadOnly(),
 			preview,
-			authorName: this._item.library.libraryType === 'group' ? Zotero.Users.getCurrentName() : '',
+			authorName: this._item.library.libraryType === 'group' ? Trellis.Users.getCurrentName() : '',
 			showContextPaneToggle: this._showContextPaneToggle,
 			sidebarWidth: this._sidebarWidth,
 			sidebarOpen: this._sidebarOpen,
 			bottomPlaceholderHeight: this._bottomPlaceholderHeight,
 			contextPaneOpen: this._contextPaneOpen,
-			rtl: Zotero.rtl,
-			fontSize: Zotero.Prefs.get('fontSize'),
+			rtl: Trellis.rtl,
+			fontSize: Trellis.Prefs.get('fontSize'),
 			ftl,
 			showAnnotations: true,
-			textSelectionAnnotationMode: Zotero.Prefs.get('reader.textSelectionAnnotationMode'),
-			customThemes: Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, 'readerCustomThemes') ?? [],
-			lightTheme: Zotero.Prefs.get('reader.lightTheme'),
-			darkTheme: Zotero.Prefs.get('reader.darkTheme'),
-			fontFamily: Zotero.Prefs.get('reader.ebookFontFamily'),
-			hyphenate: Zotero.Prefs.get('reader.ebookHyphenate'),
-			autoDisableNoteTool: Zotero.Prefs.get('reader.autoDisableTool.note'),
-			autoDisableTextTool: Zotero.Prefs.get('reader.autoDisableTool.text'),
-			autoDisableImageTool: Zotero.Prefs.get('reader.autoDisableTool.image'),
-			sidebarView: Zotero.Prefs.get('reader.lastSidebarTab'),
+			textSelectionAnnotationMode: Trellis.Prefs.get('reader.textSelectionAnnotationMode'),
+			customThemes: Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, 'readerCustomThemes') ?? [],
+			lightTheme: Trellis.Prefs.get('reader.lightTheme'),
+			darkTheme: Trellis.Prefs.get('reader.darkTheme'),
+			fontFamily: Trellis.Prefs.get('reader.ebookFontFamily'),
+			hyphenate: Trellis.Prefs.get('reader.ebookHyphenate'),
+			autoDisableNoteTool: Trellis.Prefs.get('reader.autoDisableTool.note'),
+			autoDisableTextTool: Trellis.Prefs.get('reader.autoDisableTool.text'),
+			autoDisableImageTool: Trellis.Prefs.get('reader.autoDisableTool.image'),
+			sidebarView: Trellis.Prefs.get('reader.lastSidebarTab'),
 			enableReadAloud: true,
 			readAloudVoices: this._getReadAloudVoices(),
 			readAloudEnabledVoices: await this._getReadAloudEnabledVoices(),
 			readAloudRemoteInterface: this._getReadAloudRemoteInterface(this._iframeWindow),
 			getSDTPack: this._createGetSDTPack(this._iframeWindow),
-			loggedIn: Zotero.Sync.Runner.enabled,
+			loggedIn: Trellis.Sync.Runner.enabled,
 			onOpenContextMenu: () => {
 				// Functions can only be passed over wrappedJSObject (we call back onClick for context menu items)
 				return this._openContextMenu(this._iframeWindow.wrappedJSObject.contextMenuParams);
@@ -277,11 +277,11 @@ class ReaderInstance {
 				// Although simultaneous changes are still possible from different reader instances,
 				// but unlikely to be a problem.
 				// It's best to test that by running the code below in Run JavaScript tool:
-				// await Zotero.DB.executeTransaction(async function () {
-				//     await Zotero.Promise.delay(15000);
+				// await Trellis.DB.executeTransaction(async function () {
+				//     await Trellis.Promise.delay(15000);
 				// });
-				let attachment = Zotero.Items.get(this.itemID);
-				let notifierQueue = new Zotero.Notifier.Queue();
+				let attachment = Trellis.Items.get(this.itemID);
+				let notifierQueue = new Trellis.Notifier.Queue();
 				try {
 					for (let annotation of annotations) {
 						annotation.key = annotation.id;
@@ -293,24 +293,24 @@ class ReaderInstance {
 						};
 
 						if (annotation.onlyTextOrComment) {
-							saveOptions.notifierData.autoSyncDelay = Zotero.Notes.AUTO_SYNC_DELAY;
+							saveOptions.notifierData.autoSyncDelay = Trellis.Notes.AUTO_SYNC_DELAY;
 						}
 
-						let item = Zotero.Items.getByLibraryAndKey(attachment.libraryID, annotation.key);
+						let item = Trellis.Items.getByLibraryAndKey(attachment.libraryID, annotation.key);
 						// If annotation isn't editable, only save image to cache.
 						// This is the only case when saving can be triggered for non-editable annotation
 						if (annotation.image && item && !item.isEditable()) {
 							let blob = this._dataURLtoBlob(annotation.image);
-							await Zotero.Annotations.saveCacheImage(item, blob);
+							await Trellis.Annotations.saveCacheImage(item, blob);
 						}
 						// Save annotation, and save image to cache
 						else {
 							// Delete authorName to prevent setting annotationAuthorName unnecessarily
 							delete annotation.authorName;
-							let savedAnnotation = await Zotero.Annotations.saveFromJSON(attachment, annotation, saveOptions);
+							let savedAnnotation = await Trellis.Annotations.saveFromJSON(attachment, annotation, saveOptions);
 							if (annotation.image) {
 								let blob = this._dataURLtoBlob(annotation.image);
-								await Zotero.Annotations.saveCacheImage(savedAnnotation, blob);
+								await Trellis.Annotations.saveCacheImage(savedAnnotation, blob);
 							}
 						}
 					}
@@ -325,17 +325,17 @@ class ReaderInstance {
 					// Reader iframe doesn't have permissions to wait for onSaveAnnotations
 					// promise, therefore using callback to inform when saving finishes
 					callback();
-					await Zotero.Notifier.commit(notifierQueue);
+					await Trellis.Notifier.commit(notifierQueue);
 				}
 			},
 			onDeleteAnnotations: async (ids) => {
 				let keys = ids;
 				let attachment = this._item;
 				let libraryID = attachment.libraryID;
-				let notifierQueue = new Zotero.Notifier.Queue();
+				let notifierQueue = new Trellis.Notifier.Queue();
 				try {
 					for (let key of keys) {
-						let annotation = Zotero.Items.getByLibraryAndKey(libraryID, key);
+						let annotation = Trellis.Items.getByLibraryAndKey(libraryID, key);
 						// Make sure the annotation actually belongs to the current PDF
 						if (annotation && annotation.isAnnotation() && annotation.parentID === this._item.id) {
 							this.annotationItemIDs = this.annotationItemIDs.filter(id => id !== annotation.id);
@@ -348,7 +348,7 @@ class ReaderInstance {
 					throw e;
 				}
 				finally {
-					await Zotero.Notifier.commit(notifierQueue);
+					await Trellis.Notifier.commit(notifierQueue);
 				}
 			},
 			onChangeViewState: async (state, primary) => {
@@ -357,17 +357,17 @@ class ReaderInstance {
 					await this._setState(state);
 				}
 				else if (this.tabID) {
-					let win = Zotero.getMainWindow();
+					let win = Trellis.getMainWindow();
 					if (win) {
-						win.Zotero_Tabs.setTabData(this.tabID, { secondViewState: state });
+						win.Trellis_Tabs.setTabData(this.tabID, { secondViewState: state });
 					}
 				}
 			},
 			onOpenTagsPopup: (id, x, y) => {
 				let key = id;
-				let attachment = Zotero.Items.get(this._item.id);
+				let attachment = Trellis.Items.get(this._item.id);
 				let libraryID = attachment.libraryID;
-				let annotation = Zotero.Items.getByLibraryAndKey(libraryID, key);
+				let annotation = Trellis.Items.getByLibraryAndKey(libraryID, key);
 				if (annotation) {
 					this._openTagsPopup(annotation, x, y);
 				}
@@ -384,7 +384,7 @@ class ReaderInstance {
 			onOpenLink: (url) => {
 				let win = Services.wm.getMostRecentWindow('navigator:browser');
 				if (win) {
-					win.ZoteroPane.loadURI(url);
+					win.TrellisPane.loadURI(url);
 				}
 			},
 			onToggleSidebar: (open) => {
@@ -398,10 +398,10 @@ class ReaderInstance {
 				}
 			},
 			onChangeSidebarView: (view) => {
-				Zotero.Prefs.set('reader.lastSidebarTab', view);
+				Trellis.Prefs.set('reader.lastSidebarTab', view);
 			},
 			onFocusContextPane: () => {
-				if (this instanceof ReaderWindow || !this._window.ZoteroContextPane.focus()) {
+				if (this instanceof ReaderWindow || !this._window.TrellisContextPane.focus()) {
 					this.focusFirst();
 				}
 			},
@@ -412,28 +412,28 @@ class ReaderInstance {
 					for (let annotation of annotations) {
 						annotation.attachmentItemID = this._item.id;
 					}
-					dataTransfer.setData('zotero/annotation', JSON.stringify(annotations));
+					dataTransfer.setData('trellis/annotation', JSON.stringify(annotations));
 					// Don't set Markdown or HTML if copying or dragging text
 					if (fromText) {
 						return;
 					}
 					// annotations are wrapped in a temp note for translation
-					let items = [Zotero.QuickCopy.annotationsToNote(annotations)];
-					let format = Zotero.QuickCopy.getNoteFormat();
-					Zotero.debug(`Copying/dragging (${annotations.length}) annotation(s) with ${format}`);
-					format = Zotero.QuickCopy.unserializeSetting(format);
+					let items = [Trellis.QuickCopy.annotationsToNote(annotations)];
+					let format = Trellis.QuickCopy.getNoteFormat();
+					Trellis.debug(`Copying/dragging (${annotations.length}) annotation(s) with ${format}`);
+					format = Trellis.QuickCopy.unserializeSetting(format);
 					// Basically the same code is used in itemTree.jsx onDragStart
 					if (format.mode === 'export') {
 						// If exporting with virtual "Markdown + Rich Text" translator, call Note Markdown
 						// and Note HTML translators instead
-						if (format.id === Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
-							let markdownFormat = { mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN, options: format.markdownOptions };
-							let htmlFormat = { mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_HTML, options: format.htmlOptions };
-							Zotero.QuickCopy.getContentFromItems(items, markdownFormat, (obj, worked) => {
+						if (format.id === Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+							let markdownFormat = { mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN, options: format.markdownOptions };
+							let htmlFormat = { mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_HTML, options: format.htmlOptions };
+							Trellis.QuickCopy.getContentFromItems(items, markdownFormat, (obj, worked) => {
 								if (!worked) {
 									return;
 								}
-								Zotero.QuickCopy.getContentFromItems(items, htmlFormat, (obj2, worked) => {
+								Trellis.QuickCopy.getContentFromItems(items, htmlFormat, (obj2, worked) => {
 									if (!worked) {
 										return;
 									}
@@ -443,13 +443,13 @@ class ReaderInstance {
 							});
 						}
 						else {
-							Zotero.QuickCopy.getContentFromItems(items, format, (obj, worked) => {
+							Trellis.QuickCopy.getContentFromItems(items, format, (obj, worked) => {
 								if (!worked) {
 									return;
 								}
 								var text = obj.string.replace(/\r\n/g, '\n');
 								// For Note HTML translator use body content only
-								if (format.id === Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+								if (format.id === Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 									// Use body content only
 									let parser = new DOMParser();
 									let doc = parser.parseFromString(text, 'text/html');
@@ -503,9 +503,9 @@ class ReaderInstance {
 			onSaveImageAs: async (dataURLOrBlob) => {
 				try {
 					let fp = new FilePicker();
-					fp.init(this._iframeWindow, Zotero.getString('reader-save-image-as'), fp.modeSave);
+					fp.init(this._iframeWindow, Trellis.getString('reader-save-image-as'), fp.modeSave);
 					fp.appendFilter("PNG", "*.png");
-					fp.defaultString = Zotero.getString('file-type-image').toLowerCase() + '.png';
+					fp.defaultString = Trellis.getString('file-type-image').toLowerCase() + '.png';
 					let rv = await fp.show();
 					if (rv === fp.returnOK || rv === fp.returnReplace) {
 						let outputPath = fp.file;
@@ -536,7 +536,7 @@ class ReaderInstance {
 			onRotatePages: async (pageIndexes, degrees) => {
 				this._internalReader.freeze();
 				try {
-					await Zotero.PDFWorker.rotatePages(this._item.id, pageIndexes, degrees, true);
+					await Trellis.PDFWorker.rotatePages(this._item.id, pageIndexes, degrees, true);
 				}
 				catch (e) {
 					this.displayError(e);
@@ -548,7 +548,7 @@ class ReaderInstance {
 				if (this._promptToDeletePages(pageIndexes.length)) {
 					this._internalReader.freeze();
 					try {
-						await Zotero.PDFWorker.deletePages(this._item.id, pageIndexes, true);
+						await Trellis.PDFWorker.deletePages(this._item.id, pageIndexes, true);
 					}
 					catch (e) {
 						this.displayError(e);
@@ -558,34 +558,34 @@ class ReaderInstance {
 				}
 			},
 			onToggleContextPane: () => {
-				Zotero.debug('toggle context pane');
-				let win = Zotero.getMainWindow();
-				win.ZoteroContextPane.togglePane();
+				Trellis.debug('toggle context pane');
+				let win = Trellis.getMainWindow();
+				win.TrellisContextPane.togglePane();
 			},
 			onToolbarShiftTab: () => {
 				// Shift-tab from the toolbar focuses the sync button (if reader instance is opened in a tab)
 				if (!this.tabID) return;
-				let win = Zotero.getMainWindow();
-				win.Zotero_Tabs.focusBack();
+				let win = Trellis.getMainWindow();
+				win.Trellis_Tabs.focusBack();
 			},
 			onIframeTab: () => {
 				// Tab after the last tabstop will focus the contextPane (if reader instance is opened in a tab)
 				if (!this.tabID) return;
-				let win = Zotero.getMainWindow();
-				win.Zotero_Tabs.focusForward();
+				let win = Trellis.getMainWindow();
+				win.Trellis_Tabs.focusForward();
 			},
 			onSetZoom: (iframe, zoom) => {
 				iframe.browsingContext.textZoom = 1;
 				iframe.browsingContext.fullZoom = zoom;
 			},
 			onTextSelectionAnnotationModeChange: (mode) => {
-				Zotero.Prefs.set('reader.textSelectionAnnotationMode', mode);
+				Trellis.Prefs.set('reader.textSelectionAnnotationMode', mode);
 			},
 			onBringReaderToFront: (bring) => {
 				// Temporary bring reader iframe to front to make sure popups and context menus
 				// aren't overlapped by contextPane, in Stacked View mode
 				if (bring) {
-					if (Zotero.Prefs.get('layout') === 'stacked') {
+					if (Trellis.Prefs.get('layout') === 'stacked') {
 						this._iframe.parentElement.style.zIndex = 1;
 					}
 				}
@@ -596,39 +596,39 @@ class ReaderInstance {
 			onSaveCustomThemes: async (customThemes) => {
 				// If a custom theme is deleted, clear the theme preference.
 				// This ensures that the correct light/dark theme is auto-picked and also fixes #5070.
-				const lightTheme = Zotero.Prefs.get('reader.lightTheme');
-				const darkTheme = Zotero.Prefs.get('reader.darkTheme');
+				const lightTheme = Trellis.Prefs.get('reader.lightTheme');
+				const darkTheme = Trellis.Prefs.get('reader.darkTheme');
 
 				if (lightTheme.startsWith('custom') && !customThemes?.some(theme => theme.id === lightTheme)) {
-					Zotero.Prefs.clear('reader.lightTheme');
+					Trellis.Prefs.clear('reader.lightTheme');
 				}
 
 				if (darkTheme.startsWith('custom') && !customThemes?.some(theme => theme.id === darkTheme)) {
-					Zotero.Prefs.clear('reader.darkTheme');
+					Trellis.Prefs.clear('reader.darkTheme');
 				}
 				
 				if (customThemes?.length) {
-					await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'readerCustomThemes', customThemes);
+					await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'readerCustomThemes', customThemes);
 				}
 				else {
-					await Zotero.SyncedSettings.clear(Zotero.Libraries.userLibraryID, 'readerCustomThemes');
+					await Trellis.SyncedSettings.clear(Trellis.Libraries.userLibraryID, 'readerCustomThemes');
 				}
 			},
 			onSetLightTheme: (themeName) => {
-				Zotero.Prefs.set('reader.lightTheme', themeName || false);
+				Trellis.Prefs.set('reader.lightTheme', themeName || false);
 			},
 			onSetDarkTheme: (themeName) => {
-				Zotero.Prefs.set('reader.darkTheme', themeName || false);
+				Trellis.Prefs.set('reader.darkTheme', themeName || false);
 			},
 			onSetReadAloudVoice: this._setReadAloudVoice.bind(this),
 			onSetReadAloudEnabledVoices: this._setReadAloudEnabledVoices.bind(this),
 			onSetReadAloudStatus: this._setReadAloudStatus.bind(this),
 			onPurchaseReadAloudCredits: () => {
-				Zotero.launchURL(ZOTERO_CONFIG.READ_ALOUD_URL);
+				Trellis.launchURL(TRELLIS_CONFIG.READ_ALOUD_URL);
 			},
 			onLogIn: () => {
 				// This causes a segfault without the timeout...
-				setTimeout(() => Zotero.Utilities.Internal.openPreferences('zotero-prefpane-account', { action: 'logIn' }));
+				setTimeout(() => Trellis.Utilities.Internal.openPreferences('trellis-prefpane-account', { action: 'logIn' }));
 			},
 			onOpenReadAloudFirstRunPopup: ({ lang }) => {
 				// As above
@@ -644,29 +644,29 @@ class ReaderInstance {
 		// Set title once again, because `ReaderWindow` isn't loaded the first time
 		this.updateTitle();
 
-		if (Zotero.isBetaBuild || Zotero.isDevBuild || Zotero.isSourceBuild) {
+		if (Trellis.isBetaBuild || Trellis.isDevBuild || Trellis.isSourceBuild) {
 			this._showReadAloudGuidance();
 		}
 
 		this._prefObserverIDs = [
-			Zotero.Prefs.registerObserver('fontSize', this._handleFontSizeChange),
-			Zotero.Prefs.registerObserver('tabs.title.reader', this._handleTabTitlePrefChange),
-			Zotero.Prefs.registerObserver('reader.textSelectionAnnotationMode', this._handleTextSelectionAnnotationModeChange),
-			Zotero.Prefs.registerObserver('reader.lightTheme', this._handleLightThemeChange),
-			Zotero.Prefs.registerObserver('reader.darkTheme', this._handleDarkThemeChange),
-			Zotero.Prefs.registerObserver('reader.ebookFontFamily', this._handleEbookPrefChange),
-			Zotero.Prefs.registerObserver('reader.ebookHyphenate', this._handleEbookPrefChange),
-			Zotero.Prefs.registerObserver('reader.autoDisableTool.note', this._handleAutoDisableToolPrefChange),
-			Zotero.Prefs.registerObserver('reader.autoDisableTool.text', this._handleAutoDisableToolPrefChange),
-			Zotero.Prefs.registerObserver('reader.autoDisableTool.image', this._handleAutoDisableToolPrefChange),
-			Zotero.Prefs.registerObserver('reader.readAloudVoices', this._handleReadAloudVoicesPrefChange),
+			Trellis.Prefs.registerObserver('fontSize', this._handleFontSizeChange),
+			Trellis.Prefs.registerObserver('tabs.title.reader', this._handleTabTitlePrefChange),
+			Trellis.Prefs.registerObserver('reader.textSelectionAnnotationMode', this._handleTextSelectionAnnotationModeChange),
+			Trellis.Prefs.registerObserver('reader.lightTheme', this._handleLightThemeChange),
+			Trellis.Prefs.registerObserver('reader.darkTheme', this._handleDarkThemeChange),
+			Trellis.Prefs.registerObserver('reader.ebookFontFamily', this._handleEbookPrefChange),
+			Trellis.Prefs.registerObserver('reader.ebookHyphenate', this._handleEbookPrefChange),
+			Trellis.Prefs.registerObserver('reader.autoDisableTool.note', this._handleAutoDisableToolPrefChange),
+			Trellis.Prefs.registerObserver('reader.autoDisableTool.text', this._handleAutoDisableToolPrefChange),
+			Trellis.Prefs.registerObserver('reader.autoDisableTool.image', this._handleAutoDisableToolPrefChange),
+			Trellis.Prefs.registerObserver('reader.readAloudVoices', this._handleReadAloudVoicesPrefChange),
 		];
 
 		return true;
 	}
 
 	async _getData() {
-		let item = Zotero.Items.get(this._item.id);
+		let item = Trellis.Items.get(this._item.id);
 		let path = await item.getFilePathAsync();
 		// Check file size, otherwise we get uncatchable error:
 		// JavaScript error: resource://gre/modules/osfile/osfile_native.jsm, line 60: RangeError: invalid array length
@@ -676,8 +676,8 @@ class ReaderInstance {
 			throw new Error(`The file "${path}" is too large`);
 		}
 		return {
-			url: `zotero://attachment/${Zotero.API.getLibraryPrefix(item.libraryID)}/items/${item.key}/`,
-			importedFromURL: this._item.attachmentLinkMode === Zotero.Attachments.LINK_MODE_IMPORTED_URL
+			url: `trellis://attachment/${Trellis.API.getLibraryPrefix(item.libraryID)}/items/${item.key}/`,
+			importedFromURL: this._item.attachmentLinkMode === Trellis.Attachments.LINK_MODE_IMPORTED_URL
 				? this._item.getField('url')
 				: undefined,
 		};
@@ -700,11 +700,11 @@ class ReaderInstance {
 		}
 		this._hideReadAloudGuidance();
 		if (this._prefObserverIDs) {
-			this._prefObserverIDs.forEach(id => Zotero.Prefs.unregisterObserver(id));
+			this._prefObserverIDs.forEach(id => Trellis.Prefs.unregisterObserver(id));
 		}
 		this._flushState();
 		if (this._item?.id && !this._isTransient()) {
-			Zotero.Notifier.trigger('close', 'file', this._item.id);
+			Trellis.Notifier.trigger('close', 'file', this._item.id);
 		}
 		if (this._blockingObserver && this._iframe) {
 			this._blockingObserver.unregister(this._iframe);
@@ -784,10 +784,10 @@ class ReaderInstance {
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 		let index = ps.confirmEx(
 			null,
-			Zotero.ftl.formatValueSync('reader-prompt-transfer-from-pdf-title'),
-			Zotero.ftl.formatValueSync('reader-prompt-transfer-from-pdf-text', { target: Zotero.appName }),
+			Trellis.ftl.formatValueSync('reader-prompt-transfer-from-pdf-title'),
+			Trellis.ftl.formatValueSync('reader-prompt-transfer-from-pdf-text', { target: Trellis.appName }),
 			buttonFlags,
-			Zotero.getString('general.continue'),
+			Trellis.getString('general.continue'),
 			null, null, null, {}
 		);
 		return !index;
@@ -799,10 +799,10 @@ class ReaderInstance {
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 		let index = ps.confirmEx(
 			null,
-			Zotero.ftl.formatValueSync('reader-prompt-delete-pages-title'),
-			Zotero.ftl.formatValueSync('reader-prompt-delete-pages-text', { count: num }),
+			Trellis.ftl.formatValueSync('reader-prompt-delete-pages-title'),
+			Trellis.ftl.formatValueSync('reader-prompt-delete-pages-text', { count: num }),
 			buttonFlags,
-			Zotero.getString('general.continue'),
+			Trellis.getString('general.continue'),
 			null, null, null, {}
 		);
 		return !index;
@@ -816,12 +816,12 @@ class ReaderInstance {
 	async transferFromPDF() {
 		if (this.promptToTransferAnnotations(true)) {
 			try {
-				await Zotero.PDFWorker.import(this._item.id, true, '', true);
+				await Trellis.PDFWorker.import(this._item.id, true, '', true);
 			}
 			catch (e) {
 				if (e.name === 'PasswordException') {
-					Zotero.alert(null, Zotero.getString('general.error'),
-						Zotero.getString('reader-prompt-password-protected'));
+					Trellis.alert(null, Trellis.getString('general.error'),
+						Trellis.getString('reader-prompt-password-protected'));
 				}
 				throw e;
 			}
@@ -853,7 +853,7 @@ class ReaderInstance {
 				? path
 				: PathUtils.join(PathUtils.parent(path), 'metadata.opf');
 			if (await IOUtils.exists(externalPath)) {
-				return Zotero.File.getContentsAsync(externalPath);
+				return Trellis.File.getContentsAsync(externalPath);
 			}
 			if (!path.endsWith('.epub')) {
 				return null;
@@ -861,10 +861,10 @@ class ReaderInstance {
 			
 			let epubZip;
 			try {
-				epubZip = new ZipReader(Zotero.File.pathToFile(path));
+				epubZip = new ZipReader(Trellis.File.pathToFile(path));
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				return null;
 			}
 			
@@ -874,7 +874,7 @@ class ReaderInstance {
 					return null;
 				}
 				// Await before returning for the try-finally
-				return await Zotero.File.getContentsAsync(epubZip.getInputStream(CALIBRE_BOOKMARKS_PATH));
+				return await Trellis.File.getContentsAsync(epubZip.getInputStream(CALIBRE_BOOKMARKS_PATH));
 			}
 			finally {
 				epubZip.close();
@@ -883,7 +883,7 @@ class ReaderInstance {
 		
 		let selectFile = async () => {
 			let fp = new FilePicker();
-			fp.init(this._window, Zotero.ftl.formatValueSync('reader-import-from-epub-prompt-title'), fp.modeOpen);
+			fp.init(this._window, Trellis.ftl.formatValueSync('reader-import-from-epub-prompt-title'), fp.modeOpen);
 			fp.appendFilter('EPUB Data', '*.epub; *.lua; *.opf');
 			if ((await fp.show()) !== fp.returnOK) {
 				return null;
@@ -903,7 +903,7 @@ class ReaderInstance {
 				koReaderInput = await getKOReaderInput(path);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			
 			let calibreInput;
@@ -911,7 +911,7 @@ class ReaderInstance {
 				calibreInput = await getCalibreInput(path);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			
 			let koReaderStats = koReaderInput && this._internalReader.getKOReaderAnnotationStats(koReaderInput);
@@ -925,16 +925,16 @@ class ReaderInstance {
 					+ ps.BUTTON_POS_2 * ps.BUTTON_TITLE_IS_STRING;
 				let index = ps.confirmEx(
 					this._window,
-					Zotero.ftl.formatValueSync('reader-import-from-epub-prompt-title'),
-					Zotero.ftl.formatValueSync('reader-import-from-epub-prompt-text', {
+					Trellis.ftl.formatValueSync('reader-import-from-epub-prompt-title'),
+					Trellis.ftl.formatValueSync('reader-import-from-epub-prompt-text', {
 						count: stats.count,
-						lastModifiedRelative: Zotero.Date.toRelativeDate(stats.lastModified),
+						lastModifiedRelative: Trellis.Date.toRelativeDate(stats.lastModified),
 						tool: stats === koReaderStats ? 'KOReader' : 'Calibre',
 					}),
 					buttonFlags,
-					Zotero.getString('general.import'),
+					Trellis.getString('general.import'),
 					'',
-					Zotero.ftl.formatValueSync('reader-import-from-epub-select-other'),
+					Trellis.ftl.formatValueSync('reader-import-from-epub-select-other'),
 					'', {}
 				);
 				if (index === 0) {
@@ -947,7 +947,7 @@ class ReaderInstance {
 						}
 					}
 					catch (e) {
-						Zotero.alert(this._window, Zotero.getString('general.error'), e.message);
+						Trellis.alert(this._window, Trellis.getString('general.error'), e.message);
 					}
 					break;
 				}
@@ -961,16 +961,16 @@ class ReaderInstance {
 					+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 				
 				let message = isOpenFile
-					? Zotero.ftl.formatValueSync('reader-import-from-epub-no-annotations-current-file')
-					: Zotero.ftl.formatValueSync('reader-import-from-epub-no-annotations-other-file', {
+					? Trellis.ftl.formatValueSync('reader-import-from-epub-no-annotations-current-file')
+					: Trellis.ftl.formatValueSync('reader-import-from-epub-no-annotations-other-file', {
 						filename: PathUtils.filename(path)
 					});
 				let index = ps.confirmEx(
 					this._window,
-					Zotero.ftl.formatValueSync('reader-import-from-epub-prompt-title'),
+					Trellis.ftl.formatValueSync('reader-import-from-epub-prompt-title'),
 					message,
 					buttonFlags,
-					Zotero.ftl.formatValueSync('reader-import-from-epub-select-other'),
+					Trellis.ftl.formatValueSync('reader-import-from-epub-select-other'),
 					'', '', '', {}
 				);
 				if (index === 1) {
@@ -984,16 +984,16 @@ class ReaderInstance {
 	}
 
 	export() {
-		let zp = Zotero.getActiveZoteroPane();
+		let zp = Trellis.getActiveTrellisPane();
 		zp.exportPDF(this._item.id);
 	}
 
 	showInLibrary() {
-		let win = Zotero.getMainWindow();
+		let win = Trellis.getMainWindow();
 		if (win) {
-			let item = Zotero.Items.get(this._item.id);
+			let item = Trellis.Items.get(this._item.id);
 			let id = item.parentID || item.id;
-			win.ZoteroPane.selectItems([id]);
+			win.TrellisPane.selectItems([id]);
 			win.focus();
 		}
 	}
@@ -1002,7 +1002,7 @@ class ReaderInstance {
 		if (this._isTransient()) {
 			return;
 		}
-		let item = Zotero.Items.get(this._item.id);
+		let item = Trellis.Items.get(this._item.id);
 		if (item) {
 			let lastPageIndex;
 			if (this._type === 'pdf') {
@@ -1028,9 +1028,9 @@ class ReaderInstance {
 				}
 			}
 
-			let file = Zotero.Attachments.getStorageDirectory(item);
+			let file = Trellis.Attachments.getStorageDirectory(item);
 			if (!(await OS.File.exists(file.path))) {
-				await Zotero.Attachments.createDirectoryForItem(item);
+				await Trellis.Attachments.createDirectoryForItem(item);
 			}
 			file.append(this.stateFileName);
 			
@@ -1038,7 +1038,7 @@ class ReaderInstance {
 			let path = file.path;
 
 			// State updates can be frequent (every scroll) and we need to debounce actually writing them to disk.
-			// We flush the debounced write operation when Zotero shuts down or the window/tab is closed.
+			// We flush the debounced write operation when Trellis shuts down or the window/tab is closed.
 			if (this._pendingWriteStateTimeout) {
 				clearTimeout(this._pendingWriteStateTimeout);
 			}
@@ -1049,7 +1049,7 @@ class ReaderInstance {
 				this._pendingWriteStateFunction = null;
 				this._pendingWriteStateTimeout = null;
 				
-				Zotero.debug('Writing reader state to ' + path);
+				Trellis.debug('Writing reader state to ' + path);
 				// Using atomic `writeJSON` instead of `putContentsAsync` to avoid using temp file that causes conflicts
 				// on simultaneous writes (on slow systems)
 				await IOUtils.writeJSON(path, state);
@@ -1057,7 +1057,7 @@ class ReaderInstance {
 			this._pendingWriteStateTimeout = setTimeout(this._pendingWriteStateFunction, 5000);
 
 			if (pageChanged) {
-				Zotero.Notifier.trigger('pageChange', 'file', item.id);
+				Trellis.Notifier.trigger('pageChange', 'file', item.id);
 			}
 		}
 	}
@@ -1070,29 +1070,29 @@ class ReaderInstance {
 
 	async _getState() {
 		let stateFromFile;
-		let item = Zotero.Items.get(this._item.id);
-		let directory = Zotero.Attachments.getStorageDirectory(item);
+		let item = Trellis.Items.get(this._item.id);
+		let directory = Trellis.Attachments.getStorageDirectory(item);
 		let file = directory.clone();
 		file.append(this.stateFileName);
 		try {
 			if (await OS.File.exists(file.path)) {
-				stateFromFile = JSON.parse(await Zotero.File.getContentsAsync(file.path));
+				stateFromFile = JSON.parse(await Trellis.File.getContentsAsync(file.path));
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
-		// Try to fall back to the older .zotero-pdf-state file
+		// Try to fall back to the older .trellis-pdf-state file
 		if (!stateFromFile && this._type === 'pdf') {
 			let file = directory.clone();
-			file.append('.zotero-pdf-state');
+			file.append('.trellis-pdf-state');
 			try {
 				if (await OS.File.exists(file.path)) {
-					stateFromFile = JSON.parse(await Zotero.File.getContentsAsync(file.path));
+					stateFromFile = JSON.parse(await Trellis.File.getContentsAsync(file.path));
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 
@@ -1148,14 +1148,14 @@ class ReaderInstance {
 	// value, so a held pack can't be affected by a later regeneration and
 	// always matches the document the reader is displaying.
 	_createGetSDTPack(targetWindow) {
-		if (!Zotero.SDT || !this.itemID || this._isTransient()) {
+		if (!Trellis.SDT || !this.itemID || this._isTransient()) {
 			return null;
 		}
 		// Wrap the return value in a child window Promise to avoid
 		// permissions errors (as in _getReadAloudRemoteInterface()).
 		// getPack() never rejects
 		return () => new targetWindow.Promise(async (resolve) => {
-			let result = await Zotero.SDT.getPack(this.itemID, { isPriority: true });
+			let result = await Trellis.SDT.getPack(this.itemID, { isPriority: true });
 			resolve(Cu.cloneInto(result, targetWindow));
 		});
 	}
@@ -1165,14 +1165,14 @@ class ReaderInstance {
 	}
 
 	_isReadOnly() {
-		let item = Zotero.Items.get(this._item.id);
+		let item = Trellis.Items.get(this._item.id);
 		return !item.isEditable()
 			|| item.deleted
 			|| item.parentItem && item.parentItem.deleted;
 	}
 
 	_handleFontSizeChange = () => {
-		this._internalReader.setFontSize(Zotero.Prefs.get('fontSize'));
+		this._internalReader.setFontSize(Trellis.Prefs.get('fontSize'));
 	};
 
 	_handleTabTitlePrefChange = async () => {
@@ -1180,26 +1180,26 @@ class ReaderInstance {
 	};
 
 	_handleTextSelectionAnnotationModeChange = () => {
-		this._internalReader.setTextSelectionAnnotationMode(Zotero.Prefs.get('reader.textSelectionAnnotationMode'));
+		this._internalReader.setTextSelectionAnnotationMode(Trellis.Prefs.get('reader.textSelectionAnnotationMode'));
 	};
 
 	_handleLightThemeChange = () => {
-		this._internalReader.setLightTheme(Zotero.Prefs.get('reader.lightTheme'));
+		this._internalReader.setLightTheme(Trellis.Prefs.get('reader.lightTheme'));
 	};
 
 	_handleDarkThemeChange = () => {
-		this._internalReader.setDarkTheme(Zotero.Prefs.get('reader.darkTheme'));
+		this._internalReader.setDarkTheme(Trellis.Prefs.get('reader.darkTheme'));
 	};
 
 	_handleEbookPrefChange = () => {
-		this._internalReader.setFontFamily(Zotero.Prefs.get('reader.ebookFontFamily'));
-		this._internalReader.setHyphenate(Zotero.Prefs.get('reader.ebookHyphenate'));
+		this._internalReader.setFontFamily(Trellis.Prefs.get('reader.ebookFontFamily'));
+		this._internalReader.setHyphenate(Trellis.Prefs.get('reader.ebookHyphenate'));
 	};
 
 	_handleAutoDisableToolPrefChange = () => {
-		this._internalReader.setAutoDisableNoteTool(Zotero.Prefs.get('reader.autoDisableTool.note'));
-		this._internalReader.setAutoDisableTextTool(Zotero.Prefs.get('reader.autoDisableTool.text'));
-		this._internalReader.setAutoDisableImageTool(Zotero.Prefs.get('reader.autoDisableTool.image'));
+		this._internalReader.setAutoDisableNoteTool(Trellis.Prefs.get('reader.autoDisableTool.note'));
+		this._internalReader.setAutoDisableTextTool(Trellis.Prefs.get('reader.autoDisableTool.text'));
+		this._internalReader.setAutoDisableImageTool(Trellis.Prefs.get('reader.autoDisableTool.image'));
 	};
 	
 	_handleReadAloudVoicesPrefChange = () => {
@@ -1296,7 +1296,7 @@ class ReaderInstance {
 	}
 
 	async _openContextMenu({ x, y, itemGroups }) {
-		let { resolve, promise } = Zotero.Promise.defer();
+		let { resolve, promise } = Trellis.Promise.defer();
 		let popup = this._window.document.createXULElement('menupopup');
 		this._popupset.appendChild(popup);
 		popup.addEventListener('popuphidden', function () {
@@ -1418,12 +1418,12 @@ class ReaderInstance {
 			// Check Spelling
 			var menuitem = popup.ownerDocument.createXULElement('menuitem');
 			menuitem.setAttribute('data-l10n-id', 'text-action-spell-check-toggle');
-			menuitem.setAttribute('checked', !!Zotero.Prefs.get('layout.spellcheckDefault', true));
+			menuitem.setAttribute('checked', !!Trellis.Prefs.get('layout.spellcheckDefault', true));
 			menuitem.setAttribute('type', 'checkbox');
 			menuitem.addEventListener('command', () => {
 				spellChecker.toggleEnabled();
 				// Possible values: 0 - off, 1 - only multi-line, 2 - multi and single line input boxes
-				Zotero.Prefs.set('layout.spellcheckDefault', !!Zotero.Prefs.get('layout.spellcheckDefault', true) ? 0 : 1, true);
+				Trellis.Prefs.set('layout.spellcheckDefault', !!Trellis.Prefs.get('layout.spellcheckDefault', true) ? 0 : 1, true);
 			});
 			popup.append(menuitem);
 
@@ -1443,7 +1443,7 @@ class ReaderInstance {
 				for (var menuitem of menupopup.children) {
 					// 'spell-check-dictionary-en-US'
 					let locale = menuitem.id.slice(23);
-					let label = Zotero.Dictionaries.getBestDictionaryName(locale);
+					let label = Trellis.Dictionaries.getBestDictionaryName(locale);
 					if (label && label != locale) {
 						menuitem.setAttribute('label', label);
 					}
@@ -1456,7 +1456,7 @@ class ReaderInstance {
 				var menuitem = popup.ownerDocument.createXULElement('menuitem');
 				menuitem.setAttribute('data-l10n-id', 'text-action-spell-add-dictionaries');
 				menuitem.addEventListener('command', () => {
-					Services.ww.openWindow(null, "chrome://zotero/content/dictionaryManager.xhtml",
+					Services.ww.openWindow(null, "chrome://trellis/content/dictionaryManager.xhtml",
 						"dictionary-manager", "chrome,centerscreen", {});
 				});
 				menupopup.append(menuitem);
@@ -1503,9 +1503,9 @@ class ReaderInstance {
 
 	_updateSecondViewState() {
 		if (this.tabID) {
-			let win = Zotero.getMainWindow();
+			let win = Trellis.getMainWindow();
 			if (win) {
-				win.Zotero_Tabs.setTabData(this.tabID, { secondViewState: this.getSecondViewState() });
+				win.Trellis_Tabs.setTabData(this.tabID, { secondViewState: this.getSecondViewState() });
 			}
 		}
 	}
@@ -1518,12 +1518,12 @@ class ReaderInstance {
 			let level = method === 'error' ? 1 : method === 'warn' ? 2 : 5;
 			Cu.exportFunction((...args) => {
 				try {
-					let message = args.map(a => typeof a === 'string' ? a : Zotero.Utilities.varDump(a))
+					let message = args.map(a => typeof a === 'string' ? a : Trellis.Utilities.varDump(a))
 						.join(' ');
-					Zotero.debug(`${this.constructor.name} "${this._title}": ${message}`, level);
+					Trellis.debug(`${this.constructor.name} "${this._title}": ${message}`, level);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 				console[method](...args);
 			}, wrapper, { defineAs: method });
@@ -1540,7 +1540,7 @@ class ReaderInstance {
 			if (n >= 1000) {
 				throw new Error('Waiting for reader failed');
 			}
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 			n++;
 		}
 		this._isReaderInitialized = true;
@@ -1549,7 +1549,7 @@ class ReaderInstance {
 	/**
 	 * Return item JSON in the pdf-reader ready format
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @returns {Object|null}
 	 */
 	async _getAnnotation(item) {
@@ -1557,7 +1557,7 @@ class ReaderInstance {
 			if (!item || !item.isAnnotation()) {
 				return null;
 			}
-			let json = await Zotero.Annotations.toJSON(item);
+			let json = await Trellis.Annotations.toJSON(item);
 			json.id = item.key;
 			delete json.key;
 			for (let key in json) {
@@ -1567,7 +1567,7 @@ class ReaderInstance {
 			return json;
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return null;
 		}
 	}
@@ -1588,7 +1588,7 @@ class ReaderInstance {
 			existing[lang] = { ...existingEnabledByTier, ...enabledByTier };
 		}
 		await IOUtils.writeJSON(READ_ALOUD_ENABLED_VOICES_PATH, existing);
-		for (let reader of Zotero.Reader._readers) {
+		for (let reader of Trellis.Reader._readers) {
 			reader._handleReadAloudEnabledVoicesChange(existing);
 		}
 	}
@@ -1660,7 +1660,7 @@ class ReaderInstance {
 
 	_getReadAloudVoices() {
 		try {
-			return JSON.parse(Zotero.Prefs.get('reader.readAloudVoices'));
+			return JSON.parse(Trellis.Prefs.get('reader.readAloudVoices'));
 		}
 		catch {
 			return {};
@@ -1675,7 +1675,7 @@ class ReaderInstance {
 			delete tierVoices[tier];
 			tierVoices[tier] = voice;
 		}
-		Zotero.Prefs.set('reader.readAloudVoices', JSON.stringify({
+		Trellis.Prefs.set('reader.readAloudVoices', JSON.stringify({
 			...this._getReadAloudVoices(),
 			[lang]: { region, voice, speed, tierVoices },
 		}));
@@ -1692,8 +1692,8 @@ class ReaderInstance {
 		return {
 			getVoices: () => {
 				return new targetWindow.Promise(async (resolve) => {
-					let apiKey = await Zotero.Sync.Data.Local.getAPIKey();
-					let client = Zotero.Sync.Runner.getAPIClient({ apiKey });
+					let apiKey = await Trellis.Sync.Data.Local.getAPIKey();
+					let client = Trellis.Sync.Runner.getAPIClient({ apiKey });
 					let result = await client.getReadAloudVoices();
 					resolve(Cu.cloneInto(result, targetWindow));
 					// Prune cache entries with outdated versions once per session,
@@ -1717,10 +1717,10 @@ class ReaderInstance {
 						}
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
-					let apiKey = segment === 'sample' ? null : await Zotero.Sync.Data.Local.getAPIKey();
-					let client = Zotero.Sync.Runner.getAPIClient({ apiKey });
+					let apiKey = segment === 'sample' ? null : await Trellis.Sync.Data.Local.getAPIKey();
+					let client = Trellis.Sync.Runner.getAPIClient({ apiKey });
 					let result = await client.getReadAloudAudio(segment, voice.id);
 					// Skip caching when the server forbids it (e.g., error responses
 					// returned with Cache-Control: no-store)
@@ -1729,7 +1729,7 @@ class ReaderInstance {
 							await cache.put(cacheURL, new Response(result.audio));
 						}
 						catch (e) {
-							Zotero.logError(e);
+							Trellis.logError(e);
 						}
 					}
 					resolve(Cu.cloneInto(result, targetWindow));
@@ -1738,16 +1738,16 @@ class ReaderInstance {
 
 			getCreditsRemaining: () => {
 				return new targetWindow.Promise(async (resolve) => {
-					let apiKey = await Zotero.Sync.Data.Local.getAPIKey();
-					let client = Zotero.Sync.Runner.getAPIClient({ apiKey });
+					let apiKey = await Trellis.Sync.Data.Local.getAPIKey();
+					let client = Trellis.Sync.Runner.getAPIClient({ apiKey });
 					resolve(Cu.cloneInto(await client.getReadAloudCreditsRemaining(), targetWindow));
 				});
 			},
 
 			resetCredits: () => {
 				return new targetWindow.Promise(async (resolve) => {
-					let apiKey = await Zotero.Sync.Data.Local.getAPIKey();
-					let client = Zotero.Sync.Runner.getAPIClient({ apiKey });
+					let apiKey = await Trellis.Sync.Data.Local.getAPIKey();
+					let client = Trellis.Sync.Runner.getAPIClient({ apiKey });
 					resolve(Cu.cloneInto(await client.resetReadAloudCredits(), targetWindow));
 				});
 			},
@@ -1759,7 +1759,7 @@ class ReaderInstance {
 	// key, causing old entries to miss and the correct audio to be re-fetched.
 	_getReadAloudCacheURL(segment, voice) {
 		let params = { voice: voice.id, text: segment.text, cacheVersion: voice.cacheVersion };
-		return 'https://read-aloud.zotero.invalid/audio?' + new URLSearchParams(params);
+		return 'https://read-aloud.trellis.invalid/audio?' + new URLSearchParams(params);
 	}
 
 	// Delete cached audio whose cacheVersion is no longer offered by the server,
@@ -1787,7 +1787,7 @@ class ReaderInstance {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 	}
 
@@ -1832,7 +1832,7 @@ class ReaderInstance {
 			},
 		};
 		this._window.openDialog(
-			'chrome://zotero/content/readAloudFirstRunDialog.xhtml',
+			'chrome://trellis/content/readAloudFirstRunDialog.xhtml',
 			'',
 			'chrome,modal,centerscreen,resizable=no',
 			io,
@@ -1856,7 +1856,7 @@ class ReaderInstance {
 			dataOut: null,
 		};
 		this._window.openDialog(
-			'chrome://zotero/content/readAloudVoicesDialog.xhtml',
+			'chrome://trellis/content/readAloudVoicesDialog.xhtml',
 			'',
 			'chrome,modal,centerscreen,resizable=no',
 			io,
@@ -1885,7 +1885,7 @@ class ReaderTab extends ReaderInstance {
 			this._tabContainer = this._window.document.getElementById(existingTabID);
 		}
 		else {
-			let { id, container } = this._window.Zotero_Tabs.add({
+			let { id, container } = this._window.Trellis_Tabs.add({
 				id: options.tabID,
 				type: 'reader',
 				title: options.title || '',
@@ -1905,7 +1905,7 @@ class ReaderTab extends ReaderInstance {
 		this._iframe.setAttribute('flex', '1');
 		this._iframe.setAttribute('type', 'content');
 		this._iframe.setAttribute('transparent', 'true');
-		this._iframe.setAttribute('src', 'resource://zotero/reader/reader.html');
+		this._iframe.setAttribute('src', 'resource://trellis/reader/reader.html');
 		this._tabContainer.appendChild(this._iframe);
 		this._iframe.docShell.windowDraggingAllowed = true;
 		
@@ -1920,10 +1920,10 @@ class ReaderTab extends ReaderInstance {
 
 		this._onToggleSidebarCallback = (open) => {
 			if (open) {
-				this._window.Zotero_Tabs.updateSidebarLayout({ width: true });
+				this._window.Trellis_Tabs.updateSidebarLayout({ width: true });
 			}
 			else {
-				this._window.Zotero_Tabs.updateSidebarLayout({ width: false });
+				this._window.Trellis_Tabs.updateSidebarLayout({ width: false });
 			}
 
 			if (options.onToggleSidebar) {
@@ -1932,7 +1932,7 @@ class ReaderTab extends ReaderInstance {
 		};
 		
 		this._onChangeSidebarWidthCallback = (width) => {
-			this._window.Zotero_Tabs.updateSidebarLayout({ width });
+			this._window.Trellis_Tabs.updateSidebarLayout({ width });
 
 			if (options.onChangeSidebarWidth) {
 				options.onChangeSidebarWidth(width);
@@ -1974,7 +1974,7 @@ class ReaderTab extends ReaderInstance {
 		this._window.removeEventListener('pointerdown', this._handlePointerDown);
 		this._window.removeEventListener('pointerup', this._handlePointerUp);
 		if (this.tabID) {
-			this._window.Zotero_Tabs.close(this.tabID);
+			this._window.Trellis_Tabs.close(this.tabID);
 		}
 	}
 
@@ -1982,7 +1982,7 @@ class ReaderTab extends ReaderInstance {
 		if (this._iframe && this._iframe.contentWindow && this._iframe.contentWindow.document === event.target) {
 			this._window.removeEventListener('DOMContentLoaded', this._handleLoad);
 			this._iframeWindow = this._iframe.contentWindow;
-			this._iframeWindow.addEventListener('error', event => Zotero.logError(event.error));
+			this._iframeWindow.addEventListener('error', event => Trellis.logError(event.error));
 			this._wrapConsole();
 			this._iframe.addEventListener('contextmenu', this._handleReaderTextboxContextMenuOpen);
 		}
@@ -1990,7 +1990,7 @@ class ReaderTab extends ReaderInstance {
 
 	// We don't want to send fake pointerup event, if pointerdown and pointerup was in the same iframe
 	_handlePointerDown = (event) => {
-		if (this._window.Zotero_Tabs.selectedID === this.tabID
+		if (this._window.Trellis_Tabs.selectedID === this.tabID
 			&& event.target.closest('#outerContainer')) {
 			this._pointerDownWindow = event.target.ownerDocument.defaultView;
 		}
@@ -2002,7 +2002,7 @@ class ReaderTab extends ReaderInstance {
 	_handlePointerUp = (event) => {
 		try {
 			var _window = event.target.ownerDocument.defaultView;
-			if (this._window.Zotero_Tabs.selectedID === this.tabID
+			if (this._window.Trellis_Tabs.selectedID === this.tabID
 				// If the event isn't inside a reader PDF.js iframe, or isn't the same iframe (if using split view)
 				&& (!event.target.closest('#outerContainer') || this._pointerDownWindow !== _window)
 				&& this._pointerDownWindow
@@ -2028,7 +2028,7 @@ class ReaderTab extends ReaderInstance {
 		}
 		catch (e) {
 			if (!e.message.includes("can't access dead object")) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	};
@@ -2037,10 +2037,10 @@ class ReaderTab extends ReaderInstance {
 
 	_addToNote(annotations) {
 		annotations = annotations.map(x => ({ ...x, attachmentItemID: this._item.id }));
-		if (!this._window.ZoteroContextPane) {
+		if (!this._window.TrellisContextPane) {
 			return;
 		}
-		let noteEditor = this._window.ZoteroContextPane.activeEditor;
+		let noteEditor = this._window.TrellisContextPane.activeEditor;
 		if (!noteEditor) {
 			return;
 		}
@@ -2062,7 +2062,7 @@ class ReaderTab extends ReaderInstance {
 			this._iframe.docShellIsActive = true;
 
 			// If this tab was unpaused, pause all others
-			for (let reader of Zotero.Reader._readers) {
+			for (let reader of Trellis.Reader._readers) {
 				if (reader === this) continue;
 				try {
 					reader.toggleReadAloudPaused(true);
@@ -2072,11 +2072,11 @@ class ReaderTab extends ReaderInstance {
 					// This seems to be caused by the _internalReader being a
 					// dead object. Not clear why, but we can log and continue;
 					// if the other reader is dead, it's not playing audio.
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 		}
-		this._window.Zotero_Tabs.setAudioStatus(this.tabID, status);
+		this._window.Trellis_Tabs.setAudioStatus(this.tabID, status);
 	}
 	
 	toggleReadAloudPaused(paused = undefined) {
@@ -2084,7 +2084,7 @@ class ReaderTab extends ReaderInstance {
 	}
 
 	_updateLayout() {
-		let { sidebarState } = this._window.Zotero_Tabs.updateSidebarLayout();
+		let { sidebarState } = this._window.Trellis_Tabs.updateSidebarLayout();
 		this.toggleSidebar(sidebarState.open);
 		this.setSidebarWidth(sidebarState.width);
 	}
@@ -2104,12 +2104,12 @@ class ReaderWindow extends ReaderInstance {
 		if (!win) return;
 
 		this._window = win.open(
-			'chrome://zotero/content/reader.xhtml', '', 'chrome,resizable'
+			'chrome://trellis/content/reader.xhtml', '', 'chrome,resizable'
 		);
 
 		this._window.addEventListener('DOMContentLoaded', (event) => {
 			if (event.target === this._window.document) {
-				this._popupset = this._window.document.getElementById('zotero-reader-popupset');
+				this._popupset = this._window.document.getElementById('trellis-reader-popupset');
 				this._window.onFileMenuOpen = this._onFileMenuOpen.bind(this);
 				this._window.onEditMenuOpen = this._onEditMenuOpen.bind(this);
 				this._window.onGoMenuOpen = this._onGoMenuOpen.bind(this);
@@ -2122,7 +2122,7 @@ class ReaderWindow extends ReaderInstance {
 
 			if (this._iframe.contentWindow && this._iframe.contentWindow.document === event.target) {
 				this._iframeWindow = this._window.document.getElementById('reader').contentWindow;
-				this._iframeWindow.addEventListener('error', event => Zotero.logError(event.error));
+				this._iframeWindow.addEventListener('error', event => Trellis.logError(event.error));
 				this._wrapConsole();
 					this._iframe.addEventListener('contextmenu', this._handleReaderTextboxContextMenuOpen);
 			}
@@ -2151,15 +2151,15 @@ class ReaderWindow extends ReaderInstance {
 		// Tab titles render Citeproc.js markup. There's no good way
 		// to show rich text in a window title, but we can at least
 		// strip the markup.
-		this._window.document.title = Zotero.Utilities.Internal.renderItemTitle(title);
+		this._window.document.title = Trellis.Utilities.Internal.renderItemTitle(title);
 	}
 
 	_onFileMenuOpen(event, popup) {
 		if (event.target !== popup) {
 			return;
 		}
-		let item = Zotero.Items.get(this._item.id);
-		let library = Zotero.Libraries.get(item.libraryID);
+		let item = Trellis.Items.get(this._item.id);
+		let library = Trellis.Libraries.get(item.libraryID);
 		
 		let transferFromPDFMenuitem = this._window.document.getElementById('menu_transferFromPDF');
 		let importFromEPUBMenuitem = this._window.document.getElementById('menu_importFromEPUB');
@@ -2225,7 +2225,7 @@ class ReaderWindow extends ReaderInstance {
 		let keyBack = this._window.document.getElementById('key_back');
 		let keyForward = this._window.document.getElementById('key_forward');
 
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			keyBack.setAttribute('key', '[');
 			keyBack.setAttribute('modifiers', 'meta');
 			keyForward.setAttribute('key', ']');
@@ -2264,7 +2264,7 @@ class ReaderWindow extends ReaderInstance {
 	onUpdateCustomMenus = function (event, type, popup) {
 		let tabType = "reader";
 		let tabSubType = this._type;
-		Zotero.MenuManager.updateMenuPopup(popup, `reader/menubar/${type}`, {
+		Trellis.MenuManager.updateMenuPopup(popup, `reader/menubar/${type}`, {
 			event,
 			tabType,
 			tabSubType,
@@ -2367,7 +2367,7 @@ class ReaderPreview extends ReaderInstance {
 		super(options);
 		this._iframe = options.iframe;
 		this._iframeWindow = this._iframe.contentWindow;
-		this._iframeWindow.addEventListener('error', event => Zotero.logError(event.error));
+		this._iframeWindow.addEventListener('error', event => Trellis.logError(event.error));
 		this._wrapConsole();
 	}
 
@@ -2394,7 +2394,7 @@ class ReaderPreview extends ReaderInstance {
 				let t = 0;
 				while (!viewer?.firstPagePromise && t < 100) {
 					t++;
-					await Zotero.Promise.delay(10);
+					await Trellis.Promise.delay(10);
 					viewer = win?.PDFViewerApplication?.pdfViewer;
 				}
 				await viewer?.firstPagePromise;
@@ -2413,7 +2413,7 @@ class ReaderPreview extends ReaderInstance {
 			return success;
 		}
 		catch (e) {
-			Zotero.warn(`Failed to load preview for attachment ${this._item?.libraryID}/${this._item?.key}: ${String(e)}`);
+			Trellis.warn(`Failed to load preview for attachment ${this._item?.libraryID}/${this._item?.key}: ${String(e)}`);
 			this._item = null;
 			return false;
 		}
@@ -2535,7 +2535,7 @@ class ReaderPreview extends ReaderInstance {
 				if (n >= 500) {
 					return false;
 				}
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 				n++;
 			}
 			await this._internalReader._primaryView.initializedPromise;
@@ -2558,12 +2558,12 @@ class Reader {
 		this._sidebarOpen = false;
 		this._bottomPlaceholderHeight = 0;
 		this._readers = [];
-		this._notifierID = Zotero.Notifier.registerObserver(this, ['item', 'setting', 'tab', 'api-key'], 'reader');
+		this._notifierID = Trellis.Notifier.registerObserver(this, ['item', 'setting', 'tab', 'api-key'], 'reader');
 		this._registeredListeners = [];
 		this.onChangeSidebarWidth = null;
 		this.onToggleSidebar = null;
 
-		this._debounceSidebarWidthUpdate = Zotero.Utilities.debounce(() => {
+		this._debounceSidebarWidthUpdate = Trellis.Utilities.debounce(() => {
 			let readers = this._readers.filter(r => r instanceof ReaderTab);
 			for (let reader of readers) {
 				reader.setSidebarWidth(this._sidebarWidth);
@@ -2571,7 +2571,7 @@ class Reader {
 			this._setSidebarState();
 		}, 500);
 
-		Zotero.Plugins.addObserver({
+		Trellis.Plugins.addObserver({
 			shutdown: ({ id: pluginID }) => {
 				this._unregisterEventListenerByPluginID(pluginID);
 			}
@@ -2620,7 +2620,7 @@ class Reader {
 	 * - renderToolbar
 	 *
 	 * ```javascript
-	 * Zotero.Reader.registerEventListener('renderTextSelectionPopup', (event) => {
+	 * Trellis.Reader.registerEventListener('renderTextSelectionPopup', (event) => {
 	 * 	let { reader, doc, params, append } = event;
 	 * 	let container = doc.createElement('div');
 	 * 	container.append('Loading…');
@@ -2639,7 +2639,7 @@ class Reader {
 	 * - createSelectorContextMenu
 	 *
 	 * ```javascript
-	 * Zotero.Reader.registerEventListener('createAnnotationContextMenu', (event) => {
+	 * Trellis.Reader.registerEventListener('createAnnotationContextMenu', (event) => {
 	 * 	let { reader, params, append } = event;
 	 * 	append({
 	 * 		label: 'Test',
@@ -2670,16 +2670,16 @@ class Reader {
 	}
 	
 	async init() {
-		await Zotero.uiReadyPromise;
-		Zotero.Session.state.windows
-			.filter(x => x.type == 'reader' && Zotero.Items.exists(x.itemID))
+		await Trellis.uiReadyPromise;
+		Trellis.Session.state.windows
+			.filter(x => x.type == 'reader' && Trellis.Items.exists(x.itemID))
 			.forEach(x => this.open(x.itemID, null, { title: x.title, openInWindow: true, secondViewState: x.secondViewState }));
 	}
 	
 	_loadSidebarState() {
-		let win = Zotero.getMainWindow();
+		let win = Trellis.getMainWindow();
 		if (win) {
-			let state = win.Zotero_Tabs.getSidebarState('reader');
+			let state = win.Trellis_Tabs.getSidebarState('reader');
 			this._sidebarOpen = state.open;
 			if (state.width) {
 				this._sidebarWidth = parseInt(state.width);
@@ -2691,7 +2691,7 @@ class Reader {
 		if (type === 'tab') {
 			if (event === 'close') {
 				for (let id of ids) {
-					let reader = Zotero.Reader.getByTabID(id);
+					let reader = Trellis.Reader.getByTabID(id);
 					if (reader) {
 						reader.uninit();
 						this._readers.splice(this._readers.indexOf(reader), 1);
@@ -2700,12 +2700,12 @@ class Reader {
 			}
 			else if (event === 'select') {
 				for (let reader of this._readers) {
-					if (reader instanceof ReaderTab && reader._window.Zotero_Tabs.canUnload(reader.tabID)) {
+					if (reader instanceof ReaderTab && reader._window.Trellis_Tabs.canUnload(reader.tabID)) {
 						reader._iframe.docShellIsActive = false;
 					}
 				}
 
-				let reader = Zotero.Reader.getByTabID(ids[0]);
+				let reader = Trellis.Reader.getByTabID(ids[0]);
 				if (reader) {
 					reader._iframe.docShellIsActive = true;
 					this.triggerAnnotationsImportCheck(reader.itemID);
@@ -2713,7 +2713,7 @@ class Reader {
 			}
 			
 			if (event === 'add' || event === 'close') {
-				Zotero.Session.debounceSave();
+				Trellis.Session.debounceSave();
 			}
 		}
 		// Listen for parent item, PDF attachment and its annotations updates
@@ -2724,7 +2724,7 @@ class Reader {
 				}
 
 				// Ignore other notifications if the attachment no longer exists
-				let item = Zotero.Items.get(reader.itemID);
+				let item = Trellis.Items.get(reader.itemID);
 				if (item) {
 					if (event === 'trash' && (ids.includes(item.id) || ids.includes(item.parentItemID))) {
 						reader.close();
@@ -2758,8 +2758,8 @@ class Reader {
 		}
 		else if (type === 'setting') {
 			let id = ids[0];
-			if (id === `${Zotero.Libraries.userLibraryID}/readerCustomThemes`) {
-				let newCustomThemes = Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, 'readerCustomThemes') ?? [];
+			if (id === `${Trellis.Libraries.userLibraryID}/readerCustomThemes`) {
+				let newCustomThemes = Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, 'readerCustomThemes') ?? [];
 				this._readers.forEach((reader) => {
 					reader._internalReader.setCustomThemes(
 						Components.utils.cloneInto(newCustomThemes, reader._iframeWindow)
@@ -2769,7 +2769,7 @@ class Reader {
 		}
 		else if (type === 'api-key') {
 			for (let reader of this._readers) {
-				reader._internalReader.setLoggedIn(Zotero.Sync.Runner.enabled);
+				reader._internalReader.setLoggedIn(Trellis.Sync.Runner.enabled);
 			}
 		}
 	}
@@ -2790,19 +2790,19 @@ class Reader {
 	}
 
 	async openURI(itemURI, location, options) {
-		let item = await Zotero.URI.getURIItem(itemURI);
+		let item = await Trellis.URI.getURIItem(itemURI);
 		if (!item) return;
 		await this.open(item.id, location, options);
 	}
 
 	async open(itemID, location, { title, tabIndex, tabID, openInBackground, openInWindow, allowDuplicate, secondViewState, preventJumpback } = {}) {
-		let { libraryID } = Zotero.Items.getLibraryAndKeyFromID(itemID);
-		let library = Zotero.Libraries.get(libraryID);
-		let win = Zotero.getMainWindow();
+		let { libraryID } = Trellis.Items.getLibraryAndKeyFromID(itemID);
+		let library = Trellis.Libraries.get(libraryID);
+		let win = Trellis.getMainWindow();
 
 		await library.waitForDataLoad('item');
 
-		let item = Zotero.Items.get(itemID);
+		let item = Trellis.Items.get(itemID);
 		if (!item) {
 			throw new Error('Item does not exist');
 		}
@@ -2811,12 +2811,12 @@ class Reader {
 		this.triggerAnnotationsImportCheck(itemID);
 		let reader;
 		// If duplicating is not allowed, and no reader instance is loaded for itemID,
-		// try to find an unloaded tab and select it. Zotero.Reader.open will then be called again
+		// try to find an unloaded tab and select it. Trellis.Reader.open will then be called again
 		if (!allowDuplicate && !this._readers.find(r => r.itemID === itemID)) {
 			if (win) {
-				let existingTabID = win.Zotero_Tabs.getTabIDByItemID(itemID);
+				let existingTabID = win.Trellis_Tabs.getTabIDByItemID(itemID);
 				if (existingTabID) {
-					win.Zotero_Tabs.select(existingTabID, false, { location });
+					win.Trellis_Tabs.select(existingTabID, false, { location });
 					return undefined;
 				}
 			}
@@ -2831,7 +2831,7 @@ class Reader {
 
 		if (reader) {
 			if (reader instanceof ReaderTab) {
-				reader._window.Zotero_Tabs.select(reader.tabID, true);
+				reader._window.Trellis_Tabs.select(reader.tabID, true);
 			}
 			
 			if (location) {
@@ -2848,11 +2848,11 @@ class Reader {
 				bottomPlaceholderHeight: this._bottomPlaceholderHeight,
 				onClose: () => {
 					this._readers.splice(this._readers.indexOf(reader), 1);
-					Zotero.Session.debounceSave();
+					Trellis.Session.debounceSave();
 				}
 			});
 			this._readers.push(reader);
-			Zotero.Session.debounceSave();
+			Trellis.Session.debounceSave();
 		}
 		else {
 			reader = new ReaderTab({
@@ -2865,7 +2865,7 @@ class Reader {
 				background: openInBackground,
 				sidebarWidth: this._sidebarWidth,
 				sidebarOpen: this._sidebarOpen,
-				contextPaneOpen: !win.ZoteroContextPane.collapsed,
+				contextPaneOpen: !win.TrellisContextPane.collapsed,
 				bottomPlaceholderHeight: this._bottomPlaceholderHeight,
 				preventJumpback: preventJumpback,
 				onToggleSidebar: (open) => {
@@ -2885,7 +2885,7 @@ class Reader {
 		}
 		
 		if (!openInBackground
-			&& !win.Zotero_Tabs.focusOptions.keepTabFocused) {
+			&& !win.Trellis_Tabs.focusOptions.keepTabFocused) {
 			// Do not change focus when tabs are traversed/selected using a keyboard
 			reader.focus();
 		}
@@ -2893,11 +2893,11 @@ class Reader {
 	}
 
 	async openPreview(itemID, iframe) {
-		let { libraryID } = Zotero.Items.getLibraryAndKeyFromID(itemID);
-		let library = Zotero.Libraries.get(libraryID);
+		let { libraryID } = Trellis.Items.getLibraryAndKeyFromID(itemID);
+		let library = Trellis.Libraries.get(libraryID);
 		await library.waitForDataLoad('item');
 
-		let item = Zotero.Items.get(itemID);
+		let item = Trellis.Items.get(itemID);
 		if (!item) {
 			throw new Error('Item does not exist');
 		}
@@ -2919,7 +2919,7 @@ class Reader {
 	 * @returns {Promise}
 	 */
 	async triggerAnnotationsImportCheck(itemID) {
-		let item = await Zotero.Items.getAsync(itemID);
+		let item = await Trellis.Items.getAsync(itemID);
 		if (!item.isPDFAttachment()
 			|| !item.isEditable()
 			|| item.deleted
@@ -2929,7 +2929,7 @@ class Reader {
 		}
 		let mtime = await item.attachmentModificationTime;
 		if (item.attachmentLastProcessedModificationTime < Math.floor(mtime / 1000)) {
-			await Zotero.PDFWorker.import(itemID, true);
+			await Trellis.PDFWorker.import(itemID, true);
 		}
 	}
 	
@@ -2939,7 +2939,7 @@ class Reader {
 				await reader._flushState();
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	}
@@ -2947,13 +2947,13 @@ class Reader {
 
 
 /**
- * @namespace Zotero
+ * @namespace Trellis
  */
 
 
 /**
- * @memberof Zotero
+ * @memberof Trellis
  * @type {Reader}
  */
-Zotero.Reader = new Reader();
-Zotero.addShutdownListener(() => Zotero.Reader.flushAllReaderStates());
+Trellis.Reader = new Reader();
+Trellis.addShutdownListener(() => Trellis.Reader.flushAllReaderStates());

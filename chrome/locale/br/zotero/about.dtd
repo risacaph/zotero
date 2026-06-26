@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "stumm">
-<!ENTITY zotero.whatsNew "Petra nevez">
-<!ENTITY zotero.createdby "Krouet gant:">
-<!ENTITY zotero.director "Rener:">
-<!ENTITY zotero.directors "Renerien:">
-<!ENTITY zotero.developers "Diorroerien:">
-<!ENTITY zotero.alumni "Kendaolerien gozh:">
-<!ENTITY zotero.about.localizations "Lec'heladurioù:">
-<!ENTITY zotero.about.additionalSoftware "Meziantoù tredeel:">
-<!ENTITY zotero.thanks "Trugarez vras da:">
-<!ENTITY zotero.about.close "Serriñ">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Muioc'h a greditoù &amp; trugarekadurioù">
-<!ENTITY zotero.citationProcessing "Tretadur an arroudennoù &amp; levrlennadurioù">
+<!ENTITY trellis.version "stumm">
+<!ENTITY trellis.whatsNew "Petra nevez">
+<!ENTITY trellis.createdby "Krouet gant:">
+<!ENTITY trellis.director "Rener:">
+<!ENTITY trellis.directors "Renerien:">
+<!ENTITY trellis.developers "Diorroerien:">
+<!ENTITY trellis.alumni "Kendaolerien gozh:">
+<!ENTITY trellis.about.localizations "Lec'heladurioù:">
+<!ENTITY trellis.about.additionalSoftware "Meziantoù tredeel:">
+<!ENTITY trellis.thanks "Trugarez vras da:">
+<!ENTITY trellis.about.close "Serriñ">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Muioc'h a greditoù &amp; trugarekadurioù">
+<!ENTITY trellis.citationProcessing "Tretadur an arroudennoù &amp; levrlennadurioù">

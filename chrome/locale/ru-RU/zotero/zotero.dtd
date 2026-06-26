@@ -1,329 +1,329 @@
-<!ENTITY zotero.general.yes "Да">
-<!ENTITY zotero.general.no "Нет">
-<!ENTITY zotero.general.optional "(Опционально)">
-<!ENTITY zotero.general.note "Примечание:">
-<!ENTITY zotero.general.selectAll "Выбрать всё">
-<!ENTITY zotero.general.deselectAll "Отменить выбор всего">
-<!ENTITY zotero.general.edit "Редактировать">
-<!ENTITY zotero.general.delete "Удалить">
-<!ENTITY zotero.general.moveToTrash "Поместить в Корзину">
-<!ENTITY zotero.general.ok "ОК">
-<!ENTITY zotero.general.cancel "Отменить">
-<!ENTITY zotero.general.refresh "Обновить">
-<!ENTITY zotero.general.saveAs "Сохранить как...">
-<!ENTITY zotero.general.options "Настройки">
-<!ENTITY zotero.general.advancedOptions.label "Расширенные настройки">
-<!ENTITY zotero.general.tools "Инструменты">
-<!ENTITY zotero.general.more "Ещё">
-<!ENTITY zotero.general.moreInformation "Дополнительные сведения">
-<!ENTITY zotero.general.loading "Загрузка...">
-<!ENTITY zotero.general.close "Закрыть">
-<!ENTITY zotero.general.minimize "Свернуть">
-<!ENTITY zotero.general.other "Прочие…">
-<!ENTITY zotero.general.bigger "Увеличить">
-<!ENTITY zotero.general.smaller "Уменьшить">
-<!ENTITY zotero.general.reset "Сбросить">
+<!ENTITY trellis.general.yes "Да">
+<!ENTITY trellis.general.no "Нет">
+<!ENTITY trellis.general.optional "(Опционально)">
+<!ENTITY trellis.general.note "Примечание:">
+<!ENTITY trellis.general.selectAll "Выбрать всё">
+<!ENTITY trellis.general.deselectAll "Отменить выбор всего">
+<!ENTITY trellis.general.edit "Редактировать">
+<!ENTITY trellis.general.delete "Удалить">
+<!ENTITY trellis.general.moveToTrash "Поместить в Корзину">
+<!ENTITY trellis.general.ok "ОК">
+<!ENTITY trellis.general.cancel "Отменить">
+<!ENTITY trellis.general.refresh "Обновить">
+<!ENTITY trellis.general.saveAs "Сохранить как...">
+<!ENTITY trellis.general.options "Настройки">
+<!ENTITY trellis.general.advancedOptions.label "Расширенные настройки">
+<!ENTITY trellis.general.tools "Инструменты">
+<!ENTITY trellis.general.more "Ещё">
+<!ENTITY trellis.general.moreInformation "Дополнительные сведения">
+<!ENTITY trellis.general.loading "Загрузка...">
+<!ENTITY trellis.general.close "Закрыть">
+<!ENTITY trellis.general.minimize "Свернуть">
+<!ENTITY trellis.general.other "Прочие…">
+<!ENTITY trellis.general.bigger "Увеличить">
+<!ENTITY trellis.general.smaller "Уменьшить">
+<!ENTITY trellis.general.reset "Сбросить">
 
 
-<!ENTITY zotero.errorReport.title "Отчет об ошибке Zotero">
-<!ENTITY zotero.errorReport.submissionInProgress "Подождите, пока отчёт об ошибке будет отправлен.">
-<!ENTITY zotero.errorReport.submitted "Отчёт об ошибке отправлен.">
-<!ENTITY zotero.errorReport.reportID "Номер отчёта:">
-<!ENTITY zotero.errorReport.postToForums "Пожалуйста, оставьте сообщение на форуме Zotero (forums.zotero.org), указав этот номер отчёта, описание проблемы, и какие шаги нужно предпринять чтобы воспроизвести её.">
-<!ENTITY zotero.errorReport.notReviewed "Отчёты об ошибках не рассматриваются, пока на них не сослались в форуме.">
+<!ENTITY trellis.errorReport.title "Отчет об ошибке Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Подождите, пока отчёт об ошибке будет отправлен.">
+<!ENTITY trellis.errorReport.submitted "Отчёт об ошибке отправлен.">
+<!ENTITY trellis.errorReport.reportID "Номер отчёта:">
+<!ENTITY trellis.errorReport.postToForums "Пожалуйста, оставьте сообщение на форуме Trellis (forums.trellis.org), указав этот номер отчёта, описание проблемы, и какие шаги нужно предпринять чтобы воспроизвести её.">
+<!ENTITY trellis.errorReport.notReviewed "Отчёты об ошибках не рассматриваются, пока на них не сослались в форуме.">
 
-<!ENTITY zotero.upgrade.title "Мастер обновления Zotero">
-<!ENTITY zotero.upgrade.newVersionInstalled "Вы установили новую версию Zotero.">
-<!ENTITY zotero.upgrade.upgradeRequired "Ваша база данных Zotero должна быть обновлена для работы с новой версией.">
-<!ENTITY zotero.upgrade.autoBackup "Резервная копия вашей базы данных Zotero будет сделана автоматически до каких-либо изменений.">
-<!ENTITY zotero.upgrade.majorUpgrade "Это крупное обновление.">
-<!ENTITY zotero.upgrade.majorUpgradeBeforeLink "Пожалуйста, посмотрите">
-<!ENTITY zotero.upgrade.majorUpgradeLink "инструкцию к обновлению">
-<!ENTITY zotero.upgrade.majorUpgradeAfterLink "прежде чем продолжить.">
-<!ENTITY zotero.upgrade.upgradeInProgress "Дождитесь окончания процесса обновления. Это займёт некоторое время.">
-<!ENTITY zotero.upgrade.upgradeSucceeded "Ваша база данных Zotero была успешно обновлена.">
-<!ENTITY zotero.upgrade.changeLogBeforeLink "Пожалуйста, посмотрите">
-<!ENTITY zotero.upgrade.changeLogLink "журнал изменений">
-<!ENTITY zotero.upgrade.changeLogAfterLink "чтобы узнать что нового.">
+<!ENTITY trellis.upgrade.title "Мастер обновления Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Вы установили новую версию Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "Ваша база данных Trellis должна быть обновлена для работы с новой версией.">
+<!ENTITY trellis.upgrade.autoBackup "Резервная копия вашей базы данных Trellis будет сделана автоматически до каких-либо изменений.">
+<!ENTITY trellis.upgrade.majorUpgrade "Это крупное обновление.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Пожалуйста, посмотрите">
+<!ENTITY trellis.upgrade.majorUpgradeLink "инструкцию к обновлению">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "прежде чем продолжить.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Дождитесь окончания процесса обновления. Это займёт некоторое время.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Ваша база данных Trellis была успешно обновлена.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Пожалуйста, посмотрите">
+<!ENTITY trellis.upgrade.changeLogLink "журнал изменений">
+<!ENTITY trellis.upgrade.changeLogAfterLink "чтобы узнать что нового.">
 
-<!ENTITY zotero.tabs.notes.label "Заметки">
-<!ENTITY zotero.tabs.attachments.label "Вложения">
+<!ENTITY trellis.tabs.notes.label "Заметки">
+<!ENTITY trellis.tabs.attachments.label "Вложения">
 
-<!ENTITY zotero.toolbar.duplicate.label "Показать дубликаты">
-<!ENTITY zotero.collections.showUnfiledItems "Показать неподшитые записи">
-<!ENTITY zotero.collections.showRetractedItems "Показать отозванные записи">
+<!ENTITY trellis.toolbar.duplicate.label "Показать дубликаты">
+<!ENTITY trellis.collections.showUnfiledItems "Показать неподшитые записи">
+<!ENTITY trellis.collections.showRetractedItems "Показать отозванные записи">
 
-<!ENTITY zotero.items.itemType "Тип записи">
-<!ENTITY zotero.items.creator_column "Автор">
-<!ENTITY zotero.items.year_column "Год">
-<!ENTITY zotero.items.dateModified_column "Изменён">
-<!ENTITY zotero.items.moreColumns.label "Дополнительные столбцы">
-<!ENTITY zotero.items.restoreColumnOrder.label "Восстановить порядок столбцов">
+<!ENTITY trellis.items.itemType "Тип записи">
+<!ENTITY trellis.items.creator_column "Автор">
+<!ENTITY trellis.items.year_column "Год">
+<!ENTITY trellis.items.dateModified_column "Изменён">
+<!ENTITY trellis.items.moreColumns.label "Дополнительные столбцы">
+<!ENTITY trellis.items.restoreColumnOrder.label "Восстановить порядок столбцов">
 
-<!ENTITY zotero.items.menu.showInLibrary "Показать в библиотеке">
-<!ENTITY zotero.items.menu.attach.note "Добавить заметку">
-<!ENTITY zotero.items.menu.attach "Добавить вложение">
-<!ENTITY zotero.items.menu.attach.link.uri "Прикрепить ссылку на URI…">
-<!ENTITY zotero.items.menu.attach.file "Вложить сохранённую копию файла…">
-<!ENTITY zotero.items.menu.attach.fileLink "Вложить ссылку на файл…">
+<!ENTITY trellis.items.menu.showInLibrary "Показать в библиотеке">
+<!ENTITY trellis.items.menu.attach.note "Добавить заметку">
+<!ENTITY trellis.items.menu.attach "Добавить вложение">
+<!ENTITY trellis.items.menu.attach.link.uri "Прикрепить ссылку на URI…">
+<!ENTITY trellis.items.menu.attach.file "Вложить сохранённую копию файла…">
+<!ENTITY trellis.items.menu.attach.fileLink "Вложить ссылку на файл…">
 
-<!ENTITY zotero.items.menu.restoreToLibrary "Восстановить в библиотеке">
-<!ENTITY zotero.items.menu.duplicateItem "Сделать дубликат выбранной записи">
-<!ENTITY zotero.items.menu.mergeItems "Объединить записи...">
-<!ENTITY zotero.items.menu.unrecognize "Отменить получение метаданных">
+<!ENTITY trellis.items.menu.restoreToLibrary "Восстановить в библиотеке">
+<!ENTITY trellis.items.menu.duplicateItem "Сделать дубликат выбранной записи">
+<!ENTITY trellis.items.menu.mergeItems "Объединить записи...">
+<!ENTITY trellis.items.menu.unrecognize "Отменить получение метаданных">
 
-<!ENTITY zotero.duplicatesMerge.versionSelect "Выберите версию записи для использования в качестве главной:">
-<!ENTITY zotero.duplicatesMerge.fieldSelect "Выберите поля для сохранения из других версий записи:">
+<!ENTITY trellis.duplicatesMerge.versionSelect "Выберите версию записи для использования в качестве главной:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Выберите поля для сохранения из других версий записи:">
 
-<!ENTITY zotero.toolbar.newItem.label "Новая запись">
-<!ENTITY zotero.toolbar.moreItemTypes.label "Прочие типы публикаций">
-<!ENTITY zotero.toolbar.lookup.label "Добавить запись(-и) по идентификатору">
-<!ENTITY zotero.toolbar.removeItem.label "Удалить запись...">
-<!ENTITY zotero.toolbar.newGroup "Новая группа…">
-<!ENTITY zotero.toolbar.newSubcollection.label "Новая вложенная коллекция…">
-<!ENTITY zotero.toolbar.newSavedSearch.label "Новый отбор…">
-<!ENTITY zotero.toolbar.emptyTrash.label "Очистить корзину">
-<!ENTITY zotero.toolbar.tagSelector.label "Показать/спрятать панель выбора тегов">
-<!ENTITY zotero.toolbar.actions.label "Действия">
-<!ENTITY zotero.toolbar.import.label "Импортировать…">
-<!ENTITY zotero.toolbar.importFromClipboard "Импортировать из буфера обмена">
-<!ENTITY zotero.toolbar.export.label "Экспортировать библиотеку…">
-<!ENTITY zotero.toolbar.rtfScan.label "Поиск ссылок в RTF-документе">
-<!ENTITY zotero.toolbar.preferences.label "Настройки…">
-<!ENTITY zotero.toolbar.supportAndDocumentation "Поддержка и документация">
-<!ENTITY zotero.toolbar.about.label "О Zotero">
-<!ENTITY zotero.toolbar.advancedSearch "Расширенный поиск">
-<!ENTITY zotero.toolbar.openURL.label "Найти">
-<!ENTITY zotero.toolbar.openURL.tooltip "Найти в библиотеке на этом компьютере">
+<!ENTITY trellis.toolbar.newItem.label "Новая запись">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Прочие типы публикаций">
+<!ENTITY trellis.toolbar.lookup.label "Добавить запись(-и) по идентификатору">
+<!ENTITY trellis.toolbar.removeItem.label "Удалить запись...">
+<!ENTITY trellis.toolbar.newGroup "Новая группа…">
+<!ENTITY trellis.toolbar.newSubcollection.label "Новая вложенная коллекция…">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Новый отбор…">
+<!ENTITY trellis.toolbar.emptyTrash.label "Очистить корзину">
+<!ENTITY trellis.toolbar.tagSelector.label "Показать/спрятать панель выбора тегов">
+<!ENTITY trellis.toolbar.actions.label "Действия">
+<!ENTITY trellis.toolbar.import.label "Импортировать…">
+<!ENTITY trellis.toolbar.importFromClipboard "Импортировать из буфера обмена">
+<!ENTITY trellis.toolbar.export.label "Экспортировать библиотеку…">
+<!ENTITY trellis.toolbar.rtfScan.label "Поиск ссылок в RTF-документе">
+<!ENTITY trellis.toolbar.preferences.label "Настройки…">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Поддержка и документация">
+<!ENTITY trellis.toolbar.about.label "О Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Расширенный поиск">
+<!ENTITY trellis.toolbar.openURL.label "Найти">
+<!ENTITY trellis.toolbar.openURL.tooltip "Найти в библиотеке на этом компьютере">
 
-<!ENTITY zotero.toolbar.feeds.new "Добавить новостную ленту">
-<!ENTITY zotero.toolbar.feeds.new.fromURL "Из URL…">
-<!ENTITY zotero.toolbar.feeds.new.fromOPML "Из OPML…">
-<!ENTITY zotero.toolbar.feeds.edit "Редактировать новостную ленту…">
+<!ENTITY trellis.toolbar.feeds.new "Добавить новостную ленту">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Из URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Из OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Редактировать новостную ленту…">
 
-<!ENTITY zotero.item.add "Добавить">
-<!ENTITY zotero.item.attachment.file.show "Показать файл">
-<!ENTITY zotero.item.textTransform "Трансформировать текст">
-<!ENTITY zotero.item.textTransform.titlecase "Каждое Слово с Заглавной">
-<!ENTITY zotero.item.textTransform.sentencecase "Как в предложении">
-<!ENTITY zotero.item.creatorTransform.nameSwap "Поменять местами имя и фамилию">
-<!ENTITY zotero.item.creatorTransform.fixCase "Исправить регистр">
-<!ENTITY zotero.item.copyAsURL "Скопировать как URL">
-<!ENTITY zotero.item.deletePermanently "Удалить навсегда…">
+<!ENTITY trellis.item.add "Добавить">
+<!ENTITY trellis.item.attachment.file.show "Показать файл">
+<!ENTITY trellis.item.textTransform "Трансформировать текст">
+<!ENTITY trellis.item.textTransform.titlecase "Каждое Слово с Заглавной">
+<!ENTITY trellis.item.textTransform.sentencecase "Как в предложении">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Поменять местами имя и фамилию">
+<!ENTITY trellis.item.creatorTransform.fixCase "Исправить регистр">
+<!ENTITY trellis.item.copyAsURL "Скопировать как URL">
+<!ENTITY trellis.item.deletePermanently "Удалить навсегда…">
 
-<!ENTITY zotero.item.tags.removeAll "Удалить все теги…">
+<!ENTITY trellis.item.tags.removeAll "Удалить все теги…">
 
-<!ENTITY zotero.toolbar.newNote "Новая заметка">
-<!ENTITY zotero.toolbar.note.standalone "Новая отдельная заметка">
-<!ENTITY zotero.toolbar.note.child "Добавить дочернюю заметку">
-<!ENTITY zotero.toolbar.lookup "Найти по идентификатору…">
-<!ENTITY zotero.toolbar.attachment.linked "Связать с файлом…">
-<!ENTITY zotero.toolbar.attachment.add "Сохранить копию файла…">
-<!ENTITY zotero.toolbar.attachment.weblink "Сохранить ссылку на текущую страницу">
-<!ENTITY zotero.toolbar.attachment.snapshot "Сделать снимок текущей страницы">
-<!ENTITY zotero.toolbar.context.item "Запись">
-<!ENTITY zotero.toolbar.context.notes "Заметки">
+<!ENTITY trellis.toolbar.newNote "Новая заметка">
+<!ENTITY trellis.toolbar.note.standalone "Новая отдельная заметка">
+<!ENTITY trellis.toolbar.note.child "Добавить дочернюю заметку">
+<!ENTITY trellis.toolbar.lookup "Найти по идентификатору…">
+<!ENTITY trellis.toolbar.attachment.linked "Связать с файлом…">
+<!ENTITY trellis.toolbar.attachment.add "Сохранить копию файла…">
+<!ENTITY trellis.toolbar.attachment.weblink "Сохранить ссылку на текущую страницу">
+<!ENTITY trellis.toolbar.attachment.snapshot "Сделать снимок текущей страницы">
+<!ENTITY trellis.toolbar.context.item "Запись">
+<!ENTITY trellis.toolbar.context.notes "Заметки">
 
-<!ENTITY zotero.tagSelector.noTagsToDisplay "Нет тегов для отображения">
-<!ENTITY zotero.tagSelector.loadingTags "Загрузка тегов...">
-<!ENTITY zotero.tagSelector.showAutomatic "Показывать автоматически">
-<!ENTITY zotero.tagSelector.displayAllInLibrary "Показать все теги в библиотеке">
-<!ENTITY zotero.tagSelector.deleteAutomaticInLibrary "Удалить автоматические теги в этой библиотеке…">
-<!ENTITY zotero.tagSelector.clearAll "Отменить выбор">
-<!ENTITY zotero.tagSelector.assignColor "Назначить цвет…">
-<!ENTITY zotero.tagSelector.renameTag "Переименовать тег…">
-<!ENTITY zotero.tagSelector.deleteTag "Удалить тег…">
-<!ENTITY zotero.tagSelector.splitTag "Разделить…">
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Нет тегов для отображения">
+<!ENTITY trellis.tagSelector.loadingTags "Загрузка тегов...">
+<!ENTITY trellis.tagSelector.showAutomatic "Показывать автоматически">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Показать все теги в библиотеке">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Удалить автоматические теги в этой библиотеке…">
+<!ENTITY trellis.tagSelector.clearAll "Отменить выбор">
+<!ENTITY trellis.tagSelector.assignColor "Назначить цвет…">
+<!ENTITY trellis.tagSelector.renameTag "Переименовать тег…">
+<!ENTITY trellis.tagSelector.deleteTag "Удалить тег…">
+<!ENTITY trellis.tagSelector.splitTag "Разделить…">
 
-<!ENTITY zotero.tagColorChooser.title "Выбрать цвет и расположение тега">
-<!ENTITY zotero.tagColorChooser.color "Цвет:">
-<!ENTITY zotero.tagColorChooser.position "Расположение:">
-<!ENTITY zotero.tagColorChooser.setColor "Задать цвет">
-<!ENTITY zotero.tagColorChooser.removeColor "Удалить цвет">
+<!ENTITY trellis.tagColorChooser.title "Выбрать цвет и расположение тега">
+<!ENTITY trellis.tagColorChooser.color "Цвет:">
+<!ENTITY trellis.tagColorChooser.position "Расположение:">
+<!ENTITY trellis.tagColorChooser.setColor "Задать цвет">
+<!ENTITY trellis.tagColorChooser.removeColor "Удалить цвет">
 
-<!ENTITY zotero.lookup.description "Введите ISBN, DOI, PMID, arXiv ID, или ADS Bibcode чтобы пополнить вашу ими библиотеку:">
-<!ENTITY zotero.lookup.button.search "Поиск">
+<!ENTITY trellis.lookup.description "Введите ISBN, DOI, PMID, arXiv ID, или ADS Bibcode чтобы пополнить вашу ими библиотеку:">
+<!ENTITY trellis.lookup.button.search "Поиск">
 
-<!ENTITY zotero.createParent.title "Создать родительскую запись">
-<!ENTITY zotero.createParent.button.manual "Ввести вручную">
+<!ENTITY trellis.createParent.title "Создать родительскую запись">
+<!ENTITY trellis.createParent.button.manual "Ввести вручную">
 
-<!ENTITY zotero.selectitems.title "Выбрать записи">
-<!ENTITY zotero.selectitems.intro.label "Выбрать, какие записи вы хотите добавить в свою библиотеку">
-<!ENTITY zotero.selectitems.cancel.label "Отменить">
-<!ENTITY zotero.selectitems.select.label "ОК">
+<!ENTITY trellis.selectitems.title "Выбрать записи">
+<!ENTITY trellis.selectitems.intro.label "Выбрать, какие записи вы хотите добавить в свою библиотеку">
+<!ENTITY trellis.selectitems.cancel.label "Отменить">
+<!ENTITY trellis.selectitems.select.label "ОК">
 
-<!ENTITY zotero.bibliography.title "Создать библиографию">
-<!ENTITY zotero.bibliography.style.label "Стиль цитирования:">
-<!ENTITY zotero.bibliography.manageStyles "Управление стилями…">
-<!ENTITY zotero.bibliography.locale.label "Язык:">
-<!ENTITY zotero.bibliography.outputMode "Режим вывода:">
-<!ENTITY zotero.bibliography.bibliography "Библиография">
-<!ENTITY zotero.bibliography.outputMethod "Метод вывода:">
-<!ENTITY zotero.bibliography.saveAsRTF.label "Сохранить как RTF">
-<!ENTITY zotero.bibliography.saveAsHTML.label "Сохранить как HTML">
-<!ENTITY zotero.bibliography.copyToClipboard.label "Скопировать в буфер обмена">
-<!ENTITY zotero.bibliography.print.label "Распечатать">
+<!ENTITY trellis.bibliography.title "Создать библиографию">
+<!ENTITY trellis.bibliography.style.label "Стиль цитирования:">
+<!ENTITY trellis.bibliography.manageStyles "Управление стилями…">
+<!ENTITY trellis.bibliography.locale.label "Язык:">
+<!ENTITY trellis.bibliography.outputMode "Режим вывода:">
+<!ENTITY trellis.bibliography.bibliography "Библиография">
+<!ENTITY trellis.bibliography.outputMethod "Метод вывода:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Сохранить как RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Сохранить как HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Скопировать в буфер обмена">
+<!ENTITY trellis.bibliography.print.label "Распечатать">
 
-<!ENTITY zotero.integration.docPrefs.title "Параметры документа">
-<!ENTITY zotero.integration.addEditCitation.title "Добавить/редактировать цитирование">
-<!ENTITY zotero.integration.editBibliography.title "Редактировать библиографию">
+<!ENTITY trellis.integration.docPrefs.title "Параметры документа">
+<!ENTITY trellis.integration.addEditCitation.title "Добавить/редактировать цитирование">
+<!ENTITY trellis.integration.editBibliography.title "Редактировать библиографию">
 
-<!ENTITY zotero.progress.title "Ход выполнения">
+<!ENTITY trellis.progress.title "Ход выполнения">
 
-<!ENTITY zotero.import "Импорт">
-<!ENTITY zotero.import.whereToImportFrom "Откуда вы хотите импортировать?">
-<!ENTITY zotero.import.source.file "Файл (BibTeX, RIS, Zotero RDF, etc.)">
-<!ENTITY zotero.import.source.folder "Каталог файлов PDF и прочих">
-<!ENTITY zotero.import.onlineImport "Импорт из сетевого ресурса">
-<!ENTITY zotero.import.importing "Идёт импортирование…">
-<!ENTITY zotero.import.database "База данных">
-<!ENTITY zotero.import.lastModified "Последний раз изменено">
-<!ENTITY zotero.import.size "Размер (объём)">
-<!ENTITY zotero.import.createCollection "Поместить импортированные коллекции и записи в новую коллекцию">
-<!ENTITY zotero.import.fileHandling "Обработка файлов">
-<!ENTITY zotero.import.online.newItemsOnly "Загрузить только новые записи; не обновлять ранее импортированные записи">
+<!ENTITY trellis.import "Импорт">
+<!ENTITY trellis.import.whereToImportFrom "Откуда вы хотите импортировать?">
+<!ENTITY trellis.import.source.file "Файл (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "Каталог файлов PDF и прочих">
+<!ENTITY trellis.import.onlineImport "Импорт из сетевого ресурса">
+<!ENTITY trellis.import.importing "Идёт импортирование…">
+<!ENTITY trellis.import.database "База данных">
+<!ENTITY trellis.import.lastModified "Последний раз изменено">
+<!ENTITY trellis.import.size "Размер (объём)">
+<!ENTITY trellis.import.createCollection "Поместить импортированные коллекции и записи в новую коллекцию">
+<!ENTITY trellis.import.fileHandling "Обработка файлов">
+<!ENTITY trellis.import.online.newItemsOnly "Загрузить только новые записи; не обновлять ранее импортированные записи">
 
-<!ENTITY zotero.exportOptions.title "Экспорт…">
-<!ENTITY zotero.exportOptions.format.label "Формат:">
-<!ENTITY zotero.exportOptions.translatorOptions.label "Настройки транслятора:">
+<!ENTITY trellis.exportOptions.title "Экспорт…">
+<!ENTITY trellis.exportOptions.format.label "Формат:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Настройки транслятора:">
 
-<!ENTITY zotero.charset.label "Кодировка символов">
-<!ENTITY zotero.moreEncodings.label "Ещё кодировки">
+<!ENTITY trellis.charset.label "Кодировка символов">
+<!ENTITY trellis.moreEncodings.label "Ещё кодировки">
 
-<!ENTITY zotero.citation.keepSorted.label "Поддерживать источники отсортированными">
+<!ENTITY trellis.citation.keepSorted.label "Поддерживать источники отсортированными">
 
-<!ENTITY zotero.citation.suppressAuthor.label "Не выводить автора">
-<!ENTITY zotero.citation.prefix.label "Префикс:">
-<!ENTITY zotero.citation.suffix.label "Суффикс:">
-<!ENTITY zotero.citation.editorWarning.label "Предупреждение: Если вы измените цитату в редакторе, она перестанет отражать изменения в вашей базе данных или стиле цитирования.">
+<!ENTITY trellis.citation.suppressAuthor.label "Не выводить автора">
+<!ENTITY trellis.citation.prefix.label "Префикс:">
+<!ENTITY trellis.citation.suffix.label "Суффикс:">
+<!ENTITY trellis.citation.editorWarning.label "Предупреждение: Если вы измените цитату в редакторе, она перестанет отражать изменения в вашей базе данных или стиле цитирования.">
 
-<!ENTITY zotero.richText.italic.label "Курсив">
-<!ENTITY zotero.richText.bold.label "Полужирный">
-<!ENTITY zotero.richText.underline.label "Подчеркивание">
-<!ENTITY zotero.richText.superscript.label "Надстрочный">
-<!ENTITY zotero.richText.subscript.label "Подстрочный">
+<!ENTITY trellis.richText.italic.label "Курсив">
+<!ENTITY trellis.richText.bold.label "Полужирный">
+<!ENTITY trellis.richText.underline.label "Подчеркивание">
+<!ENTITY trellis.richText.superscript.label "Надстрочный">
+<!ENTITY trellis.richText.subscript.label "Подстрочный">
 
-<!ENTITY zotero.annotate.toolbar.add.label "Добавить аннотацию">
-<!ENTITY zotero.annotate.toolbar.collapse.label "Свернуть все аннотации">
-<!ENTITY zotero.annotate.toolbar.expand.label "Развернуть все аннотации">
-<!ENTITY zotero.annotate.toolbar.highlight.label "Выделить текст">
-<!ENTITY zotero.annotate.toolbar.unhighlight.label "Снять выделение текста">
+<!ENTITY trellis.annotate.toolbar.add.label "Добавить аннотацию">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Свернуть все аннотации">
+<!ENTITY trellis.annotate.toolbar.expand.label "Развернуть все аннотации">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Выделить текст">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Снять выделение текста">
 
-<!ENTITY zotero.integration.prefs.displayAs.label "Отобразить цитаты как:">
-<!ENTITY zotero.integration.prefs.footnotes.label "Сноски">
-<!ENTITY zotero.integration.prefs.endnotes.label "Концевые сноски">
+<!ENTITY trellis.integration.prefs.displayAs.label "Отобразить цитаты как:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Сноски">
+<!ENTITY trellis.integration.prefs.endnotes.label "Концевые сноски">
 
-<!ENTITY zotero.integration.prefs.formatUsing.label "Сохранить цитаты как:">
-<!ENTITY zotero.integration.prefs.bookmarks.label "Закладки">
-<!ENTITY zotero.integration.prefs.bookmarks.caption "Закладки могут использоваться совместно Word и LibreOffice, но при случайном изменении могут вызвать ошибки и не могут быть вставлены в концевые сноски.">
+<!ENTITY trellis.integration.prefs.formatUsing.label "Сохранить цитаты как:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Закладки">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Закладки могут использоваться совместно Word и LibreOffice, но при случайном изменении могут вызвать ошибки и не могут быть вставлены в концевые сноски.">
 
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.label "Авто-обновлять Цитаты">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.tooltip "Цитаты, ожидающие обновления, будут выделены в документе">
-<!ENTITY zotero.integration.prefs.automaticCitationUpdates.description "Отключите обновление библиографии, это ускорит вставку цитат в большие документы. Нажимайте «Обновить», чтобы обновить цитаты вручную.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Авто-обновлять Цитаты">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Цитаты, ожидающие обновления, будут выделены в документе">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Отключите обновление библиографии, это ускорит вставку цитат в большие документы. Нажимайте «Обновить», чтобы обновить цитаты вручную.">
 
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.label "Исп-ть MEDLINE аббревиатуры">
-<!ENTITY zotero.integration.prefs.automaticJournalAbbeviations.caption "Поле «Сокращ. журнала» будет проигнорировано.">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Исп-ть MEDLINE аббревиатуры">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Поле «Сокращ. журнала» будет проигнорировано.">
 
-<!ENTITY zotero.integration.prefs.exportDocument "Переключиться на другой текстовый редактор…">
+<!ENTITY trellis.integration.prefs.exportDocument "Переключиться на другой текстовый редактор…">
 
-<!ENTITY zotero.integration.showEditor.label "Показать редактор">
-<!ENTITY zotero.integration.classicView.label "Классический вид">
+<!ENTITY trellis.integration.showEditor.label "Показать редактор">
+<!ENTITY trellis.integration.classicView.label "Классический вид">
 
-<!ENTITY zotero.integration.references.label "Отсылки в Библиографии">
+<!ENTITY trellis.integration.references.label "Отсылки в Библиографии">
 
-<!ENTITY zotero.sync.stop "Прекратить синхронизацию">
-<!ENTITY zotero.sync.error "Ошибка синхронизации">
-<!ENTITY zotero.sync.storage.progress "Ход выполнения:">
-<!ENTITY zotero.sync.storage.downloads "Загрузки:">
-<!ENTITY zotero.sync.storage.uploads "Закачки:">
+<!ENTITY trellis.sync.stop "Прекратить синхронизацию">
+<!ENTITY trellis.sync.error "Ошибка синхронизации">
+<!ENTITY trellis.sync.storage.progress "Ход выполнения:">
+<!ENTITY trellis.sync.storage.downloads "Загрузки:">
+<!ENTITY trellis.sync.storage.uploads "Закачки:">
 
-<!ENTITY zotero.sync.longTagFixer.followingTagTooLong "Данный тег в вашей библиотеке Zotero слишком длинный для синхронизации с сервером:">
-<!ENTITY zotero.sync.longTagFixer.syncedTagSizeLimit "Синхронизируемые теги должны быть короче 256 символов.">
-<!ENTITY zotero.sync.longTagFixer.splitEditDelete "Вы можете разделить этот тег на несколько, укоротить его вручную или удалить его.">
-<!ENTITY zotero.sync.longTagFixer.split "Разделить">
-<!ENTITY zotero.sync.longTagFixer.splitAtThe "Разделить по">
-<!ENTITY zotero.sync.longTagFixer.character "символу">
-<!ENTITY zotero.sync.longTagFixer.characters "символам">
-<!ENTITY zotero.sync.longTagFixer.uncheckedTagsNotSaved "Неотмеченные теги не будут сохранены.">
-<!ENTITY zotero.sync.longTagFixer.tagWillBeDeleted "Тег будет удалён из всех записей.">
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Данный тег в вашей библиотеке Trellis слишком длинный для синхронизации с сервером:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Синхронизируемые теги должны быть короче 256 символов.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Вы можете разделить этот тег на несколько, укоротить его вручную или удалить его.">
+<!ENTITY trellis.sync.longTagFixer.split "Разделить">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Разделить по">
+<!ENTITY trellis.sync.longTagFixer.character "символу">
+<!ENTITY trellis.sync.longTagFixer.characters "символам">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Неотмеченные теги не будут сохранены.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Тег будет удалён из всех записей.">
 
-<!ENTITY zotero.merge.title "Разрешение конфликтов">
-<!ENTITY zotero.merge.of "для">
-<!ENTITY zotero.merge.deleted "Удалено">
+<!ENTITY trellis.merge.title "Разрешение конфликтов">
+<!ENTITY trellis.merge.of "для">
+<!ENTITY trellis.merge.deleted "Удалено">
 
-<!ENTITY zotero.proxy.recognized.title "Прокси распознан">
-<!ENTITY zotero.proxy.recognized.warning "Добавляйте только прокси, предоставляемые вашей библиотекой, учебным заведением или корпоративным сайтом.">
-<!ENTITY zotero.proxy.recognized.warning.secondary "Использование других прокси позволит злонамеренным сайтам маскироваться под сайты, которым вы доверяете.">
-<!ENTITY zotero.proxy.recognized.disable.label "Не перенаправлять автоматически запросы через ранее распознанные прокси">
-<!ENTITY zotero.proxy.recognized.ignore.label "Игнорировать">
+<!ENTITY trellis.proxy.recognized.title "Прокси распознан">
+<!ENTITY trellis.proxy.recognized.warning "Добавляйте только прокси, предоставляемые вашей библиотекой, учебным заведением или корпоративным сайтом.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Использование других прокси позволит злонамеренным сайтам маскироваться под сайты, которым вы доверяете.">
+<!ENTITY trellis.proxy.recognized.disable.label "Не перенаправлять автоматически запросы через ранее распознанные прокси">
+<!ENTITY trellis.proxy.recognized.ignore.label "Игнорировать">
 
-<!ENTITY zotero.feedSettings.title "Настройки новостных лент">
-<!ENTITY zotero.feedSettings.saveButton.label "Сохранить:">
-<!ENTITY zotero.feedSettings.url.label "URL:">
-<!ENTITY zotero.feedSettings.title.label "Заголовок:">
-<!ENTITY zotero.feedSettings.refresh.label1 "Обновлять новостную ленту каждые">
-<!ENTITY zotero.feedSettings.refresh.label2 "час(-а)">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label1 "Удалять непрочтённые записи ленты старше">
-<!ENTITY zotero.feedSettings.cleanupUnreadAfter.label2 "дня(-ей)">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label1 "Удалять прочтённые записи ленты старше">
-<!ENTITY zotero.feedSettings.cleanupReadAfter.label2 "дня(-ей)">
+<!ENTITY trellis.feedSettings.title "Настройки новостных лент">
+<!ENTITY trellis.feedSettings.saveButton.label "Сохранить:">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Заголовок:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Обновлять новостную ленту каждые">
+<!ENTITY trellis.feedSettings.refresh.label2 "час(-а)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Удалять непрочтённые записи ленты старше">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "дня(-ей)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Удалять прочтённые записи ленты старше">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "дня(-ей)">
 
-<!ENTITY zotero.rtfScan.title "Сканирование RTF">
-<!ENTITY zotero.rtfScan.cancel.label "Отмена">
-<!ENTITY zotero.rtfScan.citation.label "Цитата">
-<!ENTITY zotero.rtfScan.itemName.label "Имя записи">
-<!ENTITY zotero.rtfScan.unmappedCitations.label "Неопределённые цитаты">
-<!ENTITY zotero.rtfScan.ambiguousCitations.label "Неоднозначные цитаты">
-<!ENTITY zotero.rtfScan.mappedCitations.label "Определённые цитаты">
-<!ENTITY zotero.rtfScan.introPage.label "Введение">
-<!ENTITY zotero.rtfScan.introPage.description "Zotero может автоматически извлекать и переформатировать цитаты, а также вставлять библиографию в файл RTF. В настоящее время функция сканирования RTF распознаёт цитаты в следующих форматах:">
-<!ENTITY zotero.rtfScan.introPage.description2 "Чтобы начать, выберите ниже входной файл RTF и выходной файл:">
-<!ENTITY zotero.rtfScan.scanPage.label "Сканирование на наличие цитат">
-<!ENTITY zotero.rtfScan.scanPage.description "Zotero сканирует ваш документ на наличие цитат. Пожалуйста, подождите.">
-<!ENTITY zotero.rtfScan.citationsPage.label "Проверить цитированные записи">
-<!ENTITY zotero.rtfScan.citationsPage.description "Пожалуйста, проверьте список распознанных цитат, чтобы убедиться, что Zotero правильно выбрал соответствующие записи. Необходимо принять решение по всем неопределённым или неоднозначным цитатам, прежде чем перейти к следующему шагу.">
-<!ENTITY zotero.rtfScan.stylePage.label "Форматирование документа">
-<!ENTITY zotero.rtfScan.formatPage.label "Форматирование цитат">
-<!ENTITY zotero.rtfScan.formatPage.description "Zotero обрабатывает и форматирует ваш файл RTF. Пожалуйста, подождите.">
-<!ENTITY zotero.rtfScan.completePage.label "Сканирование RTF завершено">
-<!ENTITY zotero.rtfScan.completePage.description "Ваш документ был сканирован и обработан. Пожалуйста, проверьте, что он отформатирован правильно.">
-<!ENTITY zotero.rtfScan.inputFile.label "Входной файл">
-<!ENTITY zotero.rtfScan.outputFile.label "Выходной файл">
+<!ENTITY trellis.rtfScan.title "Сканирование RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Отмена">
+<!ENTITY trellis.rtfScan.citation.label "Цитата">
+<!ENTITY trellis.rtfScan.itemName.label "Имя записи">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Неопределённые цитаты">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Неоднозначные цитаты">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Определённые цитаты">
+<!ENTITY trellis.rtfScan.introPage.label "Введение">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis может автоматически извлекать и переформатировать цитаты, а также вставлять библиографию в файл RTF. В настоящее время функция сканирования RTF распознаёт цитаты в следующих форматах:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Чтобы начать, выберите ниже входной файл RTF и выходной файл:">
+<!ENTITY trellis.rtfScan.scanPage.label "Сканирование на наличие цитат">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis сканирует ваш документ на наличие цитат. Пожалуйста, подождите.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Проверить цитированные записи">
+<!ENTITY trellis.rtfScan.citationsPage.description "Пожалуйста, проверьте список распознанных цитат, чтобы убедиться, что Trellis правильно выбрал соответствующие записи. Необходимо принять решение по всем неопределённым или неоднозначным цитатам, прежде чем перейти к следующему шагу.">
+<!ENTITY trellis.rtfScan.stylePage.label "Форматирование документа">
+<!ENTITY trellis.rtfScan.formatPage.label "Форматирование цитат">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis обрабатывает и форматирует ваш файл RTF. Пожалуйста, подождите.">
+<!ENTITY trellis.rtfScan.completePage.label "Сканирование RTF завершено">
+<!ENTITY trellis.rtfScan.completePage.description "Ваш документ был сканирован и обработан. Пожалуйста, проверьте, что он отформатирован правильно.">
+<!ENTITY trellis.rtfScan.inputFile.label "Входной файл">
+<!ENTITY trellis.rtfScan.outputFile.label "Выходной файл">
 
-<!ENTITY zotero.file.choose.label "Выберите файл…">
-<!ENTITY zotero.file.noneSelected.label "Файл не выбран">
+<!ENTITY trellis.file.choose.label "Выберите файл…">
+<!ENTITY trellis.file.noneSelected.label "Файл не выбран">
 
-<!ENTITY zotero.attachLink.title "Вложить ссылку на URI">
-<!ENTITY zotero.attachLink.label.link "Ссылка:">
-<!ENTITY zotero.attachLink.label.title "Заголовок:">
+<!ENTITY trellis.attachLink.title "Вложить ссылку на URI">
+<!ENTITY trellis.attachLink.label.link "Ссылка:">
+<!ENTITY trellis.attachLink.label.title "Заголовок:">
 
-<!ENTITY zotero.context.addChildNote "Добавить заметку">
-<!ENTITY zotero.context.addChildNoteFromAnnotations "Создать заметку из аннотаций">
-<!ENTITY zotero.context.addStandaloneNote "Создать отдельную заметку">
-<!ENTITY zotero.context.addStandaloneNoteFromAnnotations "Создать отдельную заметку из аннотаций">
-<!ENTITY zotero.context.editInWindow "Редактировать в отдельном окне">
+<!ENTITY trellis.context.addChildNote "Добавить заметку">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Создать заметку из аннотаций">
+<!ENTITY trellis.context.addStandaloneNote "Создать отдельную заметку">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Создать отдельную заметку из аннотаций">
+<!ENTITY trellis.context.editInWindow "Редактировать в отдельном окне">
 
-<!ENTITY zotero.pdfReader.firstPage "Первая страница">
-<!ENTITY zotero.pdfReader.lastPage "Последняя страница">
-<!ENTITY zotero.pdfReader.back "Назад">
-<!ENTITY zotero.pdfReader.forward "Вперёд">
-<!ENTITY zotero.pdfReader.handTool "Инструмент-рука">
-<!ENTITY zotero.pdfReader.verticalScrolling "Вертикальная прокрутка">
-<!ENTITY zotero.pdfReader.horizontalScrolling "Горизонтальная прокрутка">
-<!ENTITY zotero.pdfReader.wrappedScrolling "Завернутая прокрутка">
-<!ENTITY zotero.pdfReader.noSpreads "Нет Разворота">
-<!ENTITY zotero.pdfReader.oddSpreads "Развороты с нечётных номеров">
-<!ENTITY zotero.pdfReader.evenSpreads "Развороты с чётных номеров">
-<!ENTITY zotero.pdfReader.scrolled "С прокруткой">
-<!ENTITY zotero.pdfReader.paginated "Постранично">
-<!ENTITY zotero.pdfReader.zoomIn "Увеличить">
-<!ENTITY zotero.pdfReader.zoomOut "Уменьшить">
-<!ENTITY zotero.pdfReader.zoomReset "Масштаб 100&#37;">
-<!ENTITY zotero.pdfReader.zoomAuto "Масштабировать автоматически">
-<!ENTITY zotero.pdfReader.zoomPageWidth "По ширине страницы">
-<!ENTITY zotero.pdfReader.zoomPageHeight "По высоте страницы">
-<!ENTITY zotero.pdfReader.splitVertically "Разделить вертикально">
-<!ENTITY zotero.pdfReader.splitHorizontally "Разделить горизонтально">
-<!ENTITY zotero.pdfReader.transferFromPDF "Импорт аннотаций…">
-<!ENTITY zotero.pdfReader.rotatePageLeft "Повернуть страницу влево">
-<!ENTITY zotero.pdfReader.rotatePageRight "Повернуть страницу вправо">
+<!ENTITY trellis.pdfReader.firstPage "Первая страница">
+<!ENTITY trellis.pdfReader.lastPage "Последняя страница">
+<!ENTITY trellis.pdfReader.back "Назад">
+<!ENTITY trellis.pdfReader.forward "Вперёд">
+<!ENTITY trellis.pdfReader.handTool "Инструмент-рука">
+<!ENTITY trellis.pdfReader.verticalScrolling "Вертикальная прокрутка">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Горизонтальная прокрутка">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Завернутая прокрутка">
+<!ENTITY trellis.pdfReader.noSpreads "Нет Разворота">
+<!ENTITY trellis.pdfReader.oddSpreads "Развороты с нечётных номеров">
+<!ENTITY trellis.pdfReader.evenSpreads "Развороты с чётных номеров">
+<!ENTITY trellis.pdfReader.scrolled "С прокруткой">
+<!ENTITY trellis.pdfReader.paginated "Постранично">
+<!ENTITY trellis.pdfReader.zoomIn "Увеличить">
+<!ENTITY trellis.pdfReader.zoomOut "Уменьшить">
+<!ENTITY trellis.pdfReader.zoomReset "Масштаб 100&#37;">
+<!ENTITY trellis.pdfReader.zoomAuto "Масштабировать автоматически">
+<!ENTITY trellis.pdfReader.zoomPageWidth "По ширине страницы">
+<!ENTITY trellis.pdfReader.zoomPageHeight "По высоте страницы">
+<!ENTITY trellis.pdfReader.splitVertically "Разделить вертикально">
+<!ENTITY trellis.pdfReader.splitHorizontally "Разделить горизонтально">
+<!ENTITY trellis.pdfReader.transferFromPDF "Импорт аннотаций…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Повернуть страницу влево">
+<!ENTITY trellis.pdfReader.rotatePageRight "Повернуть страницу вправо">

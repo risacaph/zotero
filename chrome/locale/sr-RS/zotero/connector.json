@@ -183,7 +183,7 @@
     "message": "$1 не може да ступи у везу са $2 програмом за рачунар. $2 мора бити отворен како би користили цитирање помоћу веба."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Овај документ садржи активне Зотерове цитате који ће бити приказани као везе на zotero.org у преузетим копијама."
+    "message": "Овај документ садржи активне Зотерове цитате који ће бити приказани као везе на trellis.org у преузетим копијама."
   },
   "integration_googleDocs_unlinkBeforeSaving_instructions": {
     "message": "Да направите верзију која је погодна за дељење, изаберите <b>Направи копију…</b> из менија ставке, а затим <b>Уклони везе до цитата</b> из Зотеровог менија нове ставке и на крају преузмите копију без веза. Увек чувајте оригиналне везе до докумената у случају да вам буду потребне додатне измене."
@@ -195,7 +195,7 @@
     "message": "$1 ажурира ваш документ."
   },
   "integration_googleDocs_docxAlert": {
-    "message": "$1 интеграција није доступна када уређујете Microsoft Word .docx датотеке у Google Документима. Изаберите Датотека → Сачувај као Google Документ да омогућите интеграцију.<br/><br/>Уколико желите да пренесете документе из Word-а са $1 цитата у Google Документе, погледајте текст о <a href=\"https://www.zotero.org/support/kb/moving_documents_between_word_processors\">дељењу докумената између програма за обраду текста</a>."
+    "message": "$1 интеграција није доступна када уређујете Microsoft Word .docx датотеке у Google Документима. Изаберите Датотека → Сачувај као Google Документ да омогућите интеграцију.<br/><br/>Уколико желите да пренесете документе из Word-а са $1 цитата у Google Документе, погледајте текст о <a href=\"https://www.trellis.org/support/kb/moving_documents_between_word_processors\">дељењу докумената између програма за обраду текста</a>."
   },
   "integration_googleDocs_documentLocked": {
     "message": "Цитате документа уређује други корисник $1. Покушајте поново мало касније."
@@ -219,7 +219,7 @@
     "message": "Поново повежи цитат"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Ови цитати си постали <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">невезани са $1</a>. Потребно је да их поново повежете пре него што буду ажурирани или приказани унутар ваше библиографије."
+    "message": "Ови цитати си постали <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">невезани са $1</a>. Потребно је да их поново повежете пре него што буду ажурирани или приказани унутар ваше библиографије."
   },
   "copyUnproxiedLink": {
     "message": "Копирај везу без проксија"

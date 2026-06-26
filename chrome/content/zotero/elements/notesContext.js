@@ -3,22 +3,22 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -28,7 +28,7 @@
 	class NotesContext extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
 			<deck class="context-node" flex="1" selectedIndex="0">
-				<vbox class="zotero-context-notes-list" flex="1">
+				<vbox class="trellis-context-notes-list" flex="1">
 					<hbox style="display: flex;">
 						<vbox style="flex: 1;">
 							<search-textbox data-l10n-id="context-notes-search" data-l10n-attrs="placeholder"
@@ -43,46 +43,46 @@
 						</html:div>
 					</vbox>
 				</vbox>
-				<vbox class="zotero-context-note-container context-note-standalone">
-					<vbox class="zotero-context-pane-editor-parent-line">
+				<vbox class="trellis-context-note-container context-note-standalone">
+					<vbox class="trellis-context-pane-editor-parent-line">
 						<html:div class="parent-title-container">
-							<toolbarbutton class="zotero-tb-note-return" tabindex="0" data-l10n-id="context-notes-return-button"></toolbarbutton>
+							<toolbarbutton class="trellis-tb-note-return" tabindex="0" data-l10n-id="context-notes-return-button"></toolbarbutton>
 							<html:div class="parent-title"></html:div>
 						</html:div>
 					</vbox>
 					<html:div class="divider"></html:div>
 				</vbox>
-				<vbox class="zotero-context-note-container context-note-child">
-					<vbox class="zotero-context-pane-editor-parent-line">
+				<vbox class="trellis-context-note-container context-note-child">
+					<vbox class="trellis-context-pane-editor-parent-line">
 						<html:div class="parent-title-container">
-							<toolbarbutton class="zotero-tb-note-return" tabindex="0" data-l10n-id="context-notes-return-button"></toolbarbutton>
+							<toolbarbutton class="trellis-tb-note-return" tabindex="0" data-l10n-id="context-notes-return-button"></toolbarbutton>
 							<html:div class="parent-title"></html:div>
 						</html:div>
 					</vbox>
 					<html:div class="divider"></html:div>
-					<deck class="zotero-context-pane-tab-notes-deck" flex="1"></deck>
+					<deck class="trellis-context-pane-tab-notes-deck" flex="1"></deck>
 				</vbox>
 			</deck>
 			
 			<popupset>
 				<menupopup class="context-pane-add-child-note-button-popup">
-					<menuitem class="context-pane-add-child-note" label="&zotero.context.addChildNote;"/>
-					<menuitem class="context-pane-add-child-note-from-annotations" label="&zotero.context.addChildNoteFromAnnotations;"/>
+					<menuitem class="context-pane-add-child-note" label="&trellis.context.addChildNote;"/>
+					<menuitem class="context-pane-add-child-note-from-annotations" label="&trellis.context.addChildNoteFromAnnotations;"/>
 				</menupopup>
 		
 				<menupopup class="context-pane-add-standalone-note-button-popup">
-					<menuitem class="context-pane-add-standalone-note" label="&zotero.context.addStandaloneNote;"/>
-					<menuitem class="context-pane-add-standalone-note-from-annotations" label="&zotero.context.addStandaloneNoteFromAnnotations;"/>
+					<menuitem class="context-pane-add-standalone-note" label="&trellis.context.addStandaloneNote;"/>
+					<menuitem class="context-pane-add-standalone-note-from-annotations" label="&trellis.context.addStandaloneNoteFromAnnotations;"/>
 				</menupopup>
 				
 				<menupopup class="context-pane-list-popup">
-					<menuitem class="context-pane-list-show-in-library" label="&zotero.items.menu.showInLibrary;"/>
-					<menuitem class="context-pane-list-edit-in-window" label="&zotero.context.editInWindow;"/>
+					<menuitem class="context-pane-list-show-in-library" label="&trellis.items.menu.showInLibrary;"/>
+					<menuitem class="context-pane-list-edit-in-window" label="&trellis.context.editInWindow;"/>
 					<menuseparator/>
-					<menuitem class="context-pane-list-move-to-trash" label="&zotero.general.moveToTrash;"/>
+					<menuitem class="context-pane-list-move-to-trash" label="&trellis.general.moveToTrash;"/>
 				</menupopup>
 			</popupset>
-		`, ['chrome://zotero/locale/zotero.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd']);
 
 		get editable() {
 			return this._editable;
@@ -99,7 +99,7 @@
 		
 		set libraryID(libraryID) {
 			this.node.dataset.libraryId = libraryID;
-			this.editable = Zotero.Libraries.get(libraryID).editable;
+			this.editable = Trellis.Libraries.get(libraryID).editable;
 		}
 
 		get selectedIndex() {
@@ -148,7 +148,7 @@
 			}
 		}
 
-		update = Zotero.Utilities.throttle(this._updateNotesList, 1000, { leading: false });
+		update = Trellis.Utilities.throttle(this._updateNotesList, 1000, { leading: false });
 
 		cachedNotes = [];
 
@@ -158,7 +158,7 @@
 			this.node = this.querySelector(".context-node");
 			this.notesList = this.querySelector("context-notes-list");
 			this.standaloneNoteContainer = this.querySelector('.context-note-standalone');
-			this.tabNotesDeck = this.querySelector('.zotero-context-pane-tab-notes-deck');
+			this.tabNotesDeck = this.querySelector('.trellis-context-pane-tab-notes-deck');
 			this.input = this.querySelector("search-textbox");
 			this.input.addEventListener('command', () => {
 				this.notesList.expanded = false;
@@ -183,14 +183,14 @@
 		_initNotesList() {
 			this.notesList.addEventListener('note-click', (event) => {
 				let { id } = event.detail;
-				let item = Zotero.Items.get(id);
+				let item = Trellis.Items.get(id);
 				if (item) {
 					this._setPinnedNote(item);
 				}
 			});
 			this.notesList.addEventListener('note-contextmenu', (event) => {
 				let { id, screenX, screenY } = event.detail;
-				let item = Zotero.Items.get(id);
+				let item = Trellis.Items.get(id);
 				if (item) {
 					this.querySelector('.context-pane-list-move-to-trash').setAttribute('disabled', !this.editable);
 					let popup = this.querySelector('.context-pane-list-popup');
@@ -205,14 +205,14 @@
 			this.notesList.addEventListener('add-child', (event) => {
 				this.querySelector('.context-pane-add-child-note').setAttribute('disabled', !this.editable);
 				this.querySelector('.context-pane-add-child-note-from-annotations').setAttribute('disabled', !this.editable);
-				Zotero.MenuManager.updateMenuPopup(addChildNotePopup, "notesPane/addItemNote", {
+				Trellis.MenuManager.updateMenuPopup(addChildNotePopup, "notesPane/addItemNote", {
 					event: undefined,
 					getContext: () => {
 						let ret = {
 							items: [this._getCurrentAttachment()],
 						};
-						if (typeof Zotero_Tabs !== 'undefined') {
-							let { id, type, subType } = Zotero_Tabs.getTabInfo();
+						if (typeof Trellis_Tabs !== 'undefined') {
+							let { id, type, subType } = Trellis_Tabs.getTabInfo();
 							ret.tabID = id;
 							ret.tabType = type;
 							ret.tabSubType = subType;
@@ -229,14 +229,14 @@
 			this.notesList.addEventListener('add-standalone', (event) => {
 				this.querySelector('.context-pane-add-standalone-note').setAttribute('disabled', !this.editable);
 				this.querySelector('.context-pane-add-standalone-note-from-annotations').setAttribute('disabled', !this.editable);
-				Zotero.MenuManager.updateMenuPopup(addStandaloneNotePopup, "notesPane/addStandaloneNote", {
+				Trellis.MenuManager.updateMenuPopup(addStandaloneNotePopup, "notesPane/addStandaloneNote", {
 					event: undefined,
 					getContext: () => {
 						let ret = {
 							items: [this._getCurrentAttachment()],
 						};
-						if (typeof Zotero_Tabs !== 'undefined') {
-							let { id, type, subType } = Zotero_Tabs.getTabInfo();
+						if (typeof Trellis_Tabs !== 'undefined') {
+							let { id, type, subType } = Trellis_Tabs.getTabInfo();
 							ret.tabID = id;
 							ret.tabType = type;
 							ret.tabSubType = subType;
@@ -254,7 +254,7 @@
 		}
 
 		_initNoteEditor() {
-			this.querySelectorAll(".zotero-tb-note-return").forEach(
+			this.querySelectorAll(".trellis-tb-note-return").forEach(
 				btn => btn.addEventListener("command", this._handleNoteEditorReturn));
 		}
 
@@ -267,14 +267,14 @@
 			if (!annotations.length) {
 				return;
 			}
-			let note = await Zotero.EditorInstance.createNoteFromAnnotations(
+			let note = await Trellis.EditorInstance.createNoteFromAnnotations(
 				annotations,
 				{
 					parentID: child && attachment.parentID
 				}
 			);
 
-			ZoteroContextPane.updateAddToNote();
+			TrellisContextPane.updateAddToNote();
 
 			this.input.value = '';
 			this._updateNotesList();
@@ -284,7 +284,7 @@
 
 		_createNote(child) {
 			this.mode = "standaloneNote";
-			let item = new Zotero.Item('note');
+			let item = new Trellis.Item('note');
 			item.libraryID = this.libraryID;
 			if (child) {
 				let attachment = this._getCurrentAttachment();
@@ -294,24 +294,24 @@
 				item.parentID = attachment.parentID;
 			}
 			this._setPinnedNote(item);
-			ZoteroContextPane.updateAddToNote();
+			TrellisContextPane.updateAddToNote();
 			
 			this.input.value = '';
 			this._updateNotesList();
 		}
 
 		_isNotesListVisible() {
-			let splitter = ZoteroContextPane.splitter;
+			let splitter = TrellisContextPane.splitter;
 			
-			return Zotero_Tabs.selectedID != 'zotero-pane'
-				&& ZoteroContextPane.context.mode == "notes"
+			return Trellis_Tabs.selectedID != 'trellis-pane'
+				&& TrellisContextPane.context.mode == "notes"
 				&& this.mode == "notesList"
 				&& splitter.getAttribute('state') != 'collapsed';
 		}
 
 		_getCurrentEditor() {
-			let splitter = ZoteroContextPane.splitter;
-			if (splitter.getAttribute('state') == 'collapsed' || ZoteroContextPane.context.mode != "notes") return null;
+			let splitter = TrellisContextPane.splitter;
+			if (splitter.getAttribute('state') == 'collapsed' || TrellisContextPane.context.mode != "notes") return null;
 			switch (this.mode) {
 				case "childNote": {
 					return this.tabNotesDeck.selectedPanel?.querySelector("note-editor");
@@ -327,18 +327,18 @@
 		}
 
 		_getCurrentAttachment() {
-			let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+			let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 			if (reader) {
-				return Zotero.Items.get(reader.itemID);
+				return Trellis.Items.get(reader.itemID);
 			}
 			return null;
 		}
 
 		_setPinnedNote(item) {
 			let isChild = false;
-			let reader = Zotero.Reader.getByTabID(Zotero_Tabs.selectedID);
+			let reader = Trellis.Reader.getByTabID(Trellis_Tabs.selectedID);
 			if (reader) {
-				let attachment = Zotero.Items.get(reader.itemID);
+				let attachment = Trellis.Items.get(reader.itemID);
 				if (attachment.parentItemID == item.parentItemID) {
 					isChild = true;
 				}
@@ -348,7 +348,7 @@
 
 			if (isChild) {
 				let vbox = document.createXULElement('vbox');
-				vbox.setAttribute('data-tab-id', Zotero_Tabs.selectedID);
+				vbox.setAttribute('data-tab-id', Trellis_Tabs.selectedID);
 				vbox.style.display = 'flex';
 
 				editor = document.createXULElement('note-editor');
@@ -368,7 +368,7 @@
 				}
 				else {
 					editor = document.createXULElement('note-editor');
-					editor.classList.add("zotero-context-pane-pinned-note");
+					editor.classList.add("trellis-context-pane-pinned-note");
 					editor.style.flex = "1";
 
 					this.standaloneNoteContainer.append(editor);
@@ -383,7 +383,7 @@
 			editor.focus();
 
 			this.updatePinnedNoteTitle();
-			ZoteroContextPane.updateAddToNote();
+			TrellisContextPane.updateAddToNote();
 		}
 
 		updatePinnedNoteTitle() {
@@ -399,7 +399,7 @@
 
 
 		switchToTab(tabID) {
-			if (ZoteroContextPane.context.mode !== "notes") {
+			if (TrellisContextPane.context.mode !== "notes") {
 				return;
 			}
 			// Use childNote if find one
@@ -417,7 +417,7 @@
 			else {
 				this.mode = "notesList";
 			}
-			ZoteroContextPane.updateAddToNote();
+			TrellisContextPane.updateAddToNote();
 		}
 
 		async _updateNotesList(useCached) {
@@ -435,19 +435,19 @@
 				notes = this.cachedNotes;
 			}
 			else {
-				await Zotero.Schema.schemaUpdatePromise;
-				let s = new Zotero.Search();
+				await Trellis.Schema.schemaUpdatePromise;
+				let s = new Trellis.Search();
 				s.addCondition('libraryID', 'is', this.libraryID);
 				s.addCondition('itemType', 'is', 'note');
 				if (query) {
-					let parts = Zotero.SearchConditions.parseSearchString(query);
+					let parts = Trellis.SearchConditions.parseSearchString(query);
 					for (let part of parts) {
 						s.addCondition('note', 'contains', part.text);
 					}
 				}
 				notes = await s.search();
-				notes = Zotero.Items.get(notes);
-				if (Zotero.Prefs.get('sortNotesChronologically.reader')) {
+				notes = Trellis.Items.get(notes);
+				if (Trellis.Prefs.get('sortNotesChronologically.reader')) {
 					notes.sort((a, b) => {
 						a = a.dateModified;
 						b = b.dateModified;
@@ -455,10 +455,10 @@
 					});
 				}
 				else {
-					let collation = Zotero.getLocaleCollation();
+					let collation = Trellis.getLocaleCollation();
 					notes.sort((a, b) => {
-						let aTitle = Zotero.Items.getSortTitle(a.getNoteTitle());
-						let bTitle = Zotero.Items.getSortTitle(b.getNoteTitle());
+						let aTitle = Trellis.Items.getSortTitle(a.getNoteTitle());
+						let bTitle = Trellis.Items.getSortTitle(b.getNoteTitle());
 						return collation.compareString(1, aTitle, bTitle);
 					});
 				}
@@ -478,17 +478,17 @@
 						}
 					}
 					let text = note.note;
-					text = Zotero.Utilities.unescapeHTML(text);
+					text = Trellis.Utilities.unescapeHTML(text);
 					text = text.trim();
 					text = text.slice(0, 500);
 					let parts = text.split('\n').map(x => x.trim()).filter(x => x.length);
-					let title = parts[0] && parts[0].slice(0, Zotero.Notes.MAX_TITLE_LENGTH);
-					let date = Zotero.Date.sqlToDate(note.dateModified, true);
-					date = Zotero.Date.toFriendlyDate(date);
+					let title = parts[0] && parts[0].slice(0, Trellis.Notes.MAX_TITLE_LENGTH);
+					let date = Trellis.Date.sqlToDate(note.dateModified, true);
+					date = Trellis.Date.toFriendlyDate(date);
 					
 					return {
 						id: note.id,
-						title: title || Zotero.getString('pane.item.notes.untitled'),
+						title: title || Trellis.getString('pane.item.notes.untitled'),
 						body: parts[1] || '',
 						date,
 						parentID: note.parentID,
@@ -512,17 +512,17 @@
 		_handleListPopupCommand(id, event) {
 			switch (event.originalTarget.classList[0]) {
 				case 'context-pane-list-show-in-library':
-					ZoteroPane_Local.selectItem(id);
-					Zotero_Tabs.select('zotero-pane');
+					TrellisPane_Local.selectItem(id);
+					Trellis_Tabs.select('trellis-pane');
 					break;
 
 				case 'context-pane-list-edit-in-window':
-					ZoteroPane.openNote(id, { openInWindow: true });
+					TrellisPane.openNote(id, { openInWindow: true });
 					break;
 
 				case 'context-pane-list-move-to-trash':
 					if (this.editable) {
-						Zotero.Items.trashTx(id);
+						Trellis.Items.trashTx(id);
 						this.cachedNotes = this.cachedNotes.filter(x => x.id != id);
 						this._updateNotesList(true);
 					}
@@ -573,7 +573,7 @@
 			}
 			// Immediately save note content before vbox with note-editor iframe is destroyed below
 			editor.saveSync();
-			ZoteroContextPane.context.mode = "notes";
+			TrellisContextPane.context.mode = "notes";
 
 			switch (this.mode) {
 				case "childNote": {
@@ -591,7 +591,7 @@
 			}
 
 			this.mode = "notesList";
-			ZoteroContextPane.updateAddToNote();
+			TrellisContextPane.updateAddToNote();
 		};
 	}
 	customElements.define("notes-context", NotesContext);

@@ -1,24 +1,24 @@
 ChromeUtils.defineESModuleGetters(globalThis, {
-	Zotero: "chrome://zotero/content/zotero.mjs",
+	Trellis: "chrome://trellis/content/trellis.mjs",
 });
 
-export class ZoteroPrintParent extends JSWindowActorParent {
+export class TrellisPrintParent extends JSWindowActorParent {
 	async receiveMessage({ name, data }) {
 		switch (name) {
-			case "zoteroPrint": {
-				await this.zoteroPrint(data || {});
+			case "trellisPrint": {
+				await this.trellisPrint(data || {});
 			}
 		}
 	}
 
 	/**
-	 * A custom print function to work around Zotero 7 printing issues
+	 * A custom print function to work around Trellis 7 printing issues
 	 * @param {Object} [options]
 	 * @param {Object} [options.overrideSettings] PrintUtils.getPrintSettings() settings to override
 	 * @returns {Promise<void>}
 	 */
-	async zoteroPrint(options = {}) {
-		let win = Zotero.getMainWindow();
+	async trellisPrint(options = {}) {
+		let win = Trellis.getMainWindow();
 		if (win) {
 			let { PrintUtils } = win;
 			let settings = PrintUtils.getPrintSettings("", false);

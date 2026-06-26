@@ -3,28 +3,28 @@
     
     Copyright © 2015 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 /**
- * Zotero.Feed, extends Zotero.Library
+ * Trellis.Feed, extends Trellis.Library
  * 
  * Custom parameters:
  * - name - name of the feed displayed in the collection tree
@@ -34,12 +34,12 @@
  * - refreshInterval - in terms of hours
  * 
  * @param params
- * @returns Zotero.Feed
+ * @returns Trellis.Feed
  * @constructor
  */
-Zotero.Feed = function (params = {}) {
+Trellis.Feed = function (params = {}) {
 	params.libraryType = 'feed';
-	Zotero.Feed._super.call(this, params);
+	Trellis.Feed._super.call(this, params);
 
 	this._feedCleanupReadAfter = null;
 	this._feedCleanupUnreadAfter = null;
@@ -50,17 +50,17 @@ Zotero.Feed = function (params = {}) {
 
 	// Feeds are not editable by the user. Remove the setter
 	this.editable = false;
-	Zotero.defineProperty(this, 'editable', {
+	Trellis.defineProperty(this, 'editable', {
 		get: function () { return this._get('_libraryEditable'); }
 	});
 
 	// Feeds are not filesEditable by the user. Remove the setter
 	this.filesEditable = false;
-	Zotero.defineProperty(this, 'filesEditable', {
+	Trellis.defineProperty(this, 'filesEditable', {
 		get: function () { return this._get('_libraryFilesEditable'); }
 	});
 	
-	Zotero.Utilities.Internal.assignProps(this, params,
+	Trellis.Utilities.Internal.assignProps(this, params,
 		['name', 'url', 'refreshInterval', 'cleanupReadAfter', 'cleanupUnreadAfter']);
 	
 	// Return a proxy so that we can disable the object once it's deleted
@@ -74,59 +74,59 @@ Zotero.Feed = function (params = {}) {
 	});
 }
 
-Zotero.Feed._colToProp = function (c) {
-	return "_feed" + Zotero.Utilities.capitalize(c);
+Trellis.Feed._colToProp = function (c) {
+	return "_feed" + Trellis.Utilities.capitalize(c);
 }
 
-Zotero.extendClass(Zotero.Library, Zotero.Feed);
+Trellis.extendClass(Trellis.Library, Trellis.Feed);
 
-Zotero.defineProperty(Zotero.Feed, '_unreadCountSQL', {
+Trellis.defineProperty(Trellis.Feed, '_unreadCountSQL', {
 	value: "(SELECT COUNT(*) FROM items I JOIN feedItems FI USING (itemID)"
 			+ " WHERE I.libraryID=F.libraryID AND FI.readTime IS NULL) AS _feedUnreadCount"
 });
 
-Zotero.defineProperty(Zotero.Feed, '_dbColumns', {
+Trellis.defineProperty(Trellis.Feed, '_dbColumns', {
 	value: Object.freeze(['name', 'url', 'lastUpdate', 'lastCheck',
 		'lastCheckError', 'cleanupUnreadAfter', 'cleanupReadAfter', 'refreshInterval'])
 });
 
-Zotero.defineProperty(Zotero.Feed, '_primaryDataSQLParts');
+Trellis.defineProperty(Trellis.Feed, '_primaryDataSQLParts');
 
-Zotero.defineProperty(Zotero.Feed, '_rowSQLSelect', {
-	value: Zotero.Library._rowSQLSelect + ", "
-		+ Zotero.Feed._dbColumns.map(c => "F." + c + " AS " + Zotero.Feed._colToProp(c)).join(", ")
-		+ ", " + Zotero.Feed._unreadCountSQL
+Trellis.defineProperty(Trellis.Feed, '_rowSQLSelect', {
+	value: Trellis.Library._rowSQLSelect + ", "
+		+ Trellis.Feed._dbColumns.map(c => "F." + c + " AS " + Trellis.Feed._colToProp(c)).join(", ")
+		+ ", " + Trellis.Feed._unreadCountSQL
 });
 
-Zotero.defineProperty(Zotero.Feed, '_rowSQL', {
-	value: "SELECT " + Zotero.Feed._rowSQLSelect
+Trellis.defineProperty(Trellis.Feed, '_rowSQL', {
+	value: "SELECT " + Trellis.Feed._rowSQLSelect
 		+ " FROM feeds F JOIN libraries L USING (libraryID)"
 });
 
-Zotero.defineProperty(Zotero.Feed.prototype, '_objectType', {
+Trellis.defineProperty(Trellis.Feed.prototype, '_objectType', {
 	value: 'feed'
 });
 
-Zotero.defineProperty(Zotero.Feed.prototype, 'isFeed', {
+Trellis.defineProperty(Trellis.Feed.prototype, 'isFeed', {
 	value: true
 });
 
-Zotero.defineProperty(Zotero.Feed.prototype, 'allowsLinkedFiles', {
+Trellis.defineProperty(Trellis.Feed.prototype, 'allowsLinkedFiles', {
 	value: false
 });
 
-Zotero.defineProperty(Zotero.Feed.prototype, 'libraryTypes', {
-	value: Object.freeze(Zotero.Feed._super.prototype.libraryTypes.concat(['feed']))
+Trellis.defineProperty(Trellis.Feed.prototype, 'libraryTypes', {
+	value: Object.freeze(Trellis.Feed._super.prototype.libraryTypes.concat(['feed']))
 });
 
-Zotero.defineProperty(Zotero.Feed.prototype, 'libraryTypeID', {
+Trellis.defineProperty(Trellis.Feed.prototype, 'libraryTypeID', {
 	get: () => undefined
 });
 
-Zotero.defineProperty(Zotero.Feed.prototype, 'unreadCount', {
+Trellis.defineProperty(Trellis.Feed.prototype, 'unreadCount', {
 	get: function () { return this._feedUnreadCount; }
 });
-Zotero.defineProperty(Zotero.Feed.prototype, 'updating', {
+Trellis.defineProperty(Trellis.Feed.prototype, 'updating', {
 	get: function () { return !!this._updating; }
 });
 
@@ -135,8 +135,8 @@ Zotero.defineProperty(Zotero.Feed.prototype, 'updating', {
 let accessors = ['name', 'url', 'refreshInterval', 'cleanupUnreadAfter', 'cleanupReadAfter'];
 for (let i=0; i<accessors.length; i++) {
 	let name = accessors[i];
-	let prop = Zotero.Feed._colToProp(name);
-	Zotero.defineProperty(Zotero.Feed.prototype, name, {
+	let prop = Trellis.Feed._colToProp(name);
+	Trellis.defineProperty(Trellis.Feed.prototype, name, {
 		get: function () { return this._get(prop); },
 		set: function (v) { return this._set(prop, v); }
 	})
@@ -144,14 +144,14 @@ for (let i=0; i<accessors.length; i++) {
 let getters = ['lastCheck', 'lastUpdate', 'lastCheckError'];
 for (let i=0; i<getters.length; i++) {
 	let name = getters[i];
-	let prop = Zotero.Feed._colToProp(name);
-	Zotero.defineProperty(Zotero.Feed.prototype, name, {
+	let prop = Trellis.Feed._colToProp(name);
+	Trellis.defineProperty(Trellis.Feed.prototype, name, {
 		get: function () { return this._get(prop); }
 	})
 }
 })()
 
-Zotero.Feed.prototype._isValidFeedProp = function (prop) {
+Trellis.Feed.prototype._isValidFeedProp = function (prop) {
 	let preffix = '_feed';
 	if (prop.indexOf(preffix) != 0 || prop.length == preffix.length) {
 		return false;
@@ -160,15 +160,15 @@ Zotero.Feed.prototype._isValidFeedProp = function (prop) {
 	let col = prop.substr(preffix.length);
 	col = col.charAt(0).toLowerCase() + col.substr(1);
 	
-	return Zotero.Feed._dbColumns.indexOf(col) != -1;
+	return Trellis.Feed._dbColumns.indexOf(col) != -1;
 }
 
-Zotero.Feed.prototype._isValidProp = function (prop) {
+Trellis.Feed.prototype._isValidProp = function (prop) {
 	return this._isValidFeedProp(prop)
-		|| Zotero.Feed._super.prototype._isValidProp.call(this, prop);
+		|| Trellis.Feed._super.prototype._isValidProp.call(this, prop);
 }
 
-Zotero.Feed.prototype._set = function (prop, val) {
+Trellis.Feed.prototype._set = function (prop, val) {
 	switch (prop) {
 		case '_feedName':
 			if (!val || typeof val != 'string') {
@@ -214,11 +214,11 @@ Zotero.Feed.prototype._set = function (prop, val) {
 			break;
 	}
 	
-	return Zotero.Feed._super.prototype._set.call(this, prop, val);
+	return Trellis.Feed._super.prototype._set.call(this, prop, val);
 }
 
-Zotero.Feed.prototype._loadDataFromRow = function (row) {
-	Zotero.Feed._super.prototype._loadDataFromRow.call(this, row);
+Trellis.Feed.prototype._loadDataFromRow = function (row) {
+	Trellis.Feed._super.prototype._loadDataFromRow.call(this, row);
 	
 	this._feedName = row._feedName;
 	this._feedUrl = row._feedUrl;
@@ -231,29 +231,29 @@ Zotero.Feed.prototype._loadDataFromRow = function (row) {
 	this._feedUnreadCount = parseInt(row._feedUnreadCount);
 }
 
-Zotero.Feed.prototype._reloadFromDB = async function () {
-	let sql = Zotero.Feed._rowSQL + " WHERE F.libraryID=?";
-	let row = await Zotero.DB.rowQueryAsync(sql, [this.libraryID]);
+Trellis.Feed.prototype._reloadFromDB = async function () {
+	let sql = Trellis.Feed._rowSQL + " WHERE F.libraryID=?";
+	let row = await Trellis.DB.rowQueryAsync(sql, [this.libraryID]);
 	this._loadDataFromRow(row);
 };
 
-Zotero.defineProperty(Zotero.Feed.prototype, '_childObjectTypes', {
+Trellis.defineProperty(Trellis.Feed.prototype, '_childObjectTypes', {
 	value: Object.freeze(['feedItem', 'item'])
 });
 
-Zotero.Feed.prototype._initSave = async function (env) {
-	let proceed = await Zotero.Feed._super.prototype._initSave.call(this, env);
+Trellis.Feed.prototype._initSave = async function (env) {
+	let proceed = await Trellis.Feed._super.prototype._initSave.call(this, env);
 	if (!proceed) return false;
 	
 	if (!this._feedName) throw new Error("Feed name not set");
 	if (!this._feedUrl) throw new Error("Feed URL not set");
-	if (!this.refreshInterval) this.refreshInterval = Zotero.Prefs.get('feeds.defaultTTL') * 60;
-	if (!this.cleanupReadAfter) this.cleanupReadAfter = Zotero.Prefs.get('feeds.defaultCleanupReadAfter');
-	if (!this.cleanupUnreadAfter) this.cleanupUnreadAfter = Zotero.Prefs.get('feeds.defaultCleanupUnreadAfter');
+	if (!this.refreshInterval) this.refreshInterval = Trellis.Prefs.get('feeds.defaultTTL') * 60;
+	if (!this.cleanupReadAfter) this.cleanupReadAfter = Trellis.Prefs.get('feeds.defaultCleanupReadAfter');
+	if (!this.cleanupUnreadAfter) this.cleanupUnreadAfter = Trellis.Prefs.get('feeds.defaultCleanupUnreadAfter');
 	
 	if (env.isNew) {
 		// Make sure URL is unique
-		if (Zotero.Feeds.existsByURL(this._feedUrl)) {
+		if (Trellis.Feeds.existsByURL(this._feedUrl)) {
 			throw new Error('Feed for URL already exists: ' + this._feedUrl);
 		}
 	}
@@ -261,15 +261,15 @@ Zotero.Feed.prototype._initSave = async function (env) {
 	return true;
 };
 
-Zotero.Feed.prototype._saveData = async function (env) {
-	await Zotero.Feed._super.prototype._saveData.apply(this, arguments);
+Trellis.Feed.prototype._saveData = async function (env) {
+	await Trellis.Feed._super.prototype._saveData.apply(this, arguments);
 	
-	Zotero.debug("Saving feed data for library " + this.id);
+	Trellis.debug("Saving feed data for library " + this.id);
 	
 	let changedCols = [], params = [];
-	for (let i=0; i<Zotero.Feed._dbColumns.length; i++) {
-		let col = Zotero.Feed._dbColumns[i];
-		let prop = Zotero.Feed._colToProp(col);
+	for (let i=0; i<Trellis.Feed._dbColumns.length; i++) {
+		let col = Trellis.Feed._dbColumns[i];
+		let prop = Trellis.Feed._colToProp(col);
 		
 		if (!this._changed[prop]) continue;
 		
@@ -283,9 +283,9 @@ Zotero.Feed.prototype._saveData = async function (env) {
 		
 		let sql = "INSERT INTO feeds (" + changedCols.join(', ') + ") "
 			+ "VALUES (" + Array(params.length).fill('?').join(', ') + ")";
-		await Zotero.DB.queryAsync(sql, params);
+		await Trellis.DB.queryAsync(sql, params);
 		
-		Zotero.Notifier.queue(
+		Trellis.Notifier.queue(
 			'add', 'feed', this.libraryID, env.notifierData, env.options.notifierQueue
 		);
 	}
@@ -293,76 +293,76 @@ Zotero.Feed.prototype._saveData = async function (env) {
 		let sql = "UPDATE feeds SET " + changedCols.map(v => v + '=?').join(', ')
 			+ " WHERE libraryID=?";
 		params.push(this.libraryID);
-		await Zotero.DB.queryAsync(sql, params);
+		await Trellis.DB.queryAsync(sql, params);
 		
 		if (!env.options.skipNotifier) {
-			Zotero.Notifier.queue(
+			Trellis.Notifier.queue(
 				'modify', 'feed', this.libraryID, env.notifierData, env.options.notifierQueue
 			);
 		}
 	}
 	else {
-		Zotero.debug("Feed data did not change for feed " + this.libraryID, 5);
+		Trellis.debug("Feed data did not change for feed " + this.libraryID, 5);
 	}
 };
 
-Zotero.Feed.prototype._finalizeSave = async function (env) {
+Trellis.Feed.prototype._finalizeSave = async function (env) {
 	let syncedDataChanged = 
 		['_feedName', '_feedCleanupReadAfter', '_feedCleanupUnreadAfter', '_feedRefreshInterval'].some((val) => this._changed[val]);
 
-	await Zotero.Feed._super.prototype._finalizeSave.apply(this, arguments);
+	await Trellis.Feed._super.prototype._finalizeSave.apply(this, arguments);
 	
 	if (!env.isNew && this._previousURL) {
 		// Re-register library if URL changed
-		Zotero.Feeds.unregister(this.libraryID);
+		Trellis.Feeds.unregister(this.libraryID);
 		
-		let syncedFeeds = Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, 'feeds') || {};
+		let syncedFeeds = Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, 'feeds') || {};
 		delete syncedFeeds[this._previousURL];
-		await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'feeds', syncedFeeds);
+		await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'feeds', syncedFeeds);
 	}
 	if (syncedDataChanged || env.isNew || this._previousURL) {
 		await this.storeSyncedSettings();
 		if (env.isNew || this._previousURL) {
-			Zotero.Feeds.register(this);
+			Trellis.Feeds.register(this);
 		}
 	}
 	this._previousURL = null;
 	
 };
 
-Zotero.Feed.prototype._finalizeErase = async function (env) {
+Trellis.Feed.prototype._finalizeErase = async function (env) {
 	let notifierData = {};
 	notifierData[this.libraryID] = {
 		libraryID: this.libraryID
 	};
-	Zotero.Notifier.queue('delete', 'feed', this.id, notifierData, env.options.notifierQueue);
-	Zotero.Feeds.unregister(this.libraryID);
+	Trellis.Notifier.queue('delete', 'feed', this.id, notifierData, env.options.notifierQueue);
+	Trellis.Feeds.unregister(this.libraryID);
 
-	let syncedFeeds = Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, 'feeds') || {};
+	let syncedFeeds = Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, 'feeds') || {};
 	delete syncedFeeds[this.url];
 	if (Object.keys(syncedFeeds).length == 0) {
-		await Zotero.SyncedSettings.clear(Zotero.Libraries.userLibraryID, 'feeds');
+		await Trellis.SyncedSettings.clear(Trellis.Libraries.userLibraryID, 'feeds');
 	} else {
-		await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'feeds', syncedFeeds);
+		await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'feeds', syncedFeeds);
 	}
 	
-	return Zotero.Feed._super.prototype._finalizeErase.apply(this, arguments);
+	return Trellis.Feed._super.prototype._finalizeErase.apply(this, arguments);
 };
 
-Zotero.Feed.prototype.erase = async function (options = {}) {
-	let childItemIDs = await Zotero.FeedItems.getAll(this.id, false, false, true);
-	await Zotero.FeedItems.erase(childItemIDs);
+Trellis.Feed.prototype.erase = async function (options = {}) {
+	let childItemIDs = await Trellis.FeedItems.getAll(this.id, false, false, true);
+	await Trellis.FeedItems.erase(childItemIDs);
 	
-	await Zotero.Feed._super.prototype.erase.call(this, options);
+	await Trellis.Feed._super.prototype.erase.call(this, options);
 };
 
-Zotero.Feed.prototype.storeSyncedSettings = async function () {
-	let syncedFeeds = Zotero.SyncedSettings.get(Zotero.Libraries.userLibraryID, 'feeds') || {};
+Trellis.Feed.prototype.storeSyncedSettings = async function () {
+	let syncedFeeds = Trellis.SyncedSettings.get(Trellis.Libraries.userLibraryID, 'feeds') || {};
 	syncedFeeds[this.url] = [this.name, this.cleanupReadAfter, this.cleanupUnreadAfter, this.refreshInterval];
-	return Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, 'feeds', syncedFeeds);
+	return Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, 'feeds', syncedFeeds);
 };
 
-Zotero.Feed.prototype.getExpiredFeedItemIDs = async function () {
+Trellis.Feed.prototype.getExpiredFeedItemIDs = async function () {
 	let sql = "SELECT itemID AS id FROM feedItems "
 		+ "LEFT JOIN items I USING (itemID) "
 		+ "WHERE I.libraryID=? "
@@ -370,7 +370,7 @@ Zotero.Feed.prototype.getExpiredFeedItemIDs = async function () {
 			+ "(readTime IS NOT NULL AND julianday('now', 'utc') - (julianday(readTime, 'utc') + ?) > 0) "
 			+ "OR (readTime IS NULL AND julianday('now', 'utc') - (julianday(dateModified, 'utc') + ?) > 0)"
 		+ ")";
-	return Zotero.DB.columnQueryAsync(sql, [this.id, {int: this.cleanupReadAfter}, {int: this.cleanupUnreadAfter}]);
+	return Trellis.DB.columnQueryAsync(sql, [this.id, {int: this.cleanupReadAfter}, {int: this.cleanupUnreadAfter}]);
 };
 
 /**
@@ -381,7 +381,7 @@ Zotero.Feed.prototype.getExpiredFeedItemIDs = async function () {
  * If we clear items once they've been read, we may potentially end up
  * with empty feeds for those that do not update very frequently.
  */
-Zotero.Feed.prototype.clearExpiredItems = async function (itemsInFeedIDs) {
+Trellis.Feed.prototype.clearExpiredItems = async function (itemsInFeedIDs) {
 	itemsInFeedIDs = itemsInFeedIDs || new Set();
 	try {
 		// Clear expired items
@@ -395,51 +395,51 @@ Zotero.Feed.prototype.clearExpiredItems = async function (itemsInFeedIDs) {
 				}
 			}
 		}
-		Zotero.debug("Clearing up read feed items...");
+		Trellis.debug("Clearing up read feed items...");
 		if (toClear.length) {
-			Zotero.debug(toClear.join(', '));
-			await Zotero.FeedItems.erase(toClear);
+			Trellis.debug(toClear.join(', '));
+			await Trellis.FeedItems.erase(toClear);
 		} else {
-			Zotero.debug("No expired feed items");
+			Trellis.debug("No expired feed items");
 		}
 	} catch(e) {
-		Zotero.debug("Error clearing expired feed items");
-		Zotero.debug(e);
+		Trellis.debug("Error clearing expired feed items");
+		Trellis.debug(e);
 	}
 };
 
-Zotero.Feed.prototype._updateFeed = async function () {
+Trellis.Feed.prototype._updateFeed = async function () {
 	var toSave = [], attachmentsToAdd = [], feedItemIDs = new Set();
 	if (this._updating) {
 		return this._updating;
 	}
-	let deferred = Zotero.Promise.defer();
+	let deferred = Trellis.Promise.defer();
 	this._updating = deferred.promise;
-	await Zotero.Notifier.trigger('statusChanged', 'feed', this.id);
+	await Trellis.Notifier.trigger('statusChanged', 'feed', this.id);
 	this._set('_feedLastCheckError', null);
 	
 	try {
-		let fr = new Zotero.FeedReader(this.url);
+		let fr = new Trellis.FeedReader(this.url);
 		await fr.process();
 		let itemIterator = new fr.ItemIterator();
 		let item, processedGUIDs = new Set();
 		while (item = await itemIterator.next().value) {
 			if (processedGUIDs.has(item.guid)) {
-				Zotero.debug("Feed item " + item.guid + " already processed from feed");
+				Trellis.debug("Feed item " + item.guid + " already processed from feed");
 				continue;
 			}
 			processedGUIDs.add(item.guid);
 			
-			Zotero.debug("Feed item retrieved:", 5);
-			Zotero.debug(item, 5);
+			Trellis.debug("Feed item retrieved:", 5);
+			Trellis.debug(item, 5);
 			
-			let feedItem = await Zotero.FeedItems.getAsyncByGUID(item.guid);
+			let feedItem = await Trellis.FeedItems.getAsyncByGUID(item.guid);
 			if (feedItem) {
 				feedItemIDs.add(feedItem.id);
 			}
 			if (!feedItem) {
-				Zotero.debug("Creating new feed item " + item.guid);
-				feedItem = new Zotero.FeedItem();
+				Trellis.debug("Creating new feed item " + item.guid);
+				feedItem = new Trellis.FeedItem();
 				feedItem.guid = item.guid;
 				feedItem.libraryID = this.id;
 			} else if (!feedItem.isTranslated) {
@@ -449,17 +449,17 @@ Zotero.Feed.prototype._updateFeed = async function () {
 				// TODO figure out a better GUID collision resolution system
 				// that works with sync.
 				if (feedItem.libraryID != this.libraryID) {
-					let otherFeed = Zotero.Feeds.get(feedItem.libraryID);
-					Zotero.debug("Feed item " + feedItem.guid + " from " + this.url
+					let otherFeed = Trellis.Feeds.get(feedItem.libraryID);
+					Trellis.debug("Feed item " + feedItem.guid + " from " + this.url
 						+ " exists in a different feed " + otherFeed.url + ". Skipping");
 					continue;
 				}
 				
-				Zotero.debug("Feed item " + item.guid + " already in library");
-				Zotero.debug("Updating metadata");
+				Trellis.debug("Feed item " + item.guid + " already in library");
+				Trellis.debug("Updating metadata");
 			} else {
 				// Not new and has been translated
-				Zotero.debug("Feed item " + item.guid + " is not new and has already been translated. Skipping");
+				Trellis.debug("Feed item " + item.guid + " is not new and has already been translated. Skipping");
 				continue;
 			}
 			
@@ -474,7 +474,7 @@ Zotero.Feed.prototype._updateFeed = async function () {
 			feedItem.fromJSON(item);
 			
 			if (!feedItem.hasChanged()) {
-				Zotero.debug("Feed item " + feedItem.guid + " has not changed");
+				Trellis.debug("Feed item " + feedItem.guid + " has not changed");
 				continue;
 			}
 			toSave.push(feedItem);
@@ -482,53 +482,53 @@ Zotero.Feed.prototype._updateFeed = async function () {
 	}
 	catch (e) {
 		if (e.message) {
-			Zotero.logError("Error processing feed from " + this.url + ":\n\n" + e);
+			Trellis.logError("Error processing feed from " + this.url + ":\n\n" + e);
 		}
 		this._set('_feedLastCheckError', e.message || 'Error processing feed');
 	}
 	if (toSave.length) {
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			// Save in reverse order
 			for (let i=toSave.length-1; i>=0; i--) {
 				await toSave[i].save();
 			}
 			
 		});
-		this._set('_feedLastUpdate', Zotero.Date.dateToSQL(new Date(), true));
+		this._set('_feedLastUpdate', Trellis.Date.dateToSQL(new Date(), true));
 	}
 	for (let attachment of attachmentsToAdd) {
 		if (attachment.url.indexOf('pdf') != -1 || attachment.contentType.indexOf('pdf') != -1) {
 			attachment.parentItemID = attachment.parentItem.id;
-			attachment.title = Zotero.getString('file-type-pdf');
-			await Zotero.Attachments.linkFromURL(attachment);
+			attachment.title = Trellis.getString('file-type-pdf');
+			await Trellis.Attachments.linkFromURL(attachment);
 		}
 	}
 	await this.clearExpiredItems(feedItemIDs);
-	this._set('_feedLastCheck', Zotero.Date.dateToSQL(new Date(), true));
+	this._set('_feedLastCheck', Trellis.Date.dateToSQL(new Date(), true));
 	await this.saveTx();
 	await this.updateUnreadCount();
 	deferred.resolve();
 	this._updating = false;
-	await Zotero.Notifier.trigger('statusChanged', 'feed', this.id);
+	await Trellis.Notifier.trigger('statusChanged', 'feed', this.id);
 };
 
-Zotero.Feed.prototype.updateFeed = async function () {
+Trellis.Feed.prototype.updateFeed = async function () {
 	try {
 		let result = await this._updateFeed();
 		return result;
 	} finally {
-		Zotero.Feeds.scheduleNextFeedCheck();
+		Trellis.Feeds.scheduleNextFeedCheck();
 	}
 };
 
-Zotero.Feed.prototype.updateUnreadCount = async function () {
-	let sql = "SELECT " + Zotero.Feed._unreadCountSQL
+Trellis.Feed.prototype.updateUnreadCount = async function () {
+	let sql = "SELECT " + Trellis.Feed._unreadCountSQL
 		+ " FROM feeds F JOIN libraries L USING (libraryID)"
 		+ " WHERE L.libraryID=?";
-	let newCount = await Zotero.DB.valueQueryAsync(sql, [this.id]);
+	let newCount = await Trellis.DB.valueQueryAsync(sql, [this.id]);
 	
 	if (newCount != this._feedUnreadCount) {
 		this._feedUnreadCount = newCount;
-		await Zotero.Notifier.trigger('unreadCountUpdated', 'feed', this.id);
+		await Trellis.Notifier.trigger('unreadCountUpdated', 'feed', this.id);
 	}
 };

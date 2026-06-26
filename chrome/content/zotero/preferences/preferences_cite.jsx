@@ -3,54 +3,54 @@
     
     Copyright © 2006–2013 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 "use strict";
 
-var { FilePicker } = ChromeUtils.importESModule('chrome://zotero/content/modules/filePicker.mjs');
+var { FilePicker } = ChromeUtils.importESModule('chrome://trellis/content/modules/filePicker.mjs');
 
 var React = require('react');
 var ReactDOM = require('react-dom');
 var VirtualizedTable = require('components/virtualized-table');
 var { makeRowRenderer } = VirtualizedTable;
 
-Zotero_Preferences.Cite = {
+Trellis_Preferences.Cite = {
 	styles: [],
 	wordPluginResourcePaths: {
-		libreOffice: 'zotero-libreoffice-integration',
-		macWord: 'zotero-macword-integration',
-		winWord: 'zotero-winword-integration'
+		libreOffice: 'trellis-libreoffice-integration',
+		macWord: 'trellis-macword-integration',
+		winWord: 'trellis-winword-integration'
 	},
 
 	init: async function () {
 		// Init word plugin sections
 		let wordPlugins = [];
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			wordPlugins.push('winWord');
 		}
-		else if (Zotero.isMac) {
+		else if (Trellis.isMac) {
 			wordPlugins.push('macWord');
 		}
 		wordPlugins.push('libreOffice');
-		await Zotero.Promise.delay();
+		await Trellis.Promise.delay();
 		for (let wordPlugin of wordPlugins) {
 			// This is the weirdest indirect code, but let's not fix what's not broken
 			try {
@@ -58,11 +58,11 @@ Zotero_Preferences.Cite = {
 				(new Installer(true)).showPreferences(document);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		await this.refreshStylesList();
-		document.querySelector('#zotero-prefpane-cite').addEventListener('showing', () => {
+		document.querySelector('#trellis-prefpane-cite').addEventListener('showing', () => {
 			this._tree.invalidate();
 		});
 	},
@@ -74,12 +74,12 @@ Zotero_Preferences.Cite = {
 	 * @return {Promise}
 	 */
 	refreshStylesList: async function (cslID) {
-		Zotero.debug("Refreshing styles list");
+		Trellis.debug("Refreshing styles list");
 		
-		await Zotero.Styles.init();
-		this.styles = Zotero.Styles.getVisible()
+		await Trellis.Styles.init();
+		this.styles = Trellis.Styles.getVisible()
 			.map((style) => {
-				var updated = Zotero.Date.sqlToDate(style.updated, true);
+				var updated = Trellis.Date.sqlToDate(style.updated, true);
 				return {
 					title: style.title,
 					updated: updated ? updated.toLocaleDateString() : "",
@@ -90,11 +90,11 @@ Zotero_Preferences.Cite = {
 							if (event.type == "keydown" && document.activeElement == event.target) {
 								this._tabIntoIcon = true;
 							}
-							let cslID = Zotero.Styles.getVisible()[index].styleID;
+							let cslID = Trellis.Styles.getVisible()[index].styleID;
 							this.deleteStyle([cslID]);
 						},
 						isFocusable: true,
-						ariaLabel: Zotero.getString("general.remove")
+						ariaLabel: Trellis.getString("general.remove")
 					}
 				};
 			});
@@ -103,17 +103,17 @@ Zotero_Preferences.Cite = {
 			const columns = [
 				{
 					dataKey: "title",
-					label: "zotero.preferences.cite.styles.styleManager.title",
+					label: "trellis.preferences.cite.styles.styleManager.title",
 				},
 				{
 					dataKey: "updated",
-					label: "zotero.preferences.cite.styles.styleManager.updated",
+					label: "trellis.preferences.cite.styles.styleManager.updated",
 					fixedWidth: true,
 					width: 100
 				},
 				{
 					dataKey: "remove",
-					label: Zotero.getString("preferences-styleManager-remove"),
+					label: Trellis.getString("preferences-styleManager-remove"),
 					htmlLabel: ' ',
 					fixedWidth: true,
 					width: 24,
@@ -121,8 +121,8 @@ Zotero_Preferences.Cite = {
 				}
 			];
 			var handleKeyDown = (event) => {
-				if (event.key == 'Delete' || Zotero.isMac && event.key == 'Backspace') {
-					Zotero_Preferences.Cite.deleteStyle();
+				if (event.key == 'Delete' || Trellis.isMac && event.key == 'Backspace') {
+					Trellis_Preferences.Cite.deleteStyle();
 					return false;
 				}
 			};
@@ -161,7 +161,7 @@ Zotero_Preferences.Cite = {
 			this._tree.invalidate();
 		}
 		if (cslID) {
-			var styles = Zotero.Styles.getVisible();
+			var styles = Trellis.Styles.getVisible();
 			var index = styles.findIndex(style => style.styleID == cslID);
 			if (index != -1) {
 				this._tree.selection.select(index);
@@ -178,7 +178,7 @@ Zotero_Preferences.Cite = {
 	
 	
 	openStylesPage: function () {
-		Zotero.openInViewer("https://www.zotero.org/styles/");
+		Trellis.openInViewer("https://www.trellis.org/styles/");
 	},
 	
 	
@@ -187,23 +187,23 @@ Zotero_Preferences.Cite = {
 	 **/
 	addStyle: async function () {
 		var fp = new FilePicker();
-		fp.init(window, Zotero.getString("zotero.preferences.styles.addStyle"), fp.modeOpen);
+		fp.init(window, Trellis.getString("trellis.preferences.styles.addStyle"), fp.modeOpen);
 		
 		fp.appendFilter("CSL Style", "*.csl");
 		
 		var rv = await fp.show();
 		if (rv == fp.returnOK || rv == fp.returnReplace) {
 			try {
-				await Zotero.Styles.install(
+				await Trellis.Styles.install(
 					{
-						file: Zotero.File.pathToFile(fp.file)
+						file: Trellis.File.pathToFile(fp.file)
 					},
 					fp.file,
 					true
 				);
 			}
 			catch (e) {
-				(new Zotero.Exception.Alert("styles.install.unexpectedError",
+				(new Trellis.Exception.Alert("styles.install.unexpectedError",
 					fp.file, "styles.install.title", e)).present()
 			}
 		}
@@ -216,7 +216,7 @@ Zotero_Preferences.Cite = {
 	 **/
 	deleteStyle: async function (cslIDs = []) {
 		// get selected cslIDs
-		var styles = Zotero.Styles.getVisible();
+		var styles = Trellis.Styles.getVisible();
 		// if style ids are not provided, get them from the selection
 		if (cslIDs.length == 0) {
 			for (let index of this._tree.selection.selected.keys()) {
@@ -227,10 +227,10 @@ Zotero_Preferences.Cite = {
 		if(cslIDs.length == 0) {
 			return;
 		} else if(cslIDs.length == 1) {
-			var selectedStyle = Zotero.Styles.get(cslIDs[0])
-			var text = Zotero.getString('styles.deleteStyle', selectedStyle.title);
+			var selectedStyle = Trellis.Styles.get(cslIDs[0])
+			var text = Trellis.getString('styles.deleteStyle', selectedStyle.title);
 		} else {
-			var text = Zotero.getString('styles.deleteStyles');
+			var text = Trellis.getString('styles.deleteStyles');
 		}
 		
 		var ps = Services.prompt;
@@ -240,7 +240,7 @@ Zotero_Preferences.Cite = {
 				await selectedStyle.remove();
 			} else {
 				for(var i=0; i<cslIDs.length; i++) {
-					await Zotero.Styles.get(cslIDs[i]).remove();
+					await Trellis.Styles.get(cslIDs[i]).remove();
 				}
 			}
 			
@@ -255,19 +255,19 @@ Zotero_Preferences.Cite = {
 			+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL);
 		
 		var index = ps.confirmEx(null,
-			Zotero.getString('general.warning'),
-			Zotero.getString('zotero.preferences.advanced.resetStyles.changesLost'),
+			Trellis.getString('general.warning'),
+			Trellis.getString('trellis.preferences.advanced.resetStyles.changesLost'),
 			buttonFlags,
-			Zotero.getString('zotero.preferences.advanced.resetStyles'),
+			Trellis.getString('trellis.preferences.advanced.resetStyles'),
 			null, null, null, {});
 		
 		if (index == 0) {
 			let button = document.getElementById('reset-styles-button');
 			button.disabled = true;
 			try {
-				await Zotero.Schema.resetStyles()
-				if (Zotero_Preferences.Export) {
-					Zotero_Preferences.Export.populateQuickCopyList();
+				await Trellis.Schema.resetStyles()
+				if (Trellis_Preferences.Export) {
+					Trellis_Preferences.Export.populateQuickCopyList();
 				}
 			}
 			finally {
@@ -281,6 +281,6 @@ Zotero_Preferences.Cite = {
 	 * Shows an error if import fails
 	 **/
 	styleImportError: function () {
-		alert(Zotero.getString('styles.installError', "This"));
+		alert(Trellis.getString('styles.installError', "This"));
 	}
 }

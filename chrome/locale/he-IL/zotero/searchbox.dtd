@@ -1,25 +1,25 @@
-<!ENTITY zotero.search.name "שם:">
+<!ENTITY trellis.search.name "שם:">
 
-<!ENTITY zotero.search.searchInLibrary "חיפוש בספרייה:">
+<!ENTITY trellis.search.searchInLibrary "חיפוש בספרייה:">
 
-<!ENTITY zotero.search.joinMode.prefix "התאמה">
-<!ENTITY zotero.search.joinMode.any "כלשהו">
-<!ENTITY zotero.search.joinMode.all "הכול">
-<!ENTITY zotero.search.joinMode.suffix "מהבאים:">
+<!ENTITY trellis.search.joinMode.prefix "התאמה">
+<!ENTITY trellis.search.joinMode.any "כלשהו">
+<!ENTITY trellis.search.joinMode.all "הכול">
+<!ENTITY trellis.search.joinMode.suffix "מהבאים:">
 
-<!ENTITY zotero.search.recursive.label "חיפוש אוספי משנה">
-<!ENTITY zotero.search.noChildren "להציג רק פריטים מסדר עליון">
-<!ENTITY zotero.search.includeParentsAndChildren "לכלול את פריטי ההורה והצאצא של הפריטים התואמים">
+<!ENTITY trellis.search.recursive.label "חיפוש אוספי משנה">
+<!ENTITY trellis.search.noChildren "להציג רק פריטים מסדר עליון">
+<!ENTITY trellis.search.includeParentsAndChildren "לכלול את פריטי ההורה והצאצא של הפריטים התואמים">
 
-<!ENTITY zotero.search.textModes.phrase "ביטוי">
-<!ENTITY zotero.search.textModes.phraseBinary "ביטוי (כולל קבצים בינאריים)">
-<!ENTITY zotero.search.textModes.regexp "ביטוי רגולרי">
-<!ENTITY zotero.search.textModes.regexpCS "ביטוי רגולרי (תלוי רישיות)">
+<!ENTITY trellis.search.textModes.phrase "ביטוי">
+<!ENTITY trellis.search.textModes.phraseBinary "ביטוי (כולל קבצים בינאריים)">
+<!ENTITY trellis.search.textModes.regexp "ביטוי רגולרי">
+<!ENTITY trellis.search.textModes.regexpCS "ביטוי רגולרי (תלוי רישיות)">
 
-<!ENTITY zotero.search.date.units.days "ימים">
-<!ENTITY zotero.search.date.units.months "חודשים">
-<!ENTITY zotero.search.date.units.years "שנים">
+<!ENTITY trellis.search.date.units.days "ימים">
+<!ENTITY trellis.search.date.units.months "חודשים">
+<!ENTITY trellis.search.date.units.years "שנים">
 
-<!ENTITY zotero.search.search "חיפוש">
-<!ENTITY zotero.search.clear "פינוי">
-<!ENTITY zotero.search.saveSearch "שמירת החיפוש">
+<!ENTITY trellis.search.search "חיפוש">
+<!ENTITY trellis.search.clear "פינוי">
+<!ENTITY trellis.search.saveSearch "שמירת החיפוש">

@@ -11,7 +11,7 @@ $item-type-icons: (
 );
 
 @each $cls, $icon in $item-type-icons {
-	.zotero-menuitem-#{$cls} {
+	.trellis-menuitem-#{$cls} {
 		@include focus-states using ($color) {
 			@include svgicon-menu($icon, $color, "16", "item-type");
 		}
@@ -72,7 +72,7 @@ $menu-icons: (
 );
 
 @each $cls, $icon in $menu-icons {
-	.zotero-menuitem-#{$cls} {
+	.trellis-menuitem-#{$cls} {
 		// If icon starts with "light-dark:", use light and dark icon
 		@if str-slice($icon, 0, 11) == "light-dark:" {
 			@include focus-states using ($color) {
@@ -85,7 +85,7 @@ $menu-icons: (
 	}
 };
 
-#zotero-collectionmenu, #zotero-itemmenu {
+#trellis-collectionmenu, #trellis-itemmenu {
 	@include macOS-hide-menu-icons;
 }
 
@@ -100,7 +100,7 @@ menupopup image {
 
 menuitem,
 menu {
-	&.zotero-custom-menu-item {
+	&.trellis-custom-menu-item {
 		@media (prefers-color-scheme: light) {
 			list-style-image: var(--custom-menu-icon-light, none);
 		}

@@ -3,27 +3,27 @@
 	
 	Copyright © 2024 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 // Keyboard handler for citationDialog
 export class CitationDialogKeyboardHandler {
@@ -48,7 +48,7 @@ export class CitationDialogKeyboardHandler {
 	// capturing keydown listener to handle keypresses regardless of if they are handled by
 	// lower-level components
 	captureKeydown(event) {
-		let cmdOrCtrl = Zotero.isMac ? event.metaKey : event.ctrlKey;
+		let cmdOrCtrl = Trellis.isMac ? event.metaKey : event.ctrlKey;
 		// Cmd/Ctrl-Enter will always accept the dialog regardless of the target
 		if (event.key == "Enter" && cmdOrCtrl) {
 			this.doc.dispatchEvent(new CustomEvent("dialog-accepted"));
@@ -58,8 +58,8 @@ export class CitationDialogKeyboardHandler {
 		}
 		// arrowUp from the top-most row of the itemTree will focus suggested items or bubble-input
 		let noModifiers = !['ctrlKey', 'metaKey', 'shiftKey', 'altKey'].some(key => event[key]);
-		if (this._id("zotero-items-tree").contains(event.target) && event.key == "ArrowUp" && noModifiers) {
-			let focusedRow = this._id("zotero-items-tree").querySelector(".row.focused");
+		if (this._id("trellis-items-tree").contains(event.target) && event.key == "ArrowUp" && noModifiers) {
+			let focusedRow = this._id("trellis-items-tree").querySelector(".row.focused");
 			if (!focusedRow) return;
 			// fetch index from the row's id (e.g. item-tree-citationDialog-row-0)
 			let rowIndex = focusedRow.id.split("-")[4];
@@ -89,7 +89,7 @@ export class CitationDialogKeyboardHandler {
 		// Space/Enter will click on keyboard-clickable components.
 		// On macOS, focused buttons are only clickable with Space (not Enter),
 		// and on Windows they are clickable with both.
-		let isKeyboardClickable = tgt.classList.contains("keyboard-clickable") || (Zotero.isWin && tgt.localName == "button");
+		let isKeyboardClickable = tgt.classList.contains("keyboard-clickable") || (Trellis.isWin && tgt.localName == "button");
 		if (["Enter", " "].includes(event.key) && isKeyboardClickable) {
 			tgt.click();
 			handled = true;
@@ -109,7 +109,7 @@ export class CitationDialogKeyboardHandler {
 			handled = true;
 			this.doc.dispatchEvent(new CustomEvent("dialog-cancelled"));
 		}
-		else if (event.key == "f" && (Zotero.isMac ? event.metaKey : event.ctrlKey)) {
+		else if (event.key == "f" && (Trellis.isMac ? event.metaKey : event.ctrlKey)) {
 			handled = true;
 			this._id("bubble-input").focus();
 		}
@@ -138,13 +138,13 @@ export class CitationDialogKeyboardHandler {
 			else if (group.querySelector(".item:not([disabled])")) {
 				this._navigateGroup({ group, current: null, forward: true, shouldSelect: true, shouldFocus: true, multiSelect: false });
 			}
-			else if (this._id("zotero-items-tree").querySelector(".row")) {
+			else if (this._id("trellis-items-tree").querySelector(".row")) {
 				this._focusItemTree({ selectIfEmpty: true });
 			}
 			handled = true;
 		}
 		// arrow down from suggested items in library mode will focus items table
-		else if (!this._id("library-layout").hidden && event.key == "ArrowDown" && event.target.closest(".itemsContainer") && noModifiers && this._id("zotero-items-tree").querySelector(".row")) {
+		else if (!this._id("library-layout").hidden && event.key == "ArrowDown" && event.target.closest(".itemsContainer") && noModifiers && this._id("trellis-items-tree").querySelector(".row")) {
 			this._focusItemTree({ selectIfEmpty: true });
 		}
 		// arrow up/down from bubble-input in list mode will move selection in the items list
@@ -179,10 +179,10 @@ export class CitationDialogKeyboardHandler {
 			let current = this.doc.activeElement;
 			let group = current.closest("[data-arrow-nav]");
 			if (arrowDirection == "horizontal") {
-				if (!(event.key === Zotero.arrowNextKey || event.key === Zotero.arrowPreviousKey)) return false;
+				if (!(event.key === Trellis.arrowNextKey || event.key === Trellis.arrowPreviousKey)) return false;
 				// selections only happens with items
 				let shouldSelect = event.target.closest(".itemsContainer");
-				handled = this._navigateGroup({ group, current, forward: event.key == Zotero.arrowNextKey, shouldSelect, shouldFocus: true, multiSelect });
+				handled = this._navigateGroup({ group, current, forward: event.key == Trellis.arrowNextKey, shouldSelect, shouldFocus: true, multiSelect });
 			}
 			if (arrowDirection == "vertical") {
 				if (!(event.key == "ArrowUp" || event.key === "ArrowDown")) return false;

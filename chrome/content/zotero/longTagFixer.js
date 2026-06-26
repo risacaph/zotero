@@ -3,46 +3,46 @@
 
     Copyright © 2022 Corporation for Digital Scholarship
                      Vienna, Virginia, USA
-                     https://www.zotero.org
+                     https://www.trellis.org
 
-    This file is part of Zotero.
+    This file is part of Trellis.
 
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
     ***** END LICENSE BLOCK *****
 */
 
 const HTML_NS = 'http://www.w3.org/1999/xhtml';
 
-var Zotero_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, no-unused-vars
+var Trellis_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, no-unused-vars
 	let { oldTag, isLongTag, isTagsBox, delimiter } = window.arguments?.[0] ?? { isLongTag: true, isTagsBox: false, oldTag: '' };
 	let dataOut = window.arguments?.[1] || {};
 	
 	this.init = function () {
-		const lastMode = Zotero.Prefs.get('lastLongTagMode') || 0;
-		delimiter = delimiter ?? Zotero.Prefs.get('lastLongTagDelimiter');
+		const lastMode = Trellis.Prefs.get('lastLongTagMode') || 0;
+		delimiter = delimiter ?? Trellis.Prefs.get('lastLongTagDelimiter');
 
-		this.dialog = document.getElementById('zotero-long-tag-fixer');
+		this.dialog = document.getElementById('trellis-long-tag-fixer');
 		this.intro = document.getElementById('intro');
-		this.tabs = document.getElementById('zotero-new-tag-actions');
-		this.oldTagInput = document.getElementById('zotero-old-tag');
+		this.tabs = document.getElementById('trellis-new-tag-actions');
+		this.oldTagInput = document.getElementById('trellis-old-tag');
 		this.delimiterLabel = document.getElementById('delimiter-label');
-		this.oldTagDelimiter = document.getElementById('zotero-old-tag-delimiter');
-		this.listbox = document.getElementById('zotero-new-tag-list');
-		this.newTagInput = document.getElementById('zotero-new-tag-editor');
-		this.newTagCharacterCount = document.getElementById('zotero-new-tag-character-count');
-		this.zoteroNewTagInfo = document.getElementById('zotero-new-tag-characters');
+		this.oldTagDelimiter = document.getElementById('trellis-old-tag-delimiter');
+		this.listbox = document.getElementById('trellis-new-tag-list');
+		this.newTagInput = document.getElementById('trellis-new-tag-editor');
+		this.newTagCharacterCount = document.getElementById('trellis-new-tag-character-count');
+		this.trellisNewTagInfo = document.getElementById('trellis-new-tag-characters');
 
 		document.addEventListener('dialogaccept', () => this.accept());
 		document.addEventListener('dialogcancel', () => this.cancel());
@@ -90,10 +90,10 @@ var Zotero_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, 
 				break;
 		}
 		
-		this.dialog.getButton('accept').label = Zotero.getString('sync.longTagFixer.' + buttonLabel);
+		this.dialog.getButton('accept').label = Trellis.getString('sync.longTagFixer.' + buttonLabel);
 		window.sizeToContent();
 		if (isLongTag) {
-			Zotero.Prefs.set('lastLongTagMode', index);
+			Trellis.Prefs.set('lastLongTagMode', index);
 		}
 	};
 	
@@ -103,9 +103,9 @@ var Zotero_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, 
 	this.updateTagList = function () {
 		let tags = [];
 		
-		const delimiter = document.getElementById('zotero-old-tag-delimiter').value;
+		const delimiter = document.getElementById('trellis-old-tag-delimiter').value;
 		if (delimiter) {
-			Zotero.Prefs.set('lastLongTagDelimiter', delimiter);
+			Trellis.Prefs.set('lastLongTagDelimiter', delimiter);
 			const re = new RegExp("\\s*" + delimiter.replace(/([\.\-\[\]\(\)\?\*\+])/g, "\\$1") + "\\s*");
 			tags = [...new Set(oldTag.split(re).filter(t => t.length > 0))];
 		}
@@ -150,8 +150,8 @@ var Zotero_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, 
 
 	this.updateLabel = function () {
 		this.delimiterLabel.innerHTML = this.oldTagDelimiter.value.length > 1
-			? Zotero.getString('general.character.plural')
-			: Zotero.getString('general.character.singular');
+			? Trellis.getString('general.character.plural')
+			: Trellis.getString('general.character.singular');
 	};
 
 	this.onUpdateDelimiter = function () {
@@ -172,8 +172,8 @@ var Zotero_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, 
 	
 	this.updateEditLength = function (len) {
 		this.newTagCharacterCount.innerText = len;
-		const invalid = len == 0 || len > Zotero.Tags.MAX_SYNC_LENGTH;
-		this.zoteroNewTagInfo.classList.toggle('invalid', invalid);
+		const invalid = len == 0 || len > Trellis.Tags.MAX_SYNC_LENGTH;
+		this.trellisNewTagInfo.classList.toggle('invalid', invalid);
 		this.dialog.getButton('accept').disabled = invalid;
 	};
 	
@@ -208,7 +208,7 @@ var Zotero_Long_Tag_Fixer = new function () { // eslint-disable-line camelcase, 
 			dataOut.result = result;
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 			throw (e);
 		}
 	};

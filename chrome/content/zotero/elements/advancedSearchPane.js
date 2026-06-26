@@ -3,22 +3,22 @@
 
 	Copyright © 2025 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -32,7 +32,7 @@
 				<label control="saved-search-name" data-l10n-id="new-collection-name"/>
 				<html:input type="text" id="saved-search-name"/>
 			</hbox>
-			<zoterosearch/>
+			<trellissearch/>
 			<hbox class="advanced-search-buttons">
 				<button class="cancel-button" data-l10n-id="cancel-button"/>
 				<button class="search-button" data-l10n-id="search-button" default="true"/>
@@ -45,7 +45,7 @@
 
 		init() {
 			this._nameField = this.querySelector('#saved-search-name');
-			this._searchElem = this.querySelector('zoterosearch');
+			this._searchElem = this.querySelector('trellissearch');
 			this._cancelButton = this.querySelector('.cancel-button');
 			this._searchButton = this.querySelector('.search-button');
 			this._clearButton = this.querySelector('.clear-button');
@@ -126,7 +126,7 @@
 				this._search = search.clone();
 			}
 			else {
-				this._search = new Zotero.Search();
+				this._search = new Trellis.Search();
 				// Default a fresh search to top-level items, so a condition on a child
 				// (e.g. attachment content) maps up to its item without any grouping
 				this._search.addCondition('resultLevel', 'item');
@@ -145,7 +145,7 @@
 		// editable library or group root (but not a feed) and not within a collection.
 		// Revisit when/if we support nested condition sets in the UI.
 		_canSaveInCurrentRow() {
-			let collectionTreeRows = ZoteroPane.getCollectionTreeRows();
+			let collectionTreeRows = TrellisPane.getCollectionTreeRows();
 			if (collectionTreeRows.length != 1) {
 				return false;
 			}
@@ -157,7 +157,7 @@
 
 		refresh() {
 			this._ensureSearch();
-			let libraryID = ZoteroPane.getSelectedLibraryID();
+			let libraryID = TrellisPane.getSelectedLibraryID();
 			// Keep the previous library when the selected row doesn't have one (e.g., Feeds)
 			if (libraryID) {
 				this._search.libraryID = libraryID;
@@ -168,7 +168,7 @@
 			// Collection/Saved Search condition, which can only resolve within one library.
 			if (this.type === 'temporary') {
 				let libraryIDs = [];
-				for (let row of ZoteroPane.getCollectionTreeRows()) {
+				for (let row of TrellisPane.getCollectionTreeRows()) {
 					let id = row.ref && row.ref.libraryID;
 					if (id !== undefined && id !== null && !libraryIDs.includes(id)) {
 						libraryIDs.push(id);
@@ -184,7 +184,7 @@
 		}
 
 		async cancel() {
-			await ZoteroPane.setSavedSearchEditorState('closed');
+			await TrellisPane.setSavedSearchEditorState('closed');
 		}
 
 		async submit({ focusResults = true } = {}) {
@@ -194,12 +194,12 @@
 
 			this._searchElem.updateSearch();
 			this._active = true;
-			await ZoteroPane.itemsView.setFilter('advanced-search', this._search);
+			await TrellisPane.itemsView.setFilter('advanced-search', this._search);
 			// Running the search normally moves focus to the results, but a caller that
 			// wants to keep focus in the search builder (e.g. quick search prefill) can
 			// opt out
 			if (focusResults) {
-				ZoteroPane.itemsView.focus();
+				TrellisPane.itemsView.focus();
 			}
 		}
 		
@@ -209,35 +209,35 @@
 			}
 
 			this.search = null;
-			await ZoteroPane.itemsView.setFilter('advanced-search', null);
+			await TrellisPane.itemsView.setFilter('advanced-search', null);
 		}
 
 		async save() {
 			this._searchElem.updateSearch();
 			
 			if (this.type === 'saved') {
-				let search = Zotero.Searches.get(this._searchID);
+				let search = Trellis.Searches.get(this._searchID);
 				if (!search) {
 					throw new Error('Missing search');
 				}
 				search.fromJSON(this._search.toJSON());
 				search.name = this._nameField.value;
 				await search.saveTx();
-				await ZoteroPane.setSavedSearchEditorState('closed');
-				Zotero_Tabs.rename('zotero-pane', search.name);
+				await TrellisPane.setSavedSearchEditorState('closed');
+				Trellis_Tabs.rename('trellis-pane', search.name);
 				return;
 			}
 
-			let collectionTreeRows = ZoteroPane.getCollectionTreeRows();
+			let collectionTreeRows = TrellisPane.getCollectionTreeRows();
 			if (!this._canSaveInCurrentRow()) {
 				throw new Error('Can only save in an editable library root');
 			}
 			this._ensureSearch();
 
 			let libraryID = collectionTreeRows[0].ref.libraryID;
-			let searches = await Zotero.Searches.getAll(libraryID);
-			let prefix = Zotero.getString('pane.collections.untitled');
-			let defaultName = Zotero.Utilities.Internal.getNextName(
+			let searches = await Trellis.Searches.getAll(libraryID);
+			let prefix = Trellis.getString('pane.collections.untitled');
+			let defaultName = Trellis.Utilities.Internal.getNextName(
 				prefix,
 				searches.map(s => s.name).filter(n => n.startsWith(prefix))
 			);
@@ -257,7 +257,7 @@
 			search.name = name;
 			await search.saveTx();
 
-			await ZoteroPane.setAdvancedSearchState('closed');
+			await TrellisPane.setAdvancedSearchState('closed');
 		}
 		
 		focus(options) {

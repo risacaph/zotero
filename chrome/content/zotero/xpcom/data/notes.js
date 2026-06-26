@@ -3,33 +3,33 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
 
-Zotero.Notes = new function () {
+Trellis.Notes = new function () {
 	this.AUTO_SYNC_DELAY = 15;
-	// Keep in sync with utilities_item.js::noteToTitle() in zotero/utilities
+	// Keep in sync with utilities_item.js::noteToTitle() in trellis/utilities
 	this.__defineGetter__("MAX_TITLE_LENGTH", function () { return 120; });
-	this.__defineGetter__("defaultNote", function () { return '<div class="zotero-note znv1"></div>'; });
-	this.__defineGetter__("notePrefix", function () { return '<div class="zotero-note znv1">'; });
+	this.__defineGetter__("defaultNote", function () { return '<div class="trellis-note znv1"></div>'; });
+	this.__defineGetter__("notePrefix", function () { return '<div class="trellis-note znv1">'; });
 	this.__defineGetter__("noteSuffix", function () { return '</div>'; });
 	
 	this._editorInstances = [];
@@ -40,13 +40,13 @@ Zotero.Notes = new function () {
 	 * @param {number} itemID
 	 * @param {Object} location - Not implemented yet
 	 * @param {Object} options
-	 * @returns {Promise<Zotero.EditorInstance | null>} Instance of Zotero.EditorInstance for the note.
+	 * @returns {Promise<Trellis.EditorInstance | null>} Instance of Trellis.EditorInstance for the note.
 	 * If the note tab is opened in background (unloaded), returns null.
 	 */
 	this.open = async function (itemID, location, { title, tabIndex, tabID, openInBackground, openInWindow, allowDuplicate, preventJumpback, parentItemKey } = {}) {
-		let { libraryID } = Zotero.Items.getLibraryAndKeyFromID(itemID);
-		let library = Zotero.Libraries.get(libraryID);
-		let win = Zotero.getMainWindow();
+		let { libraryID } = Trellis.Items.getLibraryAndKeyFromID(itemID);
+		let library = Trellis.Libraries.get(libraryID);
+		let win = Trellis.getMainWindow();
 
 		if (!win) {
 			openInWindow = true;
@@ -59,7 +59,7 @@ Zotero.Notes = new function () {
 
 		await library.waitForDataLoad('item');
 
-		let item = Zotero.Items.get(itemID);
+		let item = Trellis.Items.get(itemID);
 		if (!item) {
 			throw new Error('Item does not exist');
 		}
@@ -79,9 +79,9 @@ Zotero.Notes = new function () {
 		}
 
 		if (win && !openInWindow && !allowDuplicate && !editorInstance) {
-			let existingTabID = win.Zotero_Tabs.getTabIDByItemID(itemID);
+			let existingTabID = win.Trellis_Tabs.getTabIDByItemID(itemID);
 			if (existingTabID) {
-				win.Zotero_Tabs.select(existingTabID, false, { location });
+				win.Trellis_Tabs.select(existingTabID, false, { location });
 				// Wait for the note editor to load
 				let timeout = 3000;
 				for (let i = 0; i < timeout; i += 100) {
@@ -102,7 +102,7 @@ Zotero.Notes = new function () {
 				editorInstance.focus();
 			}
 			else {
-				win.Zotero_Tabs.select(editorInstance.tabID, true);
+				win.Trellis_Tabs.select(editorInstance.tabID, true);
 			}
 			
 			if (location) {
@@ -117,13 +117,13 @@ Zotero.Notes = new function () {
 		
 			if (itemID) {
 				// Create a name for this window so we can focus it later
-				name = 'zotero-note-' + itemID;
+				name = 'trellis-note-' + itemID;
 			}
 
-			let io = { itemID, parentItemKey, location, _initPromise: Zotero.Promise.defer() };
+			let io = { itemID, parentItemKey, location, _initPromise: Trellis.Promise.defer() };
 			Services.ww.openWindow(
 				win,
-				'chrome://zotero/content/note.xhtml',
+				'chrome://trellis/content/note.xhtml',
 				name,
 				'chrome,resizable,centerscreen,dialog=no',
 				io
@@ -141,7 +141,7 @@ Zotero.Notes = new function () {
 				noteEditor = container.querySelector('note-editor.note-tab');
 			}
  			else {
-				({ id, container } = win.Zotero_Tabs.add({
+				({ id, container } = win.Trellis_Tabs.add({
 					id: tabID,
 					type: 'note-unloaded',
 					title,
@@ -210,9 +210,9 @@ Zotero.Notes = new function () {
 	};
 
 	this._updateLayout = function () {
-		let win = Zotero.getMainWindow();
-		win.ZoteroContextPane.update();
-		let { sidebarState } = win.Zotero_Tabs.updateSidebarLayout();
+		let win = Trellis.getMainWindow();
+		win.TrellisContextPane.update();
+		let { sidebarState } = win.Trellis_Tabs.updateSidebarLayout();
 		this.toggleSidebar(sidebarState.open);
 		this.setSidebarWidth(sidebarState.width);
 	};
@@ -229,8 +229,8 @@ Zotero.Notes = new function () {
 	};
 	
 	this.noteToTitle = function (text) {
-		Zotero.debug(`Zotero.Note.noteToTitle() is deprecated -- use Zotero.Utilities.Item.noteToTitle() instead`);
-		return Zotero.Utilities.Item.noteToTitle(text);
+		Trellis.debug(`Trellis.Note.noteToTitle() is deprecated -- use Trellis.Utilities.Item.noteToTitle() instead`);
+		return Trellis.Utilities.Item.noteToTitle(text);
 	};
 	
 	this.registerEditorInstance = function (instance) {
@@ -239,9 +239,9 @@ Zotero.Notes = new function () {
 	
 	this.unregisterEditorInstance = async function (instance) {
 		// Make sure the editor instance is not unregistered while
-		// Zotero.Notes.updateUser is in progress, otherwise the
+		// Trellis.Notes.updateUser is in progress, otherwise the
 		// instance might not get the`disableSaving` flag set
-		await Zotero.DB.executeTransaction(async () => {
+		await Trellis.DB.executeTransaction(async () => {
 			this._editorInstances = this._editorInstances.filter(x => x !== instance);
 		});
 	};
@@ -257,26 +257,26 @@ Zotero.Notes = new function () {
 	 */
 	this.updateUser = async function (fromUserID, toUserID) {
 		if (!fromUserID) {
-			fromUserID = 'local%2F' + Zotero.Users.getLocalUserKey();
+			fromUserID = 'local%2F' + Trellis.Users.getLocalUserKey();
 		}
 		if (!toUserID) {
 			throw new Error('Invalid target userID ' + toUserID);
 		}
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 
-		// `"http://zotero.org/users/${fromUserID}/items/`
-		let from = `%22http%3A%2F%2Fzotero.org%2Fusers%2F${fromUserID}%2Fitems%2F`;
-		// `"http://zotero.org/users/${toUserId}/items/`
-		let to = `%22http%3A%2F%2Fzotero.org%2Fusers%2F${toUserID}%2Fitems%2F`;
+		// `"http://trellis.org/users/${fromUserID}/items/`
+		let from = `%22http%3A%2F%2Ftrellis.org%2Fusers%2F${fromUserID}%2Fitems%2F`;
+		// `"http://trellis.org/users/${toUserId}/items/`
+		let to = `%22http%3A%2F%2Ftrellis.org%2Fusers%2F${toUserID}%2Fitems%2F`;
 		let sql = `UPDATE itemNotes SET note=REPLACE(note, '${from}', '${to}')`;
-		await Zotero.DB.queryAsync(sql);
+		await Trellis.DB.queryAsync(sql);
 
 		// Disable saving for each editor instance to make sure none
 		// of the instances can overwrite our changes
 		this._editorInstances.forEach(x => x.disableSaving = true);
 
 		let idsToRefresh = [];
-		let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType('item');
+		let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType('item');
 		let loadedObjects = objectsClass.getLoaded();
 		for (let object of loadedObjects) {
 			if (object.isNote()) {
@@ -285,8 +285,8 @@ Zotero.Notes = new function () {
 			}
 		}
 
-		Zotero.DB.addCurrentCallback('commit', async () => {
-			await Zotero.Notifier.trigger('refresh', 'item', idsToRefresh);
+		Trellis.DB.addCurrentCallback('commit', async () => {
+			await Trellis.Notifier.trigger('refresh', 'item', idsToRefresh);
 		});
 	};
 
@@ -295,7 +295,7 @@ Zotero.Notes = new function () {
 	 * key in itemKeyMap with the associated value.
 	 * Passed item should have an embedded note or be a note item.
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {Map<String, String>} itemKeyMap
 	 */
 	this.replaceAllItemKeys = function (item, itemKeyMap) {
@@ -311,7 +311,7 @@ Zotero.Notes = new function () {
 	/**
 	 * Convenience function to call replaceAllItemKeys with a single key-value pair.
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @param {String} fromItemKey
 	 * @param {String} toItemKey
 	 */
@@ -336,7 +336,7 @@ Zotero.Notes = new function () {
 			for (let node of nodes) {
 				let attachmentKey = node.getAttribute('data-attachment-key');
 				if (attachmentKey) {
-					let attachment = Zotero.Items.getByLibraryAndKey(item.libraryID, attachmentKey);
+					let attachment = Trellis.Items.getByLibraryAndKey(item.libraryID, attachmentKey);
 					if (attachment && attachment.parentID == item.id) {
 						let dataURI = await attachment.attachmentDataURI;
 						node.setAttribute('src', dataURI);
@@ -353,9 +353,9 @@ Zotero.Notes = new function () {
 					citation = JSON.parse(decodeURIComponent(citation));
 					for (let citationItem of citation.citationItems) {
 						// Get itemData from existing item
-						let item = await Zotero.EditorInstance.getItemFromURIs(citationItem.uris);
+						let item = await Trellis.EditorInstance.getItemFromURIs(citationItem.uris);
 						if (item) {
-							citationItem.itemData = Zotero.Cite.System.prototype.retrieveItem(item);
+							citationItem.itemData = Trellis.Cite.System.prototype.retrieveItem(item);
 						}
 						// Get itemData from note metadata container
 						else {
@@ -378,7 +378,7 @@ Zotero.Notes = new function () {
 					node.setAttribute('data-citation', citation);
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 				}
 			}
 
@@ -401,7 +401,7 @@ Zotero.Notes = new function () {
 	/**
 	 * Download embedded images if they don't exist locally
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @returns {Promise<boolean>}
 	 */
 	this.ensureEmbeddedImagesAreAvailable = async function (item) {
@@ -418,28 +418,28 @@ Zotero.Notes = new function () {
 			});
 		}
 		try {
-			var attachments = Zotero.Items.get(item.getAttachments());
+			var attachments = Trellis.Items.get(item.getAttachments());
 			for (let attachment of attachments) {
 				let path = await attachment.getFilePathAsync();
 				if (!path) {
-					Zotero.debug(`Image file not found for item ${attachment.key}. Trying to download`);
-					let fileSyncingEnabled = Zotero.Sync.Storage.Local.getEnabledForLibrary(item.libraryID);
+					Trellis.debug(`Image file not found for item ${attachment.key}. Trying to download`);
+					let fileSyncingEnabled = Trellis.Sync.Storage.Local.getEnabledForLibrary(item.libraryID);
 					if (!fileSyncingEnabled) {
-						Zotero.debug('File sync is disabled');
+						Trellis.debug('File sync is disabled');
 						resolvePromise();
 						return false;
 					}
 
 					try {
-						let results = await Zotero.Sync.Runner.downloadFile(attachment);
+						let results = await Trellis.Sync.Runner.downloadFile(attachment);
 						if (!results || !results.localChanges) {
-							Zotero.debug('Download failed');
+							Trellis.debug('Download failed');
 							resolvePromise();
 							return false;
 						}
 					}
 					catch (e) {
-						Zotero.debug(e);
+						Trellis.debug(e);
 						resolvePromise();
 						return false;
 					}
@@ -447,7 +447,7 @@ Zotero.Notes = new function () {
 			}
 		}
 		catch (e) {
-			Zotero.debug(e);
+			Trellis.debug(e);
 			resolvePromise();
 			return false;
 		}
@@ -462,14 +462,14 @@ Zotero.Notes = new function () {
 	 *
 	 * Must be called after copying a note
  	 *
-	 * @param {Zotero.Item} fromNote
-	 * @param {Zotero.Item} toNote
+	 * @param {Trellis.Item} fromNote
+	 * @param {Trellis.Item} toNote
 	 * @returns {Promise}
 	 */
 	this.copyEmbeddedImages = async function (fromNote, toNote) {
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		
-		let attachments = Zotero.Items.get(fromNote.getAttachments());
+		let attachments = Trellis.Items.get(fromNote.getAttachments());
 		if (!attachments.length) {
 			return;
 		}
@@ -481,7 +481,7 @@ Zotero.Notes = new function () {
 		// Copy note image attachments and replace keys in the new note
 		for (let attachment of attachments) {
 			if (await attachment.fileExists()) {
-				let copiedAttachment = await Zotero.Attachments.copyEmbeddedImage({ attachment, note: toNote });
+				let copiedAttachment = await Trellis.Attachments.copyEmbeddedImage({ attachment, note: toNote });
 				let node = doc.querySelector(`img[data-attachment-key="${attachment.key}"]`);
 				if (node) {
 					node.setAttribute('data-attachment-key', copiedAttachment.key);
@@ -498,10 +498,10 @@ Zotero.Notes = new function () {
 			+ ps.BUTTON_POS_1 * ps.BUTTON_TITLE_CANCEL;
 		let index = ps.confirmEx(
 			null,
-			Zotero.getString('general.warning'),
-			Zotero.getString('pane.item.notes.ignoreMissingImage'),
+			Trellis.getString('general.warning'),
+			Trellis.getString('pane.item.notes.ignoreMissingImage'),
 			buttonFlags,
-			Zotero.getString('general.continue'),
+			Trellis.getString('general.continue'),
 			null, null, null, {}
 		);
 		return !index;
@@ -523,7 +523,7 @@ Zotero.Notes = new function () {
 		let keys = Array.from(doc.querySelectorAll('img[data-attachment-key]'))
 			.map(node => node.getAttribute('data-attachment-key'));
 
-		let attachments = Zotero.Items.get(item.getAttachments());
+		let attachments = Trellis.Items.get(item.getAttachments());
 		for (let attachment of attachments) {
 			if (!keys.includes(attachment.key)) {
 				await attachment.eraseTx();
@@ -549,7 +549,7 @@ Zotero.Notes = new function () {
 	 *    - citationItem
 	 * - Increase schema version number
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @returns {Promise<boolean>}
 	 */
 	this.upgradeSchemaV1 = async function (item) {
@@ -598,7 +598,7 @@ Zotero.Notes = new function () {
 				node.setAttribute('data-citation', citation);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 
@@ -623,7 +623,7 @@ Zotero.Notes = new function () {
 				node.setAttribute('data-annotation', annotation);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 
@@ -640,5 +640,5 @@ Zotero.Notes = new function () {
 };
 
 if (typeof process === 'object' && process + '' === '[object process]') {
-	module.exports = Zotero.Notes;
+	module.exports = Trellis.Notes;
 }

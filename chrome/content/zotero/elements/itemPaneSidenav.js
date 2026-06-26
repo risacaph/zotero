@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -55,7 +55,7 @@
 			
 			<html:div class="pin-wrapper">
 				<toolbarbutton class="btn"
-					tooltiptext="&zotero.toolbar.openURL.label;"
+					tooltiptext="&trellis.toolbar.openURL.label;"
 					type="menu"
 					data-action="locate"
 					tabindex="0">
@@ -65,15 +65,15 @@
 			
 			<popupset>
 				<menupopup class="context-menu">
-					<menuitem class="menuitem-iconic zotero-menuitem-pin" data-l10n-id="pin-section"/>
-					<menuitem class="menuitem-iconic zotero-menuitem-unpin" data-l10n-id="unpin-section"/>
-					<menuseparator class="zotero-menuitem-pin-separator"/>
-					<menuitem class="menuitem-iconic zotero-menuitem-reorder zotero-menuitem-reorder-up" data-l10n-id="sidenav-reorder-up"/>
-					<menuitem class="menuitem-iconic zotero-menuitem-reorder zotero-menuitem-reorder-down" data-l10n-id="sidenav-reorder-down"/>
-					<menuitem class="menuitem-iconic zotero-menuitem-reorder zotero-menuitem-reorder-reset" data-l10n-id="sidenav-reorder-reset"/>
+					<menuitem class="menuitem-iconic trellis-menuitem-pin" data-l10n-id="pin-section"/>
+					<menuitem class="menuitem-iconic trellis-menuitem-unpin" data-l10n-id="unpin-section"/>
+					<menuseparator class="trellis-menuitem-pin-separator"/>
+					<menuitem class="menuitem-iconic trellis-menuitem-reorder trellis-menuitem-reorder-up" data-l10n-id="sidenav-reorder-up"/>
+					<menuitem class="menuitem-iconic trellis-menuitem-reorder trellis-menuitem-reorder-down" data-l10n-id="sidenav-reorder-down"/>
+					<menuitem class="menuitem-iconic trellis-menuitem-reorder trellis-menuitem-reorder-reset" data-l10n-id="sidenav-reorder-reset"/>
 				</menupopup>
 			</popupset>
-		`, ['chrome://zotero/locale/zotero.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd']);
 
 		_initialized = false;
 		
@@ -218,7 +218,7 @@
 			}
 			let orderable
 				// Built-in or orderable custom sections
-				= this._builtInPanes.includes(paneID) || Zotero.ItemPaneManager.isSectionOrderable(paneID);
+				= this._builtInPanes.includes(paneID) || Trellis.ItemPaneManager.isSectionOrderable(paneID);
 			return orderable;
 		}
 
@@ -287,9 +287,9 @@
 						else {
 							locateMode = "tab";
 						}
-						await Zotero_LocateMenu.buildLocateMenu(menu, { locateMode });
+						await Trellis_LocateMenu.buildLocateMenu(menu, { locateMode });
 
-						Zotero.MenuManager.updateMenuPopup(menu, "sidenav/locate", {
+						Trellis.MenuManager.updateMenuPopup(menu, "sidenav/locate", {
 							event: undefined,
 							getContext: () => {
 								let ret = {
@@ -303,8 +303,8 @@
 									ret.tabType = this.container.tabType;
 									ret.tabID = this.container.tabID;
 								}
-								if (typeof Zotero_Tabs !== 'undefined') {
-									let { subType: tabSubType } = Zotero_Tabs.getTabInfo();
+								if (typeof Trellis_Tabs !== 'undefined') {
+									let { subType: tabSubType } = Trellis_Tabs.getTabInfo();
 									ret.tabSubType = tabSubType;
 								}
 								return ret;
@@ -323,25 +323,25 @@
 			this._buttonContainer.addEventListener('dragend', this.handleButtonDragEnd);
 			this._buttonContainer.addEventListener('dragleave', this.handleButtonDragLeave);
 			
-			this.querySelector('.zotero-menuitem-pin').addEventListener('command', () => {
+			this.querySelector('.trellis-menuitem-pin').addEventListener('command', () => {
 				this.container.scrollToPane(this._contextMenuTarget, 'smooth');
 				this.pinnedPane = this._contextMenuTarget;
 			});
-			this.querySelector('.zotero-menuitem-unpin').addEventListener('command', () => {
+			this.querySelector('.trellis-menuitem-unpin').addEventListener('command', () => {
 				this.pinnedPane = null;
 			});
-			this.querySelector('.zotero-menuitem-reorder-up').addEventListener('command', () => {
+			this.querySelector('.trellis-menuitem-reorder-up').addEventListener('command', () => {
 				this.handlePaneMove(this._contextMenuTarget, 'up');
 			});
-			this.querySelector('.zotero-menuitem-reorder-down').addEventListener('command', () => {
+			this.querySelector('.trellis-menuitem-reorder-down').addEventListener('command', () => {
 				this.handlePaneMove(this._contextMenuTarget, 'down');
 			});
-			this.querySelector('.zotero-menuitem-reorder-reset').addEventListener('command', () => {
+			this.querySelector('.trellis-menuitem-reorder-reset').addEventListener('command', () => {
 				this.resetPaneOrder();
 			});
 			this.setAttribute("role", "tablist");
 
-			this._prefObserverID = Zotero.Prefs.registerObserver("sidenav.order", this.handlePaneOrderChange);
+			this._prefObserverID = Trellis.Prefs.registerObserver("sidenav.order", this.handlePaneOrderChange);
 
 			this._initialized = true;
 		}
@@ -357,7 +357,7 @@
 			this._buttonContainer.removeEventListener('dragend', this.handleButtonDragEnd);
 			this._buttonContainer.removeEventListener('dragleave', this.handleButtonDragLeave);
 
-			Zotero.Prefs.unregisterObserver(this._prefObserverID);
+			Trellis.Prefs.unregisterObserver(this._prefObserverID);
 
 			this._initialized = false;
 		}
@@ -406,7 +406,7 @@
 				}
 				if (action == 'toggle-pane') {
 					document.l10n.setAttributes(button,
-						Zotero_Tabs.selectedType === 'library'
+						Trellis_Tabs.selectedType === 'library'
 							? 'toggle-item-pane'
 							: 'toggle-context-pane');
 				}
@@ -442,7 +442,7 @@
 				}
 				// If the pane ID is not in the current order, check if it's a plugin ID
 				if (!installedPluginIDs) {
-					installedPluginIDs = (await Zotero.Plugins.getAllPluginIDs()).map(
+					installedPluginIDs = (await Trellis.Plugins.getAllPluginIDs()).map(
 						// Escape the plugin ID to match the pane ID generation
 						id => CSS.escape(id)
 					);
@@ -456,13 +456,13 @@
 				currentOrder.push(paneID);
 			}
 
-			Zotero.Prefs.set("sidenav.order", currentOrder.join(","));
+			Trellis.Prefs.set("sidenav.order", currentOrder.join(","));
 		}
 		
 
 		getPersistedOrder(value = null) {
 			if (value === null) {
-				value = Zotero.Prefs.get("sidenav.order");
+				value = Trellis.Prefs.get("sidenav.order");
 			}
 			if (!value) return this._builtInPanes;
 			try {
@@ -706,7 +706,7 @@
 		handleKeyDown = (event) => {
 			if (event.key == "Tab" && !event.shiftKey) {
 				// Wrap focus around to the tab bar
-				Zotero_Tabs.moveFocus("current");
+				Trellis_Tabs.moveFocus("current");
 				event.preventDefault();
 			}
 			if (event.key == "Tab" && event.shiftKey) {
@@ -757,7 +757,7 @@
 					}
 					// Otherwise, focus the top-level scrollable itemPane
 					else {
-						this._container.querySelector(".zotero-view-item").focus();
+						this._container.querySelector(".trellis-view-item").focus();
 					}
 				});
 			}
@@ -842,17 +842,17 @@
 			let isPinnable = this.isPanePinnable(paneID);
 			let pinHidden = !isPinnable || this.pinnedPane == paneID;
 			let unpinHidden = !isPinnable || this.pinnedPane != paneID;
-			this.querySelector('.zotero-menuitem-pin').hidden = pinHidden;
-			this.querySelector('.zotero-menuitem-unpin').hidden = unpinHidden;
-			this.querySelector('.zotero-menuitem-pin-separator').hidden = !isPinnable;
+			this.querySelector('.trellis-menuitem-pin').hidden = pinHidden;
+			this.querySelector('.trellis-menuitem-unpin').hidden = unpinHidden;
+			this.querySelector('.trellis-menuitem-pin-separator').hidden = !isPinnable;
 
 			let canReorder = !!this.container?.supportsReorder;
 			let moveUpHidden = !this.isPaneMovable(paneID, 'up');
 			let moveDownHidden = !this.isPaneMovable(paneID, 'down');
 			let resetHidden = !canReorder || !this.isOrderChanged();
-			this.querySelector('.zotero-menuitem-reorder-up').hidden = moveUpHidden;
-			this.querySelector('.zotero-menuitem-reorder-down').hidden = moveDownHidden;
-			this.querySelector('.zotero-menuitem-reorder-reset').hidden = resetHidden;
+			this.querySelector('.trellis-menuitem-reorder-up').hidden = moveUpHidden;
+			this.querySelector('.trellis-menuitem-reorder-down').hidden = moveDownHidden;
+			this.querySelector('.trellis-menuitem-reorder-reset').hidden = resetHidden;
 
 			// Don't open an empty popup
 			if (pinHidden && unpinHidden && moveUpHidden && moveDownHidden && resetHidden) {
@@ -909,11 +909,11 @@
 				clone.remove();
 			}, 0);
 			// Set the data to the pane ID.
-			event.dataTransfer.setData("zotero/sidenav", paneID);
+			event.dataTransfer.setData("trellis/sidenav", paneID);
 		};
 
 		handleButtonDragOver = (event) => {
-			let paneID = event.dataTransfer.getData("zotero/sidenav");
+			let paneID = event.dataTransfer.getData("trellis/sidenav");
 			if (!paneID) return;
 			event.preventDefault();
 			
@@ -953,7 +953,7 @@
 		};
 
 		handleButtonDrop = async (event) => {
-			let paneID = event.dataTransfer.getData("zotero/sidenav");
+			let paneID = event.dataTransfer.getData("trellis/sidenav");
 			if (!paneID) return;
 			event.preventDefault();
 
@@ -974,7 +974,7 @@
 		};
 
 		handleButtonDragEnd = (event) => {
-			if (!event.dataTransfer.types.includes("zotero/sidenav")) {
+			if (!event.dataTransfer.types.includes("trellis/sidenav")) {
 				return;
 			}
 			this._draggedWrapper = null;

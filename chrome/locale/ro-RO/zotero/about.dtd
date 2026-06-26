@@ -1,13 +1,13 @@
-<!ENTITY zotero.version "versiune">
-<!ENTITY zotero.whatsNew "Ce este nou">
-<!ENTITY zotero.createdby "Creat de:">
-<!ENTITY zotero.director "Director:">
-<!ENTITY zotero.directors "Directori:">
-<!ENTITY zotero.developers "Dezvoltatori:">
-<!ENTITY zotero.alumni "Alumni:">
-<!ENTITY zotero.about.localizations "Localizări:">
-<!ENTITY zotero.about.additionalSoftware "Software de la terți:">
-<!ENTITY zotero.thanks "Mulțumiri speciale:">
-<!ENTITY zotero.about.close "Închide">
-<!ENTITY zotero.moreCreditsAndAcknowledgements "Alți participanți și mulțumiri suplimentare">
-<!ENTITY zotero.citationProcessing "Procesare citări și bibliografie">
+<!ENTITY trellis.version "versiune">
+<!ENTITY trellis.whatsNew "Ce este nou">
+<!ENTITY trellis.createdby "Creat de:">
+<!ENTITY trellis.director "Director:">
+<!ENTITY trellis.directors "Directori:">
+<!ENTITY trellis.developers "Dezvoltatori:">
+<!ENTITY trellis.alumni "Alumni:">
+<!ENTITY trellis.about.localizations "Localizări:">
+<!ENTITY trellis.about.additionalSoftware "Software de la terți:">
+<!ENTITY trellis.thanks "Mulțumiri speciale:">
+<!ENTITY trellis.about.close "Închide">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Alți participanți și mulțumiri suplimentare">
+<!ENTITY trellis.citationProcessing "Procesare citări și bibliografie">

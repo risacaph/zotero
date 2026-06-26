@@ -3,35 +3,35 @@
     
     Copyright © 2014 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-if (!Zotero.Sync.Data) {
-	Zotero.Sync.Data = {};
+if (!Trellis.Sync.Data) {
+	Trellis.Sync.Data = {};
 }
 
-Zotero.Sync.Data.Local = {
+Trellis.Sync.Data.Local = {
 	_syncQueueIntervals: [0.5, 1, 4, 16, 16, 16, 16, 16, 16, 16, 64], // hours
-	_loginManagerHost: 'chrome://zotero',
-	_loginManagerRealm: 'Zotero Web API (encrypted)',
-	_loginManagerRealmLegacy: 'Zotero Web API',
+	_loginManagerHost: 'chrome://trellis',
+	_loginManagerRealm: 'Trellis Web API (encrypted)',
+	_loginManagerRealmLegacy: 'Trellis Web API',
 	_lastSyncTime: null,
 	_lastClassicSyncTime: null,
 	// Item/Collection-only -- synced settings can't affect the undo stack
@@ -72,29 +72,29 @@ Zotero.Sync.Data.Local = {
 			let apiKey = legacyLogin.password;
 			if (!this._mirroredAPIKey) {
 				try {
-					Zotero.debug("Mirroring plaintext API key to encrypted storage");
+					Trellis.debug("Mirroring plaintext API key to encrypted storage");
 					await this._writeEncryptedAPIKey(apiKey);
 					this._mirroredAPIKey = true;
 				}
 				catch (e) {
-					Zotero.logError(e);
-					Zotero.OSKeyStore.alertMigrateFailed();
+					Trellis.logError(e);
+					Trellis.OSKeyStore.alertMigrateFailed();
 				}
 			}
 			return apiKey;
 		}
 		var login = this._getAPIKeyLoginInfo();
 		if (login) {
-			return Zotero.OSKeyStore.decrypt(login.password);
+			return Trellis.OSKeyStore.decrypt(login.password);
 		}
 		// If the login manager had to be reset, the stored API key is gone, so tell the user
 		// to log in again
 		if (this._loginManagerRepaired && !this._loginManagerRepairAlertShown) {
 			this._loginManagerRepairAlertShown = true;
-			Zotero.alert(
+			Trellis.alert(
 				null,
-				Zotero.getString('general-error'),
-				Zotero.getString('login-manager-reset')
+				Trellis.getString('general-error'),
+				Trellis.getString('login-manager-reset')
 			);
 		}
 		// Fallback to old username/password
@@ -110,7 +110,7 @@ Zotero.Sync.Data.Local = {
 			return true;
 		}
 		// If no API key, check for legacy login
-		var username = Zotero.Prefs.get('sync.server.username');
+		var username = Trellis.Prefs.get('sync.server.username');
 		return username && !!this.getLegacyPassword(username)
 	},
 	
@@ -122,13 +122,13 @@ Zotero.Sync.Data.Local = {
 		// Clear old login
 		if ((!apiKey || apiKey === "")) {
 			if (oldLoginInfo) {
-				Zotero.debug("Clearing old API key");
+				Trellis.debug("Clearing old API key");
 				Services.logins.removeLogin(oldLoginInfo);
 			}
 			if (legacyLoginInfo) {
 				Services.logins.removeLogin(legacyLoginInfo);
 			}
-			Zotero.Notifier.trigger('delete', 'api-key', []);
+			Trellis.Notifier.trigger('delete', 'api-key', []);
 			return;
 		}
 		
@@ -139,14 +139,14 @@ Zotero.Sync.Data.Local = {
 			// If the write failed because the key database was unusable, reset the login
 			// manager and retry, so that logging in works without a manual fix
 			if (!this.repairLoginManager()) {
-				Zotero.OSKeyStore.alertSaveFailed();
+				Trellis.OSKeyStore.alertSaveFailed();
 				throw e;
 			}
 			try {
 				await this._writeEncryptedAPIKey(apiKey);
 			}
 			catch (e) {
-				Zotero.OSKeyStore.alertSaveFailed();
+				Trellis.OSKeyStore.alertSaveFailed();
 				throw e;
 			}
 		}
@@ -154,13 +154,13 @@ Zotero.Sync.Data.Local = {
 		if (legacyLoginInfo) {
 			Services.logins.removeLogin(legacyLoginInfo);
 		}
-		Zotero.Notifier.trigger('modify', 'api-key', []);
+		Trellis.Notifier.trigger('modify', 'api-key', []);
 	},
 	
 	
 	_writeEncryptedAPIKey: async function (apiKey) {
 		var oldLoginInfo = this._getAPIKeyLoginInfo();
-		var storedValue = await Zotero.OSKeyStore.encrypt(apiKey);
+		var storedValue = await Trellis.OSKeyStore.encrypt(apiKey);
 		var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
 				Components.interfaces.nsILoginInfo, "init");
 		var loginInfo = new nsLoginInfo(
@@ -173,11 +173,11 @@ Zotero.Sync.Data.Local = {
 			''
 		);
 		if (!oldLoginInfo) {
-			Zotero.debug("Setting API key");
+			Trellis.debug("Setting API key");
 			await Services.logins.addLoginAsync(loginInfo);
 		}
 		else {
-			Zotero.debug("Replacing API key");
+			Trellis.debug("Replacing API key");
 			Services.logins.modifyLogin(oldLoginInfo, loginInfo);
 		}
 	},
@@ -196,72 +196,72 @@ Zotero.Sync.Data.Local = {
 	 * @return {Boolean} - True to continue, false to cancel
 	 */
 	checkUser: async function (win, userID, username, name, emails) {
-		var lastUserID = Zotero.Users.getCurrentUserID();
-		var lastUsername = Zotero.Users.getCurrentUsername();
-		var lastName = Zotero.Users.getCurrentName();
+		var lastUserID = Trellis.Users.getCurrentUserID();
+		var lastUsername = Trellis.Users.getCurrentUsername();
+		var lastName = Trellis.Users.getCurrentName();
 		
 		if (lastUserID && lastUserID != userID) {
-			Zotero.debug(`Last user id ${lastUserID}, current user id ${userID}, `
+			Trellis.debug(`Last user id ${lastUserID}, current user id ${userID}, `
 				+ `last username '${lastUsername}', current username '${username}'`, 2);
 			var io = {
-				title: Zotero.getString('general.warning'),
-				text: Zotero.getString(
+				title: Trellis.getString('general.warning'),
+				text: Trellis.getString(
 						'account.lastSyncWithDifferentAccount',
-						[Zotero.appName, lastUsername, username]
+						[Trellis.appName, lastUsername, username]
 					) + '\n\n'
-					+ Zotero.getString(
+					+ Trellis.getString(
 						'account.lastSyncWithDifferentAccount.beforeContinuing',
-						[lastUsername, Zotero.appName]
+						[lastUsername, Trellis.appName]
 					),
-				checkboxLabel: Zotero.getString('account.confirmDelete', lastUsername),
-				acceptLabel: Zotero.getString('account.confirmDelete.button'),
-				extra2Label: Zotero.getString('general.moreInformation')
+				checkboxLabel: Trellis.getString('account.confirmDelete', lastUsername),
+				acceptLabel: Trellis.getString('account.confirmDelete.button'),
+				extra2Label: Trellis.getString('general.moreInformation')
 			};
-			win.openDialog("chrome://zotero/content/hardConfirmationDialog.xhtml", "",
+			win.openDialog("chrome://trellis/content/hardConfirmationDialog.xhtml", "",
 				"chrome,dialog,modal,centerscreen", io);
 			
 			if (io.accept) {
-				var resetDataDirFile = OS.Path.join(Zotero.DataDirectory.dir, 'reset-data-directory');
-				await Zotero.File.putContentsAsync(resetDataDirFile, '');
+				var resetDataDirFile = OS.Path.join(Trellis.DataDirectory.dir, 'reset-data-directory');
+				await Trellis.File.putContentsAsync(resetDataDirFile, '');
 				
-				Zotero.Prefs.clear('sync.storage.downloadMode.groups');
-				Zotero.Prefs.clear('sync.storage.groups.enabled');
-				Zotero.Prefs.clear('sync.storage.downloadMode.personal');
-				Zotero.Prefs.clear('sync.storage.username');
-				Zotero.Prefs.clear('sync.storage.url');
-				Zotero.Prefs.clear('sync.storage.scheme');
-				Zotero.Prefs.clear('sync.storage.protocol');
-				Zotero.Prefs.clear('sync.storage.enabled');
+				Trellis.Prefs.clear('sync.storage.downloadMode.groups');
+				Trellis.Prefs.clear('sync.storage.groups.enabled');
+				Trellis.Prefs.clear('sync.storage.downloadMode.personal');
+				Trellis.Prefs.clear('sync.storage.username');
+				Trellis.Prefs.clear('sync.storage.url');
+				Trellis.Prefs.clear('sync.storage.scheme');
+				Trellis.Prefs.clear('sync.storage.protocol');
+				Trellis.Prefs.clear('sync.storage.enabled');
 				
-				Zotero.Utilities.Internal.quitZotero(true);
+				Trellis.Utilities.Internal.quitTrellis(true);
 				
 				return true;
 			}
 			else if (io.extra2) {
-				Zotero.launchURL("https://www.zotero.org/support/kb/switching_accounts");
+				Trellis.launchURL("https://www.trellis.org/support/kb/switching_accounts");
 			}
 			
 			return false;
 		}
 		
-		await Zotero.DB.executeTransaction(async function () {
+		await Trellis.DB.executeTransaction(async function () {
 			if (lastUsername != username) {
-				await Zotero.Users.setCurrentUsername(username);
+				await Trellis.Users.setCurrentUsername(username);
 			}
 			if (!lastUserID) {
-				await Zotero.Users.setCurrentUserID(userID);
+				await Trellis.Users.setCurrentUserID(userID);
 				
 				// Replace local user key with libraryID, in case duplicates were merged before the
 				// first sync
-				await Zotero.Relations.updateUser(null, userID);
-				await Zotero.Notes.updateUser(null, userID);
+				await Trellis.Relations.updateUser(null, userID);
+				await Trellis.Notes.updateUser(null, userID);
 			}
 			var newName = name || username;
 			if (lastName != newName) {
-				await Zotero.Users.setCurrentName(newName);
+				await Trellis.Users.setCurrentName(newName);
 			}
 			if (emails) {
-				await Zotero.Users.setCurrentEmails(emails);
+				await Trellis.Users.setCurrentEmails(emails);
 			}
 		});
 		
@@ -273,11 +273,11 @@ Zotero.Sync.Data.Local = {
 	 * @return {Promise<Boolean>} - True if library updated, false to cancel
 	 */
 	checkLibraryForAccess: async function (win, libraryID, editable, filesEditable) {
-		var library = Zotero.Libraries.get(libraryID);
+		var library = Trellis.Libraries.get(libraryID);
 		
 		// If library is going from editable to non-editable and there's unsynced local data, prompt
 		if (library.editable && !editable && ((await this._libraryHasUnsyncedData(libraryID)))) {
-			let index = Zotero.Sync.Data.Utilities.showWriteAccessLostPrompt(win, library);
+			let index = Trellis.Sync.Data.Utilities.showWriteAccessLostPrompt(win, library);
 			// Reset library
 			if (index == 0) {
 				// This check happens before item data is loaded for syncing, so do it now,
@@ -294,7 +294,7 @@ Zotero.Sync.Data.Local = {
 		}
 		
 		if (library.filesEditable && !filesEditable && ((await this._libraryHasUnsyncedFiles(libraryID)))) {
-			let index = Zotero.Sync.Storage.Utilities.showFileWriteAccessLostPrompt(win, library);
+			let index = Trellis.Sync.Storage.Utilities.showFileWriteAccessLostPrompt(win, library);
 			// Reset library files
 			if (index == 0) {
 				// This check happens before item data is loaded for syncing, so do it now,
@@ -315,7 +315,7 @@ Zotero.Sync.Data.Local = {
 	
 	
 	_libraryHasUnsyncedData: async function (libraryID) {
-		let settings = await Zotero.SyncedSettings.getUnsynced(libraryID);
+		let settings = await Trellis.SyncedSettings.getUnsynced(libraryID);
 		if (Object.keys(settings).length) {
 			return true;
 		}
@@ -325,13 +325,13 @@ Zotero.Sync.Data.Local = {
 			return true;
 		}
 
-		for (let objectType of Zotero.DataObjectUtilities.getTypesForLibrary(libraryID)) {
-			let ids = await Zotero.Sync.Data.Local.getUnsynced(objectType, libraryID);
+		for (let objectType of Trellis.DataObjectUtilities.getTypesForLibrary(libraryID)) {
+			let ids = await Trellis.Sync.Data.Local.getUnsynced(objectType, libraryID);
 			if (ids.length) {
 				return true;
 			}
 			
-			let keys = await Zotero.Sync.Data.Local.getDeleted(objectType, libraryID);
+			let keys = await Trellis.Sync.Data.Local.getDeleted(objectType, libraryID);
 			if (keys.length) {
 				return true;
 			}
@@ -344,28 +344,28 @@ Zotero.Sync.Data.Local = {
 	_libraryHasUnsyncedFiles: async function (libraryID) {
 		// TODO: Check for modified file attachment items, which also can't be uploaded
 		// (and which are corrected by resetUnsyncedLibraryFiles())
-		await Zotero.Sync.Storage.Local.checkForUpdatedFiles(libraryID);
-		return !!((await Zotero.Sync.Storage.Local.getFilesToUpload(libraryID))).length;
+		await Trellis.Sync.Storage.Local.checkForUpdatedFiles(libraryID);
+		return !!((await Trellis.Sync.Storage.Local.getFilesToUpload(libraryID))).length;
 	},
 	
 	
 	resetUnsyncedLibraryData: async function (libraryID) {
-		let settings = await Zotero.SyncedSettings.getUnsynced(libraryID);
+		let settings = await Trellis.SyncedSettings.getUnsynced(libraryID);
 		for (let key of Object.keys(settings)) {
-			await Zotero.SyncedSettings.clear(libraryID, key, { skipDeleteLog: true });
+			await Trellis.SyncedSettings.clear(libraryID, key, { skipDeleteLog: true });
 		}
 
 		let deletedSettingKeys = await this.getDeleted('setting', libraryID);
 		await this.removeObjectsFromDeleteLog('setting', libraryID, deletedSettingKeys);
 
-		for (let objectType of Zotero.DataObjectUtilities.getTypesForLibrary(libraryID)) {
+		for (let objectType of Trellis.DataObjectUtilities.getTypesForLibrary(libraryID)) {
 			// New/modified objects
 			let ids = await this.getUnsynced(objectType, libraryID);
 			await this._resetObjects(libraryID, objectType, ids);
 		}
 		
 		// Mark library for full sync
-		var library = Zotero.Libraries.get(libraryID);
+		var library = Trellis.Libraries.get(libraryID);
 		library.libraryVersion = -1;
 		await library.saveTx();
 
@@ -380,10 +380,10 @@ Zotero.Sync.Data.Local = {
 	 */
 	resetUnsyncedLibraryFiles: async function (libraryID) {
 		// Reset unsynced file attachments
-		var itemIDs = await Zotero.Sync.Data.Local.getUnsynced('item', libraryID);
+		var itemIDs = await Trellis.Sync.Data.Local.getUnsynced('item', libraryID);
 		var toReset = [];
 		for (let itemID of itemIDs) {
-			let item = Zotero.Items.get(itemID);
+			let item = Trellis.Items.get(itemID);
 			if (item.isFileAttachment()) {
 				toReset.push(item.id);
 			}
@@ -391,16 +391,16 @@ Zotero.Sync.Data.Local = {
 		await this._resetObjects(libraryID, 'item', toReset);
 		
 		// Delete unsynced files
-		var itemIDs = await Zotero.Sync.Storage.Local.getFilesToUpload(libraryID);
+		var itemIDs = await Trellis.Sync.Storage.Local.getFilesToUpload(libraryID);
 		for (let itemID of itemIDs) {
-			let item = Zotero.Items.get(itemID);
+			let item = Trellis.Items.get(itemID);
 			await item.deleteAttachmentFile();
 		}
 	},
 	
 	
 	_resetObjects: async function (libraryID, objectType, ids) {
-		var objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		var objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
 		
 		var keys = ids.map(id => objectsClass.getLibraryAndKeyFromID(id).key);
 		var cacheVersions = await this.getLatestCacheObjectVersions(objectType, libraryID, keys);
@@ -411,7 +411,7 @@ Zotero.Sync.Data.Local = {
 			// If object is in cache, overwrite with pristine data
 			if (cacheVersions[key]) {
 				let json = await this.getCacheObject(objectType, libraryID, key, cacheVersions[key]);
-				await Zotero.DB.executeTransaction(async function () {
+				await Trellis.DB.executeTransaction(async function () {
 					await this._saveObjectFromJSON(obj, json, {});
 				}.bind(this));
 			}
@@ -432,7 +432,7 @@ Zotero.Sync.Data.Local = {
 		}
 
 		// Deleted objects
-		keys = await Zotero.Sync.Data.Local.getDeleted(objectType, libraryID);
+		keys = await Trellis.Sync.Data.Local.getDeleted(objectType, libraryID);
 		await this.removeObjectsFromDeleteLog(objectType, libraryID, keys);
 	},
 	
@@ -450,22 +450,22 @@ Zotero.Sync.Data.Local = {
 	_getSkippedLibrariesByPrefix: function (prefix) {
 		var pref = 'sync.librariesToSkip';
 		try {
-			var librariesToSkip = JSON.parse(Zotero.Prefs.get(pref) || '[]');
+			var librariesToSkip = JSON.parse(Trellis.Prefs.get(pref) || '[]');
 			return librariesToSkip
 				.filter(id => id.startsWith(prefix))
 				.map(id => parseInt(id.substr(1)));
 		}
 		catch (e) {
-			Zotero.logError(e);
-			Zotero.Prefs.clear(pref);
+			Trellis.logError(e);
+			Trellis.Prefs.clear(pref);
 			return [];
 		}
 	},
 	
 	
 	/**
-	 * @param {Zotero.Library[]} libraries
-	 * @return {Zotero.Library[]}
+	 * @param {Trellis.Library[]} libraries
+	 * @return {Trellis.Library[]}
 	 */
 	filterSkippedLibraries: function (libraries) {
 		var skippedLibraries = this.getSkippedLibraries();
@@ -484,7 +484,7 @@ Zotero.Sync.Data.Local = {
 	/**
 	 * Reset the login manager if the NSS key database is unusable
 	 *
-	 * Zotero never sets a primary password, so if one is set on the key database, it was either
+	 * Trellis never sets a primary password, so if one is set on the key database, it was either
 	 * corrupted or copied in from a Firefox profile, and stored logins can never be decrypted,
 	 * since there's no primary-password prompt. Clear stored logins and reset the key database
 	 * so that credentials can be saved again.
@@ -499,7 +499,7 @@ Zotero.Sync.Data.Local = {
 			if (!token.hasPassword) {
 				return false;
 			}
-			Zotero.debug("Primary password set on NSS key database -- resetting login manager", 1);
+			Trellis.debug("Primary password set on NSS key database -- resetting login manager", 1);
 			Services.logins.removeAllLogins();
 			token.reset();
 			if (token.needsUserInit) {
@@ -507,7 +507,7 @@ Zotero.Sync.Data.Local = {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		this._loginManagerRepaired = true;
@@ -527,7 +527,7 @@ Zotero.Sync.Data.Local = {
 			);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			// If the key database was unusable, reset the login manager so that credentials
 			// can be saved again
 			if (this.repairLoginManager()) {
@@ -535,9 +535,9 @@ Zotero.Sync.Data.Local = {
 			}
 			if (!this._lastLoginManagerErrorTime
 					|| this._lastLoginManagerErrorTime < Date.now() - 60000) {
-				let msg = Zotero.getString('sync.error.loginManagerCorrupted1', Zotero.appName) + "\n\n"
-					+ Zotero.getString('sync.error.loginManagerCorrupted2', Zotero.appName);
-				Zotero.alert(null, Zotero.getString('general.error'), msg);
+				let msg = Trellis.getString('sync.error.loginManagerCorrupted1', Trellis.appName) + "\n\n"
+					+ Trellis.getString('sync.error.loginManagerCorrupted2', Trellis.appName);
+				Trellis.alert(null, Trellis.getString('general.error'), msg);
 				this._lastLoginManagerErrorTime = Date.now();
 			}
 			return false;
@@ -560,7 +560,7 @@ Zotero.Sync.Data.Local = {
 			);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		return logins.length ? logins[0] : false;
@@ -568,7 +568,7 @@ Zotero.Sync.Data.Local = {
 	
 	
 	_getAPIKeyFromLogin: async function () {
-		let username = Zotero.Prefs.get('sync.server.username');
+		let username = Trellis.Prefs.get('sync.server.username');
 		if (username) {
 			// Check for legacy password if no password set in current session
 			// and no API keys stored yet
@@ -577,7 +577,7 @@ Zotero.Sync.Data.Local = {
 				return "";
 			}
 			
-			let json = await Zotero.Sync.Runner.createAPIKeyFromCredentials(username, password);
+			let json = await Trellis.Sync.Runner.createAPIKeyFromCredentials(username, password);
 			this.removeLegacyLogins();
 			return json.key;
 		}
@@ -586,10 +586,10 @@ Zotero.Sync.Data.Local = {
 	
 	
 	getLegacyPassword: function (username) {
-		var loginManagerHost = 'chrome://zotero';
-		var loginManagerRealm = 'Zotero Sync Server';
+		var loginManagerHost = 'chrome://trellis';
+		var loginManagerRealm = 'Trellis Sync Server';
 		
-		Zotero.debug('Getting Zotero sync password');
+		Trellis.debug('Getting Trellis sync password');
 		
 		var loginManager = Components.classes["@mozilla.org/login-manager;1"]
 			.getService(Components.interfaces.nsILoginManager);
@@ -597,7 +597,7 @@ Zotero.Sync.Data.Local = {
 			var logins = loginManager.findLogins(loginManagerHost, null, loginManagerRealm);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return '';
 		}
 		
@@ -612,7 +612,7 @@ Zotero.Sync.Data.Local = {
 		var logins = loginManager.findLogins(loginManagerHost, "", null);
 		for (let i = 0; i < logins.length; i++) {
 			if (logins[i].username == username
-					&& logins[i].formSubmitURL == "Zotero Sync Server") {
+					&& logins[i].formSubmitURL == "Trellis Sync Server") {
 				return logins[i].password;
 			}
 		}
@@ -621,10 +621,10 @@ Zotero.Sync.Data.Local = {
 	
 	
 	removeLegacyLogins: function () {
-		var loginManagerHost = 'chrome://zotero';
-		var loginManagerRealm = 'Zotero Sync Server';
+		var loginManagerHost = 'chrome://trellis';
+		var loginManagerRealm = 'Trellis Sync Server';
 		
-		Zotero.debug('Removing legacy Zotero sync credentials (api key acquired)');
+		Trellis.debug('Removing legacy Trellis sync credentials (api key acquired)');
 		
 		var loginManager = Components.classes["@mozilla.org/login-manager;1"]
 			.getService(Components.interfaces.nsILoginManager);
@@ -632,7 +632,7 @@ Zotero.Sync.Data.Local = {
 			var logins = loginManager.findLogins(loginManagerHost, null, loginManagerRealm);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return '';
 		}
 		
@@ -641,7 +641,7 @@ Zotero.Sync.Data.Local = {
 			loginManager.removeLogin(login);
 		}
 		// Remove the legacy pref
-		Zotero.Prefs.clear('sync.server.username');
+		Trellis.Prefs.clear('sync.server.username');
 	},
 	
 	
@@ -658,7 +658,7 @@ Zotero.Sync.Data.Local = {
 	 */
 	updateLastSyncTime: function () {
 		_lastSyncTime = new Date();
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			"REPLACE INTO version (schema, version) VALUES ('lastsync', ?)",
 			Math.round(_lastSyncTime.getTime() / 1000)
 		);
@@ -667,7 +667,7 @@ Zotero.Sync.Data.Local = {
 	
 	_loadLastSyncTime: async function () {
 		var sql = "SELECT version FROM version WHERE schema='lastsync'";
-		var lastsync = await Zotero.DB.valueQueryAsync(sql);
+		var lastsync = await Trellis.DB.valueQueryAsync(sql);
 		_lastSyncTime = (lastsync ? new Date(lastsync * 1000) : false);
 	},
 	
@@ -678,9 +678,9 @@ Zotero.Sync.Data.Local = {
 	 * @return {Promise<String[]>} - A promise for an array of object keys
 	 */
 	getSynced: function (objectType, libraryID) {
-		var objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		var objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
 		var sql = "SELECT key FROM " + objectsClass.table + " WHERE libraryID=? AND synced=1";
-		return Zotero.DB.columnQueryAsync(sql, [libraryID]);
+		return Trellis.DB.columnQueryAsync(sql, [libraryID]);
 	},
 	
 	
@@ -690,7 +690,7 @@ Zotero.Sync.Data.Local = {
 	 * @return {Promise<Integer[]>} - A promise for an array of object ids
 	 */
 	getUnsynced: async function (objectType, libraryID) {
-		var objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		var objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
 		var sql = "SELECT O." + objectsClass.idColumn + " FROM " + objectsClass.table + " O";
 		if (objectType == 'item') {
 			sql += " LEFT JOIN itemAttachments IA USING (itemID) "
@@ -703,19 +703,19 @@ Zotero.Sync.Data.Local = {
 			sql += " AND (IAn.isExternal IS NULL OR IAN.isExternal=0)";
 		}
 		
-		var ids = await Zotero.DB.columnQueryAsync(sql, [libraryID]);
+		var ids = await Trellis.DB.columnQueryAsync(sql, [libraryID]);
 		
 		// Sort descendent collections last
 		if (objectType == 'collection') {
 			try {
-				ids = Zotero.Collections.sortByLevel(ids.map(id => Zotero.Collections.get(id))).map(o => o.id);
+				ids = Trellis.Collections.sortByLevel(ids.map(id => Trellis.Collections.get(id))).map(o => o.id);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				// If collections were incorrectly nested, fix and try again
-				if (e instanceof Zotero.Error && e.error == Zotero.Error.ERROR_INVALID_OBJECT_NESTING) {
-					let c = Zotero.Collections.get(e.collectionID);
-					Zotero.debug(`Removing parent collection ${c.parentKey} from collection ${c.key}`);
+				if (e instanceof Trellis.Error && e.error == Trellis.Error.ERROR_INVALID_OBJECT_NESTING) {
+					let c = Trellis.Collections.get(e.collectionID);
+					Trellis.debug(`Removing parent collection ${c.parentKey} from collection ${c.key}`);
 					c.parentID = null;
 					await c.saveTx();
 					return this.getUnsynced(...arguments);
@@ -726,10 +726,10 @@ Zotero.Sync.Data.Local = {
 			}
 		}
 		else if (objectType == 'item') {
-			let library = Zotero.Libraries.get(libraryID);
+			let library = Trellis.Libraries.get(libraryID);
 			await library.waitForDataLoad('item');
 			
-			ids = Zotero.Items.sortByParent(ids.map(id => Zotero.Items.get(id))).map(o => o.id);
+			ids = Trellis.Items.sortByParent(ids.map(id => Trellis.Items.get(id))).map(o => o.id);
 		}
 		
 		return ids;
@@ -756,9 +756,9 @@ Zotero.Sync.Data.Local = {
 	getLatestCacheObjectVersions: async function (objectType, libraryID, keys=[]) {
 		var versions = {};
 		
-		await Zotero.Utilities.Internal.forEachChunkAsync(
+		await Trellis.Utilities.Internal.forEachChunkAsync(
 			keys,
-			Zotero.DB.MAX_BOUND_PARAMETERS - 2,
+			Trellis.DB.MAX_BOUND_PARAMETERS - 2,
 			async function (chunk) {
 				// The MAX(version) ensures we get the data from the most recent version of the object,
 				// thanks to SQLite 3.7.11 (http://www.sqlite.org/releaselog/3_7_11.html)
@@ -771,7 +771,7 @@ Zotero.Sync.Data.Local = {
 					params = params.concat(chunk);
 				}
 				sql += "GROUP BY libraryID, key";
-				var rows = await Zotero.DB.queryAsync(sql, params);
+				var rows = await Trellis.DB.queryAsync(sql, params);
 				
 				for (let i = 0; i < rows.length; i++) {
 					let row = rows[i];
@@ -791,7 +791,7 @@ Zotero.Sync.Data.Local = {
 		var sql = "SELECT version FROM syncCache WHERE libraryID=? AND key=? "
 			+ "AND syncObjectTypeID IN (SELECT syncObjectTypeID FROM "
 			+ "syncObjectTypes WHERE name=?) ORDER BY version";
-		return Zotero.DB.columnQueryAsync(sql, [libraryID, key, objectType]);
+		return Trellis.DB.columnQueryAsync(sql, [libraryID, key, objectType]);
 	},
 	
 	
@@ -802,7 +802,7 @@ Zotero.Sync.Data.Local = {
 		var sql = "SELECT version FROM syncCache WHERE libraryID=? AND key=? "
 			+ "AND syncObjectTypeID IN (SELECT syncObjectTypeID FROM "
 			+ "syncObjectTypes WHERE name=?) ORDER BY VERSION DESC LIMIT 1";
-		return Zotero.DB.valueQueryAsync(sql, [libraryID, key, objectType]);
+		return Trellis.DB.valueQueryAsync(sql, [libraryID, key, objectType]);
 	},
 	
 	
@@ -813,15 +813,15 @@ Zotero.Sync.Data.Local = {
 		var sql = "SELECT data FROM syncCache WHERE libraryID=? AND key=? AND version=? "
 			+ "AND syncObjectTypeID IN (SELECT syncObjectTypeID FROM "
 			+ "syncObjectTypes WHERE name=?)";
-		var data = await Zotero.DB.valueQueryAsync(sql, [libraryID, key, version, objectType]);
+		var data = await Trellis.DB.valueQueryAsync(sql, [libraryID, key, version, objectType]);
 		if (data) {
 			try {
 				return JSON.parse(data);
 			}
 			// Shouldn't happen, but don't break syncing if it does
-			// https://forums.zotero.org/discussion/95926/zotero-not-syncing-report-id-1924846177
+			// https://forums.trellis.org/discussion/95926/trellis-not-syncing-report-id-1924846177
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		return false;
@@ -831,19 +831,19 @@ Zotero.Sync.Data.Local = {
 	getCacheObjects: async function (objectType, libraryID, keyVersionPairs) {
 		if (!keyVersionPairs.length) return [];
 		var rows = [];
-		await Zotero.Utilities.Internal.forEachChunkAsync(
+		await Trellis.Utilities.Internal.forEachChunkAsync(
 			keyVersionPairs,
 			240, // SQLITE_MAX_COMPOUND_SELECT defaults to 500
 			async function (chunk) {
 				var sql = "SELECT data FROM syncCache SC JOIN (SELECT "
 					+ chunk.map((pair) => {
-						Zotero.DataObjectUtilities.checkKey(pair[0]);
+						Trellis.DataObjectUtilities.checkKey(pair[0]);
 						return "'" + pair[0] + "' AS key, " + parseInt(pair[1]) + " AS version";
 					}).join(" UNION SELECT ")
 					+ ") AS pairs ON (pairs.key=SC.key AND pairs.version=SC.version) "
 					+ "WHERE libraryID=? AND "
 					+ "syncObjectTypeID IN (SELECT syncObjectTypeID FROM syncObjectTypes WHERE name=?)";
-				rows.push(...(await Zotero.DB.columnQueryAsync(sql, [libraryID, objectType])));
+				rows.push(...(await Trellis.DB.columnQueryAsync(sql, [libraryID, objectType])));
 			}
 		)
 		return rows.map(row => JSON.parse(row));
@@ -853,14 +853,14 @@ Zotero.Sync.Data.Local = {
 	saveCacheObject: async function (objectType, libraryID, json) {
 		json = this._checkCacheJSON(json);
 		
-		Zotero.debug("Saving to sync cache:");
-		Zotero.debug(json);
+		Trellis.debug("Saving to sync cache:");
+		Trellis.debug(json);
 		
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "INSERT OR REPLACE INTO syncCache "
 			+ "(libraryID, key, syncObjectTypeID, version, data) VALUES (?, ?, ?, ?, ?)";
 		var params = [libraryID, json.key, syncObjectTypeID, json.version, JSON.stringify(json)];
-		return Zotero.DB.queryAsync(sql, params);
+		return Trellis.DB.queryAsync(sql, params);
 	},
 	
 	
@@ -870,21 +870,21 @@ Zotero.Sync.Data.Local = {
 		}
 		
 		if (!jsonArray.length) {
-			Zotero.debug("No " + Zotero.DataObjectUtilities.getObjectTypePlural(objectType)
+			Trellis.debug("No " + Trellis.DataObjectUtilities.getObjectTypePlural(objectType)
 				+ " to save to sync cache");
 			return;
 		}
 		
 		jsonArray = jsonArray.map(json => this._checkCacheJSON(json));
 		
-		Zotero.debug("Saving to sync cache:");
-		Zotero.debug(jsonArray);
+		Trellis.debug("Saving to sync cache:");
+		Trellis.debug(jsonArray);
 		
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "INSERT OR REPLACE INTO syncCache "
 			+ "(libraryID, key, syncObjectTypeID, version, data) VALUES ";
-		var chunkSize = Math.floor(Zotero.DB.MAX_BOUND_PARAMETERS / 5);
-		return Zotero.Utilities.Internal.forEachChunkAsync(
+		var chunkSize = Math.floor(Trellis.DB.MAX_BOUND_PARAMETERS / 5);
+		return Trellis.Utilities.Internal.forEachChunkAsync(
 			jsonArray,
 			chunkSize,
 			async function (chunk) {
@@ -893,7 +893,7 @@ Zotero.Sync.Data.Local = {
 					let o = chunk[i];
 					params.push(libraryID, o.key, syncObjectTypeID, o.version, JSON.stringify(o));
 				}
-				return Zotero.DB.queryAsync(
+				return Trellis.DB.queryAsync(
 					sql + chunk.map(() => "(?, ?, ?, ?, ?)").join(", "), params
 				);
 			}
@@ -918,17 +918,17 @@ Zotero.Sync.Data.Local = {
 	 *         {Object[]} [conflicts] - An array of conflicting fields that can't be resolved automatically
 	 */
 	processObjectsFromJSON: async function (objectType, libraryID, json, options = {}) {
-		var objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
-		var objectTypePlural = Zotero.DataObjectUtilities.getObjectTypePlural(objectType);
-		var ObjectType = Zotero.Utilities.capitalize(objectType);
-		var libraryName = Zotero.Libraries.get(libraryID).name;
+		var objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		var objectTypePlural = Trellis.DataObjectUtilities.getObjectTypePlural(objectType);
+		var ObjectType = Trellis.Utilities.capitalize(objectType);
+		var libraryName = Trellis.Libraries.get(libraryID).name;
 		
 		var knownErrors = new Set([
-			'ZoteroInvalidDataError',
-			'ZoteroMissingObjectError'
+			'TrellisInvalidDataError',
+			'TrellisMissingObjectError'
 		]);
 		
-		Zotero.debug("Processing " + json.length + " downloaded "
+		Trellis.debug("Processing " + json.length + " downloaded "
 			+ (json.length == 1 ? objectType : objectTypePlural)
 			+ " for " + libraryName);
 		
@@ -961,14 +961,14 @@ Zotero.Sync.Data.Local = {
 			for (let i = 0; i < json.length; i++) {
 				// Batch notifier updates
 				if (notifierQueues.length == batchSize) {
-					await Zotero.Notifier.commit(notifierQueues);
+					await Trellis.Notifier.commit(notifierQueues);
 					notifierQueues = [];
 					// Get the current batch size, which might have increased
 					if (options.getNotifierBatchSize) {
 						batchSize = options.getNotifierBatchSize()
 					}
 				}
-				let notifierQueue = new Zotero.Notifier.Queue({
+				let notifierQueue = new Trellis.Notifier.Queue({
 					skipAutoSync: true
 				});
 				
@@ -983,8 +983,8 @@ Zotero.Sync.Data.Local = {
 				saveOptions.storageDetailsChanged = false;
 				saveOptions.notifierQueue = notifierQueue;
 				
-				Zotero.debug(`Processing ${objectType} ${libraryID}/${objectKey}`);
-				Zotero.debug(jsonObject);
+				Trellis.debug(`Processing ${objectType} ${libraryID}/${objectKey}`);
+				Trellis.debug(jsonObject);
 				
 				// Skip objects with unmet dependencies
 				if (objectType == 'item' || objectType == 'collection') {
@@ -998,8 +998,8 @@ Zotero.Sync.Data.Local = {
 						if (!parentObj) {
 							let error = new Error("Parent of " + objectType + " "
 								+ libraryID + "/" + jsonData.key + " not found -- skipping");
-							error.name = "ZoteroMissingObjectError";
-							Zotero.debug(error.message);
+							error.name = "TrellisMissingObjectError";
+							Trellis.debug(error.message);
 							results.push({
 								key: objectKey,
 								processed: false,
@@ -1015,12 +1015,12 @@ Zotero.Sync.Data.Local = {
 					if (objectType == 'item' && jsonData.collections) {
 						let error;
 						for (let key of jsonData.collections) {
-							let collection = Zotero.Collections.getByLibraryAndKey(libraryID, key);
+							let collection = Trellis.Collections.getByLibraryAndKey(libraryID, key);
 							if (!collection) {
 								error = new Error(`Collection ${libraryID}/${key} not found `
 									+ `-- skipping item`);
-								error.name = "ZoteroMissingObjectError";
-								Zotero.debug(error.message);
+								error.name = "TrellisMissingObjectError";
+								Trellis.debug(error.message);
 								results.push({
 									key: objectKey,
 									processed: false,
@@ -1046,13 +1046,13 @@ Zotero.Sync.Data.Local = {
 				// Errors have to be thrown in order to roll back the transaction, so catch those here
 				// and continue
 				try {
-					await Zotero.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(async function () {
 						let obj = await objectsClass.getByLibraryAndKeyAsync(
 							libraryID, objectKey, { noCache: true }
 						);
 						let restored = false;
 						if (obj) {
-							Zotero.debug("Matching local " + objectType + " exists", 4);
+							Trellis.debug("Matching local " + objectType + " exists", 4);
 							
 							let jsonDataLocal = obj.toJSON();
 							
@@ -1072,7 +1072,7 @@ Zotero.Sync.Data.Local = {
 							
 							// Local object has been modified since last sync
 							if (!obj.synced) {
-								Zotero.debug("Local " + objectType + " " + obj.libraryKey
+								Trellis.debug("Local " + objectType + " " + obj.libraryKey
 										+ " has been modified since last sync", 4);
 								
 								let cachedJSON = await this.getCacheObject(
@@ -1104,7 +1104,7 @@ Zotero.Sync.Data.Local = {
 								
 								// If no changes, just update local version number and mark as synced
 								if (!result.changes.length && !result.conflicts.length) {
-									Zotero.debug("No remote changes to apply to local "
+									Trellis.debug("No remote changes to apply to local "
 										+ objectType + " " + obj.libraryKey);
 									saveOptions.skipData = true;
 									// If either there were additional local changes after cancelling
@@ -1147,10 +1147,10 @@ Zotero.Sync.Data.Local = {
 										throw e;
 									}
 									
-									Zotero.debug("Conflict!", 2);
-									Zotero.debug(jsonDataLocal);
-									Zotero.debug(jsonData);
-									Zotero.debug(result);
+									Trellis.debug("Conflict!", 2);
+									Trellis.debug(jsonDataLocal);
+									Trellis.debug(jsonData);
+									Trellis.debug(result);
 									results.push({
 										libraryID,
 										key: objectKey,
@@ -1165,9 +1165,9 @@ Zotero.Sync.Data.Local = {
 								}
 								
 								// If no conflicts, apply remote changes automatically
-								Zotero.debug(`Applying remote changes to ${objectType} `
+								Trellis.debug(`Applying remote changes to ${objectType} `
 									+ obj.libraryKey);
-								Zotero.debug(result.changes);
+								Trellis.debug(result.changes);
 								// If there were local changes as well, keep object as unsynced and
 								// save the remote version to the sync cache rather than the merged
 								// version
@@ -1175,14 +1175,14 @@ Zotero.Sync.Data.Local = {
 									saveOptions.saveAsUnsynced = true;
 									saveOptions.cacheObject = jsonObject.data;
 								}
-								Zotero.DataObjectUtilities.applyChanges(
+								Trellis.DataObjectUtilities.applyChanges(
 									jsonDataLocal, result.changes
 								);
 								// Transfer properties that aren't in the changeset
 								['version', 'dateAdded', 'dateModified'].forEach(x => {
 									if (jsonData[x] === undefined) return;
 									if (jsonDataLocal[x] !== jsonData[x]) {
-										Zotero.debug(`Applying remote '${x}' value`);
+										Trellis.debug(`Applying remote '${x}' value`);
 									}
 									jsonDataLocal[x] = jsonData[x];
 								})
@@ -1191,7 +1191,7 @@ Zotero.Sync.Data.Local = {
 						}
 						// Object doesn't exist locally
 						else {
-							Zotero.debug(ObjectType + " doesn't exist locally");
+							Trellis.debug(ObjectType + " doesn't exist locally");
 							
 							saveOptions.isNewObject = true;
 							
@@ -1200,12 +1200,12 @@ Zotero.Sync.Data.Local = {
 								objectType, libraryID, objectKey
 							);
 							if (dateDeleted) {
-								Zotero.debug(ObjectType + " was deleted locally");
+								Trellis.debug(ObjectType + " was deleted locally");
 								
 								switch (objectType) {
 									case 'item':
 										if (jsonData.deleted) {
-											Zotero.debug("Remote item is in trash -- allowing local deletion to propagate");
+											Trellis.debug("Remote item is in trash -- allowing local deletion to propagate");
 											results.push({
 												libraryID,
 												key: objectKey,
@@ -1221,7 +1221,7 @@ Zotero.Sync.Data.Local = {
 											conflict: true,
 											left: {
 												deleted: true,
-												dateDeleted: Zotero.Date.dateToSQL(dateDeleted, true)
+												dateDeleted: Trellis.Date.dateToSQL(dateDeleted, true)
 											},
 											right: jsonData
 										});
@@ -1230,7 +1230,7 @@ Zotero.Sync.Data.Local = {
 									// Auto-restore some locally deleted objects that have changed remotely
 									case 'collection':
 									case 'search':
-										Zotero.debug(`${ObjectType} ${objectKey} was modified remotely `
+										Trellis.debug(`${ObjectType} ${objectKey} was modified remotely `
 											+ '-- restoring');
 										await this.removeObjectsFromDeleteLog(
 											objectType,
@@ -1246,7 +1246,7 @@ Zotero.Sync.Data.Local = {
 							}
 							
 							// Create new object
-							obj = new Zotero[ObjectType];
+							obj = new Trellis[ObjectType];
 							obj.libraryID = libraryID;
 							obj.key = objectKey;
 							await obj.loadPrimaryData();
@@ -1276,25 +1276,25 @@ Zotero.Sync.Data.Local = {
 					// Display nicer debug line for known errors
 					if (knownErrors.has(e.name)) {
 						let desc = e.name
-							.replace(/^Zotero/, "")
+							.replace(/^Trellis/, "")
 							// Convert "MissingObjectError" to "missing object error"
 							.split(/([a-z]+)/).join(' ').trim()
 							.replace(/([A-Z]) ([a-z]+)/g, "$1$2").toLowerCase();
-						let msg = Zotero.Utilities.capitalize(desc) + " for "
-							+ `${objectType} ${jsonObject.key} in ${Zotero.Libraries.get(libraryID).name}`;
-						Zotero.debug(msg, 2);
-						Zotero.debug(e, 2);
+						let msg = Trellis.Utilities.capitalize(desc) + " for "
+							+ `${objectType} ${jsonObject.key} in ${Trellis.Libraries.get(libraryID).name}`;
+						Trellis.debug(msg, 2);
+						Trellis.debug(e, 2);
 						Components.utils.reportError(msg + ": " + e.message);
 					}
 					else {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 					
 					if (options.onError) {
 						options.onError(e);
 					}
 					
-					if (Zotero.DB.closed) {
+					if (Trellis.DB.closed) {
 						e.fatal = true;
 					}
 					if (options.stopOnError || e.fatal) {
@@ -1307,12 +1307,12 @@ Zotero.Sync.Data.Local = {
 					}
 				}
 				
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 		}
 		finally {
 			if (notifierQueues.length) {
-				await Zotero.Notifier.commit(notifierQueues);
+				await Trellis.Notifier.commit(notifierQueues);
 			}
 		}
 		
@@ -1320,7 +1320,7 @@ Zotero.Sync.Data.Local = {
 		let skipped = 0;
 		results.forEach(x => x.processed ? processed++ : skipped++);
 		
-		Zotero.debug(`Processed ${processed} `
+		Trellis.debug(`Processed ${processed} `
 			+ (processed == 1 ? objectType : objectTypePlural)
 			+ (skipped ? ` and skipped ${skipped}` : "")
 			+ " in " + libraryName);
@@ -1331,17 +1331,17 @@ Zotero.Sync.Data.Local = {
 	
 	_checkCacheJSON: function (json) {
 		if (json.key === undefined) {
-			Zotero.debug(json, 1);
+			Trellis.debug(json, 1);
 			throw new Error("Missing 'key' property in JSON");
 		}
 		if (json.version === undefined) {
-			Zotero.debug(json, 1);
+			Trellis.debug(json, 1);
 			throw new Error("Missing 'version' property in JSON");
 		}
 		if (json.version === 0) {
-			Zotero.debug(json, 1);
+			Trellis.debug(json, 1);
 			// TODO: Fix tests so this doesn't happen
-			Zotero.warn("'version' cannot be 0 in cache JSON");
+			Trellis.warn("'version' cannot be 0 in cache JSON");
 			//throw new Error("'version' cannot be 0 in cache JSON");
 		}
 		// If direct data object passed, wrap in fake response object
@@ -1369,7 +1369,7 @@ Zotero.Sync.Data.Local = {
 		if (!isNewObject) {
 			// Convert previously used Unix timestamps to ms-based timestamps
 			if (mtime < 10000000000) {
-				Zotero.debug("Converting Unix timestamp '" + mtime + "' to ms");
+				Trellis.debug("Converting Unix timestamp '" + mtime + "' to ms");
 				mtime = mtime * 1000;
 			}
 			var fmtime = null;
@@ -1378,10 +1378,10 @@ Zotero.Sync.Data.Local = {
 			}
 			catch (e) {
 				// This will probably fail later too, but ignore it for now
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			if (fmtime) {
-				let state = Zotero.Sync.Storage.Local.checkFileModTime(item, fmtime, mtime);
+				let state = Trellis.Sync.Storage.Local.checkFileModTime(item, fmtime, mtime);
 				if (state === false) {
 					markToDownload = false;
 				}
@@ -1408,7 +1408,7 @@ Zotero.Sync.Data.Local = {
 	 * @param {Integer} [maxVersion]
 	 */
 	deleteCacheObjectVersions: function (objectType, libraryID, key, minVersion, maxVersion) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "DELETE FROM syncCache WHERE libraryID=? AND key=? AND syncObjectTypeID=?";
 		var params = [libraryID, key, syncObjectTypeID];
 		if (minVersion && minVersion == maxVersion) {
@@ -1425,7 +1425,7 @@ Zotero.Sync.Data.Local = {
 				params.push(maxVersion);
 			}
 		}
-		return Zotero.DB.queryAsync(sql, params);
+		return Trellis.DB.queryAsync(sql, params);
 	},
 	
 	
@@ -1433,27 +1433,27 @@ Zotero.Sync.Data.Local = {
 	 * Delete entries from sync cache that don't exist or are less than the current object version
 	 */
 	purgeCache: async function (objectType, libraryID) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
-		var table = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType).table;
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var table = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType).table;
 		var sql = "DELETE FROM syncCache WHERE ROWID IN ("
 			+ "SELECT SC.ROWID FROM syncCache SC "
 			+ `LEFT JOIN ${table} O USING (libraryID, key, version) `
 			+ "WHERE syncObjectTypeID=? AND SC.libraryID=? AND "
 			+ "(O.libraryID IS NULL OR SC.version < O.version))";
-		await Zotero.DB.queryAsync(sql, [syncObjectTypeID, libraryID]);
+		await Trellis.DB.queryAsync(sql, [syncObjectTypeID, libraryID]);
 	},
 	
 	
 	clearCacheForLibrary: async function (libraryID) {
-		await Zotero.DB.queryAsync("DELETE FROM syncCache WHERE libraryID=?", libraryID);
+		await Trellis.DB.queryAsync("DELETE FROM syncCache WHERE libraryID=?", libraryID);
 	},
 	
 	
 	processConflicts: async function (objectType, libraryID, conflicts, options = {}) {
 		if (!conflicts.length) return [];
 		
-		var objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(objectType);
-		var ObjectType = Zotero.Utilities.capitalize(objectType);
+		var objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(objectType);
+		var ObjectType = Trellis.Utilities.capitalize(objectType);
 		
 		// Sort conflicts by local Date Modified/Deleted
 		conflicts.sort(function (a, b) {
@@ -1472,7 +1472,7 @@ Zotero.Sync.Data.Local = {
 		
 		var mergeData = this.showConflictResolutionWindow(conflicts);
 		if (!mergeData) {
-			Zotero.debug("Conflict resolution was cancelled", 2);
+			Trellis.debug("Conflict resolution was cancelled", 2);
 			for (let conflict of conflicts) {
 				results.push({
 					// Use key from either, in case one side is deleted
@@ -1484,7 +1484,7 @@ Zotero.Sync.Data.Local = {
 			return results;
 		}
 		
-		Zotero.debug("Processing resolved conflicts");
+		Trellis.debug("Processing resolved conflicts");
 		
 		let batchSize = mergeData.length;
 		let notifierQueues = [];
@@ -1492,10 +1492,10 @@ Zotero.Sync.Data.Local = {
 			for (let i = 0; i < mergeData.length; i++) {
 				// Batch notifier updates, despite multiple transactions
 				if (notifierQueues.length == batchSize) {
-					await Zotero.Notifier.commit(notifierQueues);
+					await Trellis.Notifier.commit(notifierQueues);
 					notifierQueues = [];
 				}
-				let notifierQueue = new Zotero.Notifier.Queue;
+				let notifierQueue = new Trellis.Notifier.Queue;
 				
 				let json = mergeData[i].data;
 				
@@ -1515,7 +1515,7 @@ Zotero.Sync.Data.Local = {
 				// Errors have to be thrown in order to roll back the transaction, so catch
 				// those here and continue
 				try {
-					await Zotero.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(async function () {
 						let obj = await objectsClass.getByLibraryAndKeyAsync(
 							libraryID, json.key, { noCache: true }
 						);
@@ -1527,7 +1527,7 @@ Zotero.Sync.Data.Local = {
 									await obj.erase({
 										notifierQueue
 									});
-									Zotero.Sync.Data.Local.markRemoteChangesApplied();
+									Trellis.Sync.Data.Local.markRemoteChangesApplied();
 								}
 								catch (e) {
 									results.push({
@@ -1557,7 +1557,7 @@ Zotero.Sync.Data.Local = {
 						}
 						// Recreate locally deleted object
 						else {
-							obj = new Zotero[ObjectType];
+							obj = new Trellis[ObjectType];
 							obj.libraryID = libraryID;
 							obj.key = json.key;
 							await obj.loadPrimaryData();
@@ -1579,7 +1579,7 @@ Zotero.Sync.Data.Local = {
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					
 					if (options.onError) {
 						options.onError(e);
@@ -1593,7 +1593,7 @@ Zotero.Sync.Data.Local = {
 		}
 		finally {
 			if (notifierQueues.length) {
-				await Zotero.Notifier.commit(notifierQueues);
+				await Trellis.Notifier.commit(notifierQueues);
 			}
 		}
 		
@@ -1602,20 +1602,20 @@ Zotero.Sync.Data.Local = {
 	
 	
 	showConflictResolutionWindow: function (conflicts) {
-		Zotero.debug("Showing conflict resolution window");
-		Zotero.debug(conflicts);
+		Trellis.debug("Showing conflict resolution window");
+		Trellis.debug(conflicts);
 		
 		var io = {
 			dataIn: {
 				captions: [
-					Zotero.getString('sync.conflict.localItem'),
-					Zotero.getString('sync.conflict.remoteItem'),
-					Zotero.getString('sync.conflict.mergedItem')
+					Trellis.getString('sync.conflict.localItem'),
+					Trellis.getString('sync.conflict.remoteItem'),
+					Trellis.getString('sync.conflict.mergedItem')
 				],
 				conflicts
 			}
 		};
-		var url = 'chrome://zotero/content/merge.xhtml';
+		var url = 'chrome://trellis/content/merge.xhtml';
 		var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
 		   .getService(Components.interfaces.nsIWindowMediator);
 		var lastWin = wm.getMostRecentWindow("navigator:browser");
@@ -1649,7 +1649,7 @@ Zotero.Sync.Data.Local = {
 	
 	_loadLastClassicSyncTime: async function () {
 		var sql = "SELECT version FROM version WHERE schema='lastlocalsync'";
-		var lastsync = await Zotero.DB.valueQueryAsync(sql);
+		var lastsync = await Trellis.DB.valueQueryAsync(sql);
 		_lastClassicSyncTime = (lastsync ? new Date(lastsync * 1000) : false);
 	},
 	
@@ -1686,8 +1686,8 @@ Zotero.Sync.Data.Local = {
 						obj[p + 'ID'] = userID;
 						name = name !== '' ? name : username;
 						// Update stored name if it changed
-						if (Zotero.Users.getName(userID) != name) {
-							await Zotero.Users.setName(userID, name);
+						if (Trellis.Users.getName(userID) != name) {
+							await Trellis.Users.setName(userID, name);
 						}
 					}
 				}
@@ -1722,17 +1722,17 @@ Zotero.Sync.Data.Local = {
 				// If storage changes were made (attachment mtime or hash), mark
 				// library as requiring download
 				if (options.isNewObject || options.storageDetailsChanged) {
-					Zotero.Libraries.get(obj.libraryID).storageDownloadNeeded = true;
+					Trellis.Libraries.get(obj.libraryID).storageDownloadNeeded = true;
 				}
 				// Rename file to new filename
 				if (options.renameFile) {
 					try {
-						let dir = Zotero.Attachments.getStorageDirectoryByID(obj.id).path;
+						let dir = Trellis.Attachments.getStorageDirectoryByID(obj.id).path;
 						let previousFile = PathUtils.join(dir, options.previousFilename);
-						await Zotero.File.rename(previousFile, obj.attachmentFilename);
+						await Trellis.File.rename(previousFile, obj.attachmentFilename);
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 			}
@@ -1765,13 +1765,13 @@ Zotero.Sync.Data.Local = {
 			return this._reconcileChangesWithoutCache(objectType, currentJSON, newJSON, ignoreFields);
 		}
 		
-		var changeset1 = Zotero.DataObjectUtilities.diff(originalJSON, currentJSON, ignoreFields);
-		var changeset2 = Zotero.DataObjectUtilities.diff(originalJSON, newJSON, ignoreFields);
+		var changeset1 = Trellis.DataObjectUtilities.diff(originalJSON, currentJSON, ignoreFields);
+		var changeset2 = Trellis.DataObjectUtilities.diff(originalJSON, newJSON, ignoreFields);
 		
-		Zotero.debug("CHANGESET1");
-		Zotero.debug(changeset1);
-		Zotero.debug("CHANGESET2");
-		Zotero.debug(changeset2);
+		Trellis.debug("CHANGESET1");
+		Trellis.debug(changeset1);
+		Trellis.debug("CHANGESET2");
+		Trellis.debug(changeset2);
 		
 		const isAutoMergeType = objectType != 'item';
 		var conflicts = [];
@@ -1799,7 +1799,7 @@ Zotero.Sync.Data.Local = {
 							break;
 						
 						case 'tags':
-							if (!Zotero.Tags.equals(c1.value, c2.value)) {
+							if (!Trellis.Tags.equals(c1.value, c2.value)) {
 								// If just a type difference, treat as modify with type 0 if
 								// not type 0 in changeset1
 								if (c1.op == 'member-add' && c2.op == 'member-add'
@@ -1842,7 +1842,7 @@ Zotero.Sync.Data.Local = {
 					let creators1 = c1.value;
 					let creators2 = c2.value;
 					if (creators1.length == creators2.length
-							&& creators1.every((c, index) => Zotero.Creators.equals(c, creators2[index]))) {
+							&& creators1.every((c, index) => Trellis.Creators.equals(c, creators2[index]))) {
 						matchedLocalChanges.add(i);
 						changeset2.splice(j--, 1);
 						continue;
@@ -1929,7 +1929,7 @@ Zotero.Sync.Data.Local = {
 	 * conflicts.
 	 */
 	_reconcileChangesWithoutCache: function (objectType, currentJSON, newJSON, ignoreFields) {
-		var changeset = Zotero.DataObjectUtilities.diff(currentJSON, newJSON, ignoreFields);
+		var changeset = Trellis.DataObjectUtilities.diff(currentJSON, newJSON, ignoreFields);
 		
 		var changes = [];
 		var conflicts = [];
@@ -1989,8 +1989,8 @@ Zotero.Sync.Data.Local = {
 		conflicts = conflicts.filter((x) => {
 			// If one side has auto-hyphenated ISBN, use that
 			if (x[0].field == 'ISBN' && x[0].op == 'add' && x[1].op == 'add') {
-				let hyphenatedA = Zotero.Utilities.Internal.hyphenateISBN(x[0].value);
-				let hyphenatedB = Zotero.Utilities.Internal.hyphenateISBN(x[1].value);
+				let hyphenatedA = Trellis.Utilities.Internal.hyphenateISBN(x[0].value);
+				let hyphenatedB = Trellis.Utilities.Internal.hyphenateISBN(x[1].value);
 				if (hyphenatedA && hyphenatedB) {
 					// Use remote
 					if (hyphenatedA == x[1].value) {
@@ -2015,13 +2015,13 @@ Zotero.Sync.Data.Local = {
 					a = normalizeHTML(a);
 					b = normalizeHTML(b);
 					if (a == b) {
-						Zotero.debug("Notes differ only by markup -- using remote version");
+						Trellis.debug("Notes differ only by markup -- using remote version");
 						changes.push(x[1]);
 						return false;
 					}
 				}
 				catch (e) {
-					Zotero.logError(e);
+					Trellis.logError(e);
 					return true
 				}
 			}
@@ -2048,11 +2048,11 @@ Zotero.Sync.Data.Local = {
 	 * @return {Promise<Date|false>}
 	 */
 	getDateDeleted: async function (objectType, libraryID, key) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "SELECT dateDeleted FROM syncDeleteLog WHERE libraryID=? AND key=? "
 			+ "AND syncObjectTypeID=?";
-		var date = await Zotero.DB.valueQueryAsync(sql, [libraryID, key, syncObjectTypeID]);
-		return date ? Zotero.Date.sqlToDate(date, true) : false;
+		var date = await Trellis.DB.valueQueryAsync(sql, [libraryID, key, syncObjectTypeID]);
+		return date ? Trellis.Date.sqlToDate(date, true) : false;
 	},
 	
 	
@@ -2060,9 +2060,9 @@ Zotero.Sync.Data.Local = {
 	 * @return {Promise<String[]>} - Promise for array of keys
 	 */
 	getDeleted: async function (objectType, libraryID) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "SELECT key FROM syncDeleteLog WHERE libraryID=? AND syncObjectTypeID=?";
-		return Zotero.DB.columnQueryAsync(sql, [libraryID, syncObjectTypeID]);
+		return Trellis.DB.columnQueryAsync(sql, [libraryID, syncObjectTypeID]);
 	},
 	
 	
@@ -2072,14 +2072,14 @@ Zotero.Sync.Data.Local = {
 	removeObjectsFromDeleteLog: function (objectType, libraryID, keys) {
 		if (!keys.length) Promise.resolve();
 		
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "DELETE FROM syncDeleteLog WHERE libraryID=? AND syncObjectTypeID=? AND key IN (";
-		return Zotero.Utilities.Internal.forEachChunkAsync(
+		return Trellis.Utilities.Internal.forEachChunkAsync(
 			keys,
-			Zotero.DB.MAX_BOUND_PARAMETERS - 2,
+			Trellis.DB.MAX_BOUND_PARAMETERS - 2,
 			async function (chunk) {
 				var params = [libraryID, syncObjectTypeID].concat(chunk);
-				return Zotero.DB.queryAsync(
+				return Trellis.DB.queryAsync(
 					sql + Array(chunk.length).fill('?').join(',') + ")", params
 				);
 			}
@@ -2088,7 +2088,7 @@ Zotero.Sync.Data.Local = {
 	
 	
 	clearDeleteLogForLibrary: async function (libraryID) {
-		await Zotero.DB.queryAsync("DELETE FROM syncDeleteLog WHERE libraryID=?", libraryID);
+		await Trellis.DB.queryAsync("DELETE FROM syncDeleteLog WHERE libraryID=?", libraryID);
 	},
 	
 	
@@ -2099,8 +2099,8 @@ Zotero.Sync.Data.Local = {
 	 * @param {Boolean} [tryImmediately=false] - Assign lastCheck of 0 so item is retried immediately
 	 */
 	addObjectsToSyncQueue: async function (objectType, libraryID, keys, tryImmediately) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
-		var now = tryImmediately ? 0 : Zotero.Date.getUnixTimestamp();
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var now = tryImmediately ? 0 : Trellis.Date.getUnixTimestamp();
 		
 		// Default to first try
 		var keyTries = {};
@@ -2108,14 +2108,14 @@ Zotero.Sync.Data.Local = {
 		
 		// Check current try counts
 		var sql = "SELECT key, tries FROM syncQueue WHERE ";
-		await Zotero.Utilities.Internal.forEachChunkAsync(
+		await Trellis.Utilities.Internal.forEachChunkAsync(
 			keys,
-			Math.floor(Zotero.DB.MAX_BOUND_PARAMETERS / 3),
+			Math.floor(Trellis.DB.MAX_BOUND_PARAMETERS / 3),
 			async function (chunk) {
 				var params = chunk.reduce(
 					(arr, key) => arr.concat([libraryID, key, syncObjectTypeID]), []
 				);
-				var rows = await Zotero.DB.queryAsync(
+				var rows = await Trellis.DB.queryAsync(
 					sql + Array(chunk.length)
 						.fill('(libraryID=? AND key=? AND syncObjectTypeID=?)')
 						.join(' OR '),
@@ -2130,16 +2130,16 @@ Zotero.Sync.Data.Local = {
 		// Insert or update
 		var sql = "INSERT OR REPLACE INTO syncQueue "
 			+ "(libraryID, key, syncObjectTypeID, lastCheck, tries) VALUES ";
-		return Zotero.Utilities.Internal.forEachChunkAsync(
+		return Trellis.Utilities.Internal.forEachChunkAsync(
 			keys,
-			Math.floor(Zotero.DB.MAX_BOUND_PARAMETERS / 5),
+			Math.floor(Trellis.DB.MAX_BOUND_PARAMETERS / 5),
 			function (chunk) {
 				var params = chunk.reduce(
 					(arr, key) => arr.concat(
 						[libraryID, key, syncObjectTypeID, now, keyTries[key]]
 					), []
 				);
-				return Zotero.DB.queryAsync(
+				return Trellis.DB.queryAsync(
 					sql + Array(chunk.length).fill('(?, ?, ?, ?, ?)').join(', '), params
 				);
 			}
@@ -2148,14 +2148,14 @@ Zotero.Sync.Data.Local = {
 	
 	
 	hasObjectsInSyncQueue: function (libraryID) {
-		return Zotero.DB.valueQueryAsync(
+		return Trellis.DB.valueQueryAsync(
 			"SELECT ROWID FROM syncQueue WHERE libraryID=? LIMIT 1", libraryID
 		).then(x => !!x);
 	},
 	
 	
 	getObjectsFromSyncQueue: function (objectType, libraryID) {
-		return Zotero.DB.columnQueryAsync(
+		return Trellis.DB.columnQueryAsync(
 			"SELECT key FROM syncQueue WHERE libraryID=? AND "
 				+ "syncObjectTypeID IN (SELECT syncObjectTypeID FROM syncObjectTypes WHERE name=?)",
 			[libraryID, objectType]
@@ -2164,7 +2164,7 @@ Zotero.Sync.Data.Local = {
 	
 	
 	hasObjectsToTryInSyncQueue: async function (libraryID) {
-		var rows = await Zotero.DB.queryAsync(
+		var rows = await Trellis.DB.queryAsync(
 			"SELECT key, lastCheck, tries FROM syncQueue WHERE libraryID=?", libraryID
 		);
 		for (let row of rows) {
@@ -2174,7 +2174,7 @@ Zotero.Sync.Data.Local = {
 				interval = this._syncQueueIntervals[this._syncQueueIntervals.length - 1];
 			}
 			let nextCheck = row.lastCheck + interval * 60 * 60;
-			if (nextCheck <= Zotero.Date.getUnixTimestamp()) {
+			if (nextCheck <= Trellis.Date.getUnixTimestamp()) {
 				return true;
 			}
 		}
@@ -2183,8 +2183,8 @@ Zotero.Sync.Data.Local = {
 	
 	
 	getObjectsToTryFromSyncQueue: async function (objectType, libraryID) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
-		var rows = await Zotero.DB.queryAsync(
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var rows = await Trellis.DB.queryAsync(
 			"SELECT key, lastCheck, tries FROM syncQueue WHERE libraryID=? AND syncObjectTypeID=?",
 			[libraryID, syncObjectTypeID]
 		);
@@ -2196,7 +2196,7 @@ Zotero.Sync.Data.Local = {
 				interval = this._syncQueueIntervals[this._syncQueueIntervals.length - 1];
 			}
 			let nextCheck = row.lastCheck + interval * 60 * 60;
-			if (nextCheck <= Zotero.Date.getUnixTimestamp()) {
+			if (nextCheck <= Trellis.Date.getUnixTimestamp()) {
 				keysToTry.push(row.key);
 			}
 		}
@@ -2205,14 +2205,14 @@ Zotero.Sync.Data.Local = {
 	
 	
 	removeObjectsFromSyncQueue: function (objectType, libraryID, keys) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType);
 		var sql = "DELETE FROM syncQueue WHERE libraryID=? AND syncObjectTypeID=? AND key IN (";
-		return Zotero.Utilities.Internal.forEachChunkAsync(
+		return Trellis.Utilities.Internal.forEachChunkAsync(
 			keys,
-			Zotero.DB.MAX_BOUND_PARAMETERS - 2,
+			Trellis.DB.MAX_BOUND_PARAMETERS - 2,
 			async function (chunk) {
 				var params = [libraryID, syncObjectTypeID].concat(chunk);
-				return Zotero.DB.queryAsync(
+				return Trellis.DB.queryAsync(
 					sql + Array(chunk.length).fill('?').join(',') + ")", params
 				);
 			}
@@ -2221,28 +2221,28 @@ Zotero.Sync.Data.Local = {
 	
 	
 	clearQueueForLibrary: async function (libraryID) {
-		await Zotero.DB.queryAsync("DELETE FROM syncQueue WHERE libraryID=?", libraryID);
+		await Trellis.DB.queryAsync("DELETE FROM syncQueue WHERE libraryID=?", libraryID);
 	},
 	
 	
 	_removeObjectFromSyncQueue: function (objectType, libraryID, key) {
-		return Zotero.DB.queryAsync(
+		return Trellis.DB.queryAsync(
 			"DELETE FROM syncQueue WHERE libraryID=? AND key=? AND syncObjectTypeID=?",
 			[
 				libraryID,
 				key,
-				Zotero.Sync.Data.Utilities.getSyncObjectTypeID(objectType)
+				Trellis.Sync.Data.Utilities.getSyncObjectTypeID(objectType)
 			]
 		);
 	},
 	
 	
 	resetSyncQueue: function () {
-		return Zotero.DB.queryAsync("DELETE FROM syncQueue");
+		return Trellis.DB.queryAsync("DELETE FROM syncQueue");
 	},
 	
 	
 	resetSyncQueueTries: function () {
-		return Zotero.DB.queryAsync("UPDATE syncQueue SET tries=0");
+		return Trellis.DB.queryAsync("UPDATE syncQueue SET tries=0");
 	}
 }

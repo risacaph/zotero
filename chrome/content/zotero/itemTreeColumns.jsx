@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					http://zotero.org
+					http://trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -49,9 +49,9 @@ const Icons = require('components/icons');
  * @property {boolean} [showInColumnPicker=true] - Default: true. Set to true to show in column picker.
  * @property {boolean} [columnPickerSubMenu=false] - Default: false. Set to true to display the column in "More Columns" submenu of column picker.
  * @property {boolean} [primary] - Should only be one column at the time. Title is the primary column
- * @property {(item: Zotero.Item, dataKey: string) => string} [dataProvider] - Custom data provider that is called when rendering cells
+ * @property {(item: Trellis.Item, dataKey: string) => string} [dataProvider] - Custom data provider that is called when rendering cells
  * @property {(index: number, data: string, column: ItemTreeColumnOptions & {className: string}) => HTMLElement} [renderCell] - The cell renderer function
- * @property {string[]} [zoteroPersist] - Which column properties should be persisted between zotero close
+ * @property {string[]} [trellisPersist] - Which column properties should be persisted between trellis close
  */
 
 /**
@@ -66,22 +66,22 @@ const COLUMNS = [
 		label: "itemFields.title",
 		showInColumnPicker: false,
 		flex: 4,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "firstCreator",
 		defaultIn: ["*"],
-		label: "zotero.items.creator_column",
+		label: "trellis.items.creator_column",
 		showInColumnPicker: true,
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "itemType",
-		label: "zotero.items.itemType",
+		label: "trellis.items.itemType",
 		showInColumnPicker: true,
 		width: "40",
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "date",
@@ -90,31 +90,31 @@ const COLUMNS = [
 		label: "itemFields.date",
 		showInColumnPicker: true,
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "year",
 		disabledIn: ["feeds", "feed"],
 		sortReverse: true,
-		label: "zotero.items.year_column",
+		label: "trellis.items.year_column",
 		showInColumnPicker: true,
 		flex: 1,
 		staticWidth: true,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "publisher",
 		label: "itemFields.publisher",
 		showInColumnPicker: true,
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "publicationTitle",
 		label: "itemFields.publicationTitle",
 		showInColumnPicker: true,
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "journalAbbreviation",
@@ -123,7 +123,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.journalAbbreviation",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "language",
@@ -131,7 +131,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.language",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "accessDate",
@@ -141,7 +141,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.accessDate",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "libraryCatalog",
@@ -150,7 +150,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.libraryCatalog",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "callNumber",
@@ -159,7 +159,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.callNumber",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "rights",
@@ -167,7 +167,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.rights",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "dateAdded",
@@ -176,16 +176,16 @@ const COLUMNS = [
 		showInColumnPicker: true,
 		label: "itemFields.dateAdded",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "dateModified",
 		sortReverse: true,
 		disabledIn: ["feeds", "feed"],
 		showInColumnPicker: true,
-		label: "zotero.items.dateModified_column",
+		label: "trellis.items.dateModified_column",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "lastRead",
@@ -196,7 +196,7 @@ const COLUMNS = [
 		dependsOnChildren: true,
 		label: "items-column-last-read",
 		flex: 2,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "archive",
@@ -205,7 +205,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.archive",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "archiveLocation",
@@ -214,7 +214,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.archiveLocation",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "place",
@@ -223,7 +223,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.place",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "volume",
@@ -232,7 +232,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.volume",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "edition",
@@ -241,7 +241,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.edition",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "number",
@@ -250,7 +250,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.number",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "pages",
@@ -259,7 +259,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.pages",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "issue",
@@ -268,7 +268,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.issue",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "series",
@@ -277,7 +277,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.series",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "seriesTitle",
@@ -286,7 +286,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.seriesTitle",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "court",
@@ -295,7 +295,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.court",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "medium",
@@ -304,7 +304,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.medium",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "type",
@@ -313,7 +313,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.type",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "system",
@@ -322,7 +322,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.system",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "shortTitle",
@@ -331,7 +331,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.shortTitle",
 		flex: 2,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "citationKey",
@@ -340,7 +340,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "itemFields.citationKey",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "extra",
@@ -348,7 +348,7 @@ const COLUMNS = [
 		showInColumnPicker: true,
 		label: "itemFields.extra",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "hasAttachment",
@@ -356,23 +356,23 @@ const COLUMNS = [
 		disabledIn: ["feeds", "feed"],
 		showInColumnPicker: true,
 		dependsOnChildren: true,
-		label: "zotero.tabs.attachments.label",
+		label: "trellis.tabs.attachments.label",
 		iconLabel: <Icons.IconAttachSmall />,
 		fixedWidth: true,
 		width: "32",
-		zoteroPersist: ["hidden", "sortDirection"]
+		trellisPersist: ["hidden", "sortDirection"]
 	},
 	{
 		dataKey: "numNotes",
 		disabledIn: ["feeds", "feed"],
 		showInColumnPicker: true,
 		dependsOnChildren: true,
-		label: "zotero.tabs.notes.label",
+		label: "trellis.tabs.notes.label",
 		iconLabel: <Icons.IconTreeitemNoteSmall />,
 		width: "26",
 		minWidth: 26,
 		staticWidth: true,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "addedBy",
@@ -381,7 +381,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "items-column-added-by",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "lastModifiedBy",
@@ -390,7 +390,7 @@ const COLUMNS = [
 		columnPickerSubMenu: true,
 		label: "items-column-modified-by",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	},
 	{
 		dataKey: "feed",
@@ -398,7 +398,7 @@ const COLUMNS = [
 		showInColumnPicker: true,
 		label: "itemFields.feed",
 		flex: 1,
-		zoteroPersist: ["width", "hidden", "sortDirection"]
+		trellisPersist: ["width", "hidden", "sortDirection"]
 	}
 ];
 

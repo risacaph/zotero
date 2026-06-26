@@ -3,22 +3,22 @@
 	
 	Copyright © 2020 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
 
 {
 	const { ItemPaneSectionElementBase } = ChromeUtils.importESModule(
-		"chrome://zotero/content/elements/itemPaneSectionElementBase.mjs",
+		"chrome://trellis/content/elements/itemPaneSectionElementBase.mjs",
 		{ global: "current" }
 	);
 
@@ -62,7 +62,7 @@
 					</menu>
 				</menupopup>
 			</popupset>
-		`, ['chrome://zotero/locale/zotero.dtd']);
+		`, ['chrome://trellis/locale/trellis.dtd']);
 		
 		_item = null;
 		
@@ -96,17 +96,17 @@
 		}
 
 		init() {
-			this._notifierID = Zotero.Notifier.registerObserver(this, ['item'], 'paneHeader');
+			this._notifierID = Trellis.Notifier.registerObserver(this, ['item'], 'paneHeader');
 			this._prefsObserverIDs = [
-				Zotero.Prefs.registerObserver(PREF_HEADER_MODE, () => {
+				Trellis.Prefs.registerObserver(PREF_HEADER_MODE, () => {
 					this._forceRenderAll();
 				}),
-				Zotero.Prefs.registerObserver(PREF_BIB_ENTRY_STYLE, () => this._forceRenderAll()),
-				Zotero.Prefs.registerObserver(PREF_BIB_ENTRY_LOCALE, () => this._forceRenderAll()),
+				Trellis.Prefs.registerObserver(PREF_BIB_ENTRY_STYLE, () => this._forceRenderAll()),
+				Trellis.Prefs.registerObserver(PREF_BIB_ENTRY_LOCALE, () => this._forceRenderAll()),
 			];
 			
 			this._bibEntryCache = new LRUCache();
-			if (Zotero.Prefs.get(PREF_HEADER_MODE) === 'bibEntry') {
+			if (Trellis.Prefs.get(PREF_HEADER_MODE) === 'bibEntry') {
 				this._cacheCSLEngine();
 			}
 			
@@ -131,11 +131,11 @@
 			this.bibEntryContent.addEventListener('click', (event) => {
 				event.preventDefault();
 				if (event.target.matches('a[href]')) {
-					Zotero.launchURL(event.target.href);
+					Trellis.launchURL(event.target.href);
 				}
 			});
 			this.bibEntryContent.addEventListener('contextmenu', (event) => {
-				if (this._item && Zotero.Styles.initialized()) {
+				if (this._item && Trellis.Styles.initialized()) {
 					this.secondaryPopup.openPopupAtScreen(event.screenX + 1, event.screenY + 1, true);
 				}
 			});
@@ -145,14 +145,14 @@
 			this.viewAsPopup.addEventListener('popupshowing', () => this._buildViewAsMenu(this.viewAsPopup));
 			
 			this.titleField.addEventListener('blur', () => this.save());
-			this.titleField.ariaLabel = Zotero.getString('itemFields.title');
+			this.titleField.ariaLabel = Trellis.getString('itemFields.title');
 			this.titleField.addEventListener('contextmenu', (event) => {
 				if (!this._item
 					// Attachment title field: Use default editable-text context menu
 					|| this._item.isAttachment()) return;
 				
 				event.preventDefault();
-				let menupopup = ZoteroPane.buildFieldTransformMenu({
+				let menupopup = TrellisPane.buildFieldTransformMenu({
 					target: this.titleField,
 					onTransform: (newValues) => {
 						this._setTransformedValue(newValues[0]);
@@ -176,9 +176,9 @@
 		}
 		
 		destroy() {
-			Zotero.Notifier.unregisterObserver(this._notifierID);
+			Trellis.Notifier.unregisterObserver(this._notifierID);
 			for (let id of this._prefsObserverIDs) {
-				Zotero.Prefs.unregisterObserver(id);
+				Trellis.Prefs.unregisterObserver(id);
 			}
 		}
 
@@ -204,7 +204,7 @@
 			await this._item.saveTx({
 				undoAction: 'undo-action-edit-field',
 				undoActionArgs: {
-					field: Zotero.ItemFields.getLocalizedString(this._titleFieldID),
+					field: Trellis.ItemFields.getLocalizedString(this._titleFieldID),
 					count: 1
 				}
 			});
@@ -222,7 +222,7 @@
 				await this._item.saveTx({
 					undoAction: 'undo-action-edit-field',
 					undoActionArgs: {
-						field: Zotero.ItemFields.getLocalizedString(this._titleFieldID),
+						field: Trellis.ItemFields.getLocalizedString(this._titleFieldID),
 						count: 1
 					}
 				});
@@ -243,7 +243,7 @@
 			}
 			if (this._isAlreadyRendered()) return;
 
-			let headerMode = Zotero.Prefs.get(PREF_HEADER_MODE);
+			let headerMode = Trellis.Prefs.get(PREF_HEADER_MODE);
 			if (this._item.isAttachment()) {
 				headerMode = 'title';
 			}
@@ -266,11 +266,11 @@
 			this.classList.remove('no-title-head');
 			
 			if (headerMode === 'bibEntry') {
-				if (!Zotero.Styles.initialized()) {
-					this.bibEntryContent.textContent = Zotero.getString('general.loading');
+				if (!Trellis.Styles.initialized()) {
+					this.bibEntryContent.textContent = Trellis.getString('general.loading');
 					this.bibEntry.classList.add('loading');
 					this.bibEntry.hidden = false;
-					Zotero.Styles.init().then(() => this._forceRenderAll());
+					Trellis.Styles.init().then(() => this._forceRenderAll());
 					return;
 				}
 				
@@ -286,12 +286,12 @@
 			if (headerMode === 'title' || headerMode === 'titleCreatorYear') {
 				let title = "";
 				if (!this._item.isNote()) {
-					this._titleFieldID = Zotero.ItemFields.getFieldIDFromTypeAndBase(this._item.itemTypeID, 'title');
+					this._titleFieldID = Trellis.ItemFields.getFieldIDFromTypeAndBase(this._item.itemTypeID, 'title');
 					title = this.item.getField(this._titleFieldID);
 				}
 				else {
 					this._titleFieldID = "";
-					title = this._item.getDisplayTitle() || Zotero.getString("item-title-empty-note");
+					title = this._item.getDisplayTitle() || Trellis.getString("item-title-empty-note");
 				}
 				
 				// If focused, update the value that will be restored on Escape;
@@ -304,7 +304,7 @@
 				}
 				this.titleField.readOnly = !this.editable;
 				if (this._titleFieldID) {
-					this.titleField.placeholder = Zotero.ItemFields.getLocalizedString(this._titleFieldID);
+					this.titleField.placeholder = Trellis.ItemFields.getLocalizedString(this._titleFieldID);
 				}
 				this.title.hidden = false;
 			}
@@ -335,8 +335,8 @@
 		}
 		
 		_getCSLEngineParams() {
-			let style = Zotero.Styles.get(Zotero.Prefs.get(PREF_BIB_ENTRY_STYLE));
-			let locale = Zotero.Prefs.get(PREF_BIB_ENTRY_LOCALE);
+			let style = Trellis.Styles.get(Trellis.Prefs.get(PREF_BIB_ENTRY_STYLE));
+			let locale = Trellis.Prefs.get(PREF_BIB_ENTRY_LOCALE);
 			return { style, locale };
 		}
 		
@@ -355,7 +355,7 @@
 		_renderBibEntry() {
 			let { style, locale } = this._getCSLEngineParams();
 			if (!style) {
-				Zotero.warn('Item pane header style not found: ' + Zotero.Prefs.get(PREF_BIB_ENTRY_STYLE));
+				Trellis.warn('Item pane header style not found: ' + Trellis.Prefs.get(PREF_BIB_ENTRY_STYLE));
 				return false;
 			}
 			let cslEngine = this._getCSLEngine(style, locale);
@@ -365,7 +365,7 @@
 				// Force refresh items - without this, entries won't change when item data changes
 				cslEngine.updateItems([]);
 				this._bibEntryCache.set(this._item.id,
-					Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine,
+					Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine,
 						[this._item], 'html', false));
 			}
 			
@@ -379,7 +379,7 @@
 			
 			let body = this.bibEntryContent.querySelector('.csl-bib-body');
 			if (!body) {
-				Zotero.debug('No .csl-bib-body found in bib entry');
+				Trellis.debug('No .csl-bib-body found in bib entry');
 				return false;
 			}
 			
@@ -405,7 +405,7 @@
 		}
 		
 		async _cacheCSLEngine() {
-			await Zotero.Styles.init();
+			await Trellis.Styles.init();
 			let { style, locale } = this._getCSLEngineParams();
 			if (!style) {
 				// We'll warn in _renderBibEntry()
@@ -415,15 +415,15 @@
 		}
 
 		_handleSecondaryCopy() {
-			let selectedMode = Zotero.Prefs.get(PREF_HEADER_MODE);
+			let selectedMode = Trellis.Prefs.get(PREF_HEADER_MODE);
 			if (selectedMode === 'titleCreatorYear') {
-				Zotero.Utilities.Internal.copyTextToClipboard(this.creatorYear.textContent);
+				Trellis.Utilities.Internal.copyTextToClipboard(this.creatorYear.textContent);
 			}
 			else if (selectedMode === 'bibEntry') {
-				Zotero_File_Interface.copyItemsToClipboard(
+				Trellis_File_Interface.copyItemsToClipboard(
 					[this._item],
-					Zotero.Prefs.get(PREF_BIB_ENTRY_STYLE),
-					Zotero.Prefs.get(PREF_BIB_ENTRY_LOCALE),
+					Trellis.Prefs.get(PREF_BIB_ENTRY_STYLE),
+					Trellis.Prefs.get(PREF_BIB_ENTRY_LOCALE),
 					false,
 					false
 				);
@@ -433,14 +433,14 @@
 		_buildViewAsMenu(menupopup) {
 			menupopup.replaceChildren();
 			
-			let selectedMode = Zotero.Prefs.get(PREF_HEADER_MODE);
+			let selectedMode = Trellis.Prefs.get(PREF_HEADER_MODE);
 			for (let headerMode of ['title', 'titleCreatorYear', 'bibEntry']) {
 				let menuitem = document.createXULElement('menuitem');
 				menuitem.setAttribute('data-l10n-id', 'item-pane-header-' + headerMode);
 				menuitem.setAttribute('type', 'radio');
 				menuitem.setAttribute('checked', headerMode === selectedMode);
 				menuitem.addEventListener('command', () => {
-					Zotero.Prefs.set(PREF_HEADER_MODE, headerMode);
+					Trellis.Prefs.set(PREF_HEADER_MODE, headerMode);
 				});
 				menupopup.append(menuitem);
 			}
@@ -450,7 +450,7 @@
 			let moreOptionsMenuitem = document.createXULElement('menuitem');
 			moreOptionsMenuitem.setAttribute('data-l10n-id', 'item-pane-header-more-options');
 			moreOptionsMenuitem.addEventListener('command', () => {
-				Zotero.Utilities.Internal.openPreferences('zotero-prefpane-general');
+				Trellis.Utilities.Internal.openPreferences('trellis-prefpane-general');
 			});
 			menupopup.append(moreOptionsMenuitem);
 		}

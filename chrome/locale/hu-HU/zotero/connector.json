@@ -153,13 +153,13 @@
     "message": "Mentés engedélyezése online könyvtárba"
   },
   "reports_report_submitted": {
-    "message": "Hibajelentése elküldésre került.\n\nReport ID: $1\n\nKérjük, tegyen közzé egy üzenetet a Zotero fórumokon ezzel a Report ID, a probléma leírásával és a probléma reprodukálásához szükséges lépésekkel.\n\nA hibajelentéseket csak akkor vizsgáljuk meg, ha azok a fórumokon is megjelennek."
+    "message": "Hibajelentése elküldésre került.\n\nReport ID: $1\n\nKérjük, tegyen közzé egy üzenetet a Trellis fórumokon ezzel a Report ID, a probléma leírásával és a probléma reprodukálásához szükséges lépésekkel.\n\nA hibajelentéseket csak akkor vizsgáljuk meg, ha azok a fórumokon is megjelennek."
   },
   "reports_debug_output_submitted": {
     "message": "A hibakeresés eredménye elküldve.\n\nA hibaazonosító$1."
   },
   "reports_submission_failed": {
-    "message": "Hiba történt a jelentés elküldése közben.\n\n$1\n\nKérjük, ellenőrizze az internetkapcsolatát. Ha a probléma továbbra is fennáll, írjon üzenetet a Zotero Fórumára."
+    "message": "Hiba történt a jelentés elküldése közben.\n\n$1\n\nKérjük, ellenőrizze az internetkapcsolatát. Ha a probléma továbbra is fennáll, írjon üzenetet a Trellis Fórumára."
   },
   "integration_error_clientUpgrade": {
     "message": "A webalapú hivatkozáshoz szükség van $1 vagy későbbire."
@@ -168,7 +168,7 @@
     "message": "A $1 nem tudott kommunikálni a $2 asztali alkalmazással. $2-t meg kell nyitni a webalapú idézés használatához."
   },
   "integration_googleDocs_unlinkBeforeSaving_warning": {
-    "message": "Ez a dokumentum aktív Zotero-hivatkozásokat tartalmaz, amelyek zotero.org linkként jelennek meg egy letöltött példányban."
+    "message": "Ez a dokumentum aktív Trellis-hivatkozásokat tartalmaz, amelyek trellis.org linkként jelennek meg egy letöltött példányban."
   },
   "integration_googleDocs_unlinkBeforeSaving_downloadAnyway": {
     "message": "Mindenképpen töltse le a hivatkozott verziót"
@@ -195,7 +195,7 @@
     "message": "Hivatkozás újralinkelése"
   },
   "integration_googleDocs_orphanedCitations_disclaimer": {
-    "message": "Ezek az idézetek már nem <a target=\"_blank\" href=\"https://www.zotero.org/support/kb/google_docs_citations_unlinked\">kapcsolódnak $1 </a>. Újra kell kapcsolnia őket, mielőtt frissülnének vagy megjelennének az irodalomjegyzékben."
+    "message": "Ezek az idézetek már nem <a target=\"_blank\" href=\"https://www.trellis.org/support/kb/google_docs_citations_unlinked\">kapcsolódnak $1 </a>. Újra kell kapcsolnia őket, mielőtt frissülnének vagy megjelennének az irodalomjegyzékben."
   },
   "reloadViaProxy": {
     "message": "Újratöltés proxyn keresztül"
