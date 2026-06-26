@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/upgrade.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
+
+<wizard id="trellis-schema-upgrade" title="&trellis.upgrade.title;"
+		xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	
+	<script>
+	<![CDATA[
+		var Trellis_Schema_Upgrade = new function() {
+			this.init = init;
+			this.onAdvance = onAdvance;
+			this.doUpgrade = doUpgrade;
+			
+			var obj = window.arguments[0].wrappedJSObject;
+			var Trellis = obj.Trellis;
+			var data = obj.data;
+			
+			function init() {
+				var wizard = document.getElementById('trellis-schema-upgrade');
+				
+				var continueButton = wizard.getButton('next');
+				continueButton.focus(); // prevent focusing upgrade instructions link
+				
+				// Use proper button name in text
+				var continueButtonName = continueButton.getAttribute('label');
+				var str = Trellis.getString('upgrade.advanceMessage', continueButtonName);
+				document.getElementById('trellis-advance-message').setAttribute('value', str);
+				
+				if (data.majorUpgrade) {
+					document.getElementById('trellis-major-upgrade').hidden = false;
+					document.getElementById('trellis-upgrade-required').hidden = true;
+				}
+			}
+			
+			
+			function onAdvance() {
+				var wizard = document.getElementById('trellis-schema-upgrade');
+				wizard.getButton('cancel').setAttribute('disabled', true);
+				wizard.getButton('next').setAttribute('disabled', true);
+				wizard.canRewind = false;
+				wizard.getButton('finish').focus(); // prevent focusing of changelog link
+				Trellis.wait();
+			}
+			
+			
+			function doUpgrade() {
+				var wizard = document.getElementById('trellis-schema-upgrade');
+				
+				onAdvance();
+				
+				try {
+					if (data.integrityCheck) {
+						if (!Trellis.DB.integrityCheck()) {
+							var ps = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+													.getService(Components.interfaces.nsIPromptService);
+							var buttonFlags = (ps.BUTTON_POS_0) * (ps.BUTTON_TITLE_IS_STRING)
+												+ (ps.BUTTON_POS_1) * (ps.BUTTON_TITLE_CANCEL);
+							var index = ps.confirmEx(
+								null,
+								Trellis.getString('general.error'),
+								Trellis.getString('upgrade.integrityCheckFailed'),
+								buttonFlags, Trellis.getString('upgrade.loadDBRepairTool'),
+								null, null, null, {});
+							
+							if (index == 0) {
+								Trellis.initialURL = 'https://www.trellis.org/utils/dbfix/';
+							}
+							
+							_setStartupError();
+							_clickCancel();
+							return;
+						}
+					}
+					
+					Trellis.Schema.updateSchema();
+				}
+				catch (e) {
+					data.msg = Trellis.getString('upgrade.failed');
+					data.e = e;
+					
+					Components.utils.reportError(e);
+					
+					_clickCancel();
+					return;
+				}
+				
+				data.success = true;
+				
+				wizard.advance();
+			}
+			
+			
+			this.onUpgradeInstructionsLinkClick = function () {
+				_setStartupError();
+				Trellis.initialURL = 'http://trellis.org/support/upgrade';
+				_clickCancel();
+			}
+			
+			
+			this.onChangeLogLinkClick = function () {
+				Trellis.initialURL = 'http://trellis.org/support/changelog';
+				document.getElementById('trellis-schema-upgrade').getButton('finish').click();
+			}
+			
+			
+			function _setStartupError() {
+				Trellis.startupError = [
+					Trellis.getString('upgrade.dbUpdateRequired'), Trellis.getString('general.restartFirefox')
+				].join(' ');
+			}
+			
+			
+			function _clickCancel() {
+				var cancelButton = document.getElementById('trellis-schema-upgrade').getButton('cancel');
+				cancelButton.setAttribute('disabled', false);
+				cancelButton.click();
+			}
+		}
+	]]>
+	</script>
+	
+	<wizardpage onpageshow="Trellis_Schema_Upgrade.init()" label=" ">
+		<description>&trellis.upgrade.newVersionInstalled;</description>
+		<description id="trellis-upgrade-required">&trellis.upgrade.upgradeRequired; &trellis.upgrade.autoBackup;</description>
+		<description id="trellis-major-upgrade" hidden="true">
+			<label value="&trellis.upgrade.majorUpgrade;" style="font-weight: 600"/>
+			&trellis.upgrade.majorUpgradeBeforeLink;
+			<label class="text-link" value="&trellis.upgrade.majorUpgradeLink;"
+				onclick="try { Trellis_Schema_Upgrade.onUpgradeInstructionsLinkClick(); } catch (e) { alert(e); }"/>
+			&trellis.upgrade.majorUpgradeAfterLink;
+		</description>
+		<description id="trellis-advance-message"/>
+	</wizardpage>
+	
+	<wizardpage onpageshow="Trellis_Schema_Upgrade.doUpgrade()" label=" ">
+		<description>&trellis.upgrade.upgradeInProgress;</description>
+		<progressmeter mode="undetermined"/>
+	</wizardpage>
+	
+	<wizardpage onpageshow="Trellis_Schema_Upgrade.onAdvance()" label=" ">
+		<description>&trellis.upgrade.upgradeSucceeded;</description>
+		<description>
+			&trellis.upgrade.changeLogBeforeLink;
+			<label class="text-link" value="&trellis.upgrade.changeLogLink;"
+				onclick="Trellis_Schema_Upgrade.onChangeLogLinkClick()"/>
+			&trellis.upgrade.changeLogAfterLink;
+		</description>
+	</wizardpage>
+</wizard>

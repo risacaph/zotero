@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "កំណែ">
+<!ENTITY trellis.whatsNew "What’s new">
+<!ENTITY trellis.createdby "បង្កើតដោយ:">
+<!ENTITY trellis.director "នាយក:">
+<!ENTITY trellis.directors "នាយក:">
+<!ENTITY trellis.developers "អ្នកបង្កើត:">
+<!ENTITY trellis.alumni "សហសេវិកតា:">
+<!ENTITY trellis.about.localizations "ភាសាតាមតំបន់:">
+<!ENTITY trellis.about.additionalSoftware "Third-Party Software:">
+<!ENTITY trellis.thanks "ថ្លែងអំណគុណពិសេស:">
+<!ENTITY trellis.about.close "បិទ">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "ទំនួលស្គាល់ និង ថ្លែងអំណគុណ">
+<!ENTITY trellis.citationProcessing "កំពុងដំណើរការរៀបចំអាគតដ្ឋាន និងគន្ថនិទេ្ទស">

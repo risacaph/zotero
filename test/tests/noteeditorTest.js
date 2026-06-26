@@ -4,8 +4,8 @@ describe("Note Editor", function () {
 	var win, zp;
 	
 	before(function* () {
-		win = yield loadZoteroPane();
-		zp = win.ZoteroPane;
+		win = yield loadTrellisPane();
+		zp = win.TrellisPane;
 	});
 	
 	after(function () {
@@ -13,13 +13,13 @@ describe("Note Editor", function () {
 	});
 	
 	var waitForNoteEditor = async function (item) {
-		var noteEditor = win.document.getElementById('zotero-note-editor');
+		var noteEditor = win.document.getElementById('trellis-note-editor');
 		while (noteEditor.item != item) {
-			Zotero.debug("Waiting for note editor");
-			await Zotero.Promise.delay(50);
-			noteEditor = win.document.getElementById('zotero-note-editor');
+			Trellis.debug("Waiting for note editor");
+			await Trellis.Promise.delay(50);
+			noteEditor = win.document.getElementById('trellis-note-editor');
 		}
-		return new Zotero.Promise((resolve, reject) => {
+		return new Trellis.Promise((resolve, reject) => {
 			noteEditor.onInit(() => resolve(noteEditor));
 		});
 	};

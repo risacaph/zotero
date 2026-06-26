@@ -5,7 +5,7 @@ from functools import cmp_to_key
 from locale import strcoll
 
 locales = {
-    # Keep in sync with locale.js in zotero-client
+    # Keep in sync with locale.js in trellis-client
     'ar': 'عربي',
     'bg-BG': 'Български',
     'br': 'brezhoneg',

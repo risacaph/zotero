@@ -59,7 +59,7 @@ toolbarbutton[status=animate] {
 	}
 }
 
-.zotero-tb-separator {
+.trellis-tb-separator {
 	height: 36px;
 	border-right: var(--material-panedivider);
 }
@@ -78,7 +78,7 @@ $toolbarbutton-icons: (
 );
 
 @each $cls, $icon in $toolbarbutton-icons {
-	#zotero-tb-#{$cls} {
+	#trellis-tb-#{$cls} {
 		@include svgicon-menu($icon, "universal", "20");
 	}
 };

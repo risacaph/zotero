@@ -1,0 +1,19 @@
+<!ENTITY trellis.publications.my_publications "Publicațiile mele">
+
+<!ENTITY trellis.publications.intro "Itemii pe care îi adaugi în Publicațiile mele vor fi afișați în profilul tău pe trellis.org. Dacă alegi să incluzi fișiere anexate, acestea vor fi disponibile public sub licența pe care o specifici. Adaugă doar ceea ce ai creat tu însuți și adaugă fișiere doar dacă ai drepturile de a le distribui și vrei să o faci.">
+<!ENTITY trellis.publications.include.checkbox.files "Include fișiere">
+<!ENTITY trellis.publications.include.checkbox.notes "Include note">
+<!ENTITY trellis.publications.include.adjustAtAnyTime "Poți alege oricând ce să afișezei din colecția Publicațiile mele.">
+
+<!ENTITY trellis.publications.sharing.title "Alege cum poate fi distribuite lucrările tale.">
+<!ENTITY trellis.publications.sharing.text "Poți rezerva toate drepturile pentru lucrările tale, licența este Creative Commons, sau să le oferi domeniului public. În fiecare caz, lucrările vor fi disponibile public via trellis.org.">
+<!ENTITY trellis.publications.sharing.prompt "Vrei să permiți ca alții să aibă dreptul de a distribui lucrările tale?">
+<!ENTITY trellis.publications.sharing.cc "Da, sub licența Creative Commons.">
+<!ENTITY trellis.publications.sharing.cc0 "Da și plasează lucrările mele în domeniul public">
+<!ENTITY trellis.publications.sharing.reserved "Nu, publică lucrările mele doar pe trellis.org">
+
+<!ENTITY trellis.publications.chooseLicense.title "Alege licența Creative Commons">
+<!ENTITY trellis.publications.chooseLicense.text "Licența Creative Commons permite altora să copieze și să distribuie lucrările tale, cu condiția să specifice cui aparțin, să ofere un link către licență și să indice dacă au fost făcute modificări. Mai multe condiții pot fi specificate mai jos.">
+<!ENTITY trellis.publications.chooseLicense.adaptations.prompt "Permite ca modificările la lucrările tale să fie distribuite?">
+<!ENTITY trellis.publications.chooseLicense.adaptations.sharealike "Da, cât timp și alții distribuie la fel.">
+<!ENTITY trellis.publications.chooseLicense.commercial.prompt "Permite folosirea comercială a lucrărilor tale?">

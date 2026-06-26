@@ -1,7 +1,7 @@
 #csl-edit {
     font-size: 12px;
 
-    #csledit-splitter, #zotero-csl-editor-iframe {
+    #csledit-splitter, #trellis-csl-editor-iframe {
         border-top: var(--material-panedivider);
     }
 
@@ -37,7 +37,7 @@
         white-space: nowrap;
     }
     
-    #zotero-csl-preview-box {
+    #trellis-csl-preview-box {
         height: 33%;
     }
 }

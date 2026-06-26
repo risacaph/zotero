@@ -171,12 +171,12 @@ Section "Uninstall"
   ${MUI_INSTALLOPTIONS_READ} $0 "unconfirm.ini" "Field 3" "State"
   ${If} "$0" == "1"
     SetShellVarContext current
-    Push "Zotero\Zotero"
+    Push "Trellis\Trellis"
     Call un.DeleteRelativeProfiles
-    RmDir "$APPDATA\Zotero"
+    RmDir "$APPDATA\Trellis"
   ${EndIf}
 
-  ; Check whether Zotero was installed under HKLM. If it was we will need to elevate.
+  ; Check whether Trellis was installed under HKLM. If it was we will need to elevate.
   SetShellVarContext all
   Push "0"
   Push $INSTDIR
@@ -209,36 +209,36 @@ Section "Uninstall"
   ApplicationID::UninstallJumpLists "${AppUserModelID}"
 
   ClearErrors
-  ${un.RegCleanMain} "Software\Zotero"
+  ${un.RegCleanMain} "Software\Trellis"
   ${un.RegCleanUninstall}
   ${un.DeleteShortcuts}
   ${un.SetAppLSPCategories}
   
-  ${un.RegCleanProtocolHandler} "zotero"
-  ${un.RegCleanAppHandler} "ZoteroRIS"
-  ${un.RegCleanAppHandler} "ZoteroISI"
-  ${un.RegCleanAppHandler} "ZoteroMODS"
-  ${un.RegCleanAppHandler} "ZoteroRDF"
-  ${un.RegCleanAppHandler} "ZoteroBibTeX"
-  ${un.RegCleanAppHandler} "ZoteroMARC"
-  ${un.RegCleanAppHandler} "ZoteroCSL"
+  ${un.RegCleanProtocolHandler} "trellis"
+  ${un.RegCleanAppHandler} "TrellisRIS"
+  ${un.RegCleanAppHandler} "TrellisISI"
+  ${un.RegCleanAppHandler} "TrellisMODS"
+  ${un.RegCleanAppHandler} "TrellisRDF"
+  ${un.RegCleanAppHandler} "TrellisBibTeX"
+  ${un.RegCleanAppHandler} "TrellisMARC"
+  ${un.RegCleanAppHandler} "TrellisCSL"
 
   ClearErrors
-  ReadRegStr $R9 HKCR "ZoteroRDF" ""
-  ; Don't clean up the file handlers if the ZoteroRDF key still exists since
+  ReadRegStr $R9 HKCR "TrellisRDF" ""
+  ; Don't clean up the file handlers if the TrellisRDF key still exists since
   ; there should be a second installation that may be the default file handler
   ${If} ${Errors}
-    ${un.RegCleanFileHandler}  ".rdf"    "ZoteroRDF"
-    ${un.RegCleanFileHandler}  ".ris"    "ZoteroRIS"
-    ${un.RegCleanFileHandler}  ".isi"    "ZoteroISI"
-    ${un.RegCleanFileHandler}  ".mods"   "ZoteroMODS"
-    ${un.RegCleanFileHandler}  ".bib"    "ZoteroBibTeX"
-    ${un.RegCleanFileHandler}  ".bibtex" "ZoteroBibTeX"
-    ${un.RegCleanFileHandler}  ".marc"   "ZoteroMARC"
-    ${un.RegCleanFileHandler}  ".csl"    "ZoteroCSL"
+    ${un.RegCleanFileHandler}  ".rdf"    "TrellisRDF"
+    ${un.RegCleanFileHandler}  ".ris"    "TrellisRIS"
+    ${un.RegCleanFileHandler}  ".isi"    "TrellisISI"
+    ${un.RegCleanFileHandler}  ".mods"   "TrellisMODS"
+    ${un.RegCleanFileHandler}  ".bib"    "TrellisBibTeX"
+    ${un.RegCleanFileHandler}  ".bibtex" "TrellisBibTeX"
+    ${un.RegCleanFileHandler}  ".marc"   "TrellisMARC"
+    ${un.RegCleanFileHandler}  ".csl"    "TrellisCSL"
   ${EndIf}
 
-  ${un.GetSecondInstallPath} "Software\Zotero" $R9
+  ${un.GetSecondInstallPath} "Software\Trellis" $R9
 
   StrCpy $0 "Software\Microsoft\Windows\CurrentVersion\App Paths\${FileMainEXE}"
   ${If} $R9 == "false"
@@ -274,19 +274,19 @@ Section "Uninstall"
   ${EndIf}
 
   ; Remove the updates directory for Vista and above
-  ${un.CleanUpdatesDir} "Zotero\Zotero"
+  ${un.CleanUpdatesDir} "Trellis\Trellis"
 
   ; Parse the uninstall log to unregister dll's and remove all installed
   ; files / directories this install is responsible for.
   ${un.ParseUninstallLog}
 
   ; Files that were added by an in-app update aren't currently being added to the uninstall log,
-  ; so manually delete everything we know about as long as the directory name begins with "Zotero".
+  ; so manually delete everything we know about as long as the directory name begins with "Trellis".
   ; We don't just delete the directory because we don't know for sure that the user didn't do
   ; something crazy like put their data directory in it.
   ${GetFileName} $INSTDIR $R1
   StrCpy $R2 $R1 6
-  StrCmp $R2 "Zotero" +1 post_delete
+  StrCmp $R2 "Trellis" +1 post_delete
   ${If} ${FileExists} "$INSTDIR\chrome"
     RMDir /r /REBOOTOK "$INSTDIR\chrome"
   ${EndIF}

@@ -37,7 +37,7 @@ def main():
         updates.append({
             'version': version,
             'buildID': args.build_id,
-            'detailsURL': f'https://www.zotero.org/support/{short_version}_changelog',
+            'detailsURL': f'https://www.trellis.org/support/{short_version}_changelog',
             'major': MAJOR
         })
         

@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellis eelistused">
+
+<!ENTITY trellis.preferences.helpButton.label "Abi">
+
+<!ENTITY trellis.preferences.default "Vaikimisi:">
+<!ENTITY trellis.preferences.items "kirjet">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Custom…">
+
+<!ENTITY trellis.preferences.prefpane.general "Üldine">
+
+<!ENTITY trellis.preferences.interface "Interface">
+<!ENTITY trellis.preferences.fileHandling "File Handling">
+<!ENTITY trellis.preferences.automaticSnapshots "Teha momentülesvõtted kui luuakse kirjeid lehekülgedest">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Kirje lisamisel salvestada automaatselt seotud PDF-id ja teised elemendid">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Rename linked files">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Open PDFs using">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "System Default">
+
+<!ENTITY trellis.preferences.miscellaneous "Mitmesugust">
+<!ENTITY trellis.preferences.autoUpdate "Otsida automaatsed stiile ja tõlkijaid">
+<!ENTITY trellis.preferences.updateNow "Uuendada nüüd">
+<!ENTITY trellis.preferences.reportTranslationFailure "Anda teada vigastest tõlkijatest">
+<!ENTITY trellis.preferences.parseRISRefer "Kasutada Trellist BibTeX/RIS/Refer failide avamisel">
+<!ENTITY trellis.preferences.automaticTags "Lisada automaatselt märksõnad ja teemapealkirjad lipikutesse">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Automaatselt eemaldada kirjed prügikastist, mis on kustutatud rohkem kui">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "päeva tagasi">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Show tabs as">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creator - Year - Title">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Title - Creator - Year">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Faili nimi">
+
+<!ENTITY trellis.preferences.groups "Grupid">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Kirjete kopeerimisel kataloogide vahel lisada:">
+<!ENTITY trellis.preferences.groups.childNotes "seotud märkused">
+<!ENTITY trellis.preferences.groups.childFiles "seotud momentülesvõtted ja imporditud failid">
+<!ENTITY trellis.preferences.groups.annotations "annotations">
+<!ENTITY trellis.preferences.groups.childLinks "seotud lingid">
+<!ENTITY trellis.preferences.groups.tags "lipikud">
+
+<!ENTITY trellis.preferences.feeds "Uudisvood">
+<!ENTITY trellis.preferences.feeds.sorting.label "Sorting:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Newest items first">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Oldest items first">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Feed Defaults">
+
+<!ENTITY trellis.preferences.prefpane.sync "Sünkroonimine">
+<!ENTITY trellis.preferences.sync.username "Kasutajanimi:">
+<!ENTITY trellis.preferences.sync.password "Salasõna:">
+<!ENTITY trellis.preferences.sync.createAccount "Loo kasutaja">
+<!ENTITY trellis.preferences.sync.lostPassword "Salasõna kadunud?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Sünkroonida automaatselt">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Sünkroniseerida täistekst sisu">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis on võimeline sünkroniseerima teie failide täistekst sisu trellis.org kaudu teiste ühendatud seadmetega, võimaldades lihtsat ligipääsu failidele. Teie failide täistekst sisu ei jagata avalikult. ">
+<!ENTITY trellis.preferences.sync.about "Sünkroonimise kohta">
+<!ENTITY trellis.preferences.sync.fileSyncing "Failide sünkroonimine">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Minu raamatukogus olevate lisade sünkroonimine kasutades">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Failide allalaadimine">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "sünkroonimise ajal">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "vajadusel">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Verify Server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Libraries to Sync">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Choose Libraries…">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sünkroonimine">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Raamatukogu">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Järgnevad toimingud on mõeldud vaid erakordseteks ja spetsiifilisteks olukordadeks ja neid ei tohiks kasutada üldiseks probleemide lahendamiseks. Paljudel juhtudel võib algseadistamine lisaprobleeme põhjustada. Vt ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Sünkroniseerimise alglaadimise seaded">
+<!ENTITY trellis.preferences.sync.reset.warning3 "edasine info.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Reset Data Sync History">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Merge local data with remote data, ignoring sync history">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Restore from Online Library">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Overwrite local Trellis data with data from the online library.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Replace Online Library">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Overwrite online library with local Trellis data">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Algseadistada failide sünkroonimise ajalugu">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Compare all attachment files with the storage service">
+<!ENTITY trellis.preferences.sync.reset "Algseadistada">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Reset…">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Otsing">
+<!ENTITY trellis.preferences.search.fulltextCache "Täistekst puhvrist">
+<!ENTITY trellis.preferences.search.indexStats "Indekseerimise statistika">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indekseeritud:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Osaliselt:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Indekseerimata:">
+<!ENTITY trellis.preferences.search.indexStats.words "Sõnu:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Tähemärkide ülemhulk, mida faili kohta indekseeritakse:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Lehekülgede ülemhulk, mida faili kohta indekseeritakse:">
+
+<!ENTITY trellis.preferences.prefpane.export "Eksport">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Tsiteeringu seaded">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Lisada viidetes paberartiklitele URL">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Kui see ei ole valitud, siis Trellis lisab URL vaid siis kui tsiteeritaval artiklil ei ole määratud lehekülgede vahemikku.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Kiirkopeerimine">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Item Format:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Note Format:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopeerida HTML kujul">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Leheküljespetsiifilised seaded:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domeen/aadress">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(e.g., wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formaat">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Keel">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Peatada kiirkopeerimine juhul kui lohistatakse rohkem kui">
+
+<!ENTITY trellis.preferences.prefpane.cite "Viitamine">
+<!ENTITY trellis.preferences.cite.wordProcessors "Tekstiredaktorid">
+<!ENTITY trellis.preferences.styleEditor "Style Editor">
+<!ENTITY trellis.preferences.stylePreview "Style Preview">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Stiilide haldamine">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Pealkiri">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Uuendatud">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Salvestada Trellissse (aadressiriba ikoon)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Kataloogide paan fookusesse">
+<!ENTITY trellis.preferences.keys.quicksearch "Kiirotsing">
+<!ENTITY trellis.preferences.keys.newItem "Uue kirje loomine">
+<!ENTITY trellis.preferences.keys.newNote "Uue märkuse loomine">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Mark All Feed Items As Read/Unread">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopeerida valitud kirje tsiteeringud lõikepuhvrisse">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopeerida valitud kirjed lõikepuhvrisse">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Lõikepuhvrist importimine">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Changes take effect after restart">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proksid">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Proksi seaded">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis suunab transparentselt päringuid läbi salvestatud prokside. Palun vaadata">
+<!ENTITY trellis.preferences.proxies.desc_link "prokside dokumentatsiooni">
+<!ENTITY trellis.preferences.proxies.desc_after_link ".">
+<!ENTITY trellis.preferences.proxies.transparent "Pidada meeles prokside kaudu kasutatavad allikad">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Tuvastada prokside kaudu külastatavad lehed automaatselt">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Teate näitamine, kui toimub ligipääs proxy kaudu">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Proksile ümbersuunamine peatada, kui domeeninimi sisaldab ">
+<!ENTITY trellis.preferences.proxies.configured "Konfigureeritud proksid">
+<!ENTITY trellis.preferences.proxies.hostname "Hostinimi">
+<!ENTITY trellis.preferences.proxies.scheme "Skeem">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Mitme-lehekülje">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Seosta uued leheküljed automaatselt">
+<!ENTITY trellis.preferences.proxies.variables "Proksi skeemides võib kasutada järgnevaid muutujaid:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Proksitava lehekülje nimi (nt www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Lehekülje rada ilma kaldkriipsuta (nt about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Kataloogi rada (nt about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Failinimi (e.g., index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Suvaline string">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Täpsemalt">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Failid ja kataloogid">
+<!ENTITY trellis.preferences.advanced.keys "Kiirvaliku klahvid">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Advanced Configuration">
+
+<!ENTITY trellis.preferences.prefpane.locate "Otsing">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Artikli otsingumootori haldaja">
+<!ENTITY trellis.preferences.locate.description "Kirjeldus">
+<!ENTITY trellis.preferences.locate.name "Nimi">
+<!ENTITY trellis.preferences.locate.addDescription "To add a Lookup Engine that is not on the list, visit the desired search engine in your browser and select “Add” from Trellis’s Locate menu.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Algseaded taastada">
+
+<!ENTITY trellis.preferences.charset "Tähtede kodeering">
+<!ENTITY trellis.preferences.charset.importCharset "Tähdede kodeeringu importimine">
+<!ENTITY trellis.preferences.charset.displayExportOption "Näidata ekspordi puhul tähtede kodeeringut">
+
+<!ENTITY trellis.preferences.dataDir "Lao asukoht">
+<!ENTITY trellis.preferences.dataDir.useProfile "Kasutada Firefoxi profiili kataloogi">
+<!ENTITY trellis.preferences.dataDir.custom "Oma valik:">
+<!ENTITY trellis.preferences.dataDir.choose "Valida...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(specified via command line)">
+<!ENTITY trellis.preferences.dataDir.reveal "Andmete kataloogi näitamine">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrate To New Default Location…">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Lingitud manuse baaskataloog">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis kasutab lingitud manuste puhul suhtelisi radasid baaskataloogis. Selliseilt on võimalik failidele ligipääs erinevates arvutites, tingimusel, et failistruktuur baaskataloogis on sama.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Baaskataloog:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Valida...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Absoluutsetele radadele üleminek...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Andmebaasi hooldus">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Andmebaasi sidususe kontroll">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Reset Translators and Styles…">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Reset Translators…">
+
+<!ENTITY trellis.preferences.configEditor "Config Editor">

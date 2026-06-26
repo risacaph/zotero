@@ -7,7 +7,7 @@
 <script type="text/javascript" src="locale.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
-		body_id: "zotero-tinymce-note",
+		body_id: "trellis-tinymce-note",
 		content_css: "css/note-content.css",
 		entity_encoding: "raw",
 		fix_list_elements: true,
@@ -29,12 +29,12 @@
 			ed.setMode('readonly');
 			
 			setLocale(ed);
-			zoteroInit(ed);
+			trellisInit(ed);
 
 			ed.getContainer().classList.add('readonly');
 			ed.dom.doc.addEventListener('click', (event) => {
 				if (event.target.nodeName === 'A') {
-					zoteroHandleEvent({ type: 'ZoteroLinkClick', value: event.target.href });
+					trellisHandleEvent({ type: 'TrellisLinkClick', value: event.target.href });
 					event.preventDefault();
 				}
 			}, true);

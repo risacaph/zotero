@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Nome:">
+
+<!ENTITY trellis.search.searchInLibrary "Buscar na biblioteca:">
+
+<!ENTITY trellis.search.joinMode.prefix "Comparar con">
+<!ENTITY trellis.search.joinMode.any "calquera">
+<!ENTITY trellis.search.joinMode.all "todos">
+<!ENTITY trellis.search.joinMode.suffix "dos seguintes:">
+
+<!ENTITY trellis.search.recursive.label "Buscar en subcartafoles">
+<!ENTITY trellis.search.noChildren "Só mostrar temas de nivel superior">
+<!ENTITY trellis.search.includeParentsAndChildren "Incluír artigos pais e fillos de artigos coincidentes">
+
+<!ENTITY trellis.search.textModes.phrase "Frase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (incl. ficheiros binarios)">
+<!ENTITY trellis.search.textModes.regexp "Expr. regular">
+<!ENTITY trellis.search.textModes.regexpCS "Expr. regular (sensible a maiúsculas e minúsculas)">
+
+<!ENTITY trellis.search.date.units.days "días">
+<!ENTITY trellis.search.date.units.months "meses">
+<!ENTITY trellis.search.date.units.years "anos">
+
+<!ENTITY trellis.search.search "Buscar">
+<!ENTITY trellis.search.clear "Borrar">
+<!ENTITY trellis.search.saveSearch "Gardar a busca">

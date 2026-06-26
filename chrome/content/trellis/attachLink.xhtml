@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
+
+<window
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	title="&trellis.attachLink.title;"
+	drawintitlebar-platforms="mac"
+	onload="Trellis_AttachLink.load()">
+<dialog
+	buttons="accept,cancel"
+	id="trellis-attach-uri-dialog">
+	
+	<script src="chrome://global/content/globalOverlay.js"/>
+	<script src="include.js"/>
+	<script src="titlebar.js"/>
+	<script src="editMenuOverlay.js"/>
+	<script src="attachLink.js"/>
+	
+	<vbox id="trellis-attach-uri-container">
+		<hbox>
+			<description id="trellis-attach-uri-message" class="trellis-message-error"></description>
+		</hbox>
+		<hbox align="center">
+			<label id="trellis-attach-uri-label-input" value="&trellis.attachLink.label.link;" control="trellis-attach-uri-input"></label>
+			<html:input type="text" id="trellis-attach-uri-input" style="flex: 1"/>
+		</hbox>
+		<hbox align="center">
+			<label id="trellis-attach-uri-label-title" value="&trellis.attachLink.label.title;" control="trellis-attach-uri-title"></label>
+			<html:input type="text" id="trellis-attach-uri-title" style="flex: 1" placeholder="&trellis.general.optional;"/>
+		</hbox>
+	</vbox>
+</dialog>
+</window>

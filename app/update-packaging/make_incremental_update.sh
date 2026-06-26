@@ -8,7 +8,7 @@
 # Author: Darin Fisher
 #
 
-# Added for Zotero
+# Added for Trellis
 set -eo pipefail
 
 . $(dirname "$0")/common.sh
@@ -101,7 +101,7 @@ done
 
 mar_command="$MAR -V ${MOZ_PRODUCT_VERSION:?} -H ${MAR_CHANNEL_ID:?}"
 
-# Added for -e for Zotero
+# Added for -e for Trellis
 set +e
 let arg_start=$OPTIND-1
 shift $arg_start
@@ -209,7 +209,7 @@ for ((i=0; $i<$num_oldfiles; i=$i+1)); do
       # Note: patches are bzipped or xz stashed in funsize to gain more speed
 
       # if service is not enabled then default to old behavior
-      # Disabled for Zotero
+      # Disabled for Trellis
       #if [ -z "$MBSDIFF_HOOK" ]; then
       if true; then
         # mbsdiff doesn't like POSIX paths on Windows
@@ -256,7 +256,7 @@ for ((i=0; $i<$num_oldfiles; i=$i+1)); do
     # remove instructions are added after add / patch instructions for
     # consistency with make_incremental_updates.py
     remove_array[$num_removes]=$f
-    # Changed by Zotero for -e
+    # Changed by Trellis for -e
     #(( num_removes++ ))
     (( ++num_removes ))
   fi
@@ -321,7 +321,7 @@ done
 
 $XZ $XZ_OPT --compress $BCJ_OPTIONS --lzma2 --format=xz --check=crc64 --force "$updatemanifestv3" && mv -f "$updatemanifestv3.xz" "$updatemanifestv3"
 
-# Changed for Zotero -- -C is unreliable
+# Changed for Trellis -- -C is unreliable
 pushd "$workdir" > /dev/null
 mar_command="$mar_command -c output.mar"
 eval "$mar_command $archivefiles"

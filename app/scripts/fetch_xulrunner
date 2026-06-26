@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# Copyright (c) 2011  Zotero
+# Copyright (c) 2011  Trellis
 #                     Center for History and New Media
 #                     George Mason University, Fairfax, Virginia, USA
-#                     http://zotero.org
+#                     http://trellis.org
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -132,12 +132,12 @@ function modify_omni {
 	rm actors/Translations{Engine,}{Parent,Child}.sys.mjs
 	rm actors/AudioPlayback{Parent,Child}.sys.mjs
 	
-	replace_line 'BROWSER_CHROME_URL:.+' 'BROWSER_CHROME_URL: "chrome:\/\/zotero\/content\/zoteroPane.xhtml",' modules/AppConstants.sys.mjs
+	replace_line 'BROWSER_CHROME_URL:.+' 'BROWSER_CHROME_URL: "chrome:\/\/trellis\/content\/trellisPane.xhtml",' modules/AppConstants.sys.mjs
 	# Used by OSKeyStore as the master-key label, visible in macOS Keychain Access.
 	# Verify that OSKeyStore still derives the label from MOZ_APP_BASENAME, so a
 	# future Mozilla change to a hardcoded string doesn't silently rebrand the
 	# keychain entry back to "Firefox Encrypted Storage".
-	replace_line 'MOZ_APP_BASENAME: "Firefox"' 'MOZ_APP_BASENAME: "Zotero"' modules/AppConstants.sys.mjs
+	replace_line 'MOZ_APP_BASENAME: "Firefox"' 'MOZ_APP_BASENAME: "Trellis"' modules/AppConstants.sys.mjs
 	check_line 'STORE_LABEL: AppConstants\.MOZ_APP_BASENAME \+ " Encrypted Storage"' modules/OSKeyStore.sys.mjs
 	
 	# https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/internals/preferences.html
@@ -237,20 +237,20 @@ function modify_omni {
 	rm -rf default-theme
 	popd
 	
-	# This file loads remote-settings.sys.mjs, but if it's empty Zotero crashes
+	# This file loads remote-settings.sys.mjs, but if it's empty Trellis crashes
 	replace_line 'async #init\(\) \{' 'async #init() { if (true) { return; }' modules/URLQueryStrippingListService.sys.mjs
 	
 	# Clear most WebExtension manifest properties
 	replace_line 'manifest = normalized.value;' 'manifest = normalized.value;
     if (this.type == "extension") {
-      if (!manifest.applications?.zotero?.id) {
-        this.manifestError("applications.zotero.id not provided");
+      if (!manifest.applications?.trellis?.id) {
+        this.manifestError("applications.trellis.id not provided");
       }
-      if (!manifest.applications?.zotero?.update_url) {
-        this.manifestError("applications.zotero.update_url not provided");
+      if (!manifest.applications?.trellis?.update_url) {
+        this.manifestError("applications.trellis.update_url not provided");
       }
-      if (!manifest.applications?.zotero?.strict_max_version) {
-        this.manifestError("applications.zotero.strict_max_version not provided");
+      if (!manifest.applications?.trellis?.strict_max_version) {
+        this.manifestError("applications.trellis.strict_max_version not provided");
       }
       manifest.browser_specific_settings = undefined;
       manifest.content_scripts = [];
@@ -260,9 +260,9 @@ function modify_omni {
       manifest.experiment_apis = {};
     }' modules/Extension.sys.mjs
 	
-	# Use applications.zotero instead of applications.gecko
-	replace_line 'let bss = manifest.applications\?.gecko' 'let bss = manifest.applications?.zotero' modules/addons/XPIInstall.sys.mjs
-	replace_line 'manifest.applications\?.gecko' 'manifest.applications?.zotero' modules/Extension.sys.mjs
+	# Use applications.trellis instead of applications.gecko
+	replace_line 'let bss = manifest.applications\?.gecko' 'let bss = manifest.applications?.trellis' modules/addons/XPIInstall.sys.mjs
+	replace_line 'manifest.applications\?.gecko' 'manifest.applications?.trellis' modules/Extension.sys.mjs
 	
 	# When installing addon, use app version instead of toolkit version for targetApplication
 	replace_line "id: TOOLKIT_ID," "id: '$APP_ID'," modules/addons/XPIInstall.sys.mjs
@@ -281,20 +281,20 @@ function modify_omni {
 	replace_line '!this\.strictCompatibility &&' \
 		'(!this.strictCompatibility || Services.appinfo.version.includes("-beta") || Services.appinfo.version.includes("-dev") || Services.appinfo.version.includes("SOURCE")) &&' modules/addons/XPIDatabase.sys.mjs
 	
-	# Accept zotero@chnm.gmu.edu for target application to allow Zotero 6 plugins to remain
-	# installed in Zotero 7
-	replace_line "if \(targetApp.id == Services.appinfo.ID\) \{" "if (targetApp.id == 'zotero\@chnm.gmu.edu') targetApp.id = '$APP_ID'; if (targetApp.id == Services.appinfo.ID) {" modules/addons/XPIDatabase.sys.mjs
+	# Accept trellis@chnm.gmu.edu for target application to allow Trellis 6 plugins to remain
+	# installed in Trellis 7
+	replace_line "if \(targetApp.id == Services.appinfo.ID\) \{" "if (targetApp.id == 'trellis\@chnm.gmu.edu') targetApp.id = '$APP_ID'; if (targetApp.id == Services.appinfo.ID) {" modules/addons/XPIDatabase.sys.mjs
 	
 	# TEMP: Skip addons without ids until we figure out what's going on with the default theme.
 	# This fixes plugin updating and other things.
 	replace_line 'return addons;' 'return addons.filter(addon => addon.id);' modules/addons/XPIDatabase.sys.mjs
 	
-	# For updates, look for applications.zotero instead of applications.gecko in manifest.json and
+	# For updates, look for applications.trellis instead of applications.gecko in manifest.json and
 	# use the app id and version for strict_min_version/strict_max_version comparisons
-	replace_line 'gecko: \{\},' 'zotero: {},' modules/addons/AddonUpdateChecker.sys.mjs
-	replace_line 'if \(!\("gecko" in applications\)\) \{'  'if (!("zotero" in applications)) {' modules/addons/AddonUpdateChecker.sys.mjs
-	replace_line '"gecko not in application entry' '"zotero not in application entry' modules/addons/AddonUpdateChecker.sys.mjs
-	replace_line 'let app = getProperty\(applications, "gecko", "object"\);' 'let app = getProperty(applications, "zotero", "object");' modules/addons/AddonUpdateChecker.sys.mjs
+	replace_line 'gecko: \{\},' 'trellis: {},' modules/addons/AddonUpdateChecker.sys.mjs
+	replace_line 'if \(!\("gecko" in applications\)\) \{'  'if (!("trellis" in applications)) {' modules/addons/AddonUpdateChecker.sys.mjs
+	replace_line '"gecko not in application entry' '"trellis not in application entry' modules/addons/AddonUpdateChecker.sys.mjs
+	replace_line 'let app = getProperty\(applications, "gecko", "object"\);' 'let app = getProperty(applications, "trellis", "object");' modules/addons/AddonUpdateChecker.sys.mjs
 	replace_line "id: TOOLKIT_ID," "id: '$APP_ID'," modules/addons/AddonUpdateChecker.sys.mjs
 	replace_line 'lazy.AddonManagerPrivate.webExtensionsMinPlatformVersion' '"7.0"' modules/addons/AddonUpdateChecker.sys.mjs
 	replace_line 'result.targetApplications.push' 'false && result.targetApplications.push' modules/addons/AddonUpdateChecker.sys.mjs
@@ -381,8 +381,8 @@ function modify_omni {
 	# Set available locales
 	cp "$APP_ROOT_DIR/assets/multilocale.txt" res/multilocale.txt
 	
-	# Use Zotero URL opening in Mozilla dialogs (e.g., app update dialog)
-	replace_line 'function openURL\(aURL\) \{' 'function openURL(aURL) {let {Zotero} = ChromeUtils.importESModule("chrome:\/\/zotero\/content\/zotero.mjs"); Zotero.launchURL(aURL); if (true) { return; }' chrome/toolkit/content/global/contentAreaUtils.js
+	# Use Trellis URL opening in Mozilla dialogs (e.g., app update dialog)
+	replace_line 'function openURL\(aURL\) \{' 'function openURL(aURL) {let {Trellis} = ChromeUtils.importESModule("chrome:\/\/trellis\/content\/trellis.mjs"); Trellis.launchURL(aURL); if (true) { return; }' chrome/toolkit/content/global/contentAreaUtils.js
 	
 	#
 	# Modify Add-ons window
@@ -425,7 +425,7 @@ function modify_omni {
         var p = document.createElement("p");
         p.id = "empty-list-message";
         return p;' $file
-	# Swap in include.js, which we need for Zotero.getString(), for abuse-reports.js, which we don't need
+	# Swap in include.js, which we need for Trellis.getString(), for abuse-reports.js, which we don't need
 	
 	# Open plugin links in external browser
 	replace_line 'let homepageURL = homepageRow.querySelector\(\"a\"\);' 'let homepageURL = homepageRow.querySelector(\"\.text-link\");' $file
@@ -434,8 +434,8 @@ function modify_omni {
 		'<label target="_blank" class="text-link" dir="ltr"><\/label>' \
 		chrome/toolkit/content/mozapps/extensions/aboutaddons.html
 	
-	# Add zotero.ftl to the addons page for our own localized strings
-	replace_line 'href="toolkit\/about\/aboutAddons.ftl"' 'href="toolkit\/about\/aboutAddons.ftl" \/>\n    <link rel="localization" href="zotero.ftl"' \
+	# Add trellis.ftl to the addons page for our own localized strings
+	replace_line 'href="toolkit\/about\/aboutAddons.ftl"' 'href="toolkit\/about\/aboutAddons.ftl" \/>\n    <link rel="localization" href="trellis.ftl"' \
 		chrome/toolkit/content/mozapps/extensions/aboutaddons.html
 	# Use our own localized string for blocked plugin notification
 	file="chrome/toolkit/content/mozapps/extensions/aboutaddons.js"
@@ -462,31 +462,31 @@ function modify_omni {
 	
 	# Import style into built-in dialogs
 	replace_line 'id=\"commonDialogWindow\"' \
-		'id=\"commonDialogWindow\" class=\"zotero-dialog\" drawintitlebar-platforms=\"mac\"' \
+		'id=\"commonDialogWindow\" class=\"trellis-dialog\" drawintitlebar-platforms=\"mac\"' \
 		chrome/toolkit/content/global/commonDialog.xhtml
 	# commonDialog.css link is split across multiple lines, so we have to do a weird substitution,
 	# so check the one-line global.css to make sure the format hasn't changed
 	check_line '<html:link rel="stylesheet" href="chrome:\/\/global\/skin\/global.css" \/>' chrome/toolkit/content/global/commonDialog.xhtml
 	replace_line 'chrome:\/\/global\/skin\/commonDialog.css"' \
 		'chrome:\/\/global\/skin\/commonDialog.css"\/>
-		<html:link rel="stylesheet" href="chrome:\/\/zotero-platform\/content\/zotero.css"' \
+		<html:link rel="stylesheet" href="chrome:\/\/trellis-platform\/content\/trellis.css"' \
 		chrome/toolkit/content/global/commonDialog.xhtml
 	# commonDialog.xhtml can be opened via Services.prompt in the Profile Manager, so check for a profile first
 	replace_line 'function commonDialogOnLoad\(\) \{' \
 		'function commonDialogOnLoad() {
 		try {
 			Services.dirsvc.get(\"ProfD\", Ci.nsIFile);
-			Services.scriptloader.loadSubScript(\"chrome:\/\/zotero\/content\/include.js\", this);
-			Services.scriptloader.loadSubScript(\"chrome:\/\/zotero\/content\/titlebar.js\", this);
-			Services.scriptloader.loadSubScript(\"chrome:\/\/zotero\/content\/customElements.js\", this);
+			Services.scriptloader.loadSubScript(\"chrome:\/\/trellis\/content\/include.js\", this);
+			Services.scriptloader.loadSubScript(\"chrome:\/\/trellis\/content\/titlebar.js\", this);
+			Services.scriptloader.loadSubScript(\"chrome:\/\/trellis\/content\/customElements.js\", this);
 		} catch (e) {}' \
 		chrome/toolkit/content/global/commonDialog.js
 	
 	# Use native checkbox instead of Firefox-themed version in prompt dialogs
 	replace_line '<xul:checkbox' '<xul:checkbox native=\"true\"' chrome/toolkit/content/global/commonDialog.xhtml
 	
-	# The <browser> CE appends its autoscroll <popup> to document.documentElement, which doesn't work in zoteroPane.xhtml
-	# (in Firefox browser.xhtml, document.documentElement is <html>, which can contain <popup>s; in zoteroPane.xhtml, it's
+	# The <browser> CE appends its autoscroll <popup> to document.documentElement, which doesn't work in trellisPane.xhtml
+	# (in Firefox browser.xhtml, document.documentElement is <html>, which can contain <popup>s; in trellisPane.xhtml, it's
 	# <window>, which can't)
 	# Fix by appending it to a <popupset> instead
 	replace_line 'document.documentElement.appendChild\(this._autoScrollPopup\);' 'let popupset = document.querySelector("popupset");
@@ -605,14 +605,14 @@ if [ $BUILD_MAC == 1 ]; then
 	modify_omni mac
 	popd
 	
-	# Replace "FirefoxCP" with "ZoteroCP" for subprocesses ("Isolated Web Content", "Socket Process", "Web Content", etc.)
+	# Replace "FirefoxCP" with "TrellisCP" for subprocesses ("Isolated Web Content", "Socket Process", "Web Content", etc.)
 	info_plist=Firefox.app/Contents/MacOS/plugin-container.app/Contents/Resources/English.lproj/InfoPlist.strings
 	from=$(get_utf16_chars "FirefoxCP")
-	to=$(get_utf16_chars "ZoteroCP")
+	to=$(get_utf16_chars "TrellisCP")
 	perl -pi -e "s/$from/$to/" $info_plist
-	# Check for UTF-16 "ZoteroCP"
+	# Check for UTF-16 "TrellisCP"
 	if ! grep -a -q "Z.o.t.e.r.o.C.P." $info_plist; then
-		echo '"ZoteroCP" not found in InfoPlist.strings after replacement'
+		echo '"TrellisCP" not found in InfoPlist.strings after replacement'
 		exit 1
 	fi
 	
@@ -714,26 +714,26 @@ if [ $BUILD_WIN == 1 ]; then
 		# -- it's now truncated after "e594e8d1" for x64/win32 and doesn't appear at all for ARM64
 		#
 		
-		# Replace "Mozilla-1de4eec8-1241-4177-a864-e594e8d1fb38" with "Zotero" for C:\ProgramData directory
+		# Replace "Mozilla-1de4eec8-1241-4177-a864-e594e8d1fb38" with "Trellis" for C:\ProgramData directory
 		#
 		# Mozilla uses a UUID in the path because they previously used just "Mozilla" and needed to
 		# recreate the folder with correct permissions for security reasons, but we never had a folder in
-		# ProgramData, so we can just create it as "Zotero". Instead of using a custom xul.dll, just
-		# replace the hard-coded string with "Zotero" and add a bunch of NULs.
+		# ProgramData, so we can just create it as "Trellis". Instead of using a custom xul.dll, just
+		# replace the hard-coded string with "Trellis" and add a bunch of NULs.
 		#
 		#from=$(get_utf16_chars "Mozilla-1de4eec8-1241-4177-a864-e594e8d1fb38")
-		#to=$(get_utf16_chars "Zotero" 38)
+		#to=$(get_utf16_chars "Trellis" 38)
 		#perl -pe "s/$from/$to/" < xul.dll > xul.dll.new
 		#mv xul.dll.new xul.dll
 		
-		# Check for UTF-16 "Zotero" in DLL
+		# Check for UTF-16 "Trellis" in DLL
 		#
 		# (The macOS strings command doesn't have an encoding option, so skip on macOS. You need to
 		# build on Windows to make an installer, so a Windows build from macOS likely isn't being
 		# deployed.)
 		#
-		#if [[ "`uname`" != "Darwin" ]] && [[ -z "$(strings -e l xul.dll | grep -m 1 Zotero)" ]]; then
-		#	echo '"Zotero" not found in xul.dll after replacement'
+		#if [[ "`uname`" != "Darwin" ]] && [[ -z "$(strings -e l xul.dll | grep -m 1 Trellis)" ]]; then
+		#	echo '"Trellis" not found in xul.dll after replacement'
 		#	exit 1
 		#fi
 		
@@ -743,7 +743,7 @@ if [ $BUILD_WIN == 1 ]; then
 		
 		modify_omni $arch
 		# Disable skeleton UI window
-		# https://forums.zotero.org/discussion/comment/437636/#Comment_437636
+		# https://forums.trellis.org/discussion/comment/437636/#Comment_437636
 		replace_line 'pref\("browser\.startup\.preXulSkeletonUI", true\);' 'pref("browser.startup.preXulSkeletonUI", false);' defaults/preferences/firefox.js
 		popd
 		

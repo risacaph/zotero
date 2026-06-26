@@ -1,11 +1,11 @@
 "use strict";
 
-describe("Zotero.Integration", function () {
+describe("Trellis.Integration", function () {
 	const INTEGRATION_TYPE_ITEM = 1;
 	const INTEGRATION_TYPE_BIBLIOGRAPHY = 2;
 	const INTEGRATION_TYPE_TEMP = 3;
 	/**
-	 * To be used as a reference for Zotero-Word Integration plugins
+	 * To be used as a reference for Trellis-Word Integration plugins
 	 * 
 	 * NOTE: Functions must return promises instead of values!
 	 * The functions defined for the dummy are promisified below
@@ -107,7 +107,7 @@ describe("Zotero.Integration", function () {
 		 */
 		insertText: function (text) { return; },
 		/**
-		 * Converts placeholders (which are text with links to https://www.zotero.org/?[placeholderID])
+		 * Converts placeholders (which are text with links to https://www.trellis.org/?[placeholderID])
 		 * to fields and sets their field codes to strings in `codes` in the reverse order of their appearance
 		 * @param {String[]} codes
 		 * @param {String[]} placeholderIDs - the order of placeholders to be replaced
@@ -156,18 +156,18 @@ describe("Zotero.Integration", function () {
 		 * 	- Bibliography style: "BIBLIOGRAPHY_STYLE "
 		 * 	- Document preferences: "DOCUMENT_PREFERENCES "
 		 * 	
-		 * 	All Zotero exported text must be converted to a hyperlink
-		 * 	(with any url, e.g. http://www.zotero.org)
+		 * 	All Trellis exported text must be converted to a hyperlink
+		 * 	(with any url, e.g. http://www.trellis.org)
 		 */
 		exportDocument: (fieldType) => 0,
 		
 		/**
 		 * Converts a document from an exported form described in #exportDocument()
-		 * to a Zotero editable form. Bibliography Style and Document Preferences
+		 * to a Trellis editable form. Bibliography Style and Document Preferences
 		 * text is removed and stored internally within the doc. The citation codes are
 		 * also stored within the doc in appropriate representation. 
 		 * 
-		 * Note that no citation text updates are needed. Zotero will issue field updates 
+		 * Note that no citation text updates are needed. Trellis will issue field updates 
 		 * manually.
 		 * 
 		 * @returns {Boolean} whether the document contained importable data
@@ -252,19 +252,19 @@ describe("Zotero.Integration", function () {
 				DocumentPluginDummy[cls].prototype[methodName] = async function () {
 					try {
 						if (cls == 'Field') {
-							Zotero.debug(`DocumentPluginDummy: ${cls}[${this.idx}].${methodName} invoked with args ${JSON.stringify(arguments)}`, 2);
+							Trellis.debug(`DocumentPluginDummy: ${cls}[${this.idx}].${methodName} invoked with args ${JSON.stringify(arguments)}`, 2);
 						}
 						else {
-							Zotero.debug(`DocumentPluginDummy: ${cls}.${methodName} invoked with args ${JSON.stringify(arguments)}`, 2);
+							Trellis.debug(`DocumentPluginDummy: ${cls}.${methodName} invoked with args ${JSON.stringify(arguments)}`, 2);
 						}
 					} catch (e) {
-						Zotero.debug(`DocumentPluginDummy: ${cls}.${methodName} invoked with args ${arguments}`, 2);
+						Trellis.debug(`DocumentPluginDummy: ${cls}.${methodName} invoked with args ${arguments}`, 2);
 					}
 					var result = method.apply(this, arguments);
 					try {
-						Zotero.debug(`Result: ${JSON.stringify(result)}`, 2);
+						Trellis.debug(`Result: ${JSON.stringify(result)}`, 2);
 					} catch (e) {
-						Zotero.debug(`Result: ${result}`, 2);
+						Trellis.debug(`Result: ${result}`, 2);
 					}
 					return result;
 				}
@@ -275,7 +275,7 @@ describe("Zotero.Integration", function () {
 	var testItems;
 	var applications = {};
 	var addEditCitationSpy, displayDialogStub;
-	var styleID = "http://www.zotero.org/styles/apa";
+	var styleID = "http://www.trellis.org/styles/apa";
 	var stylePath = OS.Path.join(getTestDataDirectory().path, 'apa.csl');
 
 	var commandList = [
@@ -291,8 +291,8 @@ describe("Zotero.Integration", function () {
 		if (typeof docID === "undefined") {
 			throw new Error(`docID cannot be undefined`)
 		}
-		Zotero.debug(`execCommand '${command}': ${docID}`, 2);
-		return Zotero.Integration.execCommand("dummy", command, docID);
+		Trellis.debug(`execCommand '${command}': ${docID}`, 2);
+		return Trellis.Integration.execCommand("dummy", command, docID);
 	}
 	
 	var dialogResults = {
@@ -305,14 +305,14 @@ describe("Zotero.Integration", function () {
 	
 	async function initDoc(docID, options={}) {
 		applications[docID] = new DocumentPluginDummy.Application();
-		var data = new Zotero.Integration.DocumentData();
+		var data = new Trellis.Integration.DocumentData();
 		data.prefs = {
 			noteType: 0,
 			fieldType: "Field",
 			automaticJournalAbbreviations: true
 		};
 		data.style = {styleID, locale: 'en-US', hasBibliography: true, bibliographyStyleHasBeenSet: true};
-		data.sessionID = Zotero.Utilities.randomString(10);
+		data.sessionID = Trellis.Utilities.randomString(10);
 		Object.assign(data, options);
 		await (await applications[docID].getDocument(docID)).setDocumentData(data.serialize());
 	}
@@ -332,7 +332,7 @@ describe("Zotero.Integration", function () {
 		if (items.length == undefined) items = [items];
 		dialogResults.citationDialog = async function (dialogName, io) {
 			io.citation.citationItems = items.map(function (item) {
-				item = Zotero.Cite.getItem(item.id);
+				item = Trellis.Cite.getItem(item.id);
 				return {id: item.id, uris: item.cslURIs, itemData: item.cslItemData};
 			});
 			try {
@@ -351,14 +351,14 @@ describe("Zotero.Integration", function () {
 		setAddEditItems(testItems[0]);
 		await execCommand('addEditCitation', docID);
 		assert.equal(doc.fields.length, 1);
-		var citation = await (new Zotero.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
+		var citation = await (new Trellis.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
 		assert.equal(citation.citationItems.length, 1);
 		assert.equal(citation.citationItems[0].id, testItems[0].id);
 
 		setAddEditItems(testItems.slice(1, 3));
 		await execCommand('addEditCitation', docID);
 		assert.equal(doc.fields.length, 2);
-		citation = await (new Zotero.Integration.CitationField(doc.fields[1], doc.fields[1].code)).unserialize();
+		citation = await (new Trellis.Integration.CitationField(doc.fields[1], doc.fields[1].code)).unserialize();
 		assert.equal(citation.citationItems.length, 2);
 		for (let i = 1; i < 3; i++) {
 			assert.equal(citation.citationItems[i-1].id, testItems[i].id);
@@ -366,28 +366,28 @@ describe("Zotero.Integration", function () {
 	};
 	
 	before(function* () {
-		yield Zotero.Styles.init();
-		yield Zotero.Styles.install({file: stylePath}, styleID, true);
+		yield Trellis.Styles.init();
+		yield Trellis.Styles.install({file: stylePath}, styleID, true);
 
 		testItems = [];
 		for (let i = 0; i < 5; i++) {
-			let testItem = yield createDataObject('item', {libraryID: Zotero.Libraries.userLibraryID});
+			let testItem = yield createDataObject('item', {libraryID: Trellis.Libraries.userLibraryID});
 			testItem.setField('title', `title${i}`);
 			testItem.setCreator(0, {creatorType: 'author', name: `Author No${i}`});
 			testItems.push(testItem);
 		}
 		setAddEditItems(testItems[0]);
 		
-		sinon.stub(Zotero.Integration, 'getApplication').callsFake(function (agent, command, docID) {
+		sinon.stub(Trellis.Integration, 'getApplication').callsFake(function (agent, command, docID) {
 			if (!applications[docID]) {
 				applications[docID] = new DocumentPluginDummy.Application();
 			}
 			return applications[docID];
 		});
 		
-		displayDialogStub = sinon.stub(Zotero.Integration, 'displayDialog');
+		displayDialogStub = sinon.stub(Trellis.Integration, 'displayDialog');
 		displayDialogStub.callsFake(async function (dialogName, prefs, io, windowType) {
-			Zotero.debug(`Display dialog: ${dialogName}`, 2);
+			Trellis.debug(`Display dialog: ${dialogName}`, 2);
 			var ioResult = dialogResults[dialogName.substring(dialogName.lastIndexOf('/')+1, dialogName.length-6)];
 			if (typeof ioResult == 'function') {
 				await ioResult(dialogName, io, windowType);
@@ -396,14 +396,14 @@ describe("Zotero.Integration", function () {
 			}
 		});
 		
-		addEditCitationSpy = sinon.spy(Zotero.Integration.Interface.prototype, 'addEditCitation');
+		addEditCitationSpy = sinon.spy(Trellis.Integration.Interface.prototype, 'addEditCitation');
 		
-		sinon.stub(Zotero.Integration.Progress.prototype, 'show');
+		sinon.stub(Trellis.Integration.Progress.prototype, 'show');
 	});
 	
 	after(function () {
-		Zotero.Integration.Progress.prototype.show.restore();
-		Zotero.Integration.getApplication.restore();
+		Trellis.Integration.Progress.prototype.show.restore();
+		Trellis.Integration.getApplication.restore();
 		displayDialogStub.restore();
 		addEditCitationSpy.restore();
 	});
@@ -444,7 +444,7 @@ describe("Zotero.Integration", function () {
 					
 					// Make sure style not in library
 					try {
-						Zotero.Styles.get(style.styleID).remove();
+						Trellis.Styles.get(style.styleID).remove();
 					} catch (e) {}
 					await initDoc(docID, {style});
 					displayDialogStub.resetHistory();
@@ -457,13 +457,13 @@ describe("Zotero.Integration", function () {
 			
 				describe('when the style is not from a trusted source', function () {
 					it('should download the style and if user clicks YES', async function () {
-						var styleInstallStub = sinon.stub(Zotero.Styles, "install").resolves({
+						var styleInstallStub = sinon.stub(Trellis.Styles, "install").resolves({
 							styleTitle: 'Waterbirds',
 							styleID: 'waterbirds'
 						});
-						var style = Zotero.Styles.get(styleID);
+						var style = Trellis.Styles.get(styleID);
 						var styleGetCalledOnce = false;
-						var styleGetStub = sinon.stub(Zotero.Styles, 'get').callsFake(function () {
+						var styleGetStub = sinon.stub(Trellis.Styles, 'get').callsFake(function () {
 							if (!styleGetCalledOnce) {
 								styleGetCalledOnce = true;
 								return false;
@@ -473,9 +473,9 @@ describe("Zotero.Integration", function () {
 						displayAlertStub.resolves(1);
 						await execCommand('addEditCitation', docID);
 						assert.isTrue(displayAlertStub.calledOnce);
-						assert.isFalse(displayDialogStub.calledWith(applications[docID].doc, 'chrome://zotero/content/integration/integrationDocPrefs.xul'));
+						assert.isFalse(displayDialogStub.calledWith(applications[docID].doc, 'chrome://trellis/content/integration/integrationDocPrefs.xul'));
 						assert.isTrue(styleInstallStub.calledOnce);
-						assert.isOk(Zotero.Styles.get(style.styleID));
+						assert.isOk(Trellis.Styles.get(style.styleID));
 						styleInstallStub.restore();
 						styleGetStub.restore();
 					});
@@ -486,19 +486,19 @@ describe("Zotero.Integration", function () {
 						assert.isTrue(displayAlertStub.calledOnce);
 						// Prefs to select a new style
 						assert.isTrue(displayDialogStub.calledTwice);
-						assert.isNotOk(Zotero.Styles.get(style.styleID));
+						assert.isNotOk(Trellis.Styles.get(style.styleID));
 					});	
 				});
 					
-				it('should download the style without prompting if it is from zotero.org', async function () {
-					await initDoc(docID, {styleID: "http://www.zotero.org/styles/waterbirds", locale: 'en-US'});
-					var styleInstallStub = sinon.stub(Zotero.Styles, "install").resolves({
+				it('should download the style without prompting if it is from trellis.org', async function () {
+					await initDoc(docID, {styleID: "http://www.trellis.org/styles/waterbirds", locale: 'en-US'});
+					var styleInstallStub = sinon.stub(Trellis.Styles, "install").resolves({
 						styleTitle: 'Waterbirds',
 						styleID: 'waterbirds'
 					});
-					var style = Zotero.Styles.get(styleID);
+					var style = Trellis.Styles.get(styleID);
 					var styleGetCalledOnce = false;
-					var styleGetStub = sinon.stub(Zotero.Styles, 'get').callsFake(function () {
+					var styleGetStub = sinon.stub(Trellis.Styles, 'get').callsFake(function () {
 						if (!styleGetCalledOnce) {
 							styleGetCalledOnce = true;
 							return false;
@@ -508,9 +508,9 @@ describe("Zotero.Integration", function () {
 					displayAlertStub.resolves(1);
 					await execCommand('addEditCitation', docID);
 					assert.isFalse(displayAlertStub.called);
-					assert.isFalse(displayDialogStub.calledWith(applications[docID].doc, 'chrome://zotero/content/integration/integrationDocPrefs.xul'));
+					assert.isFalse(displayDialogStub.calledWith(applications[docID].doc, 'chrome://trellis/content/integration/integrationDocPrefs.xul'));
 					assert.isTrue(styleInstallStub.calledOnce);
-					assert.isOk(Zotero.Styles.get(style.styleID));
+					assert.isOk(Trellis.Styles.get(style.styleID));
 					styleInstallStub.restore();
 					styleGetStub.restore();	
 				});
@@ -519,24 +519,24 @@ describe("Zotero.Integration", function () {
 		
 		describe('#shouldAbortCommand', function () {
 			it('should return false if no command is running', async function () {
-				assert.isFalse(await Zotero.Integration.shouldAbortCommand());
+				assert.isFalse(await Trellis.Integration.shouldAbortCommand());
 			});
 
 			it('should return false if an integration dialog is open but is pristine', async function () {
 				await insertMultipleCitations.call(this);
 				let docID = this.test.fullTitle();
-				let citationDialogOpenedDeferred = Zotero.Promise.defer();
-				let citationDialogCancelledDeferred = Zotero.Promise.defer();
+				let citationDialogOpenedDeferred = Trellis.Promise.defer();
+				let citationDialogCancelledDeferred = Trellis.Promise.defer();
 				dialogResults.citationDialog = async function (dialogName, io) {
-					Zotero.Integration.currentWindow = { isPristine: true, focus: () => 0, cancel: citationDialogCancelledDeferred.resolve };
+					Trellis.Integration.currentWindow = { isPristine: true, focus: () => 0, cancel: citationDialogCancelledDeferred.resolve };
 					citationDialogOpenedDeferred.resolve();
 					await citationDialogCancelledDeferred.promise;
 					io._acceptDeferred.resolve(() => {});
-					Zotero.Integration.currentWindow = null;
+					Trellis.Integration.currentWindow = null;
 				};
 				let firstCommandPromise = execCommand('addEditCitation', docID);
 				await citationDialogOpenedDeferred.promise;
-				assert.isFalse(await Zotero.Integration.shouldAbortCommand());
+				assert.isFalse(await Trellis.Integration.shouldAbortCommand());
 				await citationDialogCancelledDeferred.promise;
 				await firstCommandPromise;
 			});
@@ -548,8 +548,8 @@ describe("Zotero.Integration", function () {
 				try {
 					await insertMultipleCitations.call(this);
 					let docID = this.test.fullTitle();
-					let citationDialogOpenedDeferred = Zotero.Promise.defer();
-					let citationDialogDeferred = Zotero.Promise.defer();
+					let citationDialogOpenedDeferred = Trellis.Promise.defer();
+					let citationDialogDeferred = Trellis.Promise.defer();
 					dialogResults.citationDialog = async function (dialogName, io) {
 						citationDialogOpenedDeferred.resolve();
 						await citationDialogDeferred.promise;
@@ -557,7 +557,7 @@ describe("Zotero.Integration", function () {
 					};
 					let firstCommandPromise = execCommand('addEditCitation', docID);
 					await citationDialogOpenedDeferred.promise;
-					assert.isTrue(await Zotero.Integration.shouldAbortCommand());
+					assert.isTrue(await Trellis.Integration.shouldAbortCommand());
 					assert.isTrue(stub.called);
 					citationDialogDeferred.resolve({});
 					await firstCommandPromise;
@@ -574,19 +574,19 @@ describe("Zotero.Integration", function () {
 				try {
 					await insertMultipleCitations.call(this);
 					let docID = this.test.fullTitle();
-					let citationDialogOpenedDeferred = Zotero.Promise.defer();
-					let citationDialogCancelledDeferred = Zotero.Promise.defer();
+					let citationDialogOpenedDeferred = Trellis.Promise.defer();
+					let citationDialogCancelledDeferred = Trellis.Promise.defer();
 					dialogResults.citationDialog = async function (dialogName, io, windowType) {
-						Zotero.Integration.currentWindow = { isPristine: false, focus: () => 0, cancel: citationDialogCancelledDeferred.resolve };
-						Zotero.Integration.currentWindowType = windowType;
+						Trellis.Integration.currentWindow = { isPristine: false, focus: () => 0, cancel: citationDialogCancelledDeferred.resolve };
+						Trellis.Integration.currentWindowType = windowType;
 						citationDialogOpenedDeferred.resolve();
 						await citationDialogCancelledDeferred.promise;
 						io._acceptDeferred.resolve(() => {});
-						Zotero.Integration.currentWindow = null;
+						Trellis.Integration.currentWindow = null;
 					};
 					let firstCommandPromise = execCommand('addEditCitation', docID);
 					await citationDialogOpenedDeferred.promise;
-					assert.isFalse(await Zotero.Integration.shouldAbortCommand());
+					assert.isFalse(await Trellis.Integration.shouldAbortCommand());
 					assert.isTrue(stub.called);
 					await citationDialogCancelledDeferred.promise;
 					await firstCommandPromise;
@@ -611,7 +611,7 @@ describe("Zotero.Integration", function () {
 				setAddEditItems(testItems.slice(3, 5));
 				await execCommand('addEditCitation', docID);
 				assert.equal(doc.fields.length, 2);
-				var citation = await (new Zotero.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
+				var citation = await (new Trellis.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
 				assert.equal(citation.citationItems.length, 2);
 				assert.equal(citation.citationItems[0].id, testItems[3].id);
 			});
@@ -629,7 +629,7 @@ describe("Zotero.Integration", function () {
 				setAddEditItems(testItems[0]);
 				await execCommand('addEditCitation', docID);
 				assert.equal(doc.fields.length, 1);
-				var citation = await (new Zotero.Integration.CitationField(field, field.code)).unserialize();
+				var citation = await (new Trellis.Integration.CitationField(field, field.code)).unserialize();
 				assert.equal(citation.citationItems.length, 1);
 				assert.equal(citation.citationItems[0].id, testItems[0].id);
 			});
@@ -648,7 +648,7 @@ describe("Zotero.Integration", function () {
 				assert.isTrue(displayAlertStub.calledOnce);
 				assert.equal(
 					displayAlertStub.firstCall.args[0],
-					Zotero.getString('integration.error.inBibliography', ['Add/Edit Bibliography'])
+					Trellis.getString('integration.error.inBibliography', ['Add/Edit Bibliography'])
 				);
 			});
 			
@@ -711,7 +711,7 @@ describe("Zotero.Integration", function () {
 				var doc = applications[docID].doc;
 				
 				let getCiteprocBibliographySpy =
-					sinon.spy(Zotero.Integration.Bibliography.prototype, 'getCiteprocBibliography');
+					sinon.spy(Trellis.Integration.Bibliography.prototype, 'getCiteprocBibliography');
 					
 				await execCommand('addEditBibliography', docID);
 				assert.isTrue(getCiteprocBibliographySpy.calledOnce);
@@ -732,7 +732,7 @@ describe("Zotero.Integration", function () {
 				var doc = applications[docID].doc;
 
 				let getCiteprocBibliographySpy =
-					sinon.spy(Zotero.Integration.Bibliography.prototype, 'getCiteprocBibliography');
+					sinon.spy(Trellis.Integration.Bibliography.prototype, 'getCiteprocBibliography');
 
 				await execCommand('addEditBibliography', docID);
 				assert.isTrue(getCiteprocBibliographySpy.calledOnce);
@@ -802,7 +802,7 @@ describe("Zotero.Integration", function () {
 					var docID = this.test.fullTitle();
 					var doc = applications[docID].doc;
 
-					var citation = await (new Zotero.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
+					var citation = await (new Trellis.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
 					assert.isNotOk(citation.properties.dontUpdate);
 					doc.fields[0].text = "modified";
 					// Return Yes
@@ -812,7 +812,7 @@ describe("Zotero.Integration", function () {
 					assert.isTrue(displayAlertStub.called);
 					assert.equal(doc.fields.length, 2);
 					assert.equal(doc.fields[0].text, "modified");
-					var citation = await (new Zotero.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
+					var citation = await (new Trellis.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
 					assert.isOk(citation.properties.dontUpdate);
 				});
 				it('should reset citation text if "no" selected in refresh prompt', async function () {
@@ -820,7 +820,7 @@ describe("Zotero.Integration", function () {
 					var docID = this.test.fullTitle();
 					var doc = applications[docID].doc;
 
-					var citation = await (new Zotero.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
+					var citation = await (new Trellis.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
 					assert.isNotOk(citation.properties.dontUpdate);
 					let origText = doc.fields[0].text;
 					doc.fields[0].text = "modified";
@@ -831,17 +831,17 @@ describe("Zotero.Integration", function () {
 					assert.isTrue(displayAlertStub.called);
 					assert.equal(doc.fields.length, 2);
 					assert.equal(doc.fields[0].text, origText);
-					var citation = await (new Zotero.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
+					var citation = await (new Trellis.Integration.CitationField(doc.fields[0], doc.fields[0].code)).unserialize();
 					assert.isNotOk(citation.properties.dontUpdate);
 				});
 			});
 
-			it('should detect items cited with Mendeley if they are imported into Zotero', async function () {
+			it('should detect items cited with Mendeley if they are imported into Trellis', async function () {
 				var docID = this.test.fullTitle();
 				if (!(docID in applications)) await initDoc(docID);
 				var doc = applications[docID].doc;
 
-				let testItem = await createDataObject('item', {libraryID: Zotero.Libraries.userLibraryID});
+				let testItem = await createDataObject('item', {libraryID: Trellis.Libraries.userLibraryID});
 				testItem.setField('title', `Mendeley imported`);
 				testItem.setCreator(0, {creatorType: 'author', name: `Mendeleev, Dmitri `});
 				testItem.addRelation('mendeleyDB:documentUUID', 'e213167f-af42-4ff1-95e8-a9aa6b0b3e1b');
@@ -857,7 +857,7 @@ describe("Zotero.Integration", function () {
 				sinon.stub(doc, 'cursorInField').resolves(doc.fields[0]);
 				await execCommand('addEditCitation', docID);
 				assert.include(doc.fields[0].code, 'http://www.mendeley.com/documents/?uuid=e213167f-af42-4ff1-95e8-a9aa6b0b3e1b');
-				assert.include(doc.fields[0].code, Zotero.URI.getItemURI(testItem));
+				assert.include(doc.fields[0].code, Trellis.URI.getItemURI(testItem));
 			});
 			
 			describe('when there are copy-pasted citations', function () {
@@ -874,8 +874,8 @@ describe("Zotero.Integration", function () {
 					doc.fields[1].code = doc.fields[0].code;
 					doc.fields[1].text = doc.fields[0].text;
 					
-					var originalUpdateDocument = Zotero.Integration.Session.prototype.updateDocument;
-					var stubUpdateDocument = sinon.stub(Zotero.Integration.Session.prototype, 'updateDocument');
+					var originalUpdateDocument = Trellis.Integration.Session.prototype.updateDocument;
+					var stubUpdateDocument = sinon.stub(Trellis.Integration.Session.prototype, 'updateDocument');
 					try {
 						var indicesLength;
 						stubUpdateDocument.callsFake(function () {
@@ -902,14 +902,14 @@ describe("Zotero.Integration", function () {
 					doc.fields.push(new DocumentPluginDummy.Field(doc));
 					// Add a "citation copied from somewhere else"
 					// the content doesn't really matter, just make sure that the citationID is different
-					var newCitationID = Zotero.Utilities.randomString();
+					var newCitationID = Trellis.Utilities.randomString();
 					doc.fields[1].code = doc.fields[0].code;
 					doc.fields[1].code = doc.fields[1].code.replace(/"citationID":"[A-Za-z0-9^"]*"/,
 						`"citationID":"${newCitationID}"`);
 					doc.fields[1].text = doc.fields[0].text;
 					
-					var originalUpdateDocument = Zotero.Integration.Session.prototype.updateDocument;
-					var stubUpdateDocument = sinon.stub(Zotero.Integration.Session.prototype, 'updateDocument');
+					var originalUpdateDocument = Trellis.Integration.Session.prototype.updateDocument;
+					var stubUpdateDocument = sinon.stub(Trellis.Integration.Session.prototype, 'updateDocument');
 					try {
 						var indices;
 						stubUpdateDocument.callsFake(function () {
@@ -938,7 +938,7 @@ describe("Zotero.Integration", function () {
 					doc.fields.push(new DocumentPluginDummy.Field(doc));
 					// Add a "citation copied from somewhere else"
 					// the content doesn't really matter, just make sure that the citationID is different
-					var newCitationID = Zotero.Utilities.randomString();
+					var newCitationID = Trellis.Utilities.randomString();
 					doc.fields[1].code = doc.fields[0].code;
 					doc.fields[1].code = doc.fields[1].code.replace(/"citationID":"[A-Za-z0-9^"]*"/,
 						`"citationID":"${newCitationID}"`);
@@ -958,7 +958,7 @@ describe("Zotero.Integration", function () {
 					await insertMultipleCitations.call(this);
 					var docID = this.test.fullTitle();
 					var doc = applications[docID].doc;
-					var data = new Zotero.Integration.DocumentData(doc.data);
+					var data = new Trellis.Integration.DocumentData(doc.data);
 					data.prefs.delayCitationUpdates = true;
 					doc.data = data.serialize();
 					
@@ -974,7 +974,7 @@ describe("Zotero.Integration", function () {
 					await insertMultipleCitations.call(this);
 					var docID = this.test.fullTitle();
 					var doc = applications[docID].doc;
-					var data = new Zotero.Integration.DocumentData(doc.data);
+					var data = new Trellis.Integration.DocumentData(doc.data);
 					data.prefs.delayCitationUpdates = true;
 					doc.data = data.serialize();
 
@@ -1006,8 +1006,8 @@ describe("Zotero.Integration", function () {
 					setAddEditItems(testItems[0]);
 					await execCommand('addEditCitation', docID);
 
-					let stub1 = sinon.stub(Zotero.Retractions, 'isRetracted').returns(true);
-					let stub2 = sinon.stub(Zotero.Retractions, 'shouldShowCitationWarning').returns(true);
+					let stub1 = sinon.stub(Trellis.Retractions, 'isRetracted').returns(true);
+					let stub2 = sinon.stub(Trellis.Retractions, 'shouldShowCitationWarning').returns(true);
 
 					let promise = execCommand('refresh', docID);
 					await waitForDialog();
@@ -1021,14 +1021,14 @@ describe("Zotero.Integration", function () {
 					var docID = this.test.fullTitle();
 					await initDoc(docID);
 					var doc = applications[docID].doc;
-					let testItem = await createDataObject('item', { libraryID: Zotero.Libraries.userLibraryID });
+					let testItem = await createDataObject('item', { libraryID: Trellis.Libraries.userLibraryID });
 					testItem.setField('title', `embedded title`);
 					testItem.setCreator(0, { creatorType: 'author', name: `Embedded Author` });
 					setAddEditItems(testItem);
 					await execCommand('addEditCitation', docID);
 					await testItem.eraseTx();
 
-					let stub = sinon.stub(Zotero.Retractions, 'getRetractionsFromJSON').resolves([0]);
+					let stub = sinon.stub(Trellis.Retractions, 'getRetractionsFromJSON').resolves([0]);
 
 					let promise = execCommand('refresh', docID);
 					await waitForDialog();
@@ -1041,10 +1041,10 @@ describe("Zotero.Integration", function () {
 					var docID = this.test.fullTitle();
 					await initDoc(docID);
 					var doc = applications[docID].doc;
-					let testItem = await createDataObject('item', { libraryID: Zotero.Libraries.userLibraryID });
+					let testItem = await createDataObject('item', { libraryID: Trellis.Libraries.userLibraryID });
 					testItem.setField('title', `title`);
 					testItem.setCreator(0, { creatorType: 'author', name: `Author` });
-					await Zotero.Retractions.disableCitationWarningsForItem(testItem);
+					await Trellis.Retractions.disableCitationWarningsForItem(testItem);
 					setAddEditItems(testItem);
 					await execCommand('addEditCitation', docID);
 
@@ -1069,7 +1069,7 @@ describe("Zotero.Integration", function () {
 				assert.isFalse(displayDialogStub.called);
 				var biblPresent = false;
 				for (let i = applications[docID].doc.fields.length-1; i >= 0; i--) {
-					let field = await Zotero.Integration.Field.loadExisting(applications[docID].doc.fields[i]);
+					let field = await Trellis.Integration.Field.loadExisting(applications[docID].doc.fields[i]);
 					if (field.type == INTEGRATION_TYPE_BIBLIOGRAPHY) {
 						biblPresent = true;
 						break;
@@ -1090,11 +1090,11 @@ describe("Zotero.Integration", function () {
 		describe('#refresh', function () {
 			it ('should properly disambiguate author after editing in the database', async function () {
 				var docID = this.test.fullTitle();
-				let testItem1 = await createDataObject('item', {libraryID: Zotero.Libraries.userLibraryID});
+				let testItem1 = await createDataObject('item', {libraryID: Trellis.Libraries.userLibraryID});
 				testItem1.setField('title', `title1`);
 				testItem1.setCreator(0, {creatorType: 'author', firstName: "Foo", lastName: "Bar"});
 				testItem1.setField('date', '2022-01-01');
-				let testItem2 = await createDataObject('item', {libraryID: Zotero.Libraries.userLibraryID});
+				let testItem2 = await createDataObject('item', {libraryID: Trellis.Libraries.userLibraryID});
 				testItem2.setField('title', `title2`);
 				testItem2.setCreator(0, {creatorType: 'author', firstName: "Foo", lastName: "Bar"});
 				testItem2.setField('date', '2022-01-01');
@@ -1140,7 +1140,7 @@ describe("Zotero.Integration", function () {
 						},
 						CITATIONITEMS: [{
 							ID: testItem.id,
-							URIS: ["HTTP://ZOTERO.ORG/USERS/12345/ITEMS/XXXXXXXX"],
+							URIS: ["HTTP://TRELLIS.ORG/USERS/12345/ITEMS/XXXXXXXX"],
 							ITEMDATA: {
 								ID: testItem.id,
 								TYPE: "ARTICLE-JOURNAL",
@@ -1156,7 +1156,7 @@ describe("Zotero.Integration", function () {
 				field.code = allCapsCode;
 				field.text = "(Author 2025)";
 				
-				let citationField = new Zotero.Integration.CitationField(field, allCapsCode);
+				let citationField = new Trellis.Integration.CitationField(field, allCapsCode);
 				let citation = await citationField.unserialize();
 				
 				// citationID recovered
@@ -1187,7 +1187,7 @@ describe("Zotero.Integration", function () {
 						},
 						CITATIONITEMS: [{
 							ID: testItem.id,
-							URIS: ["HTTP://ZOTERO.ORG/USERS/12345/ITEMS/XXXXXXXX"]
+							URIS: ["HTTP://TRELLIS.ORG/USERS/12345/ITEMS/XXXXXXXX"]
 						}],
 						SCHEMA: "HTTPS://GITHUB.COM/CITATION-STYLE-LANGUAGE/SCHEMA/RAW/MASTER/CSL-CITATION.JSON"
 					});
@@ -1198,7 +1198,7 @@ describe("Zotero.Integration", function () {
 				field.code = allCapsCode;
 				field.text = "(Author 2025)";
 				
-				let citationField = new Zotero.Integration.CitationField(field, allCapsCode);
+				let citationField = new Trellis.Integration.CitationField(field, allCapsCode);
 				let citation = await citationField.unserialize();
 				
 				assert.equal(citation.properties.noteIndex, 3);
@@ -1212,8 +1212,8 @@ describe("Zotero.Integration", function () {
 	
 	describe("DocumentData", function () {
 		it('should properly unserialize old XML document data', function () {
-			var serializedXMLData = `<data data-version="3" zotero-version="5.0.SOURCE"><session id="F0NFmZ32"/><style id="${styleID}" hasBibliography="1" bibliographyStyleHasBeenSet="1"/><prefs><pref name="fieldType" value="ReferenceMark"/><pref name="automaticJournalAbbreviations" value="true"/><pref name="noteType" value="0"/></prefs></data>`;
-			var data = new Zotero.Integration.DocumentData(serializedXMLData);
+			var serializedXMLData = `<data data-version="3" trellis-version="5.0.SOURCE"><session id="F0NFmZ32"/><style id="${styleID}" hasBibliography="1" bibliographyStyleHasBeenSet="1"/><prefs><pref name="fieldType" value="ReferenceMark"/><pref name="automaticJournalAbbreviations" value="true"/><pref name="noteType" value="0"/></prefs></data>`;
+			var data = new Trellis.Integration.DocumentData(serializedXMLData);
 			var expectedData = {
 				style: {
 					styleID,
@@ -1227,7 +1227,7 @@ describe("Zotero.Integration", function () {
 					noteType: 0
 				},
 				sessionID: 'F0NFmZ32',
-				zoteroVersion: '5.0.SOURCE',
+				trellisVersion: '5.0.SOURCE',
 				dataVersion: '3'
 			};
 			// Convert to JSON to remove functions from DocumentData object
@@ -1248,19 +1248,19 @@ describe("Zotero.Integration", function () {
 					noteType: 0
 				},
 				sessionID: 'owl-sesh',
-				zoteroVersion: '5.0.SOURCE',
+				trellisVersion: '5.0.SOURCE',
 				dataVersion: 4
 			});
-			var data = new Zotero.Integration.DocumentData(expectedData);
+			var data = new Trellis.Integration.DocumentData(expectedData);
 			// Convert to JSON to remove functions from DocumentData object
 			assert.equal(JSON.stringify(data), expectedData);
 		});
 		
 		it('should properly serialize document data to XML (data ver 3)', function () {
-			sinon.spy(Zotero, 'debug');
-			var data = new Zotero.Integration.DocumentData();
+			sinon.spy(Trellis, 'debug');
+			var data = new Trellis.Integration.DocumentData();
 			data.sessionID = "owl-sesh";
-			data.zoteroVersion = Zotero.version;
+			data.trellisVersion = Trellis.version;
 			data.dataVersion = 3;
 			data.style = {
 				styleID,
@@ -1278,7 +1278,7 @@ describe("Zotero.Integration", function () {
 			// Make sure we serialized to XML here
 			assert.equal(serializedData[0], '<');
 			// Serialize and unserialize (above test makes sure unserialize works properly).
-			var processedData = new Zotero.Integration.DocumentData(serializedData);
+			var processedData = new Trellis.Integration.DocumentData(serializedData);
 			
 			// This isn't ideal, but currently how it works. Better serialization which properly retains types
 			// coming with official 5.0 release.
@@ -1288,12 +1288,12 @@ describe("Zotero.Integration", function () {
 			assert.equal(JSON.stringify(processedData), JSON.stringify(data));
 			
 			// Make sure we are not triggering debug traces in Utilities.htmlSpecialChars()
-			assert.isFalse(Zotero.debug.calledWith(sinon.match.string, 1));
-			Zotero.debug.restore();
+			assert.isFalse(Trellis.debug.calledWith(sinon.match.string, 1));
+			Trellis.debug.restore();
 		});
 		
 		it('should properly serialize document data to JSON (data ver 4)', function () {
-			var data = new Zotero.Integration.DocumentData();
+			var data = new Trellis.Integration.DocumentData();
 			// data version 4 triggers serialization to JSON
 			// (e.g. when we've retrieved data from the doc and it was ver 4 already)
 			data.dataVersion = 4;
@@ -1311,10 +1311,10 @@ describe("Zotero.Integration", function () {
 			};
 			
 			// Serialize and unserialize (above tests makes sure unserialize works properly).
-			var processedData = new Zotero.Integration.DocumentData(data.serialize());
+			var processedData = new Trellis.Integration.DocumentData(data.serialize());
 
 			// Added in serialization routine
-			data.zoteroVersion = Zotero.version;
+			data.trellisVersion = Trellis.version;
 			
 			// Convert to JSON to remove functions from DocumentData objects
 			assert.deepEqual(JSON.parse(JSON.stringify(processedData)), JSON.parse(JSON.stringify(data)));

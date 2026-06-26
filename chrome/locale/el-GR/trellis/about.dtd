@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "έκδοση">
+<!ENTITY trellis.whatsNew "Τι νέο υπάρχει">
+<!ENTITY trellis.createdby "Δημιουργήθηκε Από:">
+<!ENTITY trellis.director "Διευθυντής:">
+<!ENTITY trellis.directors "Διευθυντές:">
+<!ENTITY trellis.developers "Προγραμματιστές:">
+<!ENTITY trellis.alumni "Απόφοιτοι:">
+<!ENTITY trellis.about.localizations "Μεταφράσεις:">
+<!ENTITY trellis.about.additionalSoftware "Λογισμικό Τρίτων">
+<!ENTITY trellis.thanks "Ειδικές Ευχαριστίες:">
+<!ENTITY trellis.about.close "Κλείσιμο">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Συντελεστές και ευχαριστίες">
+<!ENTITY trellis.citationProcessing "Παραμπομπές &amp; Βιβλιογραφική επεξεργασία">

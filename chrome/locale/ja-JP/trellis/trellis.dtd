@@ -1,0 +1,330 @@
+<!ENTITY trellis.general.yes "はい">
+<!ENTITY trellis.general.no "いいえ">
+<!ENTITY trellis.general.optional "（任意）">
+<!ENTITY trellis.general.note "メモ:">
+<!ENTITY trellis.general.selectAll "すべて選択">
+<!ENTITY trellis.general.deselectAll "選択をすべて解除">
+<!ENTITY trellis.general.edit "編集">
+<!ENTITY trellis.general.delete "削除">
+<!ENTITY trellis.general.moveToTrash "Move to Trash">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "キャンセル">
+<!ENTITY trellis.general.refresh "再読み込み">
+<!ENTITY trellis.general.saveAs "名前をつけて保存...">
+<!ENTITY trellis.general.options "オプション">
+<!ENTITY trellis.general.advancedOptions.label "高度なオプション">
+<!ENTITY trellis.general.tools "ツール">
+<!ENTITY trellis.general.more "その他">
+<!ENTITY trellis.general.moreInformation "More Information">
+<!ENTITY trellis.general.loading "読み込み中...">
+<!ENTITY trellis.general.close "閉じる">
+<!ENTITY trellis.general.minimize "Minimize">
+<!ENTITY trellis.general.other "その他...">
+<!ENTITY trellis.general.bigger "拡大">
+<!ENTITY trellis.general.smaller "縮小">
+<!ENTITY trellis.general.reset "リセット">
+
+
+<!ENTITY trellis.errorReport.title "Trellis エラーレポート">
+<!ENTITY trellis.errorReport.submissionInProgress "エラーレポートが送信されるまでお待ちください。">
+<!ENTITY trellis.errorReport.submitted "エラーレポートが送信されました。">
+<!ENTITY trellis.errorReport.reportID "レポート ID:">
+<!ENTITY trellis.errorReport.postToForums "このレポート ID、問題の説明、および問題を再現するために必要なあらゆる手順について、Trellis フォーラム (forums.trellis.org)に投稿して下さい。">
+<!ENTITY trellis.errorReport.notReviewed "エラーレポートはフォーラムで言及されない限り、調査されることはありません。">
+
+<!ENTITY trellis.upgrade.title "Trellis 更新ガイド">
+<!ENTITY trellis.upgrade.newVersionInstalled "Trellis の新しいバージョンがインストールされました。">
+<!ENTITY trellis.upgrade.upgradeRequired "新しいバージョンを使用する前にあなたの Trellis データベースを更新する必要があります。">
+<!ENTITY trellis.upgrade.autoBackup "変更が行われる前に既存のデータベースはすべて自動的にバックアップされます。">
+<!ENTITY trellis.upgrade.majorUpgrade "これは重要な更新です。">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "続ける前に">
+<!ENTITY trellis.upgrade.majorUpgradeLink "更新の手引きを">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "まずご確認ください。">
+<!ENTITY trellis.upgrade.upgradeInProgress "この更新が終了するまでお待ちください。数分間かかる場合もあります。">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Trellis データベースは問題なく更新されました。">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "新機能と改良点については">
+<!ENTITY trellis.upgrade.changeLogLink "更新履歴">
+<!ENTITY trellis.upgrade.changeLogAfterLink "をご覧ください。">
+
+<!ENTITY trellis.tabs.notes.label "メモ">
+<!ENTITY trellis.tabs.attachments.label "添付ファイル">
+
+<!ENTITY trellis.toolbar.duplicate.label "重複アイテムを表示">
+<!ENTITY trellis.collections.showUnfiledItems "未整理のアイテムを表示">
+<!ENTITY trellis.collections.showRetractedItems "取り消し済みのアイテムを表示">
+
+<!ENTITY trellis.items.itemType "アイテムの種類">
+<!ENTITY trellis.items.creator_column "編著者名">
+<!ENTITY trellis.items.year_column "年">
+<!ENTITY trellis.items.dateModified_column "更新日時">
+<!ENTITY trellis.items.moreColumns.label "列を追加する">
+<!ENTITY trellis.items.restoreColumnOrder.label "列の順序を復元する">
+
+<!ENTITY trellis.items.menu.showInLibrary "ライブラリの中に表示">
+<!ENTITY trellis.items.menu.attach.note "メモを追加">
+<!ENTITY trellis.items.menu.attach "添付ファイルを追加する">
+<!ENTITY trellis.items.menu.attach.link.uri "URIへのリンクを添付する...">
+<!ENTITY trellis.items.menu.attach.file "保存されたファイルのコピーを添付する...">
+<!ENTITY trellis.items.menu.attach.fileLink "リンクをファイルに添付する...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "ライブラリへ復帰させる">
+<!ENTITY trellis.items.menu.duplicateItem "選択されたアイテムを複製">
+<!ENTITY trellis.items.menu.mergeItems "アイテムを統合する...">
+<!ENTITY trellis.items.menu.unrecognize "Undo Retrieve Metadata">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "土台として用いるアイテムのヴァージョンを選んでください:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "このアイテムの重複するヴァージョンから維持したいフィールドを選択してください:">
+
+<!ENTITY trellis.toolbar.newItem.label "新規アイテム">
+<!ENTITY trellis.toolbar.moreItemTypes.label "その他">
+<!ENTITY trellis.toolbar.lookup.label "識別子によってアイテムを追加する">
+<!ENTITY trellis.toolbar.removeItem.label "アイテムを削除...">
+<!ENTITY trellis.toolbar.newGroup "新規グループ...">
+<!ENTITY trellis.toolbar.newSubcollection.label "新規サブコレクション...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "新規検索条件の保存...">
+<!ENTITY trellis.toolbar.emptyTrash.label "ゴミ箱を空にする">
+<!ENTITY trellis.toolbar.tagSelector.label "タグ選択ボックスを表示する／隠す">
+<!ENTITY trellis.toolbar.actions.label "アクション">
+<!ENTITY trellis.toolbar.import.label "インポート...">
+<!ENTITY trellis.toolbar.importFromClipboard "クリップボードからインポートする">
+<!ENTITY trellis.toolbar.export.label "ライブラリをエクスポート...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF スキャン">
+<!ENTITY trellis.toolbar.preferences.label "環境設定...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "サポートとヘルプ">
+<!ENTITY trellis.toolbar.about.label "Trellis について">
+<!ENTITY trellis.toolbar.advancedSearch "高度な検索">
+<!ENTITY trellis.toolbar.openURL.label "所在確認">
+<!ENTITY trellis.toolbar.openURL.tooltip "あなたの所属機関の図書館を通じて所在確認">
+
+<!ENTITY trellis.toolbar.feeds.new "新しいフィード">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "URLから...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "OPMLから...">
+<!ENTITY trellis.toolbar.feeds.edit "フィードを編集する...">
+
+<!ENTITY trellis.item.add "追加">
+<!ENTITY trellis.item.attachment.file.show "ファイルを表示">
+<!ENTITY trellis.item.textTransform "テキストの大文字・小文字を指定する">
+<!ENTITY trellis.item.textTransform.titlecase "各単語の先頭を大文字に">
+<!ENTITY trellis.item.textTransform.sentencecase "各文の先頭を大文字に">
+<!ENTITY trellis.item.creatorTransform.nameSwap "姓と名を入れ替える">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "URLとしてコピーする">
+<!ENTITY trellis.item.deletePermanently "永久に削除する...">
+
+<!ENTITY trellis.item.tags.removeAll "すべてのタグを削除する...">
+
+<!ENTITY trellis.toolbar.newNote "新しいメモ">
+<!ENTITY trellis.toolbar.note.standalone "新しく独立メモを作成">
+<!ENTITY trellis.toolbar.note.child "子メモを追加する">
+<!ENTITY trellis.toolbar.lookup "識別子によって所在確認...">
+<!ENTITY trellis.toolbar.attachment.linked "ファイルへのリンク作成...">
+<!ENTITY trellis.toolbar.attachment.add "ファイルのコピーを保存...">
+<!ENTITY trellis.toolbar.attachment.weblink "現在のページへのリンクを保存">
+<!ENTITY trellis.toolbar.attachment.snapshot "現在のページのスナップショットを撮る">
+<!ENTITY trellis.toolbar.context.item "アイテム">
+<!ENTITY trellis.toolbar.context.notes "メモ">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "表示するタグがありません">
+<!ENTITY trellis.tagSelector.loadingTags "タグを読込中...">
+<!ENTITY trellis.tagSelector.showAutomatic "自動生成タグも表示">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "このライブラリの全タグを表示">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "このライブラリから自動生成されたタグを削除する...">
+<!ENTITY trellis.tagSelector.clearAll "選択をすべて解除">
+<!ENTITY trellis.tagSelector.assignColor "色を指定...">
+<!ENTITY trellis.tagSelector.renameTag "タグ名の変更...">
+<!ENTITY trellis.tagSelector.deleteTag "タグを削除...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "タグの色と位置を選ぶ">
+<!ENTITY trellis.tagColorChooser.color "色:">
+<!ENTITY trellis.tagColorChooser.position "位置:">
+<!ENTITY trellis.tagColorChooser.setColor "色を指定">
+<!ENTITY trellis.tagColorChooser.removeColor "色を取り除く">
+
+<!ENTITY trellis.lookup.description "ISBN、DOI、PMID、arXiv ID、ADS Bibcodes を入力して、ライブラリに追加します。">
+<!ENTITY trellis.lookup.button.search "検索">
+
+<!ENTITY trellis.createParent.title "親アイテムを作成">
+<!ENTITY trellis.createParent.button.manual "手動入力">
+
+<!ENTITY trellis.selectitems.title "アイテムを選択">
+<!ENTITY trellis.selectitems.intro.label "ライブラリに追加したいアイテムを選択してください">
+<!ENTITY trellis.selectitems.cancel.label "キャンセル">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "出典表記／参考文献目録を作成">
+<!ENTITY trellis.bibliography.style.label "引用スタイル:">
+<!ENTITY trellis.bibliography.manageStyles "スタイルを管理する...">
+<!ENTITY trellis.bibliography.locale.label "言語:">
+<!ENTITY trellis.bibliography.outputMode "出力モード:">
+<!ENTITY trellis.bibliography.bibliography "参考文献目録">
+<!ENTITY trellis.bibliography.outputMethod "出力方法:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "RTF として保存">
+<!ENTITY trellis.bibliography.saveAsHTML.label "HTML として保存">
+<!ENTITY trellis.bibliography.copyToClipboard.label "クリップボードにコピー">
+<!ENTITY trellis.bibliography.print.label "印刷">
+
+<!ENTITY trellis.integration.docPrefs.title "ドキュメントの設定">
+<!ENTITY trellis.integration.addEditCitation.title "出典表記を追加・編集">
+<!ENTITY trellis.integration.editBibliography.title "参考文献目録を編集">
+
+<!ENTITY trellis.progress.title "進捗">
+
+<!ENTITY trellis.import "インポート">
+<!ENTITY trellis.import.whereToImportFrom "どこからインポートしますか？">
+<!ENTITY trellis.import.source.file "単一ファイル (BibTeX, RIS, Trellis RDF, など.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "インポート中...">
+<!ENTITY trellis.import.database "データベース">
+<!ENTITY trellis.import.lastModified "Last Modified">
+<!ENTITY trellis.import.size "サイズ">
+<!ENTITY trellis.import.createCollection "Place imported collections and items into new collection">
+<!ENTITY trellis.import.fileHandling "File Handling">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "エクスポート...">
+<!ENTITY trellis.exportOptions.format.label "フォーマット:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "トランスレータのオプション">
+
+<!ENTITY trellis.charset.label "文字コード">
+<!ENTITY trellis.moreEncodings.label "その他の文字コード">
+
+<!ENTITY trellis.citation.keepSorted.label "参考文献の順序を維持">
+
+<!ENTITY trellis.citation.suppressAuthor.label "著者名を省略">
+<!ENTITY trellis.citation.prefix.label "接頭辞:">
+<!ENTITY trellis.citation.suffix.label "接尾辞:">
+<!ENTITY trellis.citation.editorWarning.label "警告: エディタの中で出典表記を編集すると、データベース側、または引用スタイルの変更を反映した自動更新が行われなくなります。">
+
+<!ENTITY trellis.richText.italic.label "斜体">
+<!ENTITY trellis.richText.bold.label "太字">
+<!ENTITY trellis.richText.underline.label "下線">
+<!ENTITY trellis.richText.superscript.label "上付き文字">
+<!ENTITY trellis.richText.subscript.label "下付き文字">
+
+<!ENTITY trellis.annotate.toolbar.add.label "注釈を追加">
+<!ENTITY trellis.annotate.toolbar.collapse.label "すべての注釈を折りたたむ">
+<!ENTITY trellis.annotate.toolbar.expand.label "すべての注釈を展開する">
+<!ENTITY trellis.annotate.toolbar.highlight.label "テキストを強調表示">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "テキストの強調表示を解除">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "出典表記の出力形式:">
+<!ENTITY trellis.integration.prefs.footnotes.label "脚注">
+<!ENTITY trellis.integration.prefs.endnotes.label "文末注">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "出典表記の保存形式:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "ブックマーク">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "ブックマークはWordとLibreOfficeの間で共有できますが、意図せずに変更された場合にエラーを生じる場合があり、また脚注に挿入することが出来ません。">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatically update citations">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citations with pending updates will be highlighted in the document">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Disabling updates can speed up citation insertion in large documents. Click Refresh to update citations manually.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "MEDLINEの略誌名を使用する">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "「雑誌略誌名」のフィールドは無視されます。">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Switch to a Different Word Processor…">
+
+<!ENTITY trellis.integration.showEditor.label "エディタを表示">
+<!ENTITY trellis.integration.classicView.label "クラシック表示">
+
+<!ENTITY trellis.integration.references.label "参考文献目録に含まれる文献">
+
+<!ENTITY trellis.sync.stop "同期を停止">
+<!ENTITY trellis.sync.error "同期エラー">
+<!ENTITY trellis.sync.storage.progress "進捗:">
+<!ENTITY trellis.sync.storage.downloads "ダウンロード:">
+<!ENTITY trellis.sync.storage.uploads "アップロード:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "あなたの Trellis ライブラリにある以下のタグは、サーバと同期させるには長過ぎます。">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "タグを同期させるには 256 文字以下である必要があります。">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "問題のタグを複数のタグに分割するか、手動でタグを編集して短くするか、あるいは削除してください。">
+<!ENTITY trellis.sync.longTagFixer.split "分割する">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "次の場所で分割:">
+<!ENTITY trellis.sync.longTagFixer.character "文字目">
+<!ENTITY trellis.sync.longTagFixer.characters "文字目">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "チェックされていないタグは保存されません。">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "このタグは全てのアイテムから削除されます。">
+
+<!ENTITY trellis.merge.title "衝突の解決">
+<!ENTITY trellis.merge.of "of">
+<!ENTITY trellis.merge.deleted "削除済み">
+
+<!ENTITY trellis.proxy.recognized.title "プロキシが認識されました。">
+<!ENTITY trellis.proxy.recognized.warning "あなたの図書館、学校または企業のウェブサイトからリンクされたプロキシのみを追加するようにしてください。">
+<!ENTITY trellis.proxy.recognized.warning.secondary "その他のプロキシを追加すると、悪意あるサイトがあなたの信頼するサイトに成り済ます恐れがあります。">
+<!ENTITY trellis.proxy.recognized.disable.label "以前に認識されたプロキシを通じて、要求を自動転送しないでください。">
+<!ENTITY trellis.proxy.recognized.ignore.label "無視する">
+
+<!ENTITY trellis.feedSettings.title "フィードの設定">
+<!ENTITY trellis.feedSettings.saveButton.label "保存">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "題名:">
+<!ENTITY trellis.feedSettings.refresh.label1 "フィードを">
+<!ENTITY trellis.feedSettings.refresh.label2 "時間おきに更新する">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "未読フィードアイテムを">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "日後に除去する">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "既読フィードアイテムを">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "日後に除去する">
+
+<!ENTITY trellis.rtfScan.title "RTF スキャン">
+<!ENTITY trellis.rtfScan.cancel.label "取り消す">
+<!ENTITY trellis.rtfScan.citation.label "出典表記">
+<!ENTITY trellis.rtfScan.itemName.label "アイテム名">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "文献不明の出典表記">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "曖昧な出典表記
+">
+<!ENTITY trellis.rtfScan.mappedCitations.label "文献同定済みの出典表記">
+<!ENTITY trellis.rtfScan.introPage.label "案内">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis は RTF ファイルから自動的に出典表記を抽出し、出典表記を再整形して、参考文献目録を挿入することができます。この RTF スキャン機能は現在、以下に挙げる形式の出典表記をサポートしています:">
+<!ENTITY trellis.rtfScan.introPage.description2 "まず最初に、RTF 入力元ファイルと出力先ファイルを下記から選んでください。">
+<!ENTITY trellis.rtfScan.scanPage.label "出典表記をスキャンしています">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis はあなたの文書の出典表記をスキャンしています。しばらくお待ちください。">
+<!ENTITY trellis.rtfScan.citationsPage.label "引用されたアイテムを検証する">
+<!ENTITY trellis.rtfScan.citationsPage.description "以下に表示される、 Trellis が認識した出典表記の一覧をご覧頂き、対応する文献を正しく見つけたかどうかご確認ください。次の手順に進む前に、文献不明の出典表記やあいまいな出典表記はすべて解消される必要があります。">
+<!ENTITY trellis.rtfScan.stylePage.label "文書の書式設定">
+<!ENTITY trellis.rtfScan.formatPage.label "出典表記の書式設定">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis はあなたの RTF ファイルを処理中、整形中です。しばらくお待ちください。">
+<!ENTITY trellis.rtfScan.completePage.label "RTF スキャンが完了しました">
+<!ENTITY trellis.rtfScan.completePage.description "あなたの文書はスキャンされ処理が完了しました。正しく整形されていることを確認してください。">
+<!ENTITY trellis.rtfScan.inputFile.label "入力元ファイル">
+<!ENTITY trellis.rtfScan.outputFile.label "出力先ファイル">
+
+<!ENTITY trellis.file.choose.label "ファイルを選択...">
+<!ENTITY trellis.file.noneSelected.label "ファイルが選択されていません">
+
+<!ENTITY trellis.attachLink.title "URIへのリンクを添付する">
+<!ENTITY trellis.attachLink.label.link "リンク:">
+<!ENTITY trellis.attachLink.label.title "題:">
+
+<!ENTITY trellis.context.addChildNote "Add Item Note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
+<!ENTITY trellis.context.addStandaloneNote "独立メモを追加">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "注釈から独立メモを追加">
+<!ENTITY trellis.context.editInWindow "別ウィンドウで編集">
+
+<!ENTITY trellis.pdfReader.firstPage "最初のページ">
+<!ENTITY trellis.pdfReader.lastPage "最後のページ">
+<!ENTITY trellis.pdfReader.back "戻る">
+<!ENTITY trellis.pdfReader.forward "進む">
+<!ENTITY trellis.pdfReader.handTool "てのひらツール">
+<!ENTITY trellis.pdfReader.verticalScrolling "垂直スクロール">
+<!ENTITY trellis.pdfReader.horizontalScrolling "水平スクロール">
+<!ENTITY trellis.pdfReader.wrappedScrolling "折り返しスクロール">
+<!ENTITY trellis.pdfReader.noSpreads "スプレッドなし ">
+<!ENTITY trellis.pdfReader.oddSpreads "奇数スプレッド">
+<!ENTITY trellis.pdfReader.evenSpreads "偶数スプレッド">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "拡大表示">
+<!ENTITY trellis.pdfReader.zoomOut "縮小表示">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "自動的にサイズ変更">
+<!ENTITY trellis.pdfReader.zoomPageWidth "ページ幅に合わせる">
+<!ENTITY trellis.pdfReader.zoomPageHeight "ページの高さに合わせる">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "注釈のインポート…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Jah">
+<!ENTITY trellis.general.no "Ei">
+<!ENTITY trellis.general.optional "(Valikuline)">
+<!ENTITY trellis.general.note "Märkus:">
+<!ENTITY trellis.general.selectAll "Valida kõik">
+<!ENTITY trellis.general.deselectAll "Tühistada kõik valikud">
+<!ENTITY trellis.general.edit "Toimetada">
+<!ENTITY trellis.general.delete "Kustutada">
+<!ENTITY trellis.general.moveToTrash "Liiguta Prahi hulka">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Tühistada">
+<!ENTITY trellis.general.refresh "Värskenda">
+<!ENTITY trellis.general.saveAs "Salvestada kui...">
+<!ENTITY trellis.general.options "Valikud">
+<!ENTITY trellis.general.advancedOptions.label "Advanced Options">
+<!ENTITY trellis.general.tools "Tööriistad">
+<!ENTITY trellis.general.more "Veel">
+<!ENTITY trellis.general.moreInformation "Lisainfo">
+<!ENTITY trellis.general.loading "Laadimine...">
+<!ENTITY trellis.general.close "Sulge">
+<!ENTITY trellis.general.minimize "Minimeerida">
+<!ENTITY trellis.general.other "Other…">
+<!ENTITY trellis.general.bigger "Bigger">
+<!ENTITY trellis.general.smaller "Smaller">
+<!ENTITY trellis.general.reset "Lähtestamine">
+
+
+<!ENTITY trellis.errorReport.title "Trellis vearaport">
+<!ENTITY trellis.errorReport.submissionInProgress "Palun oodake kuni veateadet saadetakse.">
+<!ENTITY trellis.errorReport.submitted "Teie veateade on saadetud.">
+<!ENTITY trellis.errorReport.reportID "Veateate ID:">
+<!ENTITY trellis.errorReport.postToForums "Palun postitage teade foorumisse (forums.trellis.org) koos veateate ID-ga ja kirjeldusega, millistel asjaoludel probleem esineb ning mis seda iseloomustab.">
+<!ENTITY trellis.errorReport.notReviewed "Veateadetega, millest ei ole foorumites teada antud, üldjuhul ei tegeleta.">
+
+<!ENTITY trellis.upgrade.title "Trellis uuendamishaldur">
+<!ENTITY trellis.upgrade.newVersionInstalled "Paigaldasite uue Trellis versiooni.">
+<!ENTITY trellis.upgrade.upgradeRequired "Et Trellis andmebaas töötaks uue versiooniga on seda tarvis uuendada.">
+<!ENTITY trellis.upgrade.autoBackup "Enne muudatuste tegemist varundatakse olemasolev andmebaas automaatselt.">
+<!ENTITY trellis.upgrade.majorUpgrade "Tegemist on olulise uuendusega.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Enne jätkamist palun tutvuge kindlasti">
+<!ENTITY trellis.upgrade.majorUpgradeLink "uuenduste">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "kirjeldusega.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Palun oodake kuni uuendusi paigaldatakse. See võib võtta mõned minutid aega.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Teie Trellis andmebaas on edukalt uuendatud.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Programmis tehtud uuendused on">
+<!ENTITY trellis.upgrade.changeLogLink "muudatuste">
+<!ENTITY trellis.upgrade.changeLogAfterLink "nimekirjas.">
+
+<!ENTITY trellis.tabs.notes.label "Märkused">
+<!ENTITY trellis.tabs.attachments.label "Manused">
+
+<!ENTITY trellis.toolbar.duplicate.label "Näidata duplikaate">
+<!ENTITY trellis.collections.showUnfiledItems "Teemata kirjed">
+<!ENTITY trellis.collections.showRetractedItems "Show Retracted Items">
+
+<!ENTITY trellis.items.itemType "Kirje tüüp">
+<!ENTITY trellis.items.creator_column "Autor">
+<!ENTITY trellis.items.year_column "Aasta">
+<!ENTITY trellis.items.dateModified_column "Muutmise kuupäev">
+<!ENTITY trellis.items.moreColumns.label "Rohkem tulpasid">
+<!ENTITY trellis.items.restoreColumnOrder.label "Taastada tulpade järjekord">
+
+<!ENTITY trellis.items.menu.showInLibrary "Näidata raamatukogus">
+<!ENTITY trellis.items.menu.attach.note "Märkuse lisamine">
+<!ENTITY trellis.items.menu.attach "Manuse lisamine">
+<!ENTITY trellis.items.menu.attach.link.uri "Seonda link URI-ga…">
+<!ENTITY trellis.items.menu.attach.file "Lisada fail kirje manusena">
+<!ENTITY trellis.items.menu.attach.fileLink "Lisada link failile">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Taasta raamatukokku">
+<!ENTITY trellis.items.menu.duplicateItem "Valitud kirje duplitseerimine">
+<!ENTITY trellis.items.menu.mergeItems "Kirjete liitmine...">
+<!ENTITY trellis.items.menu.unrecognize "Undo Retrieve Metadata">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Palun valida aluskirje, millele liidetakse teise kirje andmed:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Valida väljad, mida säilitada teistest versioonidest:">
+
+<!ENTITY trellis.toolbar.newItem.label "Uus kirje">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Veel">
+<!ENTITY trellis.toolbar.lookup.label "Identifitseerija abil uue kirje loomine">
+<!ENTITY trellis.toolbar.removeItem.label "Kirje eemaldamine...">
+<!ENTITY trellis.toolbar.newGroup "Uus grupp...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Uus alamteema...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Uus salvestatud otsing...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Prügikasti tühjendamine">
+<!ENTITY trellis.toolbar.tagSelector.label "Lipikusirvija olek">
+<!ENTITY trellis.toolbar.actions.label "Tegevused">
+<!ENTITY trellis.toolbar.import.label "Import...">
+<!ENTITY trellis.toolbar.importFromClipboard "Lõikepuhvrist importimine">
+<!ENTITY trellis.toolbar.export.label "Raamatukogu eksport...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF Skänn">
+<!ENTITY trellis.toolbar.preferences.label "Eelistused...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Abi ja dokumentatsioon">
+<!ENTITY trellis.toolbar.about.label "Trellis kohta">
+<!ENTITY trellis.toolbar.advancedSearch "Täpsem otsing">
+<!ENTITY trellis.toolbar.openURL.label "Otsida">
+<!ENTITY trellis.toolbar.openURL.tooltip "Otsida kohalikus raamatukogus">
+
+<!ENTITY trellis.toolbar.feeds.new "New Feed">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "From URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "From OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Edit Feed…">
+
+<!ENTITY trellis.item.add "Lisada">
+<!ENTITY trellis.item.attachment.file.show "Faili näitamine">
+<!ENTITY trellis.item.textTransform "Teksti muutmine">
+<!ENTITY trellis.item.textTransform.titlecase "Suurteks Algustähtedeks">
+<!ENTITY trellis.item.textTransform.sentencecase "Lause tõst">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Kopeerida URL kujul">
+<!ENTITY trellis.item.deletePermanently "Kustuta jäädavalt...">
+
+<!ENTITY trellis.item.tags.removeAll "Remove All Tags…">
+
+<!ENTITY trellis.toolbar.newNote "Uus märkus">
+<!ENTITY trellis.toolbar.note.standalone "Uus sõltumatu märkus">
+<!ENTITY trellis.toolbar.note.child "Lisada alammärkus">
+<!ENTITY trellis.toolbar.lookup "Identifitseerija abil otsida...">
+<!ENTITY trellis.toolbar.attachment.linked "Link failile...">
+<!ENTITY trellis.toolbar.attachment.add "Faili koopia salvestamine...">
+<!ENTITY trellis.toolbar.attachment.weblink "Salvestada link käesolevale leheküljele">
+<!ENTITY trellis.toolbar.attachment.snapshot "Teha käesolevast leheküljest momentülesvõte">
+<!ENTITY trellis.toolbar.context.item "Kirje">
+<!ENTITY trellis.toolbar.context.notes "Märkused">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Lipikud puuduvad">
+<!ENTITY trellis.tagSelector.loadingTags "Loading tags…">
+<!ENTITY trellis.tagSelector.showAutomatic "Automaatselt näidata">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Näidata kõiki lipikuid raamatukogus">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Delete Automatic Tags in This Library…">
+<!ENTITY trellis.tagSelector.clearAll "Ära vali midagi">
+<!ENTITY trellis.tagSelector.assignColor "Värvi valik...">
+<!ENTITY trellis.tagSelector.renameTag "Lipiku ümbernimetamine...">
+<!ENTITY trellis.tagSelector.deleteTag "Lipiku kustutamine...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Lipiku värvi valik ja asukoht">
+<!ENTITY trellis.tagColorChooser.color "Värv:">
+<!ENTITY trellis.tagColorChooser.position "Asukoht:">
+<!ENTITY trellis.tagColorChooser.setColor "Värvi valimine:">
+<!ENTITY trellis.tagColorChooser.removeColor "Värvi eemaldamine">
+
+<!ENTITY trellis.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
+<!ENTITY trellis.lookup.button.search "Otsing">
+
+<!ENTITY trellis.createParent.title "Create Parent Item">
+<!ENTITY trellis.createParent.button.manual "Manual Entry">
+
+<!ENTITY trellis.selectitems.title "Kirjete valimine">
+<!ENTITY trellis.selectitems.intro.label "Valida millised kirjeid soovite lisada raamatukokku">
+<!ENTITY trellis.selectitems.cancel.label "Tühistada">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Bibliograafia loomine">
+<!ENTITY trellis.bibliography.style.label "Viite stiil:">
+<!ENTITY trellis.bibliography.manageStyles "Manage Styles…">
+<!ENTITY trellis.bibliography.locale.label "Keel">
+<!ENTITY trellis.bibliography.outputMode "Väljundi tüüp:">
+<!ENTITY trellis.bibliography.bibliography "Biblograafia">
+<!ENTITY trellis.bibliography.outputMethod "Väljundi meetod:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Salvestada RTF-ina">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Salvestada HTML-ina">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Lõikepuhvrisse kopeerimine">
+<!ENTITY trellis.bibliography.print.label "Trükkida">
+
+<!ENTITY trellis.integration.docPrefs.title "Dokumendi sätted">
+<!ENTITY trellis.integration.addEditCitation.title "Lisa/toimeta viidet">
+<!ENTITY trellis.integration.editBibliography.title "Toimeta bibliograafiat">
+
+<!ENTITY trellis.progress.title "Progress">
+
+<!ENTITY trellis.import "Import">
+<!ENTITY trellis.import.whereToImportFrom "Where do you want to import from?">
+<!ENTITY trellis.import.source.file "A file (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importimine...">
+<!ENTITY trellis.import.database "Database">
+<!ENTITY trellis.import.lastModified "Last Modified">
+<!ENTITY trellis.import.size "Suurus">
+<!ENTITY trellis.import.createCollection "Place imported collections and items into new collection">
+<!ENTITY trellis.import.fileHandling "File Handling">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Eksport...">
+<!ENTITY trellis.exportOptions.format.label "Formaat:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Tõlkija seaded">
+
+<!ENTITY trellis.charset.label "Märgikodeering">
+<!ENTITY trellis.moreEncodings.label "Rohkem kodeeringud">
+
+<!ENTITY trellis.citation.keepSorted.label "Hoida allikad sorteeritud">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Prefiks:">
+<!ENTITY trellis.citation.suffix.label "Sufiks:">
+<!ENTITY trellis.citation.editorWarning.label "Hoiatus: kui te redigeerite tsiteeringut siis see ei hakka enam peegeldama muutuseid, mida teete selle kirje trellis andmebaasi või kui muudate seadetes tsiteeringu stiili.">
+
+<!ENTITY trellis.richText.italic.label "Kaldkiri">
+<!ENTITY trellis.richText.bold.label "Rasvane">
+<!ENTITY trellis.richText.underline.label "Allajoonitud">
+<!ENTITY trellis.richText.superscript.label "Ülaindeks">
+<!ENTITY trellis.richText.subscript.label "Alaindeks">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Annotatsiooni lisamine">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Annotatsioonide peitmine">
+<!ENTITY trellis.annotate.toolbar.expand.label "Annotatsioonide näitamine">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Teksti esiletõstmine">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Esiletõste eemaldamine">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Näidata viiteid:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Joonealustena">
+<!ENTITY trellis.integration.prefs.endnotes.label "Lõppmärkustena">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Store Citations as:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Järjehoidjaid">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Bookmarks can be shared between Word and LibreOffice, but may cause errors if accidentally modified and cannot be inserted into footnotes.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatically update citations">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citations with pending updates will be highlighted in the document">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Disabling updates can speed up citation insertion in large documents. Click Refresh to update citations manually.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Use MEDLINE journal abbreviations">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "The “Journal Abbr” field will be ignored.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Switch to a Different Word Processor…">
+
+<!ENTITY trellis.integration.showEditor.label "Redaktori näitamine">
+<!ENTITY trellis.integration.classicView.label "Tavaline vaade">
+
+<!ENTITY trellis.integration.references.label "Referentsid bibliograafias">
+
+<!ENTITY trellis.sync.stop "Stop Sync">
+<!ENTITY trellis.sync.error "Sünkroniseerimisviga">
+<!ENTITY trellis.sync.storage.progress "Progress:">
+<!ENTITY trellis.sync.storage.downloads "Allalaadimised:">
+<!ENTITY trellis.sync.storage.uploads "Üleslaadimised:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Järgnev lipik Trellis raamatukogus on liiga pikk selleks, et seda sünkroniseerida:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Sünkroniseerimiseks peavad lipikud olema lühemad kui 256 märki.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Võite selle lipiku jagada mitmeks lipikuks, lühendada seda käsitsi või selle hoopis kustutada.">
+<!ENTITY trellis.sync.longTagFixer.split "Jagada">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Jagada">
+<!ENTITY trellis.sync.longTagFixer.character "märgi juurest">
+<!ENTITY trellis.sync.longTagFixer.characters "märkide juurest">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Valimata lipikuid ei salvestata.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Lipik kustutatakse kõigilt kirjetelt.">
+
+<!ENTITY trellis.merge.title "Konflikti lahendamine">
+<!ENTITY trellis.merge.of " ">
+<!ENTITY trellis.merge.deleted "Kustututatud">
+
+<!ENTITY trellis.proxy.recognized.title "Proksi omaks võetud.">
+<!ENTITY trellis.proxy.recognized.warning "Lisage vaid oma raamatukogust, koolist või firmast lähtuvaid proksisid">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Teiste prokside lisamine võib kujutada turvariski.">
+<!ENTITY trellis.proxy.recognized.disable.label "Mitte suunata automaatselt eelevalt tuvastatud proksi kaudu">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignoreerida">
+
+<!ENTITY trellis.feedSettings.title "Feed Settings">
+<!ENTITY trellis.feedSettings.saveButton.label "Salvesta">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Pealkiri:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Update feed every">
+<!ENTITY trellis.feedSettings.refresh.label2 "hour(s)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Remove unread feed items after">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "day(s)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Remove read feed items after">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "day(s)">
+
+<!ENTITY trellis.rtfScan.title "RTF Skänn">
+<!ENTITY trellis.rtfScan.cancel.label "Tühistada">
+<!ENTITY trellis.rtfScan.citation.label "Viide">
+<!ENTITY trellis.rtfScan.itemName.label "Kirje nimi">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Paigutamata viited">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Ebamäärased viited">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Paigutatud viited">
+<!ENTITY trellis.rtfScan.introPage.label "Sissejuhatus">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis suudab automaatselt RTF failidest viiteid lugeda ja ümber formateerida ja ka neisse bibliograafiat salvestada. Alustamiseks valige allpool RTF fail.">
+<!ENTITY trellis.rtfScan.introPage.description2 "Alustamiseks valige allpool RTF sisend ja väljundfail:">
+<!ENTITY trellis.rtfScan.scanPage.label "Viidete otsimine">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis otsib dokumendist viiteid. Palun kannatust.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Viitekirjete kontroll">
+<!ENTITY trellis.rtfScan.citationsPage.description "Et kindlaks teha, kas Trellis sorteeris kirjed õigesti, palun kontrollida tuvastatud viidete nimekirja. Kõik paigutamata või ebamäärastest viidetest tulenevad probleemid peaks enne järgmist sammu lahendama.">
+<!ENTITY trellis.rtfScan.stylePage.label "Dokumendi formateering">
+<!ENTITY trellis.rtfScan.formatPage.label "Viidete formateering">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis töötleb RTF dokumenti. Palun kannatust.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF otsing lõppenud">
+<!ENTITY trellis.rtfScan.completePage.description "Dokument on töödeldud. Palun kontrollida formateeringut.">
+<!ENTITY trellis.rtfScan.inputFile.label "Sisendfail">
+<!ENTITY trellis.rtfScan.outputFile.label "Väljundfail">
+
+<!ENTITY trellis.file.choose.label "Faili valimine...">
+<!ENTITY trellis.file.noneSelected.label "Faili ei ole valitud">
+
+<!ENTITY trellis.attachLink.title "Seonda link URI-ga…">
+<!ENTITY trellis.attachLink.label.link "Link:">
+<!ENTITY trellis.attachLink.label.title "Pealkiri:">
+
+<!ENTITY trellis.context.addChildNote "Add Item Note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
+<!ENTITY trellis.context.addStandaloneNote "Add Standalone Note">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Add Standalone Note from Annotations">
+<!ENTITY trellis.context.editInWindow "Muuda eraldi aknas">
+
+<!ENTITY trellis.pdfReader.firstPage "Esimene lehekülg">
+<!ENTITY trellis.pdfReader.lastPage "Last Page">
+<!ENTITY trellis.pdfReader.back "Tagasi">
+<!ENTITY trellis.pdfReader.forward "Forward">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom In">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom Out">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

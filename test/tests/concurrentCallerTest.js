@@ -1,10 +1,10 @@
 "use strict";
 
 describe("ConcurrentCaller", function () {
-	const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+	const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 	var logger = null;
 	// Uncomment to get debug output
-	//logger = Zotero.debug;
+	//logger = Trellis.debug;
 	
 	describe("#start()", function () {
 		it("should run functions as slots open and wait for them to complete", async function () {
@@ -17,7 +17,7 @@ describe("ConcurrentCaller", function () {
 			var funcs = ids.map(function (id) {
 				return async function () {
 					if (logger) {
-						Zotero.debug("Running " + id);
+						Trellis.debug("Running " + id);
 					}
 					running++;
 					if (running > numConcurrent) {
@@ -26,7 +26,7 @@ describe("ConcurrentCaller", function () {
 					}
 					var min = 10;
 					var max = 25;
-					await Zotero.Promise.delay(
+					await Trellis.Promise.delay(
 						Math.floor(Math.random() * (max - min + 1)) + min
 					);
 					if (running > numConcurrent) {
@@ -36,7 +36,7 @@ describe("ConcurrentCaller", function () {
 					running--;
 					finished++;
 					if (logger) {
-						Zotero.debug("Finished " + id);
+						Trellis.debug("Finished " + id);
 					}
 					return id;
 				};
@@ -65,14 +65,14 @@ describe("ConcurrentCaller", function () {
 			var makeFunc = function (id, delay) {
 				return async function () {
 					if (logger) {
-						Zotero.debug("Running " + id);
+						Trellis.debug("Running " + id);
 					}
 					running++;
 					if (running > numConcurrent) {
 						failed = true;
 						throw new Error("Too many concurrent tasks");
 					}
-					await Zotero.Promise.delay(delay);
+					await Trellis.Promise.delay(delay);
 					if (running > numConcurrent) {
 						failed = true;
 						throw new Error("Too many concurrent tasks");
@@ -80,7 +80,7 @@ describe("ConcurrentCaller", function () {
 					running--;
 					finished++;
 					if (logger) {
-						Zotero.debug("Finished " + id);
+						Trellis.debug("Finished " + id);
 					}
 					return id;
 				};
@@ -95,7 +95,7 @@ describe("ConcurrentCaller", function () {
 				logger
 			});
 			var promise1 = caller.start(funcs1);
-			await Zotero.Promise.delay(1);
+			await Trellis.Promise.delay(1);
 			var promise2 = caller.start(funcs2);
 			var promise2Fulfilled = false;
 			promise2.then(() => promise2Fulfilled = true);
@@ -122,14 +122,14 @@ describe("ConcurrentCaller", function () {
 			var makeFunc = function (id, delay) {
 				return async function () {
 					if (logger) {
-						Zotero.debug("Running " + id);
+						Trellis.debug("Running " + id);
 					}
 					running++;
 					if (running > numConcurrent) {
 						failed = true;
 						throw new Error("Too many concurrent tasks");
 					}
-					await Zotero.Promise.delay(delay);
+					await Trellis.Promise.delay(delay);
 					if (running > numConcurrent) {
 						failed = true;
 						throw new Error("Too many concurrent tasks");
@@ -137,7 +137,7 @@ describe("ConcurrentCaller", function () {
 					running--;
 					finished++;
 					if (logger) {
-						Zotero.debug("Finished " + id);
+						Trellis.debug("Finished " + id);
 					}
 					return id;
 				};
@@ -154,7 +154,7 @@ describe("ConcurrentCaller", function () {
 			var promise1 = caller.start(funcs1);
 			var promise1Fulfilled = false;
 			promise1.then(() => promise1Fulfilled = true);
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 			var promise2 = caller.start(funcs2);
 			
 			// Wait for second set
@@ -194,7 +194,7 @@ describe("ConcurrentCaller", function () {
 			var makeFunc = function (id) {
 				return async function () {
 					if (logger) {
-						Zotero.debug("Running " + id);
+						Trellis.debug("Running " + id);
 					}
 					running++
 					if (running > numConcurrent) {
@@ -203,13 +203,13 @@ describe("ConcurrentCaller", function () {
 					}
 					var min = 10;
 					var max = 25;
-					await Zotero.Promise.delay(
+					await Trellis.Promise.delay(
 						Math.floor(Math.random() * (max - min + 1)) + min
 					);
 					if (id == 'g') {
 						running--;
 						finished++;
-						Zotero.debug("Throwing " + id);
+						Trellis.debug("Throwing " + id);
 						// This causes an erroneous "possibly unhandled rejection" message in
 						// Bluebird 2.10.2 that I can't seem to get rid of (and the rejection
 						// is later handled), so tell Bluebird to ignore it
@@ -224,7 +224,7 @@ describe("ConcurrentCaller", function () {
 					running--;
 					finished++;
 					if (logger) {
-						Zotero.debug("Finished " + id);
+						Trellis.debug("Finished " + id);
 					}
 					return id;
 				};
@@ -274,7 +274,7 @@ describe("ConcurrentCaller", function () {
 			var makeFunc = function (id) {
 				return async function () {
 					if (logger) {
-						Zotero.debug("Running " + id);
+						Trellis.debug("Running " + id);
 					}
 					running++
 					if (running > numConcurrent) {
@@ -283,13 +283,13 @@ describe("ConcurrentCaller", function () {
 					}
 					var min = 10;
 					var max = 25;
-					await Zotero.Promise.delay(
+					await Trellis.Promise.delay(
 						Math.floor(Math.random() * (max - min + 1)) + min
 					);
 					if (id == 'g') {
 						running--;
 						finished++;
-						Zotero.debug("Throwing " + id);
+						Trellis.debug("Throwing " + id);
 						// This causes an erroneous "possibly unhandled rejection" message in
 						// Bluebird 2.10.2 that I can't seem to get rid of (and the rejection
 						// is later handled), so tell Bluebird to ignore it
@@ -304,7 +304,7 @@ describe("ConcurrentCaller", function () {
 					running--;
 					finished++;
 					if (logger) {
-						Zotero.debug("Finished " + id);
+						Trellis.debug("Finished " + id);
 					}
 					return id;
 				};
@@ -355,7 +355,7 @@ describe("ConcurrentCaller", function () {
 			var makeFunc = function (id) {
 				return async function () {
 					if (logger) {
-						Zotero.debug("Running " + id);
+						Trellis.debug("Running " + id);
 					}
 					running++;
 					if (running > numConcurrent) {
@@ -364,7 +364,7 @@ describe("ConcurrentCaller", function () {
 					}
 					var min = 10;
 					var max = 25;
-					await Zotero.Promise.delay(
+					await Trellis.Promise.delay(
 						Math.floor(Math.random() * (max - min + 1)) + min
 					);
 					if (running > numConcurrent) {
@@ -374,7 +374,7 @@ describe("ConcurrentCaller", function () {
 					running--;
 					finished++;
 					if (logger) {
-						Zotero.debug("Finished " + id);
+						Trellis.debug("Finished " + id);
 					}
 					return id;
 				};
@@ -389,7 +389,7 @@ describe("ConcurrentCaller", function () {
 			var promise1 = caller.start(funcs1);
 			var promise1Fulfilled = false;
 			promise1.then(() => promise1Fulfilled = true);
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 			var promise2 = caller.start(funcs2);
 			var promise2Fulfilled = false;
 			promise2.then(() => promise2Fulfilled = true);

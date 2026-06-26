@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Builds Zotero and uploads to S3 and deploy server, but does not make the build live.
+# Builds Trellis and uploads to S3 and deploy server, but does not make the build live.
 # To make the build live, run the deploy script on the deploy server (or via SSH).
 #
 set -euo pipefail
@@ -68,7 +68,7 @@ else
 	SIGN=""
 fi
 
-# Build Zotero
+# Build Trellis
 "$ROOT_DIR/build.sh" -d "$SOURCE_DIR" -p $PLATFORMS -c $CHANNEL $SIGN
 
 BUILD_ID=`cat "$DIST_DIR/build_id"`
@@ -145,7 +145,7 @@ cp "$DIST_DIR"/files-* "$TEMP_DIR/version_info"
 chmod g+w "$TEMP_DIR"/version_info/files-*
 # Generate build-{os}.json for each platform
 SHORT_VERSION="${VERSION:0:3}"
-DETAILS_URL="https://www.zotero.org/support/${SHORT_VERSION}_changelog"
+DETAILS_URL="https://www.trellis.org/support/${SHORT_VERSION}_changelog"
 for i in `seq 0 1 $((${#PLATFORMS}-1))`
 do
 	case ${PLATFORMS:i:1} in

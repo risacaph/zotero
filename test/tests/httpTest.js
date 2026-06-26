@@ -1,4 +1,4 @@
-describe("Zotero.HTTP", function () {
+describe("Trellis.HTTP", function () {
 	var server;
 	var httpd;
 	var port = 16213;
@@ -87,30 +87,30 @@ describe("Zotero.HTTP", function () {
 	});
 	
 	beforeEach(function () {
-		// Fake XHR, which can be disabled per test with `Zotero.HTTP.mock = null`
-		Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+		// Fake XHR, which can be disabled per test with `Trellis.HTTP.mock = null`
+		Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 		server = sinon.fakeServer.create();
 		server.autoRespond = true;
 	});
 	
 	afterEach(async function () {
 		// Allow requests to settle
-		await Zotero.Promise.delay(50);
+		await Trellis.Promise.delay(50);
 	});
 	
 	after(function* () {
-		var defer = Zotero.Promise.defer();
+		var defer = Trellis.Promise.defer();
 		httpd.stop(() => defer.resolve());
 		yield defer.promise;
 		
-		Zotero.HTTP.mock = null;
+		Trellis.HTTP.mock = null;
 	});
 	
 	
 	describe("#request()", function () {
 		it("should succeed with 3xx status if followRedirects is false", async function () {
-			Zotero.HTTP.mock = null;
-			var req = await Zotero.HTTP.request(
+			Trellis.HTTP.mock = null;
+			var req = await Trellis.HTTP.request(
 				'GET',
 				baseURL + 'redirect',
 				{
@@ -129,9 +129,9 @@ describe("Zotero.HTTP", function () {
 				status: 0,
 				text: ""
 			})
-			var e = await getPromiseError(Zotero.HTTP.request("GET", baseURL + "empty"));
+			var e = await getPromiseError(Trellis.HTTP.request("GET", baseURL + "empty"));
 			assert.ok(e);
-			assert.equal(e.message, Zotero.getString('sync.error.checkConnection'));
+			assert.equal(e.message, Trellis.getString('sync.error.checkConnection'));
 		});
 		
 		it("should provide cancellerReceiver with a callback to cancel a request", async function () {
@@ -150,7 +150,7 @@ describe("Zotero.HTTP", function () {
 			setTimeout(function () {
 				cancel();
 			}, 50);
-			var e = await getPromiseError(Zotero.HTTP.request(
+			var e = await getPromiseError(Trellis.HTTP.request(
 				"GET",
 				baseURL + "slow",
 				{
@@ -160,13 +160,13 @@ describe("Zotero.HTTP", function () {
 				}
 			));
 			
-			assert.instanceOf(e, Zotero.HTTP.CancelledException);
+			assert.instanceOf(e, Trellis.HTTP.CancelledException);
 			server.respond();
 		});
 		
 		it("should process headers case insensitively", async function () {
-			Zotero.HTTP.mock = null;
-			var req = await Zotero.HTTP.request(
+			Trellis.HTTP.mock = null;
+			var req = await Trellis.HTTP.request(
 				'GET',
 				baseURL + 'requireJSON',
 				{
@@ -184,12 +184,12 @@ describe("Zotero.HTTP", function () {
 
 			before(async function () {
 				// Wait for proxy auth probing to finish so its
-				// Zotero.Promise.delay() calls don't pollute the stub
-				await Zotero.proxyAuthComplete;
+				// Trellis.Promise.delay() calls don't pollute the stub
+				await Trellis.proxyAuthComplete;
 			});
 
 			beforeEach(function () {
-				delayStub = sinon.stub(Zotero.Promise, "delay").returns(Promise.resolve());
+				delayStub = sinon.stub(Trellis.Promise, "delay").returns(Promise.resolve());
 			});
 			
 			afterEach(function () {
@@ -211,9 +211,9 @@ describe("Zotero.HTTP", function () {
 					status: 500,
 					text: ""
 				});
-				spy = sinon.spy(Zotero.HTTP, "_requestInternal");
+				spy = sinon.spy(Trellis.HTTP, "_requestInternal");
 				var e = await getPromiseError(
-					Zotero.HTTP.request(
+					Trellis.HTTP.request(
 						"GET",
 						baseURL + "error",
 						{
@@ -222,7 +222,7 @@ describe("Zotero.HTTP", function () {
 						}
 					)
 				);
-				assert.instanceOf(e, Zotero.HTTP.UnexpectedStatusException);
+				assert.instanceOf(e, Trellis.HTTP.UnexpectedStatusException);
 				assert.isTrue(spy.calledThrice);
 				assert.isTrue(delayStub.calledTwice);
 				assert.equal(delayStub.args[0][0], 10);
@@ -236,9 +236,9 @@ describe("Zotero.HTTP", function () {
 					status: 500,
 					text: ""
 				});
-				spy = sinon.spy(Zotero.HTTP, "_requestInternal");
+				spy = sinon.spy(Trellis.HTTP, "_requestInternal");
 				var e = await getPromiseError(
-					Zotero.HTTP.request(
+					Trellis.HTTP.request(
 						"GET",
 						baseURL + "error",
 						{
@@ -247,7 +247,7 @@ describe("Zotero.HTTP", function () {
 						}
 					)
 				);
-				assert.instanceOf(e, Zotero.HTTP.UnexpectedStatusException);
+				assert.instanceOf(e, Trellis.HTTP.UnexpectedStatusException);
 				assert.isTrue(spy.calledOnce);
 				assert.isTrue(delayStub.notCalled);
 			});
@@ -261,12 +261,12 @@ describe("Zotero.HTTP", function () {
 					text: ""
 				});
 				var cancel;
-				spy = sinon.spy(Zotero.HTTP, "_requestInternal");
+				spy = sinon.spy(Trellis.HTTP, "_requestInternal");
 				setTimeout(() => {
 					cancel();
 				}, 300);
 				var e = await getPromiseError(
-					Zotero.HTTP.request(
+					Trellis.HTTP.request(
 						"GET",
 						baseURL + "error",
 						{
@@ -277,7 +277,7 @@ describe("Zotero.HTTP", function () {
 						}
 					)
 				);
-				assert.instanceOf(e, Zotero.HTTP.CancelledException);
+				assert.instanceOf(e, Trellis.HTTP.CancelledException);
 				assert.equal(spy.callCount, 3);
 			});
 			
@@ -304,8 +304,8 @@ describe("Zotero.HTTP", function () {
 					}
 					called++;
 				});
-				spy = sinon.spy(Zotero.HTTP, "_requestInternal");
-				await Zotero.HTTP.request("GET", baseURL + "error");
+				spy = sinon.spy(Trellis.HTTP, "_requestInternal");
+				await Trellis.HTTP.request("GET", baseURL + "error");
 				assert.equal(2, spy.callCount);
 				assert.approximately(delayStub.args[0][0], 5 * 1000, 5);
 			});
@@ -342,8 +342,8 @@ describe("Zotero.HTTP", function () {
 					}
 					called++;
 				});
-				spy = sinon.spy(Zotero.HTTP, "_requestInternal");
-				await Zotero.HTTP.request("GET", baseURL + "error");
+				spy = sinon.spy(Trellis.HTTP, "_requestInternal");
+				await Trellis.HTTP.request("GET", baseURL + "error");
 				assert.equal(3, spy.callCount);
 				// DEBUG: Why are these slightly off?
 				assert.approximately(delayStub.args[0][0], 5 * 1000, 5);
@@ -363,11 +363,11 @@ describe("Zotero.HTTP", function () {
 					}
 					called++;
 				});
-				spy = sinon.spy(Zotero.HTTP, "_requestInternal");
+				spy = sinon.spy(Trellis.HTTP, "_requestInternal");
 				var errorDelayIntervals = [20];
-				await Zotero.HTTP.request("GET", baseURL + "error1", { errorDelayIntervals })
+				await Trellis.HTTP.request("GET", baseURL + "error1", { errorDelayIntervals })
 				called = 0;
-				await Zotero.HTTP.request("GET", baseURL + "error2", { errorDelayIntervals }),
+				await Trellis.HTTP.request("GET", baseURL + "error2", { errorDelayIntervals }),
 				assert.equal(4, spy.callCount);
 				assert.equal(delayStub.args[0][0], 20);
 				assert.equal(delayStub.args[1][0], 20);
@@ -470,7 +470,7 @@ describe("Zotero.HTTP", function () {
 		});
 
 		beforeEach(async function () {
-			Zotero.HTTP.mock = null;
+			Trellis.HTTP.mock = null;
 			tmpDir = await getTempDirectory();
 		});
 
@@ -481,7 +481,7 @@ describe("Zotero.HTTP", function () {
 
 		it("should download a file to disk", async function () {
 			let dest = PathUtils.join(tmpDir, "small.bin");
-			let req = await Zotero.HTTP.download(
+			let req = await Trellis.HTTP.download(
 				baseURL + "download/small.bin",
 				dest
 			);
@@ -492,7 +492,7 @@ describe("Zotero.HTTP", function () {
 
 		it("should download a larger file", async function () {
 			let dest = PathUtils.join(tmpDir, "large.bin");
-			let req = await Zotero.HTTP.download(
+			let req = await Trellis.HTTP.download(
 				baseURL + "download/large.bin",
 				dest
 			);
@@ -503,7 +503,7 @@ describe("Zotero.HTTP", function () {
 
 		it("should send request headers", async function () {
 			let dest = PathUtils.join(tmpDir, "custom.bin");
-			let req = await Zotero.HTTP.download(
+			let req = await Trellis.HTTP.download(
 				baseURL + "download/custom-header",
 				dest,
 				{
@@ -517,9 +517,9 @@ describe("Zotero.HTTP", function () {
 		it("should throw UnexpectedStatusException for non-success status", async function () {
 			let dest = PathUtils.join(tmpDir, "404.bin");
 			let e = await getPromiseError(
-				Zotero.HTTP.download(baseURL + "download/404", dest)
+				Trellis.HTTP.download(baseURL + "download/404", dest)
 			);
-			assert.instanceOf(e, Zotero.HTTP.UnexpectedStatusException);
+			assert.instanceOf(e, Trellis.HTTP.UnexpectedStatusException);
 			assert.equal(e.status, 404);
 			// File should not exist
 			assert.isFalse(await IOUtils.exists(dest));
@@ -527,7 +527,7 @@ describe("Zotero.HTTP", function () {
 
 		it("should allow non-success status with successCodes", async function () {
 			let dest = PathUtils.join(tmpDir, "404.bin");
-			let req = await Zotero.HTTP.download(
+			let req = await Trellis.HTTP.download(
 				baseURL + "download/404",
 				dest,
 				{
@@ -539,7 +539,7 @@ describe("Zotero.HTTP", function () {
 
 		it("should follow redirects", async function () {
 			let dest = PathUtils.join(tmpDir, "redirected.bin");
-			let req = await Zotero.HTTP.download(
+			let req = await Trellis.HTTP.download(
 				baseURL + "download/redirect-to-file",
 				dest
 			);
@@ -551,7 +551,7 @@ describe("Zotero.HTTP", function () {
 		it("should call onProgress during download", async function () {
 			let dest = PathUtils.join(tmpDir, "progress.bin");
 			let progressCalls = [];
-			await Zotero.HTTP.download(
+			await Trellis.HTTP.download(
 				baseURL + "download/large.bin",
 				dest,
 				{
@@ -567,12 +567,12 @@ describe("Zotero.HTTP", function () {
 		});
 
 		it("should retry on 5xx errors", async function () {
-			let delayStub = sinon.stub(Zotero.Promise, "delay")
+			let delayStub = sinon.stub(Trellis.Promise, "delay")
 				.returns(Promise.resolve());
 			try {
 				let dest = PathUtils.join(tmpDir, "500.bin");
 				let e = await getPromiseError(
-					Zotero.HTTP.download(
+					Trellis.HTTP.download(
 						baseURL + "download/500",
 						dest,
 						{
@@ -581,7 +581,7 @@ describe("Zotero.HTTP", function () {
 						}
 					)
 				);
-				assert.instanceOf(e, Zotero.HTTP.UnexpectedStatusException);
+				assert.instanceOf(e, Trellis.HTTP.UnexpectedStatusException);
 				assert.equal(e.status, 500);
 			}
 			finally {
@@ -592,7 +592,7 @@ describe("Zotero.HTTP", function () {
 		it("should accept nsIURI as first argument", async function () {
 			let dest = PathUtils.join(tmpDir, "nsuri.bin");
 			let nsUri = Services.io.newURI(baseURL + "download/small.bin");
-			let req = await Zotero.HTTP.download(nsUri, dest);
+			let req = await Trellis.HTTP.download(nsUri, dest);
 			assert.equal(req.status, 200);
 			let stat = await IOUtils.stat(dest);
 			assert.equal(stat.size, 3 * 1024);
@@ -606,7 +606,7 @@ describe("Zotero.HTTP", function () {
 				+ `@127.0.0.1:${port}/download/auth`;
 			let dest = PathUtils.join(tmpDir, "auth.bin");
 			let nsUri = Services.io.newURI(url);
-			let req = await Zotero.HTTP.download(nsUri, dest);
+			let req = await Trellis.HTTP.download(nsUri, dest);
 			assert.equal(req.status, 200);
 			assert.equal(req.headers.get("X-Echo-Auth"), expected);
 		});
@@ -615,12 +615,12 @@ describe("Zotero.HTTP", function () {
 
 	describe("#processDocuments()", function () {
 		beforeEach(function () {
-			Zotero.HTTP.mock = null;
+			Trellis.HTTP.mock = null;
 		});
 		
 		it("should provide a document object", async function () {
 			var called = false;
-			await Zotero.HTTP.processDocuments(
+			await Trellis.HTTP.processDocuments(
 				testURL,
 				function (doc) {
 					assert.equal(doc.location.href, testURL);
@@ -637,7 +637,7 @@ describe("Zotero.HTTP", function () {
 			let url1 = `http://127.0.0.1:${port}/test-redirect.html`;
 			let url2 = `http://127.0.0.1:${port}/test.html`;
 			let called = false;
-			await Zotero.HTTP.processDocuments(
+			await Trellis.HTTP.processDocuments(
 				url1,
 				function (doc) {
 					assert.equal(doc.location.href, url2);
@@ -656,20 +656,20 @@ describe("Zotero.HTTP", function () {
 		});
 
 		beforeEach(function () {
-			Zotero.HTTP.mock = null;
+			Trellis.HTTP.mock = null;
 			// Clear all cookies for the test server
 			Services.cookies.removeAll();
 		});
 
 		it("should send cookies by default (mozAnon: false)", async function () {
 			// First request sets the cookie but gets 403
-			var req = await Zotero.HTTP.request('GET', cookieURL, {
+			var req = await Trellis.HTTP.request('GET', cookieURL, {
 				successCodes: false
 			});
 			assert.equal(req.status, 403);
 
 			// Second request should send the cookie and get 200
-			req = await Zotero.HTTP.request('GET', cookieURL, {
+			req = await Trellis.HTTP.request('GET', cookieURL, {
 				successCodes: false
 			});
 			assert.equal(req.status, 200);
@@ -677,12 +677,12 @@ describe("Zotero.HTTP", function () {
 
 		it("should not send cookies with anon: true", async function () {
 			// First request sets the cookie
-			await Zotero.HTTP.request('GET', cookieURL, {
+			await Trellis.HTTP.request('GET', cookieURL, {
 				successCodes: false
 			});
 
 			// Second request with anon: true should not send the cookie
-			var req = await Zotero.HTTP.request('GET', cookieURL, {
+			var req = await Trellis.HTTP.request('GET', cookieURL, {
 				anon: true,
 				successCodes: false
 			});
@@ -691,15 +691,15 @@ describe("Zotero.HTTP", function () {
 
 		describe("#newCookieContext()", function () {
 			it("should isolate cookies from the default jar", async function () {
-				let ctx = Zotero.HTTP.newCookieContext();
+				let ctx = Trellis.HTTP.newCookieContext();
 				try {
 					// Set cookie in the default jar
-					await Zotero.HTTP.request('GET', cookieURL, {
+					await Trellis.HTTP.request('GET', cookieURL, {
 						successCodes: false
 					});
 
 					// Request in the isolated context should not see the default cookie
-					let req = await Zotero.HTTP.request('GET', cookieURL, {
+					let req = await Trellis.HTTP.request('GET', cookieURL, {
 						userContextId: ctx.id,
 						successCodes: false
 					});
@@ -711,17 +711,17 @@ describe("Zotero.HTTP", function () {
 			});
 
 			it("should persist cookies within the same context", async function () {
-				let ctx = Zotero.HTTP.newCookieContext();
+				let ctx = Trellis.HTTP.newCookieContext();
 				try {
 					// First request in context -- gets 403, sets cookie
-					let req = await Zotero.HTTP.request('GET', cookieURL, {
+					let req = await Trellis.HTTP.request('GET', cookieURL, {
 						userContextId: ctx.id,
 						successCodes: false
 					});
 					assert.equal(req.status, 403);
 
 					// Second request in same context -- should have the cookie
-					req = await Zotero.HTTP.request('GET', cookieURL, {
+					req = await Trellis.HTTP.request('GET', cookieURL, {
 						userContextId: ctx.id,
 						successCodes: false
 					});
@@ -733,17 +733,17 @@ describe("Zotero.HTTP", function () {
 			});
 
 			it("should not leak cookies between different contexts", async function () {
-				let ctx1 = Zotero.HTTP.newCookieContext();
-				let ctx2 = Zotero.HTTP.newCookieContext();
+				let ctx1 = Trellis.HTTP.newCookieContext();
+				let ctx2 = Trellis.HTTP.newCookieContext();
 				try {
 					// Set cookie in ctx1
-					await Zotero.HTTP.request('GET', cookieURL, {
+					await Trellis.HTTP.request('GET', cookieURL, {
 						userContextId: ctx1.id,
 						successCodes: false
 					});
 
 					// ctx2 should not see ctx1's cookie
-					let req = await Zotero.HTTP.request('GET', cookieURL, {
+					let req = await Trellis.HTTP.request('GET', cookieURL, {
 						userContextId: ctx2.id,
 						successCodes: false
 					});
@@ -756,10 +756,10 @@ describe("Zotero.HTTP", function () {
 			});
 
 			it("should remove cookies on dispose()", async function () {
-				let ctx = Zotero.HTTP.newCookieContext();
+				let ctx = Trellis.HTTP.newCookieContext();
 
 				// Set cookie in context
-				await Zotero.HTTP.request('GET', cookieURL, {
+				await Trellis.HTTP.request('GET', cookieURL, {
 					userContextId: ctx.id,
 					successCodes: false
 				});
@@ -770,9 +770,9 @@ describe("Zotero.HTTP", function () {
 
 				// Dispose and verify cookies are gone
 				ctx.dispose();
-				let ctx2 = Zotero.HTTP.newCookieContext();
+				let ctx2 = Trellis.HTTP.newCookieContext();
 				try {
-					let req = await Zotero.HTTP.request('GET', cookieURL, {
+					let req = await Trellis.HTTP.request('GET', cookieURL, {
 						userContextId: ctx.id,
 						successCodes: false
 					});
@@ -788,16 +788,16 @@ describe("Zotero.HTTP", function () {
 	describe("CasePreservingHeaders", function () {
 		describe("#constructor()", function () {
 			it("should initialize from an iterable or object", function () {
-				let headers = new Zotero.HTTP.CasePreservingHeaders([['Name', 'value']]);
+				let headers = new Trellis.HTTP.CasePreservingHeaders([['Name', 'value']]);
 				assert.equal(headers.get('name'), 'value');
-				headers = new Zotero.HTTP.CasePreservingHeaders({ NAME: 'value' });
+				headers = new Trellis.HTTP.CasePreservingHeaders({ NAME: 'value' });
 				assert.equal(headers.get('Name'), 'value');
 			});
 		});
 		
 		describe("#entries()", function () {
 			it("should iterate through headers with original capitalization", function () {
-				let headers = new Zotero.HTTP.CasePreservingHeaders({ 'A-Header': 'a value' });
+				let headers = new Trellis.HTTP.CasePreservingHeaders({ 'A-Header': 'a value' });
 				headers.set('FuNkY-Header', 'some other value');
 				assert.deepEqual(Array.from(headers.entries()), [
 					['A-Header', 'a value'],

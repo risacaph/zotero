@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellis 首选项">
+
+<!ENTITY trellis.preferences.helpButton.label "帮助">
+
+<!ENTITY trellis.preferences.default "默认:">
+<!ENTITY trellis.preferences.items "条目">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "自定义…">
+
+<!ENTITY trellis.preferences.prefpane.general "常规">
+
+<!ENTITY trellis.preferences.interface "界面">
+<!ENTITY trellis.preferences.fileHandling "文件处理">
+<!ENTITY trellis.preferences.automaticSnapshots "从网页创建条目时自动抓取网页快照">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "保存条目时自动附加相关的 PDF 文档及其他文件">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "重命名链接的文件">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "PDF 打开方式：">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "系统默认">
+
+<!ENTITY trellis.preferences.miscellaneous "杂项">
+<!ENTITY trellis.preferences.autoUpdate "自动检查转换器及样式的更新">
+<!ENTITY trellis.preferences.updateNow "立即更新">
+<!ENTITY trellis.preferences.reportTranslationFailure "报告网站转换器的故障">
+<!ENTITY trellis.preferences.parseRISRefer "使用 Trellis 处理下载的 BibTeX/RIS/Refer 文件">
+<!ENTITY trellis.preferences.automaticTags "基于关键词和主题词自动为条目添加标签">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "自动删除回收站内时间超过">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "天前的条目">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "显示标签页为">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "作者 - 年份 - 标题">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "标题 - 作者 - 年份">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "文件名">
+
+<!ENTITY trellis.preferences.groups "群组">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "跨文献库复制条目时，包含：">
+<!ENTITY trellis.preferences.groups.childNotes "子笔记">
+<!ENTITY trellis.preferences.groups.childFiles "子网页快照和导入的文件">
+<!ENTITY trellis.preferences.groups.annotations "注释">
+<!ENTITY trellis.preferences.groups.childLinks "子链接">
+<!ENTITY trellis.preferences.groups.tags "标签">
+
+<!ENTITY trellis.preferences.feeds "订阅">
+<!ENTITY trellis.preferences.feeds.sorting.label "排序:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "最新条目在先">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "最早条目在先">
+<!ENTITY trellis.preferences.feeds.feedDefaults "订阅默认">
+
+<!ENTITY trellis.preferences.prefpane.sync "同步">
+<!ENTITY trellis.preferences.sync.username "用户名:">
+<!ENTITY trellis.preferences.sync.password "密码:">
+<!ENTITY trellis.preferences.sync.createAccount "创建账户">
+<!ENTITY trellis.preferences.sync.lostPassword "忘记密码?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "自动同步">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "同步全文内容">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis 可以将 Trellis 文献库中的文件全文内容同步到 trellis.org 及其他已链接的设备。启用这一功能后，无论您在何处，都能方便地搜索您的文件。您的文件的全文不会向大众公开。">
+<!ENTITY trellis.preferences.sync.about "关于同步">
+<!ENTITY trellis.preferences.sync.fileSyncing "文件同步">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "网址:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "“我的文库”附件同步方式：">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "下载文件">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "在同步时">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "在需要时">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "验证服务器">
+<!ENTITY trellis.preferences.sync.librariesToSync "要同步的文献库">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "选择文献库…">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "同步">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "文献库">
+<!ENTITY trellis.preferences.sync.reset.warning1 "下列操作仅用于一些极少出现的专门情况，进行常见的故障排除时请勿使用。多数情况下，重置将引发一系列其他问题。参见">
+<!ENTITY trellis.preferences.sync.reset.warning2 "同步重置选项">
+<!ENTITY trellis.preferences.sync.reset.warning3 "以获取更多信息。">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "重置数据同步历史">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "将本地数据与远程数据合并，忽略同步历史">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "从在线文献库恢复">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "用在线文献库中的数据覆盖本地 Trellis 数据。">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "替换在线文献库">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "使用本地 Trellis 数据覆盖在线文献库">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "重置文件同步历史">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "比较存储服务中的所有附件文件">
+<!ENTITY trellis.preferences.sync.reset "重置">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "显示重置选项">
+<!ENTITY trellis.preferences.sync.reset.button "重置…">
+
+
+<!ENTITY trellis.preferences.prefpane.search "搜索">
+<!ENTITY trellis.preferences.search.fulltextCache "全文缓存">
+<!ENTITY trellis.preferences.search.indexStats "索引统计">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "已索引:">
+<!ENTITY trellis.preferences.search.indexStats.partial "部分索引:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "未索引:">
+<!ENTITY trellis.preferences.search.indexStats.words "字/词:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "单个文件最多索引字符数:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "单个文件最多索引页数:">
+
+<!ENTITY trellis.preferences.prefpane.export "导出">
+
+<!ENTITY trellis.preferences.citationOptions.caption "引注选项">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "在参考文献中包含纸质文章的网址">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "如果禁用此项，Trellis 生成期刊、杂志或报纸文章的引用时，仅为没有指定页码范围的文章加入网址。">
+
+<!ENTITY trellis.preferences.quickCopy.caption "快速复制">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "条目格式：">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "笔记格式：">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "复制为 HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "网站专属设置:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "域/路径">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(例如 wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "格式">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "语言">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "禁用快速复制，当拖动超过">
+
+<!ENTITY trellis.preferences.prefpane.cite "引用">
+<!ENTITY trellis.preferences.cite.wordProcessors "文档编辑软件">
+<!ENTITY trellis.preferences.styleEditor "样式编辑器">
+<!ENTITY trellis.preferences.stylePreview "样式预览">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "样式管理器">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "标题">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "最后更新">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "保存到 Trellis (地址栏图标)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "聚焦文库窗格">
+<!ENTITY trellis.preferences.keys.quicksearch "快速搜索">
+<!ENTITY trellis.preferences.keys.newItem "新建条目">
+<!ENTITY trellis.preferences.keys.newNote "新建笔记">
+<!ENTITY trellis.preferences.keys.toggleAllRead "订阅条目全部标为已读/未读">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "复制选定条目的引注到剪贴板">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "复制选定的条目到剪贴板">
+<!ENTITY trellis.preferences.keys.importFromClipboard "从剪贴板导入">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "所做更改会在重启后生效">
+
+<!ENTITY trellis.preferences.prefpane.proxies "代理">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "代理选项">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis 将通过已保存的代理无需介入地重定向请求。参见">
+<!ENTITY trellis.preferences.proxies.desc_link "代理文档">
+<!ENTITY trellis.preferences.proxies.desc_after_link "以获取更多信息。">
+<!ENTITY trellis.preferences.proxies.transparent "启用代理重定向">
+<!ENTITY trellis.preferences.proxies.autoRecognize "自动识别代理的资源">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "通过代理重定向时显示通知">
+<!ENTITY trellis.preferences.proxies.disableByDomain "禁用代理重定向，如果我的域名包含">
+<!ENTITY trellis.preferences.proxies.configured "代理配置">
+<!ENTITY trellis.preferences.proxies.hostname "域名">
+<!ENTITY trellis.preferences.proxies.scheme "规则">
+
+<!ENTITY trellis.preferences.proxies.multiSite "多站点">
+<!ENTITY trellis.preferences.proxies.autoAssociate "自动关联新域名">
+<!ENTITY trellis.preferences.proxies.variables "代理规则中可以使用以下变量：">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - 代理站点的域名 (如 www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p -  代理页面的路径，无需斜杆开头（如 about/index.html）">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - 目录路径（如 about/）">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - 文件名（如 index.html）">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a -  任意字符串">
+
+<!ENTITY trellis.preferences.prefpane.advanced "高级">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "文件和文件夹">
+<!ENTITY trellis.preferences.advanced.keys "快捷键">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "高级设置">
+
+<!ENTITY trellis.preferences.prefpane.locate "检索">
+<!ENTITY trellis.preferences.locate.locateEngineManager "文章检索引擎管理器">
+<!ENTITY trellis.preferences.locate.description "描述">
+<!ENTITY trellis.preferences.locate.name "名称">
+<!ENTITY trellis.preferences.locate.addDescription "若要添加一个列表中不存在的搜索引擎，请先在浏览器中访问该搜索引擎，然后在 Trellis 的菜单中点击“添加”。">
+<!ENTITY trellis.preferences.locate.restoreDefaults "恢复默认">
+
+<!ENTITY trellis.preferences.charset "字符编码">
+<!ENTITY trellis.preferences.charset.importCharset "导入字符编码">
+<!ENTITY trellis.preferences.charset.displayExportOption "导出时显示字符编码选项">
+
+<!ENTITY trellis.preferences.dataDir "数据存储位置">
+<!ENTITY trellis.preferences.dataDir.useProfile "使用配置目录">
+<!ENTITY trellis.preferences.dataDir.custom "自定义:">
+<!ENTITY trellis.preferences.dataDir.choose "选择…">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "（已由命令行指定）">
+<!ENTITY trellis.preferences.dataDir.reveal "打开数据文件夹">
+<!ENTITY trellis.preferences.dataDir.migrate "迁移到新的默认位置…">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "已链接附件的根目录">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis 会为位于根目录（及其子目录）内的已链接附件使用相对路径，因此只要目录结构相同，您可以在不同电脑上照常访问这些附件。">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "根目录:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "选择…">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "改为使用绝对路径…">
+
+<!ENTITY trellis.preferences.dbMaintenance "数据库维护">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "检查数据库完整性">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "重置转换器和样式…">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "重置转换器…">
+
+<!ENTITY trellis.preferences.configEditor "设置编辑器">

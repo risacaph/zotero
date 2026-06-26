@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Προτιμήσεις Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "Βοήθεια">
+
+<!ENTITY trellis.preferences.default "Αρχικές">
+<!ENTITY trellis.preferences.items "στοιχεία">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Προσαρμογή...">
+
+<!ENTITY trellis.preferences.prefpane.general "Γενικές">
+
+<!ENTITY trellis.preferences.interface "Διεπαφή">
+<!ENTITY trellis.preferences.fileHandling "Χειρισμός Αρχείου">
+<!ENTITY trellis.preferences.automaticSnapshots "Αυτόματη λήψη φωτογραφικού στιγμιότυπου όταν δημιουργούνται στοιχεία από ιστοσελίδες">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Αυτόματη προσάρτηση των συνοδευτικών PDF και άλλων αρχείων όταν αποθηκεύονται στοιχεία">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Μετονομασία συνδεδεμένων αρχείων">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Άνοιγμα PDF χρησιμοποιώντας">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Προεπιλογή Συστήματος">
+
+<!ENTITY trellis.preferences.miscellaneous "Διάφορα">
+<!ENTITY trellis.preferences.autoUpdate "Αυτόματος έλεγχος για ενημερωμένους μεταφραστές και στυλ">
+<!ENTITY trellis.preferences.updateNow "Ενημέρωση τώρα">
+<!ENTITY trellis.preferences.reportTranslationFailure "Αναφέρετε προβληματικούς μεταφραστές ιστοτόπου">
+<!ENTITY trellis.preferences.parseRISRefer "Χρήση του Trellis για λήψη αρχείων BibTex/RIS/Refer">
+<!ENTITY trellis.preferences.automaticTags "Αυτόματη επισήμανση των στοιχείων με λέξεις κλειδιά και κεφαλίδες θέματος">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Αυτόματη διαγραφή από τον κάδο ανακύκλωσης στοιχείων που έχουν διαγραφεί για περισσότερο από">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "ημέρες πριν">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Εμφάνιση καρτελών ως">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Δημιουργός - Έτος - Τίτλος">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Τίτλος - Δημιουργός - Έτος">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Όνομα αρχείου">
+
+<!ENTITY trellis.preferences.groups "Ομάδες">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Όταν αντιγράφονται στοιχεία μεταξύ βιβλιοθηκών, να συμπεριλαμβάνονται:">
+<!ENTITY trellis.preferences.groups.childNotes "θυγατρικές σημειώσεις">
+<!ENTITY trellis.preferences.groups.childFiles "θυγατρικά φωτογραφικά στιγμιότυπα και εισαγόμενα αρχεία">
+<!ENTITY trellis.preferences.groups.annotations "σχολιασμοί">
+<!ENTITY trellis.preferences.groups.childLinks "θυγατρικοί σύνδεσμοι">
+<!ENTITY trellis.preferences.groups.tags "ετικέτες">
+
+<!ENTITY trellis.preferences.feeds "Ροή">
+<!ENTITY trellis.preferences.feeds.sorting.label "Ταξινόμηση:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Πρώτα τα νεώτερα στοιχεία">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Πρώτα τα παλαιότερα στοιχεία">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Εξ ορισμού Ροή">
+
+<!ENTITY trellis.preferences.prefpane.sync "Συγχρονισμός">
+<!ENTITY trellis.preferences.sync.username "Όνομα χρήστη:">
+<!ENTITY trellis.preferences.sync.password "Κωδικός:">
+<!ENTITY trellis.preferences.sync.createAccount "Δημιουργία λογαριασμού">
+<!ENTITY trellis.preferences.sync.lostPassword "Χάσατε τον κωδικό;">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Αυτόματος συγχρονισμός">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Συγχρονισμός περιεχομένου πλήρους κειμένου">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Το Trellis μπορεί να συγχρονίσει με το trellis.org και με άλλες συνδεδεμένες συσκευές το πλήρους κειμένου περιεχόμενο των αρχείων σας μέσα στην βιβλιοθήκη σας Trellis, επιτρέποντας την εύκολη αναζήτηση των αρχείων σας οπουδήποτε κι αν είστε. Το περιεχόμενο πλήρους κειμένου των αρχείων σας δεν διαμοιρασθεί δημοσίως.">
+<!ENTITY trellis.preferences.sync.about "Σχετικά με τον συγχρονισμό">
+<!ENTITY trellis.preferences.sync.fileSyncing "Συγχρονισμός αρχείου">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Συγχρονισμός προσαρτημένων αρχείων στην Βιβλιοθήκη μου, χρησιμοποιώντας">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Λήψη αρχείων">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "την ώρα συγχρονισμού">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "εφόσον χρειάζεται">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Επαλήθευση Διακομιστή">
+<!ENTITY trellis.preferences.sync.librariesToSync "Βιβλιοθήκες προς Συγχρονισμό">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Επιλογή Βιβλιοθηκών...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Συγχρονισμός">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Βιβλιοθήκη">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Οι λειτουργίες που ακολουθούν προορίζονται για χρήση μόνον σε σπάνιες, ειδικές συνθήκες και δεν θα πρέπει να αναφέρονται σε γενικές επιλύσεις προβλημάτων. Σε πολλές περιπτώσεις η επαναφορά των ρυθμίσεων προκαλεί επιπρόσθετα προβλήματα. Δείτε">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Επιλογές επαναφοράς ρυθμίσεων συγχρονισμού">
+<!ENTITY trellis.preferences.sync.reset.warning3 "για περισσότερες πληροφορίες.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Επαναφορά Ιστορικού Συγχρονισμού Δεδομένων">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Συγχώνευση τοπικών δεδομένων με απομακρυσμένα δεδομένα, αγνοώντας το ιστορικό συγχρονισμού">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Επαναφορά από την Online Βιβλιοθήκη">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Αντικατάσταση των τοπικών δεδομένων Trellis με δεδομένα από την Online Ββλιοθήκη.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Αντικατάσταση Online Βιβλιοθήκης">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Αντικαταστήστε την online βιβλιοθήκη με τα τοπικά δεδομένα Trellis">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Μηδενισμός του ιστορικού συγχρονισμού αρχείων">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Σύγκριση όλων των συνημμένων αρχείων με την υπηρεσία αποθήκευσης">
+<!ENTITY trellis.preferences.sync.reset "Επαναφορά">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Εμφάνιση επιλογών Επαναφοράς">
+<!ENTITY trellis.preferences.sync.reset.button "Επαναφορά...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Αναζήτηση">
+<!ENTITY trellis.preferences.search.fulltextCache "Προσωρινή μνήμη πλήρους κειμένου">
+<!ENTITY trellis.preferences.search.indexStats "Καταλογοποίηση στατιστικών">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Έχουν καταλογοποιηθεί:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Μερικά/Τμηματικά:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Εκτός καταλογοποίησης:">
+<!ENTITY trellis.preferences.search.indexStats.words "Λέξεις:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Μέγιστος αριθμός χαρακτήρων καταλογοποίησης ανά αρχείο:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Μέγιστος αριθμός σελίδων καταλογοποίησης ανά αρχείο: ">
+
+<!ENTITY trellis.preferences.prefpane.export "Εξαγωγή">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Επιλογές παραπομπών">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Στις αναφορές να συμπεριλαμβάνονται τα URL έντυπων άρθρων">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Όταν απενεργοποιείται αυτή η λειτουργία το Trellis συμπεριλαμβάνει τις διευθύνσεις URL κατά την παράθεση άρθρων περιοδικών και εφημερίδων, μόνο αν στα άρθρα δεν ορίζεται το εύρος των σελίδων.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Γρήγορη αντιγραφή">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Μορφή Στοιχείου:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Μορφή Σημειώσεων:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Αντιγραφή ως HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Ρυθμίσεις εκάστου ιστοτόπου:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Περιοχή/Διαδρομή">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(π.χ. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Μορφή">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Γλώσσα">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Απενεργοποίηση της Γρήγορης αντιγραφής όταν σύρονται περισσότερα από">
+
+<!ENTITY trellis.preferences.prefpane.cite "Παράθεση/Παραπομπή">
+<!ENTITY trellis.preferences.cite.wordProcessors "Επεξεργαστές κειμένου">
+<!ENTITY trellis.preferences.styleEditor "Επεξεργασία στυλ">
+<!ENTITY trellis.preferences.stylePreview "Προεπισκόπιση στυλ">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Διαχειριστής στυλ">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Τίτλος">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Ενημερώθηκε">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Αποθήκευση στο Trellis (εικονίδιο γραμμής διεύθυνσης)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Εστίαση στο πλαίσιο Βιβλιοθηκών">
+<!ENTITY trellis.preferences.keys.quicksearch "Γρήγορη αναζήτηση">
+<!ENTITY trellis.preferences.keys.newItem "Δημιουργία Νέου στοιχείου">
+<!ENTITY trellis.preferences.keys.newNote "Δημιουργία Νέας σημείωσης">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Σημειώστε όλα τα στοιχεία ροής ως αναγνωσμένα / μη αναγνωσμένα">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Αντιγραφή των επιλεγμένων παραπομπών στοιχείου στην προσωρινή μνήμη">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Αντιγραφή των επιλεγμένων στοιχείων στην προσωρινή μνήμη">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Εισαγωγή από το Πρόχειρο">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Ενεργοποίηση μετά από επανεκκίνηση">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Διαμεσολαβητές">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Επιλογές διαμεσολαβητή">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Το Trellis θα ανακατευθύνει τα αιτήματα μέσω των αποθηκευμένων διαμεσολαβητών. Δείτε την">
+<!ENTITY trellis.preferences.proxies.desc_link "τεκμηρίωση διαμεσολαβητών">
+<!ENTITY trellis.preferences.proxies.desc_after_link "για περισσότερες πληροφορίες.">
+<!ENTITY trellis.preferences.proxies.transparent "Ενεργοποίηση της ανακατεύθυνσης διαμεσολαβητή">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Αυτόματη αναγνώριση διαμεσολαβημένων πόρων">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Εμφάνιση ειδοποίησης κατά την ανακατεύθυνση μέσω διακομιστή μεσολάβησης">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Να απενεργοποιείται η ανακατεύθυνση διαμεσολαβητή όταν η περιοχή μου περιέχει">
+<!ENTITY trellis.preferences.proxies.configured "Προσαρμοσμένους διαμεσολαβητές">
+<!ENTITY trellis.preferences.proxies.hostname "Όνομα Διακομιστή">
+<!ENTITY trellis.preferences.proxies.scheme "Σχήμα">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Multi-Site">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Αυτόματη συσχέτιση νέων διακομιστών">
+<!ENTITY trellis.preferences.proxies.variables "Στο σχήμα διακομιστών σας, μπορείτε να χρησιμοποιείτε τις ακόλουθες μεταβλητές:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Το όνομα υπολογιστή για τον διαμεσολαβούμενο ιστότοπο (π.χ. www.zoter.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Η διαδρομή της διαμεσολαβούμενης σελίδας, χωρίς την πλάγια κάθετο στην αρχή (π.χ. about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Η διαδρομή καταλόγου (π.χ. about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Το όνομα αρχείου (π.χ. index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Οποιοδήποτε αλφαριθμητικό">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Προχωρημένα">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Αρχεία και Φάκελοι">
+<!ENTITY trellis.preferences.advanced.keys "Συντομέυσεις">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Προηγμένη διαμόρφωση">
+
+<!ENTITY trellis.preferences.prefpane.locate "Εντοπισμός">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Διαχειριστής Μηχανής Αναζήτησης Άρθρων">
+<!ENTITY trellis.preferences.locate.description "Περιγραφή">
+<!ENTITY trellis.preferences.locate.name "Όνομα">
+<!ENTITY trellis.preferences.locate.addDescription "Για να προσθέσετε μια Μηχανή Αναζήτησης που δεν περιλαμβάνεται στη λίστα, επισκεφθείτε την μηχανή αναζήτησης που επιθυμείτε και επιλέξτε &quot;Προσθήκη&quot; από το μενού εντοπισμού του Trellis.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Επαναφορά αρχικών ρυθμίσεων">
+
+<!ENTITY trellis.preferences.charset "Κωδικοποίηση χαρακτήρων">
+<!ENTITY trellis.preferences.charset.importCharset "Εισαγωγή κωδικοποίησης χαρακτήρων">
+<!ENTITY trellis.preferences.charset.displayExportOption "Εμφάνιση της επιλογής κωδικοποίησης χαρακτήρων κατά την εξαγωγή">
+
+<!ENTITY trellis.preferences.dataDir "Θέση Καταλόγου δεδομένων">
+<!ENTITY trellis.preferences.dataDir.useProfile "Χρήση του καταλόγου προφίλ">
+<!ENTITY trellis.preferences.dataDir.custom "Προσαρμογή...">
+<!ENTITY trellis.preferences.dataDir.choose "Επιλέξτε...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(καθορίζεται μέσω γραμμής εντολών)">
+<!ENTITY trellis.preferences.dataDir.reveal "Εμφάνιση του Καταλόγου δεδομένων">
+<!ENTITY trellis.preferences.dataDir.migrate "Μετεγκατάσταση Σε Νέα Προεπιλεγμένη Θέση ...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Σύνδεσμος Βασικού Καταλόγου Συνημμένων">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Το Trellis θα χρησιμοποιήσει σχετικές διαδρομές για τα συνδεδεμένα προσαρτήματα αρχείων εντός του καταλόγου βάσης του, επιτρέποντας την πρόσβαση προς αρχείων σε διαφορετικούς υπολογιστές, εφόσον η δομή των αρχείων μέσα στον κατάλογο βάσης παραμένει η ίδια.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Κατάλογος βάσης:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Επιλέξτε...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Επαναφορά σε απόλυτες διαδρομές...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Συντήρηση βάσης δεδομένων">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Έλεγχος της ακεραιότητας της βάσης δεδομένων">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Επαναφορά Μεταφράσεων και Στυλ ...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Επαναφορά Μεταφράσεων ...">
+
+<!ENTITY trellis.preferences.configEditor "Διαμόρφωση Συντάκτη">

@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Kyllä">
+<!ENTITY trellis.general.no "Ei">
+<!ENTITY trellis.general.optional "(Valinnainen)">
+<!ENTITY trellis.general.note "Huomio:">
+<!ENTITY trellis.general.selectAll "Valitse kaikki">
+<!ENTITY trellis.general.deselectAll "Poista valinnat">
+<!ENTITY trellis.general.edit "Muokkaa">
+<!ENTITY trellis.general.delete "Poista">
+<!ENTITY trellis.general.moveToTrash "Siirrä roskakoriin">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Peruuta">
+<!ENTITY trellis.general.refresh "Päivitä">
+<!ENTITY trellis.general.saveAs "Tallenna nimellä...">
+<!ENTITY trellis.general.options "Asetukset">
+<!ENTITY trellis.general.advancedOptions.label "Lisäasetukset">
+<!ENTITY trellis.general.tools "Työkalut">
+<!ENTITY trellis.general.more "Lisää">
+<!ENTITY trellis.general.moreInformation "Lisätietoja">
+<!ENTITY trellis.general.loading "Ladataan...">
+<!ENTITY trellis.general.close "Sulje">
+<!ENTITY trellis.general.minimize "Pienennä">
+<!ENTITY trellis.general.other "Muu...">
+<!ENTITY trellis.general.bigger "Suurempi">
+<!ENTITY trellis.general.smaller "Pienempi">
+<!ENTITY trellis.general.reset "Palauta">
+
+
+<!ENTITY trellis.errorReport.title "Trellisn virheraportti">
+<!ENTITY trellis.errorReport.submissionInProgress "Odota, kunnes virheraportti on toimitettu.">
+<!ENTITY trellis.errorReport.submitted "Virheraporttisi on toimitettu.">
+<!ENTITY trellis.errorReport.reportID "Raportin tunnus:">
+<!ENTITY trellis.errorReport.postToForums "Lähetä Trellisn keskustelualueelle (forums.trellis.org) viesti, joka sisältää raportin tunnuksen, ongelman kuvauksen sekä toimenpiteet, joilla virhe saadaan toistettua.">
+<!ENTITY trellis.errorReport.notReviewed "Virheraportteja ei yleensä käsitellä, jos niihin ei ole viitattu keskustelualueella.">
+
+<!ENTITY trellis.upgrade.title "Trellisn ohjattu päivitystoiminto">
+<!ENTITY trellis.upgrade.newVersionInstalled "Olet asentanut Trellisn uuden version.">
+<!ENTITY trellis.upgrade.upgradeRequired "Trellis-tietokantasi täytyy päivittää, jotta se toimisi uuden version kanssa.">
+<!ENTITY trellis.upgrade.autoBackup "Tietokantasi varmuuskopioidaan automaattisesti ennen muutosten tekemistä.">
+<!ENTITY trellis.upgrade.majorUpgrade "Tämä on merkittävä päivitys.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Olethan tutustunut">
+<!ENTITY trellis.upgrade.majorUpgradeLink "päivitysohjeisiin">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "ennen kuin jatkat.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Odota päivitysprosessin päättymistä. Tämä saattaa kestää muutamia minuutteja.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Trellis-tietokantasi on onnistuneesti päivitetty.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Katso">
+<!ENTITY trellis.upgrade.changeLogLink "muutosloki">
+<!ENTITY trellis.upgrade.changeLogAfterLink "tutustuaksesi uusiin ominaisuuksiin ja päivityksiin.">
+
+<!ENTITY trellis.tabs.notes.label "Muistiinpanot">
+<!ENTITY trellis.tabs.attachments.label "Liitteet">
+
+<!ENTITY trellis.toolbar.duplicate.label "Näytä kaksoiskappaleet">
+<!ENTITY trellis.collections.showUnfiledItems "Näytä arkistoimattomat nimikkeet">
+<!ENTITY trellis.collections.showRetractedItems "Näytä takaisinvedetyt nimikkeet">
+
+<!ENTITY trellis.items.itemType "Nimikkeen tyyppi">
+<!ENTITY trellis.items.creator_column "Luoja">
+<!ENTITY trellis.items.year_column "Vuosi">
+<!ENTITY trellis.items.dateModified_column "Muokattu">
+<!ENTITY trellis.items.moreColumns.label "Lisää sarakkeita">
+<!ENTITY trellis.items.restoreColumnOrder.label "Palauta sarakejärjestys">
+
+<!ENTITY trellis.items.menu.showInLibrary "Näytä kirjastossa">
+<!ENTITY trellis.items.menu.attach.note "Lisää muistiinpano">
+<!ENTITY trellis.items.menu.attach "Lisää liite">
+<!ENTITY trellis.items.menu.attach.link.uri "Liitä linkki URIin...">
+<!ENTITY trellis.items.menu.attach.file "Attach Stored Copy of File...">
+<!ENTITY trellis.items.menu.attach.fileLink "Liitä linkki tiedostoon...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Palauta kirjastoon">
+<!ENTITY trellis.items.menu.duplicateItem "Monista valittu nimike">
+<!ENTITY trellis.items.menu.mergeItems "Yhdistä kohteet...">
+<!ENTITY trellis.items.menu.unrecognize "Kumoa metadatan noutaminen">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Valitse se nimikkeen versio, jota haluat käyttää pääversiona:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Valise kentät, jotka säilytetään muista versioista:">
+
+<!ENTITY trellis.toolbar.newItem.label "Uusi nimike">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Lisää">
+<!ENTITY trellis.toolbar.lookup.label "Uusi nimike tunnisteen perusteella">
+<!ENTITY trellis.toolbar.removeItem.label "Poista nimike...">
+<!ENTITY trellis.toolbar.newGroup "Uusi ryhmä...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Uusi alakokoelma...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Uusi tallennettu haku...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Tyhjennä roskakori">
+<!ENTITY trellis.toolbar.tagSelector.label "Näytä/piilota merkkivalitsin">
+<!ENTITY trellis.toolbar.actions.label "Toiminnot">
+<!ENTITY trellis.toolbar.import.label "Tuo...">
+<!ENTITY trellis.toolbar.importFromClipboard "Tuo leikepöydältä">
+<!ENTITY trellis.toolbar.export.label "Vie kirjasto...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF:n läpikäynti">
+<!ENTITY trellis.toolbar.preferences.label "Asetukset...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Ohjeet ja tuki">
+<!ENTITY trellis.toolbar.about.label "Tietoja Trellissta">
+<!ENTITY trellis.toolbar.advancedSearch "Tarkennettu haku">
+<!ENTITY trellis.toolbar.openURL.label "Paikanna">
+<!ENTITY trellis.toolbar.openURL.tooltip "Etsi paikallisen kirjaston kautta">
+
+<!ENTITY trellis.toolbar.feeds.new "Uusi syöte">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "URL-osoitteesta...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "OPML-tiedostosta...">
+<!ENTITY trellis.toolbar.feeds.edit "Muokkaa syötettä...">
+
+<!ENTITY trellis.item.add "Lisää">
+<!ENTITY trellis.item.attachment.file.show "Näytä tiedosto">
+<!ENTITY trellis.item.textTransform "Muunna teksti">
+<!ENTITY trellis.item.textTransform.titlecase "Otsikon aakkoslaji">
+<!ENTITY trellis.item.textTransform.sentencecase "Lauseen aakkoslaji">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Vaihda Etu/Suku">
+<!ENTITY trellis.item.creatorTransform.fixCase "Korjaa aakkoslaji">
+<!ENTITY trellis.item.copyAsURL "Kopioi URL-osoitteena">
+<!ENTITY trellis.item.deletePermanently "Poista lopullisesti...">
+
+<!ENTITY trellis.item.tags.removeAll "Poista kaikki avainsanat...">
+
+<!ENTITY trellis.toolbar.newNote "Uusi muistiinpano">
+<!ENTITY trellis.toolbar.note.standalone "Uusi itsenäinen muistiinpano">
+<!ENTITY trellis.toolbar.note.child "Uusi alamuistiinpano">
+<!ENTITY trellis.toolbar.lookup "Etsi tunnisteen perusteella...">
+<!ENTITY trellis.toolbar.attachment.linked "Linkitä tiedostoon...">
+<!ENTITY trellis.toolbar.attachment.add "Tallenna tiedoston kopio...">
+<!ENTITY trellis.toolbar.attachment.weblink "Tallenna linkki nykyiselle sivulle">
+<!ENTITY trellis.toolbar.attachment.snapshot "Ota tilannekuva nykyisestä sivusta">
+<!ENTITY trellis.toolbar.context.item "Nimike">
+<!ENTITY trellis.toolbar.context.notes "Muistiinpanot">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Ei näytettäviä avainsanoja">
+<!ENTITY trellis.tagSelector.loadingTags "Ladataan avainsanoja...">
+<!ENTITY trellis.tagSelector.showAutomatic "Show automatic">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Näytä tämän kirjaston kaikki avainsanat">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Posta automaattiset avainsanat tästä kirjastosta...">
+<!ENTITY trellis.tagSelector.clearAll "Poista kaikki valinnat">
+<!ENTITY trellis.tagSelector.assignColor "Aseta väri">
+<!ENTITY trellis.tagSelector.renameTag "Nimeä avainsana uudelleen...">
+<!ENTITY trellis.tagSelector.deleteTag "Poista avainsana...">
+<!ENTITY trellis.tagSelector.splitTag "Jaa...">
+
+<!ENTITY trellis.tagColorChooser.title "Valitse avainsanan väri ja sijainti">
+<!ENTITY trellis.tagColorChooser.color "Väri:">
+<!ENTITY trellis.tagColorChooser.position "Sijainti:">
+<!ENTITY trellis.tagColorChooser.setColor "Aseta väri">
+<!ENTITY trellis.tagColorChooser.removeColor "Poista väri">
+
+<!ENTITY trellis.lookup.description "Anna lisättävien nimikkeiden ISBN-, DOI-, PMID-, arXiv ID- tai ADS Bibcode -tunnisteet:">
+<!ENTITY trellis.lookup.button.search "Etsi">
+
+<!ENTITY trellis.createParent.title "Luo tiedostolle nimike">
+<!ENTITY trellis.createParent.button.manual "Käsinsyöttö">
+
+<!ENTITY trellis.selectitems.title "Valitse nimikkeet">
+<!ENTITY trellis.selectitems.intro.label "Valitse nimikkeet, jotka haluat lisätä kirjastoon">
+<!ENTITY trellis.selectitems.cancel.label "Peruuta">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Luo viite/lähdeluettelo">
+<!ENTITY trellis.bibliography.style.label "Viittaustyyli:">
+<!ENTITY trellis.bibliography.manageStyles "Hallitse tyylejä...">
+<!ENTITY trellis.bibliography.locale.label "Kieli:">
+<!ENTITY trellis.bibliography.outputMode "Luettelotyyppi:">
+<!ENTITY trellis.bibliography.bibliography "Lähdeluettelo">
+<!ENTITY trellis.bibliography.outputMethod "Vientitapa:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Tallenna RTF-muodossa">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Tallenna HTML-muodossa">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopioi leikepöydälle">
+<!ENTITY trellis.bibliography.print.label "Tulosta">
+
+<!ENTITY trellis.integration.docPrefs.title "Asiakirjan asetukset">
+<!ENTITY trellis.integration.addEditCitation.title "Lisää/muokkaa viitettä">
+<!ENTITY trellis.integration.editBibliography.title "Muokkaa lähdeluetteloa">
+
+<!ENTITY trellis.progress.title "Tilanne">
+
+<!ENTITY trellis.import "Tuonti">
+<!ENTITY trellis.import.whereToImportFrom "Mistä haluat tuoda?">
+<!ENTITY trellis.import.source.file "Tiedosto (BibTeX, RIS, Trellis RDF, jne.)">
+<!ENTITY trellis.import.source.folder "Hakemisto, jossa on PDF:iä tai muita tiedostoja">
+<!ENTITY trellis.import.onlineImport "tuo verkosta">
+<!ENTITY trellis.import.importing "Tuodaan...">
+<!ENTITY trellis.import.database "Tietokanta">
+<!ENTITY trellis.import.lastModified "Viimeksi muokattu">
+<!ENTITY trellis.import.size "Koko">
+<!ENTITY trellis.import.createCollection "Sijoita tuodut kokoelmat ja nimikkeet uuteen kokoelmaan.">
+<!ENTITY trellis.import.fileHandling "Tiedostojen käsittely">
+<!ENTITY trellis.import.online.newItemsOnly "Lataa vain uudet kohteet; älä päivitä aikaisemmin tuotuja kohteita">
+
+<!ENTITY trellis.exportOptions.title "Vie...">
+<!ENTITY trellis.exportOptions.format.label "Muoto:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Kääntäjän asetukset">
+
+<!ENTITY trellis.charset.label "Merkistökoodaus">
+<!ENTITY trellis.moreEncodings.label "Lisää koodauksia">
+
+<!ENTITY trellis.citation.keepSorted.label "Pidä lähteet lajiteltuna">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Piilota tekijä">
+<!ENTITY trellis.citation.prefix.label "Etuliite:">
+<!ENTITY trellis.citation.suffix.label "Jälkiliite:">
+<!ENTITY trellis.citation.editorWarning.label "Varoitus: Jos muokkaat viittausta editorissa, se ei enää päivity tietokannan tietojen tai viittaustyylin muuttuessa.">
+
+<!ENTITY trellis.richText.italic.label "Kursiivi">
+<!ENTITY trellis.richText.bold.label "Lihavointi">
+<!ENTITY trellis.richText.underline.label "Alleviivaus">
+<!ENTITY trellis.richText.superscript.label "Yläindeksi">
+<!ENTITY trellis.richText.subscript.label "Alaindeksi">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Lisää huomautus">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Kasaa kaikki huomautukset">
+<!ENTITY trellis.annotate.toolbar.expand.label "Laajenna kaikki huomautukset">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Korosta teksti">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Poista tekstin korostus">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Näytä sitaatit muodossa:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Alaviitteet">
+<!ENTITY trellis.integration.prefs.endnotes.label "Loppuviitteet">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Näytä sitaatit muodossa:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Kirjanmerkit">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Kirjanmerkkejä voidaan jakaa Wordin ja LibreOfficen välillä, mutta se saattaa aiheuttaa ongelmia, mikäli niitä muutetaan vahingossa. Kirjanmerkkejä ei voi myöskään lisätä alaviitteisiin.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Päivitä viitteet automaattisesti">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Viitteet, joilla on odottavia päivityksiä, korostetaan asiakirjassa">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Päivittämisen poiskytkentä voi nopeuttaa viitteiden lisäämistä pitkissä asiakirjoissa. Päivitä asiakirjan viitteet käsin valitsemalla Päivitä.  ">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Käytä MEDLINEn lehtilyhenteitä">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Lehden lyhenne -kenttää ei huomioida.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Vaihda eri tekstinkäsittelyohjelmaan…">
+
+<!ENTITY trellis.integration.showEditor.label "Näytä muokkain">
+<!ENTITY trellis.integration.classicView.label "Perinteinen näkymä">
+
+<!ENTITY trellis.integration.references.label "Viitteet lähdeluettelossa">
+
+<!ENTITY trellis.sync.stop "Pysäytä synkronointi">
+<!ENTITY trellis.sync.error "Synkronointivirhe">
+<!ENTITY trellis.sync.storage.progress "Tilanne:">
+<!ENTITY trellis.sync.storage.downloads "Lataukset:">
+<!ENTITY trellis.sync.storage.uploads "Siirrot:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Seuraava merkki Trellis-kirjastossasi on liian pitkä synkronoitavaksi palvelimelle:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Synkronoitavien merkkien tulee olla alle 256 merkkiä pitkiä.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Voit joko jakaa merkin useisiin osiin, muokata sitä käsin lyhyemmäksi tai poistaa sen.">
+<!ENTITY trellis.sync.longTagFixer.split "Jaa">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Jaa">
+<!ENTITY trellis.sync.longTagFixer.character "merkin kohdalta">
+<!ENTITY trellis.sync.longTagFixer.characters "merkin kohdalta">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Rastittamattomia merkkejä ei tallenneta.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Merkki poistetaan kaikista nimikkeistä.">
+
+<!ENTITY trellis.merge.title "Ristiriidan selvittäminen">
+<!ENTITY trellis.merge.of "/">
+<!ENTITY trellis.merge.deleted "Poistettu">
+
+<!ENTITY trellis.proxy.recognized.title "Välityspalvelin tunnistettu">
+<!ENTITY trellis.proxy.recognized.warning "Lisää vain välityspalvelimia, jotka on linkitetty kirjastostasi, koulustasi tai yrityksestäsi">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Muiden välityspalvelinten lisääminen antaa haittasivustoille mahdollisuuden naamioitua luotettaviksi sivustoiksi.">
+<!ENTITY trellis.proxy.recognized.disable.label "Älä automaattisesti uudelleenohjaa pyyntöjä aiemmin tunnistettujen välitystyspalvelinten kautta">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ohita">
+
+<!ENTITY trellis.feedSettings.title "Syötteen asetukset">
+<!ENTITY trellis.feedSettings.saveButton.label "Tallenna">
+<!ENTITY trellis.feedSettings.url.label "Osoite:">
+<!ENTITY trellis.feedSettings.title.label "Otsikko:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Päivitä syötettä joka">
+<!ENTITY trellis.feedSettings.refresh.label2 "tunti">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Poista lukemattomat kohteet syötteestä">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "päivän jälkeen">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Poista luetut kohteet syötteestä">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "päivän jälkeen">
+
+<!ENTITY trellis.rtfScan.title "RTF:n läpikäynti">
+<!ENTITY trellis.rtfScan.cancel.label "Peruuta">
+<!ENTITY trellis.rtfScan.citation.label "Viite">
+<!ENTITY trellis.rtfScan.itemName.label "Nimikkeen nimi">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Paikantamattomat sitaatit">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Monimerkityksiset sitaatit">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Paikannetut sitaatit">
+<!ENTITY trellis.rtfScan.introPage.label "Johdanto">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis voi automaattisesti poimia ja uudelleenmuotoilla viittaukset ja lisätä kirjallisuusluettelon RTF-tiedostoon. Valitse aluksi RTF-tiedosto.">
+<!ENTITY trellis.rtfScan.introPage.description2 "Valitse aluksi luettava RTF-tiedosto sekä kirjoitettava tiedosto:">
+<!ENTITY trellis.rtfScan.scanPage.label "Etsitään viitteitä">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis etsii asiakirjasta lähdeviitteitä. Malta vielä hetki.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Varmenna siteeratut nimikkeet">
+<!ENTITY trellis.rtfScan.citationsPage.description "Käy läpi allaoleva tunnistettujen sitaattien lista varmistaaksesi, että Trellis on valinnut sitaatteja vastaavat nimikkeet oikein. Kaikki paikantamattomat tai monimerkityksiset sitaatit täytyy selvittää ennen seuraavaa vaihetta.">
+<!ENTITY trellis.rtfScan.stylePage.label "Asiakirjan muotoilu">
+<!ENTITY trellis.rtfScan.formatPage.label "Sitaattien muotoilu">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis käsittelee ja muotoilee RTF-tiedostoa. Malta vielä hetki.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF-läpikäynti valmis">
+<!ENTITY trellis.rtfScan.completePage.description "Asiakirja on läpikäyty ja prosessoitu. Varmista vielä, että muotoilut ovat oikein.">
+<!ENTITY trellis.rtfScan.inputFile.label "Luettava tiedosto">
+<!ENTITY trellis.rtfScan.outputFile.label "Kirjoitettava tiedosto">
+
+<!ENTITY trellis.file.choose.label "Valitse tiedosto...">
+<!ENTITY trellis.file.noneSelected.label "Tiedostoa ei ole valittu">
+
+<!ENTITY trellis.attachLink.title "Liitä linkki URI:in">
+<!ENTITY trellis.attachLink.label.link "Linkki:">
+<!ENTITY trellis.attachLink.label.title "Otsikko:">
+
+<!ENTITY trellis.context.addChildNote "Lisää nimikkeelle muistiinpano">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Lisää nimikkeelle muistiinpano huomautuksista">
+<!ENTITY trellis.context.addStandaloneNote "Lisää itsenäinen muistiinpano">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Lisää itsenäinen muistiinpano huomautuksista">
+<!ENTITY trellis.context.editInWindow "Muokkaa erillisessä ikkunassa">
+
+<!ENTITY trellis.pdfReader.firstPage "Ensimmäinen sivu">
+<!ENTITY trellis.pdfReader.lastPage "Viimeinen sivu">
+<!ENTITY trellis.pdfReader.back "Takaisin">
+<!ENTITY trellis.pdfReader.forward "Seuraava">
+<!ENTITY trellis.pdfReader.handTool "Käsityökalu">
+<!ENTITY trellis.pdfReader.verticalScrolling "Pystyvieritys">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Vaakavieritys">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Rivittyvä vieritys">
+<!ENTITY trellis.pdfReader.noSpreads "Ilman aukeamia">
+<!ENTITY trellis.pdfReader.oddSpreads "Pariton sivu vasemmalla">
+<!ENTITY trellis.pdfReader.evenSpreads "Parillinen sivu vasemmalla">
+<!ENTITY trellis.pdfReader.scrolled "Vieritettävä">
+<!ENTITY trellis.pdfReader.paginated "Sivutettu">
+<!ENTITY trellis.pdfReader.zoomIn "Lähennä">
+<!ENTITY trellis.pdfReader.zoomOut "Loitonna">
+<!ENTITY trellis.pdfReader.zoomReset "Resetoi zoomaus">
+<!ENTITY trellis.pdfReader.zoomAuto "Säädä kokoa automaattisesti">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Koko sivun leveys">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Koko sivun korkeus">
+<!ENTITY trellis.pdfReader.splitVertically "Jaa pystysuunnassa">
+<!ENTITY trellis.pdfReader.splitHorizontally "Jaa vaakasuunnassa">
+<!ENTITY trellis.pdfReader.transferFromPDF "Tuo huomautukset...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Kierrä sivua vasemmalle">
+<!ENTITY trellis.pdfReader.rotatePageRight "Kierrä sivua oikealle">

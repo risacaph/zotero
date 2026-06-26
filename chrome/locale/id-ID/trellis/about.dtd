@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "versi">
+<!ENTITY trellis.whatsNew "Yang baru">
+<!ENTITY trellis.createdby "Dibuat oleh:">
+<!ENTITY trellis.director "Direktur:">
+<!ENTITY trellis.directors "Direktur-direktur:">
+<!ENTITY trellis.developers "Pengembang:">
+<!ENTITY trellis.alumni "Alumni:">
+<!ENTITY trellis.about.localizations "Lokalisasi:">
+<!ENTITY trellis.about.additionalSoftware "Perangkat lunak pihak ketiga:">
+<!ENTITY trellis.thanks "Ucapan Terima kasih khusus:">
+<!ENTITY trellis.about.close "Tutup">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Pengakuan &amp; Penghargaan lain">
+<!ENTITY trellis.citationProcessing "Proses sitasi &amp; bibliografi">

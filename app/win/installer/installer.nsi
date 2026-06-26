@@ -169,7 +169,7 @@ Page custom preSummary
 ChangeUI IDD_VERIFY "${NSISDIR}\Contrib\UIs\default.exe"
 
 ; If a version beginning with $R1 is installed, uninstall that.
-; This is used to uninstall the old Zotero Standalone installer and a 32-bit version on 64-bit Windows
+; This is used to uninstall the old Trellis Standalone installer and a 32-bit version on 64-bit Windows
 Function UninstallOld
   Push $R1
   Push $R2
@@ -180,10 +180,10 @@ Function UninstallOld
   enum_uninst_keys:
     EnumRegKey $1 SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall" $0
     StrCmp $1 "" switch_root_key_or_continue
-    ; $R1 is "Zotero", registry key name contains version and locale e.g. "Zotero 6.0.0 (x86 en-US)" so:
-    StrLen $3 $R1 ; $3 = length of $R1, e.g. 6 for "Zotero"
-    StrCpy $2 $1 $3 ; $2 = first $3 characters of $1, i.e. name without version and locale, e.g. "Zotero"
-    StrCmp $2 $R1 get_uninst_exe ; if the key we found is the one we're looking for (e.g. "Zotero"), go to get_uninst_exe
+    ; $R1 is "Trellis", registry key name contains version and locale e.g. "Trellis 6.0.0 (x86 en-US)" so:
+    StrLen $3 $R1 ; $3 = length of $R1, e.g. 6 for "Trellis"
+    StrCpy $2 $1 $3 ; $2 = first $3 characters of $1, i.e. name without version and locale, e.g. "Trellis"
+    StrCmp $2 $R1 get_uninst_exe ; if the key we found is the one we're looking for (e.g. "Trellis"), go to get_uninst_exe
     IntOp $0 $0 + 1 
     Goto enum_uninst_keys ; loop through all keys
 
@@ -212,12 +212,12 @@ Function UninstallOld
     Sleep 3000
 
     ; Files that were added by an in-app update won't be automatically deleted by the 4.0 uninstaller,
-    ; so manually delete everything we know about as long as the directory name begins with "Zotero".
+    ; so manually delete everything we know about as long as the directory name begins with "Trellis".
     ; We don't just delete the directory because we don't know for sure that the user didn't do
     ; something crazy like put their data directory in it.
     ${GetFileName} $3 $4
     StrCpy $5 $4 6
-    StrCmp $5 "Zotero" +1 continue_installation
+    StrCmp $5 "Trellis" +1 continue_installation
     RMDir /r "$3\chrome"
     RMDir /r "$3\components"
     RMDir /r "$3\defaults"
@@ -307,7 +307,7 @@ Section "-InstallStartCleanup"
   ${EndIf}
 
   ; Remove the updates directory for Vista and above
-  ${CleanUpdatesDir} "Zotero\Zotero"
+  ${CleanUpdatesDir} "Trellis\Trellis"
 
 
   ${InstallStartCleanupCommon}
@@ -356,25 +356,25 @@ Section "-Application" APP_IDX
 
   ${LogHeader} "Adding Registry Entries"
   SetShellVarContext current  ; Set SHCTX to HKCU
-  ${RegCleanMain} "Software\Zotero"
+  ${RegCleanMain} "Software\Trellis"
   ${RegCleanUninstall}
   ${UpdateProtocolHandlers}
 
   ClearErrors
-  WriteRegStr HKLM "Software\Zotero" "${BrandShortName}InstallerTest" "Write Test"
+  WriteRegStr HKLM "Software\Trellis" "${BrandShortName}InstallerTest" "Write Test"
   ${If} ${Errors}
     StrCpy $TmpVal "HKCU" ; used primarily for logging
   ${Else}
     SetShellVarContext all  ; Set SHCTX to HKLM
-    DeleteRegValue HKLM "Software\Zotero" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\Trellis" "${BrandShortName}InstallerTest"
     StrCpy $TmpVal "HKLM" ; used primarily for logging
-    ${RegCleanMain} "Software\Zotero"
+    ${RegCleanMain} "Software\Trellis"
     ${RegCleanUninstall}
     ${UpdateProtocolHandlers}
 
-    ReadRegStr $0 HKLM "Software\zotero.org\Zotero" "CurrentVersion"
+    ReadRegStr $0 HKLM "Software\trellis.org\Trellis" "CurrentVersion"
     ${If} "$0" != "${GREVersion}"
-      WriteRegStr HKLM "Software\zotero.org\Zotero" "CurrentVersion" "${GREVersion}"
+      WriteRegStr HKLM "Software\trellis.org\Trellis" "CurrentVersion" "${GREVersion}"
     ${EndIf}
   ${EndIf}
 
@@ -391,7 +391,7 @@ Section "-Application" APP_IDX
   ; it doesn't cause problems always add them.
   ${SetUninstallKeys}
   
-  ; Register zotero protocol handler
+  ; Register trellis protocol handler
   ${SetHandlers}
 
   ; These need special handling on uninstall since they may be overwritten by
@@ -702,7 +702,7 @@ FunctionEnd
 Function LaunchAppFromElevatedProcess
   ; Find the installation directory when launching using GetFunctionAddress
   ; from an elevated installer since $INSTDIR will not be set in this installer
-  ReadRegStr $0 HKLM "Software\Classes\zotero\DefaultIcon" ""
+  ReadRegStr $0 HKLM "Software\Classes\trellis\DefaultIcon" ""
   ${GetPathFromString} "$0" $0
   ${GetParent} "$0" $1
   ; Set our current working directory to the application's install directory
@@ -880,9 +880,9 @@ Function preSummary
 
   ; Check if it is possible to write to HKLM
   ClearErrors
-  WriteRegStr HKLM "Software\Zotero" "${BrandShortName}InstallerTest" "Write Test"
+  WriteRegStr HKLM "Software\Trellis" "${BrandShortName}InstallerTest" "Write Test"
   ${Unless} ${Errors}
-    DeleteRegValue HKLM "Software\Zotero" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\Trellis" "${BrandShortName}InstallerTest"
     ; Check if Firefox is the http handler for this user.
     SetShellVarContext current ; Set SHCTX to the current user
     ${IsHandlerForInstallDir} "http" $R9
@@ -966,12 +966,12 @@ Function .onInit
     ${EndIf}
   !endif
 
-  # Check if Zotero is running. If it is, prompt the user to close Zotero and exit.
-  # For silent installs, kill Zotero and if successful, continue with the install.
+  # Check if Trellis is running. If it is, prompt the user to close Trellis and exit.
+  # For silent installs, kill Trellis and if successful, continue with the install.
   ${nsProcess::FindProcess} ${FileMainEXE} $R0
   ${If} $R0 = 0
     IfSilent +3
-    MessageBox MB_OK|MB_ICONSTOP "Zotero is already running. Please close Zotero before running the installer."
+    MessageBox MB_OK|MB_ICONSTOP "Trellis is already running. Please close Trellis before running the installer."
     Quit
     ${nsProcess::KillProcess} ${FileMainEXE} $R0
     Sleep 500
@@ -981,14 +981,14 @@ Function .onInit
     ${EndIf}
   ${EndIf}
 
-  StrCpy $R1 "Zotero Standalone"
-  StrCpy $R2 "An older version of Zotero is installed. If you continue, the existing version will be removed.$\n$\nYour Zotero data will not be affected."
+  StrCpy $R1 "Trellis Standalone"
+  StrCpy $R2 "An older version of Trellis is installed. If you continue, the existing version will be removed.$\n$\nYour Trellis data will not be affected."
   Call UninstallOld
 
   !ifdef HAVE_64BIT_BUILD
     SetRegView 32
-      StrCpy $R1 "Zotero"
-      StrCpy $R2 "A 32-bit version of Zotero is installed. If you continue, it will be replaced with a 64-bit version that offers better performance.$\n$\nYour Zotero data will not be affected."
+      StrCpy $R1 "Trellis"
+      StrCpy $R2 "A 32-bit version of Trellis is installed. If you continue, it will be replaced with a 64-bit version that offers better performance.$\n$\nYour Trellis data will not be affected."
       Call UninstallOld
     SetRegView 64
   !endif
@@ -997,7 +997,7 @@ Function .onInit
     ${If} "${ARCH}" == "x64"
       ${If} ${IsNativeARM64}
         MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_DEFBUTTON2 \
-          "This installer is for the x64 version of Zotero, but you appear to be running an ARM version of Windows.$\n$\nFor the best performance, please cancel and download the ARM version of Zotero for Windows." \
+          "This installer is for the x64 version of Trellis, but you appear to be running an ARM version of Windows.$\n$\nFor the best performance, please cancel and download the ARM version of Trellis for Windows." \
           /SD IDOK IDOK continue_architecture IDCANCEL cancel_architecture
           cancel_architecture:
             Abort
@@ -1009,7 +1009,7 @@ Function .onInit
   !ifndef HAVE_64BIT_BUILD
     ${If} ${RunningX64}
       MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_DEFBUTTON2 \
-        "This installer is for the 32-bit version of Zotero, but you appear to be running a 64-bit version of Windows.$\n$\nFor the best performance, please cancel and download the 64-bit version of Zotero." \
+        "This installer is for the 32-bit version of Trellis, but you appear to be running a 64-bit version of Windows.$\n$\nFor the best performance, please cancel and download the 64-bit version of Trellis." \
         /SD IDOK IDOK continue_architecture IDCANCEL cancel_architecture
         cancel_architecture:
           Abort

@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "phiên bản">
+<!ENTITY trellis.whatsNew "Các điểm mới">
+<!ENTITY trellis.createdby "Một sản phẩm của:">
+<!ENTITY trellis.director "Giám đốc điều hành:">
+<!ENTITY trellis.directors "Giám đốc điều hành:">
+<!ENTITY trellis.developers "Phát triển phần mềm:">
+<!ENTITY trellis.alumni "Cựu thành viên:">
+<!ENTITY trellis.about.localizations "Bản địa hóa:">
+<!ENTITY trellis.about.additionalSoftware "Các phần mềm hỗ trợ">
+<!ENTITY trellis.thanks "Xin gửi lời cảm ơn đặc biệt tới:">
+<!ENTITY trellis.about.close "Đóng">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Những người tham gia &amp; Lời cảm ơn">
+<!ENTITY trellis.citationProcessing "Xử lý trích dẫn &amp; danh mục tài liệu tham khảo">

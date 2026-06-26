@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellis beállítások">
+
+<!ENTITY trellis.preferences.helpButton.label "Súgó">
+
+<!ENTITY trellis.preferences.default "Alapértelmezett">
+<!ENTITY trellis.preferences.items "elemek">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Egyedi...">
+
+<!ENTITY trellis.preferences.prefpane.general "Általános">
+
+<!ENTITY trellis.preferences.interface "Felhasználói felület">
+<!ENTITY trellis.preferences.fileHandling "Fájlkezelés">
+<!ENTITY trellis.preferences.automaticSnapshots "Weboldalon alapuló elem létrehozásakor automatikus pillanatfelvétel készítése">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "A kapcsolódó PDF és más fájlok automatikus csatolása">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Csatolt fájlok átnevezése">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "A PDF-fájlok megnyitása">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Alapértelmezett rendszerbeállítás">
+
+<!ENTITY trellis.preferences.miscellaneous "Egyéb">
+<!ENTITY trellis.preferences.autoUpdate "Fordítók- és stílusfrissítések automatikus ellenőrzése">
+<!ENTITY trellis.preferences.updateNow "Frissítés indítása">
+<!ENTITY trellis.preferences.reportTranslationFailure "Hibás adatkonverterek jelentése">
+<!ENTITY trellis.preferences.parseRISRefer "A Trellis használata BibTeX/RIS/Refer fájlok letöltésére">
+<!ENTITY trellis.preferences.automaticTags "Kulcsszavak és tárgyszavak automatikus hozzárendelése címkeként">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Automatikusan törölje a kukából azokat az elemeket, amelyek">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "napnál régebbiek">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Fülek megjelenítése">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Szerző - Év - Cím">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Cím - Szerző - Év">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Fájlnév">
+
+<!ENTITY trellis.preferences.groups "Csoportok">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Amikor könyvtárak között másol elemeket, az alábbiakat másolja:">
+<!ENTITY trellis.preferences.groups.childNotes "kapcsolódó jegyzetek">
+<!ENTITY trellis.preferences.groups.childFiles "kapcsolódó pillanatfelvételek és importált fájlok">
+<!ENTITY trellis.preferences.groups.annotations "jegyzetek">
+<!ENTITY trellis.preferences.groups.childLinks "kapcsolódó hivatkozások">
+<!ENTITY trellis.preferences.groups.tags "címkék">
+
+<!ENTITY trellis.preferences.feeds "Feeds">
+<!ENTITY trellis.preferences.feeds.sorting.label "Rendezés:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "A legújabb elem felül">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "A legrégebbi elem felül">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Feed Defaults">
+
+<!ENTITY trellis.preferences.prefpane.sync "Szinkronizálás">
+<!ENTITY trellis.preferences.sync.username "Felhasználónév:">
+<!ENTITY trellis.preferences.sync.password "Jelszó:">
+<!ENTITY trellis.preferences.sync.createAccount "Új felhasználói fiók">
+<!ENTITY trellis.preferences.sync.lostPassword "Elveszett jelszó?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Automatikus szinkronizálás">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Teljes szöveg szinkronizálása">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "A Trellis szinkronizálhatja a Trellis könyvtáraiban található fájlok teljes szövegét a trellis.org-gal és egyéb csatolt eszközökkel, lehetővé téve, hogy bárhol könnyedén keressen a fájljaira. A fájlok teljes szövege nem válik nyilvánossá.">
+<!ENTITY trellis.preferences.sync.about "Bővebben a szinkronizálásról">
+<!ENTITY trellis.preferences.sync.fileSyncing "Fájlok szinkronizálása">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "A könyvtáramban található fájlok szinkronizálása">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Fájlok letöltése">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "szinkronizáláskor">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "szükség szerint">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Szerver ellenőrzése">
+<!ENTITY trellis.preferences.sync.librariesToSync "Könyvtárak szinkronizálása">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Könyvtárak kiválasztása...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Szinkronizálás">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Könyvtár">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Az alábbi műveletek kizárólag ritka, egyedi esetekre valók, alkalmazásuk nem javasolt általános hibaelhárításra. A visszaállítás sok esetben további problémákat okoz. Lásd ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Sync Reset Options">
+<!ENTITY trellis.preferences.sync.reset.warning3 " további információért.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Az adatszinkronizációs előzmények törlése">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "A helyi adatok összefésülése a távoli adatokkal, a szinkronizációs előzmények figyelmen kívül hagyása.">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Helyreállítás az online könyvtáramból">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "A helyi adatok felülírása az online könyvtárban található adatokkal.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Az Online Könyvtár cseréje">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Az online könyvtár felülírása a helyi Trellis adatokkal">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "A szinkronizációs előzmények törlése">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Az összes csatolt fájl összehasonlítása a tárhely szerveren">
+<!ENTITY trellis.preferences.sync.reset "Visszaállítás">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Visszaállítás">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Keresés">
+<!ENTITY trellis.preferences.search.fulltextCache "Teljesszövegű gyorsítótár">
+<!ENTITY trellis.preferences.search.indexStats "Index statisztikák">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indexelve:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Részlegesen indexelve:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Nincs indexelve">
+<!ENTITY trellis.preferences.search.indexStats.words "Szavak száma:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Indexelendő karakterek maximális száma egy fájlban:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Indexelendő oldalak maximális száma egy fájlban:">
+
+<!ENTITY trellis.preferences.prefpane.export "Exportálás">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Hivatkozási beállítások">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "URL megjelenítése a nyomtatásban megjelent cikkeknél">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Ha ez a lehetőség nincs bekapcsolva, a Trellis csak akkor jeleníti meg az URL-t folyóirat-, újság- vagy magazincikkeknél, ha nincs megadva oldalszám.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Gyorsmásolás">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Elemformátum:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Jegyzetformátum:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Másolás HTML-ként">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Weboldal-specifikus beállítások:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domén/Útvonal">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(pl: wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formátum">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Nyelv">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "A gyorsmásolás kikapcsolása, amikor az elemek száma több, mint">
+
+<!ENTITY trellis.preferences.prefpane.cite "Hivatkozás">
+<!ENTITY trellis.preferences.cite.wordProcessors "Szövegszerkesztők">
+<!ENTITY trellis.preferences.styleEditor "Stílus szerkesztő">
+<!ENTITY trellis.preferences.stylePreview "Stílus előnézet">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Stílus Kezelő">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Cím">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Frissítve">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Mentés Trellis-ba (adress bar icon)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Focus Libraries Pane">
+<!ENTITY trellis.preferences.keys.quicksearch "Gyorskeresés">
+<!ENTITY trellis.preferences.keys.newItem "Új elem létrehozása">
+<!ENTITY trellis.preferences.keys.newNote "Új jegyzet létrehozása">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Az összes elem megjelölése olvasottként/olvasatlanként">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kiválasztott hivatkozás másolása a vágólapra">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kiválasztott elemek másolása a vágólapra">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importálás a vágólapról">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "A változások csak az újraindítás után érvényesülnek">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proxyk">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Proxy-beállítások">
+<!ENTITY trellis.preferences.proxies.desc_before_link "A Trellis a kéréseket az elmentett proxykon keresztül szolgálja ki. Olvassa el a">
+<!ENTITY trellis.preferences.proxies.desc_link "proxy leírást">
+<!ENTITY trellis.preferences.proxies.desc_after_link "további információkért.">
+<!ENTITY trellis.preferences.proxies.transparent "Emlékezzen a proxyn keresztül megtekintett erőforrásokra">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Proxy-források automatikus felismerése">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Értesítés megjelenítése proxy-n keresztüli átirányításkor">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Proxy átirányítás tiltása, ha a domén nevem tartalmaz">
+<!ENTITY trellis.preferences.proxies.configured "Proxyk">
+<!ENTITY trellis.preferences.proxies.hostname "Host neve">
+<!ENTITY trellis.preferences.proxies.scheme "Séma">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Multi-Site">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Új hostok automatikus hozzákapcsolása">
+<!ENTITY trellis.preferences.proxies.variables "A következő változók használhatóak a proxy sémában:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - A proxyn keresztül megtekintett site neve (pl.: www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - A proxyn keresztül megtekintett oldal címe az első perjel nélkül (pl.: about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Az útvonal (pl.: about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - A fájl neve (pl.: index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Bármilyen szöveg">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Haladó">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Fájlok és mappák">
+<!ENTITY trellis.preferences.advanced.keys "Billentyűparancsok">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration " Haladó beállítások">
+
+<!ENTITY trellis.preferences.prefpane.locate "Hely megadása">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Article Lookup Engine Manager">
+<!ENTITY trellis.preferences.locate.description "Leírás">
+<!ENTITY trellis.preferences.locate.name "Név">
+<!ENTITY trellis.preferences.locate.addDescription "A listán nem szereplő keresőmotor hozzáadásához látogasson el a kívánt keresőmotorra a böngészőben, és válassza a &quot;Hozzáadás&quot; lehetőséget a Trellis Keresés menüjében.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Visszaállítás alapértelmezettre">
+
+<!ENTITY trellis.preferences.charset "Karakterkódolás">
+<!ENTITY trellis.preferences.charset.importCharset "Karakterkódolás importálása">
+<!ENTITY trellis.preferences.charset.displayExportOption "A karakterkódolás beállításainak mutatása exportálás során">
+
+<!ENTITY trellis.preferences.dataDir "Adatok mentése ide:">
+<!ENTITY trellis.preferences.dataDir.useProfile "Firefox profilkönyvtár">
+<!ENTITY trellis.preferences.dataDir.custom "Egyéni:">
+<!ENTITY trellis.preferences.dataDir.choose "T   History  1  allózás...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(parancssoron keresztül megadva)">
+<!ENTITY trellis.preferences.dataDir.reveal "Az adatkönyvtár mutatása">
+<!ENTITY trellis.preferences.dataDir.migrate "Áttérés az új alapértelmezett helyre…">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Linked Attachment Base Directory">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "A Trellis relatív útvonalakat használ a csatolt fájlokhoz az alap könyvtáron belül , ezzel elérhetővé teszi a fájlokat különböző számítógépeken, amennyiben a fájlszerkezet az alap könyvtárban változatlan.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Alap könyvtár:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Tallózás…">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Visszavonás…">
+
+<!ENTITY trellis.preferences.dbMaintenance "Adatbázis karbantartás">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Az adatbázis integritásának ellenőrzése">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Fordítók és stílusok visszaállítása…">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Fordítók visszaállítása">
+
+<!ENTITY trellis.preferences.configEditor "Konfiguráció szerkesztése">

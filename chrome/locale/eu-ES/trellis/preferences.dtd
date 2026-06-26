@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellis hobespenak">
+
+<!ENTITY trellis.preferences.helpButton.label "Laguntza">
+
+<!ENTITY trellis.preferences.default "Lehenetsia:">
+<!ENTITY trellis.preferences.items "elementu">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Pertsonalizatua...">
+
+<!ENTITY trellis.preferences.prefpane.general "Orokorra">
+
+<!ENTITY trellis.preferences.interface "Interfazea">
+<!ENTITY trellis.preferences.fileHandling "Fitxategien kudeaketa">
+<!ENTITY trellis.preferences.automaticSnapshots "Gorde pantaila-irudiak automatikoki web orri batetik elementu bat sortzerakoan">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Automatikoki erantsi erlazionatutako PDF eta bestelako fitxategiak elementuak gordetzerakoan">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Berrizendatu estekatutako fitxategiak">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Ireki PDFak honakoa erabiliz">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Sistemako lehenetsia">
+
+<!ENTITY trellis.preferences.miscellaneous "Bestelakoak">
+<!ENTITY trellis.preferences.autoUpdate "Automatikoki egiaztatu itzultzaile eta estiloen eguneraketan">
+<!ENTITY trellis.preferences.updateNow "Eguneratu orain">
+<!ENTITY trellis.preferences.reportTranslationFailure "Hautsitako gune itzultzaileen berri eman">
+<!ENTITY trellis.preferences.parseRISRefer "Erabili Trellis deskargatutako RIS/Refer fitxategietarako">
+<!ENTITY trellis.preferences.automaticTags "Automatikoki etiketatu elementuak hitz gako eta gaien goiburuekin">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Automatikoki ezabatu zaborran daudek elementuak ">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "egun atzera">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Erakutxi fitxak honela:">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Sortzailea - Urtea - Izenburua">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Izenburua - Sortzailea - Urtea">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Fitxategiaren izena">
+
+<!ENTITY trellis.preferences.groups "Taldeak">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Bildumen artean iemak kopiatzen dituzunean, horrekin batera kopiatuko dira:">
+<!ENTITY trellis.preferences.groups.childNotes "ohar umeak">
+<!ENTITY trellis.preferences.groups.childFiles "pantaila-argazki umeak eta inportatutako fitxategiak">
+<!ENTITY trellis.preferences.groups.annotations "oharpenak">
+<!ENTITY trellis.preferences.groups.childLinks "esteka umeak">
+<!ENTITY trellis.preferences.groups.tags "etiketa">
+
+<!ENTITY trellis.preferences.feeds "Jarioak">
+<!ENTITY trellis.preferences.feeds.sorting.label "Ordena:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Elementu berrienak lehenengo">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Elementu zaharrenak lehenengo">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Jarioen lehenetsitakoak">
+
+<!ENTITY trellis.preferences.prefpane.sync "Sinkronizatu">
+<!ENTITY trellis.preferences.sync.username "Erabiltzailea:">
+<!ENTITY trellis.preferences.sync.password "Pasahitza:">
+<!ENTITY trellis.preferences.sync.createAccount "Kontua sortu">
+<!ENTITY trellis.preferences.sync.lostPassword "Pasahitza ahaztu zaizu?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Sinkronizatu automatikoki">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Sinkronizatu testu osoa">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellisk zure Trellis liburutegietako fitxategien testu osoko edukia sinkronizatu dezake trellis.org eta estekatutako beste gailuekin, edonon zaudela ere zure fitxategietan bilaketak egitea ahalbidetuz. Zure fitxategien testu osoko edukia ez da publikoki partekatuko.">
+<!ENTITY trellis.preferences.sync.about "Sinkronizazioari buruz">
+<!ENTITY trellis.preferences.sync.fileSyncing "Fitxategiak sinkronizatzea">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URLa:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Talde liburutegietan erantsitako fitxategiak sinkronizatu honakoa erabiliz:">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Fitxategiak deskargatu">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "sinkronizazioaren unean">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "behar ahala">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Zerbitzaria egiaztatu">
+<!ENTITY trellis.preferences.sync.librariesToSync "Sinkronizatu beharreko liburutegiak">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Hautatu liburutegiak...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sinkronizatu">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Liburutegia">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Honako operaziak egoera ezohiko eta zehatzetan erabitzeko bakarrik dira eta ez lirateke arazoen konponketa orokorrerako erabili behar. Kasu askotan, berrezarpenak arazo gehiago sor ditzake. Ikus">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Sinkronizazioaren berrezarpenerako aukerak">
+<!ENTITY trellis.preferences.sync.reset.warning3 "informazio gehiagorako.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Berrezarri datuen sinkronizazioaren historia">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Bateratu datu lokalak urrunekoekin, sinkronizazioaren historia baztertuz">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Lineako liburutegitik berreskuratu">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Gainidatzi Trellisko datu lokalak lineako liburutegikoekin.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Ordezkatu lineako liburutegia">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Gainidatzi lineako liburutegia Trellisko datu lokalekin.">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Garbitu Sync kronika">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Alderatu eranskin fitxategi guztiak biltegi zerbitzuarekin">
+<!ENTITY trellis.preferences.sync.reset "Berrezarri">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Erakutsi berrezartzeko aukerak...">
+<!ENTITY trellis.preferences.sync.reset.button "Berrezarri...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Bilatu">
+<!ENTITY trellis.preferences.search.fulltextCache "Testu osoaren cachea">
+<!ENTITY trellis.preferences.search.indexStats "Indexaren estatistika">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indexatuta:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Erdizkakoa:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Indexatu gabe:">
+<!ENTITY trellis.preferences.search.indexStats.words "Hitzak:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Indexatzeko gehieneko karaktere kopurua fitxategi bakoitzeko:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Indexatzeko gehieneko orrialde kopurua fitxategi bakoitzeko:">
+
+<!ENTITY trellis.preferences.prefpane.export "Esportatu">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Aipuaren aukerak">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Paperezko artikuluen URLak gehitu erreferentziatan">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Aukera hau ezgaituta dagoenean, Trellisk URLak gehitzen ditu aldizkari eta egunkarietako artikuluak aipatzean, artikuluak orrialde-barruti bat zehazten ez badu bakarrik.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Kopia azkarra">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Elementuaren formatua:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Oharraren formatua:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopiatu HTML gisa">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Gunearen berariazko ezarpenak:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domeinua/bidea">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(adibidez, wikipedia.eus)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formatua">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Hizkuntza">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Kopia azkarra desgaitu hauek baino gehiago arrastratzean: ">
+
+<!ENTITY trellis.preferences.prefpane.cite "Aipatu">
+<!ENTITY trellis.preferences.cite.wordProcessors "Testu prozesatzaileak">
+<!ENTITY trellis.preferences.styleEditor "Estilo editorea">
+<!ENTITY trellis.preferences.stylePreview "Estiloen aurrebista">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Estilo kudeatzailea">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Izenburua">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Eguneratua">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Gorde Trellisn (helbide barrako ikonoa)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Enfokatu liburutegien panela">
+<!ENTITY trellis.preferences.keys.quicksearch "Bilatu:">
+<!ENTITY trellis.preferences.keys.newItem "Elementu berria sortu">
+<!ENTITY trellis.preferences.keys.newNote "Sortu ohar berria">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Jarioko elementu guztiak irakurrita/irakurri gabe markatu">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Hautatutako elementuen aipuak arbelera kopiatu">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Hautatutako elementuak arbelera kopiatu">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Arbeletik inportatu">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Aldaketak berrabiarazi ondoren sartuko dira indarrean">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proxyak">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Proxy aukerak">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellisk transparenteki berbideratuko ditu gordetako proxien bitartez egindako eskaerak. Ikus ">
+<!ENTITY trellis.preferences.proxies.desc_link "proxy dokumentazioa">
+<!ENTITY trellis.preferences.proxies.desc_after_link "informazio gehiagorako.">
+<!ENTITY trellis.preferences.proxies.transparent "Gaitu proxy bidezko birbideratzea">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Proxy bitartezko errekurtsoak automatikoki ezagutu">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Erakutsi jakinarazpena proxy bidez birbideratzerakoan">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Ezgaitu proxy bidezko birbideratzea nire domeinu izenak honakoa duenean:">
+<!ENTITY trellis.preferences.proxies.configured "Konfiguratutako proxyak">
+<!ENTITY trellis.preferences.proxies.hostname "Ostalari-izena">
+<!ENTITY trellis.preferences.proxies.scheme "Eskema">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Gune ugari">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Ostalari berriak automatikoki erlazionatu">
+<!ENTITY trellis.preferences.proxies.variables "Honako aldagaiak erabil ditzakezu zure proxy eskeman: ">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Proxy bitartezko gunearen ostalari-izena (adibidez, www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Proxy atzeko orrialderainoko bidea hasierako barra kanpoan utzita (adibidez, about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Direktorioaren bidea (adibidez, about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Fitxategiaren izena (adibidez, index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Edozein kate">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Aurreratua">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Fitxategiak eta karpetak">
+<!ENTITY trellis.preferences.advanced.keys "Lasterbideak">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Konfigurazio aurreratua">
+
+<!ENTITY trellis.preferences.prefpane.locate "Aurkitu">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Artikuluen bilaketarako motoreen kudeatzailea">
+<!ENTITY trellis.preferences.locate.description "Deskribapena">
+<!ENTITY trellis.preferences.locate.name "Izena">
+<!ENTITY trellis.preferences.locate.addDescription "Zerrendan ez dagoen Bilaketa motore bat gehitzeko, bisitatu nahi duzun bilatzailea zure nabigatzailearen bitartez eta sakatu &quot;Gehitu&quot; Trellisren &quot;Aurkitu&quot; menuan.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Lehenetsitakoak berrezarri">
+
+<!ENTITY trellis.preferences.charset "Karaktere-kodeketa">
+<!ENTITY trellis.preferences.charset.importCharset "Karaktere-kodeketa inportatu">
+<!ENTITY trellis.preferences.charset.displayExportOption "Karaktere-kodeketaren aukerak erakutsi esportatzerakoan">
+
+<!ENTITY trellis.preferences.dataDir "Datu direktorioaren kokalekua">
+<!ENTITY trellis.preferences.dataDir.useProfile "Profilaren direktorioa erabili">
+<!ENTITY trellis.preferences.dataDir.custom "Pertsonalizatua:">
+<!ENTITY trellis.preferences.dataDir.choose "Aukeratu...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(komando lerroaren bitartez zehaztua)">
+<!ENTITY trellis.preferences.dataDir.reveal "Datuen direktorioa erakutsi">
+<!ENTITY trellis.preferences.dataDir.migrate "Lehenetsitako kokaleku berrira migratu...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Estekatutako eranskinen erro-direktorioa">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellisk bide erlatiboak erabiliko ditu oinarrizko direktorioko estekatutako fitxategi eranskinentzat. Modu horretan, oinarrizko direktorioaren direktorio egitura berbera den bitartean, ordenagailu ezberdinetan fitxategiak eskuragarri izatea ahalbidetzen da.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Oinarrizko direktorioa:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Aukeratu...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Bide absolutuetara itzuli...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Datu basearen mantenua">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Datu basearen integritatea egiaztatu">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Itzultzaile eta estiloak berrezarri...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Itzultzaileak berrezarri...">
+
+<!ENTITY trellis.preferences.configEditor "Konfigurazio editorea">

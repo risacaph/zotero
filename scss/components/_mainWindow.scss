@@ -19,25 +19,25 @@
 	min-height: calc(var(--height-of-fixed-components) + $min-height-items-pane + $height-toolbar);
 }
 
-#zotero-pane {
+#trellis-pane {
 	min-width: 0;
 	min-height: 0;
 	flex-direction: column;
 }
 
-#zotero-pane-stack > hbox {
+#trellis-pane-stack > hbox {
 	// Let window chrome, tabs, and toolbar shrink even when sidebars overflow
 	min-width: 0;
 }
-#browser, #zotero-pane-stack, #zotero-trees {
+#browser, #trellis-pane-stack, #trellis-trees {
 	min-height: 0;
 }
 
-#zotero-pane-overlay {
+#trellis-pane-overlay {
 	background: rgba(0,0,0,.3);
 }
 
-#zotero-pane-progress-box {
+#trellis-pane-progress-box {
 	background: var(--color-sidepane);
 	border-radius: 5px;
 	border: var(--color-panedivider);
@@ -45,11 +45,11 @@
 	width: 300px;
 }
 
-#zotero-pane-progressmeter-container {
+#trellis-pane-progressmeter-container {
 	padding: 10px;
 }
 
-#zotero-layout-switcher {
+#trellis-layout-switcher {
 	flex-grow: 1;
 	flex-shrink: 1;
 	min-width: 0;
@@ -61,15 +61,15 @@
 		properties, and if we remove them, the splitter breaks. So we override
 		them here with !important.
 	*/
-	&[orient="horizontal"] :is(#zotero-items-pane-container, #zotero-item-pane) {
+	&[orient="horizontal"] :is(#trellis-items-pane-container, #trellis-item-pane) {
 		height: auto !important;
 	}
 
 	&[orient="vertical"],
-	&[orient="vertical"] :is(#zotero-items-pane-container, #zotero-item-pane) {
+	&[orient="vertical"] :is(#trellis-items-pane-container, #trellis-item-pane) {
 		width: -moz-available !important;
 		/* min-width: 0 is required here to allow the pane to shrink in Stacked view,
-		   but the child #zotero-items-pane sets a larger min-width, and the splitter
+		   but the child #trellis-items-pane sets a larger min-width, and the splitter
 		   follows that instead of this. */
 		min-width: 0 !important;
 	}

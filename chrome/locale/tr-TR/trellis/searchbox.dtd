@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "İsim:">
+
+<!ENTITY trellis.search.searchInLibrary "Kitaplıkta ara:">
+
+<!ENTITY trellis.search.joinMode.prefix "Aşağıdakilerden">
+<!ENTITY trellis.search.joinMode.any "herhangi birine">
+<!ENTITY trellis.search.joinMode.all "hepsine">
+<!ENTITY trellis.search.joinMode.suffix "uyanları bul:">
+
+<!ENTITY trellis.search.recursive.label "Alt dermeleri araştır">
+<!ENTITY trellis.search.noChildren "Yalnızca üst-seviye eserleri göster">
+<!ENTITY trellis.search.includeParentsAndChildren "Uyan eserlerin ana ve alt eserlerini de dahil et">
+
+<!ENTITY trellis.search.textModes.phrase "Sözcük öbeği">
+<!ENTITY trellis.search.textModes.phraseBinary "Sözcük öbeği (ikili dosyalar içerir)">
+<!ENTITY trellis.search.textModes.regexp "AraBul">
+<!ENTITY trellis.search.textModes.regexpCS "AraBul (büyük/küçük harf duyarlı)">
+
+<!ENTITY trellis.search.date.units.days "gün">
+<!ENTITY trellis.search.date.units.months "ay">
+<!ENTITY trellis.search.date.units.years "yıl">
+
+<!ENTITY trellis.search.search "Arama">
+<!ENTITY trellis.search.clear "Temizle">
+<!ENTITY trellis.search.saveSearch "Aramayı Kaydet">

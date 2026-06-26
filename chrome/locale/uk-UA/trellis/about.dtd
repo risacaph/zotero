@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "версія">
+<!ENTITY trellis.whatsNew "Що нового">
+<!ENTITY trellis.createdby "Розробник:">
+<!ENTITY trellis.director "Директор:">
+<!ENTITY trellis.directors "Керівники:">
+<!ENTITY trellis.developers "Розробники:">
+<!ENTITY trellis.alumni "Колишні розробники:">
+<!ENTITY trellis.about.localizations "Локалізація:">
+<!ENTITY trellis.about.additionalSoftware "Програмне забезпечення сторонніх виробників:">
+<!ENTITY trellis.thanks "Особливі подяки:">
+<!ENTITY trellis.about.close "Закрити">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Більше інформації та подяки">
+<!ENTITY trellis.citationProcessing "Обробка цитування та списку літератури">

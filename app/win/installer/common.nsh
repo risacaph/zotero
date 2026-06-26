@@ -2180,7 +2180,7 @@ FunctionEnd
 
       outerdecrement:
       IntOp $R6 $R6 - 1 ; decrement the outer loop's counter when the key is deleted successfully.
-      ; Attempt to delete Software/Zotero. There is nothing we can do if the
+      ; Attempt to delete Software/Trellis. There is nothing we can do if the
       ; user lacks permissions to delete this key.
       DeleteRegKey /ifempty SHCTX "$R9"
       ClearErrors
@@ -4155,7 +4155,7 @@ FunctionEnd
       Push $R5
 
       ; Windows NT 6.0 (Vista/Server 2008) and lower are not supported.
-      ; TODO for Zotero: Change to Win10 with Fx128
+      ; TODO for Trellis: Change to Win10 with Fx128
       ${Unless} ${AtLeastWin7}
           MessageBox MB_OK|MB_ICONSTOP "$R9" IDOK
           ; Nothing initialized so no need to call OnEndCommon
@@ -4303,12 +4303,12 @@ FunctionEnd
 
 !ifndef NO_INSTDIR_FROM_REG
       SetShellVarContext all      ; Set SHCTX to HKLM
-      ${GetSingleInstallPath} "Software\Zotero\${BrandFullNameInternal}" $R9
+      ${GetSingleInstallPath} "Software\Trellis\${BrandFullNameInternal}" $R9
 
       StrCmp "$R9" "false" +1 finish_get_install_dir
 
       SetShellVarContext current  ; Set SHCTX to HKCU
-      ${GetSingleInstallPath} "Software\Zotero\${BrandFullNameInternal}" $R9
+      ${GetSingleInstallPath} "Software\Trellis\${BrandFullNameInternal}" $R9
 
       finish_get_install_dir:
       StrCmp "$R9" "false" +2 +1

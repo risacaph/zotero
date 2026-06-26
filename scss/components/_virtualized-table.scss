@@ -183,7 +183,7 @@
 				height: 16px;
 				padding: 4px;
 				box-sizing: border-box;
-				background: url("chrome://zotero/skin/8/universal/chevron-8.svg") content-box no-repeat;
+				background: url("chrome://trellis/skin/8/universal/chevron-8.svg") content-box no-repeat;
 				-moz-context-properties: fill, fill-opacity;
 			}
 		}
@@ -347,7 +347,7 @@
 			margin-right: 3px; // + 5px padding = 8px total
 			
 			&.icon-css {
-				background: url("chrome://zotero/skin/8/universal/chevron-8.svg") content-box no-repeat;
+				background: url("chrome://trellis/skin/8/universal/chevron-8.svg") content-box no-repeat;
 				-moz-context-properties: fill, fill-opacity;
 				fill: var(--fill-primary);
 			}
@@ -401,7 +401,7 @@
 	// in Gecko also paints it above the scrollbar; keeping the scrollbar out of the content box
 	// is what stops it from covering the scrollbar's edge (see the sticky header rules above).
 	// The body must also have no top padding so rows can't scroll up into it and show above the
-	// pinned header; that's handled per-consumer (e.g. #zotero-items-tree) where the padding is
+	// pinned header; that's handled per-consumer (e.g. #trellis-items-tree) where the padding is
 	// set with higher specificity.
 	&.has-sticky-section-headers {
 		scrollbar-gutter: stable;

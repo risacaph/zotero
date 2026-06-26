@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "verze">
+<!ENTITY trellis.whatsNew "Co je nového">
+<!ENTITY trellis.createdby "Vytvořili:">
+<!ENTITY trellis.director "Vedoucí:">
+<!ENTITY trellis.directors "Vedoucí:">
+<!ENTITY trellis.developers "Vývojáři:">
+<!ENTITY trellis.alumni "Alumni:">
+<!ENTITY trellis.about.localizations "Lokalizace:">
+<!ENTITY trellis.about.additionalSoftware "Software třetí strany:">
+<!ENTITY trellis.thanks "Zvláštní poděkování:">
+<!ENTITY trellis.about.close "Zavřít">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Další spolupracovníci a poděkování...">
+<!ENTITY trellis.citationProcessing "Zpracování citací a bibliografie">

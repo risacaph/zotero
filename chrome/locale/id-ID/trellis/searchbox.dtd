@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Nama:">
+
+<!ENTITY trellis.search.searchInLibrary "Cari di perpustakaan:">
+
+<!ENTITY trellis.search.joinMode.prefix "Cocok">
+<!ENTITY trellis.search.joinMode.any "apapun">
+<!ENTITY trellis.search.joinMode.all "semua">
+<!ENTITY trellis.search.joinMode.suffix "salah satu dari berikut ini:">
+
+<!ENTITY trellis.search.recursive.label "cari subfolder">
+<!ENTITY trellis.search.noChildren "Tampilkan hanya item level teratas">
+<!ENTITY trellis.search.includeParentsAndChildren "Sertakan item induk dan anak dari item-item yang cocok">
+
+<!ENTITY trellis.search.textModes.phrase "rase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (termasuk berkas binari)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (case-sensitive)">
+
+<!ENTITY trellis.search.date.units.days "hari">
+<!ENTITY trellis.search.date.units.months "bulan">
+<!ENTITY trellis.search.date.units.years "tahun">
+
+<!ENTITY trellis.search.search "Cari">
+<!ENTITY trellis.search.clear "Bersihkan">
+<!ENTITY trellis.search.saveSearch "Simpan pencarian">

@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "รุ่น">
+<!ENTITY trellis.whatsNew "What’s new">
+<!ENTITY trellis.createdby "สร้างสรรค์โดย:">
+<!ENTITY trellis.director "ผู้ควบคุม:">
+<!ENTITY trellis.directors "ผู้ควบคุม:">
+<!ENTITY trellis.developers "ผู้พัฒนา:">
+<!ENTITY trellis.alumni "ผู้ที่เคยช่วยเหลือ:">
+<!ENTITY trellis.about.localizations "การแปลเป็นภาษาถิ่น:">
+<!ENTITY trellis.about.additionalSoftware "Third-Party Software:">
+<!ENTITY trellis.thanks "ขอบคุณเป็นพิเศษ:">
+<!ENTITY trellis.about.close "ปิด">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "เกียรติยศและกิตติกรรมประกาศ">
+<!ENTITY trellis.citationProcessing "กำลังดำเนินการการอ้างอิง &amp; บรรณานุกรม">

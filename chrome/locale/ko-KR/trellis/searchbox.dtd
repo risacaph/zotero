@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "이름:">
+
+<!ENTITY trellis.search.searchInLibrary "라이브러리 검색:">
+
+<!ENTITY trellis.search.joinMode.prefix "다음 조건 중">
+<!ENTITY trellis.search.joinMode.any "아무거나">
+<!ENTITY trellis.search.joinMode.all "모두">
+<!ENTITY trellis.search.joinMode.suffix "일치하는 것을 검색:">
+
+<!ENTITY trellis.search.recursive.label "하위 컬렉션 검색">
+<!ENTITY trellis.search.noChildren "최상위 항목만 표시">
+<!ENTITY trellis.search.includeParentsAndChildren "일치하는 항목의 상위 및 하위 항목 포함">
+
+<!ENTITY trellis.search.textModes.phrase "어구">
+<!ENTITY trellis.search.textModes.phraseBinary "어구 (바이너리 파일 포함)">
+<!ENTITY trellis.search.textModes.regexp "정규표현식">
+<!ENTITY trellis.search.textModes.regexpCS "정규표현식 (대/소문자 구분)">
+
+<!ENTITY trellis.search.date.units.days "일">
+<!ENTITY trellis.search.date.units.months "월">
+<!ENTITY trellis.search.date.units.years "년">
+
+<!ENTITY trellis.search.search "검색">
+<!ENTITY trellis.search.clear "결과 삭제">
+<!ENTITY trellis.search.saveSearch "검색결과 저장">

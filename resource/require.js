@@ -13,9 +13,9 @@ const {
 	Require,
 	resolveURI,
 	unload,
-} = ChromeUtils.importESModule("resource://zotero/loader.sys.mjs");
+} = ChromeUtils.importESModule("resource://trellis/loader.sys.mjs");
 
-const DEFAULT_SANDBOX_NAME = "Zotero (Module loader)";
+const DEFAULT_SANDBOX_NAME = "Trellis (Module loader)";
 
 var gNextLoaderID = 0;
 
@@ -39,7 +39,7 @@ var gNextLoaderID = 0;
  *        modules instead of creating a sandbox with custom options. Cannot be
  *        used with freshCompartment.
  */
-function ZoteroLoader({
+function TrellisLoader({
 	freshCompartment = false,
 	useLoaderGlobal = false,
 } = {}) {
@@ -50,10 +50,10 @@ function ZoteroLoader({
 	}
 
 	const paths = {
-		'': 'resource://zotero/',
-		'containers/': 'chrome://zotero/content/containers/',
-		'components/': 'chrome://zotero/content/components/',
-		'zotero/': 'chrome://zotero/content/'
+		'': 'resource://trellis/',
+		'containers/': 'chrome://trellis/content/containers/',
+		'components/': 'chrome://trellis/content/components/',
+		'trellis/': 'chrome://trellis/content/'
 	};
 
 	// In case the Loader ESM is loaded in the existing global,
@@ -61,7 +61,7 @@ function ZoteroLoader({
 	const sharedGlobal =
 		useLoaderGlobal ||
 		// eslint-disable-next-line mozilla/reject-globalThis-modification
-		Cu.getRealmLocation(globalThis) == "Zotero global"
+		Cu.getRealmLocation(globalThis) == "Trellis global"
 			? Cu.getGlobalForObject({})
 			: undefined;
 	this.loader = new Loader({
@@ -69,7 +69,7 @@ function ZoteroLoader({
 		sharedGlobal,
 		freshCompartment,
 		sandboxName: useLoaderGlobal
-			? "Zotero (Server Module Loader)"
+			? "Trellis (Server Module Loader)"
 			: DEFAULT_SANDBOX_NAME,
 		// Make sure `define` function exists. JSON Viewer needs modules in AMD
 		// format, as it currently uses RequireJS from a content document and
@@ -90,7 +90,7 @@ function ZoteroLoader({
 		},
 	});
 
-	this.require = Require(this.loader, { id: "zotero" });
+	this.require = Require(this.loader, { id: "trellis" });
 	
 	let win = typeof window !== "undefined" ? window : {};
 	let doc = win.document ?? {};
@@ -136,11 +136,11 @@ function ZoteroLoader({
 		this.loader.globals[name] = injectedGlobals[name];
 	}
 	
-	Object.defineProperty(this.loader.globals, "Zotero", {
+	Object.defineProperty(this.loader.globals, "Trellis", {
 		get: () => {
-			const { Zotero } = ChromeUtils.importESModule("chrome://zotero/content/zotero.mjs");
+			const { Trellis } = ChromeUtils.importESModule("chrome://trellis/content/trellis.mjs");
 			// TODO: Cache
-			return Zotero;
+			return Trellis;
 		}
 	})
 
@@ -148,7 +148,7 @@ function ZoteroLoader({
 	// follow the app locale
 	if (!sharedGlobal) {
 		Services.scriptloader.loadSubScript(
-			'chrome://zotero/content/dateOverrides.js',
+			'chrome://trellis/content/dateOverrides.js',
 			this.loader.sharedGlobal
 		);
 	}
@@ -179,16 +179,16 @@ function ZoteroLoader({
 	this.id = gNextLoaderID++;
 }
 
-ZoteroLoader.prototype = {
+TrellisLoader.prototype = {
 	destroy(reason = "shutdown") {
 		unload(this.loader, reason);
 		delete this.loader;
 	},
 };
 
-// Export the standard instance of ZoteroLoader used by the tools.
-// TODO: Zotero: Not making require.js an ESM for now, so this isn't exposed
+// Export the standard instance of TrellisLoader used by the tools.
+// TODO: Trellis: Not making require.js an ESM for now, so this isn't exposed
 // Should it be?
-let loader = new ZoteroLoader();
+let loader = new TrellisLoader();
 
 var require = loader.require;

@@ -1,4 +1,4 @@
-#zotero-select-items-dialog {
+#trellis-select-items-dialog {
     display: flex;
     min-width: 800px;
     min-height: 450px;
@@ -13,12 +13,12 @@
         flex: 1 1 auto;
     }
 
-    #zotero-select-items-container {
+    #trellis-select-items-container {
         display: flex;
         flex-direction: column;
     }
 
-    #zotero-collections-tree-container {
+    #trellis-collections-tree-container {
         min-width: 200px;
 		min-height: 100%;
         background: var(--material-sidepane);
@@ -29,11 +29,11 @@
         }
     }
 
-    #zotero-collections-tree {
+    #trellis-collections-tree {
         background: var(--material-sidepane);
     }
 
-	#zotero-items-pane-content {
+	#trellis-items-pane-content {
         // Please do not become infinitely tall
 		min-height: 0;
         flex: 1;
@@ -59,19 +59,19 @@
         }
     }
 
-    #zotero-items-pane-content, .dialog-button-box {
+    #trellis-items-pane-content, .dialog-button-box {
         border-top: var(--material-border-quarternary);
     }
     
     // Draggable areas:
-    #zotero-collections-tree-container,
+    #trellis-collections-tree-container,
     #search-toolbar,
     .dialog-button-box {
         -moz-window-dragging: drag;
     }
 
     // Non-draggable sub-areas:
-    #zotero-collections-tree-container .windowed-list,
+    #trellis-collections-tree-container .windowed-list,
     #search-toolbar quick-search-textbox,
     .dialog-button-box button {
         -moz-window-dragging: no-drag;

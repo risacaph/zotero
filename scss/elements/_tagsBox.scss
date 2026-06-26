@@ -33,7 +33,7 @@ tags-box {
 				}
 			}
 
-			.zotero-box-icon {
+			.trellis-box-icon {
 				grid-column: 1;
 				width: 12px;
 				height: 12px;
@@ -41,26 +41,26 @@ tags-box {
 				background: icon-url('tag.svg') center no-repeat;
 			}
 			
-			&[tagType="0"] .zotero-box-icon {
+			&[tagType="0"] .trellis-box-icon {
 				// User tag: use tag color if we have one, blue accent if we don't
 				fill: var(--tag-color, var(--accent-blue));
 			}
 			
-			&[tagType="1"] .zotero-box-icon {
+			&[tagType="1"] .trellis-box-icon {
 				// Automatic tag: use tag color if we have one, gray if we don't
 				fill: var(--tag-color, var(--fill-secondary));
 			}
 
-			.zotero-box-label {
+			.trellis-box-label {
 				grid-column: 2;
 			}
 			
 			&.has-color {
-				.zotero-box-icon {
+				.trellis-box-icon {
 					background-image: icon-url('tag-fill.svg');
 				}
 				
-				.zotero-box-label {
+				.trellis-box-label {
 					font-weight: 600;
 				}
 			}

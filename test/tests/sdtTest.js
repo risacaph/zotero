@@ -1,5 +1,5 @@
-describe("Zotero.SDT", function () {
-	const SDT_CACHE_FILE_NAME = '.zotero-sdt-cache';
+describe("Trellis.SDT", function () {
+	const SDT_CACHE_FILE_NAME = '.trellis-sdt-cache';
 	const TEST_PDF_HASH = 'e54589353710950c4b7ff70829a60036';
 	const SDT_PACK_MAGIC = [0x89, 0x53, 0x44, 0x54, 0x0d, 0x0a, 0x1a, 0x0a];
 	const TEST_SDT_PACK_BASE64 = 'iVNEVA0KGgoBAQAAGAAAAHMAAABGAAAAAAAAADMAAAAAAAAAAQAAAB3MsQ7CIBQF0H+5MzWXtpSW1V9wcsPySF2EQGtiGv7daHLmcyKXtEqtqcCd2D9Z4JBDhMJbSn2mF5xuCsHvci3idwlw6NlPHXVHfSPd34XkHQo1HWWVX7b5usFBzGjmZTCD1VwM1/FhY7Sc+8VP5DChtS+rVipITE8tVrKKrlbKTFGyUiowVNJRyklMSs1RslICsZPz80pS80qCEvPSU5WsoqMNYnWiDWNja2N1lPJLS3Iy80CisbUAY2BgYKhWKqksSFWyUipILEpML0osyFDSUSpJrShRslIKSS0uUQh2CVFITkzOSNVTqgUA';
@@ -48,7 +48,7 @@ describe("Zotero.SDT", function () {
 		let workerBlocked = new Promise((resolve) => {
 			unblockWorker = resolve;
 		});
-		let workerStub = sinon.stub(Zotero.PDFWorker, 'getStructuredDocumentText')
+		let workerStub = sinon.stub(Trellis.PDFWorker, 'getStructuredDocumentText')
 			.callsFake(async () => {
 				await workerBlocked;
 				return { buf: getTestSDTPackBuffer() };
@@ -56,8 +56,8 @@ describe("Zotero.SDT", function () {
 		try {
 			// One generation per item at a time -- this is also what keeps
 			// concurrent generations from racing on the cache file write
-			let promise1 = Zotero.SDT.getPack(item.id);
-			let promise2 = Zotero.SDT.getPack(item.id);
+			let promise1 = Trellis.SDT.getPack(item.id);
+			let promise2 = Trellis.SDT.getPack(item.id);
 			await waitForStubCall(workerStub);
 			unblockWorker();
 
@@ -94,7 +94,7 @@ describe("Zotero.SDT", function () {
 		let workerBlocked = new Promise((resolve) => {
 			unblockWorker = resolve;
 		});
-		let workerStub = sinon.stub(Zotero.PDFWorker, 'getStructuredDocumentText')
+		let workerStub = sinon.stub(Trellis.PDFWorker, 'getStructuredDocumentText')
 			.callsFake(async () => {
 				await workerBlocked;
 				return { buf: getTestSDTPackBuffer() };
@@ -156,11 +156,11 @@ describe("Zotero.SDT", function () {
 		let item = await importFileAttachment('test.pdf');
 		await OS.File.remove(getSDTCachePath(item), { ignoreAbsent: true });
 
-		let workerStub = sinon.stub(Zotero.PDFWorker, 'getStructuredDocumentText');
+		let workerStub = sinon.stub(Trellis.PDFWorker, 'getStructuredDocumentText');
 		workerStub.onFirstCall().rejects(new Error('Transient extraction failure'));
 		workerStub.callsFake(async () => ({ buf: getTestSDTPackBuffer() }));
 		try {
-			let result = await Zotero.SDT.getPack(item.id);
+			let result = await Trellis.SDT.getPack(item.id);
 			assert.isFalse(result.ok);
 			assert.equal(result.reason, 'failed');
 
@@ -178,14 +178,14 @@ describe("Zotero.SDT", function () {
 
 		let error = new Error('Password required');
 		error.name = 'PasswordException';
-		let workerStub = sinon.stub(Zotero.PDFWorker, 'getStructuredDocumentText')
+		let workerStub = sinon.stub(Trellis.PDFWorker, 'getStructuredDocumentText')
 			.rejects(error);
 		try {
-			let result = await Zotero.SDT.getPack(item.id);
+			let result = await Trellis.SDT.getPack(item.id);
 			assert.isFalse(result.ok);
 			assert.equal(result.reason, 'password-required');
 
-			result = await Zotero.SDT.getPack(item.id);
+			result = await Trellis.SDT.getPack(item.id);
 			assert.isFalse(result.ok);
 			assert.equal(result.reason, 'password-required');
 			assert.isTrue(workerStub.calledOnce);
@@ -203,7 +203,7 @@ describe("Zotero.SDT", function () {
 		try {
 			// Unlike getPack(), ensure() doesn't return early with the old
 			// pack -- once it resolves, the cache must already be current
-			assert.isTrue(await Zotero.SDT.ensure(item.id));
+			assert.isTrue(await Trellis.SDT.ensure(item.id));
 			assert.isTrue(workerStub.calledOnce);
 			assert.deepEqual(
 				await IOUtils.read(getSDTCachePath(item)),
@@ -219,10 +219,10 @@ describe("Zotero.SDT", function () {
 		let item = await importFileAttachment('test.pdf');
 		await OS.File.remove(getSDTCachePath(item), { ignoreAbsent: true });
 
-		let workerStub = sinon.stub(Zotero.PDFWorker, 'getStructuredDocumentText')
+		let workerStub = sinon.stub(Trellis.PDFWorker, 'getStructuredDocumentText')
 			.rejects(new Error('Extraction failure'));
 		try {
-			assert.isFalse(await Zotero.SDT.ensure(item.id));
+			assert.isFalse(await Trellis.SDT.ensure(item.id));
 		}
 		finally {
 			workerStub.restore();
@@ -231,7 +231,7 @@ describe("Zotero.SDT", function () {
 
 	it("should return unavailable for unsupported items", async function () {
 		let item = await importFileAttachment('test.txt');
-		let result = await Zotero.SDT.getPack(item.id);
+		let result = await Trellis.SDT.getPack(item.id);
 		assert.isFalse(result.ok);
 		assert.equal(result.reason, 'unavailable');
 	});
@@ -254,14 +254,14 @@ describe("Zotero.SDT", function () {
 
 		// getReader() should return a parsed pack from the cache without
 		// re-extracting
-		let reader = await Zotero.SDT.getReader(item.id);
+		let reader = await Trellis.SDT.getReader(item.id);
 		assert.isOk(reader);
 		let metadata = await reader.getMetadata();
 		assert.equal(metadata.source.hash, TEST_PDF_HASH);
 	});
 
 	function getSDTCachePath(item) {
-		return OS.Path.join(Zotero.Attachments.getStorageDirectory(item).path, SDT_CACHE_FILE_NAME);
+		return OS.Path.join(Trellis.Attachments.getStorageDirectory(item).path, SDT_CACHE_FILE_NAME);
 	}
 
 	async function writeTestSDTCache(item, bytes = getTestSDTPackBytes()) {
@@ -275,7 +275,7 @@ describe("Zotero.SDT", function () {
 	}
 
 	async function getValidPack(item) {
-		let result = await Zotero.SDT.getPack(item.id);
+		let result = await Trellis.SDT.getPack(item.id);
 		assert.isTrue(result.ok, result.reason);
 		return result;
 	}
@@ -286,7 +286,7 @@ describe("Zotero.SDT", function () {
 
 	async function waitForStubCall(stub) {
 		while (!stub.called) {
-			await Zotero.Promise.delay(5);
+			await Trellis.Promise.delay(5);
 		}
 	}
 
@@ -297,12 +297,12 @@ describe("Zotero.SDT", function () {
 			if (bytes.length === expected.length && bytes.every((b, i) => b === expected[i])) {
 				return;
 			}
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 		}
 	}
 
 	function stubStructuredDocumentTextWorker() {
-		return sinon.stub(Zotero.PDFWorker, 'getStructuredDocumentText')
+		return sinon.stub(Trellis.PDFWorker, 'getStructuredDocumentText')
 			.callsFake(async () => ({ buf: getTestSDTPackBuffer() }));
 	}
 

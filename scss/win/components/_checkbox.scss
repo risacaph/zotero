@@ -1,10 +1,10 @@
 @mixin -make-checkbox-icon($state) {
 	& :is(.checkbox-check) {
 		@include focus-states using ($color) {
-			background-image: url('chrome://zotero/skin/win/#{$color}/checkbox-#{$state}.svg');
+			background-image: url('chrome://trellis/skin/win/#{$color}/checkbox-#{$state}.svg');
 	
 			&[checked=true] {
-				background-image: url('chrome://zotero/skin/win/#{$color}/checkbox-selected-#{$state}.svg');
+				background-image: url('chrome://trellis/skin/win/#{$color}/checkbox-selected-#{$state}.svg');
 			}
 		}
 	}

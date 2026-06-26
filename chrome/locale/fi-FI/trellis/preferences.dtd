@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellisn asetukset">
+
+<!ENTITY trellis.preferences.helpButton.label "Ohje">
+
+<!ENTITY trellis.preferences.default "Oletus:">
+<!ENTITY trellis.preferences.items "nimikkeet">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Oma asetus...">
+
+<!ENTITY trellis.preferences.prefpane.general "Yleistä">
+
+<!ENTITY trellis.preferences.interface "Käyttöliittymä">
+<!ENTITY trellis.preferences.fileHandling "Tiedostojen käsittely">
+<!ENTITY trellis.preferences.automaticSnapshots "Ota tilannekuvat automaattisesti luotaessa nimikettä web-sivusta">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Liitä automaattisesti asiaankuuluvat PDF:t ja muut tiedostot">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Nimeä uudelleen linkitetyt tiedostot">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Avaa PDF:t ohjelmalla">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Järjestelmän oletus">
+
+<!ENTITY trellis.preferences.miscellaneous "Sekalaista">
+<!ENTITY trellis.preferences.autoUpdate "Tarkista sivutulkkien ja tyylien päivitykset automaattisesti">
+<!ENTITY trellis.preferences.updateNow "Päivitä nyt">
+<!ENTITY trellis.preferences.reportTranslationFailure "Ilmoita toimimattomista sivutulkeista">
+<!ENTITY trellis.preferences.parseRISRefer "Käytä Trellisa ladattujen BibTeX/Refer-tiedostojen avaamiseen">
+<!ENTITY trellis.preferences.automaticTags "Merkitse automaattisesti nimikkeisiin avainsanat ja otsikot">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Poista roskakorista automaattisesti nimikkeet, jotka poistettiin yli">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "päivää sitten">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Näytä välilehdet">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Tekijä - Vuosi - Otsikko">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Otsikko - Tekijä - Vuosi">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Tiedostonimi">
+
+<!ENTITY trellis.preferences.groups "Ryhmät">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Nimikkeitä kirjastojen välillä kopioitaessa sisällytä:">
+<!ENTITY trellis.preferences.groups.childNotes "niiden alaiset muistiinpanot">
+<!ENTITY trellis.preferences.groups.childFiles "niiden alaiset tilannekuvat ja tuodut tiedostot">
+<!ENTITY trellis.preferences.groups.annotations "huomautukset">
+<!ENTITY trellis.preferences.groups.childLinks "niiden alaiset linkit">
+<!ENTITY trellis.preferences.groups.tags "avainsanat">
+
+<!ENTITY trellis.preferences.feeds "Syötteet">
+<!ENTITY trellis.preferences.feeds.sorting.label "Lajittelu:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Uusimmat ensin">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Vanhimmat ensin">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Syötteen oletukset">
+
+<!ENTITY trellis.preferences.prefpane.sync "Synkronointi">
+<!ENTITY trellis.preferences.sync.username "Käyttäjätunnus:">
+<!ENTITY trellis.preferences.sync.password "Salasana:">
+<!ENTITY trellis.preferences.sync.createAccount "Luo käyttäjätili">
+<!ENTITY trellis.preferences.sync.lostPassword "Unohditko salasanan?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Synkronoi automaattisesti">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Synkronisoi kokotekstit">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis voi synkronisoida kirjastossasi olevien tiedostojen kokotekstisisällön trellis.orgiin ja linkattuihin laitteisiin, joten voi helposti hakea tietoja missä vain. Tiedostojen kokotekstisisältöä ei jaeta julkisesti.">
+<!ENTITY trellis.preferences.sync.about "Tietoa synkronoinnista">
+<!ENTITY trellis.preferences.sync.fileSyncing "Tiedostojen synkronointi">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "Osoite:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Synkronoi liitetiedostot Omaan Kirjastoon käyttäen protokollaa">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Lataa tiedostot">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "synkronoinnin yhteydessä">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "tarvittaessa">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Todenna palvelin">
+<!ENTITY trellis.preferences.sync.librariesToSync "Synkronoitavat kirjastot">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Valitse kirjastot...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Synkronoi">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Kirjasto">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Seuraavat toiminnot ovat tarpeen vain äärimmäisen harvinaisissa tilanteissa, eikä niitä tulisi käyttää tavalliseen virheenetsintään. Monissa tapauksissa asetusten nollaus voi aiheuttaa lisää ongelmia. Katso ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Synkroinnin nollauksen asetukset">
+<!ENTITY trellis.preferences.sync.reset.warning3 "saadaksesi lisätietoja.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Tyhjennä synkronointihistoria">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Yhdistä paikalliset tiedot palvelimella olevien kanssa, välittämättä synkronointihistoriasta">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Palauta tiedot verkkokirjastosta">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Korvaa Trellisn paikalliset tiedot verkkokirjastossa olevilla tiedoilla.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Korvaa verkkokirjasto">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Korvaa verkkokirjastossa olevat tiedot Trellisn paikallisilla tiedoilla.">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Poista tiedostojen synkronointihistoria">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Vertaa kaikkia liitetiedostoja tallennuspalvelun kanssa">
+<!ENTITY trellis.preferences.sync.reset "Palauta alkutilaan">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Näytä synkroinnin nollauksen asetukset...">
+<!ENTITY trellis.preferences.sync.reset.button "Palauta alkutilaan...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Haku">
+<!ENTITY trellis.preferences.search.fulltextCache "Kokotekstihaun välimuisti">
+<!ENTITY trellis.preferences.search.indexStats "Indeksointitilastot">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indeksoitu:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Osittain indeksoitu:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Indeksoimatta:">
+<!ENTITY trellis.preferences.search.indexStats.words "Sanoja:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Indeksoitavien merkkien enimmäismäärä tiedostoa kohden:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Indeksoitavien sivujen enimmäismäärä tiedostoa kohden:">
+
+<!ENTITY trellis.preferences.prefpane.export "Vienti">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Viittausasetukset">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Liitä painettujen artikkeleiden internet-osoitteet viitteisiin">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Kun tämä valinta on pois päältä, Trellis lisää internet-osoitteet tieteellisten lehtien, aikakauslehtien ja sanomalehtien artikkeleihin vain silloin kun niiden sivunumeroja ei ole määritelty.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Pikakopiointi">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Nimikkeen muoto:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Muistiinpanon muoto:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopioi HTML-muodossa">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Sivustokohtaiset asetukset:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Verkkotunnus/polku">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(esim. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Muoto">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Kieli">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Estä pikakopiointi raahattaessa yli ">
+
+<!ENTITY trellis.preferences.prefpane.cite "Viitteet">
+<!ENTITY trellis.preferences.cite.wordProcessors "Tekstinkäsittelyohjelmat">
+<!ENTITY trellis.preferences.styleEditor "Tyylieditori">
+<!ENTITY trellis.preferences.stylePreview "Tyylin esikatselu">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Tyylien hallinta">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Nimi">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Päivitetty">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Tallenna Trellison (osoitepalkin kuvake)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Kohdista kirjastonäkymään">
+<!ENTITY trellis.preferences.keys.quicksearch "Pikahaku">
+<!ENTITY trellis.preferences.keys.newItem "Luo uusi nimike">
+<!ENTITY trellis.preferences.keys.newNote "Luo uusi muistiinpano">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Merkitse kaikki syötteen kohteet luetuiksi/lukemattomiksi">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopioi valittujen nimikkeiden sitaatit leikepöydälle">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopioi valitut nimikkeet leikepöydälle">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Tuo leikepöydältä">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Muutokset tulevat voimaan uudelleenkäynnistyksen jälkeen">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Välityspalvelimet">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Välityspalvelinten asetukset">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis välittää huomaamattomasti pyyntöjä tallennettujen välityspalvelinten kautta. Katso">
+<!ENTITY trellis.preferences.proxies.desc_link "välityspalvelinten ohjeesta">
+<!ENTITY trellis.preferences.proxies.desc_after_link "lisätietoja.">
+<!ENTITY trellis.preferences.proxies.transparent "Käytä välityspalvelinta uudelleenohjaukseen">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Tunnista välitetyt resurssit automaattisesti">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Näytä ilmoitus uudelleenohjattaessa välityspalvelimen kautta">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Poista käytöstä välitetty uudelleenohjaus, kun palvelinnimessä on">
+<!ENTITY trellis.preferences.proxies.configured "Konfiguroidut välityspalvelimet">
+<!ENTITY trellis.preferences.proxies.hostname "Palvelimen nimi">
+<!ENTITY trellis.preferences.proxies.scheme "Skeema">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Monisivustoinen">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Liitä uudet isännät automaattisesti">
+<!ENTITY trellis.preferences.proxies.variables "Voit käyttää seuraavia muuttujia välityspalvelinskeemassa:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Välitetyn sivuston isäntänimi (esim. www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Välitetyn sivun polku ilman alussa olevaa kauttaviivaa (esim. about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Hakemistopolku (esim. about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Tiedostonimi (esim. index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Mikä tahansa merkkijono">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Lisäasetukset">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Tiedostot ja kansiot">
+<!ENTITY trellis.preferences.advanced.keys "Pikanäppäimet">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Edistyneet asetukset">
+
+<!ENTITY trellis.preferences.prefpane.locate "Paikanna">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Artikkelihakumoottorin hallinta">
+<!ENTITY trellis.preferences.locate.description "Kuvaus">
+<!ENTITY trellis.preferences.locate.name "Nimi">
+<!ENTITY trellis.preferences.locate.addDescription "Lisätäksesi hakukoneen listan ulkopuolelta, käy kyseisen hakukoneen verkkosivulla ja valitse &quot;Lisää&quot; Trellisn &quot;Etsi&quot;-valikosta.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Palauta oletusarvot">
+
+<!ENTITY trellis.preferences.charset "Merkistökoodaus">
+<!ENTITY trellis.preferences.charset.importCharset "Tuo merkistökoodaus">
+<!ENTITY trellis.preferences.charset.displayExportOption "Näytä merkistökoodaus vietäessä">
+
+<!ENTITY trellis.preferences.dataDir "Datahakemiston sijainti">
+<!ENTITY trellis.preferences.dataDir.useProfile "Käytä profiilikansiota">
+<!ENTITY trellis.preferences.dataDir.custom "Oma asetus:">
+<!ENTITY trellis.preferences.dataDir.choose "Valitse...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(määritetään komentoriviltä)">
+<!ENTITY trellis.preferences.dataDir.reveal "Näytä datahakemisto">
+<!ENTITY trellis.preferences.dataDir.migrate "Siirrä uuteen vakiosijaintiin...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Linkattujen liitteiden juurikansio">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis käyttää suhteellisia polkuja viitatakseen tiedostoliitteisiin juurikansiossa, joten voit käyttää tiedostoja eri tietokoneilla, kunhan tiedostorakenne juurikansion sisällä pysyy samana.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Juurikansio:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Valitse...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Palauta absoluuttiset polut...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Tietokannan huolto">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Tarkista tietokannan eheys">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Nollaa sivustotulkit ja tyylit...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Nollaa sivustotulkit...">
+
+<!ENTITY trellis.preferences.configEditor "Asetuseditori">

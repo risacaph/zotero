@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Kjörstillingar Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "Hjálp">
+
+<!ENTITY trellis.preferences.default "Sjálfgefið:">
+<!ENTITY trellis.preferences.items "færslur">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Sérsniðið…">
+
+<!ENTITY trellis.preferences.prefpane.general "Almennt">
+
+<!ENTITY trellis.preferences.interface "Viðmót">
+<!ENTITY trellis.preferences.fileHandling "Meðhöndlun skráa">
+<!ENTITY trellis.preferences.automaticSnapshots "Taka sjálfkrafa mynd af skjá þegar vefsíðufærslur eru búnar til">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Hengja sjálfkrafa PDF-skrár og önnur gögn við færslur þegar þær eru vistaðar">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Endurnefna tengdar skrár">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Opna PDF-skrár með">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Sjálfgefið í kerfinu">
+
+<!ENTITY trellis.preferences.miscellaneous "Ýmislegt">
+<!ENTITY trellis.preferences.autoUpdate "Sjálfvirkt fylgjast með uppfærslum á þýðendum og leturstílum">
+<!ENTITY trellis.preferences.updateNow "Uppfæra núna">
+<!ENTITY trellis.preferences.reportTranslationFailure "Tilkynna rangar vísanir í þýðingar">
+<!ENTITY trellis.preferences.parseRISRefer "Nota Trellis fyrir BibTex/RIS/Refer skrár sem hlaðið er niður">
+<!ENTITY trellis.preferences.automaticTags "Sjálfvirkt bæta við merkjum í færslur í samræmi við stikkorð og fyrirsagnir þeirra">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Sjálfvirkt fjarlægja færslur í ruslinu sem voru settar þar fyrir meira en">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "dögum síðan">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Birta flipa sem">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Höfundur - Ár - Titill">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Titill - Höfundur - Ár">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Skráarheiti">
+
+<!ENTITY trellis.preferences.groups "Hópar">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Þegar færslur eru afritaðar frá einu safni til annars, þá skal einnig afrita:">
+<!ENTITY trellis.preferences.groups.childNotes "undirathugasemdir">
+<!ENTITY trellis.preferences.groups.childFiles "undirskjámyndir og tengdar skrár">
+<!ENTITY trellis.preferences.groups.annotations "glósur">
+<!ENTITY trellis.preferences.groups.childLinks "undirslóðir">
+<!ENTITY trellis.preferences.groups.tags "merki">
+
+<!ENTITY trellis.preferences.feeds "Streymi">
+<!ENTITY trellis.preferences.feeds.sorting.label "Röðun:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Nýjustu færslur fyrst">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Elstu færslur fyrst">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Sjálfgefnar stillingar streymis">
+
+<!ENTITY trellis.preferences.prefpane.sync "Samstilla">
+<!ENTITY trellis.preferences.sync.username "Notandanafn:">
+<!ENTITY trellis.preferences.sync.password "Lykilorð:">
+<!ENTITY trellis.preferences.sync.createAccount "Nýr notandi">
+<!ENTITY trellis.preferences.sync.lostPassword "Týnt lykilorð?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Samstilla sjálfkrafa">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Samstilla efni skjala">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis getur samstillt efni skjala í Trellis safninu þínu við trellis.org og önnur nettengd tæki sem gerir þér kleift að leita að skránum þínum hvar sem þú ert. Innihaldi skjalanna er ekki deilt með öðrum.">
+<!ENTITY trellis.preferences.sync.about "Um samstillingu">
+<!ENTITY trellis.preferences.sync.fileSyncing "Samstilling skráa">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "slóð:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Samstilla viðhengi í Mínu færslusafni með">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Hlaða niður skrám">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "um leið og gagnasamstilling á sér stað">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "eftir þörfum">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Sannreyna netþjón">
+<!ENTITY trellis.preferences.sync.librariesToSync "Söfn sem á að samstilla">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Veldu söfn…">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Samstilla">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Færslusafn">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Aðgerðir hér fyrir neðan eru einungis notaðar í sjaldgæfum og sérhæfðum tilvikum og ætti ekki að beita almennt. Í mörgum tilvikum mun endurræsing valda viðbótar vandræðum. Sjá ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Stillingar vegna endurræsingar á samstillngu">
+<!ENTITY trellis.preferences.sync.reset.warning3 "til frekari upplýsinga">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Endurstilla forsögu gagnasamstillingar">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Sameina staðbundin Trellis gögn með gögnum á samhæfingarþjóni, án tillits til fyrri samhæfingaraðgerða.">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Endurheimta úr safni á netinu">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Overwrite local Trellis data with data from the online library.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Skipta út í safni á netinu">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Overwrite online library with local Trellis data">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Endurræsa forsögu skráasamstillingar">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Compare all attachment files with the storage service">
+<!ENTITY trellis.preferences.sync.reset "Endurræsa">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Sýna valkosti endurstillingar…">
+<!ENTITY trellis.preferences.sync.reset.button "Endurstilla…">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Leita">
+<!ENTITY trellis.preferences.search.fulltextCache "Geymslupláss fyrir textaskrár">
+<!ENTITY trellis.preferences.search.indexStats "Tölfræði gagnaskráa">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Skráð:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Hlutskráð:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Óskráð:">
+<!ENTITY trellis.preferences.search.indexStats.words "Orð:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Leyfilegur stafafjöldi til skráningar úr hverri skrá:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Leyfilegur síðufjöldi til skráningar úr hverri skrá:">
+
+<!ENTITY trellis.preferences.prefpane.export "Flytja út">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Tilvísunarstillingar">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Sýna vefslóð til ritverka í heimildaskrá">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Þegar þetta val er ekki virkjað, þá mun Trellis einungis birta vefslóð í fræðigreinar, tímaritsgreinar og dagblaðagreinar ef ekkert síðubil er tiltekið.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Flýtiafrit">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Snið færslna:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Snið athugasemdar:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Afrita á HTML-sniði">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Sértækar stillingar fyrir hvert vefsvæði:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Lén/Slóð">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(t.d. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Snið">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Tungumál">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Afvirkja flýtiafrit þegar dregnar eru fleiri en">
+
+<!ENTITY trellis.preferences.prefpane.cite "Tilvísun">
+<!ENTITY trellis.preferences.cite.wordProcessors "Ritvinnsluforrit">
+<!ENTITY trellis.preferences.styleEditor "Breyta stíl">
+<!ENTITY trellis.preferences.stylePreview "Forskoðun stíls">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Umsýsla leturstíla">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Titill">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Uppfært">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "Tilvísunarmál - CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Vista í Trellis (tákn birt í vefslóðareit)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Áhersla á safnaglugga">
+<!ENTITY trellis.preferences.keys.quicksearch "Flýtileit">
+<!ENTITY trellis.preferences.keys.newItem "Ný færsla">
+<!ENTITY trellis.preferences.keys.newNote "Ný athugasemd">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Merkja öll atriði í streymi sem lesin/ólesin">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Afrita valdar tilvísunarfærslur á klippispjald">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Afrita valdar færslur á klippispjald">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Flytja inn af klippispjaldi">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Breytingar taka gildi eftir endurræsingu">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Milliþjónar">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Valkostir milliþjóna…">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis mun gagnsætt framvísa beiðnum til vistaðra milliþjóna. Sjá">
+<!ENTITY trellis.preferences.proxies.desc_link "fylgigögn um milliþjóna">
+<!ENTITY trellis.preferences.proxies.desc_after_link "til frekari upplýsinga.">
+<!ENTITY trellis.preferences.proxies.transparent "Virkja framvísun í gegnum milliþjón">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Sjálfvirk auðkenning á milliþjónagögnum">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Tilkynna þegar framsent er gegnum milliþjón (proxy)">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Afvirkja framvísun á milliþjóna þegar mitt nafn á léni inniheldur">
+<!ENTITY trellis.preferences.proxies.configured "Stilltir milliþjónar">
+<!ENTITY trellis.preferences.proxies.hostname "Nafn hýsitölvu">
+<!ENTITY trellis.preferences.proxies.scheme "Skipulag">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Fjöl-setur">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Sjálfvirkt tengjast nýjum hýsitölvum">
+<!ENTITY trellis.preferences.proxies.variables "Þú mátt nota eftirtaldar breytur í milliþjónaskipulagi:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Nafn hýsitölvu sem er leppuð með milliþjóni (t.d. www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Slóðin á leppuðu síðuna en án upphafsskástriks (t.d. about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Slóðin í möppuna (t.d. about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Skráarheitið (t.d. index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Hvaða textastrengur sem er">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Ítarlegt">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Skrár og möppur">
+<!ENTITY trellis.preferences.advanced.keys "Flýtivísanir">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Ítarlegir valkostir">
+
+<!ENTITY trellis.preferences.prefpane.locate "Staðsetja">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Stýring á uppflettikerfi greina">
+<!ENTITY trellis.preferences.locate.description "Lýsing">
+<!ENTITY trellis.preferences.locate.name "Nafn">
+<!ENTITY trellis.preferences.locate.addDescription "Til að bæta við leitarvél sem er ekki á listanum, þá er fyrst vafrað á vefsíðu leitarvélarinnar og svo valið &quot;Bæta við&quot; úr staðsetningar vallista Trellis.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Endurheimta upphafsstillingar">
+
+<!ENTITY trellis.preferences.charset "Leturtegund">
+<!ENTITY trellis.preferences.charset.importCharset "Flytja inn leturtegund">
+<!ENTITY trellis.preferences.charset.displayExportOption "Sýna aðgerðir um leturtegund við útskrift færslna">
+
+<!ENTITY trellis.preferences.dataDir "Storage Location">
+<!ENTITY trellis.preferences.dataDir.useProfile "Nota forstillta möppu">
+<!ENTITY trellis.preferences.dataDir.custom "Sérsniðið:">
+<!ENTITY trellis.preferences.dataDir.choose "Veldu…">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(tilgreint á skipanalínu)">
+<!ENTITY trellis.preferences.dataDir.reveal "Sýna gagnamöppu">
+<!ENTITY trellis.preferences.dataDir.migrate "Færa í nýja sjálfgefna staðsetningu...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Grunnmappa fyrir tengd viðhengi">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis mun nota afstæðar slóðir fyrir tengd viðhengi innan grunnmöppu, sem leyfir þér að nálgast skrár á mismunandi tölvum svo framarlega sem skráauppbygging í grunnmöppu er ávallt hin sama.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Grunnmappa:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Veldu…">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Umbreyta í algildar slóðir…">
+
+<!ENTITY trellis.preferences.dbMaintenance "Viðhald gagnagrunns">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Ahuga ástand gagnagrunns">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Endurræsa þýðendur og stíla…">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Endurræsa þýðendur…">
+
+<!ENTITY trellis.preferences.configEditor "Stillingarritill">

@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "verzija">
+<!ENTITY trellis.whatsNew "Što je novo">
+<!ENTITY trellis.createdby "Izradili:">
+<!ENTITY trellis.director "Ravnatelj:">
+<!ENTITY trellis.directors "Ravnatelji:">
+<!ENTITY trellis.developers "Razvojni tim:">
+<!ENTITY trellis.alumni "Alumni:">
+<!ENTITY trellis.about.localizations "Lokalizacije:">
+<!ENTITY trellis.about.additionalSoftware "Programi treće strane:">
+<!ENTITY trellis.thanks "Posebna zahvala:">
+<!ENTITY trellis.about.close "Zatvori">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Više zasluga i zahvala">
+<!ENTITY trellis.citationProcessing "Citiranje i bibliografska obrada">

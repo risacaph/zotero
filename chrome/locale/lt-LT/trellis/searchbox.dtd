@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Pavadinimas:">
+
+<!ENTITY trellis.search.searchInLibrary "Ieškoti bibliotekoje">
+
+<!ENTITY trellis.search.joinMode.prefix "Taikyti">
+<!ENTITY trellis.search.joinMode.any "bet kuriuos">
+<!ENTITY trellis.search.joinMode.all "visus">
+<!ENTITY trellis.search.joinMode.suffix "paieškos kriterijus:">
+
+<!ENTITY trellis.search.recursive.label "Ieškoti poaplankiuose">
+<!ENTITY trellis.search.noChildren "Nerodyti priedų">
+<!ENTITY trellis.search.includeParentsAndChildren "Įtraukti pagrindinius įrašus ir jų priedus">
+
+<!ENTITY trellis.search.textModes.phrase "Frazė">
+<!ENTITY trellis.search.textModes.phraseBinary "Frazė (įsk. dvejetaines rinkmenas)">
+<!ENTITY trellis.search.textModes.regexp "Reguliarusis reiškinys">
+<!ENTITY trellis.search.textModes.regexpCS "Reguliarusis reiškinys (skiriant didž. ir maž. raides)">
+
+<!ENTITY trellis.search.date.units.days "d.">
+<!ENTITY trellis.search.date.units.months "mėn.">
+<!ENTITY trellis.search.date.units.years "m.">
+
+<!ENTITY trellis.search.search "Ieškoti">
+<!ENTITY trellis.search.clear "Išvalyti">
+<!ENTITY trellis.search.saveSearch "Įsiminti paiešką">

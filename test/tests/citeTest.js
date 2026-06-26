@@ -1,33 +1,33 @@
-describe("Zotero.Cite", function () {
+describe("Trellis.Cite", function () {
 	after(function () {
-		Zotero.locale = 'en-US';
+		Trellis.locale = 'en-US';
 	});
 	
 	describe("#getLocatorString()", function () {
 		it("should get 'book' in en-US", function () {
-			Zotero.locale = 'en-US';
-			assert.equal(Zotero.Cite.getLocatorString('book'), 'Book');
+			Trellis.locale = 'en-US';
+			assert.equal(Trellis.Cite.getLocatorString('book'), 'Book');
 		});
 		
 		it("should get 'sub-verbo' in en-US", function () {
-			Zotero.locale = 'en-US';
-			assert.equal(Zotero.Cite.getLocatorString('sub-verbo'), 'Sub verbo');
+			Trellis.locale = 'en-US';
+			assert.equal(Trellis.Cite.getLocatorString('sub-verbo'), 'Sub verbo');
 		});
 		
 		it("should get 'timestamp' in en-US", function () {
-			Zotero.locale = 'en-US';
-			assert.equal(Zotero.Cite.getLocatorString('timestamp'), 'Timestamp');
+			Trellis.locale = 'en-US';
+			assert.equal(Trellis.Cite.getLocatorString('timestamp'), 'Timestamp');
 		});
 		
 		it("should get 'book' in fr-FR", function () {
-			Zotero.locale = 'fr-FR';
-			assert.equal(Zotero.Cite.getLocatorString('book'), 'Livre');
+			Trellis.locale = 'fr-FR';
+			assert.equal(Trellis.Cite.getLocatorString('book'), 'Livre');
 		});
 	});
 	
 	describe("#retrieveLocale()", function () {
 		it("should handle locale with script code", async function () {
-			var item = new Zotero.Item;
+			var item = new Trellis.Item;
 			item.fromJSON({
 				itemType: "book",
 				title: "Test Book",
@@ -35,10 +35,10 @@ describe("Zotero.Cite", function () {
 			});
 			await item.saveTx();
 			
-			var style = Zotero.Styles.get('http://www.zotero.org/styles/chicago-notes-bibliography');
+			var style = Trellis.Styles.get('http://www.trellis.org/styles/chicago-notes-bibliography');
 			var cslEngine = style.getCiteProc('sr-Latn-RS');
 			
-			var output = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, [item], "text");
+			var output = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, [item], "text");
 			assert.include(output, 'izd');
 		});
 	});
@@ -65,43 +65,43 @@ describe("Zotero.Cite", function () {
 				+ '\n\n'
 				+ "Ignore other strings: they're not fields\n"
 				+ 'This is just some text.';
-			assert.equal(Zotero.Cite.extraToCSL(str1), str2);
+			assert.equal(Trellis.Cite.extraToCSL(str1), str2);
 		});
 		
-		it("should convert Zotero field names to CSL fields", function () {
+		it("should convert Trellis field names to CSL fields", function () {
 			var str1 = 'publicationTitle: My Publication';
 			var str2 = 'container-title: My Publication';
-			assert.equal(Zotero.Cite.extraToCSL(str1), str2);
+			assert.equal(Trellis.Cite.extraToCSL(str1), str2);
 		});
 		
-		it("should convert capitalized and spaced Zotero field names to CSL fields", function () {
+		it("should convert capitalized and spaced Trellis field names to CSL fields", function () {
 			var str1 = 'Publication Title: My Publication\nDate: 1989';
 			var str2 = 'container-title: My Publication\nissued: 1989';
-			assert.equal(Zotero.Cite.extraToCSL(str1), str2);
+			assert.equal(Trellis.Cite.extraToCSL(str1), str2);
 		});
 		
 		it("should convert lowercase 'doi' to uppercase", function () {
 			var str1 = 'doi: 10.0/abc';
 			var str2 = 'DOI: 10.0/abc';
-			assert.equal(Zotero.Cite.extraToCSL(str1), str2);
+			assert.equal(Trellis.Cite.extraToCSL(str1), str2);
 		});
 		
 		it("should handle a single-character field name", function () {
 			var str = 'a: ';
-			assert.equal(Zotero.Cite.extraToCSL(str), str);
+			assert.equal(Trellis.Cite.extraToCSL(str), str);
 		});
 	});
 	
 	it("shouldn't hang during disambiguation (https://github.com/Juris-M/citeproc-js/issues/179)", async function () {
-		var item1 = new Zotero.Item;
+		var item1 = new Trellis.Item;
 		item1.fromJSON({"key":"WB338HGS","version":0,"itemType":"journalArticle","creators":[{"firstName":"Carl G.","lastName":"de Boer","creatorType":"author"},{"firstName":"John P.","lastName":"Ray","creatorType":"author"},{"firstName":"Nir","lastName":"Hacohen","creatorType":"author"},{"firstName":"Aviv","lastName":"Regev","creatorType":"author"}],"tags":[{"tag":"CRISPR/Cas9","type":1},{"tag":"Enhancers","type":1},{"tag":"Gene regulation","type":1},{"tag":"Transcriptional regulation","type":1},{"tag":"Gene expression","type":1},{"tag":"Pooled screen","type":1},{"tag":"R","type":1}],"date":"June 3, 2020","title":"MAUDE: inferring expression changes in sorting-based CRISPR screens","journalAbbreviation":"Genome Biology","pages":"134","volume":"21","issue":"1","abstractNote":"","ISSN":"1474-760X","url":"https://doi.org/10.1186/s13059-020-02046-8","DOI":"10.1186/s13059-020-02046-8","publicationTitle":"Genome Biology","libraryCatalog":"BioMed Central","accessDate":"2021-02-17T02:40:40Z","shortTitle":"MAUDE"});
 		await item1.saveTx();
-		var item2 = new Zotero.Item;
+		var item2 = new Trellis.Item;
 		item2.fromJSON({"key":"U2L8PVTW","version":0,"itemType":"journalArticle","creators":[{"firstName":"Carl G.","lastName":"de Boer","creatorType":"author"},{"firstName":"Eeshit Dhaval","lastName":"Vaishnav","creatorType":"author"},{"firstName":"Ronen","lastName":"Sadeh","creatorType":"author"},{"firstName":"Esteban Luis","lastName":"Abeyta","creatorType":"author"},{"firstName":"Nir","lastName":"Friedman","creatorType":"author"},{"firstName":"Aviv","lastName":"Regev","creatorType":"author"}],"tags":[],"title":"Deciphering eukaryotic gene-regulatory logic with 100 million random promoters","publicationTitle":"Nature Biotechnology","rights":"2019 The Author(s), under exclusive licence to Springer Nature America, Inc.","volume":"38","issue":"1","pages":"56-65","date":"2020-01","DOI":"10.1038/s41587-019-0315-8","ISSN":"1546-1696","url":"https://www.nature.com/articles/s41587-019-0315-8","abstractNote":"","language":"en","libraryCatalog":"www.nature.com","accessDate":"2021-02-17T02:40:52Z"});
 		await item2.saveTx();
 		var items = [item1, item2];
-		var style = Zotero.Styles.get('http://www.zotero.org/styles/elsevier-harvard');
+		var style = Trellis.Styles.get('http://www.trellis.org/styles/elsevier-harvard');
 		var cslEngine = style.getCiteProc('en-US');
-		var output = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "html");
+		var output = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, items, "html");
 	});
 });

@@ -1,0 +1,298 @@
+<!--
+    ***** BEGIN LICENSE BLOCK *****
+    
+    Copyright © 2006–2022 Center for History and New Media
+                     George Mason University, Fairfax, Virginia, USA
+                     http://trellis.org
+    
+    This file is part of Trellis.
+    
+    Trellis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    Trellis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+    
+    ***** END LICENSE BLOCK *****
+-->
+
+<vbox id="trellis-prefpane-advanced" onload="Trellis_Preferences.Advanced.init()">
+	<vbox class="main-section" id="trellis-prefpane-advanced-general-tab">
+		<groupbox id="trellis-prefpane-advanced-miscellaneous" aria-label="&trellis.preferences.miscellaneous;">
+			<label><html:h2>&trellis.preferences.miscellaneous;</html:h2></label>
+			
+			<hbox align="center">
+				<checkbox label="&trellis.preferences.autoUpdate;" preference="extensions.trellis.automaticScraperUpdates" native="true"/>
+				<button id="updateButton" label="&trellis.preferences.updateNow;"
+					oncommand="Trellis_Preferences.Advanced.updateTranslators()"/>
+			</hbox>
+			
+			<checkbox label="&trellis.preferences.reportTranslationFailure;" preference="extensions.trellis.reportTranslationFailure" native="true"/>
+			
+			<checkbox
+				id="trellis-prefpane-advanced-enable-local-api"
+				data-l10n-id="preferences-advanced-enable-local-api"
+				preference="extensions.trellis.httpServer.localAPI.enabled"
+				native="true"
+			/>
+			<vbox class="indented-pref">
+				<label
+					id="trellis-prefpane-advanced-local-api-available"
+					data-l10n-id="preferences-advanced-local-api-available"
+				>
+					<html:code class="local-api-url" data-l10n-name="url"/>
+				</label>
+				<hbox id="trellis-prefpane-advanced-server-disabled" align="center" hidden="true">
+					<label data-l10n-id="preferences-advanced-server-disabled"/>
+					<button
+						data-l10n-id="preferences-advanced-server-enable-and-restart"
+						oncommand="Trellis_Preferences.Advanced.enableServerForLocalAPI()"
+					/>
+				</hbox>
+			</vbox>
+		</groupbox>
+
+		<groupbox aria-labelledby="preferences-advanced-language-and-region-title">
+			<label><html:h2 id="preferences-advanced-language-and-region-title" data-l10n-id="preferences-advanced-language-and-region-title"/></label>
+
+			<checkbox
+				data-l10n-id="preferences-advanced-enable-bidi-ui"
+				preference="bidi.browser.ui"
+				native="true"
+			/>
+		</groupbox>
+	</vbox>
+	
+	<vbox class="main-section" role="group" aria-label="&trellis.preferences.advanced.filesAndFolders;">
+		<html:h1>&trellis.preferences.advanced.filesAndFolders;</html:h1>
+
+		<groupbox aria-label="&trellis.preferences.attachmentBaseDir.caption;" aria-description="&trellis.preferences.attachmentBaseDir.message;">
+			<label><html:h2>&trellis.preferences.attachmentBaseDir.caption;</html:h2></label>
+			
+			<vbox>
+				<description>&trellis.preferences.attachmentBaseDir.message;</description>
+			</vbox>
+			
+			<hbox align="center">
+				<label id="baseAttachmentPathLabel" value="&trellis.preferences.attachmentBaseDir.basePath;"/>
+				<html:input type="text" id="baseAttachmentPath"
+					preference="extensions.trellis.baseAttachmentPath"
+					readonly="true"
+					flex="1"
+					tabindex="0"
+					class="directory-path"
+					aria-labelledby="baseAttachmentPathLabel"/>
+				<button id="baseAttachmentPathButton"
+					label="&trellis.preferences.attachmentBaseDir.selectBasePath;"
+					oncommand="Trellis_Preferences.Attachment_Base_Directory.choosePath()"
+					aria-describedby="baseAttachmentPathLabel"/>
+			</hbox>
+			
+			<hbox class="preferences-button-group">
+				<button id="resetBasePath"
+					label="&trellis.preferences.attachmentBaseDir.resetBasePath;"
+					oncommand="Trellis_Preferences.Attachment_Base_Directory.clearPath()"
+					data-search-strings="attachmentBasePath.clearBasePath.message"/>
+			</hbox>
+			
+		</groupbox>
+		
+		<groupbox aria-label="&trellis.preferences.dataDir;">
+			<label><html:h2>&trellis.preferences.dataDir;</html:h2></label>
+			
+			<hbox align="center">
+				<label id="data-dir-label" data-l10n-id="preferences-advanced-data-dir" control="data-dir-path"></label>
+				<html:input type="text" id="data-dir-path" preference="extensions.trellis.dataDir"
+					readonly="true" class="directory-path"/>
+				<button id="change-data-dir" label="&trellis.preferences.attachmentBaseDir.selectBasePath;"
+					aria-describedby="data-dir-label"
+					oncommand="Trellis_Preferences.Advanced.dataDirUpdate(true)"/>
+			</hbox>
+			
+			<vbox id="command-line-data-dir" hidden="true">
+				<description id="command-line-data-dir-path"/>
+				<label value="&trellis.preferences.dataDir.viaCommandLine;"/>
+			</vbox>
+			
+			<hbox class="preferences-button-group">
+				<button label="&trellis.preferences.dataDir.reveal;"
+					oncommand="Trellis.DataDirectory.reveal()"/>
+				<button id="custom-data-dir" data-l10n-id="preferences-advanced-custom-data-dir"
+					oncommand="Trellis_Preferences.Advanced.dataDirUpdate(true)"/>
+				<button id="reset-data-dir" data-l10n-id="preferences-advanced-reset-data-dir"
+					oncommand="Trellis_Preferences.Advanced.dataDirUpdate(false)" aria-describedby="default-data-dir"/>
+				<html:input id="default-data-dir" data-l10n-id="preferences-advanced-default-data-dir"
+					data-l10n-attrs="value" readonly="true" class="directory-path"/>
+				<button id="migrate-data-dir" label="&trellis.preferences.dataDir.migrate;"
+					oncommand="Trellis_Preferences.Advanced.migrateDataDirectory()" hidden="true"/>
+			</hbox>
+		</groupbox>
+		
+		<groupbox aria-label="&trellis.preferences.dbMaintenance;">
+			<label><html:h2>&trellis.preferences.dbMaintenance;</html:h2></label>
+			
+			<hbox id="db-maintenance-options">
+				<button label="&trellis.preferences.dbMaintenance.integrityCheck;"
+					oncommand="Trellis_Preferences.Advanced.runIntegrityCheck(this)"/>
+				<button id="reset-translators-button"
+					label="&trellis.preferences.dbMaintenance.resetTranslators;"
+					oncommand="Trellis_Preferences.Advanced.resetTranslators()"/>
+			</hbox>
+		</groupbox>
+	</vbox>
+
+	<html:div class="main-section" id="trellis-prefpane-advanced-keys-tab" role="group" aria-label="&trellis.preferences.advanced.keys;">
+		<html:h1>&trellis.preferences.advanced.keys;</html:h1>
+	
+		<html:div id="trellis-keys-grid">
+			<html:label for="textbox-newItem">&trellis.preferences.keys.newItem;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-newItem" maxlength="1" size="1" preference="extensions.trellis.keys.newItem"/>
+
+			<html:label for="textbox-newNote">&trellis.preferences.keys.newNote;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-newNote" maxlength="1" size="1" preference="extensions.trellis.keys.newNote"/>
+
+			<html:label for="textbox-library">&trellis.preferences.keys.focusLibrariesPane;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-library" maxlength="1" size="1" preference="extensions.trellis.keys.library"/>
+
+			<html:label for="textbox-quicksearch">&trellis.preferences.keys.quicksearch;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-quicksearch" maxlength="1" size="1" preference="extensions.trellis.keys.quicksearch"/>
+
+			<html:label for="textbox-copySelectedItemCitationsToClipboard">&trellis.preferences.keys.copySelectedItemCitationsToClipboard;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-copySelectedItemCitationsToClipboard" maxlength="1" size="1"
+					preference="extensions.trellis.keys.copySelectedItemCitationsToClipboard"
+					oninput="if (Trellis_Preferences.Export) { Trellis_Preferences.Export.updateQuickCopyInstructions(); }"/>
+
+			<html:label for="textbox-copySelectedItemsToClipboard">&trellis.preferences.keys.copySelectedItemsToClipboard;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-copySelectedItemsToClipboard" maxlength="1" size="1"
+					preference="extensions.trellis.keys.copySelectedItemsToClipboard"
+					oninput="if (Trellis_Preferences.Export) { Trellis_Preferences.Export.updateQuickCopyInstructions(); }"/>
+
+			<html:label for="textbox-toggleAllRead">&trellis.preferences.keys.toggleAllRead;</html:label>
+			<html:label class="modifier"/>
+			<html:input type="text" id="textbox-toggleAllRead" maxlength="1" size="1" preference="extensions.trellis.keys.toggleAllRead"/>
+		</html:div>
+		
+		<label class="statusLine" value="&trellis.preferences.keys.changesTakeEffect;"/>
+		
+		<separator/>
+	</html:div>
+	<vbox class="main-section" id="trellis-prefpane-advanced-feeds-tab" role="group" aria-label="&trellis.preferences.feeds;">
+		<html:h1>&trellis.preferences.feeds;</html:h1>
+
+		<groupbox>
+			<hbox>
+				<hbox align="center">
+					<label value="&trellis.preferences.feeds.sorting.label;" control="feed-sort"/>
+					<menulist id="feed-sort" preference="extensions.trellis.feeds.sortAscending" native="true">
+						<menupopup>
+							<menuitem label="&trellis.preferences.feeds.sorting.newest;" value="false"/>
+							<menuitem label="&trellis.preferences.feeds.sorting.oldest;" value="true"/>
+						</menupopup>
+					</menulist>
+				</hbox>
+			</hbox>
+		</groupbox>
+		
+		<groupbox id="trellis-prefpane-advanced-feeds-feedDefaults" aria-label="&trellis.preferences.feeds.feedDefaults;">
+			<label><html:h2>&trellis.preferences.feeds.feedDefaults;</html:h2></label>
+			<hbox>
+				<hbox align="center">
+					<label id="trellis-prefpane-feeds-refresh-label1" value="&trellis.feedSettings.refresh.label1;"/>
+					<html:input class="html-input" type="number" min="1" step="1" size="3" data-preference="feeds.defaultTTL"
+						aria-labelledby="trellis-prefpane-feeds-refresh-label1 trellis-prefpane-feeds-refresh-label2"/>
+					<label id="trellis-prefpane-feeds-refresh-label2" value="&trellis.feedSettings.refresh.label2;"/>
+				</hbox>
+			</hbox>
+			<hbox>
+				<hbox align="center">
+					<label id="trellis-prefpane-feeds-readAfter-label1" value="&trellis.feedSettings.cleanupReadAfter.label1;"/>
+					<html:input class="html-input" type="number" min="1" step="1" size="2" data-preference="feeds.defaultCleanupReadAfter"
+						aria-labelledby="trellis-prefpane-feeds-readAfter-label1 trellis-prefpane-feeds-readAfter-label2"/>
+					<label id="trellis-prefpane-feeds-readAfter-label2" value="&trellis.feedSettings.cleanupReadAfter.label2;"/>
+				</hbox>
+			</hbox>
+			<hbox>
+				<hbox align="center">
+					<label id="trellis-prefpane-feeds-unreadAfter-label1" value="&trellis.feedSettings.cleanupUnreadAfter.label1;"/>
+					<html:input class="html-input" type="number" min="1" step="1" size="2" data-preference="feeds.defaultCleanupUnreadAfter"
+						aria-labelledby="trellis-prefpane-feeds-unreadAfter-label1 trellis-prefpane-feeds-unreadAfter-label2"/>
+					<label id="trellis-prefpane-feeds-unreadAfter-label2" value="&trellis.feedSettings.cleanupUnreadAfter.label2;"/>
+				</hbox>
+			</hbox>
+		</groupbox>
+	</vbox>
+
+	<vbox class="main-section" role="group" aria-label="&trellis.preferences.prefpane.search;">
+		<html:h1>&trellis.preferences.prefpane.search;</html:h1>
+
+		<groupbox aria-label="&trellis.preferences.search.fulltextCache;">
+			<label><html:h2>&trellis.preferences.search.fulltextCache;</html:h2></label>
+			
+			<hbox>
+				<button id="fulltext-rebuildIndex" flex="1" oncommand="Trellis_Preferences.Advanced.rebuildIndexPrompt()"
+					data-search-strings="trellis.preferences.search.rebuildWarning"/>
+				<button id="fulltext-clearIndex" flex="1" oncommand="Trellis_Preferences.Advanced.clearIndexPrompt()"
+					data-search-strings="trellis.preferences.search.clearWarning"/>
+			</hbox>
+			
+			<separator/>
+			
+			<hbox align="center">
+				<html:label for="fulltext-maxLength">&trellis.preferences.fulltext.textMaxLength;</html:label>
+				<html:input id="fulltext-maxLength" type="text" size="10" preference="extensions.trellis.fulltext.textMaxLength"/>
+				<html:label>(&trellis.preferences.default; 500000)</html:label>
+			</hbox>
+	
+			<separator class="thin"/>
+	
+			<hbox align="center">
+				<html:label for="fulltext-pdfMaxPages">&trellis.preferences.fulltext.pdfMaxPages;</html:label>
+				<html:input id="fulltext-pdfMaxPages" type="text" size="5" preference="extensions.trellis.fulltext.pdfMaxPages"/>
+				<html:label>(&trellis.preferences.default; 100)</html:label>
+			</hbox>
+		</groupbox>
+		
+		<groupbox id="fulltext-stats" tabindex="0" aria-label="&trellis.preferences.search.indexStats;" aria-describedby="fulltext-stats-grid">
+			<label><html:h2>&trellis.preferences.search.indexStats;</html:h2></label>
+			
+			<vbox class="form-grid" id="fulltext-stats-grid">
+				<label value="&trellis.preferences.search.indexStats.indexed;"/>
+				<label id="fulltext-stats-indexed"/>
+	
+				<label value="&trellis.preferences.search.indexStats.partial;"/>
+				<label id="fulltext-stats-partial"/>
+	
+				<label value="&trellis.preferences.search.indexStats.unindexed;"/>
+				<label id="fulltext-stats-unindexed"/>
+	
+				<label value="&trellis.preferences.search.indexStats.words;"/>
+				<label id="fulltext-stats-words"/>
+			</vbox>
+		</groupbox>	
+	</vbox>
+	
+	<vbox>
+		<hbox id="trellis-prefpane-advanced-open-buttons" align="center">
+			<button id="config-editor"
+				label="&trellis.preferences.configEditor;"
+				oncommand="Trellis.openInViewer('about:config')"/>
+			<button id="memory-info"
+				label="Memory Info"
+				oncommand="Trellis.openInViewer('about:memory')"
+				hidden="true"/>
+		</hbox>
+	</vbox>
+</vbox>

@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Tak">
+<!ENTITY trellis.general.no "Nie">
+<!ENTITY trellis.general.optional "(Opcjonalne)">
+<!ENTITY trellis.general.note "Uwaga:">
+<!ENTITY trellis.general.selectAll "Zaznacz wszystkie">
+<!ENTITY trellis.general.deselectAll "Odznacz wszystkie">
+<!ENTITY trellis.general.edit "Edytuj">
+<!ENTITY trellis.general.delete "Usuń">
+<!ENTITY trellis.general.moveToTrash "Przenieś do Kosza">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Anuluj">
+<!ENTITY trellis.general.refresh "Odśwież">
+<!ENTITY trellis.general.saveAs "Zapisz jako...">
+<!ENTITY trellis.general.options "Opcje">
+<!ENTITY trellis.general.advancedOptions.label "Zaawansowane ustawienia">
+<!ENTITY trellis.general.tools "Narzędzia">
+<!ENTITY trellis.general.more "Więcej">
+<!ENTITY trellis.general.moreInformation "Więcej informacji">
+<!ENTITY trellis.general.loading "Wczytywanie...">
+<!ENTITY trellis.general.close "Zamknij">
+<!ENTITY trellis.general.minimize "Minimalizuj">
+<!ENTITY trellis.general.other "Inne...">
+<!ENTITY trellis.general.bigger "Większy">
+<!ENTITY trellis.general.smaller "Mniejszy">
+<!ENTITY trellis.general.reset "Przywróć">
+
+
+<!ENTITY trellis.errorReport.title "Raport błędów Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Proszę czekać, informacje o błędzie są wysyłane.">
+<!ENTITY trellis.errorReport.submitted "Informacje o błędzie zostały wysłane.">
+<!ENTITY trellis.errorReport.reportID "ID raportu:">
+<!ENTITY trellis.errorReport.postToForums "Proszę wysłać informację na forum Trellis (forums.trellis.org) z podaniem tego ID raportu, opisem problemu oraz wszystkmi krokami niezbędnymi do powtórzenia błędu.">
+<!ENTITY trellis.errorReport.notReviewed "Raporty błędów zwykle nie są przeglądane, jeśli nie zostaną zamieszczone na forum.">
+
+<!ENTITY trellis.upgrade.title "Kreator aktualizacji Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Nowa wersja Trellis została zainstalowana.">
+<!ENTITY trellis.upgrade.upgradeRequired "Baza danych Trellis musi zostać zaktualizowana, aby mogła współpracować z nową wersją programu.">
+<!ENTITY trellis.upgrade.autoBackup "Przed wprowadzeniem zmian automatycznie zostanie utworzona kopia zapasowa istniejącej bazy danych.">
+<!ENTITY trellis.upgrade.majorUpgrade "To jest duża aktualizacja.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Upewnij się, że zapoznałeś się z">
+<!ENTITY trellis.upgrade.majorUpgradeLink "instrukcją aktualizacji">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "przed kontynuacją.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Proszę poczekać na zakończenie procesu aktualizacji. Może to potrwać kilka minut.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Baza danych Trellis została pomyślnie zaktualizowana.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Przejrzyj">
+<!ENTITY trellis.upgrade.changeLogLink "opis zmian,">
+<!ENTITY trellis.upgrade.changeLogAfterLink "aby zobaczyć nowości w tej wersji.">
+
+<!ENTITY trellis.tabs.notes.label "Notatki">
+<!ENTITY trellis.tabs.attachments.label "Załączniki">
+
+<!ENTITY trellis.toolbar.duplicate.label "Pokaż duplikaty">
+<!ENTITY trellis.collections.showUnfiledItems "Pokaż Niepowiązane pliki">
+<!ENTITY trellis.collections.showRetractedItems "Pokaż wycofane elementy">
+
+<!ENTITY trellis.items.itemType "Typ elementu">
+<!ENTITY trellis.items.creator_column "Twórca">
+<!ENTITY trellis.items.year_column "Rok">
+<!ENTITY trellis.items.dateModified_column "Data modyfikacji">
+<!ENTITY trellis.items.moreColumns.label "Więcej kolumn">
+<!ENTITY trellis.items.restoreColumnOrder.label "Przywróć porządek kolumn">
+
+<!ENTITY trellis.items.menu.showInLibrary "Wyświetl w bibliotece">
+<!ENTITY trellis.items.menu.attach.note "Dodaj notatkę">
+<!ENTITY trellis.items.menu.attach "Dodaj załącznik">
+<!ENTITY trellis.items.menu.attach.link.uri "Dołącz odnośnik do URI...">
+<!ENTITY trellis.items.menu.attach.file "Dołącz zachowaną kopię pliku...">
+<!ENTITY trellis.items.menu.attach.fileLink "Dołącz odnośnik do pliku...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Przywróć do biblioteki">
+<!ENTITY trellis.items.menu.duplicateItem "Duplikuj element">
+<!ENTITY trellis.items.menu.mergeItems "Złącz elementy...">
+<!ENTITY trellis.items.menu.unrecognize "Cofnij pobieranie metadanych">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Wybierz wersję elementu, którą chcesz użyć jako element główny:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Wybierz pola, które chcesz zachować z innych wersji elementu:">
+
+<!ENTITY trellis.toolbar.newItem.label "Nowy element">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Więcej">
+<!ENTITY trellis.toolbar.lookup.label "Dodaj element(y) za pomocą identyfikatora">
+<!ENTITY trellis.toolbar.removeItem.label "Usuń element...">
+<!ENTITY trellis.toolbar.newGroup "Nowa grupa...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Nowa subkolekcja...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nowe zapisane wyszukiwanie...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Opróżnij Kosz">
+<!ENTITY trellis.toolbar.tagSelector.label "Wyświetl/Ukryj selektor etykiet">
+<!ENTITY trellis.toolbar.actions.label "Funkcje">
+<!ENTITY trellis.toolbar.import.label "Importuj...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importuj ze schowka">
+<!ENTITY trellis.toolbar.export.label "Eksportuj bibliotekę...">
+<!ENTITY trellis.toolbar.rtfScan.label "Skanowanie pliku RTF">
+<!ENTITY trellis.toolbar.preferences.label "Ustawienia...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Wsparcie i dokumentacja">
+<!ENTITY trellis.toolbar.about.label "Trellis - informacje">
+<!ENTITY trellis.toolbar.advancedSearch "Wyszukiwanie zaawansowane">
+<!ENTITY trellis.toolbar.openURL.label "Wyszukaj lokalnie">
+<!ENTITY trellis.toolbar.openURL.tooltip "Wyszukuje w katalogu lokalnej biblioteki">
+
+<!ENTITY trellis.toolbar.feeds.new "Nowy kanał">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Z URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Z OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Edytuj kanał...">
+
+<!ENTITY trellis.item.add "Dodaj">
+<!ENTITY trellis.item.attachment.file.show "Wyświetl plik">
+<!ENTITY trellis.item.textTransform "Przekształć tekst">
+<!ENTITY trellis.item.textTransform.titlecase "Kapitaliki">
+<!ENTITY trellis.item.textTransform.sentencecase "Jak w zdaniu">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Zamień imię i nazwisko">
+<!ENTITY trellis.item.creatorTransform.fixCase "Popraw wielkie litery">
+<!ENTITY trellis.item.copyAsURL "Kopiuj jako URL">
+<!ENTITY trellis.item.deletePermanently "Usuń trwale...">
+
+<!ENTITY trellis.item.tags.removeAll "Usuń wszystkie etykiety...">
+
+<!ENTITY trellis.toolbar.newNote "Nowa notatka">
+<!ENTITY trellis.toolbar.note.standalone "Nowa osobna notatka">
+<!ENTITY trellis.toolbar.note.child "Dodaj notatkę potomną">
+<!ENTITY trellis.toolbar.lookup "Wyszukaj za pomocą identyfikatora...">
+<!ENTITY trellis.toolbar.attachment.linked "Odnośnik do pliku...">
+<!ENTITY trellis.toolbar.attachment.add "Zapisz kopię pliku...">
+<!ENTITY trellis.toolbar.attachment.weblink "Zapisz odnośnik do aktywnej strony">
+<!ENTITY trellis.toolbar.attachment.snapshot "Zrób zrzut ekranu aktywnej strony">
+<!ENTITY trellis.toolbar.context.item "Element">
+<!ENTITY trellis.toolbar.context.notes "Notatki">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Brak etykiet do wyświetlenia">
+<!ENTITY trellis.tagSelector.loadingTags "Wczytywanie etykiet...">
+<!ENTITY trellis.tagSelector.showAutomatic "Wyświetl etykiety automatyczne">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Wyświetl wszystkie etykiety w tej bibliotece">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Usuń automatycznie nadane etykiety w tej bibliotece...">
+<!ENTITY trellis.tagSelector.clearAll "Odznacz wszystkie">
+<!ENTITY trellis.tagSelector.assignColor "Przypisz kolor...">
+<!ENTITY trellis.tagSelector.renameTag "Zmień nazwę etykiety...">
+<!ENTITY trellis.tagSelector.deleteTag "Usuń etykietę...">
+<!ENTITY trellis.tagSelector.splitTag "Podziel...">
+
+<!ENTITY trellis.tagColorChooser.title "Wybierz kolor i pozycję etykiety">
+<!ENTITY trellis.tagColorChooser.color "Kolor:">
+<!ENTITY trellis.tagColorChooser.position "Pozycja:">
+<!ENTITY trellis.tagColorChooser.setColor "Ustaw kolor">
+<!ENTITY trellis.tagColorChooser.removeColor "Usuń kolor">
+
+<!ENTITY trellis.lookup.description "Wprowadź numery ISBN, DOI, PMID, identyfikatory arXiv lub ADS Bibcode, aby dodać je do twojej biblioteki:">
+<!ENTITY trellis.lookup.button.search "Wyszukiwanie">
+
+<!ENTITY trellis.createParent.title "Utwórz element nadrzędny">
+<!ENTITY trellis.createParent.button.manual "Wprowadź ręcznie">
+
+<!ENTITY trellis.selectitems.title "Zaznacz elementy">
+<!ENTITY trellis.selectitems.intro.label "Zaznacz elementy, które chcesz dodać do twojej biblioteki">
+<!ENTITY trellis.selectitems.cancel.label "Anuluj">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Utwórz bibliografię">
+<!ENTITY trellis.bibliography.style.label "Styl cytowania:">
+<!ENTITY trellis.bibliography.manageStyles "Zarządzaj stylami...">
+<!ENTITY trellis.bibliography.locale.label "Język:">
+<!ENTITY trellis.bibliography.outputMode "Tryb wyjścia:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografia">
+<!ENTITY trellis.bibliography.outputMethod "Metoda wyjścia:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Zapisz jako RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Zapisz jako HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopiuj do schowka">
+<!ENTITY trellis.bibliography.print.label "Drukuj">
+
+<!ENTITY trellis.integration.docPrefs.title "Ustawienia dokumentu">
+<!ENTITY trellis.integration.addEditCitation.title "Dodaj/Edytuj cytowanie">
+<!ENTITY trellis.integration.editBibliography.title "Edytuj bibliografię">
+
+<!ENTITY trellis.progress.title "Postęp">
+
+<!ENTITY trellis.import "Importuj">
+<!ENTITY trellis.import.whereToImportFrom "Skąd chcesz zaimportować?">
+<!ENTITY trellis.import.source.file "Z pliku (BibTeX, RIS, Trellis RDF itp.)">
+<!ENTITY trellis.import.source.folder "Katalog z plikami PDF i innymi">
+<!ENTITY trellis.import.onlineImport "import zdalny">
+<!ENTITY trellis.import.importing "Importowanie...">
+<!ENTITY trellis.import.database "Baza danych">
+<!ENTITY trellis.import.lastModified "Ostatnia modyfikacja">
+<!ENTITY trellis.import.size "Rozmiar">
+<!ENTITY trellis.import.createCollection "Umieść zaimportowane kolekcje i elementy w nowej kolekcji">
+<!ENTITY trellis.import.fileHandling "Obsługa plików">
+<!ENTITY trellis.import.online.newItemsOnly "Pobierz tylko nowe elementy; nie aktualizuj poprzednio zaimportowanych elementów">
+
+<!ENTITY trellis.exportOptions.title "Eksportuj...">
+<!ENTITY trellis.exportOptions.format.label "Format:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Opcje translacji">
+
+<!ENTITY trellis.charset.label "Kodowanie znaków">
+<!ENTITY trellis.moreEncodings.label "Więcej kodowań">
+
+<!ENTITY trellis.citation.keepSorted.label "Zachowuj źródła posortowane">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Pomiń autora">
+<!ENTITY trellis.citation.prefix.label "Prefiks:">
+<!ENTITY trellis.citation.suffix.label "Sufiks:">
+<!ENTITY trellis.citation.editorWarning.label "Ostrzeżenie: Jeżeli edytujesz cytowanie w edytorze, nie będzie ono więcej aktualizowane z twojej bazy danych ani stylu cytowania.">
+
+<!ENTITY trellis.richText.italic.label "Kursywa">
+<!ENTITY trellis.richText.bold.label "Pogrubienie">
+<!ENTITY trellis.richText.underline.label "Podkreślenie:">
+<!ENTITY trellis.richText.superscript.label "Indeks górny">
+<!ENTITY trellis.richText.subscript.label "Indeks dolny">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Dodaj adnotację">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Zwiń wszystkie adnotacje">
+<!ENTITY trellis.annotate.toolbar.expand.label "Rozwiń wszystkie adnotacje">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Wyróżnij tekst">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Zdejmij wyróżnienie">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Wyświetl cytowania jako:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Przypisy dolne">
+<!ENTITY trellis.integration.prefs.endnotes.label "Przypisy końcowe">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Zapisz cytowania jako:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Zakładki">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Zakładki mogą być współdzielone między edytorami Word i LibreOffice Writer, ale w razie ich przypadkowej modyfikacji mogą wystąpić błędy i nie mogą być one wstawiane do przypisów dolnych.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatycznie aktualizuj cytowania">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Cytowania z oczekującymi aktualizacjami będą podświetlone w dokumencie">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Wyłączenie aktualizacji cytowań może przyspieszyć wstawianie cytowań w dużych dokumentach. Wciśnij Odśwież, aby ręcznie zaktualizować cytowania.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Użyj skrótów czasopism w formacie MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Pole &quot;Skrót czasopisma&quot; będzie ignorowane.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Przełącz na inny edytor tekstu...">
+
+<!ENTITY trellis.integration.showEditor.label "Pokaż edytor">
+<!ENTITY trellis.integration.classicView.label "Widok klasyczny">
+
+<!ENTITY trellis.integration.references.label "Pozycje w bibliografii">
+
+<!ENTITY trellis.sync.stop "Zatrzymaj synchronizację">
+<!ENTITY trellis.sync.error "Błąd synchronizacji">
+<!ENTITY trellis.sync.storage.progress "Postęp:">
+<!ENTITY trellis.sync.storage.downloads "Pobrano:">
+<!ENTITY trellis.sync.storage.uploads "Wysłano:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Poniższa etykieta w twojej bibliotece Trellis jest zbyt długa, aby ją zsynchornizować z serwerem:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Synchronizowane etykiety muszą być krótsze niż 256 znaków.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Możesz podzielić etykietę na kilka osobnych, edytować ręcznie, aby ją skrócić lub też po prostu ją usunąć.">
+<!ENTITY trellis.sync.longTagFixer.split "Podziel">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Podziel na ">
+<!ENTITY trellis.sync.longTagFixer.character "znaku">
+<!ENTITY trellis.sync.longTagFixer.characters "znakach">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Niezaznaczone etykiety nie będą zachowane.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Etykieta zostanie usunięta ze wszystkich elementów.">
+
+<!ENTITY trellis.merge.title "Rozwiązanie konfliktu">
+<!ENTITY trellis.merge.of "z">
+<!ENTITY trellis.merge.deleted "Usunięty">
+
+<!ENTITY trellis.proxy.recognized.title "Rozpoznano serwer pośredniczący">
+<!ENTITY trellis.proxy.recognized.warning "Dodaj tylko zaufane serwery pośredniczące, powiązane z twoją stroną biblioteki, szkoły lub organizacji. ">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Dodawanie innych serwerów pośredniczących umożliwia złośliwym stronom internetowym podszywanie się pod zaufane.">
+<!ENTITY trellis.proxy.recognized.disable.label "Nie przekierowuj automatycznie żądań za pomocą poprzednio rozpoznanych serwerów pośredniczących">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignoruj">
+
+<!ENTITY trellis.feedSettings.title "Ustawienia kanału">
+<!ENTITY trellis.feedSettings.saveButton.label "Zapisz">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Tytuł:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Aktualizuj kanał co">
+<!ENTITY trellis.feedSettings.refresh.label2 "godzin(y)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Usuń nieprzeczytane elementy kanału po">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dniu(ach)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Usuń przeczytane elementy kanału po">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dniu(ach)">
+
+<!ENTITY trellis.rtfScan.title "Skanowanie RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Anuluj">
+<!ENTITY trellis.rtfScan.citation.label "Cytowanie">
+<!ENTITY trellis.rtfScan.itemName.label "Nazwa elementu">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Niezmapowane cytowania">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Niepewne cytowania">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Zmapowane cytowania">
+<!ENTITY trellis.rtfScan.introPage.label "Wstęp">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis potrafi automatycznie wydobyć i przeformatować cytowania oraz wstawić bibliografię do plików w formacie RTF. Usługa skanowania plików RTF wspiera obecnie cytowania w następujących sposobach formatowania:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Aby rozpocząć, wybierz poniżej plik wejściowy w formacie RTF oraz plik wyjściowy:">
+<!ENTITY trellis.rtfScan.scanPage.label "Skanowanie cytowań">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis skanuje twój dokument w poszukiwaniu cytowań, prosimy o cierpliwość.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Sprawdzenie cytowanych elementów">
+<!ENTITY trellis.rtfScan.citationsPage.description "Proszę przejrzeć poniższą listę rozpoznanych cytowań, aby upewnić się że Trellis wybrał poprawnie odpowiednie elementy. Wszystkie niezmapowane lub niepewne cytowania muszą być rozwiązane przed przejściem do następnego etapu.">
+<!ENTITY trellis.rtfScan.stylePage.label "Formatowanie dokumentu">
+<!ENTITY trellis.rtfScan.formatPage.label "Formatowanie cytowań">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis przetwarza i formatuje twój plik RTF, prosimy o cierpliwość.">
+<!ENTITY trellis.rtfScan.completePage.label "Zakończono skanowanie RTF">
+<!ENTITY trellis.rtfScan.completePage.description "Twój dokument został przeskanowany i przetworzony. Proszę upewnić się, że jest on poprawnie sformatowany.">
+<!ENTITY trellis.rtfScan.inputFile.label "Plik wejściowy">
+<!ENTITY trellis.rtfScan.outputFile.label "Plik wyjściowy">
+
+<!ENTITY trellis.file.choose.label "Wybierz plik...">
+<!ENTITY trellis.file.noneSelected.label "Nie wybrano pliku">
+
+<!ENTITY trellis.attachLink.title "Dołącz odnośnik do URI">
+<!ENTITY trellis.attachLink.label.link "Odnośnik:">
+<!ENTITY trellis.attachLink.label.title "Tytuł:">
+
+<!ENTITY trellis.context.addChildNote "Dodaj notatkę do elementu">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Dodaj notatkę do elementu z adnotacji">
+<!ENTITY trellis.context.addStandaloneNote "Dodaj osobną notatkę">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Dodaj osobną notatkę z adnotacji">
+<!ENTITY trellis.context.editInWindow "Edytuj w oddzielnym oknie">
+
+<!ENTITY trellis.pdfReader.firstPage "Pierwsza strona">
+<!ENTITY trellis.pdfReader.lastPage "Ostatnia strona">
+<!ENTITY trellis.pdfReader.back "Wstecz">
+<!ENTITY trellis.pdfReader.forward "Naprzód">
+<!ENTITY trellis.pdfReader.handTool "Narzędzie rączka">
+<!ENTITY trellis.pdfReader.verticalScrolling "Przewijanie pionowe">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Przewijanie poziome">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Przewijanie zawinięte">
+<!ENTITY trellis.pdfReader.noSpreads "Pojedyncza strona">
+<!ENTITY trellis.pdfReader.oddSpreads "Dwie strony - nieparzysta">
+<!ENTITY trellis.pdfReader.evenSpreads "Dwie strony - parzysta">
+<!ENTITY trellis.pdfReader.scrolled "Przewijalny">
+<!ENTITY trellis.pdfReader.paginated "Zawinięty">
+<!ENTITY trellis.pdfReader.zoomIn "Powiększ">
+<!ENTITY trellis.pdfReader.zoomOut "Zmniejsz">
+<!ENTITY trellis.pdfReader.zoomReset "Przywróć powiększenie">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatycznie zmień rozmiar">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Powiększ do szerokości strony">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Powiększ do wysokości strony">
+<!ENTITY trellis.pdfReader.splitVertically "Podziel pionowo">
+<!ENTITY trellis.pdfReader.splitHorizontally "Podziel poziomo">
+<!ENTITY trellis.pdfReader.transferFromPDF "Importuj adnotacje...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Obróć stronę w lewo">
+<!ENTITY trellis.pdfReader.rotatePageRight "Obróć stronę w prawo">

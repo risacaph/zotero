@@ -1,10 +1,10 @@
-describe("Zotero_File_Interface", function () {
+describe("Trellis_File_Interface", function () {
     let win;
     before(function* () {
-        win = yield loadZoteroPane();
+        win = yield loadTrellisPane();
         yield OS.File.copy(OS.Path.join(getTestDataDirectory().path, "Test Import Translator.js"),
-                           OS.Path.join(Zotero.getTranslatorsDirectory().path, "Test Import Translator.js"));
-        yield Zotero.Translators.reinit();
+                           OS.Path.join(Trellis.getTranslatorsDirectory().path, "Test Import Translator.js"));
+        yield Trellis.Translators.reinit();
     });
     after(function () {
         win.close();
@@ -14,12 +14,12 @@ describe("Zotero_File_Interface", function () {
         this.timeout(10000);
         let testFile = getTestDataDirectory();
         testFile.append("allTypesAndFields.js");
-        await win.Zotero_File_Interface.importFile({
+        await win.Trellis_File_Interface.importFile({
         	file: testFile
         });
 
-        let importedCollection = Zotero.Collections.getByLibrary(
-			Zotero.Libraries.userLibraryID
+        let importedCollection = Trellis.Collections.getByLibrary(
+			Trellis.Libraries.userLibraryID
 		).filter(x => x.name == 'allTypesAndFields');
         assert.equal(importedCollection.length, 1);
         let childItems = importedCollection[0].getChildItems();
@@ -30,7 +30,7 @@ describe("Zotero_File_Interface", function () {
             delete savedItem.dateModified;
             delete savedItem.key;
             delete savedItem.collections;
-            savedItems[Zotero.ItemTypes.getName(childItems[i].itemTypeID)] = savedItem;
+            savedItems[Trellis.ItemTypes.getName(childItems[i].itemTypeID)] = savedItem;
         }
         let trueItems = loadSampleData('itemJSON');
         for (let itemType in trueItems) {
@@ -49,7 +49,7 @@ describe("Zotero_File_Interface", function () {
 		await select(win, collection);
 		
         var testFile = OS.Path.join(getTestDataDirectory().path, 'book_and_child_note.ris');
-        await win.Zotero_File_Interface.importFile({
+        await win.Trellis_File_Interface.importFile({
 				file: testFile,
 				createNewCollection: false
         });
@@ -58,11 +58,11 @@ describe("Zotero_File_Interface", function () {
         assert.lengthOf(items, 1);
         var childNotes = items[0].getNotes();
         assert.lengthOf(childNotes, 1);
-        assert.equal(Zotero.Items.get(childNotes[0]).getNote(), '<p>Child</p>');
+        assert.equal(Trellis.Items.get(childNotes[0]).getNote(), '<p>Child</p>');
     });
     
     
-	it('should import an item and snapshot from Zotero RDF', async function () {
+	it('should import an item and snapshot from Trellis RDF', async function () {
 		var tmpDir = await getTempDirectory();
 		var rdfFile = OS.Path.join(tmpDir, 'test.rdf');
 		await OS.File.copy(OS.Path.join(getTestDataDirectory().path, 'book_and_snapshot.rdf'), rdfFile);
@@ -74,7 +74,7 @@ describe("Zotero_File_Interface", function () {
 		);
 		
 		var promise = waitForItemEvent('add');
-		await win.Zotero_File_Interface.importFile({
+		await win.Trellis_File_Interface.importFile({
 			file: rdfFile
 		});
 		var ids = await promise;
@@ -82,17 +82,17 @@ describe("Zotero_File_Interface", function () {
 		assert.lengthOf(ids, 2);
 		
 		// Check book
-		var item = Zotero.Items.get(ids[0]);
-		assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('book'));
+		var item = Trellis.Items.get(ids[0]);
+		assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('book'));
 		
 		// Check attachment
 		var ids = item.getAttachments();
 		assert.lengthOf(ids, 1);
-		var attachment = Zotero.Items.get(ids[0]);
+		var attachment = Trellis.Items.get(ids[0]);
 		assert.equal(attachment.attachmentCharset, 'utf-8');
 		
 		// Check indexing
-		var matches = await Zotero.Fulltext.findTextInItems([attachment.id], 'test');
+		var matches = await Trellis.Fulltext.findTextInItems([attachment.id], 'test');
 		assert.lengthOf(matches, 1);
 		assert.propertyVal(matches[0], 'id', attachment.id);
 	});
@@ -101,14 +101,14 @@ describe("Zotero_File_Interface", function () {
 		var modsFile = OS.Path.join(getTestDataDirectory().path, "mods.xml");
 		
 		var promise = waitForItemEvent('add');
-		await win.Zotero_File_Interface.importFile({
+		await win.Trellis_File_Interface.importFile({
 			file: modsFile
 		});
 		var ids = await promise;
 		assert.lengthOf(ids, 1);
 		
-		var item = Zotero.Items.get(ids[0]);
-		assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('journalArticle'));
+		var item = Trellis.Items.get(ids[0]);
+		assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('journalArticle'));
 		assert.equal(item.getField('title'), "Test");
 	});
 	
@@ -116,14 +116,14 @@ describe("Zotero_File_Interface", function () {
 	describe("#importFromClipboard()", function () {
 		it("should import BibTeX from the clipboard", async function () {
 			var str = "@article{last_test_nodate,\n	title = {Test},\n	author = {Last, First},\n}";
-			Zotero.Utilities.Internal.copyTextToClipboard(str);
+			Trellis.Utilities.Internal.copyTextToClipboard(str);
 			var promise = waitForItemEvent('add');
-			await win.Zotero_File_Interface.importFromClipboard();
+			await win.Trellis_File_Interface.importFromClipboard();
 			var ids = await promise;
 			assert.lengthOf(ids, 1);
 			
-			var item = Zotero.Items.get(ids[0]);
-			assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('journalArticle'));
+			var item = Trellis.Items.get(ids[0]);
+			assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('journalArticle'));
 			assert.equal(item.getField('title'), "Test");
 			var creator = item.getCreators()[0];
 			assert.propertyVal(creator, 'firstName', "First")
@@ -136,7 +136,7 @@ describe("Zotero_File_Interface", function () {
 		var clipboardService, item1, item2;
 		
 		before(function* () {
-			yield Zotero.Styles.init();
+			yield Trellis.Styles.init();
 			
 			clipboardService = Components.classes["@mozilla.org/widget/clipboard;1"]
 				.getService(Components.interfaces.nsIClipboard);
@@ -164,9 +164,9 @@ describe("Zotero_File_Interface", function () {
 		// Non-"Copy as HTML" mode
 		//
 		it("should copy HTML and text citations to the clipboard", async function () {
-			win.Zotero_File_Interface.copyItemsToClipboard(
+			win.Trellis_File_Interface.copyItemsToClipboard(
 				[item1, item2],
-				'http://www.zotero.org/styles/apa',
+				'http://www.trellis.org/styles/apa',
 				'en-US',
 				false,
 				true
@@ -182,9 +182,9 @@ describe("Zotero_File_Interface", function () {
 		});
 		
 		it("should copy HTML and text bibliography to the clipboard", async function () {
-			win.Zotero_File_Interface.copyItemsToClipboard(
+			win.Trellis_File_Interface.copyItemsToClipboard(
 				[item1, item2],
-				'http://www.zotero.org/styles/apa',
+				'http://www.trellis.org/styles/apa',
 				'en-US'
 			);
 			
@@ -202,9 +202,9 @@ describe("Zotero_File_Interface", function () {
 		// "Copy as HTML" mode
 		//
 		it("should copy HTML and HTML source citations to the clipboard", async function () {
-			win.Zotero_File_Interface.copyItemsToClipboard(
+			win.Trellis_File_Interface.copyItemsToClipboard(
 				[item1, item2],
-				'http://www.zotero.org/styles/apa',
+				'http://www.trellis.org/styles/apa',
 				'en-US',
 				true,
 				true
@@ -219,9 +219,9 @@ describe("Zotero_File_Interface", function () {
 		});
 		
 		it("should copy HTML and HTML source bibliography to the clipboard", async function () {
-			win.Zotero_File_Interface.copyItemsToClipboard(
+			win.Trellis_File_Interface.copyItemsToClipboard(
 				[item1, item2],
-				'http://www.zotero.org/styles/apa',
+				'http://www.trellis.org/styles/apa',
 				'en-US',
 				true
 			);
@@ -244,15 +244,15 @@ describe("Zotero_File_Interface", function () {
 			var testFile = OS.Path.join(getTestDataDirectory().path, 'citavi-test-project.ctv6');
 			
 			const promise = waitForItemEvent('add');
-			await win.Zotero_File_Interface.importFile({
+			await win.Trellis_File_Interface.importFile({
 				file: testFile,
 				createNewCollection: false
 			});
 			
 			const itemIDs = await promise;
-			const importedItem = await Zotero.Items.getAsync(itemIDs[0]);
+			const importedItem = await Trellis.Items.getAsync(itemIDs[0]);
 			assert.equal(importedItem.getField('title'), 'Bitcoin: A Peer-to-Peer Electronic Cash System');
-			const importedPDF = await Zotero.Items.getAsync(importedItem.getAttachments()[0]);
+			const importedPDF = await Trellis.Items.getAsync(importedItem.getAttachments()[0]);
 			const annotations = importedPDF.getAnnotations();
 			assert.lengthOf(annotations, 5);
 

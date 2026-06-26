@@ -47,7 +47,7 @@ for plugin in $plugins; do
 done
 
 # From https://nsis.sourceforge.io/NsProcess_plugin
-curl https://download.zotero.org/dev/win/NsProcess-1.6.zip > NsProcess.zip
+curl https://download.trellis.org/dev/win/NsProcess-1.6.zip > NsProcess.zip
 7z e NsProcess.zip "Plugin/nsProcessW.dll"
 mv nsProcessW.dll nsProcess.dll
 rm NsProcess.zip

@@ -1,4 +1,4 @@
-.zotero-clicky {
+.trellis-clicky {
 	border-radius: 6px;
 	padding: 2px;
 
@@ -14,7 +14,7 @@
 }
 
 /* Minus and plus buttons with clicky glow effect */
-.zotero-clicky-minus, .zotero-clicky-plus {
+.trellis-clicky-minus, .trellis-clicky-plus {
 	margin: 0;
 	width: 20px;
 	border-radius: 2px;
@@ -25,55 +25,55 @@
 	}
 }
 
-.zotero-clicky-minus {
+.trellis-clicky-minus {
 	@include svgicon-menu("minus-circle", "universal", "16");
 	border: 0px !important;
 	margin: 0;
 }
 
-.zotero-clicky-plus {
+.trellis-clicky-plus {
 	@include svgicon-menu("plus-circle", "universal", "16");
 	border: 0px !important;
 	margin: 0;
 }
 
-.zotero-clicky-grippy {
+.trellis-clicky-grippy {
 	@include svgicon-menu("grip", "universal", "16");
 	margin: 0;
 }
 
-.zotero-clicky-options {
+.trellis-clicky-options {
 	@include svgicon-menu("options", "universal", "16");
 	margin: 0;
 }
 
-.zotero-clicky-open-link {
+.trellis-clicky-open-link {
 	@include svgicon-menu("open-link", "universal", "16");
 	margin: 0;
 }
 
-.zotero-clicky-merge {
+.trellis-clicky-merge {
 	@include svgicon-menu("merge", "universal", "16");
 	margin: 0;
 }
 
-.zotero-clicky-cross {
+.trellis-clicky-cross {
 	@include svgicon-menu("x-8", "universal", "16");
 	border: 0px !important;
 	color: var(--fill-secondary);
 }
 
-.zotero-clicky-switch-type[type=single] {
+.trellis-clicky-switch-type[type=single] {
 	@include svgicon-menu("input-dual", "universal", "16");
 	margin: 0;
 }
 
-.zotero-clicky-switch-type[type=dual] {
+.trellis-clicky-switch-type[type=dual] {
 	@include svgicon-menu("input-single", "universal", "16");
 	margin: 0;
 }
 
-.zotero-clicky-preview-control {
+.trellis-clicky-preview-control {
 	@include svgicon-menu("preview-show", "universal", "16");
 	&[data-show-preview] {
 		@include svgicon-menu("preview-hide", "universal", "16");
@@ -81,6 +81,6 @@
 	border: 0px !important;
 }
 
-.zotero-clicky-minus[disabled=true], .zotero-clicky-plus[disabled=true] {
+.trellis-clicky-minus[disabled=true], .trellis-clicky-plus[disabled=true] {
 	opacity: .5;
 }

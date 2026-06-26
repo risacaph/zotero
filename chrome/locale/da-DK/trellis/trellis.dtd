@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Ja">
+<!ENTITY trellis.general.no "Nej">
+<!ENTITY trellis.general.optional "(Valgfrit)">
+<!ENTITY trellis.general.note "Note:">
+<!ENTITY trellis.general.selectAll "Vælg alle">
+<!ENTITY trellis.general.deselectAll "Fravælg alle">
+<!ENTITY trellis.general.edit "Rediger">
+<!ENTITY trellis.general.delete "Slet">
+<!ENTITY trellis.general.moveToTrash "Flyt til papirkurv">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Annullér">
+<!ENTITY trellis.general.refresh "Opdatér">
+<!ENTITY trellis.general.saveAs "Gem som...">
+<!ENTITY trellis.general.options "Indstillinger">
+<!ENTITY trellis.general.advancedOptions.label "Avancerede indstillinger">
+<!ENTITY trellis.general.tools "Værktøj">
+<!ENTITY trellis.general.more "Mere">
+<!ENTITY trellis.general.moreInformation "Mere information">
+<!ENTITY trellis.general.loading "Indlæser...">
+<!ENTITY trellis.general.close "Luk">
+<!ENTITY trellis.general.minimize "Minimér">
+<!ENTITY trellis.general.other "Andet...">
+<!ENTITY trellis.general.bigger "Større">
+<!ENTITY trellis.general.smaller "Mindre">
+<!ENTITY trellis.general.reset "Nulstil">
+
+
+<!ENTITY trellis.errorReport.title "Trellis fejlrapport">
+<!ENTITY trellis.errorReport.submissionInProgress "Vent venligst mens fejlrapporten registreres.">
+<!ENTITY trellis.errorReport.submitted "Din fejlrapport er registreret.">
+<!ENTITY trellis.errorReport.reportID "Rapport-ID:">
+<!ENTITY trellis.errorReport.postToForums "Læg venligst en besked på Trelliss fora (forums.trellis.org) med dette Rapport-ID, en beskrivelse af problemet og det der får problemet til at opstå.">
+<!ENTITY trellis.errorReport.notReviewed "Fejlrapporter bliver ikke læst medmindre der henvises til dem i Trelliss fora.">
+
+<!ENTITY trellis.upgrade.title "Trellis opgraderingsguide">
+<!ENTITY trellis.upgrade.newVersionInstalled "Du har installeret en ny version af Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "Din Trellis-database skal opgraderes for at virke med den seneste version.">
+<!ENTITY trellis.upgrade.autoBackup "Din nuværende database vil blive sikkerhedskopieret, inden der foretages ændringer.">
+<!ENTITY trellis.upgrade.majorUpgrade "Dette er en større opgradering.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Sørg for at gennemse">
+<!ENTITY trellis.upgrade.majorUpgradeLink "instruktioner for opgradering">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "inden du fortsætter">
+<!ENTITY trellis.upgrade.upgradeInProgress "Vent venligst til opgraderingsprocessen er slut. Det kan tage nogle minutter.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Din Trellis-database er blevet opgraderet korrekt.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Se venligst">
+<!ENTITY trellis.upgrade.changeLogLink "listen med ændringer">
+<!ENTITY trellis.upgrade.changeLogAfterLink "for at se nyhederne.">
+
+<!ENTITY trellis.tabs.notes.label "Noter">
+<!ENTITY trellis.tabs.attachments.label "Vedhæftede filer">
+
+<!ENTITY trellis.toolbar.duplicate.label "Vis dubletter">
+<!ENTITY trellis.collections.showUnfiledItems "Vis ukategoriserede elementer">
+<!ENTITY trellis.collections.showRetractedItems "Vis tilbagetrukne elementer">
+
+<!ENTITY trellis.items.itemType "Type">
+<!ENTITY trellis.items.creator_column "Ophav">
+<!ENTITY trellis.items.year_column "År">
+<!ENTITY trellis.items.dateModified_column "Ændret d.">
+<!ENTITY trellis.items.moreColumns.label "Flere kolonner">
+<!ENTITY trellis.items.restoreColumnOrder.label "Retabler rækkefølgen af kolonner">
+
+<!ENTITY trellis.items.menu.showInLibrary "Vis i bibliotek">
+<!ENTITY trellis.items.menu.attach.note "Tilføj note">
+<!ENTITY trellis.items.menu.attach "Vedhæft">
+<!ENTITY trellis.items.menu.attach.link.uri "Vedhæft link til URI...">
+<!ENTITY trellis.items.menu.attach.file "Vedhæft en gemt kopi af ...">
+<!ENTITY trellis.items.menu.attach.fileLink "Knyt linket til ...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Genindlæs i bibliotek">
+<!ENTITY trellis.items.menu.duplicateItem "Duplikér valgte element">
+<!ENTITY trellis.items.menu.mergeItems "Flet elementer...">
+<!ENTITY trellis.items.menu.unrecognize "Fortryd indhentning af metadata">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Vælg den version af elementet som du vil bruge som hovedelement:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Vælg felter som skal bevares fra andre versioner af elementet">
+
+<!ENTITY trellis.toolbar.newItem.label "Nyt element">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Mere">
+<!ENTITY trellis.toolbar.lookup.label "Tilføj element(er) ud fra identifikator">
+<!ENTITY trellis.toolbar.removeItem.label "Fjern ...">
+<!ENTITY trellis.toolbar.newGroup "Ny Gruppe ...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Ny delsamling">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Ny gemt Søgning ...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Tøm papirkurv">
+<!ENTITY trellis.toolbar.tagSelector.label "Vis/skjul søgning på mærker">
+<!ENTITY trellis.toolbar.actions.label "Handlinger">
+<!ENTITY trellis.toolbar.import.label "Importér...">
+<!ENTITY trellis.toolbar.importFromClipboard "Hent fra udklipsholder">
+<!ENTITY trellis.toolbar.export.label "Eksportér bibliotek...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF Scan">
+<!ENTITY trellis.toolbar.preferences.label "Indstillinger...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Support og dokumentation">
+<!ENTITY trellis.toolbar.about.label "Om Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Avanceret søgning">
+<!ENTITY trellis.toolbar.openURL.label "Find">
+<!ENTITY trellis.toolbar.openURL.tooltip "Find gennem dit lokale bibliotek">
+
+<!ENTITY trellis.toolbar.feeds.new "Ny nyhedsstrøm">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Fra URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Fra OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Redigér nyhedsstrøm...">
+
+<!ENTITY trellis.item.add "Tilføj">
+<!ENTITY trellis.item.attachment.file.show "Vis fil">
+<!ENTITY trellis.item.textTransform "Transformer tekst">
+<!ENTITY trellis.item.textTransform.titlecase "Betydende ord med stort ">
+<!ENTITY trellis.item.textTransform.sentencecase "Første bogstav med stort">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Ombyt fornavn/efternavn">
+<!ENTITY trellis.item.creatorTransform.fixCase "Ret store/små bogstaver">
+<!ENTITY trellis.item.copyAsURL "Kopiér som URL">
+<!ENTITY trellis.item.deletePermanently "Slet permanent...">
+
+<!ENTITY trellis.item.tags.removeAll "Fjern alle tags">
+
+<!ENTITY trellis.toolbar.newNote "Ny note">
+<!ENTITY trellis.toolbar.note.standalone "Ny selvstændig note">
+<!ENTITY trellis.toolbar.note.child "Tilføj under-note">
+<!ENTITY trellis.toolbar.lookup "Opslag med id-kode ...">
+<!ENTITY trellis.toolbar.attachment.linked "Link til filen...">
+<!ENTITY trellis.toolbar.attachment.add "Gem kopi af filen...">
+<!ENTITY trellis.toolbar.attachment.weblink "Gem link til den aktuelle side">
+<!ENTITY trellis.toolbar.attachment.snapshot "Tag kopi af den aktuelle side">
+<!ENTITY trellis.toolbar.context.item "Element">
+<!ENTITY trellis.toolbar.context.notes "Noter">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Der er ingen mærker at vise">
+<!ENTITY trellis.tagSelector.loadingTags "Indlæser mærker...">
+<!ENTITY trellis.tagSelector.showAutomatic "Vis automatisk">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Vis alle mærker i dette Bibliotek">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Slet automatiske tags i dette bibliotek">
+<!ENTITY trellis.tagSelector.clearAll "Fravælg alle">
+<!ENTITY trellis.tagSelector.assignColor "Tilknyt farve...">
+<!ENTITY trellis.tagSelector.renameTag "Omdøb mærket ...">
+<!ENTITY trellis.tagSelector.deleteTag "Slet mærket...">
+<!ENTITY trellis.tagSelector.splitTag "Split...">
+
+<!ENTITY trellis.tagColorChooser.title "Vælg en farve og placering">
+<!ENTITY trellis.tagColorChooser.color "Farve:">
+<!ENTITY trellis.tagColorChooser.position "Placering:">
+<!ENTITY trellis.tagColorChooser.setColor "Sæt farve:">
+<!ENTITY trellis.tagColorChooser.removeColor "Fjern farve">
+
+<!ENTITY trellis.lookup.description "Indtast ISBN'er, DOI'er, PMID'er, eller arXiv ID'er som skal tilføjes til dit bibliotek:">
+<!ENTITY trellis.lookup.button.search "Søg">
+
+<!ENTITY trellis.createParent.title "Opret moder-element">
+<!ENTITY trellis.createParent.button.manual "Manuel indtastning">
+
+<!ENTITY trellis.selectitems.title "Vælg elementer">
+<!ENTITY trellis.selectitems.intro.label "Vælg de elementer, du ønsker at tilføje til dit bibliotek">
+<!ENTITY trellis.selectitems.cancel.label "Fortryd">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Opret reference/referenceliste">
+<!ENTITY trellis.bibliography.style.label "Reference-stil:">
+<!ENTITY trellis.bibliography.manageStyles "Håndtér formater...">
+<!ENTITY trellis.bibliography.locale.label "Sprog:">
+<!ENTITY trellis.bibliography.outputMode "Output-tilstand:">
+<!ENTITY trellis.bibliography.bibliography "Referenceliste">
+<!ENTITY trellis.bibliography.outputMethod "Output-metode:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Gem som RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Gem som HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopier til udklipsholder">
+<!ENTITY trellis.bibliography.print.label "Udskrift">
+
+<!ENTITY trellis.integration.docPrefs.title "Dokumentindstillinger">
+<!ENTITY trellis.integration.addEditCitation.title "Tilføj/rediger reference">
+<!ENTITY trellis.integration.editBibliography.title "Rediger referenceliste">
+
+<!ENTITY trellis.progress.title "Fremdrift">
+
+<!ENTITY trellis.import "Importér">
+<!ENTITY trellis.import.whereToImportFrom "Hvor vil du importere fra?">
+<!ENTITY trellis.import.source.file "En fil (BibTeX, RIS, Trellis RDF osv.)">
+<!ENTITY trellis.import.source.folder "En mappe med PDF'er eller andre filer">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importerer…">
+<!ENTITY trellis.import.database "Database">
+<!ENTITY trellis.import.lastModified "Sidst ændret">
+<!ENTITY trellis.import.size "Størrelse">
+<!ENTITY trellis.import.createCollection "Placér importerede samlinger og nye elementer i den nye samling">
+<!ENTITY trellis.import.fileHandling "Filhåndtering">
+<!ENTITY trellis.import.online.newItemsOnly "Download kun nye emner; opdater ikke tidligere importerede emner">
+
+<!ENTITY trellis.exportOptions.title "Eksportér...">
+<!ENTITY trellis.exportOptions.format.label "Format:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Oversættelsesmuligheder">
+
+<!ENTITY trellis.charset.label "Tegnsæt">
+<!ENTITY trellis.moreEncodings.label "Flere tegnsæt">
+
+<!ENTITY trellis.citation.keepSorted.label "Sorter kilder">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Udelad forfatter/ophav">
+<!ENTITY trellis.citation.prefix.label "Præfiks:">
+<!ENTITY trellis.citation.suffix.label "Suffiks:">
+<!ENTITY trellis.citation.editorWarning.label "Advarsel: hvis du redigerer en reference i editoren vil den ikke længere blive opdateret når der sker ændringer i din database eller reference-typografi.">
+
+<!ENTITY trellis.richText.italic.label "Kursiv">
+<!ENTITY trellis.richText.bold.label "Fed">
+<!ENTITY trellis.richText.underline.label "Understreg">
+<!ENTITY trellis.richText.superscript.label "Hævet skrift">
+<!ENTITY trellis.richText.subscript.label "Sænket skrift">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Tilføj kommentar">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Slå kommentarerne sammen">
+<!ENTITY trellis.annotate.toolbar.expand.label "Udfold alle kommentarer">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Marker tekst">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Fjern markering fra tekst">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Vis referencer som:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Fodnoter">
+<!ENTITY trellis.integration.prefs.endnotes.label "Slutnoter">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Gem henvisninger som:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Bogmærker">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Bogmærker kan deles mellem Word og LibreOffice, men kan skabe fejl, hvis de utilsigtet ændres, og de kan ikke indsættes i fodnoter.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Opdatér automatisk referencer">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Referencer, som afventer opdatering, vil blive fremhævet i dokumentet.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Ved at deaktivere opdateringer kan indsættelse af referencer i store dokumenter gøres hurtigere. Klik Opdatér for at opdatere referencer manuelt.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Brug MEDLINE's tidsskriftforkortelser">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Feltet “Journal Abbr” vil blive ignoreret.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Skift til et anden tekstbehandlerprogram ">
+
+<!ENTITY trellis.integration.showEditor.label "Vis editor">
+<!ENTITY trellis.integration.classicView.label "Klassisk visning">
+
+<!ENTITY trellis.integration.references.label "Referencer i referenceliste">
+
+<!ENTITY trellis.sync.stop "Stop synkronisering">
+<!ENTITY trellis.sync.error "Synkroniseringsfejl">
+<!ENTITY trellis.sync.storage.progress "Fremdrift:">
+<!ENTITY trellis.sync.storage.downloads "Downloads:">
+<!ENTITY trellis.sync.storage.uploads "Uploads:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "De følgende mærkater i dit Trellisbibliotek er for lange til at synkronisere med serveren:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Synkroniserede mærkater kan højst være 256 tegn.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Du kan enten opdele mærkatet i flere mærkater, redigere mærkatet manuelt for at forkorte det eller slette det.">
+<!ENTITY trellis.sync.longTagFixer.split "Opdel">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Opdel ved">
+<!ENTITY trellis.sync.longTagFixer.character "tegn">
+<!ENTITY trellis.sync.longTagFixer.characters "tegn">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Mærker, der ikke er markeret, vil ikke blive gemt.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Mærket vil blive fjernet fra alle elementer.">
+
+<!ENTITY trellis.merge.title "Reparer konflikter">
+<!ENTITY trellis.merge.of "af">
+<!ENTITY trellis.merge.deleted "Slettede">
+
+<!ENTITY trellis.proxy.recognized.title "Proxy registreret">
+<!ENTITY trellis.proxy.recognized.warning "Tilføj kun proxyer, der er knyttet til dit biblioteks, din institutions eller din virksomheds web-sted">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Hvis du tilføjer andre proxyer, kan ondsindede web-steder optræde som steder du stoler på.">
+<!ENTITY trellis.proxy.recognized.disable.label "Lad ikke forespørgsler blive omdirigeret automatisk gennem tidligere godkendte proxyer. ">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignorer">
+
+<!ENTITY trellis.feedSettings.title "Indstillinger for nyhedsstrøm">
+<!ENTITY trellis.feedSettings.saveButton.label "Gem">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Titel:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Opdatér nyhedsstrøm efter">
+<!ENTITY trellis.feedSettings.refresh.label2 "time(r)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Fjern ulæste nyhedsstrømme efter">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dag(e)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Fjern læste nyhedsstrømme efter">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dage(e)">
+
+<!ENTITY trellis.rtfScan.title "RTF-scanning">
+<!ENTITY trellis.rtfScan.cancel.label "Fortryd">
+<!ENTITY trellis.rtfScan.citation.label "Reference">
+<!ENTITY trellis.rtfScan.itemName.label "Navn på element">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Teksthenvisninger uden poster i dit bibliotek">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Flertydige teksthenvisnnger">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Teksthenvisninger med poster i dit bibliotek">
+<!ENTITY trellis.rtfScan.introPage.label "Introduktion">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis kan automatisk uddrage og reformatere teksthenvisninger og indsætte en referenceliste i en RTF-fil. RTF-scanningsfunktionen understøtter referencer i følgende formater:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Vælg en RTF-fil som input og en output-fil nedenfor:">
+<!ENTITY trellis.rtfScan.scanPage.label "Scanner efter teksthenvisninger i dokumentet">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis scanner dit dokument for teksthenvisninger. Vent venligst.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Kontroller referencerne">
+<!ENTITY trellis.rtfScan.citationsPage.description "Kontroller listen med de fundne referencer for at sikre at Trellis har identificeret værkerne korrekt. Alle referencer uden korrespondence og alle flertydige referencer skal afklares før du går videre til næste fase.">
+<!ENTITY trellis.rtfScan.stylePage.label "Formatering af dokument">
+<!ENTITY trellis.rtfScan.formatPage.label "Formatering af referencer">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis behandler og formaterer din RTF-fil. Vent tålmodigt.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF-scanning fuldført">
+<!ENTITY trellis.rtfScan.completePage.description "Dit dokument er blevet scannet og behandlet. Kontrollerer at det er blevet formateret korrekt.">
+<!ENTITY trellis.rtfScan.inputFile.label "Input-fil">
+<!ENTITY trellis.rtfScan.outputFile.label "Output-fil">
+
+<!ENTITY trellis.file.choose.label "Vælg fil...">
+<!ENTITY trellis.file.noneSelected.label "Der er ikke valgt en fil">
+
+<!ENTITY trellis.attachLink.title "Tilføj link til URI">
+<!ENTITY trellis.attachLink.label.link "Link:">
+<!ENTITY trellis.attachLink.label.title "Titel:">
+
+<!ENTITY trellis.context.addChildNote "Tilføj emne note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Til emne note fra Kommentar">
+<!ENTITY trellis.context.addStandaloneNote "Tilføj selvstændig note">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Tilføj selvstændig note fra Kommentar">
+<!ENTITY trellis.context.editInWindow "Redigér i nyt vindue">
+
+<!ENTITY trellis.pdfReader.firstPage "Første side">
+<!ENTITY trellis.pdfReader.lastPage "Sidste side">
+<!ENTITY trellis.pdfReader.back "Tilbage">
+<!ENTITY trellis.pdfReader.forward "Frem">
+<!ENTITY trellis.pdfReader.handTool "Håndværktøj">
+<!ENTITY trellis.pdfReader.verticalScrolling "Lodret rulning">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Vandret rulning">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Omløbende rulning">
+<!ENTITY trellis.pdfReader.noSpreads "Ingen opslag">
+<!ENTITY trellis.pdfReader.oddSpreads "Ulige opslag">
+<!ENTITY trellis.pdfReader.evenSpreads "Llige opslag">
+<!ENTITY trellis.pdfReader.scrolled "Rullet">
+<!ENTITY trellis.pdfReader.paginated "Pagineret">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom ind">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom ud">
+<!ENTITY trellis.pdfReader.zoomReset "Reset zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Tilpas størrelse automatisk">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom til sidens bredde">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom til sidens højde">
+<!ENTITY trellis.pdfReader.splitVertically "Opdel lodret">
+<!ENTITY trellis.pdfReader.splitHorizontally "Opdel vandret">
+<!ENTITY trellis.pdfReader.transferFromPDF "Importer kommentarer…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Roter side til venstre">
+<!ENTITY trellis.pdfReader.rotatePageRight "Roter side til højre">

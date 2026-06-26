@@ -5,8 +5,8 @@
     "@babel/preset-react"
   ],
   "ignore": [
-    "chrome/content/zotero/include.js",
-    "chrome/content/zotero/xpcom/citeproc.js",
+    "chrome/content/trellis/include.js",
+    "chrome/content/trellis/xpcom/citeproc.js",
     "chrome/content/ace/*",
     "chrome/content/scaffold/templates/*",
     "resource/react-virtualized.js",

@@ -1,4 +1,4 @@
-#zotero-long-tag-fixer {
+#trellis-long-tag-fixer {
 	padding: 20px;
 	font-size: 12px;
 	line-height: 1.333333333;
@@ -14,7 +14,7 @@
 	tab {
 		display: none;
 		
-		@include variant("#zotero-long-tag-fixer.is-long-tag") {
+		@include variant("#trellis-long-tag-fixer.is-long-tag") {
 			display: revert;
 		}
 	}
@@ -36,7 +36,7 @@
 			}
 		}
 
-		@include variant("#zotero-long-tag-fixer.is-long-tag") {
+		@include variant("#trellis-long-tag-fixer.is-long-tag") {
 			padding-top: 33px;
 		}
 	}
@@ -45,7 +45,7 @@
 		display: none;
 		flex-direction: column;
 
-		@include variant("#zotero-long-tag-fixer.is-long-tag") {
+		@include variant("#trellis-long-tag-fixer.is-long-tag") {
 			display: flex;
 		}
 
@@ -64,7 +64,7 @@
 		}
 	}
 
-	#zotero-new-tag-actions {
+	#trellis-new-tag-actions {
 		margin: 20px 0;
 	}
 
@@ -108,12 +108,12 @@
 		display: flex;
 		flex-direction: column;
 
-		#zotero-new-tag-editor {
+		#trellis-new-tag-editor {
 			padding: 8px;
 			flex: 1 1 auto;
 		}
 
-		#zotero-new-tag-characters {
+		#trellis-new-tag-characters {
 			flex: 0 1 auto;
 			padding: .5em 0;
 		}
@@ -136,7 +136,7 @@
 		}
 	}
 
-	#zotero-new-tag-character-count {
+	#trellis-new-tag-character-count {
 		font-weight: 600;
 		margin-right: 0;
 	}

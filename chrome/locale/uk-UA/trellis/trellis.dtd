@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Так">
+<!ENTITY trellis.general.no "Ні">
+<!ENTITY trellis.general.optional "(Необов'язково)">
+<!ENTITY trellis.general.note "Примітка:">
+<!ENTITY trellis.general.selectAll "Вибрати все">
+<!ENTITY trellis.general.deselectAll "Відмінити вибір">
+<!ENTITY trellis.general.edit "Редагувати">
+<!ENTITY trellis.general.delete "Видалити">
+<!ENTITY trellis.general.moveToTrash "Перемістити в Кошик">
+<!ENTITY trellis.general.ok "Гаразд">
+<!ENTITY trellis.general.cancel "Відміна">
+<!ENTITY trellis.general.refresh "Оновити">
+<!ENTITY trellis.general.saveAs "Зберегти як...">
+<!ENTITY trellis.general.options "Options">
+<!ENTITY trellis.general.advancedOptions.label "Розширені налаштування">
+<!ENTITY trellis.general.tools "Інструменти">
+<!ENTITY trellis.general.more "Більше">
+<!ENTITY trellis.general.moreInformation "Додаткова інформація">
+<!ENTITY trellis.general.loading "Завантаження">
+<!ENTITY trellis.general.close "Закрити">
+<!ENTITY trellis.general.minimize "Згорнути">
+<!ENTITY trellis.general.other "Other…">
+<!ENTITY trellis.general.bigger "Bigger">
+<!ENTITY trellis.general.smaller "Smaller">
+<!ENTITY trellis.general.reset "Скинути">
+
+
+<!ENTITY trellis.errorReport.title "Звіт про помилку в Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Почекайте, поки звіт про помилку буде передано.">
+<!ENTITY trellis.errorReport.submitted "Ваш звіт про помилку був переданий.">
+<!ENTITY trellis.errorReport.reportID "Номер звіту:">
+<!ENTITY trellis.errorReport.postToForums "Будь ласка відправте повідомлення на форуми Trellis (forums.trellis.org) з цим ID звіту, описом проблеми, і будь-які кроки, необхідні для її відтворити.">
+<!ENTITY trellis.errorReport.notReviewed "Звіт про помилку не розглядається, поки не буде згаданий в форумах.">
+
+<!ENTITY trellis.upgrade.title "Майстер оновлення Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Ви встановили нову версію Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "Ваша база даних Trellis має бути оновлена для роботи з новою версією.">
+<!ENTITY trellis.upgrade.autoBackup "Ваша існуюча база даних буде збережена автоматично до того як будь-які зміни виконані.">
+<!ENTITY trellis.upgrade.majorUpgrade "Це основне оновлення.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Будьте впевненні що ви переглянули">
+<!ENTITY trellis.upgrade.majorUpgradeLink "інструкції з оновлення">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "перед продовженням.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Будь ласка, зачекайте на завершення процесу оновлення. Це може зайняти кілька хвилин.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Ваша база даних Trellis була успішно оновлена. ">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Будь ласка подивіться">
+<!ENTITY trellis.upgrade.changeLogLink "журнал змін">
+<!ENTITY trellis.upgrade.changeLogAfterLink "щоб дізнатись про нові функції.">
+
+<!ENTITY trellis.tabs.notes.label "Примітки">
+<!ENTITY trellis.tabs.attachments.label "Вкладення">
+
+<!ENTITY trellis.toolbar.duplicate.label "Показати дублювання">
+<!ENTITY trellis.collections.showUnfiledItems "Показати незаповненні записи">
+<!ENTITY trellis.collections.showRetractedItems "Show Retracted Items">
+
+<!ENTITY trellis.items.itemType "Тип документу">
+<!ENTITY trellis.items.creator_column "Автор">
+<!ENTITY trellis.items.year_column "Рік">
+<!ENTITY trellis.items.dateModified_column "Дата зміни">
+<!ENTITY trellis.items.moreColumns.label "Додаткові стовпці">
+<!ENTITY trellis.items.restoreColumnOrder.label "Відновити порядок стовпців">
+
+<!ENTITY trellis.items.menu.showInLibrary "Покзати в бібліотеці">
+<!ENTITY trellis.items.menu.attach.note "Додати примітку">
+<!ENTITY trellis.items.menu.attach "Додати вкладення">
+<!ENTITY trellis.items.menu.attach.link.uri "Прикріпити посилання на URI…">
+<!ENTITY trellis.items.menu.attach.file "Прикріпити копію фалу...">
+<!ENTITY trellis.items.menu.attach.fileLink "Прикріпити посилання на файл...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Відновити в бібліотеці">
+<!ENTITY trellis.items.menu.duplicateItem "Дублювати документ">
+<!ENTITY trellis.items.menu.mergeItems "Об'єднати документи...">
+<!ENTITY trellis.items.menu.unrecognize "Undo Retrieve Metadata">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Виберіть версію документа для використання в якості головної:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Виберіть поля для збереження з іншої версії документа:">
+
+<!ENTITY trellis.toolbar.newItem.label "Новий документ">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Більше">
+<!ENTITY trellis.toolbar.lookup.label "Додати документ(и) за ідентифікатором">
+<!ENTITY trellis.toolbar.removeItem.label "Видалити документ...">
+<!ENTITY trellis.toolbar.newGroup "Нова група...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Нова підколекція...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Новий збережений пошук...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Очистити корзину">
+<!ENTITY trellis.toolbar.tagSelector.label "Показати/сховати панель вибору тегів">
+<!ENTITY trellis.toolbar.actions.label "Дії">
+<!ENTITY trellis.toolbar.import.label "Імпортувати...">
+<!ENTITY trellis.toolbar.importFromClipboard "Імпортувати з буферу обміну">
+<!ENTITY trellis.toolbar.export.label "Експортувати бібліотеку...">
+<!ENTITY trellis.toolbar.rtfScan.label "Сканування RTF">
+<!ENTITY trellis.toolbar.preferences.label "Налаштування...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Підтримка і документація">
+<!ENTITY trellis.toolbar.about.label "Про Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Розширений пошук">
+<!ENTITY trellis.toolbar.openURL.label "Знайти">
+<!ENTITY trellis.toolbar.openURL.tooltip "Знайти через місцеву бібліотеку">
+
+<!ENTITY trellis.toolbar.feeds.new "Нова стрічка">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Новий URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "З OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Редагувати стрічку...">
+
+<!ENTITY trellis.item.add "Додати">
+<!ENTITY trellis.item.attachment.file.show "Показати файл">
+<!ENTITY trellis.item.textTransform "Трансформувати текст">
+<!ENTITY trellis.item.textTransform.titlecase "Кожне Слово з Заголовної Букви">
+<!ENTITY trellis.item.textTransform.sentencecase "Як у реченні">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Копіювати у вигляді URL">
+<!ENTITY trellis.item.deletePermanently "Видалити остаточно...">
+
+<!ENTITY trellis.item.tags.removeAll "Видалити всі теги...">
+
+<!ENTITY trellis.toolbar.newNote "Нова примітка">
+<!ENTITY trellis.toolbar.note.standalone "Нова окрема примітка">
+<!ENTITY trellis.toolbar.note.child "Додати дочірню примітку">
+<!ENTITY trellis.toolbar.lookup "Знайти за ідентифікатором...">
+<!ENTITY trellis.toolbar.attachment.linked "Зв'язати з файлом...">
+<!ENTITY trellis.toolbar.attachment.add "Зберегти копію файлу...">
+<!ENTITY trellis.toolbar.attachment.weblink "Зберегти посилання на поточну сторінку">
+<!ENTITY trellis.toolbar.attachment.snapshot "Зробити знімок поточної сторінки">
+<!ENTITY trellis.toolbar.context.item "Item">
+<!ENTITY trellis.toolbar.context.notes "Примітки">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Немає тегів для відображення">
+<!ENTITY trellis.tagSelector.loadingTags "Завантажуємо теги...">
+<!ENTITY trellis.tagSelector.showAutomatic "Показувати автоматичні">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Показувати всі теги в бібліотеці">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Видалити всі автоматичні теги в бібліотеці...">
+<!ENTITY trellis.tagSelector.clearAll "Відмінити вибір">
+<!ENTITY trellis.tagSelector.assignColor "Призначити колір...">
+<!ENTITY trellis.tagSelector.renameTag "Перейменувати тег...">
+<!ENTITY trellis.tagSelector.deleteTag "Видалити тег...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Вибрати колір та розташування тега">
+<!ENTITY trellis.tagColorChooser.color "Колір:">
+<!ENTITY trellis.tagColorChooser.position "Розташування:">
+<!ENTITY trellis.tagColorChooser.setColor "Задати колір">
+<!ENTITY trellis.tagColorChooser.removeColor "Видалити колір">
+
+<!ENTITY trellis.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
+<!ENTITY trellis.lookup.button.search "Пошук">
+
+<!ENTITY trellis.createParent.title "Створити батьківський документ">
+<!ENTITY trellis.createParent.button.manual "Manual Entry">
+
+<!ENTITY trellis.selectitems.title "Вибрати документи">
+<!ENTITY trellis.selectitems.intro.label "Вибрати які документи ви бажаєте додати в свою бібіліотеку">
+<!ENTITY trellis.selectitems.cancel.label "Відмінити">
+<!ENTITY trellis.selectitems.select.label "Гаразд">
+
+<!ENTITY trellis.bibliography.title "Створити цитування/список літератури">
+<!ENTITY trellis.bibliography.style.label "Стиль цитування:">
+<!ENTITY trellis.bibliography.manageStyles "Керувати стилями">
+<!ENTITY trellis.bibliography.locale.label "Мова:">
+<!ENTITY trellis.bibliography.outputMode "Режим вводу:">
+<!ENTITY trellis.bibliography.bibliography "Список літератури">
+<!ENTITY trellis.bibliography.outputMethod "Метод вводу:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Зберегти як RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Зберегти як HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Скопіювати в буфер обміну">
+<!ENTITY trellis.bibliography.print.label "Роздрукувати">
+
+<!ENTITY trellis.integration.docPrefs.title "Налаштування документу">
+<!ENTITY trellis.integration.addEditCitation.title "Додати/редагувати цитату">
+<!ENTITY trellis.integration.editBibliography.title "Редагувати список літератури">
+
+<!ENTITY trellis.progress.title "Хід виконання">
+
+<!ENTITY trellis.import "Імпорт">
+<!ENTITY trellis.import.whereToImportFrom "Where do you want to import from?">
+<!ENTITY trellis.import.source.file "A file (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Імпортування...">
+<!ENTITY trellis.import.database "Database">
+<!ENTITY trellis.import.lastModified "Last Modified">
+<!ENTITY trellis.import.size "Size">
+<!ENTITY trellis.import.createCollection "Place imported collections and items into new collection">
+<!ENTITY trellis.import.fileHandling "File Handling">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Експорт...">
+<!ENTITY trellis.exportOptions.format.label "Формат:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Налаштування транслятора">
+
+<!ENTITY trellis.charset.label "Кодування символів">
+<!ENTITY trellis.moreEncodings.label "Ще кодування">
+
+<!ENTITY trellis.citation.keepSorted.label "Підтримувати джерела відсортованими">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Префікс">
+<!ENTITY trellis.citation.suffix.label "Суфікс">
+<!ENTITY trellis.citation.editorWarning.label "Попередження: Якщо ви зміните цитату в редакторі, вона більше не буде оновлюватись у відповідності зі змінами в базі даних або стилі цитування">
+
+<!ENTITY trellis.richText.italic.label "Курсив">
+<!ENTITY trellis.richText.bold.label "Напівжириний">
+<!ENTITY trellis.richText.underline.label "Підкреслення">
+<!ENTITY trellis.richText.superscript.label "Надрядковий">
+<!ENTITY trellis.richText.subscript.label "Підрядковий">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Додати анотацію">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Сгорнути всі анотації">
+<!ENTITY trellis.annotate.toolbar.expand.label "Розгорнути всі анотації">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Виділити текст">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Зняти виділення тексту">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Показати цитати як:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Виноски">
+<!ENTITY trellis.integration.prefs.endnotes.label "Кінцеві виноски">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Зберегти цитування як:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Закладки">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Закладки можна поширювати між Word та LibreOffice, але це може викликати помилки в разі випадкого редагування та неможливість вставки у виноски.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatically update citations">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citations with pending updates will be highlighted in the document">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Disabling updates can speed up citation insertion in large documents. Click Refresh to update citations manually.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Використовувати абревіатуру журналу в MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Поле &quot;Журнал скор.&quot; буде проігнороване.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Switch to a Different Word Processor…">
+
+<!ENTITY trellis.integration.showEditor.label "Покзати редактор">
+<!ENTITY trellis.integration.classicView.label "Класичний вигляд">
+
+<!ENTITY trellis.integration.references.label "Посилання в списку літератури">
+
+<!ENTITY trellis.sync.stop "Зупинити синхронізацію">
+<!ENTITY trellis.sync.error "Помилка сінхронізації">
+<!ENTITY trellis.sync.storage.progress "Хід виконання:">
+<!ENTITY trellis.sync.storage.downloads "Завантаження:">
+<!ENTITY trellis.sync.storage.uploads "Вивантаження:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Цей тег в вашій бібліотеці Trellis занадто довгий ля синхронізації з сервером:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Теги, що синхронізуються, мають бути коротші за 256 символів.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Ви можете розділити цей тег на декілька, вкоротити його вручну або видалити його.">
+<!ENTITY trellis.sync.longTagFixer.split "Розділити">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Розділити за">
+<!ENTITY trellis.sync.longTagFixer.character "літерою">
+<!ENTITY trellis.sync.longTagFixer.characters "літерами">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Невідмічені теги будуть збережені.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Тег буде видалений зі всіх документів.">
+
+<!ENTITY trellis.merge.title "Вирішення конфліктів">
+<!ENTITY trellis.merge.of "для">
+<!ENTITY trellis.merge.deleted "Видалено">
+
+<!ENTITY trellis.proxy.recognized.title "Проксі визначений">
+<!ENTITY trellis.proxy.recognized.warning "Додавайте лише проксі, які надаються вашою бібліотекою, навчальним закладом або корпоративним сайтом.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Використання інших проксі дозволить зловмисним сайтам маскуватись під сайти яким ви довіряєте.">
+<!ENTITY trellis.proxy.recognized.disable.label "Не перенаправляти автоматичні запроси через раніше визначені проксі">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ігнорувати">
+
+<!ENTITY trellis.feedSettings.title "Налаштування стрічки">
+<!ENTITY trellis.feedSettings.saveButton.label "Зберегти">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Назва:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Оновлювати стрічку кожні">
+<!ENTITY trellis.feedSettings.refresh.label2 "годин">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Видалити непрочитані записи зі стрічки через">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "днів">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Видалити прочитані записи зі стрічки через">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "днів">
+
+<!ENTITY trellis.rtfScan.title "Сканування RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Відміна">
+<!ENTITY trellis.rtfScan.citation.label "Цитата">
+<!ENTITY trellis.rtfScan.itemName.label "Ім'я документа">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Невизначені цитати">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Неоднозначні цитати">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Визначені цитати">
+<!ENTITY trellis.rtfScan.introPage.label "Вступ">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis може автоматично витягти і переформатувати цитати та вставити список літератури в файл RTF. Наразі функція сканування RTF розпізнає цитати в наступних форматах:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Щоб почати, виберіть нижче вхідний файл RTF та вихідний файл:">
+<!ENTITY trellis.rtfScan.scanPage.label "Сканування на наявність цитат">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis сканує ваш документ на наявність цитат. Зачекайте, будь ласка.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Перевірка цитований документів.">
+<!ENTITY trellis.rtfScan.citationsPage.description "Будь ласка, перегляньте список визнаних нижче цитат для того, щоб Trellis правильно вибрав відповідні документи. Треба прийняти рішення за всіма невизначеними або неоднозначними цитатами, перш ніж приступити до наступного кроку.">
+<!ENTITY trellis.rtfScan.stylePage.label "Форматування документа">
+<!ENTITY trellis.rtfScan.formatPage.label "Форматування цитат">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis обробляє та форматує ваш файл RTF. Будь ласка, почекайте.">
+<!ENTITY trellis.rtfScan.completePage.label "Сканування RTF завершено">
+<!ENTITY trellis.rtfScan.completePage.description "Ваш документ був сканований та оброблений. Будь ласка, перевірте, що він відформатований правильно.">
+<!ENTITY trellis.rtfScan.inputFile.label "Вхідний файл">
+<!ENTITY trellis.rtfScan.outputFile.label "Вихідний файл">
+
+<!ENTITY trellis.file.choose.label "Виберіть файл...">
+<!ENTITY trellis.file.noneSelected.label "Файл не вибрано">
+
+<!ENTITY trellis.attachLink.title "Прикріпити посилання на URI">
+<!ENTITY trellis.attachLink.label.link "Посилання:">
+<!ENTITY trellis.attachLink.label.title "Назва">
+
+<!ENTITY trellis.context.addChildNote "Add Item Note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
+<!ENTITY trellis.context.addStandaloneNote "Add Standalone Note">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Add Standalone Note from Annotations">
+<!ENTITY trellis.context.editInWindow "Edit in a Separate Window">
+
+<!ENTITY trellis.pdfReader.firstPage "Перша стор.">
+<!ENTITY trellis.pdfReader.lastPage "Last Page">
+<!ENTITY trellis.pdfReader.back "Back">
+<!ENTITY trellis.pdfReader.forward "Forward">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom In">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom Out">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

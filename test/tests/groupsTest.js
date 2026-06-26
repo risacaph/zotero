@@ -1,13 +1,13 @@
-describe("Zotero.Groups", function () {
+describe("Trellis.Groups", function () {
 	describe("#get()", function () {
 		it("should retrieve a newly created group", async function () {
 			try {
 				var group = await createGroup();
-				assert.equal(Zotero.Groups.get(group.id), group)
+				assert.equal(Trellis.Groups.get(group.id), group)
 			}
 			finally {
 				if (group) {
-					await Zotero.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(async function () {
 						return group.erase();
 					})
 				}

@@ -1,4 +1,4 @@
-describe("Zotero.Collections", function () {
+describe("Trellis.Collections", function () {
 	describe("#getByLibrary()", function () {
 		it("should get all root collections in a library", async function () {
 			var group = await createGroup();
@@ -7,7 +7,7 @@ describe("Zotero.Collections", function () {
 			var col1 = await createDataObject('collection', { libraryID });
 			var col2 = await createDataObject('collection', { libraryID });
 			var col3 = await createDataObject('collection', { libraryID, parentID: col2.id });
-			var cols = Zotero.Collections.getByLibrary(libraryID);
+			var cols = Trellis.Collections.getByLibrary(libraryID);
 			assert.lengthOf(cols, 2);
 			assert.sameMembers(cols.map(col => col.id), [col1.id, col2.id]);
 		})
@@ -26,7 +26,7 @@ describe("Zotero.Collections", function () {
 			var col5 = await createDataObject('collection', { libraryID, name: "E", parentID: col2.id });
 			var col6 = await createDataObject('collection', { libraryID, name: "G", parentID: col3.id });
 			var col7 = await createDataObject('collection', { libraryID, name: "F", parentID: col3.id });
-			var cols = Zotero.Collections.getByLibrary(libraryID, true);
+			var cols = Trellis.Collections.getByLibrary(libraryID, true);
 			assert.lengthOf(cols, 7);
 			var ids = cols.map(col => col.id);
 			assert.sameMembers(
@@ -50,20 +50,20 @@ describe("Zotero.Collections", function () {
 		})
 		
 		it("should not include collections in trash", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			var col = await createDataObject('collection', { deleted: true });
-			var cols = Zotero.Collections.getByLibrary(libraryID);
+			var cols = Trellis.Collections.getByLibrary(libraryID);
 			assert.notInclude(cols.map(c => c.id), col.id);
 		});
 		
 		it("should not include collections in trash in recursive mode", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			var col1 = await createDataObject('collection');
 			var col2 = await createDataObject('collection', { parentID: col1.id, deleted: true });
 			var col3 = await createDataObject('collection', { parentID: col2.id });
 			var col4 = await createDataObject('collection', { parentID: col1.id });
 			var col5 = await createDataObject('collection', { parentID: col4.id, deleted: true });
-			var cols = Zotero.Collections.getByLibrary(libraryID, true);
+			var cols = Trellis.Collections.getByLibrary(libraryID, true);
 			assert.notIncludeMembers(cols.map(c => c.id), [col2.id, col3.id, col5.id]);
 		});
 	})
@@ -73,8 +73,8 @@ describe("Zotero.Collections", function () {
 			var col1 = await createDataObject('collection');
 			var col2 = await createDataObject('collection');
 			var col3 = await createDataObject('collection', { parentID: col2.id });
-			assert.lengthOf(Zotero.Collections.getByParent(col1.id), 0);
-			var cols = Zotero.Collections.getByParent(col2.id);
+			assert.lengthOf(Trellis.Collections.getByParent(col1.id), 0);
+			var cols = Trellis.Collections.getByParent(col2.id);
 			assert.lengthOf(cols, 1);
 			assert.sameMembers(cols.map(col => col.id), [col3.id]);
 		})
@@ -84,8 +84,8 @@ describe("Zotero.Collections", function () {
 			var col2 = await createDataObject('collection');
 			var col3 = await createDataObject('collection', { parentID: col2.id });
 			var col4 = await createDataObject('collection', { parentID: col3.id });
-			assert.lengthOf(Zotero.Collections.getByParent(col1.id), 0);
-			var cols = Zotero.Collections.getByParent(col2.id, true);
+			assert.lengthOf(Trellis.Collections.getByParent(col1.id), 0);
+			var cols = Trellis.Collections.getByParent(col2.id, true);
 			assert.lengthOf(cols, 2);
 			assert.includeMembers(cols.map(col => col.id), [col3.id, col4.id]);
 		})
@@ -93,12 +93,12 @@ describe("Zotero.Collections", function () {
 	
 	describe("#getAsync()", function () {
 		it("should return a collection item for a collection ID", async function () {
-			let collection = new Zotero.Collection({ name: 'foo' });
-			collection = await Zotero.Collections.getAsync(await collection.saveTx());
+			let collection = new Trellis.Collection({ name: 'foo' });
+			collection = await Trellis.Collections.getAsync(await collection.saveTx());
 			
 			assert.notOk(collection.isFeed);
-			assert.instanceOf(collection, Zotero.Collection);
-			assert.notInstanceOf(collection, Zotero.Feed);
+			assert.instanceOf(collection, Trellis.Collection);
+			assert.notInstanceOf(collection, Trellis.Feed);
 		});
 	});
 })

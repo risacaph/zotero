@@ -10,8 +10,8 @@ const dirs = [
 
 // list of folders that are symlinked
 const symlinkDirs = [
-	'chrome/content/zotero/xpcom/rdf',
-	'chrome/content/zotero/xpcom/translate/src',
+	'chrome/content/trellis/xpcom/rdf',
+	'chrome/content/trellis/xpcom/translate/src',
 	'styles',
 	'translators',
 ];
@@ -48,7 +48,7 @@ const symlinkFiles = [
 	'resource/ace/worker-javascript.js',
 	// Feed *.idl files are for documentation only
 	'!resource/feeds/*.idl',
-	'!chrome/skin/default/zotero/**/*.scss',
+	'!chrome/skin/default/trellis/**/*.scss',
 	'!resource/citeproc_rs_wasm.js',
 	'resource/vs/**/*',
 	// Patched in babel-worker.js
@@ -90,10 +90,10 @@ const ignoreMask = [
 	'resource/schema/global/README.md',
 	'resource/schema/global/schema.json.gz',
 	'resource/schema/global/scripts/*',
-	'chrome/content/zotero/xpcom/translate/example/**/*',
-	'chrome/content/zotero/xpcom/translate/README.md',
-	'chrome/content/zotero/xpcom/utilities/node_modules/**/*',
-	'chrome/content/zotero/xpcom/utilities/test/**/*',
+	'chrome/content/trellis/xpcom/translate/example/**/*',
+	'chrome/content/trellis/xpcom/translate/README.md',
+	'chrome/content/trellis/xpcom/utilities/node_modules/**/*',
+	'chrome/content/trellis/xpcom/utilities/test/**/*',
 ];
 
 const jsFiles = [
@@ -112,11 +112,11 @@ const jsFiles = [
 
 const scssFiles = [
 	'scss/**/*.scss',
-	'chrome/skin/default/zotero/**/*.scss'
+	'chrome/skin/default/trellis/**/*.scss'
 ];
 
 const ftlFileBaseNames = [
-	'zotero',
+	'trellis',
 	'preferences',
 	'scaffold',
 	'reader',
@@ -126,7 +126,7 @@ const ftlFileBaseNames = [
 	'fileRenaming',
 ];
 
-const buildsURL = 'https://zotero-download.s3.amazonaws.com/ci/';
+const buildsURL = 'https://trellis-download.s3.amazonaws.com/ci/';
 
 module.exports = {
 	dirs,

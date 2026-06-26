@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Назва:">
+
+<!ENTITY trellis.search.searchInLibrary "Шукати в бібліотеці:">
+
+<!ENTITY trellis.search.joinMode.prefix "Збігаються з">
+<!ENTITY trellis.search.joinMode.any "будь-яким">
+<!ENTITY trellis.search.joinMode.all "всіма">
+<!ENTITY trellis.search.joinMode.suffix "з нижченаведеного:">
+
+<!ENTITY trellis.search.recursive.label "Шукати в підпапках">
+<!ENTITY trellis.search.noChildren "Показувати документи тільки верхнього рівня">
+<!ENTITY trellis.search.includeParentsAndChildren "Включити батьківські та дочірні документи, що збігають з шуканим">
+
+<!ENTITY trellis.search.textModes.phrase "Фраза">
+<!ENTITY trellis.search.textModes.phraseBinary "Фраза (вкл. двійкові файли)">
+<!ENTITY trellis.search.textModes.regexp "Регулярний вираз">
+<!ENTITY trellis.search.textModes.regexpCS "Регулярний вираз (з врахуванням регістру)">
+
+<!ENTITY trellis.search.date.units.days "дні">
+<!ENTITY trellis.search.date.units.months "місяці">
+<!ENTITY trellis.search.date.units.years "роки">
+
+<!ENTITY trellis.search.search "Шукати">
+<!ENTITY trellis.search.clear "Очистити">
+<!ENTITY trellis.search.saveSearch "Зберегти пошук">

@@ -1,8 +1,8 @@
 var lookupIdentifier = async function (win, identifier) {
-	var textbox = win.document.getElementById("zotero-lookup-textbox");
+	var textbox = win.document.getElementById("trellis-lookup-textbox");
 	textbox.value = identifier;
 	var promise = waitForItemEvent("add");
-	await win.Zotero_Lookup.accept(textbox);
+	await win.Trellis_Lookup.accept(textbox);
 	return promise;
 };
 
@@ -10,11 +10,11 @@ describe("Add Item by Identifier", function () {
 	var win;
 	
 	before(function* () {
-		if (Zotero.automatedTest) {
+		if (Trellis.automatedTest) {
 			this.skip();
 			return;
 		}
-		win = yield loadZoteroPane();
+		win = yield loadTrellisPane();
 	});
 	
 	after(function () {
@@ -23,29 +23,29 @@ describe("Add Item by Identifier", function () {
 		}
 	});
 	
-	// TODO: mock external services: https://github.com/zotero/zotero/issues/699
+	// TODO: mock external services: https://github.com/trellis/trellis/issues/699
 	
 	it("should add an ISBN-10", function () {
 		this.timeout(20000);
 		return lookupIdentifier(win, "0838985890").then(function (ids) {
-			var item = Zotero.Items.get(ids[0]);
-			assert.match(item.getField("title"), /^Zotero: a guide for librarians, researchers/);
+			var item = Trellis.Items.get(ids[0]);
+			assert.match(item.getField("title"), /^Trellis: a guide for librarians, researchers/);
 		});
 	});
 	
 	it("should add an ISBN-13", function () {
 		this.timeout(20000);
 		return lookupIdentifier(win, "978-0838985892").then(function (ids) {
-			var item = Zotero.Items.get(ids[0]);
-			assert.match(item.getField("title"), /^Zotero: a guide for librarians, researchers/);
+			var item = Trellis.Items.get(ids[0]);
+			assert.match(item.getField("title"), /^Trellis: a guide for librarians, researchers/);
 		});
 	});
 	
 	it("should add a DOI", function () {
 		this.timeout(20000);
 		return lookupIdentifier(win, "10.4103/0976-500X.85940").then(function (ids) {
-			var item = Zotero.Items.get(ids[0]);
-			assert.equal(item.getField("title"), "Zotero: A bibliographic assistant to researcher");
+			var item = Trellis.Items.get(ids[0]);
+			assert.equal(item.getField("title"), "Trellis: A bibliographic assistant to researcher");
 		});
 	});
 	
@@ -54,11 +54,11 @@ describe("Add Item by Identifier", function () {
 		await createDataObject('item');
 		await waitForItemsLoad(win);
 		// Stub the lookup itself so the test doesn't hit external services
-		var stub = sinon.stub(win.Zotero_Lookup, "addItemsFromIdentifier").resolves([{}]);
+		var stub = sinon.stub(win.Trellis_Lookup, "addItemsFromIdentifier").resolves([{}]);
 		try {
-			var textbox = win.document.getElementById("zotero-lookup-textbox");
-			await win.Zotero_Lookup.accept(textbox);
-			assert.equal(win.document.activeElement.id, win.ZoteroPane.itemsView.id);
+			var textbox = win.document.getElementById("trellis-lookup-textbox");
+			await win.Trellis_Lookup.accept(textbox);
+			assert.equal(win.document.activeElement.id, win.TrellisPane.itemsView.id);
 		}
 		finally {
 			stub.restore();
@@ -73,7 +73,7 @@ describe("Add Item by Identifier", function () {
 	it("should add a PMID", function () {
 		this.timeout(10000);
 		return lookupIdentifier(win, "24297125").then(function (ids) {
-			var item = Zotero.Items.get(ids[0]);
+			var item = Trellis.Items.get(ids[0]);
 			assert.equal(item.getField("title"), "Taking control of your digital library: how modern citation managers do more than just referencing");
 		});
 	});
@@ -86,13 +86,13 @@ describe("Add Item by Identifier", function () {
 		
 		// Initial translator
 		var ids = await lookupIdentifier(win, "10.4103/0976-500X.85940");
-		var item = Zotero.Items.get(ids[0]);
-		assert.equal(item.getField("title"), "Zotero: A bibliographic assistant to researcher");
+		var item = Trellis.Items.get(ids[0]);
+		assert.equal(item.getField("title"), "Trellis: A bibliographic assistant to researcher");
 		assert.isTrue(item.inCollection(col.id));
 		
 		// Fallback translator
 		var ids = await lookupIdentifier(win, "10.5281/zenodo.55073");
-		var item = Zotero.Items.get(ids[0]);
+		var item = Trellis.Items.get(ids[0]);
 		assert.equal(item.getField("title"), "Comparison Of Spectral Methods Through The Adjacency Matrix And The Laplacian Of A Graph");
 		assert.isTrue(item.inCollection(col.id));
 	});

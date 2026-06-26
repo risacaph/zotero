@@ -107,7 +107,7 @@ def main():
             locale = lang
         
         pack_dir = os.path.join(script_dir, 'packs', lang)
-        locale_dir = os.path.join(locales_dir, locale, 'zotero', 'mozilla')
+        locale_dir = os.path.join(locales_dir, locale, 'trellis', 'mozilla')
         
         if not os.path.exists(pack_dir):
             os.makedirs(pack_dir)
@@ -224,7 +224,7 @@ def main():
     print()
     
     # Copy en-US files to any locales that didn't have localized versions
-    en_locale_dir = os.path.join(locales_dir, 'en-US', 'zotero', 'mozilla')
+    en_locale_dir = os.path.join(locales_dir, 'en-US', 'trellis', 'mozilla')
     locales = set(os.listdir(locales_dir))
     locales -= set(['.DS_Store'])
     for entry_filename, existing_locales in extracted_files.items():
@@ -233,7 +233,7 @@ def main():
         for locale in missing:
             if locale == 'en-US':
                 continue
-            dest_dir = os.path.join(locales_dir, locale, 'zotero', 'mozilla')
+            dest_dir = os.path.join(locales_dir, locale, 'trellis', 'mozilla')
             dest_file = os.path.join(dest_dir, entry_filename)
             if not os.path.exists(dest_dir):
                 os.mkdir(dest_dir)
@@ -249,7 +249,7 @@ def main():
     print()
     
     # Date format overrides
-    # https://github.com/zotero/zotero/pull/1156
+    # https://github.com/trellis/trellis/pull/1156
     #date_formats['fr-FR']['short'][5] = 'juin'
     #date_formats['fr-FR']['short'][6] = 'juil'
     #date_formats['fr-FR']['short'][11] = 'déc'

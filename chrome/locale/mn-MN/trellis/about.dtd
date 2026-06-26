@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "хувилбар">
+<!ENTITY trellis.whatsNew "Шинэ мэдээ">
+<!ENTITY trellis.createdby "Бичсэн:">
+<!ENTITY trellis.director "Лавлах:">
+<!ENTITY trellis.directors "Лавлахууд:">
+<!ENTITY trellis.developers "Хөгжүүлэгчид:">
+<!ENTITY trellis.alumni "Төгсөгч:">
+<!ENTITY trellis.about.localizations "Нутагшуулах:">
+<!ENTITY trellis.about.additionalSoftware "Гуравдагч талын програм хангамж:">
+<!ENTITY trellis.thanks "Онцгой талархал:">
+<!ENTITY trellis.about.close "Хаах">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Илүү нэр дурдах &amp; Батламжлах">
+<!ENTITY trellis.citationProcessing "Иш татах &amp; Номзүйн боловсруулалт">

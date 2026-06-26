@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellis nuostatos">
+
+<!ENTITY trellis.preferences.helpButton.label "Žinynas">
+
+<!ENTITY trellis.preferences.default "Numatyta:">
+<!ENTITY trellis.preferences.items "įrašai">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Savita...">
+
+<!ENTITY trellis.preferences.prefpane.general "Bendrosios">
+
+<!ENTITY trellis.preferences.interface "Sąsaja">
+<!ENTITY trellis.preferences.fileHandling "Rinkmenų tvarkymas">
+<!ENTITY trellis.preferences.automaticSnapshots "Kuriamiems naujiems įrašams automatiškai sukurti tinklalapių momentines kopijas">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Įrašant įrašus, automatiškai prisegti susijusius PDF dokumentus ir kitas rinkmenas">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Pervadinti susietas rinkmenas">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "PDF atverti su">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Sistemos numatytoji">
+
+<!ENTITY trellis.preferences.miscellaneous "Įvairios">
+<!ENTITY trellis.preferences.autoUpdate "Automatiškai tikrinti, ar yra transliatorių ir stilių atnaujinimų">
+<!ENTITY trellis.preferences.updateNow "Atnaujinti dabar">
+<!ENTITY trellis.preferences.reportTranslationFailure "Pranešti apie netinkamus svetainės transliatorius">
+<!ENTITY trellis.preferences.parseRISRefer "Trellis naudoti BibTeX/RIS/Refer rinkmenų parsiuntimui">
+<!ENTITY trellis.preferences.automaticTags "Įrašams automatiškai priskirti gaires su raktažodžiais ir temomis">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Automatiškai šalinti šiukšlinės įrašus, senesnius nei">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "d.">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Kortelių antraštės:">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "autorius - metai - pavadinimas">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "pavadinimas - autorius - metai">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Rinkmenos vardas">
+
+<!ENTITY trellis.preferences.groups "Grupės">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Kopijuojant elementus tarp bibliotekų, įtraukti:">
+<!ENTITY trellis.preferences.groups.childNotes "įrašams priklausančias pastabas">
+<!ENTITY trellis.preferences.groups.childFiles "įrašams priklausančias tinklalapių momentines kopijas ir importuotas rinkmenas">
+<!ENTITY trellis.preferences.groups.annotations "anotacijas">
+<!ENTITY trellis.preferences.groups.childLinks "įrašams priklausančias nuorodas">
+<!ENTITY trellis.preferences.groups.tags "gaires">
+
+<!ENTITY trellis.preferences.feeds "Naujienų kanalai">
+<!ENTITY trellis.preferences.feeds.sorting.label "Rikiavimas:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Naujausi pradžioje">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Seniausi pradžioje">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Numatytosios kanalų parinktys">
+
+<!ENTITY trellis.preferences.prefpane.sync "Sinchronizavimas">
+<!ENTITY trellis.preferences.sync.username "Naudotojo vardas:">
+<!ENTITY trellis.preferences.sync.password "Slaptažodis:">
+<!ENTITY trellis.preferences.sync.createAccount "Sukurti paskyrą">
+<!ENTITY trellis.preferences.sync.lostPassword "Pamiršote slaptažodį?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Sinchronizuoti automatiškai">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Visatekstinio turinio sinchronizavimas">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis gali sinchronizuoti visą jūsiškės bibliotekos rinkmenų visatekstinį turinį su trellis.org ir kitais susietais įrenginiais. Tai Jums leistų greitai pasiekti savas rinkmenas kad ir kur bebūtumėte. Jūsų visatekstinis turinys nebus viešinamas.">
+<!ENTITY trellis.preferences.sync.about "Apie sinchronizavimą">
+<!ENTITY trellis.preferences.sync.fileSyncing "Rinkmenų sinchronizavimas">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Prie savosios bibliotekos įrašų prisegtas rinkmenas sinchronizuoti per">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Rinkmenas parsiųsti">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "sinchronizuojant">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "pagal poreikį">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Tikrinti serverį">
+<!ENTITY trellis.preferences.sync.librariesToSync "Sinchronizuotinos bibliotekos">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Pasirinkti bibliotekas...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sinchronizuoti">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Biblioteka">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Tolaiu pateiktos funkcijos skirtos retiems specifiniams atvejams - jų nereikėtų naudoti įprastų nesklandumų sprendimui. Dažniausiai atkūrimas sukelia dar daugiau problemų. Daugiau informacijos rasite ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "atkūrimo sinchronizuojant parinkčių">
+<!ENTITY trellis.preferences.sync.reset.warning3 " puslapyje.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Perrašyti duomenų sinchronizavimo žurnalą">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Apjungti vietinius duomenis su duomenimis nuotoliniame serveryje, ignoruojant duombazės informaciją apie pakeitimus">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Atkurti iš nuotolinės saugyklos">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Vietinius Trellis duomenis pakeisti nuotolinės saugyklos duomenimis.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Pakeisti nuotolinėje saugykloje">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Nuotolinės saugyklos duomenis pakeisti vietinės saugyklos duomenimis.">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Perrašyti rinkmenų sinchronizavimo žurnalą">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Palyginti visas pridėtas rinkmenas su esančiomis saugykloje">
+<!ENTITY trellis.preferences.sync.reset "Atkūrimas">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Rodyti atkūrimo parinktis...">
+<!ENTITY trellis.preferences.sync.reset.button "Atkurti...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Paieška">
+<!ENTITY trellis.preferences.search.fulltextCache "Visatekstinis podėlis">
+<!ENTITY trellis.preferences.search.indexStats "Indeksavimo statistika">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Suindeksuota:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Dalinai:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Nesuindeksuota:">
+<!ENTITY trellis.preferences.search.indexStats.words "Žodžių:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Didžiausias rašmenų kiekis, indeksuotinas vienoje rinkmenoje:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Didžiausias puslapių kiekis, indeksuotinas vienoje rinkmenoje:">
+
+<!ENTITY trellis.preferences.prefpane.export "Eksportavimas">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Citavimo parinktys">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Į nuorodas įtraukti popierinių straipsnių URL adresus">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Jei parinktis nepasirinkta, Trellis URL adresus įtrauks tik jei cituojamas žurnalo, laikraščio ar periodinio leidinio straipsnyje nenurodyti puslapiai.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Greitas kopijavimas">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Įrašų formatas:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Pastabų formatas:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopijuoti HTML formatu">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Parinktys atskiroms svetainėms:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Sritis/kelias">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(pvz., wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formatas">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Kalba">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Neleisti greitai kopijuoti, jei tempiama daugiau kaip">
+
+<!ENTITY trellis.preferences.prefpane.cite "Citavimas">
+<!ENTITY trellis.preferences.cite.wordProcessors "Tekstų rengyklės">
+<!ENTITY trellis.preferences.styleEditor "Stilių rengyklė">
+<!ENTITY trellis.preferences.stylePreview "Stilių peržiūra">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Stilių tvarkytuvė">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Pavadinimas">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Atnaujinta">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Įrašyti į Trellis (ženkliukas adreso juostoje)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Aktyvuoti bibliotekos skydelį">
+<!ENTITY trellis.preferences.keys.quicksearch "Greita paieška">
+<!ENTITY trellis.preferences.keys.newItem "Sukurti naują įrašą">
+<!ENTITY trellis.preferences.keys.newNote "Sukurti naują pastabą">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Visus naujienų kanalo įrašus pažymėti skaitytais/neskaitytais">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopijuoti pasirinktų įrašų citavimą į iškarpinę">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopijuoti pasirinktus įrašus į iškarpinę">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importuoti iš iškarpinės">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Pakeitimai įsigalios iš naujo paleidus programą">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Įgaliotieji serveriai">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Įgaliotojo serverio parinktys">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis skaidriai nukreips užklausas per įrašytus įgaliotuosius serverius. Daugiau informacijos rasite">
+<!ENTITY trellis.preferences.proxies.desc_link "įgaliotojo serverio dokumentacijoje">
+<!ENTITY trellis.preferences.proxies.desc_after_link ".">
+<!ENTITY trellis.preferences.proxies.transparent "Įgalinti įgaliotojo serverio nukreipimą">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Automatiškai aptikti įgaliotųjų serverių šaltinius">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Rodyti perspėjimą kai nukreipiama per proxy serverį">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Uždrauti įgaliotojo serverio nukreipimą, jei mano srities pavadinime yra">
+<!ENTITY trellis.preferences.proxies.configured "Sukonfigūruoti įgaliotieji serveriai">
+<!ENTITY trellis.preferences.proxies.hostname "Serveris">
+<!ENTITY trellis.preferences.proxies.scheme "Schema">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Daugelio svetainių">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Automatiškai susieti naujus serverius">
+<!ENTITY trellis.preferences.proxies.variables "Įgaliotojo serverio schemoje galite naudoti tokius kintamuosius:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - serveris į nukreiptą svetainę (e.g., www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - kelias į nukreiptą puslapį be adreso pagrindo ir brūkšnio (pvz., apie/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - kelias iki katalogo (pvz., apie/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - rinkmenos vardas (pvz., index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - bet kas">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Kita">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Rinkmenos ir katalogai">
+<!ENTITY trellis.preferences.advanced.keys "Spartieji klavišai">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Išsamesnė konfigūracija">
+
+<!ENTITY trellis.preferences.prefpane.locate "Rasti vietą">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Straipsnių paieškos variklių tvarkytuvė">
+<!ENTITY trellis.preferences.locate.description "Aprašas">
+<!ENTITY trellis.preferences.locate.name "Pavadinimas">
+<!ENTITY trellis.preferences.locate.addDescription "Norėdami įtraukti paieškos variklį, kurio nėra sąraše, interneto naršyklėje atverkite tos paieškos sistemos svetainę ir nuspauskite Trellis meniu mygtuką „Pridėti“.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Naudoti numatytuosius">
+
+<!ENTITY trellis.preferences.charset "Rašmenų koduotė">
+<!ENTITY trellis.preferences.charset.importCharset "Importuoti rašmenų koduotę">
+<!ENTITY trellis.preferences.charset.displayExportOption "Eksportuojant rodyti rašmenų koduotės parinktis">
+
+<!ENTITY trellis.preferences.dataDir "Duomenų katalogo vieta">
+<!ENTITY trellis.preferences.dataDir.useProfile "Naudoti profilio katalogą">
+<!ENTITY trellis.preferences.dataDir.custom "Savita:">
+<!ENTITY trellis.preferences.dataDir.choose "Pasirinkti...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(nurodyta komandinėje eilutėje)">
+<!ENTITY trellis.preferences.dataDir.reveal "Parodyti duomenų katalogą">
+<!ENTITY trellis.preferences.dataDir.migrate "Perkelti į naują numatytąją vietą...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Susietų priedų pagrindinis katalogas">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Rinkmenoms, kurios prisegtos prie įrašų, Trellis naudos santykinius kelius pagrindinio katalogo atžvilgiu, tad rinkmenas galėsite pasiekti bet kuriame savo kompiuteryje, žinoma, jei rinkmenų struktūra pagrindiniuose kataloguose bus tokia pati.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Pagrindinis katalogas:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Pasirinkti...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Pakeisti absoliučiais keliais...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Duomenų bazės priežiūra">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Tikrinti duomenų bazės vientisumą">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Atkurti transliatorius ir stilius...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Atkurti transliatorius...">
+
+<!ENTITY trellis.preferences.configEditor "Konfigūracijos rengyklė">

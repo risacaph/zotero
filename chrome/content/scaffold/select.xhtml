@@ -4,54 +4,54 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 -->
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero-platform/content/zotero.css" type="text/css"?>
-<?xml-stylesheet href="chrome://zotero/skin/scaffold.css" type="text/css"?>
-<!DOCTYPE window SYSTEM "chrome://zotero/locale/zotero.dtd">
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/scaffold.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
 <window xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	id="zotero-select-item-dialog"
-	class="zotero-dialog"
-	title="&zotero.selectitems.title;"
+	id="trellis-select-item-dialog"
+	class="trellis-dialog"
+	title="&trellis.selectitems.title;"
 	persist="width height"
 	drawintitlebar-platforms="mac"
-	onload="Zotero_Ingester_Interface_SelectItems.init()">
+	onload="Trellis_Ingester_Interface_SelectItems.init()">
 <dialog 
 	buttons="cancel,accept"
-	id="zotero-selectitems">
+	id="trellis-selectitems">
 
 	<script>
-		Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/titlebar.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/titlebar.js", this);
 		Services.scriptloader.loadSubScript("chrome://scaffold/content/select.js", this);
-		Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 	</script>
 	
-	<richlistbox id="zotero-selectitems-links"></richlistbox>
-	<hbox id="zotero-select-items-buttons">
-		<button label="Select All" oncommand="Zotero_Ingester_Interface_SelectItems.selectAll()"/>
-		<button label="Deselect All" oncommand="Zotero_Ingester_Interface_SelectItems.selectAll(true)"/>
+	<richlistbox id="trellis-selectitems-links"></richlistbox>
+	<hbox id="trellis-select-items-buttons">
+		<button label="Select All" oncommand="Trellis_Ingester_Interface_SelectItems.selectAll()"/>
+		<button label="Deselect All" oncommand="Trellis_Ingester_Interface_SelectItems.selectAll(true)"/>
 	</hbox>
 </dialog>
 </window>

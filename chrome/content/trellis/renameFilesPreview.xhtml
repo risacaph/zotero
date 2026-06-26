@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+	***** BEGIN LICENSE BLOCK *****
+
+	Copyright © 2026 Corporation for Digital Scholarship
+					 Vienna, Virginia, USA
+					http://trellis.org
+
+	This file is part of Trellis.
+
+	Trellis is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Trellis is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+
+	***** END LICENSE BLOCK *****
+-->
+
+<?xml-stylesheet href="chrome://global/skin/"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/overlay.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+		xmlns:html="http://www.w3.org/1999/xhtml"
+		id="rename-files-preview"
+		data-l10n-id="file-renaming-preview-window"
+		width="800"
+		height="500"
+		onload="RenameFilesPreview.init()"
+>
+	<vbox id="rename-files-preview-content">
+		<script>
+			Services.scriptloader.loadSubScript('chrome://trellis/content/include.js', this);
+			Services.scriptloader.loadSubScript('chrome://trellis/content/customElements.js', this);
+			Services.scriptloader.loadSubScript('chrome://trellis/content/renameFilesPreview.js', this);
+		</script>
+		<linkset>
+			<html:link rel="localization" href="branding/brand.ftl" />
+			<html:link rel="localization" href="trellis.ftl" />
+			<html:link rel="localization" href="fileRenaming.ftl" />
+		</linkset>
+
+		<vbox>
+			<html:p id="preview-intro" />
+		</vbox>
+		<vbox class="virtualized-table-container">
+			<html:div id="preview-files-list" class="virtualized-table-wrapper">
+				<html:div class="virtualized-table-loading" id="preview-loading">
+					<html:span data-l10n-id="file-renaming-preview-window-loading" />
+				</html:div>
+			</html:div>
+			<html:progress id="preview-progress" max="1" value="0" />
+		</vbox>
+		<hbox id="preview-buttons">
+			<button id="preview-cancel-btn" data-l10n-id="file-renaming-cancel-button" />
+			<button id="preview-accept-btn" data-l10n-id="file-renaming-rename-files" disabled="true" />
+		</hbox>
+	</vbox>
+</window>

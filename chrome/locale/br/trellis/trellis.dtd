@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Ya">
+<!ENTITY trellis.general.no "Ket">
+<!ENTITY trellis.general.optional "(Diret)">
+<!ENTITY trellis.general.note "Notenn:">
+<!ENTITY trellis.general.selectAll "Diuzañ pep-tra">
+<!ENTITY trellis.general.deselectAll "Diziuzañ pep-tra">
+<!ENTITY trellis.general.edit "Aozañ">
+<!ENTITY trellis.general.delete "Dilemel">
+<!ENTITY trellis.general.moveToTrash "Kas d'ar pod-lastez">
+<!ENTITY trellis.general.ok "Mat eo">
+<!ENTITY trellis.general.cancel "Nullañ">
+<!ENTITY trellis.general.refresh "Freskaat">
+<!ENTITY trellis.general.saveAs "Enrollañ dindan...">
+<!ENTITY trellis.general.options "Dibarzhioù">
+<!ENTITY trellis.general.advancedOptions.label "Dibarzhioù araokaet">
+<!ENTITY trellis.general.tools "Ostilhoù">
+<!ENTITY trellis.general.more "Muioc'h">
+<!ENTITY trellis.general.moreInformation "Muioc'h a ditouroù">
+<!ENTITY trellis.general.loading "O kargañ...">
+<!ENTITY trellis.general.close "Serriñ">
+<!ENTITY trellis.general.minimize "Bihanaat">
+<!ENTITY trellis.general.other "Traoù all...">
+<!ENTITY trellis.general.bigger "Brasoc'h">
+<!ENTITY trellis.general.smaller "Bihanoc'h">
+<!ENTITY trellis.general.reset "Adderaouekaat">
+
+
+<!ENTITY trellis.errorReport.title "Fazi danevell Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Gortozit e-pad ma vez kaset an danevell fazi mar plij.">
+<!ENTITY trellis.errorReport.submitted "An danevell fazi a zo bet kaset.">
+<!ENTITY trellis.errorReport.reportID "ID danevell:">
+<!ENTITY trellis.errorReport.postToForums "Skrivit ur gemennadenn e-barzh foromoù Trellis (forums.trellis.org) gant an ID danevell-mañ, gant un deskrivadur eus ar gudenn hag ar pazennoù ret heuliañ evit adkaout ar gudenn-se.">
+<!ENTITY trellis.errorReport.notReviewed "An danevelloù fazioù na vezont ket lennet keit ha ma ne vezont ket daveennet e-barzh ar foromoù.">
+
+<!ENTITY trellis.upgrade.title "Skoazeller hizivadur Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Staliet ho peus ur stumm nevez eus Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "Ho tiaz-roadennoù Trellis a rank bezañ hizivaet evit mont en-dro gant ar stumm nevez.">
+<!ENTITY trellis.upgrade.autoBackup "Ho tiaz-roadennoù a-vremañ a vo em-enrollet a-raok kement cheñchamant.">
+<!ENTITY trellis.upgrade.majorUpgrade "Un hizivadur a-bouez eo.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Bezit sur da vezañ taolet ur sell ouzh">
+<!ENTITY trellis.upgrade.majorUpgradeLink "kelennadurioù diwar-benn an hizivadurioù">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "a-raok kenderc'hel.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Gortozit betek fin an argerzh hizivadur mar plij. An dra-se a c'hall kemer meur a vunutenn.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Ho tiaz-roadennoù Trellis a zo bet hizivaet gant berzh.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Sellit mar plij">
+<!ENTITY trellis.upgrade.changeLogLink "renabl ar cheñchamantoù">
+<!ENTITY trellis.upgrade.changeLogAfterLink "evit dizoloiñ ar pezh a zo nevez.">
+
+<!ENTITY trellis.tabs.notes.label "Notennoù">
+<!ENTITY trellis.tabs.attachments.label "Pezhioù-stag">
+
+<!ENTITY trellis.toolbar.duplicate.label "Diskouez an doublennoù">
+<!ENTITY trellis.collections.showUnfiledItems "Diskouez an elfennoù amrummet">
+<!ENTITY trellis.collections.showRetractedItems "Diskouez an elfennoù skrizet">
+
+<!ENTITY trellis.items.itemType "Doare elfenn">
+<!ENTITY trellis.items.creator_column "Krouer">
+<!ENTITY trellis.items.year_column "Bloavezh">
+<!ENTITY trellis.items.dateModified_column "Deiziad kemmañ">
+<!ENTITY trellis.items.moreColumns.label "Muioc'h a vannoù">
+<!ENTITY trellis.items.restoreColumnOrder.label "Adsevel urzh ar bannoù">
+
+<!ENTITY trellis.items.menu.showInLibrary "Diskouez el levraoueg:">
+<!ENTITY trellis.items.menu.attach.note "Ouzhpennañ un notenn">
+<!ENTITY trellis.items.menu.attach "Ouzhpennañ ur pezh-stag">
+<!ENTITY trellis.items.menu.attach.link.uri "Stagañ ul liamm betek un URI…">
+<!ENTITY trellis.items.menu.attach.file "Stagañ un eilenn enrollet eus ur restr...">
+<!ENTITY trellis.items.menu.attach.fileLink "Stagañ ul liamm d'ar restr...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Adsevel d'al levraoueg">
+<!ENTITY trellis.items.menu.duplicateItem "Eilskrivañ an elfenn">
+<!ENTITY trellis.items.menu.mergeItems "Kendeuziñ an elfennoù...">
+<!ENTITY trellis.items.menu.unrecognize "Nullañ an adpakañ metaroadennoù">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Dibabit stumm an elfenn da implijout evel elfenn mestr:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Diuzañ ar maeziennoù da virout diwar stummoù all an elfenn:">
+
+<!ENTITY trellis.toolbar.newItem.label "Elfenn nevez">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Muioc'h">
+<!ENTITY trellis.toolbar.lookup.label "Ouzhpennañ (un) elfenn(où) dre e anaouader">
+<!ENTITY trellis.toolbar.removeItem.label "Dilemel an elfenn...">
+<!ENTITY trellis.toolbar.newGroup "Strollad nevez...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Is-dastumadeg nevez...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Klask enrollet nevez...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Goullonderiñ ar pod-lastez">
+<!ENTITY trellis.toolbar.tagSelector.label "Diskouez/Kuzhat an diuzer balizoù">
+<!ENTITY trellis.toolbar.actions.label "Oberioù">
+<!ENTITY trellis.toolbar.import.label "Emporzhiañ...">
+<!ENTITY trellis.toolbar.importFromClipboard "Emporzhiañ diwar ar golver">
+<!ENTITY trellis.toolbar.export.label "Ezporzhiañ al levraoueg...">
+<!ENTITY trellis.toolbar.rtfScan.label "Skan RTF">
+<!ENTITY trellis.toolbar.preferences.label "Arventennoù...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Skoazellerezh ha titouroù">
+<!ENTITY trellis.toolbar.about.label "Diwar-benn Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Enklaskoù araokaet">
+<!ENTITY trellis.toolbar.openURL.label "Lec'helaat">
+<!ENTITY trellis.toolbar.openURL.tooltip "Klask e-barzh ho levraoueg lec'hel">
+
+<!ENTITY trellis.toolbar.feeds.new "Froud nevez">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Adalek an URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Adalek ur restr OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Aozañ ar froud...">
+
+<!ENTITY trellis.item.add "Ouzhpennañ">
+<!ENTITY trellis.item.attachment.file.show "Diskouez ar restr">
+<!ENTITY trellis.item.textTransform "Treuzfurmiñ an destenn">
+<!ENTITY trellis.item.textTransform.titlecase "Al lizherennoù kentañ e pennlizherennoù">
+<!ENTITY trellis.item.textTransform.sentencecase "Lizherenn gentañ ar frazenn e pennlizherenn">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Eilpennañ Anv-bihan/Anv-familh">
+<!ENTITY trellis.item.creatorTransform.fixCase "Reizhañ al lizherennoù bras/bihan">
+<!ENTITY trellis.item.copyAsURL "Eilañ evel URL">
+<!ENTITY trellis.item.deletePermanently "Dilemel da virviken...">
+
+<!ENTITY trellis.item.tags.removeAll "Dilemel an holl valizoù...">
+
+<!ENTITY trellis.toolbar.newNote "Notenn nevez">
+<!ENTITY trellis.toolbar.note.standalone "Notenn dizalc'h nevez">
+<!ENTITY trellis.toolbar.note.child "Ouzhpennañ un notenn bugel">
+<!ENTITY trellis.toolbar.lookup "Klask dre anaouader...">
+<!ENTITY trellis.toolbar.attachment.linked "Liamm davet ur restr...">
+<!ENTITY trellis.toolbar.attachment.add "Stokañ un eilenn eus ar restr...">
+<!ENTITY trellis.toolbar.attachment.weblink "Enrollañ al liamm d'ar bajenn a-vremañ">
+<!ENTITY trellis.toolbar.attachment.snapshot "Kemer un dapadenn-skramm eus ar bajenn a-vremañ">
+<!ENTITY trellis.toolbar.context.item "Elfenn">
+<!ENTITY trellis.toolbar.context.notes "Notennoù">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Baliz ebet da ziskouez">
+<!ENTITY trellis.tagSelector.loadingTags "O kargañ ar balizoù...">
+<!ENTITY trellis.tagSelector.showAutomatic "Diskouez emgefreek">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Diskouez an holl valizoù el levraoueg-mañ">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Dilemel ar balizoù emgefreek el levraoueg-mañ...">
+<!ENTITY trellis.tagSelector.clearAll "Diziuzañ pep-tra">
+<!ENTITY trellis.tagSelector.assignColor "Dereiñ ul liv...">
+<!ENTITY trellis.tagSelector.renameTag "Adenvel ar baliz...">
+<!ENTITY trellis.tagSelector.deleteTag "Dilemel ar baliz...">
+<!ENTITY trellis.tagSelector.splitTag "Skarat...">
+
+<!ENTITY trellis.tagColorChooser.title "Dereiñ ul liv hag ul lec'hiadur d'ar baliz">
+<!ENTITY trellis.tagColorChooser.color "Liv:">
+<!ENTITY trellis.tagColorChooser.position "Lec'hiadur:">
+<!ENTITY trellis.tagColorChooser.setColor "Termeniñ al liv">
+<!ENTITY trellis.tagColorChooser.removeColor "Dilemel al liv">
+
+<!ENTITY trellis.lookup.description "Ebarzhiñ anaouadurioù ISBNoù, DOIoù, PMIDs, arXiv pe c'hoazh bibcodes ADS evit gellout ouzhpennañ d'ho levraoueg:">
+<!ENTITY trellis.lookup.button.search "Klask">
+
+<!ENTITY trellis.createParent.title "Krouiñ un elfenn kar">
+<!ENTITY trellis.createParent.button.manual "Enmont an Dornlevr">
+
+<!ENTITY trellis.selectitems.title "Diuzañ elfennoù">
+<!ENTITY trellis.selectitems.intro.label "Diuzit peseurt elfennoù ho peus c'hoant ouzhpennañ d'ho levraoueg">
+<!ENTITY trellis.selectitems.cancel.label "Nullañ">
+<!ENTITY trellis.selectitems.select.label "Mat eo">
+
+<!ENTITY trellis.bibliography.title "Krouiñ un arroudenn/levrlennadur">
+<!ENTITY trellis.bibliography.style.label "Doare arroudenn:">
+<!ENTITY trellis.bibliography.manageStyles "Merañ ar stiloù...">
+<!ENTITY trellis.bibliography.locale.label "Yezh:">
+<!ENTITY trellis.bibliography.outputMode "Mod ezvont:">
+<!ENTITY trellis.bibliography.bibliography "Levrlennadur">
+<!ENTITY trellis.bibliography.outputMethod "Hentenn ezvont:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Enrollañ dindan ar stumm RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Enrollañ dindan ar stumm HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Eilañ er golver">
+<!ENTITY trellis.bibliography.print.label "Moullañ">
+
+<!ENTITY trellis.integration.docPrefs.title "Arventennoù an teuliad">
+<!ENTITY trellis.integration.addEditCitation.title "Ouzhpennañ/aozañ an arroudenn">
+<!ENTITY trellis.integration.editBibliography.title "Aozañ al levrlennadur">
+
+<!ENTITY trellis.progress.title "Araokadur">
+
+<!ENTITY trellis.import "Emporzhiañ">
+<!ENTITY trellis.import.whereToImportFrom "Deus pelec'h ho peus c'hoant emporzhiañ?">
+<!ENTITY trellis.import.source.file "Ur restr (BibTeX, RIS, Trellis RDF, hag all hag all...)">
+<!ENTITY trellis.import.source.folder "Un doser gant PDFoù pe restroù all">
+<!ENTITY trellis.import.onlineImport "emporzhiañ enlinenn">
+<!ENTITY trellis.import.importing "Oc'h emporzhiañ...">
+<!ENTITY trellis.import.database "Diaz-roadennoù">
+<!ENTITY trellis.import.lastModified "Kemm diwezhañ">
+<!ENTITY trellis.import.size "Ment">
+<!ENTITY trellis.import.createCollection "Plasit an dastumadegoù hag an teuliadoù emporzhiet e-barzh un dastumadeg nevez">
+<!ENTITY trellis.import.fileHandling "Meradur ar restroù">
+<!ENTITY trellis.import.online.newItemsOnly "Pellgargañ an elfennoù nevez hepken; na hizivaat an elfennoù emporzhiet kent">
+
+<!ENTITY trellis.exportOptions.title "Ezporzhiañ...">
+<!ENTITY trellis.exportOptions.format.label "Stumm:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Dibarzhioù troer">
+
+<!ENTITY trellis.charset.label "Enkodiñ an arouezioù">
+<!ENTITY trellis.moreEncodings.label "Muioc'h a engodurioù">
+
+<!ENTITY trellis.citation.keepSorted.label "Mirout ar mammennoù rummet">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Lezel a-gostez an Aozer">
+<!ENTITY trellis.citation.prefix.label "Rakger:">
+<!ENTITY trellis.citation.suffix.label "Lostger:">
+<!ENTITY trellis.citation.editorWarning.label "Kemenn-diwall: Ma aozit un arroudenn en aozer, ne vo ket gouest ken da velezouriñ ar cheñchadurioù en ho tiaz-roadennoù pe ar stil arroudenniñ.">
+
+<!ENTITY trellis.richText.italic.label "Stouet">
+<!ENTITY trellis.richText.bold.label "Druz">
+<!ENTITY trellis.richText.underline.label "Islinennet">
+<!ENTITY trellis.richText.superscript.label "Usskrid">
+<!ENTITY trellis.richText.subscript.label "Isskrid">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Ouzhpennañ un ennotadur">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Bihanaat an holl ennotadurioù">
+<!ENTITY trellis.annotate.toolbar.expand.label "Brasaat an holl ennotadurioù">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Usskediñ an destenn">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Diusskediñ an destenn">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Diskouez an arroudennoù evel:">
+<!ENTITY trellis.integration.prefs.footnotes.label "notennoù traoñ">
+<!ENTITY trellis.integration.prefs.endnotes.label "Notennoù fin">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Stokañ an arroudennoù evel:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Sinedoù">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Ar sinedoù a c'hall bezañ rannet kenetre Word ha LibreOffice, gellout a reont degas fazioù padal ma vezont kemmet en ur gwallzarvoud ha n'hallint ket bezañ enlakaet evel notennoù traoñ.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Em-hizivaat an arroudennoù">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "An arroudennoù o c'hortoz hizivadurioù a vo usskedet e-barzh an teuliad">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Lazhañ an hizivadurioù a c'hall fonnusaat an enlakaat arroudennoù e-barzh an teuliadoù hir. Klikit war Freskaat evit hizivaat an arroudennoù gant an dorn.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Implijout ar berradurioù kelaouennoù MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Ar vaezienn Trellis &quot;Berradur kelaouenn&quot; a vo graet van outi.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Tremen d'un treter testennoù all…">
+
+<!ENTITY trellis.integration.showEditor.label "Diskouez an aozer">
+<!ENTITY trellis.integration.classicView.label "Gwel klasel">
+
+<!ENTITY trellis.integration.references.label "Arroudennoù el levrlennadur">
+
+<!ENTITY trellis.sync.stop "Paouez ar sinkro">
+<!ENTITY trellis.sync.error "Fazi sinkro">
+<!ENTITY trellis.sync.storage.progress "Araokadur:">
+<!ENTITY trellis.sync.storage.downloads "Gwech pellgarget:">
+<!ENTITY trellis.sync.storage.uploads "Lakaet enlinenn:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Ar baliz da-heul en ho levraoueg Trellis a zo re hir anezhañ da sinkro d'ar servijer:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Ar balizoù sinkroaet a rank bezañ berroc'h evit 256 arouezenn.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Gellout a rit skarat ar baliz e meur a valiz, pe aozañ ar baliz gant an dorn evit berraat anezhañ, pe dilemel anezhañ.">
+<!ENTITY trellis.sync.longTagFixer.split "Skarat">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Skarat d'an/ar/al">
+<!ENTITY trellis.sync.longTagFixer.character "arouezenn">
+<!ENTITY trellis.sync.longTagFixer.characters "arouezioù">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Ar balizoù chomet diziuzet na vint ket enrollet.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Ar baliz a vo dilamet diwar an holl elfennoù.">
+
+<!ENTITY trellis.merge.title "Dirouestlañ an dizemglevioù">
+<!ENTITY trellis.merge.of "eus">
+<!ENTITY trellis.merge.deleted "Dilamet">
+
+<!ENTITY trellis.proxy.recognized.title "Proksi anavezet">
+<!ENTITY trellis.proxy.recognized.warning "Ouzhpennit proksioù daveennet dre lec'hienn ho levraoueg, skolioù pe embregerezhioù">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Ouzhpennañ proksioù all a ro an aotre da lec'hiennoù maliset da dremen evit lec'hiennoù ho peus fiziañs enno.">
+<!ENTITY trellis.proxy.recognized.disable.label "Chom hep em-adhenchañ rekedoù dre broksioù rakanavezet">
+<!ENTITY trellis.proxy.recognized.ignore.label "Na ober van">
+
+<!ENTITY trellis.feedSettings.title "Arventennoù ar froud">
+<!ENTITY trellis.feedSettings.saveButton.label "Enrollañ">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Titl:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Hizivaat ar froudoù bep">
+<!ENTITY trellis.feedSettings.refresh.label2 "eurvezh">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Dilemel froudoù elfenn chomet anlennet bep">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "devezh">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Dilemel ar froudoù elfenn lennet bep">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "devezh">
+
+<!ENTITY trellis.rtfScan.title "Skan RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Nullañ">
+<!ENTITY trellis.rtfScan.citation.label "Arroudenn">
+<!ENTITY trellis.rtfScan.itemName.label "Anv an elfenn">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Arroudenn chomet amdreuzskrivet">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Arroudennoù amduek">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Arroudennoù treuzskrivet">
+<!ENTITY trellis.rtfScan.introPage.label "Digoradur">
+<!ENTITY trellis.rtfScan.introPage.description "Gellout a ra Trellis em-dennañ hag em-adstummañ arroudennoù hag enlakaat ul levrlennadur er restroù RTF. An arc'hweladur skan RTF a c'hall kemer e-kont an arroudennoù e-barzh kemmoù ar stummoù da-heul:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Evit stagañ ganti, diuzit ur restr RTF enmont hag ur restr ezvont dindan:">
+<!ENTITY trellis.rtfScan.scanPage.label "Skanañ evit kavout arroudennoù">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis a zo o skaniñ ho teuliad evit klask war-lerc'h arroudennoù. Bezit pasiant mar plij.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Gwiriañ an elfennoù arroudennet">
+<!ENTITY trellis.rtfScan.citationsPage.description "Grit un tamm sell ouzh al listenn a arroudennoù anavezet amañ dindan evit bezañ sur ez eus bet diuzet gant Trellis en un doare reizh an elfennoù a genglot. Kemenet arroudenn chomet amdreuzskrivet pe amduek a rank bezañ dirouestlet a-raok tremen d'ar bazenn da-heul.">
+<!ENTITY trellis.rtfScan.stylePage.label "Teuliad-aozañ">
+<!ENTITY trellis.rtfScan.formatPage.label "Arroudenn-aozañ">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis a dret hag a bajennaoz ho restr RTF. Bezit pasiant mar plij.">
+<!ENTITY trellis.rtfScan.completePage.label "Skan RTF klokaet">
+<!ENTITY trellis.rtfScan.completePage.description "Ho teuliad a zo bet skanet ha tretet bremañ. Grit e-seurt da vezañ asur eo bet stummet ez-reizh.">
+<!ENTITY trellis.rtfScan.inputFile.label "Restr enmont">
+<!ENTITY trellis.rtfScan.outputFile.label "Restr ezvont">
+
+<!ENTITY trellis.file.choose.label "Diuzañ ur restr...">
+<!ENTITY trellis.file.noneSelected.label "Restr ebet diuzet">
+
+<!ENTITY trellis.attachLink.title "Stagañ ul liamm betek un URI">
+<!ENTITY trellis.attachLink.label.link "Liamm:">
+<!ENTITY trellis.attachLink.label.title "Titl:">
+
+<!ENTITY trellis.context.addChildNote "Ouzhpennañ un notenn elfenn">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Ouzhpennañ un notenn elfenn diwar an ennotadurioù">
+<!ENTITY trellis.context.addStandaloneNote "Ouzhpennañ un notenn dizalc'h">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Ouzhpennañ un notenn dizalc'h diwar an ennotadurioù">
+<!ENTITY trellis.context.editInWindow "Aozañ en ur prenestr distag">
+
+<!ENTITY trellis.pdfReader.firstPage "Pajenn gentañ">
+<!ENTITY trellis.pdfReader.lastPage "Pajenn ziwezhañ">
+<!ENTITY trellis.pdfReader.back "Distreiñ">
+<!ENTITY trellis.pdfReader.forward "Kent">
+<!ENTITY trellis.pdfReader.handTool "Ostilh dorn">
+<!ENTITY trellis.pdfReader.verticalScrolling "Dibunañ a-blom">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Dibunañ a-blaen">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Dibunañ dre vloc'had">
+<!ENTITY trellis.pdfReader.noSpreads "Pajennadoù doubl ebet">
+<!ENTITY trellis.pdfReader.oddSpreads "Pajennadoù doubl, ampar a-gleiz">
+<!ENTITY trellis.pdfReader.evenSpreads "Pajennadoù doubl, par a-gleiz">
+<!ENTITY trellis.pdfReader.scrolled "Dibunet">
+<!ENTITY trellis.pdfReader.paginated "Pajennet">
+<!ENTITY trellis.pdfReader.zoomIn "Zoumañ">
+<!ENTITY trellis.pdfReader.zoomOut "Dizoumañ">
+<!ENTITY trellis.pdfReader.zoomReset "Adderaouiñ Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Em-adventañ">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoumañ betek ledander ar bajenn">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoumañ betek uhelder ar bajenn">
+<!ENTITY trellis.pdfReader.splitVertically "Rannañ a-blom">
+<!ENTITY trellis.pdfReader.splitHorizontally "Rannañ a-blaen">
+<!ENTITY trellis.pdfReader.transferFromPDF "Emporzhiañ an ennotadurioù...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Treiñ ar bajenn a-gleiz">
+<!ENTITY trellis.pdfReader.rotatePageRight "Treiñ ar bajenn a-zehoù">

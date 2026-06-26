@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Si">
+<!ENTITY trellis.general.no "Non">
+<!ENTITY trellis.general.optional "(Opcional)">
+<!ENTITY trellis.general.note "Nota:">
+<!ENTITY trellis.general.selectAll "Marcar todo">
+<!ENTITY trellis.general.deselectAll "Desmarcar todo">
+<!ENTITY trellis.general.edit "Editar">
+<!ENTITY trellis.general.delete "Eliminar">
+<!ENTITY trellis.general.moveToTrash "Mover ao lixo">
+<!ENTITY trellis.general.ok "Aceptar">
+<!ENTITY trellis.general.cancel "Cancelar">
+<!ENTITY trellis.general.refresh "Actualizar">
+<!ENTITY trellis.general.saveAs "Gardar como...">
+<!ENTITY trellis.general.options "Opcións">
+<!ENTITY trellis.general.advancedOptions.label "Opcións avanzadas">
+<!ENTITY trellis.general.tools "Ferramentas">
+<!ENTITY trellis.general.more "Máis">
+<!ENTITY trellis.general.moreInformation "Máis información">
+<!ENTITY trellis.general.loading "Cargando...">
+<!ENTITY trellis.general.close "Pechar">
+<!ENTITY trellis.general.minimize "Minimizar">
+<!ENTITY trellis.general.other "Outros...">
+<!ENTITY trellis.general.bigger "Máis grande">
+<!ENTITY trellis.general.smaller "Máis pequeno">
+<!ENTITY trellis.general.reset "Reiniciar">
+
+
+<!ENTITY trellis.errorReport.title "Informe de erros de Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Espera mentres que se presenta o informe de erro.">
+<!ENTITY trellis.errorReport.submitted "Presentouse o informe de erro.">
+<!ENTITY trellis.errorReport.reportID "ID do informe:">
+<!ENTITY trellis.errorReport.postToForums "Envía unha mensaxe aos foros do Trellis (forums.trellis.org) con este ID (identificador) do informe, unha descrición do problema e os pasos necesarios para reproducilo.">
+<!ENTITY trellis.errorReport.notReviewed "Non se adoitan revisar os informes de erro agás que nos foros haxa unha referencia a eles.">
+
+<!ENTITY trellis.upgrade.title "Asistente de actualización de Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Instalouse unha nova versión de Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "A base de datos de Trellis tense que actualizar para traballar coa nova versión.">
+<!ENTITY trellis.upgrade.autoBackup "Antes de realizar cambios farase unha copia de seguridade automática da base de datos.">
+<!ENTITY trellis.upgrade.majorUpgrade "Esta é unha actualización importante.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Asegúrate de ter revisado as">
+<!ENTITY trellis.upgrade.majorUpgradeLink "instrucións de actualización">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "antes de continuar.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Espera a que remate o proceso de actualización. Pode que tarde uns minutos.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Actualizouse correctamente a base de datos de Trellis.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Vexa">
+<!ENTITY trellis.upgrade.changeLogLink "o rexistro de cambios">
+<!ENTITY trellis.upgrade.changeLogAfterLink "para saber que hai de novo.">
+
+<!ENTITY trellis.tabs.notes.label "Notas">
+<!ENTITY trellis.tabs.attachments.label "Anexo">
+
+<!ENTITY trellis.toolbar.duplicate.label "Mostrar os duplicados">
+<!ENTITY trellis.collections.showUnfiledItems "Mostrar os elementos sen cubrir">
+<!ENTITY trellis.collections.showRetractedItems "Mostrar elementos descartados">
+
+<!ENTITY trellis.items.itemType "Tipo de elemento">
+<!ENTITY trellis.items.creator_column "Creador">
+<!ENTITY trellis.items.year_column "Ano">
+<!ENTITY trellis.items.dateModified_column "Data de modificación">
+<!ENTITY trellis.items.moreColumns.label "Máis columnas">
+<!ENTITY trellis.items.restoreColumnOrder.label "Reiniciar a orde das columnas">
+
+<!ENTITY trellis.items.menu.showInLibrary "Amosar na biblioteca">
+<!ENTITY trellis.items.menu.attach.note "Engadir unha nota">
+<!ENTITY trellis.items.menu.attach "Engadir un anexo">
+<!ENTITY trellis.items.menu.attach.link.uri "Anexar a ligazón ao URI...">
+<!ENTITY trellis.items.menu.attach.file "Anexar a copia almacenada do ficheiro...">
+<!ENTITY trellis.items.menu.attach.fileLink "Anexar a ligazón do ficheiro...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Restaurar na biblioteca">
+<!ENTITY trellis.items.menu.duplicateItem "Duplicar os elementos seleccionados">
+<!ENTITY trellis.items.menu.mergeItems "Xunguir os elemento...">
+<!ENTITY trellis.items.menu.unrecognize "Desfacer a recuperación de metadatos">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Escolle que versión deste elemento queres usar como o principal:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Escolle os campos a manter das outras versións do elemento:">
+
+<!ENTITY trellis.toolbar.newItem.label "Novo elemento">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Máis">
+<!ENTITY trellis.toolbar.lookup.label "Engadir un elemento polo identificador">
+<!ENTITY trellis.toolbar.removeItem.label "Eliminar...">
+<!ENTITY trellis.toolbar.newGroup "Grupo novo...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Subcolección nova">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nova busca gardada...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Baleirar o lixo">
+<!ENTITY trellis.toolbar.tagSelector.label "Mostrar/Agochar o selector de etiquetas">
+<!ENTITY trellis.toolbar.actions.label "Accións">
+<!ENTITY trellis.toolbar.import.label "Importar...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importar do portaretallos">
+<!ENTITY trellis.toolbar.export.label "Exportar a biblioteca...">
+<!ENTITY trellis.toolbar.rtfScan.label "Esculcar RTF">
+<!ENTITY trellis.toolbar.preferences.label "Preferencias...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Axuda e documentación">
+<!ENTITY trellis.toolbar.about.label "Acerca de Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Busca avanzada">
+<!ENTITY trellis.toolbar.openURL.label "Localizar">
+<!ENTITY trellis.toolbar.openURL.tooltip "Atopar na súa biblioteca local">
+
+<!ENTITY trellis.toolbar.feeds.new "Nova fonte de novas">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Desde a URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Desde a OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Editar a fonte de novas...">
+
+<!ENTITY trellis.item.add "Engadir">
+<!ENTITY trellis.item.attachment.file.show "Mostrar o ficheiro">
+<!ENTITY trellis.item.textTransform "Transformar o texto">
+<!ENTITY trellis.item.textTransform.titlecase "Maiúsculas comezando cada palabra">
+<!ENTITY trellis.item.textTransform.sentencecase "Maiúsculas comezando cada oración">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Trocar Nome/Apelidos">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fixar maiúsculas">
+<!ENTITY trellis.item.copyAsURL "Gardar como URL">
+<!ENTITY trellis.item.deletePermanently "Eliminar ao completo...">
+
+<!ENTITY trellis.item.tags.removeAll "Eliminar todas as etiquetas...">
+
+<!ENTITY trellis.toolbar.newNote "Nota nova">
+<!ENTITY trellis.toolbar.note.standalone "Nova nota independente">
+<!ENTITY trellis.toolbar.note.child "Engadir unha nota filla">
+<!ENTITY trellis.toolbar.lookup "Busca por identificador...">
+<!ENTITY trellis.toolbar.attachment.linked "Ligazón a un ficheiro...">
+<!ENTITY trellis.toolbar.attachment.add "Gardar copias dos ficheiros...">
+<!ENTITY trellis.toolbar.attachment.weblink "Gardar a ligazón á páxina actual">
+<!ENTITY trellis.toolbar.attachment.snapshot "Tomar unha imaxe instantánea da páxina actual">
+<!ENTITY trellis.toolbar.context.item "Elemento">
+<!ENTITY trellis.toolbar.context.notes "Notas">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Non hai etiquetas que mostrar">
+<!ENTITY trellis.tagSelector.loadingTags "Cargando as etiquetas...">
+<!ENTITY trellis.tagSelector.showAutomatic "Mostrar automaticamente">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Mostrar todas as etiquetas nesta librería">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Borrar as etiquetas desta librería automaticamente...">
+<!ENTITY trellis.tagSelector.clearAll "Desmarcar todo">
+<!ENTITY trellis.tagSelector.assignColor "Asignarlle cor...">
+<!ENTITY trellis.tagSelector.renameTag "Renomear a etiqueta...">
+<!ENTITY trellis.tagSelector.deleteTag "Eliminar a etiqueta...">
+<!ENTITY trellis.tagSelector.splitTag "Dividir">
+
+<!ENTITY trellis.tagColorChooser.title "Escoller unha cor de etiqueta e unha posición">
+<!ENTITY trellis.tagColorChooser.color "Cor:">
+<!ENTITY trellis.tagColorChooser.position "Posición:">
+<!ENTITY trellis.tagColorChooser.setColor "Definir a cor">
+<!ENTITY trellis.tagColorChooser.removeColor "Eliminar a cor">
+
+<!ENTITY trellis.lookup.description "Introduce as ISBNs, DOIs, PMIDs, arXiv IDs, ou bibcodes ADS para engadir á biblioteca:">
+<!ENTITY trellis.lookup.button.search "Buscar">
+
+<!ENTITY trellis.createParent.title "Crear elemento pai">
+<!ENTITY trellis.createParent.button.manual "Entrada manual">
+
+<!ENTITY trellis.selectitems.title "Seleccionar elementos">
+<!ENTITY trellis.selectitems.intro.label "Seleccione os elementos que desexa engadir á súa biblioteca">
+<!ENTITY trellis.selectitems.cancel.label "Cancelar">
+<!ENTITY trellis.selectitems.select.label "Aceptar">
+
+<!ENTITY trellis.bibliography.title "Crear a bibliografía">
+<!ENTITY trellis.bibliography.style.label "Estilo de cita:">
+<!ENTITY trellis.bibliography.manageStyles "Xestionar os estilos...">
+<!ENTITY trellis.bibliography.locale.label "Lingua:">
+<!ENTITY trellis.bibliography.outputMode "Modo de saída:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografía:">
+<!ENTITY trellis.bibliography.outputMethod "Método de saída:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Gardar como RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Gardar como HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Copiar no portaretallos">
+<!ENTITY trellis.bibliography.print.label "Imprimir">
+
+<!ENTITY trellis.integration.docPrefs.title "Preferencias do documento">
+<!ENTITY trellis.integration.addEditCitation.title "Engadir/Editar a cita">
+<!ENTITY trellis.integration.editBibliography.title "Editar a bibliografía">
+
+<!ENTITY trellis.progress.title "Progreso">
+
+<!ENTITY trellis.import "Importar">
+<!ENTITY trellis.import.whereToImportFrom "De onde queres importar?">
+<!ENTITY trellis.import.source.file "Un ficheiro (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "Un cartafol de PDFs ou doutros ficheiros">
+<!ENTITY trellis.import.onlineImport "importación en liña">
+<!ENTITY trellis.import.importing "Importando...">
+<!ENTITY trellis.import.database "Base de datos">
+<!ENTITY trellis.import.lastModified "Última modificación">
+<!ENTITY trellis.import.size "Tamaño">
+<!ENTITY trellis.import.createCollection "Poñer as coleccións e elementos importados nunha nova colección">
+<!ENTITY trellis.import.fileHandling "Xestión de ficheiros">
+<!ENTITY trellis.import.online.newItemsOnly "Descargar só os novos elementos; non actualizar os elementos importados con anterioridade">
+
+<!ENTITY trellis.exportOptions.title "Exportar...">
+<!ENTITY trellis.exportOptions.format.label "Formato:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Opcións do tradutor">
+
+<!ENTITY trellis.charset.label "Codificación de caracteres">
+<!ENTITY trellis.moreEncodings.label "Máis codificacións">
+
+<!ENTITY trellis.citation.keepSorted.label "Manter as fontes ordenadas">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Obviar autor">
+<!ENTITY trellis.citation.prefix.label "Prefixo:">
+<!ENTITY trellis.citation.suffix.label "Sufixo:">
+<!ENTITY trellis.citation.editorWarning.label "Aviso: se editas a cita no editor non se actualizará máis reflectindo os cambios tanto na base de datos como no estilo de citas.">
+
+<!ENTITY trellis.richText.italic.label "Cursiva">
+<!ENTITY trellis.richText.bold.label "Grosa">
+<!ENTITY trellis.richText.underline.label "Subliñado">
+<!ENTITY trellis.richText.superscript.label "Superíndice">
+<!ENTITY trellis.richText.subscript.label "Subíndice">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Engadir unha anotación">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Minimizar todas as anotacións">
+<!ENTITY trellis.annotate.toolbar.expand.label "Expandir todas as anotacións">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Resaltar o texto">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Non resaltar o texto">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Mostrar as citas como:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Notas ao pé de páxina">
+<!ENTITY trellis.integration.prefs.endnotes.label "Notas no rodapé">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Gardar as citas como:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Marcador">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Os marcapáxinas pódense compartir entre Word e LibreOffice. Porén, se se modifican por erro xa non se poden introducir nas notas ao pé do texto.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Actualizar as citas automaticamente">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Vanse marcar as citas con actualizacións pendentes no documento">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Desactivar as actualizacións pode acelerar a introdución de citas nos documentos grandes. Preme en refrescar para actualizar as citas de xeito manual.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Empregar as abreviaturas de MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "O campo «Abrv. Xornal» hase ignorar. ">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Mudar a outro editor de textos...">
+
+<!ENTITY trellis.integration.showEditor.label "Mostrar o editor">
+<!ENTITY trellis.integration.classicView.label "Vista clásica">
+
+<!ENTITY trellis.integration.references.label "Referencias en bibliografía">
+
+<!ENTITY trellis.sync.stop "Deter a sincronización">
+<!ENTITY trellis.sync.error "Erro de sincronización">
+<!ENTITY trellis.sync.storage.progress "Progreso:">
+<!ENTITY trellis.sync.storage.downloads "Descargas:">
+<!ENTITY trellis.sync.storage.uploads "Subidas:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Esta etiqueta da túa biblioteca Trellis é demasiado longa como para que poida ser sincronizada co servidor:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "As etiquetas sincronizadas teñen que ter menos de 256 caracteres.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "A etiquetas pódense dividir en varias, editar a man e acurtalas e mesmo borralas.">
+<!ENTITY trellis.sync.longTagFixer.split "Dividir">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Dividir en">
+<!ENTITY trellis.sync.longTagFixer.character "carácter">
+<!ENTITY trellis.sync.longTagFixer.characters "caracteres">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "As etiquetas que non estean marcadas non se gardarán.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Vaise eliminar a etiqueta de todos os elementos.">
+
+<!ENTITY trellis.merge.title "Resolución de conflito">
+<!ENTITY trellis.merge.of "de">
+<!ENTITY trellis.merge.deleted "Eliminado">
+
+<!ENTITY trellis.proxy.recognized.title "Recoñeceuse o proxy">
+<!ENTITY trellis.proxy.recognized.warning "Engadir só proxies ligado á túa biblioteca, escola ou sitio web corporativo">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Engadir outros proxies implica que sitios maliciosos poderían quedar enmascarados como sitios de confianza.">
+<!ENTITY trellis.proxy.recognized.disable.label "Bloquear as solicitude de redireccións automáticas a través de proxies previamente recoñecidos">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignorar">
+
+<!ENTITY trellis.feedSettings.title "Configuración das fontes de novas">
+<!ENTITY trellis.feedSettings.saveButton.label "Gardar">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Título:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Actualizar todas as fontes">
+<!ENTITY trellis.feedSettings.refresh.label2 "hora(s)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Borrar os elementos sen ler despois de">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "día(s)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Borrar os elementos sen ler despois de">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "día(s)">
+
+<!ENTITY trellis.rtfScan.title "Esculcar RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Cancelar">
+<!ENTITY trellis.rtfScan.citation.label "Cita">
+<!ENTITY trellis.rtfScan.itemName.label "Nome do elemento">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Citas non cotexadas">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Citas ambiguas">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Citas cotexadas">
+<!ENTITY trellis.rtfScan.introPage.label "Introdución">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis pode extraer e darlle automaticamente novo formato ás citas e inserir a bibliografía en ficheiros RTF. O esculcador de RTFs acepta as citas con variacións nos seguintes formatos:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Para comezar escolla abaixo un ficheiro RTF de entrada e un ficheiro de saída:">
+<!ENTITY trellis.rtfScan.scanPage.label "Esculcando as citas">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis está esculcando as citas dos seus documentos. Agarda.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Comproba os elementos citados">
+<!ENTITY trellis.rtfScan.citationsPage.description "Revisa a lista de citas recoñecidas de abaixo para asegurarse de que se escolleron os elementos correctos. As citas non cotexadas ou ambiguas deben ser resoltas antes de continuar co seguinte paso.">
+<!ENTITY trellis.rtfScan.stylePage.label "Formato de documentos">
+<!ENTITY trellis.rtfScan.formatPage.label "Formato de citas">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis está procesando e dando formato ao arquivo RTF. Agarde.">
+<!ENTITY trellis.rtfScan.completePage.label "Esculcado completo do RTF">
+<!ENTITY trellis.rtfScan.completePage.description "O seu documento xa foi esculcado e procesado. Asegúrate de que o formato é correcto.">
+<!ENTITY trellis.rtfScan.inputFile.label "Ficheiro de entrada">
+<!ENTITY trellis.rtfScan.outputFile.label "Ficheiro de saída">
+
+<!ENTITY trellis.file.choose.label "Escoller ficheiro...">
+<!ENTITY trellis.file.noneSelected.label "Ningún ficheiro seleccionado">
+
+<!ENTITY trellis.attachLink.title "Engadirlle unha ligazón á URI:">
+<!ENTITY trellis.attachLink.label.link "Ligazón:">
+<!ENTITY trellis.attachLink.label.title "Título:">
+
+<!ENTITY trellis.context.addChildNote "Engadir elemento de nota">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Engadir elemento de nota desde anotacións">
+<!ENTITY trellis.context.addStandaloneNote "Engadir nota independente">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Engadir nota independente desde anotacións">
+<!ENTITY trellis.context.editInWindow "Editar nunha xanela independente">
+
+<!ENTITY trellis.pdfReader.firstPage "Primeira páxina">
+<!ENTITY trellis.pdfReader.lastPage "Última páxina">
+<!ENTITY trellis.pdfReader.back "Anterior">
+<!ENTITY trellis.pdfReader.forward "Seguinte">
+<!ENTITY trellis.pdfReader.handTool "Ferramenta manual">
+<!ENTITY trellis.pdfReader.verticalScrolling "Desprazamento vertical">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Desprazamento horizontal">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Desprazamento axustado">
+<!ENTITY trellis.pdfReader.noSpreads "Sen axustar">
+<!ENTITY trellis.pdfReader.oddSpreads "Impares axustadas">
+<!ENTITY trellis.pdfReader.evenSpreads "Pares axustadas">
+<!ENTITY trellis.pdfReader.scrolled "Desprazado">
+<!ENTITY trellis.pdfReader.paginated "Paxinado">
+<!ENTITY trellis.pdfReader.zoomIn "Ampliar">
+<!ENTITY trellis.pdfReader.zoomOut "Alonxar">
+<!ENTITY trellis.pdfReader.zoomReset "Restablecer ampliación">
+<!ENTITY trellis.pdfReader.zoomAuto "Axuste automático">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Ampliar ao ancho de páxina">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Ampliar a ancho de páxina">
+<!ENTITY trellis.pdfReader.splitVertically "Partir verticalmente">
+<!ENTITY trellis.pdfReader.splitHorizontally "Partir en horizontal">
+<!ENTITY trellis.pdfReader.transferFromPDF "Importar anotacións...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotar páxina á esquerda">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotar páxina á dereita">

@@ -1,24 +1,24 @@
 "use strict";
 
-describe("Zotero.AttachmentReadObserver", function () {
+describe("Trellis.AttachmentReadObserver", function () {
 	describe("file events", function () {
 		beforeEach(function () {
-			Zotero.Libraries.userLibrary.lastReadItemInSession = null;
+			Trellis.Libraries.userLibrary.lastReadItemInSession = null;
 		});
 
 		it("should update an attachment's attachmentLastRead every time it is opened", async function () {
 			let attachment = await importPDFAttachment(null);
 
 			// We open the attachment at midnight on January 1
-			let stub = sinon.stub(Zotero.AttachmentReadObserver, '_getCurrentDate')
+			let stub = sinon.stub(Trellis.AttachmentReadObserver, '_getCurrentDate')
 				.callsFake(() => new Date(2023, 1, 1, 0, 0, 0));
-			await Zotero.Notifier.trigger('open', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('open', 'file', [attachment.id]);
 			let initialLastRead = attachment.attachmentLastRead;
 			assert.isNumber(initialLastRead);
 
 			// We open it again, only five seconds later
 			stub.callsFake(() => new Date(2023, 1, 1, 0, 0, 5));
-			await Zotero.Notifier.trigger('open', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('open', 'file', [attachment.id]);
 			assert.isAbove(attachment.attachmentLastRead, initialLastRead);
 
 			stub.restore();
@@ -28,15 +28,15 @@ describe("Zotero.AttachmentReadObserver", function () {
 			let attachment = await importPDFAttachment(null);
 
 			// We open the attachment at midnight on January 1
-			let stub = sinon.stub(Zotero.AttachmentReadObserver, '_getCurrentDate')
+			let stub = sinon.stub(Trellis.AttachmentReadObserver, '_getCurrentDate')
 				.callsFake(() => new Date(2023, 1, 1, 0, 0, 0));
-			await Zotero.Notifier.trigger('open', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('open', 'file', [attachment.id]);
 			let initialLastRead = attachment.attachmentLastRead;
 			assert.isNumber(initialLastRead);
 
 			// We close it ten minutes later
 			stub.callsFake(() => new Date(2023, 1, 1, 0, 10, 0));
-			await Zotero.Notifier.trigger('close', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('close', 'file', [attachment.id]);
 			assert.isAbove(attachment.attachmentLastRead, initialLastRead);
 
 			stub.restore();
@@ -52,7 +52,7 @@ describe("Zotero.AttachmentReadObserver", function () {
 			await attachment.saveTx({ skipSyncedUpdate: true });
 			assert.isTrue(attachment.synced);
 
-			await Zotero.Notifier.trigger('open', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('open', 'file', [attachment.id]);
 			assert.isNumber(attachment.attachmentLastRead);
 			assert.isTrue(attachment.synced);
 		});
@@ -61,26 +61,26 @@ describe("Zotero.AttachmentReadObserver", function () {
 			let attachment = await importPDFAttachment(null);
 
 			// We open the attachment at midnight on January 1
-			let stub = sinon.stub(Zotero.AttachmentReadObserver, '_getCurrentDate')
+			let stub = sinon.stub(Trellis.AttachmentReadObserver, '_getCurrentDate')
 				.callsFake(() => new Date(2023, 1, 1, 0, 0, 0));
-			await Zotero.Notifier.trigger('open', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('open', 'file', [attachment.id]);
 			let initialLastRead = attachment.attachmentLastRead;
 			assert.isNumber(initialLastRead);
 
 			// We change pages, only five seconds later
 			stub.callsFake(() => new Date(2023, 1, 1, 0, 0, 5));
-			await Zotero.Notifier.trigger('pageChange', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('pageChange', 'file', [attachment.id]);
 			assert.equal(attachment.attachmentLastRead, initialLastRead);
 
 			// We change pages again, five minutes later
 			stub.callsFake(() => new Date(2023, 1, 1, 0, 5, 5));
-			await Zotero.Notifier.trigger('pageChange', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('pageChange', 'file', [attachment.id]);
 			let updatedLastRead = attachment.attachmentLastRead;
 			assert.isAbove(updatedLastRead, initialLastRead);
 
 			// We change pages again, a minute after that
 			stub.callsFake(() => new Date(2023, 1, 1, 0, 6, 5));
-			await Zotero.Notifier.trigger('pageChange', 'file', [attachment.id]);
+			await Trellis.Notifier.trigger('pageChange', 'file', [attachment.id]);
 			assert.equal(attachment.attachmentLastRead, updatedLastRead);
 
 			stub.restore();
@@ -95,11 +95,11 @@ describe("Zotero.AttachmentReadObserver", function () {
 			let key = attachment._getLastReadSettingKey();
 
 			let firstValue = 1674668000;
-			await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, key, firstValue);
+			await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, key, firstValue);
 			assert.equal(attachment.attachmentLastRead, firstValue);
 
 			let secondValue = 1674668123;
-			await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, key, secondValue);
+			await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, key, secondValue);
 			assert.equal(attachment.attachmentLastRead, secondValue);
 		});
 
@@ -114,10 +114,10 @@ describe("Zotero.AttachmentReadObserver", function () {
 			await group.saveTx();
 
 			let value = 1674668000;
-			await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, key, value);
+			await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, key, value);
 			assert.equal(attachment.attachmentLastRead, value);
 			// Verify persisted to DB, not just set in memory
-			let dbVal = await Zotero.DB.valueQueryAsync(
+			let dbVal = await Trellis.DB.valueQueryAsync(
 				"SELECT lastRead FROM itemAttachments WHERE itemID=?", attachment.id
 			);
 			assert.equal(dbVal, value);
@@ -135,7 +135,7 @@ describe("Zotero.AttachmentReadObserver", function () {
 			assert.isTrue(attachment.synced);
 
 			let value = 1674668000;
-			await Zotero.SyncedSettings.set(Zotero.Libraries.userLibraryID, key, value);
+			await Trellis.SyncedSettings.set(Trellis.Libraries.userLibraryID, key, value);
 			assert.equal(attachment.attachmentLastRead, value);
 			// Verify item is still synced
 			await attachment.reload();

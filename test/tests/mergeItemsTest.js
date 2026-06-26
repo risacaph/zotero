@@ -2,13 +2,13 @@ describe("Item merging", function () {
 	var mergeItems;
 	
 	before(() => {
-		({ mergeItems } = ChromeUtils.importESModule("chrome://zotero/content/mergeItems.mjs"));
+		({ mergeItems } = ChromeUtils.importESModule("chrome://trellis/content/mergeItems.mjs"));
 	});
 	
 	it("should merge two items", async function () {
 		var item1 = await createDataObject('item');
 		var item2 = await createDataObject('item');
-		var item2URI = Zotero.URI.getItemURI(item2);
+		var item2URI = Trellis.URI.getItemURI(item2);
 
 		await mergeItems(item1, [item2]);
 
@@ -17,7 +17,7 @@ describe("Item merging", function () {
 
 		// Check for merge-tracking relation
 		assert.isFalse(item1.hasChanged());
-		var rels = item1.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate);
+		var rels = item1.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate);
 		assert.lengthOf(rels, 1);
 		assert.equal(rels[0], item2URI);
 	});
@@ -26,8 +26,8 @@ describe("Item merging", function () {
 		var item1 = await createDataObject('item');
 		var item2 = await createDataObject('item');
 		var item3 = await createDataObject('item');
-		var item2URI = Zotero.URI.getItemURI(item2);
-		var item3URI = Zotero.URI.getItemURI(item3);
+		var item2URI = Trellis.URI.getItemURI(item2);
+		var item3URI = Trellis.URI.getItemURI(item3);
 
 		await mergeItems(item1, [item2, item3]);
 
@@ -37,7 +37,7 @@ describe("Item merging", function () {
 
 		// Check for merge-tracking relation
 		assert.isFalse(item1.hasChanged());
-		var rels = item1.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate);
+		var rels = item1.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate);
 		assert.lengthOf(rels, 2);
 		assert.sameMembers(rels, [item2URI, item3URI]);
 	});
@@ -83,34 +83,34 @@ describe("Item merging", function () {
 			id: 25026,
 			name: "Group One"
 		});
-		var libraryOneID = Zotero.Groups.getLibraryIDFromGroupID(groupOneInfo.id);
+		var libraryOneID = Trellis.Groups.getLibraryIDFromGroupID(groupOneInfo.id);
 
 		var groupTwoInfo = await createGroup({
 			id: 11592,
 			name: "Group Two"
 		});
-		var libraryTwoID = Zotero.Groups.getLibraryIDFromGroupID(groupTwoInfo.id);
+		var libraryTwoID = Trellis.Groups.getLibraryIDFromGroupID(groupTwoInfo.id);
 
 		assert.notEqual(libraryOneID, libraryTwoID);
 
 		// two items in the first library
 		var item1 = await createDataObject('item', { libraryID: libraryOneID });
 		var item2 = await createDataObject('item', { libraryID: libraryOneID });
-		var item2URI = Zotero.URI.getItemURI(item2);
+		var item2URI = Trellis.URI.getItemURI(item2);
 
 		// one item in the second library, linked to item2 as if it dragged and dropped from it
 		var itemX = await createDataObject('item', { libraryID: libraryTwoID });
 		await itemX.addLinkedItem(item2);
 
 		// check that the owl:sameAs relation has been registered okay
-		var rels = itemX.getRelationsByPredicate(Zotero.Relations.linkedObjectPredicate);
+		var rels = itemX.getRelationsByPredicate(Trellis.Relations.linkedObjectPredicate);
 		assert.lengthOf(rels, 1);
 		assert.equal(rels[0], item2URI);
 
 		// the freshly minted item is in objectCache, but it might be absent in production,
 		// so we clobber it in this test
-		assert(!!Zotero.Items._objectCache[itemX.id], "itemX is in object cache");
-		delete Zotero.Items._objectCache[itemX.id];
+		assert(!!Trellis.Items._objectCache[itemX.id], "itemX is in object cache");
+		delete Trellis.Items._objectCache[itemX.id];
 
 		// merge the two items in the first library
 		await mergeItems(item1, [item2]);
@@ -121,7 +121,7 @@ describe("Item merging", function () {
 
 		// Check for merge-tracking relation
 		assert.isFalse(item1.hasChanged());
-		var rels = item1.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate);
+		var rels = item1.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate);
 		assert.lengthOf(rels, 1);
 		assert.equal(rels[0], item2URI);
 	});
@@ -129,15 +129,15 @@ describe("Item merging", function () {
 	it("should move merge-tracking relation from replaced item to master", async function () {
 		var item1 = await createDataObject('item');
 		var item2 = await createDataObject('item');
-		var item2URI = Zotero.URI.getItemURI(item2);
+		var item2URI = Trellis.URI.getItemURI(item2);
 		var item3 = await createDataObject('item');
-		var item3URI = Zotero.URI.getItemURI(item3);
+		var item3URI = Trellis.URI.getItemURI(item3);
 
 		await mergeItems(item2, [item3]);
 		await mergeItems(item1, [item2]);
 
 		// Check for merge-tracking relation from 1 to 3
-		var rels = item1.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate);
+		var rels = item1.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate);
 		assert.lengthOf(rels, 2);
 		assert.sameMembers(rels, [item2URI, item3URI]);
 	});
@@ -149,7 +149,7 @@ describe("Item merging", function () {
 		var item3 = await createDataObject('item', { title: 'C' });
 		var item4 = await createDataObject('item', { title: 'D' });
 
-		var uris = [item2, item3, item4].map(item => Zotero.URI.getItemURI(item));
+		var uris = [item2, item3, item4].map(item => Trellis.URI.getItemURI(item));
 
 		await mergeItems(item1, [item2]);
 		await mergeItems(item3, [item4]);
@@ -158,18 +158,18 @@ describe("Item merging", function () {
 
 		// Remaining item should include all other URIs
 		assert.sameMembers(
-			item1.getRelations()[Zotero.Relations.replacedItemPredicate],
+			item1.getRelations()[Trellis.Relations.replacedItemPredicate],
 			uris
 		);
 	});
 
 	it("should update relations pointing to replaced item to point to master", async function () {
 		var item1 = await createDataObject('item');
-		var item1URI = Zotero.URI.getItemURI(item1);
+		var item1URI = Trellis.URI.getItemURI(item1);
 		var item2 = await createDataObject('item');
-		var item2URI = Zotero.URI.getItemURI(item2);
+		var item2URI = Trellis.URI.getItemURI(item2);
 		var item3 = createUnsavedDataObject('item');
-		var predicate = Zotero.Relations.relatedItemPredicate;
+		var predicate = Trellis.Relations.relatedItemPredicate;
 		item3.addRelation(predicate, item2URI);
 		await item3.saveTx();
 
@@ -185,11 +185,11 @@ describe("Item merging", function () {
 		var group2 = await createGroup();
 
 		var item1 = await createDataObject('item', { libraryID: group1.libraryID });
-		var item1URI = Zotero.URI.getItemURI(item1);
+		var item1URI = Trellis.URI.getItemURI(item1);
 		var item2 = await createDataObject('item', { libraryID: group1.libraryID });
-		var item2URI = Zotero.URI.getItemURI(item2);
+		var item2URI = Trellis.URI.getItemURI(item2);
 		var item3 = createUnsavedDataObject('item', { libraryID: group2.libraryID });
-		var predicate = Zotero.Relations.linkedObjectPredicate;
+		var predicate = Trellis.Relations.linkedObjectPredicate;
 		item3.addRelation(predicate, item2URI);
 		await item3.saveTx();
 
@@ -268,9 +268,9 @@ describe("Item merging", function () {
 		await item2.saveTx();
 		let attachment2 = await importFileAttachment('duplicatesMerge_test_new_md5.pdf', { parentItemID: item2.id });
 
-		await Zotero.DB.executeTransaction(async () => {
-			await Zotero.FullText.clearItemWords(attachment1.id);
-			await Zotero.FullText.clearItemWords(attachment2.id);
+		await Trellis.DB.executeTransaction(async () => {
+			await Trellis.FullText.clearItemWords(attachment1.id);
+			await Trellis.FullText.clearItemWords(attachment2.id);
 		});
 
 		await mergeItems(item1, [item2]);
@@ -323,7 +323,7 @@ describe("Item merging", function () {
 	});
 
 	it("should allow small differences when hashing content", async function () {
-		let { hashAttachmentText } = ChromeUtils.importESModule("chrome://zotero/content/mergeItems.mjs");
+		let { hashAttachmentText } = ChromeUtils.importESModule("chrome://trellis/content/mergeItems.mjs");
 
 		let item1 = await createDataObject('item', { setTitle: true });
 		let attachment1 = await importFileAttachment('duplicatesMerge_JSTOR_1.pdf', { parentItemID: item1.id });
@@ -396,7 +396,7 @@ describe("Item merging", function () {
 		await item2.saveTx();
 		let attachment2 = await importPDFAttachment(item2);
 		let annotation2 = await createAnnotation('highlight', attachment2);
-		let annotation2Note = await Zotero.EditorInstance.createNoteFromAnnotations([annotation2], { parentID: item2.id });
+		let annotation2Note = await Trellis.EditorInstance.createNoteFromAnnotations([annotation2], { parentID: item2.id });
 
 		assert.include(annotation2Note.getNote(), attachment2.key);
 
@@ -419,7 +419,7 @@ describe("Item merging", function () {
 
 	it("should merge attachments in group library with annotation created by another user", async function () {
 		var otherUserID = 92624235;
-		await Zotero.Users.setName(otherUserID, 'merged-annotation-user');
+		await Trellis.Users.setName(otherUserID, 'merged-annotation-user');
 
 		let group = await createGroup();
 		let item1 = await createDataObject('item', { libraryID: group.libraryID });
@@ -459,7 +459,7 @@ describe("Item merging", function () {
 		for (let filename of attachmentFilenames) {
 			let attachment = await importFileAttachment(filename, { parentID: item2.id });
 			let annotation = await createAnnotation('highlight', attachment);
-			let note = await Zotero.EditorInstance.createNoteFromAnnotations([annotation], { parentID: item2.id });
+			let note = await Trellis.EditorInstance.createNoteFromAnnotations([annotation], { parentID: item2.id });
 			attachments2.push(attachment);
 			annotations2.push(annotation);
 			notes2.push(note);
@@ -492,10 +492,10 @@ describe("Item merging", function () {
 		content.append('snapshot');
 		content.append('index.html');
 
-		let snapshotContent = await Zotero.File.getContentsAsync(content);
+		let snapshotContent = await Trellis.File.getContentsAsync(content);
 
 		let item1 = await createDataObject('item', { setTitle: true });
-		let attachment1 = await Zotero.Attachments.importFromSnapshotContent({
+		let attachment1 = await Trellis.Attachments.importFromSnapshotContent({
 			parentItemID: item1.id,
 			url: 'https://example.com/test.html',
 			title: 'Snapshot',
@@ -504,7 +504,7 @@ describe("Item merging", function () {
 
 		let item2 = item1.clone();
 		await item2.saveTx();
-		let attachment2 = await Zotero.Attachments.importFromSnapshotContent({
+		let attachment2 = await Trellis.Attachments.importFromSnapshotContent({
 			parentItemID: item2.id,
 			url: 'https://otherdomain.example.com/test.html',
 			title: 'Snapshot',
@@ -542,7 +542,7 @@ describe("Item merging", function () {
 
 	it("should merge linked URLs", async function () {
 		let item1 = await createDataObject('item', { setTitle: true });
-		let attachment1 = await Zotero.Attachments.linkFromURL({
+		let attachment1 = await Trellis.Attachments.linkFromURL({
 			url: 'https://example.com/',
 			title: 'Catalog Entry',
 			parentItemID: item1.id
@@ -550,12 +550,12 @@ describe("Item merging", function () {
 
 		let item2 = item1.clone();
 		await item2.saveTx();
-		let attachment2 = await Zotero.Attachments.linkFromURL({
+		let attachment2 = await Trellis.Attachments.linkFromURL({
 			url: 'https://example.com/',
 			title: 'Catalog Entry',
 			parentItemID: item2.id
 		});
-		let attachment3 = await Zotero.Attachments.linkFromURL({
+		let attachment3 = await Trellis.Attachments.linkFromURL({
 			url: 'https://example.com/',
 			title: 'Catalog Entry',
 			parentItemID: item2.id
@@ -575,7 +575,7 @@ describe("Item merging", function () {
 
 	it("should keep web attachment with same URL but different title", async function () {
 		let item1 = await createDataObject('item', { setTitle: true });
-		let attachment1 = await Zotero.Attachments.linkFromURL({
+		let attachment1 = await Trellis.Attachments.linkFromURL({
 			url: 'https://example.com/',
 			title: 'Catalog Entry',
 			parentItemID: item1.id
@@ -583,12 +583,12 @@ describe("Item merging", function () {
 
 		let item2 = item1.clone();
 		await item2.saveTx();
-		let attachment2 = await Zotero.Attachments.linkFromURL({
+		let attachment2 = await Trellis.Attachments.linkFromURL({
 			url: 'https://example.com/',
 			title: 'Official Website',
 			parentItemID: item2.id
 		});
-		let attachment3 = await Zotero.Attachments.linkFromURL({
+		let attachment3 = await Trellis.Attachments.linkFromURL({
 			url: 'https://example.com/',
 			title: 'Catalog Entry',
 			parentItemID: item2.id
@@ -678,16 +678,16 @@ describe("Item merging", function () {
 
 		let item2 = await createDataObject('item');
 		let attachment2 = await importPDFAttachment(item2);
-		let attachment2URI = Zotero.URI.getItemURI(attachment2);
+		let attachment2URI = Trellis.URI.getItemURI(attachment2);
 
 		let item3 = await createDataObject('item');
 		let attachment3 = await importPDFAttachment(item3);
-		let attachment3URI = Zotero.URI.getItemURI(attachment3);
+		let attachment3URI = Trellis.URI.getItemURI(attachment3);
 
 		await mergeItems(item2, [item3]);
 		await mergeItems(item1, [item2]);
 
-		var rels = attachment1.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate);
+		var rels = attachment1.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate);
 		assert.lengthOf(rels, 2);
 		assert.sameMembers(rels, [attachment2URI, attachment3URI]);
 	});
@@ -718,7 +718,7 @@ describe("Item merging", function () {
 
 		let item1 = await createDataObject('item', { setTitle: true });
 		let attachment1 = await importPDFAttachment(item1);
-		attachment1.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_URL;
+		attachment1.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_URL;
 		await attachment1.saveTx();
 
 		let item2 = item1.clone();
@@ -739,7 +739,7 @@ describe("Item merging", function () {
 		file.append('test.pdf');
 
 		let item1 = await createDataObject('item', { setTitle: true });
-		let attachment1 = await Zotero.Attachments.linkFromFile({
+		let attachment1 = await Trellis.Attachments.linkFromFile({
 			file,
 			parentItemID: item1.id
 		});
@@ -821,7 +821,7 @@ describe("Item merging", function () {
 		assert.equal(item1.numAttachments(true), 2);
 		assert.isTrue(item2.deleted);
 		// No replaced-item relation should have been added
-		let rels = attachment1.getRelationsByPredicate(Zotero.Relations.replacedItemPredicate);
+		let rels = attachment1.getRelationsByPredicate(Trellis.Relations.replacedItemPredicate);
 		assert.lengthOf(rels, 0);
 	});
 
@@ -852,8 +852,8 @@ describe("Item merging", function () {
 		let attachment2 = await importFileAttachment('duplicatesMerge_annotated_2.pdf', { parentID: item2.id });
 
 		// Import external annotations non-destructively
-		await Zotero.PDFWorker.import(attachment1.id, true);
-		await Zotero.PDFWorker.import(attachment2.id, true);
+		await Trellis.PDFWorker.import(attachment1.id, true);
+		await Trellis.PDFWorker.import(attachment2.id, true);
 
 		assert.lengthOf(attachment1.getAnnotations(), 1);
 		assert.lengthOf(attachment2.getAnnotations(), 1);
@@ -885,15 +885,15 @@ describe("Item merging", function () {
 		let attachment2 = await importFileAttachment('duplicatesMerge_annotated_2.pdf', { parentID: item2.id });
 
 		// Import external annotations non-destructively
-		await Zotero.PDFWorker.import(attachment1.id, true);
-		await Zotero.PDFWorker.import(attachment2.id, true);
+		await Trellis.PDFWorker.import(attachment1.id, true);
+		await Trellis.PDFWorker.import(attachment2.id, true);
 
 		assert.isTrue(attachment1.getAnnotations()[0].annotationIsExternal);
 		assert.isTrue(attachment2.getAnnotations()[0].annotationIsExternal);
 
 		// Import external annotations *destructively*
-		await Zotero.PDFWorker.import(attachment1.id, true, '', true);
-		await Zotero.PDFWorker.import(attachment2.id, true, '', true);
+		await Trellis.PDFWorker.import(attachment1.id, true, '', true);
+		await Trellis.PDFWorker.import(attachment2.id, true, '', true);
 
 		assert.lengthOf(attachment1.getAnnotations(), 1);
 		assert.lengthOf(attachment2.getAnnotations(), 1);

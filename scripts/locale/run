@@ -12,7 +12,7 @@ mkdir "$WORK_DIR"
 cd $WORK_DIR
 # Create temporary directories for merge script
 mkdir en-US-new locales content-locales output
-cp -R $LOCALES_DIR/en-US/zotero/* en-US-new
+cp -R $LOCALES_DIR/en-US/trellis/* en-US-new
 cp -R $LOCALES_DIR/ locales/
 rm -rf locales/en-US
 # Correct various errors

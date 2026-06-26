@@ -1,6 +1,6 @@
 "use strict";
 
-describe("Zotero.OpenURL", function () {
+describe("Trellis.OpenURL", function () {
 	describe("#createContextObject()", function () {
 		it("should use firstCreator for author", async function () {
 			var item = createUnsavedDataObject('item');
@@ -16,7 +16,7 @@ describe("Zotero.OpenURL", function () {
 					creatorType: 'author'
 				}
 			]);
-			var co = Zotero.OpenURL.createContextObject(item, "1.0");
+			var co = Trellis.OpenURL.createContextObject(item, "1.0");
 			assert.include(co, '&rft.aufirst=Bbb&rft.aulast=Author&');
 		});
 	});

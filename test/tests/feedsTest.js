@@ -1,4 +1,4 @@
-describe("Zotero.Feeds", function () {
+describe("Trellis.Feeds", function () {
 	
 	after(function* () {
 		yield clearFeeds();
@@ -9,8 +9,8 @@ describe("Zotero.Feeds", function () {
 		var opmlString;
 		
 		before(function* (){
-			opmlString = yield Zotero.File.getContentsFromURLAsync(opmlUrl);
-			sinon.stub(Zotero.Feeds, 'updateFeeds').resolves();
+			opmlString = yield Trellis.File.getContentsFromURLAsync(opmlUrl);
+			sinon.stub(Trellis.Feeds, 'updateFeeds').resolves();
 		});
 		
 		beforeEach(function* () {
@@ -18,7 +18,7 @@ describe("Zotero.Feeds", function () {
 		});
 		
 		after(function () {
-			Zotero.Feeds.updateFeeds.restore();
+			Trellis.Feeds.updateFeeds.restore();
 		});
 		
 		it('imports feeds correctly', async function () {
@@ -27,10 +27,10 @@ describe("Zotero.Feeds", function () {
 				"http://example.com/feed2.rss": "A title 2",
 				"http://example.com/feed3.rss": "A title 3",
 				"http://example.com/feed4.rss": "A title 4",
-				"http://example.com/feed5.rss": Zotero.getString('pane.collections.untitled')
+				"http://example.com/feed5.rss": Trellis.getString('pane.collections.untitled')
 			};
-			await Zotero.Feeds.importFromOPML(opmlString);
-			let feeds = Zotero.Feeds.getAll();
+			await Trellis.Feeds.importFromOPML(opmlString);
+			let feeds = Trellis.Feeds.getAll();
 			for (let feed of feeds) {
 				assert.equal(shouldExist[feed.url], feed.name, "Feed exists and title matches");
 				delete shouldExist[feed.url];
@@ -40,7 +40,7 @@ describe("Zotero.Feeds", function () {
 		
 		it("doesn't fail if some feeds already exist", async function () {
 			await createFeed({url: "http://example.com/feed1.rss"});
-			await Zotero.Feeds.importFromOPML(opmlString)
+			await Trellis.Feeds.importFromOPML(opmlString)
 		});
 	});
 	
@@ -52,10 +52,10 @@ describe("Zotero.Feeds", function () {
 		
 			json = {};
 			for (let i = 0; i < 2; i++) {
-				let url = "http://" + Zotero.Utilities.randomString(10, 'abcdefgh') + ".com/feed.rss";
+				let url = "http://" + Trellis.Utilities.randomString(10, 'abcdefgh') + ".com/feed.rss";
 				json[url] = {
 					url,
-					name: Zotero.Utilities.randomString(),
+					name: Trellis.Utilities.randomString(),
 					refreshInterval: 5,
 					cleanupReadAfter: 3,
 					cleanupUnreadAfter: 30,
@@ -69,40 +69,40 @@ describe("Zotero.Feeds", function () {
 		});
 		
 		it("restores correctly when merge is true", async function () {
-			let feeds = Zotero.Feeds.getAll();
+			let feeds = Trellis.Feeds.getAll();
 			assert.equal(feeds.length, 2);
 			
-			await Zotero.Feeds.restoreFromJSON(json, true);
-			feeds = Zotero.Feeds.getAll();
+			await Trellis.Feeds.restoreFromJSON(json, true);
+			feeds = Trellis.Feeds.getAll();
 			
 			for (let url in json) {
-				let feed = Zotero.Feeds.getByURL(url);
+				let feed = Trellis.Feeds.getByURL(url);
 				assert.ok(feed, "new feed created");
 			}	
 			
-			let expiredFeed = Zotero.Feeds.getByURL(expiredFeedURL);
+			let expiredFeed = Trellis.Feeds.getByURL(expiredFeedURL);
 			assert.ok(expiredFeed, "does not remove feeds not in JSON");
 
-			let existingFeed = Zotero.Feeds.getByURL(existingFeedURL);
+			let existingFeed = Trellis.Feeds.getByURL(existingFeedURL);
 			assert.ok(existingFeed, "does not remove feeds in database and JSON");
 		});
 		
 		it("restores correctly when merge is false", async function () {
-			let feeds = Zotero.Feeds.getAll();
+			let feeds = Trellis.Feeds.getAll();
 			assert.equal(feeds.length, 2);
 			
-			await Zotero.Feeds.restoreFromJSON(json);
-			feeds = Zotero.Feeds.getAll();
+			await Trellis.Feeds.restoreFromJSON(json);
+			feeds = Trellis.Feeds.getAll();
 			
 			for (let url in json) {
-				let feed = Zotero.Feeds.getByURL(url);
+				let feed = Trellis.Feeds.getByURL(url);
 				assert.ok(feed, "new feed created");
 			}	
 			
-			let expiredFeed = Zotero.Feeds.getByURL(expiredFeedURL);
+			let expiredFeed = Trellis.Feeds.getByURL(expiredFeedURL);
 			assert.notOk(expiredFeed, "removes feeds not in JSON");
 
-			let existingFeed = Zotero.Feeds.getByURL(existingFeedURL);
+			let existingFeed = Trellis.Feeds.getByURL(existingFeedURL);
 			assert.ok(existingFeed, "does not remove feeds in database and JSON");
 		});
 	});
@@ -110,27 +110,27 @@ describe("Zotero.Feeds", function () {
 	describe("#haveFeeds()", function () {
 		it("should return false for a DB without feeds", async function () {
 			await clearFeeds();
-			assert.isFalse(Zotero.Feeds.haveFeeds(), 'no feeds in empty DB');
+			assert.isFalse(Trellis.Feeds.haveFeeds(), 'no feeds in empty DB');
 			
 			let group = await createGroup();
 			
-			assert.isFalse(Zotero.Feeds.haveFeeds(), 'no feeds in DB with groups');
+			assert.isFalse(Trellis.Feeds.haveFeeds(), 'no feeds in DB with groups');
 		});
 		it("should return true for a DB containing feeds", async function () {
 			let feed = await createFeed();
 			
-			assert.isTrue(Zotero.Feeds.haveFeeds());
+			assert.isTrue(Trellis.Feeds.haveFeeds());
 		});
 	});
 	describe("#getAll()", function () {
 		it("should return an empty array for a DB without feeds", async function () {
 			await clearFeeds();
-			let feeds = Zotero.Feeds.getAll();
+			let feeds = Trellis.Feeds.getAll();
 			assert.lengthOf(feeds, 0, 'no feeds in an empty DB');
 			
 			let group = await createGroup();
 			
-			feeds = Zotero.Feeds.getAll();
+			feeds = Trellis.Feeds.getAll();
 			assert.lengthOf(feeds, 0, 'no feeds in DB with group libraries');
 		});
 		it("should return an array of feeds", async function () {
@@ -138,7 +138,7 @@ describe("Zotero.Feeds", function () {
 			let feed1 = await createFeed();
 			let feed2 = await createFeed();
 			
-			let feeds = Zotero.Feeds.getAll();
+			let feeds = Trellis.Feeds.getAll();
 			assert.lengthOf(feeds, 2);
 			assert.sameMembers(feeds, [feed1, feed2]);
 		});
@@ -146,16 +146,16 @@ describe("Zotero.Feeds", function () {
 	
 	describe('#getByURL', function () {
 		it("should return a feed by url", async function () {
-			let url = 'http://' + Zotero.Utilities.randomString(10, 'abcdefg') + '.com/feed.rss';
+			let url = 'http://' + Trellis.Utilities.randomString(10, 'abcdefg') + '.com/feed.rss';
 			await createFeed({url});
-			let feed = Zotero.Feeds.getByURL(url);
+			let feed = Trellis.Feeds.getByURL(url);
 			assert.ok(feed);
 			assert.equal(feed.url, url);
 		});
 		it("should return undefined if feed does not exist", async function () {
 			var feed;
 			assert.doesNotThrow(function () {
-				feed = Zotero.Feeds.getByURL('doesnotexist');
+				feed = Trellis.Feeds.getByURL('doesnotexist');
 			});
 			assert.isUndefined(feed);
 		});
@@ -167,8 +167,8 @@ describe("Zotero.Feeds", function () {
 		before(function* () {
 			yield clearFeeds();
 		
-			sinon.stub(Zotero.Feeds, 'scheduleNextFeedCheck').resolves();
-			_updateFeed = sinon.stub(Zotero.Feed.prototype, '_updateFeed').resolves();
+			sinon.stub(Trellis.Feeds, 'scheduleNextFeedCheck').resolves();
+			_updateFeed = sinon.stub(Trellis.Feed.prototype, '_updateFeed').resolves();
 			let url = getTestDataUrl("feed.rss");
 			
 			freshFeed = yield createFeed({refreshInterval: 2});
@@ -178,20 +178,20 @@ describe("Zotero.Feeds", function () {
 			
 			recentFeed = yield createFeed({refreshInterval: 2});
 			recentFeed._feedUrl = url;
-			recentFeed.lastCheck = Zotero.Date.dateToSQL(new Date(), true);
+			recentFeed.lastCheck = Trellis.Date.dateToSQL(new Date(), true);
 			yield recentFeed.saveTx();
 			
 			oldFeed = yield createFeed({refreshInterval: 2});
 			oldFeed._feedUrl = url;
-			oldFeed.lastCheck = Zotero.Date.dateToSQL(new Date(Date.now() - 1000*60*60*6), true);
+			oldFeed.lastCheck = Trellis.Date.dateToSQL(new Date(Date.now() - 1000*60*60*6), true);
 			yield oldFeed.saveTx();
 			
-			yield Zotero.Feeds.updateFeeds();
+			yield Trellis.Feeds.updateFeeds();
 			assert.isTrue(_updateFeed.called);
 		});
 		
 		after(function () {
-			Zotero.Feeds.scheduleNextFeedCheck.restore();
+			Trellis.Feeds.scheduleNextFeedCheck.restore();
 			_updateFeed.restore();
 		});
 		
@@ -223,19 +223,19 @@ describe("Zotero.Feeds", function () {
 	});
 	describe('#scheduleNextFeedCheck()', function () {
 		it('schedules next feed check', async function () {
-			sinon.spy(Zotero.Feeds, 'scheduleNextFeedCheck');
+			sinon.spy(Trellis.Feeds, 'scheduleNextFeedCheck');
 			
 			await clearFeeds();
 			let feed = await createFeed({refreshInterval: 1});
-			feed._set('_feedLastCheck', Zotero.Date.dateToSQL(new Date(), true));
+			feed._set('_feedLastCheck', Trellis.Date.dateToSQL(new Date(), true));
 			await feed.saveTx();
 
-			await Zotero.Feeds.scheduleNextFeedCheck();
+			await Trellis.Feeds.scheduleNextFeedCheck();
 			
 			// Allow a propagation delay of 5000ms
-			assert.isTrue(Zotero.Feeds._nextFeedCheckDelay - 1000 * 60 * 60 <= 5000);
+			assert.isTrue(Trellis.Feeds._nextFeedCheckDelay - 1000 * 60 * 60 <= 5000);
 			
-			Zotero.Feeds.scheduleNextFeedCheck.restore();
+			Trellis.Feeds.scheduleNextFeedCheck.restore();
 		});
 	})
 })

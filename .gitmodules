@@ -1,14 +1,14 @@
 [submodule "translators"]
 	path = translators
-	url = https://github.com/zotero/translators.git
+	url = https://github.com/trellis/translators.git
 	branch = master
-[submodule "chrome/content/zotero/locale/csl"]
-	path = chrome/content/zotero/locale/csl
+[submodule "chrome/content/trellis/locale/csl"]
+	path = chrome/content/trellis/locale/csl
 	url = https://github.com/citation-style-language/locales.git
 	branch = master
 [submodule "styles"]
 	path = styles
-	url = https://github.com/zotero/bundled-styles.git
+	url = https://github.com/trellis/bundled-styles.git
 	branch = master
 [submodule "test/resource/chai"]
 	path = test/resource/chai
@@ -20,35 +20,35 @@
 	branch = master
 [submodule "resource/schema/global"]
 	path = resource/schema/global
-	url = https://github.com/zotero/zotero-schema.git
+	url = https://github.com/trellis/trellis-schema.git
 	branch = master
 [submodule "resource/SingleFile"]
 	path = resource/SingleFile
 	url = https://github.com/gildas-lormeau/SingleFile.git
 [submodule "pdf-reader"]
 	path = reader
-	url = https://github.com/zotero/reader.git
+	url = https://github.com/trellis/reader.git
 	branch = master
 [submodule "pdf-worker"]
 	path = document-worker
-	url = https://github.com/zotero/document-worker.git
+	url = https://github.com/trellis/document-worker.git
 	branch = master
 [submodule "note-editor"]
 	path = note-editor
-	url = https://github.com/zotero/note-editor.git
+	url = https://github.com/trellis/note-editor.git
 	branch = master
-[submodule "chrome/content/zotero/xpcom/utilities"]
-	path = chrome/content/zotero/xpcom/utilities
-	url = https://github.com/zotero/utilities.git
-[submodule "chrome/content/zotero/xpcom/translate"]
-	path = chrome/content/zotero/xpcom/translate
-	url = https://github.com/zotero/translate.git
-[submodule "app/modules/zotero-word-for-mac-integration"]
-	path = app/modules/zotero-word-for-mac-integration
-	url = https://github.com/zotero/zotero-word-for-mac-integration.git
-[submodule "app/modules/zotero-word-for-windows-integration"]
-	path = app/modules/zotero-word-for-windows-integration
-	url = https://github.com/zotero/zotero-word-for-windows-integration.git
-[submodule "app/modules/zotero-libreoffice-integration"]
-	path = app/modules/zotero-libreoffice-integration
-	url = https://github.com/zotero/zotero-libreoffice-integration.git
+[submodule "chrome/content/trellis/xpcom/utilities"]
+	path = chrome/content/trellis/xpcom/utilities
+	url = https://github.com/trellis/utilities.git
+[submodule "chrome/content/trellis/xpcom/translate"]
+	path = chrome/content/trellis/xpcom/translate
+	url = https://github.com/trellis/translate.git
+[submodule "app/modules/trellis-word-for-mac-integration"]
+	path = app/modules/trellis-word-for-mac-integration
+	url = https://github.com/trellis/trellis-word-for-mac-integration.git
+[submodule "app/modules/trellis-word-for-windows-integration"]
+	path = app/modules/trellis-word-for-windows-integration
+	url = https://github.com/trellis/trellis-word-for-windows-integration.git
+[submodule "app/modules/trellis-libreoffice-integration"]
+	path = app/modules/trellis-libreoffice-integration
+	url = https://github.com/trellis/trellis-libreoffice-integration.git

@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Áno">
+<!ENTITY trellis.general.no "Nie">
+<!ENTITY trellis.general.optional "(Voliteľné)">
+<!ENTITY trellis.general.note "Poznámka:">
+<!ENTITY trellis.general.selectAll "Označiť všetko">
+<!ENTITY trellis.general.deselectAll "Odznačiť všetko">
+<!ENTITY trellis.general.edit "Upraviť">
+<!ENTITY trellis.general.delete "Vymazať">
+<!ENTITY trellis.general.moveToTrash "Presunúť do koša">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Zrušiť">
+<!ENTITY trellis.general.refresh "Obnoviť">
+<!ENTITY trellis.general.saveAs "Uložiť ako...">
+<!ENTITY trellis.general.options "Možnosti">
+<!ENTITY trellis.general.advancedOptions.label "Rozšírené možnosti">
+<!ENTITY trellis.general.tools "Nástroje">
+<!ENTITY trellis.general.more "Viac">
+<!ENTITY trellis.general.moreInformation "Viac informácií">
+<!ENTITY trellis.general.loading "Nahrávam...">
+<!ENTITY trellis.general.close "Zavrieť">
+<!ENTITY trellis.general.minimize "Minimalizovať">
+<!ENTITY trellis.general.other "Iné...">
+<!ENTITY trellis.general.bigger "Väčší">
+<!ENTITY trellis.general.smaller "Menší">
+<!ENTITY trellis.general.reset "Obnoviť">
+
+
+<!ENTITY trellis.errorReport.title "Výkaz chýb Zotera">
+<!ENTITY trellis.errorReport.submissionInProgress "Počkajte, prosím, kým sa neodošle hlásenie o chybe.">
+<!ENTITY trellis.errorReport.submitted "Hlásenie o chybe bolo odoslané.">
+<!ENTITY trellis.errorReport.reportID "ID hlásenia:">
+<!ENTITY trellis.errorReport.postToForums "Prosím napíšte správu do diskusného fóra Trellis (forums.trellis.org) obsahujúcu toto ID, popis problému a kroky, ktoré sú potrebné k jeho reprodukovaniu.">
+<!ENTITY trellis.errorReport.notReviewed "Hlásenia o chybách nie sú preskúmané, pokiaľ sa na ne neodkazuje v diskusných fórach.">
+
+<!ENTITY trellis.upgrade.title "Sprievodca aktualizáciou Zotera">
+<!ENTITY trellis.upgrade.newVersionInstalled "Nainštalovali ste novú verziu Zotera.">
+<!ENTITY trellis.upgrade.upgradeRequired "Na to, aby ste mohli pracovať s novou verziou je potrebné aktualizovať vašu Trellis databázu.">
+<!ENTITY trellis.upgrade.autoBackup "Pred tým, než budú vykonané zmeny, sa vaša súčasná databáza automaticky zálohuje.">
+<!ENTITY trellis.upgrade.majorUpgrade "Toto je hlavná aktualizácia.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Pred tým, než budete pokračovať si prečítajte">
+<!ENTITY trellis.upgrade.majorUpgradeLink "pokyny k aktualizácii">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink ".">
+<!ENTITY trellis.upgrade.upgradeInProgress "Počkajte, prosím, kým sa dokončí aktualizácia. Môže to trvať niekoľko minút.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Vaša Trellis databáza bola úspešne aktualizovaná.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Prosím prezrite si">
+<!ENTITY trellis.upgrade.changeLogLink "protokol o zmenách">
+<!ENTITY trellis.upgrade.changeLogAfterLink "aby ste sa dozvedeli o novinkách a zmenách v tejto verzii.">
+
+<!ENTITY trellis.tabs.notes.label "Poznámky">
+<!ENTITY trellis.tabs.attachments.label "Prílohy">
+
+<!ENTITY trellis.toolbar.duplicate.label "Zobraziť duplicity">
+<!ENTITY trellis.collections.showUnfiledItems "Zobraziť nezaradené záznam">
+<!ENTITY trellis.collections.showRetractedItems "Zobraziť odobraté exempláre">
+
+<!ENTITY trellis.items.itemType "Typ záznamu">
+<!ENTITY trellis.items.creator_column "Autor">
+<!ENTITY trellis.items.year_column "Rok">
+<!ENTITY trellis.items.dateModified_column "Zmenené">
+<!ENTITY trellis.items.moreColumns.label "Viac stĺpcov">
+<!ENTITY trellis.items.restoreColumnOrder.label "Obnoviť usporiadanie stĺpcov">
+
+<!ENTITY trellis.items.menu.showInLibrary "Zobraziť v knižnici">
+<!ENTITY trellis.items.menu.attach.note "Pridať poznámku">
+<!ENTITY trellis.items.menu.attach "Vložiť prílohu">
+<!ENTITY trellis.items.menu.attach.link.uri "Vložiť odkaz na URI...">
+<!ENTITY trellis.items.menu.attach.file "Vložiť kópiu lokálneho súboru...">
+<!ENTITY trellis.items.menu.attach.fileLink "Vložiť odkaz na súbor...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Vrátiť do knižnice">
+<!ENTITY trellis.items.menu.duplicateItem "Duplikovať vybraný záznam">
+<!ENTITY trellis.items.menu.mergeItems "Zlúčiť záznamy...">
+<!ENTITY trellis.items.menu.unrecognize "Vrátiť získanie metadát">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Zvoľte verziu záznamu, ktorý chcete použiť ako hlavný záznam:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Vyberte polia, ktoré chcete zachovať z ostatných verzií záznamu:">
+
+<!ENTITY trellis.toolbar.newItem.label "Nový záznam">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Viac">
+<!ENTITY trellis.toolbar.lookup.label "Vložiť záznam(y) podľa identifikátora">
+<!ENTITY trellis.toolbar.removeItem.label "Odstrániť záznam...">
+<!ENTITY trellis.toolbar.newGroup "Nová skupina...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Nová sub-kolekcia...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nové uložené hľadanie...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Vysypať kôš">
+<!ENTITY trellis.toolbar.tagSelector.label "Ukázať/skryť výber značiek">
+<!ENTITY trellis.toolbar.actions.label "Akcie">
+<!ENTITY trellis.toolbar.import.label "Importovať...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importovať zo schránky">
+<!ENTITY trellis.toolbar.export.label "Exportovať knižnicu...">
+<!ENTITY trellis.toolbar.rtfScan.label "Preskúmať RTF">
+<!ENTITY trellis.toolbar.preferences.label "Možnosti...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Podpora a dokumentácia">
+<!ENTITY trellis.toolbar.about.label "O Zotere">
+<!ENTITY trellis.toolbar.advancedSearch "Pokročilé vyhľadávanie">
+<!ENTITY trellis.toolbar.openURL.label "Nájsť">
+<!ENTITY trellis.toolbar.openURL.tooltip "Nájdi v lokálnej knižnici">
+
+<!ENTITY trellis.toolbar.feeds.new "Nová RSS správa">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Z URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Z OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Upraviť RSS správu">
+
+<!ENTITY trellis.item.add "Pridať">
+<!ENTITY trellis.item.attachment.file.show "Zobraziť súbor">
+<!ENTITY trellis.item.textTransform "Preveď text">
+<!ENTITY trellis.item.textTransform.titlecase "Prvé Veľké">
+<!ENTITY trellis.item.textTransform.sentencecase "Prvé veľké písmeno vo vete">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Kopírovať ako URL">
+<!ENTITY trellis.item.deletePermanently "Odstrániť natrvalo...">
+
+<!ENTITY trellis.item.tags.removeAll "Odstrániť všetky značky">
+
+<!ENTITY trellis.toolbar.newNote "Nová poznámka">
+<!ENTITY trellis.toolbar.note.standalone "Nová samostatná poznámka">
+<!ENTITY trellis.toolbar.note.child "Pridať podradenú poznámku">
+<!ENTITY trellis.toolbar.lookup "Nájsť podľa identifikátora...">
+<!ENTITY trellis.toolbar.attachment.linked "Odkaz na súbor...">
+<!ENTITY trellis.toolbar.attachment.add "Uložiť kópiu súboru...">
+<!ENTITY trellis.toolbar.attachment.weblink "Uložiť odkaz na aktuálnu stránku">
+<!ENTITY trellis.toolbar.attachment.snapshot "Urobiť snímku z aktuálnej stránky">
+<!ENTITY trellis.toolbar.context.item "Záznam">
+<!ENTITY trellis.toolbar.context.notes "Poznámky">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Žiadne značky na zobrazenie">
+<!ENTITY trellis.tagSelector.loadingTags "Načítavam značky...">
+<!ENTITY trellis.tagSelector.showAutomatic "Zobrazovať automaticky">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Zobraziť všetky značky v tejto knižnici">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Zmazať automatické značky v tejto knižnici...">
+<!ENTITY trellis.tagSelector.clearAll "Odznačiť všetky">
+<!ENTITY trellis.tagSelector.assignColor "Prideliť farbu...">
+<!ENTITY trellis.tagSelector.renameTag "Premenovať značku...">
+<!ENTITY trellis.tagSelector.deleteTag "Vymazať značku...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Zvoliť farbu značky a pozíciu">
+<!ENTITY trellis.tagColorChooser.color "Farba:">
+<!ENTITY trellis.tagColorChooser.position "Pozícia:">
+<!ENTITY trellis.tagColorChooser.setColor "Nastaviť farbu">
+<!ENTITY trellis.tagColorChooser.removeColor "Odstrániť farbu">
+
+<!ENTITY trellis.lookup.description "Pridajte nové záznamy zadaním čísel ISBN, DOI, PMID, arXiv alebo kódov ADS:">
+<!ENTITY trellis.lookup.button.search "Hľadať">
+
+<!ENTITY trellis.createParent.title "Vytvoriť nadradený záznam">
+<!ENTITY trellis.createParent.button.manual "Ručné zadanie">
+
+<!ENTITY trellis.selectitems.title "Označiť záznamy">
+<!ENTITY trellis.selectitems.intro.label "Označte, ktoré záznamy chcete pridať do vašej knižnice">
+<!ENTITY trellis.selectitems.cancel.label "Zrušiť">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Vytvoriť bibliografiu">
+<!ENTITY trellis.bibliography.style.label "Citačný štýl:">
+<!ENTITY trellis.bibliography.manageStyles "Spravovať štýly...">
+<!ENTITY trellis.bibliography.locale.label "Jazyk:">
+<!ENTITY trellis.bibliography.outputMode "Výstupný režim:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografia">
+<!ENTITY trellis.bibliography.outputMethod "Výstupná metóda:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Uložiť ako RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Uložiť ako HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Skopírovať do schránky">
+<!ENTITY trellis.bibliography.print.label "Tlačiť">
+
+<!ENTITY trellis.integration.docPrefs.title "Možnosti dokumentu">
+<!ENTITY trellis.integration.addEditCitation.title "Pridať/Upraviť citáciu">
+<!ENTITY trellis.integration.editBibliography.title "Upraviť bibliografiu">
+
+<!ENTITY trellis.progress.title "Postup">
+
+<!ENTITY trellis.import "Import">
+<!ENTITY trellis.import.whereToImportFrom "Odkiaľ chcete importovať?">
+<!ENTITY trellis.import.source.file "Zo súboru (BibTeX, RIS, Trellis RDF atď.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importujem...">
+<!ENTITY trellis.import.database "Databáza">
+<!ENTITY trellis.import.lastModified "Naposledy upravené">
+<!ENTITY trellis.import.size "Veľkosť">
+<!ENTITY trellis.import.createCollection "Vložte naimportované kolekcie a záznamy do novej kolekcie">
+<!ENTITY trellis.import.fileHandling "Spracovanie súborov">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Export...">
+<!ENTITY trellis.exportOptions.format.label "Formát:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Možnosti konvertorov">
+
+<!ENTITY trellis.charset.label "Kódovanie">
+<!ENTITY trellis.moreEncodings.label "Viac">
+
+<!ENTITY trellis.citation.keepSorted.label "Zachovať zoradenie zdrojov">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Vynechať autora">
+<!ENTITY trellis.citation.prefix.label "Predpona:">
+<!ENTITY trellis.citation.suffix.label "Prípona:">
+<!ENTITY trellis.citation.editorWarning.label "Pozor: Ak citáciu upravíte v editore, nebude už aktualizovaná s ohľadom na neskoršie zmeny vo vašej databáze alebo v citačnom štýle.">
+
+<!ENTITY trellis.richText.italic.label "Kurzíva">
+<!ENTITY trellis.richText.bold.label "Tučné">
+<!ENTITY trellis.richText.underline.label "Podčiarknuté">
+<!ENTITY trellis.richText.superscript.label "Horný index">
+<!ENTITY trellis.richText.subscript.label "Dolný index">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Vložiť anotáciu">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Zbaliť všetky anotácie">
+<!ENTITY trellis.annotate.toolbar.expand.label "Rozbaliť všetky anotácie">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Zvýrazniť text">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Zrušiť zvýraznenie">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Zobraziť citácie ako:">
+<!ENTITY trellis.integration.prefs.footnotes.label "poznámky pod čiarou">
+<!ENTITY trellis.integration.prefs.endnotes.label "poznámky na konci textu">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Uschovať citácie ako:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "záložiek">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Záložky sa dajú zdieľať medzi Wordom a LibreOffice, ale môžu zapríčiniť chyby, ak sa náhodne upravia a nedajú sa vložiť do poznámok pod čiarou.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automaticky aktualizovať citácie">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citácie s nedokončenými aktualizáciami budú v dokumente zvýraznené">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Vypnutie aktualizácií môže urýchliť vkladanie citácií do veľkých dokumentov. Kliknutím na Obnoviť môžete citácie aktualizovať manuálne.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Použiť skratky časopisu MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Pole &quot;skratiek časopisov&quot; bude ignorované.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Prepnúť na iný textový editor...">
+
+<!ENTITY trellis.integration.showEditor.label "Zobraziť editor">
+<!ENTITY trellis.integration.classicView.label "Štandardné zobrazenie">
+
+<!ENTITY trellis.integration.references.label "Odkazy v bibliografii">
+
+<!ENTITY trellis.sync.stop "Zastaviť synchronizáciu">
+<!ENTITY trellis.sync.error "Chyba pri synchronizácii">
+<!ENTITY trellis.sync.storage.progress "Postup">
+<!ENTITY trellis.sync.storage.downloads "Sťahovanie:">
+<!ENTITY trellis.sync.storage.uploads "Nahrávanie:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Táto značka vo vašej Trellis knižnici je príliš dlhá na to, aby sa mohla synchronizovať na serveri:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Synchronizované značky musia mať menej ako 256 znakov.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Môžete rozdeliť značku na viacero kratších, skrátiť ju manuálne alebo ju zmazať.">
+<!ENTITY trellis.sync.longTagFixer.split "Rozdeliť">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Rozdeliť pri">
+<!ENTITY trellis.sync.longTagFixer.character "znaku">
+<!ENTITY trellis.sync.longTagFixer.characters "znakoch">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Nevybrané značky nebudú uložené.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Značka bude odstránená zo všetkých záznamov.">
+
+<!ENTITY trellis.merge.title "Riešenie konfliktov">
+<!ENTITY trellis.merge.of "z">
+<!ENTITY trellis.merge.deleted "Zmazané">
+
+<!ENTITY trellis.proxy.recognized.title "Rozpoznané proxy">
+<!ENTITY trellis.proxy.recognized.warning "Pridávajte iba proxy prepojené s vašou knižnicou, školou alebo s vašim podnikovým webovým sídlom">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Pridávanie iných proxy môže umožniť škodlivým stránkam vydávať sa za dôveryhodné.">
+<!ENTITY trellis.proxy.recognized.disable.label "Nepresmerovávať automaticky požiadavky cez v minulosti rozpoznané proxy.">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignorovať">
+
+<!ENTITY trellis.feedSettings.title "Nastavenia RSS správ">
+<!ENTITY trellis.feedSettings.saveButton.label "Uložiť">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Názov:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Aktualizovať RSS správy každú">
+<!ENTITY trellis.feedSettings.refresh.label2 "hodinu(y)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Odstrániť neprečítané RSS správy">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dňoch">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Odstrániť prečítané RSS správy po">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dňoch">
+
+<!ENTITY trellis.rtfScan.title "Spracovať RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Zrušiť">
+<!ENTITY trellis.rtfScan.citation.label "Citácia">
+<!ENTITY trellis.rtfScan.itemName.label "Názov záznamu">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Nepriradené citácie">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Nezaraditeľné citácie">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Priradené citácie">
+<!ENTITY trellis.rtfScan.introPage.label "Úvod">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis dokáže automaticky vyhľadať citácie, upraviť ich štýl a vložiť bibliografiu do RTF súborov. Funkcia spracovať RTF v súčasnosti podporuje citácie v rôznych z nasledujúcich štýlov:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Na začiatok si vyberte vstupný RTF súbor a výstupný súbor:">
+<!ENTITY trellis.rtfScan.scanPage.label "Vyhľadávanie citácií">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis vyhľadáva citácie vo vybranom dokumente. Čakajte prosím.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Skontrolovať citované záznamy">
+<!ENTITY trellis.rtfScan.citationsPage.description "Prezrite si zoznam rozpoznaných citácií a uistite sa, že Trellis správne označilo korešpondujúce záznamy. Pred ďalším krokom je potrebné priradiť všetky nepriradené alebo nejednoznačné citácie.">
+<!ENTITY trellis.rtfScan.stylePage.label "Formátovanie dokumentu">
+<!ENTITY trellis.rtfScan.formatPage.label "Formátovanie citácií">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis spracovávaa a formátuje dokument. Čakajte prosím.">
+<!ENTITY trellis.rtfScan.completePage.label "Spracovanie RTF je dokončené.">
+<!ENTITY trellis.rtfScan.completePage.description "RTF dokument bol spracovaný. Prosím uistite sa, že je formátovaný správne.">
+<!ENTITY trellis.rtfScan.inputFile.label "Vstupný súbor">
+<!ENTITY trellis.rtfScan.outputFile.label "Výstupný súbor">
+
+<!ENTITY trellis.file.choose.label "Vybrať súbor">
+<!ENTITY trellis.file.noneSelected.label "Nie je označený žiaden súbor">
+
+<!ENTITY trellis.attachLink.title "Priložiť odkaz k URI">
+<!ENTITY trellis.attachLink.label.link "Odkaz:">
+<!ENTITY trellis.attachLink.label.title "Názov:">
+
+<!ENTITY trellis.context.addChildNote "Pridať poznámku o zázname">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Pridať poznámku o zázname z anotácií">
+<!ENTITY trellis.context.addStandaloneNote "Pridať samostatnú poznámku">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Pridať samostatnú poznámku z anotácií">
+<!ENTITY trellis.context.editInWindow "Upraviť v samostatnom okne">
+
+<!ENTITY trellis.pdfReader.firstPage "Prvá strana">
+<!ENTITY trellis.pdfReader.lastPage "Posledná strana">
+<!ENTITY trellis.pdfReader.back "Späť">
+<!ENTITY trellis.pdfReader.forward "Ďalej">
+<!ENTITY trellis.pdfReader.handTool "Náradie">
+<!ENTITY trellis.pdfReader.verticalScrolling "Zvislé posúvanie">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Vodorovné posúvanie">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Zbalené posúvanie">
+<!ENTITY trellis.pdfReader.noSpreads "Žiadne rozpätia">
+<!ENTITY trellis.pdfReader.oddSpreads "Nepárne rozpätia">
+<!ENTITY trellis.pdfReader.evenSpreads "Párne rozpätia">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Priblížiť">
+<!ENTITY trellis.pdfReader.zoomOut "Oddialiť">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automaticky upraviť veľkosť">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Prispôsobiť na šírku stránky">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Prispôsobiť na výšku stránky">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "Importovať anotácie...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

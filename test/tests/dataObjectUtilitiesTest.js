@@ -1,13 +1,13 @@
 "use strict";
 
-describe("Zotero.DataObjectUtilities", function () {
+describe("Trellis.DataObjectUtilities", function () {
 	describe("#patch()", function () {
 		it("should omit 'collections' if it doesn't exist", async function () {
 			var patchBase = {
 				collections: ['AAAAAAAA']
 			};
 			var obj = {};
-			obj = Zotero.DataObjectUtilities.patch(patchBase, obj);
+			obj = Trellis.DataObjectUtilities.patch(patchBase, obj);
 			assert.notProperty(obj, 'collections');
 		})
 		
@@ -42,7 +42,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					}
 				]
 			};
-			obj = Zotero.DataObjectUtilities.patch(patchBase, obj);
+			obj = Trellis.DataObjectUtilities.patch(patchBase, obj);
 			assert.property(obj, 'conditions');
 			assert.equal(obj.conditions[0].value, 'B');
 			assert.equal(obj.conditions[1].value, 'en');
@@ -54,7 +54,7 @@ describe("Zotero.DataObjectUtilities", function () {
 				place: ''
 			};
 			var obj = {};
-			obj = Zotero.DataObjectUtilities.patch(patchBase, obj);
+			obj = Trellis.DataObjectUtilities.patch(patchBase, obj);
 			assert.propertyVal(obj, 'title', '');
 			// place was already empty, so it shouldn't be included
 			assert.notProperty(obj, 'place');
@@ -83,8 +83,8 @@ describe("Zotero.DataObjectUtilities", function () {
 					}
 				]
 			}
-			obj = Zotero.DataObjectUtilities.patch(patchBase, obj);
-			Zotero.debug(obj);
+			obj = Trellis.DataObjectUtilities.patch(patchBase, obj);
+			Trellis.debug(obj);
 			assert.notProperty(obj, 'tags');
 		});
 		
@@ -101,7 +101,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					"mendeleyDB:documentUUID": "6b97abe6-8e23-4471-b963-234cf26808b9"
 				}
 			}
-			obj = Zotero.DataObjectUtilities.patch(patchBase, obj);
+			obj = Trellis.DataObjectUtilities.patch(patchBase, obj);
 			assert.notProperty(obj, 'relations');
 		});
 		
@@ -120,7 +120,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					]
 				}
 			}
-			obj = Zotero.DataObjectUtilities.patch(patchBase, obj);
+			obj = Trellis.DataObjectUtilities.patch(patchBase, obj);
 			assert.notProperty(obj, 'relations');
 		});
 	})
@@ -135,20 +135,20 @@ describe("Zotero.DataObjectUtilities", function () {
 			describe("fields", function () {
 				it("should not show empty items as different", async function () {
 					var id1, id2, json1, json2;
-					await Zotero.DB.executeTransaction(async function () {
-						var item = new Zotero.Item('book');
+					await Trellis.DB.executeTransaction(async function () {
+						var item = new Trellis.Item('book');
 						id1 = await item.save();
 						json1 = item.toJSON();
 						
-						var item = new Zotero.Item('book');
+						var item = new Trellis.Item('book');
 						id2 = await item.save();
 						json2 = item.toJSON();
 					});
 					
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 					
-					await Zotero.Items.erase([id1, id2]);
+					await Trellis.Items.erase([id1, id2]);
 				})
 				
 				it("should not show empty strings as different", function () {
@@ -158,7 +158,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					var json2 = {
 						title: ""
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 				})
 				
@@ -169,7 +169,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					var json2 = {
 						place: ""
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 				})
 			})
@@ -195,7 +195,7 @@ describe("Zotero.DataObjectUtilities", function () {
 							}
 						]
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 				})
 				
@@ -204,14 +204,14 @@ describe("Zotero.DataObjectUtilities", function () {
 						creators: []
 					};
 					var json2 = {};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 					
 					var json1 = {};
 					var json2 = {
 						creators: []
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 		
 				})
@@ -225,7 +225,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					var json2 = {
 						note: "<p>&nbsp;</p>"
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 				});
 			});
@@ -240,16 +240,16 @@ describe("Zotero.DataObjectUtilities", function () {
 					};
 					var json2 = {
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
-					Zotero.debug(changes);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
+					Trellis.debug(changes);
 					assert.lengthOf(changes, 0);
 					
 					var json1 = {};
 					var json2 = {
 						relations: {}
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
-					Zotero.debug(changes);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
+					Trellis.debug(changes);
 					assert.lengthOf(changes, 0);
 				})
 			})
@@ -274,7 +274,7 @@ describe("Zotero.DataObjectUtilities", function () {
 							}
 						]
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 				})
 				
@@ -294,7 +294,7 @@ describe("Zotero.DataObjectUtilities", function () {
 							}
 						]
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.sameDeepMembers(
 						changes,
 						[
@@ -333,16 +333,16 @@ describe("Zotero.DataObjectUtilities", function () {
 					};
 					var json2 = {
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
-					Zotero.debug(changes);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
+					Trellis.debug(changes);
 					assert.lengthOf(changes, 0);
 					
 					var json1 = {};
 					var json2 = {
 						conditions: {}
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
-					Zotero.debug(changes);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
+					Trellis.debug(changes);
 					assert.lengthOf(changes, 0);
 				})
 
@@ -365,7 +365,7 @@ describe("Zotero.DataObjectUtilities", function () {
 							{ condition: 'tag', operator: 'is', value: 'x' }
 						]
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 1);
 					assert.equal(changes[0].field, 'conditions');
 					assert.equal(changes[0].op, 'modify');
@@ -379,7 +379,7 @@ describe("Zotero.DataObjectUtilities", function () {
 					var json2 = {
 						conditions: [{ condition: 'title', operator: 'is', value: 'A' }]
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
 					assert.lengthOf(changes, 0);
 				})
 
@@ -396,16 +396,16 @@ describe("Zotero.DataObjectUtilities", function () {
 							}
 						]
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
-					Zotero.debug(changes);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
+					Trellis.debug(changes);
 					assert.lengthOf(changes, 0);
 					
 					var json1 = {};
 					var json2 = {
 						conditions: {}
 					};
-					var changes = Zotero.DataObjectUtilities.diff(json1, json2);
-					Zotero.debug(changes);
+					var changes = Trellis.DataObjectUtilities.diff(json1, json2);
+					Trellis.debug(changes);
 					assert.lengthOf(changes, 0);
 				})*/
 			})
@@ -434,7 +434,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						value: "2015-05-19"
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.equal(json.title, "B");
 				assert.equal(json.date, "2015-05-19");
 			})
@@ -455,7 +455,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						value: "BBBBBBBB"
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameMembers(json.collections, ["AAAAAAAA", "BBBBBBBB"]);
 			})
 			
@@ -470,7 +470,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						value: "AAAAAAAA"
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameMembers(json.collections, ["AAAAAAAA"]);
 				assert.lengthOf(json.collections, 1);
 			})
@@ -486,7 +486,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						value: "AAAAAAAA"
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.lengthOf(json.collections, 0);
 			})
 		})
@@ -509,7 +509,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers([json.relations], [{ a: ["A"] }]);
 			})
 			
@@ -525,7 +525,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers([json.relations], [{ a: ["A"] }]);
 			})
 			
@@ -545,7 +545,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers([json.relations], [{ a: ["A1", "A2"] }]);
 			})
 			
@@ -565,7 +565,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers([json.relations], [{ a: ['A1', 'A2'] }]);
 			})
 			
@@ -581,7 +581,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.notProperty(json, 'relations');
 			})
 			
@@ -599,7 +599,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.lengthOf(Object.keys(json.relations), 0);
 			})
 			
@@ -619,7 +619,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers([json.relations], [{ a: ['A1'] }]);
 			})
 			
@@ -639,7 +639,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.lengthOf(Object.keys(json.relations), 0);
 			})
 			
@@ -659,7 +659,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.lengthOf(Object.keys(json.relations), 0);
 			})
 			
@@ -679,7 +679,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers([json.relations], [{ a: ["A1"] }]);
 			})
 		})
@@ -705,7 +705,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers(
 					json.tags,
 					[
@@ -736,7 +736,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.sameDeepMembers(
 					json.tags,
 					[
@@ -765,7 +765,7 @@ describe("Zotero.DataObjectUtilities", function () {
 						}
 					}
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.lengthOf(json.tags, 0);
 			})
 		})
@@ -792,7 +792,7 @@ describe("Zotero.DataObjectUtilities", function () {
 				var changes = [
 					{ field: "conditions", op: "modify", value: newConditions }
 				];
-				Zotero.DataObjectUtilities.applyChanges(json, changes);
+				Trellis.DataObjectUtilities.applyChanges(json, changes);
 				assert.deepEqual(json.conditions, newConditions);
 			})
 		})

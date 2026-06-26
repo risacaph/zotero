@@ -1,0 +1,97 @@
+groupbox > label > h2, groupbox > * > label > h2 {
+	font-size: 14px;
+	margin-top: 1em;
+	margin-bottom: .3em;
+}
+
+.text-link {
+	color: LinkText;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.trellis-message-error
+{
+	font-weight: 600;
+}
+
+#trellis-progress-text-headline
+{
+	font-weight: 600;
+	margin-bottom: 2px;
+}
+
+.trellis-progress-icon-headline {
+	width: 16px;
+	height: 16px;
+}
+
+.trellis-progress-item-hbox
+{
+	padding-inline-start: 5px;
+	padding-block: 2px;
+	margin-block: 0;
+}
+
+.trellis-progress-item-hbox[parent]
+{
+	margin-top: 3px;
+}
+
+.trellis-progress-item-label
+{
+	width: 250px;
+	margin-inline: 5px 0;
+	margin-block: 0;
+}
+
+.trellis-warning {
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-bottom: 1em;
+}
+
+#trellis-note-window {
+	padding-bottom: 4px;
+}
+
+#trellis-captcha-description {
+	max-width: 300px;
+	padding-bottom: 4px;
+	text-align: justify;
+}
+
+#trellis-captcha-error {
+	max-width: 300px;
+	padding-bottom: 4px;
+	padding-top: 4px;
+	font-weight: 600;
+	color: red;
+	text-align: center;
+}
+
+/* Constrain 2x collection/search icons */
+trellissearch .menulist-icon {
+	height: 16px;
+}
+
+#trellis-attach-uri-container
+{
+	width: 30em;
+	max-width: 30em;
+}
+
+#trellis-attach-uri-message
+{
+	width: 29.5em;
+	max-width: 29.5em;
+}
+
+#trellis-edit-bibliography-dialog #item-list .listcell-icon {
+	max-width: 16px;
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+}

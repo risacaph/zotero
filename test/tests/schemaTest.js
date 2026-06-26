@@ -1,4 +1,4 @@
-describe("Zotero.Schema", function () {
+describe("Trellis.Schema", function () {
 	describe("#initializeSchema()", function () {
 		it("should set last client version", async function () {
 			await resetDB({
@@ -7,21 +7,21 @@ describe("Zotero.Schema", function () {
 			});
 			
 			var sql = "SELECT value FROM settings WHERE setting='client' AND key='lastVersion'";
-			var lastVersion = await Zotero.DB.valueQueryAsync(sql);
-			assert.equal(await Zotero.DB.valueQueryAsync(sql), Zotero.version);
+			var lastVersion = await Trellis.DB.valueQueryAsync(sql);
+			assert.equal(await Trellis.DB.valueQueryAsync(sql), Trellis.version);
 		});
 	});
 	
 	describe("#updateSchema()", function () {
 		it("should set last client version", async function () {
 			var sql = "REPLACE INTO settings (setting, key, value) VALUES ('client', 'lastVersion', ?)";
-			await Zotero.DB.queryAsync(sql, "5.0old");
+			await Trellis.DB.queryAsync(sql, "5.0old");
 			
-			await Zotero.Schema.updateSchema();
+			await Trellis.Schema.updateSchema();
 			
 			var sql = "SELECT value FROM settings WHERE setting='client' AND key='lastVersion'";
-			var lastVersion = await Zotero.DB.valueQueryAsync(sql);
-			assert.equal(await Zotero.DB.valueQueryAsync(sql), Zotero.version);
+			var lastVersion = await Trellis.DB.valueQueryAsync(sql);
+			assert.equal(await Trellis.DB.valueQueryAsync(sql), Trellis.version);
 		});
 	});
 	
@@ -29,7 +29,7 @@ describe("Zotero.Schema", function () {
 		var schemaJSON, schema;
 		
 		before(async function () {
-			schemaJSON = await Zotero.File.getResourceAsync('resource://zotero/schema/global/schema.json');
+			schemaJSON = await Trellis.File.getResourceAsync('resource://trellis/schema/global/schema.json');
 		});
 		
 		beforeEach(async function () {
@@ -57,8 +57,8 @@ describe("Zotero.Schema", function () {
 					o.fields.fooBar = 'Foo Bar';
 					newLocales[locale] = o;
 				});
-				await Zotero.Schema._updateGlobalSchemaForTest(schema);
-				await Zotero.Schema.migrateExtraFields();
+				await Trellis.Schema._updateGlobalSchemaForTest(schema);
+				await Trellis.Schema.migrateExtraFields();
 			}
 			
 			it("should add a new field and migrate values from Extra", async function () {
@@ -70,8 +70,8 @@ describe("Zotero.Schema", function () {
 				
 				await migrate();
 				
-				assert.isNumber(Zotero.ItemFields.getID('fooBar'));
-				assert.equal(Zotero.ItemFields.getLocalizedString('fooBar'), 'Foo Bar');
+				assert.isNumber(Trellis.ItemFields.getID('fooBar'));
+				assert.equal(Trellis.ItemFields.getLocalizedString('fooBar'), 'Foo Bar');
 				assert.equal(item.getField('fooBar'), 'This is a value.');
 				// Existing fields shouldn't be overwritten and should be left in Extra
 				assert.equal(item.getField('numPages'), '10');
@@ -99,10 +99,10 @@ describe("Zotero.Schema", function () {
 				assert.lengthOf(creators, 2);
 				assert.propertyVal(creators[0], 'firstName', 'Abc');
 				assert.propertyVal(creators[0], 'lastName', 'Def');
-				assert.propertyVal(creators[0], 'creatorTypeID', Zotero.CreatorTypes.getID('author'));
+				assert.propertyVal(creators[0], 'creatorTypeID', Trellis.CreatorTypes.getID('author'));
 				assert.propertyVal(creators[1], 'firstName', 'First');
 				assert.propertyVal(creators[1], 'lastName', 'Last');
-				assert.propertyVal(creators[1], 'creatorTypeID', Zotero.CreatorTypes.getID('editor'));
+				assert.propertyVal(creators[1], 'creatorTypeID', Trellis.CreatorTypes.getID('editor'));
 				assert.equal(item.getField('extra'), 'Foo: Bar');
 				assert.isFalse(item.synced);
 			});
@@ -127,7 +127,7 @@ describe("Zotero.Schema", function () {
 				assert.lengthOf(creators, 1);
 				assert.propertyVal(creators[0], 'firstName', 'Abc');
 				assert.propertyVal(creators[0], 'lastName', 'Def');
-				assert.propertyVal(creators[0], 'creatorTypeID', Zotero.CreatorTypes.getID('author'));
+				assert.propertyVal(creators[0], 'creatorTypeID', Trellis.CreatorTypes.getID('author'));
 				assert.equal(item.getField('extra'), 'container-author: Last || First\nFoo: Bar');
 				assert.isTrue(item.synced);
 			});
@@ -143,7 +143,7 @@ describe("Zotero.Schema", function () {
 				
 				await migrate();
 				
-				assert.isNumber(Zotero.ItemFields.getID('fooBar'));
+				assert.isNumber(Trellis.ItemFields.getID('fooBar'));
 				assert.equal(item.getField('fooBar'), '');
 				assert.equal(item.getField('extra'), 'Foo Bar: This is a value.');
 				assert.isTrue(item.synced);
@@ -157,12 +157,12 @@ describe("Zotero.Schema", function () {
 				
 				await migrate();
 				
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('letter'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('letter'));
 				assert.equal(item.getField('extra'), '');
 				assert.isFalse(item.synced);
 			});
 			
-			it("should remove 'type:' line for CSL type if item is the first mapped Zotero type", async function () {
+			it("should remove 'type:' line for CSL type if item is the first mapped Trellis type", async function () {
 				var item = await createDataObject('item', { itemType: 'letter' });
 				item.setField('extra', 'type: personal_communication');
 				item.synced = true;
@@ -170,12 +170,12 @@ describe("Zotero.Schema", function () {
 				
 				await migrate();
 				
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('letter'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('letter'));
 				assert.equal(item.getField('extra'), '');
 				assert.isFalse(item.synced);
 			});
 			
-			it("should remove 'type:' line for CSL type if item is a non-primary mapped Zotero type", async function () {
+			it("should remove 'type:' line for CSL type if item is a non-primary mapped Trellis type", async function () {
 				var item = await createDataObject('item', { itemType: 'instantMessage' });
 				item.setField('extra', 'type: personal_communication');
 				item.synced = true;
@@ -183,7 +183,7 @@ describe("Zotero.Schema", function () {
 				
 				await migrate();
 				
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('instantMessage'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('instantMessage'));
 				assert.equal(item.getField('extra'), '');
 				assert.isFalse(item.synced);
 			});
@@ -197,7 +197,7 @@ describe("Zotero.Schema", function () {
 				
 				await migrate();
 				
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('journalArticle'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('journalArticle'));
 				assert.equal(item.getField('journalAbbreviation'), 'abc.');
 				// Migrated real field should be placed at beginning, followed by unused line from Extra
 				assert.equal(item.getField('extra'), 'Num Pages: 123\nnumPages: 234');
@@ -232,7 +232,7 @@ describe("Zotero.Schema", function () {
 				assert.equal(item.getField('numPages'), 30);
 				var creators = item.getCreators();
 				assert.lengthOf(creators, 2);
-				assert.equal(item.itemTypeID, Zotero.ItemTypes.getID('book'));
+				assert.equal(item.itemTypeID, Trellis.ItemTypes.getID('book'));
 				assert.equal(item.getField('extra'), 'type: invalid');
 				assert.isTrue(item.synced);
 			});
@@ -265,22 +265,22 @@ describe("Zotero.Schema", function () {
 					thisArg: this
 				});
 				
-				win = await loadZoteroPane();
+				win = await loadTrellisPane();
 			});
 			
 			beforeEach(function () {
-				Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+				Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 				server = sinon.fakeServer.create();
 				server.autoRespond = true;
 			});
 			
 			afterEach(function () {
-				Zotero.Prefs.clear('hiddenNotices');
+				Trellis.Prefs.clear('hiddenNotices');
 			});
 			
 			after(function () {
 				win.close();
-				Zotero.HTTP.mock = null;
+				Trellis.HTTP.mock = null;
 			});
 			
 			function createResponseWithMessage(message) {
@@ -310,12 +310,12 @@ describe("Zotero.Schema", function () {
 					var html = dialog.document.documentElement.outerHTML;
 					assert.include(html, "This is a warning");
 				});
-				await Zotero.Schema.updateFromRepository(3);
+				await Trellis.Schema.updateFromRepository(3);
 				await promise;
 				
 				// Don't show id-less message again for a day
-				var spy = sinon.spy(Zotero, 'debug');
-				await Zotero.Schema.updateFromRepository(3);
+				var spy = sinon.spy(Trellis, 'debug');
+				await Trellis.Schema.updateFromRepository(3);
 				assert.notEqual(spy.args.findIndex(x => {
 					return typeof x[0] == 'string' && x[0].startsWith("Not showing hidden");
 				}), -1);
@@ -323,13 +323,13 @@ describe("Zotero.Schema", function () {
 			});
 			
 			it("shouldn't show message with id again for 1 day even if not hidden", async function () {
-				var id = Zotero.Utilities.randomString();
+				var id = Trellis.Utilities.randomString();
 				createResponseWithMessage(
 					`<message id="${id}" infoURL="https://example.com">This is a warning</message>`
 				);
 				
 				var promise = waitForDialog();
-				await Zotero.Schema.updateFromRepository(3);
+				await Trellis.Schema.updateFromRepository(3);
 				await promise;
 				
 				// Make sure notice is hidden for 1 day
@@ -338,9 +338,9 @@ describe("Zotero.Schema", function () {
 				var ttl = 86400;
 				while (tries < 100) {
 					tries++;
-					hiddenNotices = Zotero.Prefs.get('hiddenNotices');
+					hiddenNotices = Trellis.Prefs.get('hiddenNotices');
 					if (!hiddenNotices) {
-						await Zotero.Promise.delay(10);
+						await Trellis.Promise.delay(10);
 						continue;
 					}
 					hiddenNotices = JSON.parse(hiddenNotices);
@@ -351,7 +351,7 @@ describe("Zotero.Schema", function () {
 			});
 			
 			it("shouldn't show message with id again for 30 days", async function () {
-				var id = Zotero.Utilities.randomString();
+				var id = Trellis.Utilities.randomString();
 				createResponseWithMessage(
 					`<message id="${id}" infoURL="https://example.com">This is a warning</message>`
 				);
@@ -360,11 +360,11 @@ describe("Zotero.Schema", function () {
 					var doc = dialog.document;
 					var innerHTML = doc.documentElement.innerHTML;
 					assert.include(innerHTML, "This is a warning");
-					assert.include(innerHTML, Zotero.getString('general.dontShowAgainFor', 30, 30));
+					assert.include(innerHTML, Trellis.getString('general.dontShowAgainFor', 30, 30));
 					// Check "Don't show again"
 					doc.getElementById('checkbox').click();
 				});
-				await Zotero.Schema.updateFromRepository(3);
+				await Trellis.Schema.updateFromRepository(3);
 				await promise;
 				
 				// Make sure notice is hidden for 30 days
@@ -373,9 +373,9 @@ describe("Zotero.Schema", function () {
 				var ttl = 30 * 86400;
 				while (tries < 100) {
 					tries++;
-					hiddenNotices = Zotero.Prefs.get('hiddenNotices');
+					hiddenNotices = Trellis.Prefs.get('hiddenNotices');
 					if (!hiddenNotices) {
-						await Zotero.Promise.delay(10);
+						await Trellis.Promise.delay(10);
 						continue;
 					}
 					hiddenNotices = JSON.parse(hiddenNotices);
@@ -386,14 +386,14 @@ describe("Zotero.Schema", function () {
 			});
 			
 			it("shouldn't show message with id if before expiration", async function () {
-				var id = Zotero.Utilities.randomString();
+				var id = Trellis.Utilities.randomString();
 				createResponseWithMessage(
 					`<message id="${id}" infoURL="https://example.com">This is a warning</message>`
 				);
 				
 				// Set expiration for 30 days from now
 				var ttl = 30 * 86400;
-				Zotero.Prefs.set(
+				Trellis.Prefs.set(
 					'hiddenNotices',
 					JSON.stringify({
 						[id]: Math.round(Date.now() / 1000) + ttl
@@ -401,8 +401,8 @@ describe("Zotero.Schema", function () {
 				);
 				
 				// Message should be hidden
-				var spy = sinon.spy(Zotero, 'debug');
-				await Zotero.Schema.updateFromRepository(3);
+				var spy = sinon.spy(Trellis, 'debug');
+				await Trellis.Schema.updateFromRepository(3);
 				assert.notEqual(spy.args.findIndex(x => {
 					return typeof x[0] == 'string' && x[0].startsWith("Not showing hidden");
 				}), -1);
@@ -421,58 +421,58 @@ describe("Zotero.Schema", function () {
 		})
 		
 		it("should create missing tables unless 'skipReconcile' is true", async function () {
-			await Zotero.DB.queryAsync("DROP TABLE retractedItems");
-			assert.isFalse(await Zotero.DB.tableExists('retractedItems'));
-			assert.isTrue(await Zotero.Schema.integrityCheck(false, { skipReconcile: true }));
+			await Trellis.DB.queryAsync("DROP TABLE retractedItems");
+			assert.isFalse(await Trellis.DB.tableExists('retractedItems'));
+			assert.isTrue(await Trellis.Schema.integrityCheck(false, { skipReconcile: true }));
 			
-			assert.isFalse(await Zotero.Schema.integrityCheck());
-			assert.isTrue(await Zotero.Schema.integrityCheck(true));
-			assert.isTrue(await Zotero.DB.tableExists('retractedItems'));
+			assert.isFalse(await Trellis.Schema.integrityCheck());
+			assert.isTrue(await Trellis.Schema.integrityCheck(true));
+			assert.isTrue(await Trellis.DB.tableExists('retractedItems'));
 		});
 		
 		it("should repair a foreign key violation", async function () {
-			assert.isTrue(await Zotero.Schema.integrityCheck());
+			assert.isTrue(await Trellis.Schema.integrityCheck());
 			
-			await Zotero.DB.queryAsync("PRAGMA foreign_keys = OFF");
-			await Zotero.DB.queryAsync("INSERT INTO itemTags VALUES (1234,1234,0)");
-			await Zotero.DB.queryAsync("PRAGMA foreign_keys = ON");
+			await Trellis.DB.queryAsync("PRAGMA foreign_keys = OFF");
+			await Trellis.DB.queryAsync("INSERT INTO itemTags VALUES (1234,1234,0)");
+			await Trellis.DB.queryAsync("PRAGMA foreign_keys = ON");
 			
-			assert.isFalse(await Zotero.Schema.integrityCheck());
-			assert.isTrue(await Zotero.Schema.integrityCheck(true));
-			assert.isTrue(await Zotero.Schema.integrityCheck());
+			assert.isFalse(await Trellis.Schema.integrityCheck());
+			assert.isTrue(await Trellis.Schema.integrityCheck(true));
+			assert.isTrue(await Trellis.Schema.integrityCheck());
 		})
 		
 		it("should repair invalid nesting between two collections", async function () {
 			var c1 = await createDataObject('collection');
 			var c2 = await createDataObject('collection', { parentID: c1.id });
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE collections SET parentCollectionID=? WHERE collectionID=?",
 				[c2.id, c1.id]
 			);
 			
-			await assert.isFalse(await Zotero.Schema.integrityCheck());
-			await assert.isTrue(await Zotero.Schema.integrityCheck(true));
-			await assert.isTrue(await Zotero.Schema.integrityCheck());
+			await assert.isFalse(await Trellis.Schema.integrityCheck());
+			await assert.isTrue(await Trellis.Schema.integrityCheck(true));
+			await assert.isTrue(await Trellis.Schema.integrityCheck());
 		});
 		
 		it("should repair invalid nesting between three collections", async function () {
 			var c1 = await createDataObject('collection');
 			var c2 = await createDataObject('collection', { parentID: c1.id });
 			var c3 = await createDataObject('collection', { parentID: c2.id });
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE collections SET parentCollectionID=? WHERE collectionID=?",
 				[c3.id, c2.id]
 			);
 			
-			await assert.isFalse(await Zotero.Schema.integrityCheck());
-			await assert.isTrue(await Zotero.Schema.integrityCheck(true));
-			await assert.isTrue(await Zotero.Schema.integrityCheck());
+			await assert.isFalse(await Trellis.Schema.integrityCheck());
+			await assert.isTrue(await Trellis.Schema.integrityCheck(true));
+			await assert.isTrue(await Trellis.Schema.integrityCheck());
 		});
 		
 		it("should allow embedded-image attachments under notes", async function () {
 			var item = await createDataObject('item', { itemType: 'note' });
 			await createEmbeddedImage(item);
-			await assert.isTrue(await Zotero.Schema.integrityCheck());
+			await assert.isTrue(await Trellis.Schema.integrityCheck());
 		});
 	})
 	
@@ -488,10 +488,10 @@ describe("Zotero.Schema", function () {
 			await resetDB({
 				thisArg: this,
 				skipBundledFiles: true,
-				dbFile: OS.Path.join(getTestDataDirectory().path, 'zotero-4.0.sqlite.zip')
+				dbFile: OS.Path.join(getTestDataDirectory().path, 'trellis-4.0.sqlite.zip')
 			});
-			// Make sure we can open the Zotero pane without errors
-			win = await loadZoteroPane();
+			// Make sure we can open the Trellis pane without errors
+			win = await loadTrellisPane();
 			win.close();
 		});
 	});

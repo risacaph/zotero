@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css" type="text/css"?>
+<!DOCTYPE window [
+	<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd" > %trellisDTD;
+]>
+<window type="child"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	title="&trellis.feedSettings.title;" buttons="cancel,accept"
+	buttonlabelaccept="&trellis.feedSettings.saveButton.label;"
+	id="trellis-feed-settings"
+	drawintitlebar-platforms="mac"
+	onload="Trellis_Feed_Settings.init()">
+<dialog>
+	<script>
+		Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/titlebar.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
+		Services.scriptloader.loadSubScript("chrome://trellis/content/feedSettings.js", this);
+	</script>
+	
+	<html:div class="form-grid">
+		<hbox align="center">
+			<label value="&trellis.feedSettings.url.label;" control="feed-url"/>
+		</hbox>
+		<html:input id="feed-url"
+				oninput="Trellis_Feed_Settings.invalidateURL();Trellis_Feed_Settings.validateURL()"
+				autofocus="true" style="width: 30em; max-width: 30em;"/>
+
+		<hbox align="center">
+			<label value="&trellis.feedSettings.title.label;" control="feed-title"/>
+		</hbox>
+		<html:input id="feed-title" style="max-width: 30em;" />
+	</html:div>
+	<vbox id="advanced-options" class="trellis-advanced-options">
+		<button oncommand="Trellis_Feed_Settings.toggleAdvancedOptions()" class="trellis-advanced-options-label">
+			<dropmarker type="menu" class="toolbarbutton-menu-dropmarker"/>
+			<hbox align="center">
+				<label value="&trellis.general.advancedOptions.label;"/>
+			</hbox>
+		</button>
+		<vbox id="advanced-options-togglable">
+			<hbox align="center">
+				<label value="&trellis.feedSettings.refresh.label1;" control="feed-ttl"/>
+				<html:input class="html-input" id="feed-ttl" type="number" min="1" step="1"/>
+				<label value="&trellis.feedSettings.refresh.label2;" control="feed-ttl"/>
+			</hbox>
+			<hbox align="center">
+				<label value="&trellis.feedSettings.cleanupReadAfter.label1;" control="feed-cleanupReadAfter"/>
+				<html:input class="html-input" id="feed-cleanupReadAfter" type="number" min="1" step="1"/>
+				<label value="&trellis.feedSettings.cleanupReadAfter.label2;" control="feed-cleanupReadAfter"/>
+			</hbox>
+			<hbox align="center">
+				<label value="&trellis.feedSettings.cleanupUnreadAfter.label1;" control="feed-cleanupUnreadAfter"/>
+				<html:input class="html-input" id="feed-cleanupUnreadAfter" type="number" min="1" step="1"/>
+				<label value="&trellis.feedSettings.cleanupUnreadAfter.label2;" control="feed-cleanupUnreadAfter"/>
+			</hbox>
+		</vbox>
+	</vbox>
+</dialog>
+</window>

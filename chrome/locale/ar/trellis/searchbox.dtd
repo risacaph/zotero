@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "الاسم">
+
+<!ENTITY trellis.search.searchInLibrary "البحث في المكتبة:">
+
+<!ENTITY trellis.search.joinMode.prefix "طابق">
+<!ENTITY trellis.search.joinMode.any "أيّاً من">
+<!ENTITY trellis.search.joinMode.all "جميع">
+<!ENTITY trellis.search.joinMode.suffix "التالي:">
+
+<!ENTITY trellis.search.recursive.label "ابحث في المجلدات الفرعية">
+<!ENTITY trellis.search.noChildren "اعرض العناصر الرئيسية فقط">
+<!ENTITY trellis.search.includeParentsAndChildren "تضمن العناصر الرئيسية والفرعية المطابقة للبحث">
+
+<!ENTITY trellis.search.textModes.phrase "جملة">
+<!ENTITY trellis.search.textModes.phraseBinary "جملة (شاملاً الملفات الغير نصية)">
+<!ENTITY trellis.search.textModes.regexp "التعبيرات المنطقية">
+<!ENTITY trellis.search.textModes.regexpCS "التعبيرات المنطقية 'تحسس حالة الأحرف'">
+
+<!ENTITY trellis.search.date.units.days "أيام">
+<!ENTITY trellis.search.date.units.months "شهور">
+<!ENTITY trellis.search.date.units.years "سنوات">
+
+<!ENTITY trellis.search.search "بحث">
+<!ENTITY trellis.search.clear "مسح">
+<!ENTITY trellis.search.saveSearch "حفظ البحث">

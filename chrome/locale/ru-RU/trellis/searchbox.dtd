@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Название:">
+
+<!ENTITY trellis.search.searchInLibrary "Искать в библиотеке:">
+
+<!ENTITY trellis.search.joinMode.prefix "Совпадения">
+<!ENTITY trellis.search.joinMode.any "любые">
+<!ENTITY trellis.search.joinMode.all "все">
+<!ENTITY trellis.search.joinMode.suffix "из следующих:">
+
+<!ENTITY trellis.search.recursive.label "Искать во вложенных коллекциях">
+<!ENTITY trellis.search.noChildren "Показывать только записи верхнего уровня">
+<!ENTITY trellis.search.includeParentsAndChildren "Включать родительские и дочерние записи совпадающих записей">
+
+<!ENTITY trellis.search.textModes.phrase "Фраза">
+<!ENTITY trellis.search.textModes.phraseBinary "Фраза (включ. двоичные файлы)">
+<!ENTITY trellis.search.textModes.regexp "Регулярное выражение">
+<!ENTITY trellis.search.textModes.regexpCS "Регулярное выражение (чувствительное к регистру)">
+
+<!ENTITY trellis.search.date.units.days "дни">
+<!ENTITY trellis.search.date.units.months "месяцы">
+<!ENTITY trellis.search.date.units.years "года">
+
+<!ENTITY trellis.search.search "Искать">
+<!ENTITY trellis.search.clear "Очистить">
+<!ENTITY trellis.search.saveSearch "Сохранить поиск">

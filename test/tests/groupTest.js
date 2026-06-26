@@ -1,15 +1,15 @@
 "use strict";
 
-describe("Zotero.Group", function () {
+describe("Trellis.Group", function () {
 	describe("#constructor()", function () {
 		it("should accept required parameters", async function () {
-			let group = new Zotero.Group();
+			let group = new Trellis.Group();
 			assert.ok(await getPromiseError(group.saveTx())); // fails without required parameters
 			
-			let groupID = Zotero.Utilities.rand(10000, 1000000);
-			let groupName = "Test " + Zotero.Utilities.randomString();
-			let groupVersion = Zotero.Utilities.rand(10000, 1000000);
-			group = new Zotero.Group({
+			let groupID = Trellis.Utilities.rand(10000, 1000000);
+			let groupName = "Test " + Trellis.Utilities.randomString();
+			let groupVersion = Trellis.Utilities.rand(10000, 1000000);
+			group = new Trellis.Group({
 				groupID: groupID,
 				name: groupName,
 				description: "",
@@ -19,8 +19,8 @@ describe("Zotero.Group", function () {
 			});
 			await group.saveTx();
 			
-			assert.isTrue(Zotero.Libraries.exists(group.libraryID));
-			assert.equal(group, Zotero.Groups.get(group.groupID));
+			assert.isTrue(Trellis.Libraries.exists(group.libraryID));
+			assert.equal(group, Trellis.Groups.get(group.groupID));
 			
 			assert.equal(group.name, groupName);
 			assert.equal(group.groupID, groupID);
@@ -30,7 +30,7 @@ describe("Zotero.Group", function () {
 	
 	describe("#version", function () {
 		it("should be settable to increasing values", function () {
-			let library = new Zotero.Group();
+			let library = new Trellis.Group();
 			assert.throws(() => library.version = -1);
 			assert.throws(() => library.version = "a");
 			assert.throws(() => library.version = 1.1);
@@ -38,7 +38,7 @@ describe("Zotero.Group", function () {
 			assert.doesNotThrow(() => library.version = 5);
 		});
 		it("should not be possible to decrement", function () {
-			let library = new Zotero.Group();
+			let library = new Trellis.Group();
 			library.version = 5;
 			assert.throws(() => library.version = 0);
 		});
@@ -49,15 +49,15 @@ describe("Zotero.Group", function () {
 			var group = await createGroup();
 			var id = group.id;
 			await group.eraseTx();
-			assert.isFalse(Zotero.Groups.exists(id));
+			assert.isFalse(Trellis.Groups.exists(id));
 		})
 		
 		it("should provide libraryID in extraData", async function () {
 			var group = await createGroup();
 			var libraryID = group.libraryID;
 			
-			var deferred = Zotero.Promise.defer();
-			var observerID = Zotero.Notifier.registerObserver({
+			var deferred = Trellis.Promise.defer();
+			var observerID = Trellis.Notifier.registerObserver({
 				notify: function (event, type, ids, extraData) {
 					deferred.resolve(extraData[ids[0]]);
 				}
@@ -68,14 +68,14 @@ describe("Zotero.Group", function () {
 				assert.equal(extraData.libraryID, libraryID);
 			}
 			finally {
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 			}
 		})
 	})
 	
 	describe("#fromJSON()", function () {
 		it("should set permissions for owner", async function () {
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'admins',
@@ -84,7 +84,7 @@ describe("Zotero.Group", function () {
 			assert.isTrue(group.editable);
 			assert.isTrue(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'members',
@@ -93,7 +93,7 @@ describe("Zotero.Group", function () {
 			assert.isTrue(group.editable);
 			assert.isTrue(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'admins',
@@ -104,7 +104,7 @@ describe("Zotero.Group", function () {
 		})
 		
 		it("should set permissions for admin", async function () {
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'admins',
@@ -114,7 +114,7 @@ describe("Zotero.Group", function () {
 			assert.isTrue(group.editable);
 			assert.isTrue(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'members',
@@ -124,7 +124,7 @@ describe("Zotero.Group", function () {
 			assert.isTrue(group.editable);
 			assert.isTrue(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'admins',
@@ -136,7 +136,7 @@ describe("Zotero.Group", function () {
 		})
 		
 		it("should set permissions for member", async function () {
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'members',
@@ -147,7 +147,7 @@ describe("Zotero.Group", function () {
 			assert.isTrue(group.editable);
 			assert.isTrue(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'admins',
@@ -158,7 +158,7 @@ describe("Zotero.Group", function () {
 			assert.isFalse(group.editable);
 			assert.isFalse(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'admins',
@@ -169,7 +169,7 @@ describe("Zotero.Group", function () {
 			assert.isFalse(group.editable);
 			assert.isFalse(group.filesEditable);
 			
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'members',
@@ -182,7 +182,7 @@ describe("Zotero.Group", function () {
 		})
 		
 		it("should set permissions for non-member", async function () {
-			var group = new Zotero.Group;
+			var group = new Trellis.Group;
 			group.fromJSON({
 				owner: 1,
 				libraryEditing: 'members',

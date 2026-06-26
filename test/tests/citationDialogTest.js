@@ -19,10 +19,10 @@ describe("Citation Dialog", function () {
 	let dialog, win, doc, IOManager, CitationDataManager, SearchHandler;
 
 	before(async function () {
-		// one of helper functions of searchHandler uses zotero pane
-		win = await loadZoteroPane();
-		let dialogPromise = waitForWindow("chrome://zotero/content/integration/citationDialog.xhtml");
-		Services.ww.openWindow(null, "chrome://zotero/content/integration/citationDialog.xhtml", "", "", io);
+		// one of helper functions of searchHandler uses trellis pane
+		win = await loadTrellisPane();
+		let dialogPromise = waitForWindow("chrome://trellis/content/integration/citationDialog.xhtml");
+		Services.ww.openWindow(null, "chrome://trellis/content/integration/citationDialog.xhtml", "", "", io);
 		dialog = await dialogPromise;
 		doc = dialog.document;
 		IOManager = dialog.IOManager;
@@ -30,7 +30,7 @@ describe("Citation Dialog", function () {
 		SearchHandler = dialog.SearchHandler;
 		// wait for everything (e.g. itemTree/collectionTree) inside of the dialog to be loaded.
 		while (!dialog.DIALOG_STATE.loaded) {
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 		}
 	});
 
@@ -41,9 +41,9 @@ describe("Citation Dialog", function () {
 		// a 100ms delay). Before each test, wait out that delay, then wait for
 		// any searches — including ones that only just started during the
 		// delay — to finish running.
-		await Zotero.Promise.delay(150);
+		await Trellis.Promise.delay(150);
 		while (SearchHandler.searching) {
-			await Zotero.Promise.delay(10);
+			await Trellis.Promise.delay(10);
 		}
 	});
 
@@ -67,7 +67,7 @@ describe("Citation Dialog", function () {
 				]
 			},
 			uris: [
-				"http://zotero.org/users/11573780/items/K22KNVZL"
+				"http://trellis.org/users/11573780/items/K22KNVZL"
 			],
 			item: {
 				id: "o7HzMbH6/6iMXHx6s",
@@ -111,24 +111,24 @@ describe("Citation Dialog", function () {
 			suffix: undefined,
 			"suppress-author": undefined
 		};
-		let itemOne, itemTwo, bubbleInput, ZoteroCiteGetItemStub, surrogateCitedItem;
+		let itemOne, itemTwo, bubbleInput, TrellisCiteGetItemStub, surrogateCitedItem;
 
 		before(async function () {
 			bubbleInput = dialog.document.querySelector("bubble-input");
 	
-			// Virtual Zotero.Item for a cited item that does not exist in the library.
-			// Same logic as in Zotero.Integration.Citation.loadItemData.
-			surrogateCitedItem = new Zotero.Item();
-			Zotero.Utilities.itemFromCSLJSON(surrogateCitedItem, citedItemNotInLibrary.itemData);
+			// Virtual Trellis.Item for a cited item that does not exist in the library.
+			// Same logic as in Trellis.Integration.Citation.loadItemData.
+			surrogateCitedItem = new Trellis.Item();
+			Trellis.Utilities.itemFromCSLJSON(surrogateCitedItem, citedItemNotInLibrary.itemData);
 			surrogateCitedItem.cslItemID = citedItemNotInLibrary.id;
 			surrogateCitedItem.cslURIs = citedItemNotInLibrary.uris;
 			surrogateCitedItem.cslItemData = citedItemNotInLibrary.itemData;
-			// Zotero.Cite.getItem called with citedItemNotInLibrary returns virtual Zotero.Item from above
-			ZoteroCiteGetItemStub = sinon.stub(Zotero.Cite, 'getItem').callsFake(function (id) {
+			// Trellis.Cite.getItem called with citedItemNotInLibrary returns virtual Trellis.Item from above
+			TrellisCiteGetItemStub = sinon.stub(Trellis.Cite, 'getItem').callsFake(function (id) {
 				if (id === citedItemNotInLibrary.id) {
 					return surrogateCitedItem;
 				}
-				return Zotero.Items.get(id);
+				return Trellis.Items.get(id);
 			});
 	
 			itemOne = await createDataObject('item', { title: "one" });
@@ -156,7 +156,7 @@ describe("Citation Dialog", function () {
 		});
 
 		after(function () {
-			ZoteroCiteGetItemStub.restore();
+			TrellisCiteGetItemStub.restore();
 		});
 
 		beforeEach(function () {
@@ -406,7 +406,7 @@ describe("Citation Dialog", function () {
 			assert.equal(SearchHandler.searchValue, "");
 
 			// Wait for the locator to be added after debounce
-			await Zotero.Promise.delay(dialog.NUMERIC_LOCATOR_TIMEOUT);
+			await Trellis.Promise.delay(dialog.NUMERIC_LOCATOR_TIMEOUT);
 
 			// Make sure it is added as a locator (without pressing Enter);
 			assert.equal(currentInput.value, "");
@@ -423,7 +423,7 @@ describe("Citation Dialog", function () {
 			assert.equal(SearchHandler.searchValue, "60");
 			// Wait for search to finish
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			// An new item matching the query should be added to citation on Enter
 			currentInput.dispatchEvent(new KeyboardEvent('keydown', { key: "Enter", bubbles: true }));
@@ -506,7 +506,7 @@ describe("Citation Dialog", function () {
 
 			// Restore the default single-row selection so later tests that rely on the
 			// library root being selected aren't affected by the leftover multi-selection
-			await cv.selectByID("L" + Zotero.Libraries.userLibraryID);
+			await cv.selectByID("L" + Trellis.Libraries.userLibraryID);
 			await itemsView.waitForLoad();
 		});
 	});
@@ -541,7 +541,7 @@ describe("Citation Dialog", function () {
 
 			// Wait for search triggered after switching dialog modes to finish
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			// Re-set cached items right before search to guard against
 			// the window focus handler clearing them
@@ -577,7 +577,7 @@ describe("Citation Dialog", function () {
 
 			// Wait for search triggered after switching dialog modes to finish
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			// Re-set cached items right before search to guard against
 			// the window focus handler clearing them
@@ -625,7 +625,7 @@ describe("Citation Dialog", function () {
 
 			await IOManager.toggleDialogMode("list");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 
 			SearchHandler.selectedItems = [];
@@ -684,21 +684,21 @@ describe("Citation Dialog", function () {
 				// allCitedDataLoadedPromise is what citation dialog checks
 				// but make all functions unresolved promises just to be sure
 				sort() {
-					return new Zotero.Promise(() => {});
+					return new Trellis.Promise(() => {});
 				},
 				getItems() {
-					return new Zotero.Promise(() => {});
+					return new Trellis.Promise(() => {});
 				},
 				preview: () => {},
-				allCitedDataLoadedPromise: new Zotero.Promise(() => {}),
+				allCitedDataLoadedPromise: new Trellis.Promise(() => {}),
 			};
 
-			let newDialogPromise = waitForWindow("chrome://zotero/content/integration/citationDialog.xhtml");
-			Services.ww.openWindow(null, "chrome://zotero/content/integration/citationDialog.xhtml", "", "", io);
+			let newDialogPromise = waitForWindow("chrome://trellis/content/integration/citationDialog.xhtml");
+			Services.ww.openWindow(null, "chrome://trellis/content/integration/citationDialog.xhtml", "", "", io);
 			newDialog = await newDialogPromise;
 
 			while (!newDialog.DIALOG_STATE.loaded || newDialog.SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			let item = await createDataObject('item', { title: "test" });
 			await newDialog.IOManager.addItemsToCitation([item]);
@@ -721,7 +721,7 @@ describe("Citation Dialog", function () {
 
 			// Wait for search triggered after switching dialog modes to finish
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			// Search for "result"
 			await dialog.currentLayout.search("result", { skipDebounce: true });
@@ -730,7 +730,7 @@ describe("Citation Dialog", function () {
 			// Start from Add/Edit Citation type
 			await dialog.setDialogType("citation");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 
 			// Before switching to add-note, note should not appear in search results
@@ -741,7 +741,7 @@ describe("Citation Dialog", function () {
 			await dialog.setDialogType("add-note");
 			assert.equal(dialog.DIALOG_STATE.type, "add-note");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 
 			// After switching to add-note, the note must appear in search results
@@ -756,7 +756,7 @@ describe("Citation Dialog", function () {
 			// Start from Add Note type
 			await dialog.setDialogType("citation");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 
 			// Before switching to add/edit citation, item should not appear in search results
@@ -766,7 +766,7 @@ describe("Citation Dialog", function () {
 			// Switch to add/edit citation
 			await dialog.setDialogType("citation");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 
 			// Item must now appear in search results
@@ -780,11 +780,11 @@ describe("Citation Dialog", function () {
 		it("should not display empty note child rows", async function () {
 			await dialog.setDialogType("add-note");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			await IOManager.toggleDialogMode("library");
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 
 			let parentItem = await createDataObject('item', { title: "parent_with_notes" });
@@ -854,7 +854,7 @@ describe("Citation Dialog", function () {
 			
 			// Wait for any ongoing search to complete
 			while (SearchHandler.searching) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 			}
 			dialog.IOManager._lastClickTime = null;
 		});
@@ -871,7 +871,7 @@ describe("Citation Dialog", function () {
 
 			// Click on selected annotation
 			dialog.document.querySelector(`.item[id="${highlightAnnotation.id}"]`).click();
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// Expect that it becomes a bubble
 			let bubbles = dialog.document.querySelector("bubble-input").getAllBubbles();
 			assert.equal(bubbles.length, 1);
@@ -889,7 +889,7 @@ describe("Citation Dialog", function () {
 			dialog.libraryLayout.itemsView._itemTreeLoadingDeferred.resolve();
 			// Click on selected item
 			dialog.document.querySelector(`.item[id="${parentItem.id}"]`).click();
-			await Zotero.Promise.delay();
+			await Trellis.Promise.delay();
 			// Expect that itemTree row is selected and itemTree is focused
 			assert.equal(dialog.libraryLayout.itemsView.getSelectedItems(true)[0], parentItem.id);
 			assert.equal(dialog.document.activeElement.id, "item-tree-citationDialog-default");

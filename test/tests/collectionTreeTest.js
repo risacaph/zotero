@@ -1,13 +1,13 @@
 "use strict";
 
-describe("Zotero.CollectionTree", function () {
+describe("Trellis.CollectionTree", function () {
 	var win, zp, cv, userLibraryID;
 	
 	before(function* () {
-		win = yield loadZoteroPane();
-		zp = win.ZoteroPane;
+		win = yield loadTrellisPane();
+		zp = win.TrellisPane;
 		cv = zp.collectionsView;
-		userLibraryID = Zotero.Libraries.userLibraryID;
+		userLibraryID = Trellis.Libraries.userLibraryID;
 	});
 	beforeEach(function () {
 		// TODO: Add a selectCollection() function and select a collection instead?
@@ -19,9 +19,9 @@ describe("Zotero.CollectionTree", function () {
 	
 	describe("#refresh()", function () {
 		it("should show Duplicate Items and Unfiled Items by default and shouldn't show Retracted Items", async function () {
-			Zotero.Prefs.clear('duplicateLibraries');
-			Zotero.Prefs.clear('unfiledLibraries');
-			Zotero.Prefs.clear('retractedLibraries');
+			Trellis.Prefs.clear('duplicateLibraries');
+			Trellis.Prefs.clear('unfiledLibraries');
+			Trellis.Prefs.clear('retractedLibraries');
 			await cv.refresh();
 			assert.ok(cv.getRowIndexByID("D" + userLibraryID));
 			assert.ok(cv.getRowIndexByID("U" + userLibraryID));
@@ -29,9 +29,9 @@ describe("Zotero.CollectionTree", function () {
 		});
 		
 		it("shouldn't show virtual collections if hidden", async function () {
-			Zotero.Prefs.set('duplicateLibraries', `{"${userLibraryID}": false}`);
-			Zotero.Prefs.set('unfiledLibraries', `{"${userLibraryID}": false}`);
-			Zotero.Prefs.set('retractedLibraries', `{"${userLibraryID}": false}`);
+			Trellis.Prefs.set('duplicateLibraries', `{"${userLibraryID}": false}`);
+			Trellis.Prefs.set('unfiledLibraries', `{"${userLibraryID}": false}`);
+			Trellis.Prefs.set('retractedLibraries', `{"${userLibraryID}": false}`);
 			await cv.refresh();
 			assert.isFalse(cv.getRowIndexByID("D" + userLibraryID));
 			assert.isFalse(cv.getRowIndexByID("U" + userLibraryID));
@@ -54,7 +54,7 @@ describe("Zotero.CollectionTree", function () {
 			
 			cv._saveOpenStates();
 			// #_saveOpenStates is debounced
-			await Zotero.Promise.delay(500);
+			await Trellis.Promise.delay(500);
 			
 			group1Row = cv.getRowIndexByID(group1.treeViewID);
 			group2Row = cv.getRowIndexByID(group2.treeViewID);
@@ -125,7 +125,7 @@ describe("Zotero.CollectionTree", function () {
 			await cv.toggleOpenState(cv.getRowIndexByID(col2.treeViewID));
 			cv._saveOpenStates();
 			// #_saveOpenStates is debounced
-			await Zotero.Promise.delay(500);
+			await Trellis.Promise.delay(500);
 			
 			// Close and reopen library
 			await cv.toggleOpenState(libraryRow);
@@ -140,7 +140,7 @@ describe("Zotero.CollectionTree", function () {
 			await cv.toggleOpenState(cv.getRowIndexByID(col2.treeViewID));
 			cv._saveOpenStates();
 			// #_saveOpenStates is debounced
-			await Zotero.Promise.delay(500);
+			await Trellis.Promise.delay(500);
 			
 			// Close and reopen library
 			await cv.toggleOpenState(libraryRow);
@@ -203,7 +203,7 @@ describe("Zotero.CollectionTree", function () {
 		it("shouldn't hang if row is already selected", async function () {
 			var row = cv.getRowIndexByID("T" + userLibraryID);
 			await cv.selectWait(row);
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			await cv.selectWait(row);
 		})
 	})
@@ -237,7 +237,7 @@ describe("Zotero.CollectionTree", function () {
 				await selectTrash(win);
 
 				// Restore
-				await Zotero.DB.executeTransaction(async function () {
+				await Trellis.DB.executeTransaction(async function () {
 					o1.deleted = false;
 					o2.deleted = false;
 					o3.deleted = false;
@@ -314,7 +314,7 @@ describe("Zotero.CollectionTree", function () {
 	describe("#notify()", function () {
 		it("should select a new collection", async function () {
 			// Create collection
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "Select new collection";
 			var id = await collection.saveTx();
 			
@@ -325,7 +325,7 @@ describe("Zotero.CollectionTree", function () {
 		
 		it("shouldn't select a new collection if skipNotifier is passed", async function () {
 			// Create collection with skipNotifier flag
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "No select on skipNotifier";
 			var id = await collection.saveTx({
 				skipNotifier: true
@@ -337,7 +337,7 @@ describe("Zotero.CollectionTree", function () {
 		
 		it("shouldn't select a new collection if skipSelect is passed", async function () {
 			// Create collection with skipSelect flag
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "No select on skipSelect";
 			var id = await collection.saveTx({
 				skipSelect: true
@@ -349,7 +349,7 @@ describe("Zotero.CollectionTree", function () {
 		
 		it("shouldn't select a modified collection", async function () {
 			// Create collection
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "No select on modify";
 			var id = await collection.saveTx();
 			
@@ -364,7 +364,7 @@ describe("Zotero.CollectionTree", function () {
 		
 		it("should maintain selection on a selected modified collection", async function () {
 			// Create collection
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "Reselect on modify";
 			var id = await collection.saveTx();
 			
@@ -382,7 +382,7 @@ describe("Zotero.CollectionTree", function () {
 		describe(".deleted selection", function () {
 			for (let objectType of ['collection', 'search']) {
 				it(`should select next row when ${objectType} is moved to trash`, async function () {
-					var ran = Zotero.Utilities.randomString();
+					var ran = Trellis.Utilities.randomString();
 					var o1 = await createDataObject(objectType, { name: ran + "AAA" });
 					var o2 = await createDataObject(objectType, { name: ran + "BBB" });
 					var o3 = await createDataObject(objectType, { name: ran + "CCC" });
@@ -396,7 +396,7 @@ describe("Zotero.CollectionTree", function () {
 				});
 				
 				it(`should maintain selection on ${objectType} when row above is moved to trash`, async function () {
-					var ran = Zotero.Utilities.randomString();
+					var ran = Trellis.Utilities.randomString();
 					var o1 = await createDataObject(objectType, { name: ran + "AAA" });
 					var o2 = await createDataObject(objectType, { name: ran + "BBB" });
 					var o3 = await createDataObject(objectType, { name: ran + "CCC" });
@@ -428,7 +428,7 @@ describe("Zotero.CollectionTree", function () {
 		
 		for (let objectType of ['collection', 'search']) {
 			it(`should select next row when ${objectType} is erased`, async function () {
-				var ran = Zotero.Utilities.randomString();
+				var ran = Trellis.Utilities.randomString();
 				var o1 = await createDataObject(objectType, { name: ran + "AAA" });
 				var o2 = await createDataObject(objectType, { name: ran + "BBB" });
 				var o3 = await createDataObject(objectType, { name: ran + "CCC" });
@@ -450,7 +450,7 @@ describe("Zotero.CollectionTree", function () {
 			await waitForItemsLoad(win);
 			
 			assert.isFalse(zp.getCollectionTreeRow().editable);
-			var cmd = win.document.getElementById('cmd_zotero_newStandaloneNote');
+			var cmd = win.document.getElementById('cmd_trellis_newStandaloneNote');
 			assert.isTrue(cmd.getAttribute('disabled') == 'true');
 			
 			group.editable = true;
@@ -461,7 +461,7 @@ describe("Zotero.CollectionTree", function () {
 		});
 		
 		it("should re-sort a modified collection", async function () {
-			var prefix = Zotero.Utilities.randomString() + " ";
+			var prefix = Trellis.Utilities.randomString() + " ";
 			var collectionA = await createDataObject('collection', { name: prefix + "A" });
 			var collectionB = await createDataObject('collection', { name: prefix + "B" });
 			
@@ -480,7 +480,7 @@ describe("Zotero.CollectionTree", function () {
 		})
 		
 		it("should re-sort a modified search", async function () {
-			var prefix = Zotero.Utilities.randomString() + " ";
+			var prefix = Trellis.Utilities.randomString() + " ";
 			var searchA = await createDataObject('search', { name: prefix + "A" });
 			var searchB = await createDataObject('search', { name: prefix + "B" });
 			
@@ -525,7 +525,7 @@ describe("Zotero.CollectionTree", function () {
 		
 		it("should add multiple collections", async function () {
 			var col1, col2;
-			await Zotero.DB.executeTransaction(async function () {
+			await Trellis.DB.executeTransaction(async function () {
 				col1 = createUnsavedDataObject('collection');
 				col2 = createUnsavedDataObject('collection');
 				await col1.save();
@@ -554,11 +554,11 @@ describe("Zotero.CollectionTree", function () {
 		})
 		
 		it("should add a saved search after collections", async function () {
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = "Test";
 			var collectionID = await collection.saveTx();
 			
-			var search = new Zotero.Search;
+			var search = new Trellis.Search;
 			search.name = "A Test Search";
 			search.addCondition('title', 'contains', 'test');
 			var searchID = await search.saveTx();
@@ -646,22 +646,22 @@ describe("Zotero.CollectionTree", function () {
 			waitForDialog();
 			var id = feed.treeViewID;
 			let promise = waitForCollectionTree(win);
-			await win.ZoteroPane.deleteSelectedCollection();
+			await win.TrellisPane.deleteSelectedCollection();
 			await promise;
 			assert.isFalse(cv.getRowIndexByID(id))
 		})
 		
 		it("should not reload tree upon feed update", async function () {
 			var feed = await createFeed();
-			await cv.selectLibrary(Zotero.Libraries.userLibraryID);
+			await cv.selectLibrary(Trellis.Libraries.userLibraryID);
 			try {
 				var reloadSpy = sinon.spy(cv, 'reload');
 				// A set of notifier calls  when a feed update is running
-				Zotero.debug(feed.id, 2);
-				await Zotero.Notifier.trigger('statusChanged', 'feed', feed.id);
-				await Zotero.Notifier.trigger('modify', 'feed', feed.id);
-				await Zotero.Notifier.trigger('unreadCountUpdated', 'feed', feed.id);
-				await Zotero.Notifier.trigger('statusChanged', 'feed', feed.id);
+				Trellis.debug(feed.id, 2);
+				await Trellis.Notifier.trigger('statusChanged', 'feed', feed.id);
+				await Trellis.Notifier.trigger('modify', 'feed', feed.id);
+				await Trellis.Notifier.trigger('unreadCountUpdated', 'feed', feed.id);
+				await Trellis.Notifier.trigger('statusChanged', 'feed', feed.id);
 				assert.isFalse(reloadSpy.called);
 			} finally {
 				reloadSpy.restore();
@@ -843,7 +843,7 @@ describe("Zotero.CollectionTree", function () {
 				var { row, orient } = targetRow;
 			}
 			
-			Zotero.DragDrop.currentDragSource = objectType == "item"
+			Trellis.DragDrop.currentDragSource = objectType == "item"
 				? zp.itemsView.collectionTreeRows[0]
 				: null;
 			
@@ -856,9 +856,9 @@ describe("Zotero.CollectionTree", function () {
 				dataTransfer: {
 					dropEffect: action,
 					effectAllowed: action,
-					types: [`zotero/${objectType}`],
+					types: [`trellis/${objectType}`],
 					getData: function (type) {
-						if (type == `zotero/${objectType}`) {
+						if (type == `trellis/${objectType}`) {
 							return ids.join(",");
 						}
 					}
@@ -867,7 +867,7 @@ describe("Zotero.CollectionTree", function () {
 			
 			// Add observer to wait for add
 			var result = await promise;
-			Zotero.DragDrop.currentDragSource = null;
+			Trellis.DragDrop.currentDragSource = null;
 			return result;
 		};
 		
@@ -875,15 +875,15 @@ describe("Zotero.CollectionTree", function () {
 		var canDrop = async function (objectType, targetRowID, ids) {
 			var row = cv.getRowIndexByID(targetRowID);
 			
-			Zotero.DragDrop.currentDragSource = objectType == "item"
+			Trellis.DragDrop.currentDragSource = objectType == "item"
 				? zp.itemsView.collectionTreeRows[0]
 				: null;
 			var dt = {
 				dropEffect: 'copy',
 				effectAllowed: 'copy',
-				types: [`zotero/${objectType}`],
+				types: [`trellis/${objectType}`],
 				getData: function (type) {
-					if (type == `zotero/${objectType}`) {
+					if (type == `trellis/${objectType}`) {
 						return ids.join(",");
 					}
 				}
@@ -892,7 +892,7 @@ describe("Zotero.CollectionTree", function () {
 			if (canDrop) {
 				canDrop = await cv.canDropCheckAsync(row, 0, dt);
 			}
-			Zotero.DragDrop.currentDragSource = null;
+			Trellis.DragDrop.currentDragSource = null;
 			return canDrop;
 		};
 		
@@ -901,7 +901,7 @@ describe("Zotero.CollectionTree", function () {
 		var dragOver = function (objectType, targetRowID, ids, { move = false } = {}) {
 			var index = cv.getRowIndexByID(targetRowID);
 			
-			Zotero.DragDrop.currentDragSource = objectType == "item"
+			Trellis.DragDrop.currentDragSource = objectType == "item"
 				? zp.itemsView.collectionTreeRows[0]
 				: null;
 			
@@ -913,9 +913,9 @@ describe("Zotero.CollectionTree", function () {
 			var dataTransfer = {
 				dropEffect: 'copy',
 				effectAllowed: 'copyMove',
-				types: [`zotero/${objectType}`],
+				types: [`trellis/${objectType}`],
 				getData: function (type) {
-					if (type == `zotero/${objectType}`) {
+					if (type == `trellis/${objectType}`) {
 						return ids.join(",");
 					}
 					return "";
@@ -928,11 +928,11 @@ describe("Zotero.CollectionTree", function () {
 				currentTarget: rowEl,
 				target: rowEl,
 				clientY: 50,
-				metaKey: move && Zotero.isMac,
-				shiftKey: move && !Zotero.isMac,
+				metaKey: move && Trellis.isMac,
+				shiftKey: move && !Trellis.isMac,
 				dataTransfer
 			}, index);
-			Zotero.DragDrop.currentDragSource = null;
+			Trellis.DragDrop.currentDragSource = null;
 			return dataTransfer.dropEffect;
 		};
 		
@@ -942,8 +942,8 @@ describe("Zotero.CollectionTree", function () {
 				var item = await createDataObject('item', false, { skipSelect: true });
 				
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection-item' && event == 'add'
 								&& ids[0] == collection.id + "-" + item.id) {
@@ -956,11 +956,11 @@ describe("Zotero.CollectionTree", function () {
 				
 				await onDrop('item', 'C' + collection.id, [item.id], deferred.promise);
 				
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 				
 				await select(win, collection);
 				
-				var itemsView = win.ZoteroPane.itemsView;
+				var itemsView = win.TrellisPane.itemsView;
 				assert.equal(itemsView.rowCount, 1);
 				var treeRow = itemsView.getRow(0);
 				assert.equal(treeRow.ref.id, item.id);
@@ -973,8 +973,8 @@ describe("Zotero.CollectionTree", function () {
 				var item = await createDataObject('item', { collections: [collection1.id] });
 				
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection-item' && event == 'add'
 								&& ids[0] == collection2.id + "-" + item.id) {
@@ -989,7 +989,7 @@ describe("Zotero.CollectionTree", function () {
 				await onDrop('item', 'C' + collection2.id, [item.id], deferred.promise, 'move');
 				await promise;
 				
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 				
 				// Source collection should be empty
 				assert.equal(zp.itemsView.rowCount, 0);
@@ -1003,8 +1003,8 @@ describe("Zotero.CollectionTree", function () {
 			});
 
 			it("should add a multiple-library item selection to a collection, copying out-of-library items", async function () {
-				await Zotero.Users.setCurrentUserID(1);
-				await Zotero.Users.setName(1, 'Name');
+				await Trellis.Users.setCurrentUserID(1);
+				await Trellis.Users.setName(1, 'Name');
 				
 				var collection = await createDataObject('collection');
 				var libraryItem = await createDataObject('item', false, { skipSelect: true });
@@ -1023,7 +1023,7 @@ describe("Zotero.CollectionTree", function () {
 				assert.include(childItemIDs, libraryItem.id);
 				
 				// The group item was copied into the personal library, and the copy links back to it
-				var copiedItem = Zotero.Items.get(childItemIDs.find(id => id != libraryItem.id));
+				var copiedItem = Trellis.Items.get(childItemIDs.find(id => id != libraryItem.id));
 				assert.equal(copiedItem.libraryID, collection.libraryID);
 				assert.equal((await copiedItem.getLinkedItem(group.libraryID)).id, groupItem.id);
 				
@@ -1052,8 +1052,8 @@ describe("Zotero.CollectionTree", function () {
 			});
 
 			it("should copy out-of-library items from a multiple-library selection dropped on a library root", async function () {
-				await Zotero.Users.setCurrentUserID(1);
-				await Zotero.Users.setName(1, 'Name');
+				await Trellis.Users.setCurrentUserID(1);
+				await Trellis.Users.setName(1, 'Name');
 
 				var libraryItem = await createDataObject('item', false, { skipSelect: true });
 
@@ -1065,7 +1065,7 @@ describe("Zotero.CollectionTree", function () {
 				var ids = (await onDrop('item', 'L' + userLibraryID, [libraryItem.id, groupItem.id])).ids;
 				assert.lengthOf(ids, 1);
 
-				var copiedItem = Zotero.Items.get(ids[0]);
+				var copiedItem = Trellis.Items.get(ids[0]);
 				assert.equal(copiedItem.libraryID, userLibraryID);
 				assert.equal((await copiedItem.getLinkedItem(group.libraryID)).id, groupItem.id);
 
@@ -1083,11 +1083,11 @@ describe("Zotero.CollectionTree", function () {
 			it("should record an undo step when adding an item to a collection", async function () {
 				var collection = await createDataObject('collection');
 				var item = await createDataObject('item', false, { skipSelect: true });
-				Zotero.UndoHistory.clear();
+				Trellis.UndoHistory.clear();
 
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection-item' && event == 'add'
 								&& ids[0] == collection.id + "-" + item.id) {
@@ -1100,30 +1100,30 @@ describe("Zotero.CollectionTree", function () {
 
 				await onDrop('item', 'C' + collection.id, [item.id], deferred.promise);
 
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 
 				assert.include(item.getCollections(), collection.id);
-				assert.isTrue(Zotero.UndoHistory.canUndo());
-				var action = Zotero.UndoHistory.getUndoAction();
+				assert.isTrue(Trellis.UndoHistory.canUndo());
+				var action = Trellis.UndoHistory.getUndoAction();
 				assert.equal(action.action, 'undo-action-add-to-collection');
 				assert.equal(action.actionArgs.count, 1);
 
-				await Zotero.UndoHistory.undo();
+				await Trellis.UndoHistory.undo();
 				assert.notInclude(item.getCollections(), collection.id);
 
-				await Zotero.UndoHistory.redo();
+				await Trellis.UndoHistory.redo();
 				assert.include(item.getCollections(), collection.id);
 			});
 
 			describe("My Publications", function () {
 				function getItemModifyPromise(item) {
 					// Add observer to wait for item modification
-					return new Zotero.Promise((resolve) => {
-						var observerID = Zotero.Notifier.registerObserver({
+					return new Trellis.Promise((resolve) => {
+						var observerID = Trellis.Notifier.registerObserver({
 							notify: function (event, type, ids, extraData) {
 								if (type == 'item' && event == 'modify' && ids[0] == item.id) {
 									setTimeout(resolve);
-									Zotero.Notifier.unregisterObserver(observerID);
+									Trellis.Notifier.unregisterObserver(observerID);
 								}
 							}
 						}, 'item', 'test');
@@ -1154,23 +1154,23 @@ describe("Zotero.CollectionTree", function () {
 				
 				it("should add an item to My Publications", async function () {
 					// TEMP: Disabled due to spurious errors
-					// https://github.com/zotero/zotero/issues/5749
-					if (Zotero.automatedTest) {
+					// https://github.com/trellis/trellis/issues/5749
+					if (Trellis.automatedTest) {
 						this.skip();
 						return;
 					}
 					// Remove other items in My Publications
-					var s = new Zotero.Search();
-					s.addCondition('libraryID', 'is', Zotero.Libraries.userLibraryID);
+					var s = new Trellis.Search();
+					s.addCondition('libraryID', 'is', Trellis.Libraries.userLibraryID);
 					s.addCondition('publications', 'true');
 					var ids = await s.search();
-					await Zotero.Items.erase(ids);
+					await Trellis.Items.erase(ids);
 					
 					var item = await createDataObject('item', false, { skipSelect: true });
 					var libraryID = item.libraryID;
 					
 					var itemModifyPromise = getItemModifyPromise(item);
-					var winPromise = waitForWindow('chrome://zotero/content/publicationsDialog.xhtml')
+					var winPromise = waitForWindow('chrome://trellis/content/publicationsDialog.xhtml')
 					var dropPromise = onDrop('item', 'P' + libraryID, [item.id], itemModifyPromise);
 					acceptItemsWithoutFiles(await winPromise);
 					await dropPromise;
@@ -1178,7 +1178,7 @@ describe("Zotero.CollectionTree", function () {
 					// Select publications and check for item
 					await cv.selectByID("P" + libraryID);
 					await waitForItemsLoad(win);
-					var itemsView = win.ZoteroPane.itemsView
+					var itemsView = win.TrellisPane.itemsView
 					assert.equal(itemsView.rowCount, 1);
 					var treeRow = itemsView.getRow(0);
 					assert.equal(treeRow.ref.id, item.id);
@@ -1190,7 +1190,7 @@ describe("Zotero.CollectionTree", function () {
 					var libraryID = item.libraryID;
 					
 					var itemModifyPromise = getItemModifyPromise(item);
-					var winPromise = waitForWindow('chrome://zotero/content/publicationsDialog.xhtml')
+					var winPromise = waitForWindow('chrome://trellis/content/publicationsDialog.xhtml')
 					var dropPromise = onDrop('item', 'P' + libraryID, [item.id], itemModifyPromise);
 					acceptItemsWithFiles(await winPromise);
 					await dropPromise;
@@ -1202,7 +1202,7 @@ describe("Zotero.CollectionTree", function () {
 				
 				it("should add an item with a linked URL attachment to My Publications", async function () {
 					var item = await createDataObject('item', false, { skipSelect: true });
-					var attachment = await Zotero.Attachments.linkFromURL({
+					var attachment = await Trellis.Attachments.linkFromURL({
 						parentItemID: item.id,
 						title: 'Test',
 						url: 'http://127.0.0.1/',
@@ -1211,7 +1211,7 @@ describe("Zotero.CollectionTree", function () {
 					var libraryID = item.libraryID;
 					
 					var itemModifyPromise = getItemModifyPromise(item);
-					var winPromise = waitForWindow('chrome://zotero/content/publicationsDialog.xhtml')
+					var winPromise = waitForWindow('chrome://trellis/content/publicationsDialog.xhtml')
 					var dropPromise = onDrop('item', 'P' + libraryID, [item.id], itemModifyPromise);
 					acceptItemsWithoutFiles(await winPromise);
 					await dropPromise;
@@ -1223,7 +1223,7 @@ describe("Zotero.CollectionTree", function () {
 				
 				it("shouldn't add linked file attachment to My Publications", async function () {
 					var item = await createDataObject('item', false, { skipSelect: true });
-					var attachment = await Zotero.Attachments.linkFromFile({
+					var attachment = await Trellis.Attachments.linkFromFile({
 						parentItemID: item.id,
 						title: 'Test',
 						file: OS.Path.join(getTestDataDirectory().path, 'test.png'),
@@ -1232,7 +1232,7 @@ describe("Zotero.CollectionTree", function () {
 					var libraryID = item.libraryID;
 					
 					var itemModifyPromise = getItemModifyPromise(item);
-					var winPromise = waitForWindow('chrome://zotero/content/publicationsDialog.xhtml')
+					var winPromise = waitForWindow('chrome://trellis/content/publicationsDialog.xhtml')
 					var dropPromise = onDrop('item', 'P' + libraryID, [item.id], itemModifyPromise);
 					acceptItemsWithoutFiles(await winPromise);
 					await dropPromise;
@@ -1244,15 +1244,15 @@ describe("Zotero.CollectionTree", function () {
 			});
 			
 			it("should copy an item with a PDF attachment containing annotations to a group", async function () {
-				await Zotero.Users.setCurrentUserID(1);
-				await Zotero.Users.setName(1, 'Name');
+				await Trellis.Users.setCurrentUserID(1);
+				await Trellis.Users.setName(1, 'Name');
 				
 				var group = await createGroup();
 				
 				var item = await createDataObject('item', false, { skipSelect: true });
 				var file = getTestDataDirectory();
 				file.append('test.pdf');
-				var attachment = await Zotero.Attachments.importFromFile({
+				var attachment = await Trellis.Attachments.importFromFile({
 					file,
 					parentItemID: item.id
 				});
@@ -1264,7 +1264,7 @@ describe("Zotero.CollectionTree", function () {
 				await waitForItemsLoad(win);
 				
 				// Check parent
-				var itemsView = win.ZoteroPane.itemsView;
+				var itemsView = win.TrellisPane.itemsView;
 				assert.equal(itemsView.rowCount, 1);
 				var treeRow = itemsView.getRow(0);
 				assert.equal(treeRow.ref.libraryID, group.libraryID);
@@ -1284,7 +1284,7 @@ describe("Zotero.CollectionTree", function () {
 				assert.equal(linked.id, treeRow.ref.id);
 				
 				// Check annotation
-				var groupAttachment = Zotero.Items.get(treeRow.ref.id);
+				var groupAttachment = Trellis.Items.get(treeRow.ref.id);
 				var annotations = groupAttachment.getAnnotations();
 				assert.lengthOf(annotations, 1);
 				
@@ -1292,9 +1292,9 @@ describe("Zotero.CollectionTree", function () {
 			});
 			
 			it("should copy a group item with a PDF attachment containing annotations to the personal library", async function () {
-				await Zotero.Users.setCurrentUserID(1);
-				await Zotero.Users.setName(1, 'Name 1');
-				await Zotero.Users.setName(12345, 'Name 2');
+				await Trellis.Users.setCurrentUserID(1);
+				await Trellis.Users.setName(1, 'Name 1');
+				await Trellis.Users.setName(12345, 'Name 2');
 				
 				var group = await createGroup();
 				await cv.selectLibrary(group.libraryID);
@@ -1302,7 +1302,7 @@ describe("Zotero.CollectionTree", function () {
 				var groupItem = await createDataObject('item', { libraryID: group.libraryID });
 				var file = getTestDataDirectory();
 				file.append('test.pdf');
-				var attachment = await Zotero.Attachments.importFromFile({
+				var attachment = await Trellis.Attachments.importFromFile({
 					file,
 					parentItemID: groupItem.id
 				});
@@ -1310,10 +1310,10 @@ describe("Zotero.CollectionTree", function () {
 				await annotation.saveTx();
 				
 				var ids = (await onDrop('item', 'L1', [groupItem.id])).ids;
-				var newItem = Zotero.Items.get(ids[0]);
+				var newItem = Trellis.Items.get(ids[0]);
 				
 				// Check annotation
-				var newAttachment = Zotero.Items.get(newItem.getAttachments())[0];
+				var newAttachment = Trellis.Items.get(newItem.getAttachments())[0];
 				var annotations = newAttachment.getAnnotations();
 				assert.lengthOf(annotations, 1);
 				
@@ -1321,16 +1321,16 @@ describe("Zotero.CollectionTree", function () {
 			});
 			
 			it("should copy a standalone attachment to a group", async function () {
-				await Zotero.Users.setCurrentUserID(1);
-				await Zotero.Users.setName(1, 'Name 1');
-				await Zotero.Users.setName(12345, 'Name 2');
+				await Trellis.Users.setCurrentUserID(1);
+				await Trellis.Users.setName(1, 'Name 1');
+				await Trellis.Users.setName(12345, 'Name 2');
 				
 				var group = await createGroup();
 				
 				var item = await importPDFAttachment();
 				
 				var ids = (await onDrop('item', 'L' + group.libraryID, [item.id])).ids;
-				var newItem = Zotero.Items.get(ids[0]);
+				var newItem = Trellis.Items.get(ids[0]);
 				
 				assert.equal(newItem.libraryID, group.libraryID);
 				assert.isTrue(newItem.isPDFAttachment());
@@ -1341,15 +1341,15 @@ describe("Zotero.CollectionTree", function () {
 			it("should not copy an item or its attachment to a group twice", async function () {
 				var group = await getGroup();
 				
-				var itemTitle = Zotero.Utilities.randomString();
+				var itemTitle = Trellis.Utilities.randomString();
 				var item = await createDataObject('item', false, { skipSelect: true });
 				var file = getTestDataDirectory();
 				file.append('test.png');
-				var attachment = await Zotero.Attachments.importFromFile({
+				var attachment = await Trellis.Attachments.importFromFile({
 					file: file,
 					parentItemID: item.id
 				});
-				var attachmentTitle = Zotero.Utilities.randomString();
+				var attachmentTitle = Trellis.Utilities.randomString();
 				attachment.setField('title', attachmentTitle);
 				await attachment.saveTx();
 				
@@ -1399,7 +1399,7 @@ describe("Zotero.CollectionTree", function () {
 
 			it("can delete an item by dropping it into the trash", async function () {
 				var item = await createDataObject('item', false, { skipSelect: true });
-				var deferred = Zotero.Promise.defer();
+				var deferred = Trellis.Promise.defer();
 				deferred.resolve();
 				await onDrop('item', 'T' + userLibraryID, [item.id], deferred.promise);
 				assert.isTrue(item.deleted);
@@ -1420,8 +1420,8 @@ describe("Zotero.CollectionTree", function () {
 				var colIndex4 = cv.getRowIndexByID('C' + collection4.id);
 				
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection' && event == 'modify' && ids[0] == collection4.id) {
 							setTimeout(function () {
@@ -1441,7 +1441,7 @@ describe("Zotero.CollectionTree", function () {
 					deferred.promise
 				);
 				
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 				
 				var newColIndex1 = cv.getRowIndexByID('C' + collection1.id);
 				var newColIndex2 = cv.getRowIndexByID('C' + collection2.id);
@@ -1479,8 +1479,8 @@ describe("Zotero.CollectionTree", function () {
 				await select(win, collectionG);
 				
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();                                                                          
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();                                                                          
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection' && event == 'modify' && ids[0] == collectionG.id) {
 							setTimeout(function () {
@@ -1500,7 +1500,7 @@ describe("Zotero.CollectionTree", function () {
 					deferred.promise
 				);
 				
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 				
 				var newColIndexA = cv.getRowIndexByID('C' + collectionA.id);
 				var newColIndexB = cv.getRowIndexByID('C' + collectionB.id);
@@ -1546,8 +1546,8 @@ describe("Zotero.CollectionTree", function () {
 				await cv.selectCollection(collectionG.id);
 				
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection' && event == 'modify' && ids[0] == collectionG.id) {
 							setTimeout(function () {
@@ -1567,7 +1567,7 @@ describe("Zotero.CollectionTree", function () {
 					deferred.promise
 				);
 				
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 				
 				var newColIndexA = cv.getRowIndexByID('C' + collectionA.id);
 				var newColIndexB = cv.getRowIndexByID('C' + collectionB.id);
@@ -1599,8 +1599,8 @@ describe("Zotero.CollectionTree", function () {
 				await cv.selectCollection(collectionA.id);
 				
 				// Add observer to wait for collection add
-				var deferred = Zotero.Promise.defer();
-				var observerID = Zotero.Notifier.registerObserver({
+				var deferred = Trellis.Promise.defer();
+				var observerID = Trellis.Notifier.registerObserver({
 					notify: function (event, type, ids, extraData) {
 						if (type == 'collection' && event == 'modify' && ids.includes(collectionB.id)) {
 							setTimeout(function () {
@@ -1617,13 +1617,13 @@ describe("Zotero.CollectionTree", function () {
 					deferred.promise
 				);
 				
-				Zotero.Notifier.unregisterObserver(observerID);
+				Trellis.Notifier.unregisterObserver(observerID);
 				
-				var pred = Zotero.Relations.linkedObjectPredicate;
-				var newCollectionA = await Zotero.URI.getURICollection(collectionA.getRelations()[pred][0]);
-				var newCollectionB = await Zotero.URI.getURICollection(collectionB.getRelations()[pred][0]);
-				var newItemA = await Zotero.URI.getURIItem(itemA.getRelations()[pred][0]);
-				var newItemB = await Zotero.URI.getURIItem(itemB.getRelations()[pred][0]);
+				var pred = Trellis.Relations.linkedObjectPredicate;
+				var newCollectionA = await Trellis.URI.getURICollection(collectionA.getRelations()[pred][0]);
+				var newCollectionB = await Trellis.URI.getURICollection(collectionB.getRelations()[pred][0]);
+				var newItemA = await Trellis.URI.getURIItem(itemA.getRelations()[pred][0]);
+				var newItemB = await Trellis.URI.getURIItem(itemB.getRelations()[pred][0]);
 				assert.equal(newCollectionA.libraryID, group.libraryID);
 				assert.equal(newCollectionB.libraryID, group.libraryID);
 				assert.equal(newCollectionB.parentID, newCollectionA.id);
@@ -1662,7 +1662,7 @@ describe("Zotero.CollectionTree", function () {
 
 			it("can delete a collection by dropping it into the trash", async function () {
 				var collection = await createDataObject('collection');
-				var deferred = Zotero.Promise.defer();
+				var deferred = Trellis.Promise.defer();
 				deferred.resolve();
 				await onDrop('collection', 'T' + userLibraryID, [collection.id], deferred.promise);
 				assert.isTrue(collection.deleted);
@@ -1683,22 +1683,22 @@ describe("Zotero.CollectionTree", function () {
 			
 			after(async function () {
 				await new Promise(resolve => httpd.stop(resolve));
-				Zotero.Prefs.clear('downloadAssociatedFiles');
-				Zotero.Prefs.clear('automaticSnapshots');
+				Trellis.Prefs.clear('downloadAssociatedFiles');
+				Trellis.Prefs.clear('automaticSnapshots');
 			});
 
 			it("should add a translated feed item retrieved from a URL", async function () {
 				// Disable file/snapshot saving to avoid external network requests and async
 				// attachment processing
-				Zotero.Prefs.set('downloadAssociatedFiles', false);
-				Zotero.Prefs.set('automaticSnapshots', false);
+				Trellis.Prefs.set('downloadAssociatedFiles', false);
+				Trellis.Prefs.set('automaticSnapshots', false);
 
 				// Serve the feed entry webpage via localhost
 				const urlPath = "/journalArticle-single.html";
 				const url = `http://localhost:${httpdPort}` + urlPath;
 				httpd.registerFile(
 					urlPath,
-					Zotero.File.pathToFile(OS.Path.join(
+					Trellis.File.pathToFile(OS.Path.join(
 						getTestDataDirectory().path, 'metadata', 'journalArticle-single.html'
 					))
 				);
@@ -1718,14 +1718,14 @@ describe("Zotero.CollectionTree", function () {
 
 				await select(win, collection);
 				// TEMP: Some extra asserts to debug flakiness in CI
-				var selectedTreeRow = win.ZoteroPane.getCollectionTreeRow();
+				var selectedTreeRow = win.TrellisPane.getCollectionTreeRow();
 				assert.ok(selectedTreeRow, 'a collection tree row should be selected');
 				assert.isTrue(selectedTreeRow.isCollection(),
 					'selected tree row should be a collection');
 				assert.equal(selectedTreeRow.ref.id, collection.id,
 					'selected collection tree row should match created collection');
 
-				var itemsView = win.ZoteroPane.itemsView;
+				var itemsView = win.TrellisPane.itemsView;
 				assert.equal(itemsView.rowCount, 1);
 				var treeRow = itemsView.getRow(0);
 				assert.equal(treeRow.ref.id, item.id);
@@ -1735,7 +1735,7 @@ describe("Zotero.CollectionTree", function () {
 		describe("with searches", function () {
 			it("can delete a saved search by dropping it into the trash", async function () {
 				var search = await createDataObject('search');
-				var deferred = Zotero.Promise.defer();
+				var deferred = Trellis.Promise.defer();
 				deferred.resolve();
 				await onDrop('search', 'T' + userLibraryID, [search.id], deferred.promise);
 				assert.isTrue(search.deleted);
@@ -1745,7 +1745,7 @@ describe("Zotero.CollectionTree", function () {
 
 	describe("Feeds pseudo-library", function () {
 		beforeEach(async function () {
-			for (let feed of Zotero.Feeds.getAll()) {
+			for (let feed of Trellis.Feeds.getAll()) {
 				await feed.eraseTx();
 			}
 		});
@@ -1772,7 +1772,7 @@ describe("Zotero.CollectionTree", function () {
 			await cv.selectFeeds();
 			await waitForItemsLoad(win);
 
-			var quickSearch = win.document.getElementById('zotero-tb-search-textbox');
+			var quickSearch = win.document.getElementById('trellis-tb-search-textbox');
 			quickSearch.value = feedItem1.getField('title');
 			quickSearch.doCommand();
 
@@ -1795,7 +1795,7 @@ describe("Zotero.CollectionTree", function () {
 			await feed2.updateUnreadCount();
 			
 			assert.equal(cv.getRow(cv.getRowIndexByID('F1')).ref.unreadCount, 1);
-			assert.lengthOf(win.document.querySelectorAll('#zotero-collections-tree .row.unread'), 2);
+			assert.lengthOf(win.document.querySelectorAll('#trellis-collections-tree .row.unread'), 2);
 		});
 	});
 
@@ -1812,17 +1812,17 @@ describe("Zotero.CollectionTree", function () {
 		};
 		before(async function () {
 			// Delete all previously added collections, feeds, searches
-			for (let col of Zotero.Collections.getByLibrary(userLibraryID)) {
+			for (let col of Trellis.Collections.getByLibrary(userLibraryID)) {
 				await col.eraseTx();
 			}
 			await clearFeeds();
-			for (let s of Zotero.Searches.getByLibrary(userLibraryID)) {
+			for (let s of Trellis.Searches.getByLibrary(userLibraryID)) {
 				await s.eraseTx();
 			}
 			// Display the collection search bar
-			win.document.getElementById("zotero-tb-collections-search").click();
+			win.document.getElementById("trellis-tb-collections-search").click();
 			// Do not hide the search panel on blur
-			win.document.getElementById("zotero-collections-search").removeEventListener('blur', zp.hideCollectionSearch);
+			win.document.getElementById("trellis-collections-search").removeEventListener('blur', zp.hideCollectionSearch);
 
 			feed1 = await createFeed({ name: "feed_1 " });
 			feed2 = await createFeed({ name: "feed_2" });
@@ -1947,32 +1947,32 @@ describe("Zotero.CollectionTree", function () {
 
 		it(`should focus selected collection on Enter if it matches filter`, async function () {
 			await cv.selectByID(`C${collection3.id}`);
-			win.document.getElementById("zotero-collections-search").value = "_2";
+			win.document.getElementById("trellis-collections-search").value = "_2";
 			await cv.setFilter("_2");
-			win.document.getElementById("zotero-collections-search").dispatchEvent(keyboardClick("Enter"));
+			win.document.getElementById("trellis-collections-search").dispatchEvent(keyboardClick("Enter"));
 			assert.equal(cv.getSelectedCollection(true), collection3.id);
 			assert.equal(win.document.activeElement.id, 'collection-tree');
 		});
 
 		it(`should focus first matching collection on Enter if selected collection does not match filter`, async function () {
 			await cv.selectByID(`C${collection2.id}`);
-			win.document.getElementById("zotero-collections-search").focus();
-			win.document.getElementById("zotero-collections-search").value = "_2";
+			win.document.getElementById("trellis-collections-search").focus();
+			win.document.getElementById("trellis-collections-search").value = "_2";
 			await cv.setFilter("_2");
-			win.document.getElementById("zotero-collections-search").dispatchEvent(keyboardClick("Enter"));
+			win.document.getElementById("trellis-collections-search").dispatchEvent(keyboardClick("Enter"));
 			// Wait for the selection to go through
-			await Zotero.Promise.delay(100);
+			await Trellis.Promise.delay(100);
 			assert.equal(cv.getSelectedCollection(true), collection3.id);
 			assert.equal(win.document.activeElement.id, 'collection-tree');
 		});
 
 		it(`should not move focus from collection filter on Enter if no rows pass the filter`, async function () {
 			await cv.selectByID(`C${collection3.id}`);
-			win.document.getElementById("zotero-collections-search").focus();
-			win.document.getElementById("zotero-collections-search").value = "Not matching anything";
+			win.document.getElementById("trellis-collections-search").focus();
+			win.document.getElementById("trellis-collections-search").value = "Not matching anything";
 			await cv.setFilter("Not matching anything");
-			win.document.getElementById("zotero-collections-search").dispatchEvent(keyboardClick("Enter"));
-			assert.equal(win.document.activeElement.id, 'zotero-collections-search');
+			win.document.getElementById("trellis-collections-search").dispatchEvent(keyboardClick("Enter"));
+			assert.equal(win.document.activeElement.id, 'trellis-collections-search');
 		});
 
 		it(`should skip context rows on arrow up/down`, async function () {

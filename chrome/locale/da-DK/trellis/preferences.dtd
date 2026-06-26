@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Indstillinger for Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "Hjælp">
+
+<!ENTITY trellis.preferences.default "Default:">
+<!ENTITY trellis.preferences.items "Elementer">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Tilpasset...">
+
+<!ENTITY trellis.preferences.prefpane.general "Generelt">
+
+<!ENTITY trellis.preferences.interface "Interface">
+<!ENTITY trellis.preferences.fileHandling "Filhåndtering">
+<!ENTITY trellis.preferences.automaticSnapshots "Tag automatisk et &quot;Snapshot&quot; når der oprettes Elementer for web-sider">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Vedhæft automatisk tilhørende PDF-filer og andre filer når Elementer gemmes">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Omdøb linkede filer">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Åbn PDF'er med brug af">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Systemstandard">
+
+<!ENTITY trellis.preferences.miscellaneous "Forskelligt">
+<!ENTITY trellis.preferences.autoUpdate "Kontroller automatisk for opdaterede oversættere og bibliografiske formater">
+<!ENTITY trellis.preferences.updateNow "Opdater nu">
+<!ENTITY trellis.preferences.reportTranslationFailure "Rapporter om &quot;oversættere&quot; uden forbindelse">
+<!ENTITY trellis.preferences.parseRISRefer "Brug Trellis til at hente BibTeX/RIS/Refer -filer">
+<!ENTITY trellis.preferences.automaticTags "Mærk automatisk Elementer med stikord og emne-grupper">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Fjern automatisk Elementer fra papirkurven hvis de er slettet for mere end">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "dage siden">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Show tabs as">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creator - Year - Title">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Title - Creator - Year">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Filnavn">
+
+<!ENTITY trellis.preferences.groups "Grupper">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Når elementer kopieres mellem biblioteker, så medtag:">
+<!ENTITY trellis.preferences.groups.childNotes "underliggende Noter">
+<!ENTITY trellis.preferences.groups.childFiles "underliggende &quot;Snapshots&quot; og importerede filer">
+<!ENTITY trellis.preferences.groups.annotations "annotations">
+<!ENTITY trellis.preferences.groups.childLinks "underliggende links">
+<!ENTITY trellis.preferences.groups.tags "etiketter">
+
+<!ENTITY trellis.preferences.feeds "Nyhedsstrømme">
+<!ENTITY trellis.preferences.feeds.sorting.label "Sortering:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Nyeste elementer først">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Ældste elementer først">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Standarder for nyhedsstrøm">
+
+<!ENTITY trellis.preferences.prefpane.sync "Synkroniser">
+<!ENTITY trellis.preferences.sync.username "Brugernavn:">
+<!ENTITY trellis.preferences.sync.password "Adgangskode:">
+<!ENTITY trellis.preferences.sync.createAccount "Opret konto">
+<!ENTITY trellis.preferences.sync.lostPassword "Mistet adgangskode?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Synkroniser automatisk">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Synkronisér fuldtekst-indhold">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis kan synkronisere full-text indholdet af filer i dit Trellisbibliotek med trellis.org og andre tilknyttede enheder, hvilket tillader dig enkel søgning i dine foler uanset hvor du er. Full-text indholdet af dine filer vil ikke blive delt offentligt.">
+<!ENTITY trellis.preferences.sync.about "Om synkronisering">
+<!ENTITY trellis.preferences.sync.fileSyncing "Fil-synkronisering">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Synkroniser Vedhæftninger i Mit Bibliotek ved hjælp af">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Hent filer">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "under synkronisering">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "efter behov">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Bekræft server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Biblioteker der skal synkroniseres">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Vælg biblioteker...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Synkronisér">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Bibliotek">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Følgende operationer er bruges normalt kun i sjældne og meget specielle situationer og bør ikke bruges ved normal problemløsning. I mange tilfælde vil nulstilling føre til yderligere problemer. Se">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Synkroniser nulstillingsindstillinger">
+<!ENTITY trellis.preferences.sync.reset.warning3 "for mere information">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Nulstil historikken for datasynkronisering">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Flet lokale data med fjerndata og ignorér synkroniseringshistorikken">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Gendan fra onlinebibliotek">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Overskriv lokale Trellis-data med data fra onlinebiblioteket.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Replace Online Library">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Overskriv onlinebiblioteket med lokale Trellis-data.">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Nulstil historik for fil-synkronisering">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Sammenlign alle vedhæftede filer med lagringstjenesten">
+<!ENTITY trellis.preferences.sync.reset "Nulstil">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Nulstil...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Søg">
+<!ENTITY trellis.preferences.search.fulltextCache "Fuldtekst-cache">
+<!ENTITY trellis.preferences.search.indexStats "Statistik for indeks">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indekseret:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Delvis:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Ikke indekseret:">
+<!ENTITY trellis.preferences.search.indexStats.words "Ord:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Maksimalt antal tegn som indekseres per fil:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Maksimalt antal sider som indekseres per fil:">
+
+<!ENTITY trellis.preferences.prefpane.export "Eksport">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Valgmuligheder for henvisninger">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Medtag URL'er for trykte artikler i referencer">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Når denne mulighed er valgt fra, medtager Trellis kun URL'er for artikler i tidsskrifter, blade og aviser hvis der ikke er anført sidetal (første og sidste side).">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Hurtig kopi">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Item Format:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Note Format:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopier som HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "site-specikke indstillinger">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domæne/Sti">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(f.eks. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Format">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Sprog">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Slå Quick Copy fra hvis du trækker mere end">
+
+<!ENTITY trellis.preferences.prefpane.cite "Henvis">
+<!ENTITY trellis.preferences.cite.wordProcessors "Tekstbehandlere">
+<!ENTITY trellis.preferences.styleEditor "Håndtering af bibliografiske formater">
+<!ENTITY trellis.preferences.stylePreview "Forhåndsvisning af bibliografisk format">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Håndtering af bibliografiske formater">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Titel">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Opdateret">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Gem til Trellis (ikon i adresselinjen)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Panel med fokusbiblioteker">
+<!ENTITY trellis.preferences.keys.quicksearch "Hurtigsøgning">
+<!ENTITY trellis.preferences.keys.newItem "Opret nyt element">
+<!ENTITY trellis.preferences.keys.newNote "Opret en ny note">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Markér alle elementer fra nyhedsstrømmen som læst/ulæst">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopier valgte henvisninger til udklipsholder">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopier valgte Elementer til udklipsholder">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importer fra udklipsholder">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Ændringer træder i kraft efter genstart">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proxyer">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Proxy-indstillinger">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis vil automatisk ekspedere forespørgsler via de gemte proxyer. Se">
+<!ENTITY trellis.preferences.proxies.desc_link "dokumentation om proxyer">
+<!ENTITY trellis.preferences.proxies.desc_after_link "for nærmere oplysninger.">
+<!ENTITY trellis.preferences.proxies.transparent "Send forespørgsler gennem tidligere anvendte proxyer">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Anerkend automatisk ressourcer i proxyer">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Giv besked, når der omdirigeres gennem en proxy">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Slå automatisk brug af proxyer fra når domænenavnet indeholder ">
+<!ENTITY trellis.preferences.proxies.configured "Konfigurerede proxyer">
+<!ENTITY trellis.preferences.proxies.hostname "Værtsnavn">
+<!ENTITY trellis.preferences.proxies.scheme "Scheme">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Multi-Site">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Tilknyt automatisk nye værter">
+<!ENTITY trellis.preferences.proxies.variables "Du kan bruge følgende variable ved tilknytningen af proxyer">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Værtsnanvnet for det site som anvendes som proxy (fx www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Stien til proxy-siden med udeladelse af første skråstreg (fx. about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Mappe-stien (fx about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Filnavnet (fx index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Enhver tegnstreng">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Avanceret">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Filer og mapper">
+<!ENTITY trellis.preferences.advanced.keys "Genvejstaster">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Avanceret konfiguration">
+
+<!ENTITY trellis.preferences.prefpane.locate "Lokalisér">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Håndtering af søgemaskiner for artikler">
+<!ENTITY trellis.preferences.locate.description "Beskrivelse">
+<!ENTITY trellis.preferences.locate.name "Navn">
+<!ENTITY trellis.preferences.locate.addDescription "For at tilføje en søgemaskine, som ikke er på listen, skal du i din browser besøge den pågældende søgemaskine og vælge &quot;Tilføj&quot; i Trelliss Lokalisér-menu">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Gendan Defaults">
+
+<!ENTITY trellis.preferences.charset "Tegnsæt">
+<!ENTITY trellis.preferences.charset.importCharset "Importer tegnsæt">
+<!ENTITY trellis.preferences.charset.displayExportOption "Vis valgmuligheder for tegnsæt ved eksport">
+
+<!ENTITY trellis.preferences.dataDir "Placering af datamappen">
+<!ENTITY trellis.preferences.dataDir.useProfile "Brug profil-mappen">
+<!ENTITY trellis.preferences.dataDir.custom "Tilpas:">
+<!ENTITY trellis.preferences.dataDir.choose "Vælg...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(specificeret via kommandolinjen)">
+<!ENTITY trellis.preferences.dataDir.reveal "Vis data-mappen">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrér til ny standardplacering">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Tilknyttet databasemappe for vedhæftninger">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis vil benytte relative stier for tilknyttede vedhæftede filer i databasemappe, hvilket giver dig mulighed for at tilgå filerne med forskellige computere så længe filstrukturen i databasemappen forbliver den samme">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Databasemappe:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Vælg...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Gendan til absolutte stier...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Vedligeholdelse af databasen">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Tjek databasens gyldighed">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Nulstil oversættere og bibliografiske formater...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Nulstil oversættere...">
+
+<!ENTITY trellis.preferences.configEditor "Redigering af konfiguration">

@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Name:">
+
+<!ENTITY trellis.search.searchInLibrary "Search in library:">
+
+<!ENTITY trellis.search.joinMode.prefix "Match">
+<!ENTITY trellis.search.joinMode.any "any">
+<!ENTITY trellis.search.joinMode.all "all">
+<!ENTITY trellis.search.joinMode.suffix "of the following:">
+
+<!ENTITY trellis.search.recursive.label "Search subcollections">
+<!ENTITY trellis.search.noChildren "Show only top-level items">
+<!ENTITY trellis.search.includeParentsAndChildren "Include parent and child items of matching items">
+
+<!ENTITY trellis.search.textModes.phrase "Phrase">
+<!ENTITY trellis.search.textModes.phraseBinary "Phrase (incl. binary files)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (case-sensitive)">
+
+<!ENTITY trellis.search.date.units.days "days">
+<!ENTITY trellis.search.date.units.months "months">
+<!ENTITY trellis.search.date.units.years "years">
+
+<!ENTITY trellis.search.search "Search">
+<!ENTITY trellis.search.clear "Clear">
+<!ENTITY trellis.search.saveSearch "Save Search">

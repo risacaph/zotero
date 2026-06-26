@@ -1,7 +1,7 @@
-describe("Zotero.FeedItem", function () {
+describe("Trellis.FeedItem", function () {
 	let feed, libraryID;
 	before(function* () {
-		feed = yield createFeed({ name: 'Test ' + Zotero.randomString(), url: 'http://' + Zotero.randomString() + '.com/' });
+		feed = yield createFeed({ name: 'Test ' + Trellis.randomString(), url: 'http://' + Trellis.randomString() + '.com/' });
 		yield feed.saveTx();
 		libraryID = feed.libraryID;
 	});
@@ -9,48 +9,48 @@ describe("Zotero.FeedItem", function () {
 		return clearFeeds();
 	});
 	
-	it("should be an instance of Zotero.Item", function () {
-		assert.instanceOf(new Zotero.FeedItem(), Zotero.Item);
+	it("should be an instance of Trellis.Item", function () {
+		assert.instanceOf(new Trellis.FeedItem(), Trellis.Item);
 	});
 	describe("#libraryID", function () {
 		it("should reference a feed", function () {
-			let feedItem = new Zotero.FeedItem();
+			let feedItem = new Trellis.FeedItem();
 			assert.doesNotThrow(function () {feedItem.libraryID = feed.libraryID});
-			assert.throws(function () {feedItem.libraryID = Zotero.Libraries.userLibraryID}, /^libraryID must reference a feed$/);
+			assert.throws(function () {feedItem.libraryID = Trellis.Libraries.userLibraryID}, /^libraryID must reference a feed$/);
 		});
 	});
 	describe("#constructor()", function* () {
 		it("should accept required fields as arguments", async function () {
-			let guid = Zotero.randomString();
-			let feedItem = new Zotero.FeedItem();
+			let guid = Trellis.randomString();
+			let feedItem = new Trellis.FeedItem();
 			assert.ok(await getPromiseError(feedItem.saveTx()));
 			
-			feedItem = new Zotero.FeedItem('book', { guid });
+			feedItem = new Trellis.FeedItem('book', { guid });
 			feedItem.libraryID = libraryID;
 			await feedItem.saveTx();
 			
-			assert.equal(feedItem.itemTypeID, Zotero.ItemTypes.getID('book'));
+			assert.equal(feedItem.itemTypeID, Trellis.ItemTypes.getID('book'));
 			assert.equal(feedItem.guid, guid);
 			assert.equal(feedItem.libraryID, libraryID);
 		});
 	});
 	describe("#isFeedItem", function () {
 		it("should be true", function () {
-			let feedItem = new Zotero.FeedItem();
+			let feedItem = new Trellis.FeedItem();
 			assert.isTrue(feedItem.isFeedItem);
 		});
 		it("should be falsy for regular item", function () {
-			let item = new Zotero.Item();
+			let item = new Trellis.Item();
 			assert.notOk(item.isFeedItem);
 		})
 	});
 	describe("#guid", function () {
 		it("should not be settable to a non-string value", function () {
-			let feedItem = new Zotero.FeedItem();
+			let feedItem = new Trellis.FeedItem();
 			assert.throws(() => feedItem.guid = 1);
 		});
 		it("should be settable to any string", function () {
-			let feedItem = new Zotero.FeedItem();
+			let feedItem = new Trellis.FeedItem();
 			feedItem.guid = 'foo';
 			assert.equal(feedItem.guid, 'foo');
 		});
@@ -66,14 +66,14 @@ describe("Zotero.FeedItem", function () {
 		});
 		it("should be settable and persist after saving", async function () {
 			this.timeout(5000);
-			let feedItem = new Zotero.FeedItem('book', { guid: Zotero.randomString() });
+			let feedItem = new Trellis.FeedItem('book', { guid: Trellis.randomString() });
 			feedItem.libraryID = feed.libraryID;
 			assert.isFalse(feedItem.isRead);
 			
 			let expectedTimestamp = Date.now();
 			feedItem.isRead = true;
 			assert.isTrue(feedItem.isRead);
-			let readTime = Zotero.Date.sqlToDate(feedItem._feedItemReadTime, true).getTime();
+			let readTime = Trellis.Date.sqlToDate(feedItem._feedItemReadTime, true).getTime();
 			assert.closeTo(readTime, expectedTimestamp, 2000, 'sets the read timestamp to current time');
 			
 			feedItem.isRead = false;
@@ -82,18 +82,18 @@ describe("Zotero.FeedItem", function () {
 			
 			expectedTimestamp = Date.now();
 			feedItem.isRead = true;
-			await Zotero.Promise.delay(2001);
+			await Trellis.Promise.delay(2001);
 			await feedItem.saveTx();
 			
-			readTime = await Zotero.DB.valueQueryAsync('SELECT readTime FROM feedItems WHERE itemID=?', feedItem.id);
-			readTime = Zotero.Date.sqlToDate(readTime, true).getTime();
+			readTime = await Trellis.DB.valueQueryAsync('SELECT readTime FROM feedItems WHERE itemID=?', feedItem.id);
+			readTime = Trellis.Date.sqlToDate(readTime, true).getTime();
 			assert.closeTo(readTime, expectedTimestamp, 2000, 'read timestamp is correct in the DB');
 		});
 	});
 	describe("#fromJSON()", function () {
 		it("should attempt to parse non ISO-8601 dates", async function () {
-			Zotero.locale = 'en-US';
-			Zotero.Date.init();
+			Trellis.locale = 'en-US';
+			Trellis.Date.init();
 			var data = [
 				{
 					itemType: "journalArticle",
@@ -119,7 +119,7 @@ describe("Zotero.FeedItem", function () {
 				'2015-06-07'
 			];
 			for (let i = 0; i < data.length; i++) {
-				var item = new Zotero.FeedItem;
+				var item = new Trellis.FeedItem;
 				item.fromJSON(data[i]);
 				assert.strictEqual(item.getField('date'), expectedDates[i]);
 			}
@@ -127,17 +127,17 @@ describe("Zotero.FeedItem", function () {
 	});
 	describe("#save()", function () {
 		it("should require feed being set", async function () {
-			let feedItem = new Zotero.FeedItem('book', { guid: Zotero.randomString() });
+			let feedItem = new Trellis.FeedItem('book', { guid: Trellis.randomString() });
 			// Defaults to user library ID
 			assert.match((await getPromiseError(feedItem.saveTx())).message, /^Cannot add /);
 		});
 		it("should require GUID being set", async function () {
-			let feedItem = new Zotero.FeedItem('book');
+			let feedItem = new Trellis.FeedItem('book');
 			feedItem.libraryID = feed.libraryID;
 			assert.equal((await getPromiseError(feedItem.saveTx())).message, 'GUID must be set before saving FeedItem');
 		});
 		it("should require a unique GUID", async function () {
-			let guid = Zotero.randomString();
+			let guid = Trellis.randomString();
 			let feedItem1 = await createDataObject('feedItem', { libraryID, guid });
 			
 			let feedItem2 = createUnsavedDataObject('feedItem', { libraryID, guid });
@@ -148,16 +148,16 @@ describe("Zotero.FeedItem", function () {
 			await feedItem2.saveTx();
 		});
 		it("should require item type being set", async function () {
-			let feedItem = new Zotero.FeedItem(null, { guid: Zotero.randomString() });
+			let feedItem = new Trellis.FeedItem(null, { guid: Trellis.randomString() });
 			feedItem.libraryID = feed.libraryID;
 			assert.equal((await getPromiseError(feedItem.saveTx())).message, 'Item type must be set before saving');
 		});
 		it("should save feed item", async function () {
-			let guid = Zotero.randomString();
+			let guid = Trellis.randomString();
 			let feedItem = createUnsavedDataObject('feedItem', { libraryID, guid });
 			await feedItem.saveTx();
 			
-			feedItem = await Zotero.FeedItems.getAsync(feedItem.id);
+			feedItem = await Trellis.FeedItems.getAsync(feedItem.id);
 			assert.ok(feedItem);
 			assert.equal(feedItem.guid, guid);
 		});
@@ -166,7 +166,7 @@ describe("Zotero.FeedItem", function () {
 			let allTypesAndFields = loadSampleData('allTypesAndFields'),
 				feedItems = [];
 			for (let type in allTypesAndFields) {
-				let feedItem = new Zotero.FeedItem(null, type, feed.libraryID);
+				let feedItem = new Trellis.FeedItem(null, type, feed.libraryID);
 				feedItem.fromJSON(allTypesAndFields[type]);
 				
 				yield feedItem.saveTx();
@@ -195,7 +195,7 @@ describe("Zotero.FeedItem", function () {
 			let feedItem = await createDataObject('feedItem', { libraryID });
 			
 			await feedItem.eraseTx();
-			assert.isFalse(await Zotero.FeedItems.getAsync(feedItem.id));
+			assert.isFalse(await Trellis.FeedItems.getAsync(feedItem.id));
 			
 			//yield assert.isRejected(feedItem.EraseTx(), "does not allow erasing twice");
 		});
@@ -232,10 +232,10 @@ describe("Zotero.FeedItem", function () {
 		before(function* () {
 			// TEMP: Fix for slow translator initialization on Linux/Travis
 			this.timeout(20000);
-			yield Zotero.Translators.init();
+			yield Trellis.Translators.init();
 			
 			// Needs an open window to be able to create a progress window
-			win = yield loadZoteroWindow();
+			win = yield loadTrellisWindow();
 		});
 		
 		after(function () {

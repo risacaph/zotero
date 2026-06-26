@@ -8,9 +8,9 @@ var Scaffold_Translators = {
 	_onLoadBeginListener: null,
 	_onLoadCompleteListener: null,
 	
-	load: Zotero.serial(async function (reload) {
+	load: Trellis.serial(async function (reload) {
 		if (this._translators.size && !reload) {
-			Zotero.debug("Scaffold: Translators already loaded");
+			Trellis.debug("Scaffold: Translators already loaded");
 			return { numLoaded: 0, numDeleted: 0 };
 		}
 
@@ -20,7 +20,7 @@ var Scaffold_Translators = {
 		var dir = this.getDirectory();
 		var numLoaded = 0;
 		var deletedTranslators = new Set(this._translatorFiles.keys());
-		await Zotero.File.iterateDirectory(dir, async function (entry) {
+		await Trellis.File.iterateDirectory(dir, async function (entry) {
 			if (entry.isDir || entry.name.startsWith('.') || !entry.name.endsWith('.js')) {
 				return;
 			}
@@ -45,7 +45,7 @@ var Scaffold_Translators = {
 					}
 				}
 				if (loadFile) {
-					let translator = await Zotero.Translators.loadFromFile(entry.path);
+					let translator = await Trellis.Translators.loadFromFile(entry.path);
 					this._translators.set(
 						translator.translatorID,
 						{
@@ -59,11 +59,11 @@ var Scaffold_Translators = {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}.bind(this));
 		
-		Zotero.debug(`Scaffold: Loaded ${numLoaded} ${Zotero.Utilities.pluralize(numLoaded, 'translator')} `
+		Trellis.debug(`Scaffold: Loaded ${numLoaded} ${Trellis.Utilities.pluralize(numLoaded, 'translator')} `
 			+ `in ${new Date() - t} ms`);
 		
 		for (let filename of deletedTranslators) {
@@ -87,7 +87,7 @@ var Scaffold_Translators = {
 	deleteByID: async function (translatorID) {
 		var translator = this._translators.get(translatorID);
 		if (!translator) {
-			Zotero.debug("Scaffold: Can't delete missing translator");
+			Trellis.debug("Scaffold: Can't delete missing translator");
 			return;
 		}
 		await IOUtils.remove(PathUtils.join(this.getDirectory(), translator.filename));
@@ -96,7 +96,7 @@ var Scaffold_Translators = {
 	},
 	
 	getDirectory: function () {
-		return Zotero.Prefs.get('scaffold.translatorsDir');
+		return Trellis.Prefs.get('scaffold.translatorsDir');
 	},
 
 	getModifiedTime: function (translatorID) {
@@ -107,7 +107,7 @@ var Scaffold_Translators = {
 		if (this._provider) {
 			return this._provider;
 		}
-		this._provider = Zotero.Translators.makeTranslatorProvider({
+		this._provider = Trellis.Translators.makeTranslatorProvider({
 			get: function (translatorID) {
 				if (!this._translators.size) {
 					throw new Error("Scaffold: Translators not loaded");
@@ -118,7 +118,7 @@ var Scaffold_Translators = {
 			
 			getCodeForTranslator: async function (translator) {
 				if (translator.code) return translator.code;
-				return Zotero.File.getContentsAsync(translator.path).then(function(code) {
+				return Trellis.File.getContentsAsync(translator.path).then(function(code) {
 					if (translator.cacheCode) {
 						// See Translator.init() for cache rules
 						translator.code = code;

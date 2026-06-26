@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "バージョン">
+<!ENTITY trellis.whatsNew "更新情報">
+<!ENTITY trellis.createdby "作成者:">
+<!ENTITY trellis.director "責任者">
+<!ENTITY trellis.directors "責任者">
+<!ENTITY trellis.developers "開発者:">
+<!ENTITY trellis.alumni "同窓会員:">
+<!ENTITY trellis.about.localizations "各国語版:">
+<!ENTITY trellis.about.additionalSoftware "Third-Party Software:">
+<!ENTITY trellis.thanks "次のコミュニティメンバーに謝辞を表します:">
+<!ENTITY trellis.about.close "閉じる">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "その他の貢献者と謝辞">
+<!ENTITY trellis.citationProcessing "出典表記と参考文献目録を処理中">

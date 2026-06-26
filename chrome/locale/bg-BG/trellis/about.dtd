@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "версия">
+<!ENTITY trellis.whatsNew "Какво е новото?">
+<!ENTITY trellis.createdby "Създаден от:">
+<!ENTITY trellis.director "Директор:">
+<!ENTITY trellis.directors "Директори:">
+<!ENTITY trellis.developers "Разработчици:">
+<!ENTITY trellis.alumni "Възпитаници:">
+<!ENTITY trellis.about.localizations "Локализации:">
+<!ENTITY trellis.about.additionalSoftware "Софтуер на трети страни:">
+<!ENTITY trellis.thanks "Специални благодарности:">
+<!ENTITY trellis.about.close "Затваряне">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Още благодарности и признания">
+<!ENTITY trellis.citationProcessing "Обработка на бележки под линия и библиография">

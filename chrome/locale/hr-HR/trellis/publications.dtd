@@ -1,0 +1,19 @@
+<!ENTITY trellis.publications.my_publications "Moje publikacije">
+
+<!ENTITY trellis.publications.intro "Stavke koje dodate u Moje publikacije bit će prikazane na stranici Vašeg profila na trellis.org. Ako odlučite uključiti priložene datoteke, one će biti javno dostupne pod licencom koju navedete. Dodajte samo radove koje ste sami izradili i uključite datoteke samo ako imate prava na njihovu distribuciju i ako to želite.">
+<!ENTITY trellis.publications.include.checkbox.files "Uključi datoteke">
+<!ENTITY trellis.publications.include.checkbox.notes "Uključi bilješke">
+<!ENTITY trellis.publications.include.adjustAtAnyTime "U zbirci „Moje publikacije” u bilo kojem trenutku možete prilagoditi što želite prikazati.">
+
+<!ENTITY trellis.publications.sharing.title "Odaberite kako se Vaš rad može dijeliti">
+<!ENTITY trellis.publications.sharing.text "Možete zadržati sva prava na svoj rad, licencirati ga pod licencijom Creative Commons ili ga posvetiti javnoj domeni. U svim slučajevima, rad će biti javno dostupan putem trellis.org.">
+<!ENTITY trellis.publications.sharing.prompt "Želite li dopustiti drugima da dijele Vaš rad?">
+<!ENTITY trellis.publications.sharing.cc "Da, pod licencijom Creative Commons">
+<!ENTITY trellis.publications.sharing.cc0 "Da, stavi moj rad u javnu domenu">
+<!ENTITY trellis.publications.sharing.reserved "Ne, moj rad objavi samo na trellis.org">
+
+<!ENTITY trellis.publications.chooseLicense.title "Odaberite licenciju Creative Commons">
+<!ENTITY trellis.publications.chooseLicense.text "Licencija Creative Commons dopušta drugima kopiranje i redistribuciju Vašeg rada sve dok navedu odgovarajuću zaslugu, daju poveznicu na licenciju i naznače jesu li napravljene promjene. Dodatni uvjeti mogu se navesti u nastavku.">
+<!ENTITY trellis.publications.chooseLicense.adaptations.prompt "Dopustiti dijeljenje adaptacije Vašeg rada?">
+<!ENTITY trellis.publications.chooseLicense.adaptations.sharealike "Da, sve dok drugi jednako dijele">
+<!ENTITY trellis.publications.chooseLicense.commercial.prompt "Dopustiti komercijalnu upotrebu Vašeg rada?">

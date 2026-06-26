@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Taip">
+<!ENTITY trellis.general.no "Ne">
+<!ENTITY trellis.general.optional "(Neprivalomas)">
+<!ENTITY trellis.general.note "Pastaba:">
+<!ENTITY trellis.general.selectAll "Pažymėti viską">
+<!ENTITY trellis.general.deselectAll "Nieko nežymėti">
+<!ENTITY trellis.general.edit "Redaguoti">
+<!ENTITY trellis.general.delete "Šalinti">
+<!ENTITY trellis.general.moveToTrash "Perkelti į šiukšlinę">
+<!ENTITY trellis.general.ok "Gerai">
+<!ENTITY trellis.general.cancel "Atšaukti">
+<!ENTITY trellis.general.refresh "Atnaujinti">
+<!ENTITY trellis.general.saveAs "Įrašyti kaip...">
+<!ENTITY trellis.general.options "Parinktys">
+<!ENTITY trellis.general.advancedOptions.label "Kitos parinktys">
+<!ENTITY trellis.general.tools "Priemonės">
+<!ENTITY trellis.general.more "Daugiau">
+<!ENTITY trellis.general.moreInformation "Daugiau informacijos">
+<!ENTITY trellis.general.loading "Įkeliama...">
+<!ENTITY trellis.general.close "Užverti">
+<!ENTITY trellis.general.minimize "Suskleisti">
+<!ENTITY trellis.general.other "Kita...">
+<!ENTITY trellis.general.bigger "Didesnis">
+<!ENTITY trellis.general.smaller "Mažesnis">
+<!ENTITY trellis.general.reset "Iš naujo">
+
+
+<!ENTITY trellis.errorReport.title "Pranešimas apie klaidą Trellis programoje">
+<!ENTITY trellis.errorReport.submissionInProgress "Prašome palaukti kol siunčiamas klaidų sąrašas.">
+<!ENTITY trellis.errorReport.submitted "Jūsų klaidų sąrašas buvo nusiųstas.">
+<!ENTITY trellis.errorReport.reportID "Pranešimo ID:">
+<!ENTITY trellis.errorReport.postToForums "Parašykite žinutę Trellis forume (forums.trellis.org), nurodydami ataskaitos identifikatorių, aprašydami nesklandumus ir žingsnius, kurie ją sukelia.">
+<!ENTITY trellis.errorReport.notReviewed "Pranešimai apie klaidas peržiūrimi tik tuomet, kai jie yra forume.">
+
+<!ENTITY trellis.upgrade.title "Trellis atnaujinimo vediklis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Jūs įdiegėte naują Trellis versiją.">
+<!ENTITY trellis.upgrade.upgradeRequired "Prieš dirbant su naujają Trellis versija, reikia atnaujinti Trellis duomenų bazę.">
+<!ENTITY trellis.upgrade.autoBackup "Prieš atliekant kokius nors pakeitimus, automatiškai sukursime dabartinės duomenų bazės atsarginę kopiją.">
+<!ENTITY trellis.upgrade.majorUpgrade "Tai reikšmingas atnaujinimas.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Prieš tęsdami būtinai perskaitykite">
+<!ENTITY trellis.upgrade.majorUpgradeLink "atnaujinimo instrukcijas">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink ".">
+<!ENTITY trellis.upgrade.upgradeInProgress "Palaukite, kol baigsime atnaujinti. Tai gali užtrukti kelias minutes.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Jūsiškė duomenų bazė sėkmingai atnaujinta.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Ieškokite">
+<!ENTITY trellis.upgrade.changeLogLink "pakeitimų žurnale">
+<!ENTITY trellis.upgrade.changeLogAfterLink "apie naujoves.">
+
+<!ENTITY trellis.tabs.notes.label "Užrašai">
+<!ENTITY trellis.tabs.attachments.label "Priedai">
+
+<!ENTITY trellis.toolbar.duplicate.label "Rodyti besidubliuojančius">
+<!ENTITY trellis.collections.showUnfiledItems "Rodyti neužpildytus">
+<!ENTITY trellis.collections.showRetractedItems "Rodyti atšauktus įrašus">
+
+<!ENTITY trellis.items.itemType "Įrašo tipas">
+<!ENTITY trellis.items.creator_column "Autorius">
+<!ENTITY trellis.items.year_column "Metai">
+<!ENTITY trellis.items.dateModified_column "Keitimo laikas">
+<!ENTITY trellis.items.moreColumns.label "Daugiau stulpelių">
+<!ENTITY trellis.items.restoreColumnOrder.label "Atstatyti stulpelių tvarką">
+
+<!ENTITY trellis.items.menu.showInLibrary "Rodyti bibliotekoje">
+<!ENTITY trellis.items.menu.attach.note "Įtraukti pastabą">
+<!ENTITY trellis.items.menu.attach "Įtraukti priedą">
+<!ENTITY trellis.items.menu.attach.link.uri "Pridėti URI nuorodą...">
+<!ENTITY trellis.items.menu.attach.file "Pridėti turimo rinkmenos kopiją...">
+<!ENTITY trellis.items.menu.attach.fileLink "Pridėti nuorodą iki rinkmenos...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Atkurti į biblioteką">
+<!ENTITY trellis.items.menu.duplicateItem "Sukurti įrašo kopiją">
+<!ENTITY trellis.items.menu.mergeItems "Apjungti įrašus...">
+<!ENTITY trellis.items.menu.unrecognize "Atšaukti metaduomenų gavimą">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Pasirinkite pagrindinę įrašo versiją:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Pasirinkite senesnių įrašo versijų laukus:">
+
+<!ENTITY trellis.toolbar.newItem.label "Naujas įrašas">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Daugiau">
+<!ENTITY trellis.toolbar.lookup.label "Įrašą(-us) pridėti pagal identifikatorių">
+<!ENTITY trellis.toolbar.removeItem.label "Pašalinti įrašą...">
+<!ENTITY trellis.toolbar.newGroup "Nauja grupė...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Naujas poaplankis...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nauja įsiminta paieška...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Išvalyti šiukšlinę">
+<!ENTITY trellis.toolbar.tagSelector.label "Rodyti/slėpti gairių parinkiklį">
+<!ENTITY trellis.toolbar.actions.label "Veiksmai">
+<!ENTITY trellis.toolbar.import.label "Importuoti...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importuoti iš iškarpinės">
+<!ENTITY trellis.toolbar.export.label "Eksportuoti biblioteką...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF peržvelgimas">
+<!ENTITY trellis.toolbar.preferences.label "Nuostatos...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Palaikymas ir dokumentacija">
+<!ENTITY trellis.toolbar.about.label "Apie Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Išplėstinė paieška">
+<!ENTITY trellis.toolbar.openURL.label "Rasti vietą">
+<!ENTITY trellis.toolbar.openURL.tooltip "Ieškoti vietinėje bibliotekoje">
+
+<!ENTITY trellis.toolbar.feeds.new "Naujas naujienų kanalas">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Keisti naujienų kanalo parinktis...">
+
+<!ENTITY trellis.item.add "Pridėti">
+<!ENTITY trellis.item.attachment.file.show "Atverti rinkmenos aplanką">
+<!ENTITY trellis.item.textTransform "Teksto trasformavimas">
+<!ENTITY trellis.item.textTransform.titlecase "Pavadinimo raidžių lygis">
+<!ENTITY trellis.item.textTransform.sentencecase "Sakinio pavidalu">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Sukeisti vardus ir pavardes">
+<!ENTITY trellis.item.creatorTransform.fixCase "Taisyti raidžių dydį">
+<!ENTITY trellis.item.copyAsURL "Kopijuoti URL">
+<!ENTITY trellis.item.deletePermanently "Pašalinti negrįžtamai...">
+
+<!ENTITY trellis.item.tags.removeAll "Pašalinti visas gaires...">
+
+<!ENTITY trellis.toolbar.newNote "Nauja pastaba">
+<!ENTITY trellis.toolbar.note.standalone "Nauja nesusieta pastaba">
+<!ENTITY trellis.toolbar.note.child "Nauja įrašo pastaba">
+<!ENTITY trellis.toolbar.lookup "Paieška pagal identifikatorių...">
+<!ENTITY trellis.toolbar.attachment.linked "Nuoroda iki rinkmenos...">
+<!ENTITY trellis.toolbar.attachment.add "Patalpinti rinkmenos kopiją...">
+<!ENTITY trellis.toolbar.attachment.weblink "Įrašyti nuorodą į šį puslapį">
+<!ENTITY trellis.toolbar.attachment.snapshot "Sukurti šio tinklalapio momentinę kopiją">
+<!ENTITY trellis.toolbar.context.item "Įrašas">
+<!ENTITY trellis.toolbar.context.notes "Pastabos">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Nėra rodytinų gairių">
+<!ENTITY trellis.tagSelector.loadingTags "Įkeliamos gairės...">
+<!ENTITY trellis.tagSelector.showAutomatic "Rodyti automatiškai">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Rodyti visas šios bibliotekos gaires">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Šioje bibliotekoje pašalinti visas automatines gaires...">
+<!ENTITY trellis.tagSelector.clearAll "Panaikinti pažymėjimą">
+<!ENTITY trellis.tagSelector.assignColor "Priskirti spalvą:">
+<!ENTITY trellis.tagSelector.renameTag "Pervadinti gairę...">
+<!ENTITY trellis.tagSelector.deleteTag "Šalinti gairę...">
+<!ENTITY trellis.tagSelector.splitTag "Skaidyti...">
+
+<!ENTITY trellis.tagColorChooser.title "Pasirinkite gairės spalvą ir padėtį">
+<!ENTITY trellis.tagColorChooser.color "Spalva:">
+<!ENTITY trellis.tagColorChooser.position "Padėtis:">
+<!ENTITY trellis.tagColorChooser.setColor "Naudoti spalvą">
+<!ENTITY trellis.tagColorChooser.removeColor "Pašalinti spalvą">
+
+<!ENTITY trellis.lookup.description "Įveskite ISBN, DOI, PMID, arXiv ID arba ADS bibkodus, kuriuos norite įtraukti į savo biblioteką:">
+<!ENTITY trellis.lookup.button.search "Ieškoti">
+
+<!ENTITY trellis.createParent.title "Sukurti aukštesnio lygio įrašą">
+<!ENTITY trellis.createParent.button.manual "Įrašyti ranka">
+
+<!ENTITY trellis.selectitems.title "Pasirinkti įrašus">
+<!ENTITY trellis.selectitems.intro.label "Pasirinkite įrašus, norimus įtraukti į biblioteką">
+<!ENTITY trellis.selectitems.cancel.label "Atšaukti">
+<!ENTITY trellis.selectitems.select.label "Gerai">
+
+<!ENTITY trellis.bibliography.title "Sukurti citavimą/bibliografiją">
+<!ENTITY trellis.bibliography.style.label "Citavimo stilius:">
+<!ENTITY trellis.bibliography.manageStyles "Tvarkyti stilius...">
+<!ENTITY trellis.bibliography.locale.label "Kalba:">
+<!ENTITY trellis.bibliography.outputMode "Išvedimo veiksena:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografija">
+<!ENTITY trellis.bibliography.outputMethod "Išvedimo būdas:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Įrašyti RTF formatu">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Įrašyti HTML formatu">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopijuoti į iškaprinę">
+<!ENTITY trellis.bibliography.print.label "Spausdinti">
+
+<!ENTITY trellis.integration.docPrefs.title "Dokumento nuostatos">
+<!ENTITY trellis.integration.addEditCitation.title "Pridėti/redaguoti citavimą">
+<!ENTITY trellis.integration.editBibliography.title "Redaguoti bibliografiją">
+
+<!ENTITY trellis.progress.title "Eiga">
+
+<!ENTITY trellis.import "Importavimas">
+<!ENTITY trellis.import.whereToImportFrom "Iš kur norėtumėte importuoti?">
+<!ENTITY trellis.import.source.file "iš rinkmenos (BibTeX, RIS, Trellis RDF ar kt.)">
+<!ENTITY trellis.import.source.folder "PDF ir kitų rinkmenų katalogas">
+<!ENTITY trellis.import.onlineImport "nuotolinis importavimas">
+<!ENTITY trellis.import.importing "Importuojama...">
+<!ENTITY trellis.import.database "iš duombazės">
+<!ENTITY trellis.import.lastModified "Paskiausiai pakeista">
+<!ENTITY trellis.import.size "Dydis">
+<!ENTITY trellis.import.createCollection "Importuotą rinkinį ir įrašus patalpinti naujame rinkinyje">
+<!ENTITY trellis.import.fileHandling "Rinkmenų tvarkymas">
+<!ENTITY trellis.import.online.newItemsOnly "Parsisiųsti tik naujus įrašus; neatnaujinti anksčiau importuotųjų">
+
+<!ENTITY trellis.exportOptions.title "Eksportuoti...">
+<!ENTITY trellis.exportOptions.format.label "Formatas:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Vertimo parinktys">
+
+<!ENTITY trellis.charset.label "Rašmenų koduotė">
+<!ENTITY trellis.moreEncodings.label "Daugiau koduočių">
+
+<!ENTITY trellis.citation.keepSorted.label "Šaltinius automatiškai rikiuoti">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Praleisti autorių">
+<!ENTITY trellis.citation.prefix.label "Priešdėlis:">
+<!ENTITY trellis.citation.suffix.label "Priesaga:">
+<!ENTITY trellis.citation.editorWarning.label "Įspėjimas: jei pakeisite citavimą tekstų rengyklėje, jis nebebus atnaujinamas pagal jūsiškę duomenų bazę ar citavimo stilių.">
+
+<!ENTITY trellis.richText.italic.label "Kursyvas">
+<!ENTITY trellis.richText.bold.label "Pusjuodis">
+<!ENTITY trellis.richText.underline.label "Pabraukimas">
+<!ENTITY trellis.richText.superscript.label "Viršutinis indeksas">
+<!ENTITY trellis.richText.subscript.label "Apatinis indeksas">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Pridėti anotaciją">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Suskleisti visas anotacijas">
+<!ENTITY trellis.annotate.toolbar.expand.label "Išplėsti visas anotacijas">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Paryškinti tekstą">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Panaikinti teksto paryškinimą">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Citavimo rodymo pavidalas:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Išnaša">
+<!ENTITY trellis.integration.prefs.endnotes.label "Galinė išnaša">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Citavimo įrašymo pavidalas:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Žymelės">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Žymelės išlaikomos tiek „Word“, tiek „LibreOffice“ programose, tačiau netyčia jas pakeitus, gali atsirasti klaidų. Žymelių negalite įterpti į išnašas ar galines išnašas.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatiškai atnaujinti citavimus">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citavimai, kurių laukia atnaujinimai, dokumente paryškinsimi">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Atnaujinimų išjungimas gali pagreitinti citavimų įterpimą dideliuose dokumentuose. Tuomet spauskite „atnaujinti“, jei norite tą padaryti rankiniu būdu.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Naudoti MEDLINE žurnalų santrumpas">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Ignoruosima reikšmė „žurnalo santrumpos“ laukelyje">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Persijungti į kitą raštinės programą...">
+
+<!ENTITY trellis.integration.showEditor.label "Rodyti rengyklę">
+<!ENTITY trellis.integration.classicView.label "Klasikinis rodinys">
+
+<!ENTITY trellis.integration.references.label "Nuorodos bibliogafijoje">
+
+<!ENTITY trellis.sync.stop "Stabdyti sinchronizaciją">
+<!ENTITY trellis.sync.error "Sinchronizavimo klaida">
+<!ENTITY trellis.sync.storage.progress "Eiga:">
+<!ENTITY trellis.sync.storage.downloads "Siuntiniai:">
+<!ENTITY trellis.sync.storage.uploads "Įkėlimai:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Ši gairė yra pernelyg ilga sinchronizavimui su serveriu:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Sincronizuojamos gairės pavadinime gali būti iki 256 rašmenų.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Galite suskaidyti gairę į keletą gairių, savarankiškai pakeisti gairę trumpesne arba ją pašalinti.">
+<!ENTITY trellis.sync.longTagFixer.split "Skaidyti">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Perskirti ties">
+<!ENTITY trellis.sync.longTagFixer.character "rašmeniu">
+<!ENTITY trellis.sync.longTagFixer.characters "rašmenimis">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Nepasirinktos gairės nebus įrašytos.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Ši gairė pašalinsima iš visų įrašų.">
+
+<!ENTITY trellis.merge.title "Konflikto sprendimas">
+<!ENTITY trellis.merge.of "iš">
+<!ENTITY trellis.merge.deleted "Pašalinta">
+
+<!ENTITY trellis.proxy.recognized.title "Įgaliotasis serveris aptiktas">
+<!ENTITY trellis.proxy.recognized.warning "Pridėti tik su jūsiške biblioteka, mokykla ar bendruomenės svetaine susietus įgaliotuosius serverius">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Įtraukdami kitus įgaliotuosius serverius, sudarote sąlygas kenksmingoms svetainėms apsimesti patikimomis svetainėmis.">
+<!ENTITY trellis.proxy.recognized.disable.label "Automatiškai nenukreipinėti užklausų per anksčiau aptiktus įgaliotuosius serverius">
+<!ENTITY trellis.proxy.recognized.ignore.label "Nepaisyti">
+
+<!ENTITY trellis.feedSettings.title "Naujienų kanalo nuostatos">
+<!ENTITY trellis.feedSettings.saveButton.label "Įrašyti">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Pavadinimas:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Atnaujinti kas">
+<!ENTITY trellis.feedSettings.refresh.label2 "val.">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Neskaitytus naujienų kanalo įrašus pašalinti po">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "d.">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Perskaitytus naujienų kanalo įrašus pašalinti po">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "d.">
+
+<!ENTITY trellis.rtfScan.title "RTF peržvelgimas">
+<!ENTITY trellis.rtfScan.cancel.label "Atšaukti">
+<!ENTITY trellis.rtfScan.citation.label "Citavimas">
+<!ENTITY trellis.rtfScan.itemName.label "Įrašo pavadinimas">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Nesusieti citatavimai">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Neaiškūs citavimai">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Susieti citavimai">
+<!ENTITY trellis.rtfScan.introPage.label "Įvadas">
+<!ENTITY trellis.rtfScan.introPage.description "Zotaro gali automatiškai aptikti citavimus, pakeisti jų formatą ir įterpti bibliografiją į raiškiojo teksto formato dokumentus. Dabartinė RTF peržvelgimo funkcija palaiko įvairiausius citavimo formatus:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Norėdami pradėti,  įvedimui pasirinkite RTF dokumentą ir dokumentą išvedimui:">
+<!ENTITY trellis.rtfScan.scanPage.label "Peržvlgiame citavimus">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis dabar ieško dokumente esančių citavimų. Palaukite.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Tikrinti cituotus įrašus">
+<!ENTITY trellis.rtfScan.citationsPage.description "Peržiūrėkite aptiktų citavimų sąrašą, kad būtumėte tikri, jog Trellis tinkamai parinko atitinkamus elementus. Prieš tęsdami turite savarankiškai susieti nesusietus ir neaiškius citavimus.">
+<!ENTITY trellis.rtfScan.stylePage.label "Dokumento formatavimas">
+<!ENTITY trellis.rtfScan.formatPage.label "Formatuojame citavimus">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis apdoroja ir formatuoja RTF dokumentą. Palaukite.">
+<!ENTITY trellis.rtfScan.completePage.label "Raiškiojo teksto formato dokumentų peržvelgimas baigtas">
+<!ENTITY trellis.rtfScan.completePage.description "Jūsiškis dokumentas peržvelgtas ir apdorotas. Pažiūrėkite, ar jis tinkamai suformatuotas.">
+<!ENTITY trellis.rtfScan.inputFile.label "Įvedimo rinkmena">
+<!ENTITY trellis.rtfScan.outputFile.label "Išvedimo rinkmena">
+
+<!ENTITY trellis.file.choose.label "Rinkmenos pasirinkimas...">
+<!ENTITY trellis.file.noneSelected.label "Nepasirinkote rinkmenos">
+
+<!ENTITY trellis.attachLink.title "Įtraukti nuorodą (URI)">
+<!ENTITY trellis.attachLink.label.link "Nuoroda:">
+<!ENTITY trellis.attachLink.label.title "Pavadinimas">
+
+<!ENTITY trellis.context.addChildNote "Pridėti įrašo pastabą">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Pridėti įrašo pastabą iš anotacijų">
+<!ENTITY trellis.context.addStandaloneNote "Pridėti nesusietą pastabą">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Pridėti nesusietą pastabą iš anotacijų">
+<!ENTITY trellis.context.editInWindow "Redaguoti atskirame lange">
+
+<!ENTITY trellis.pdfReader.firstPage "Pirmas puslapis">
+<!ENTITY trellis.pdfReader.lastPage "Paskutinis puslapis">
+<!ENTITY trellis.pdfReader.back "Atgal">
+<!ENTITY trellis.pdfReader.forward "Toliau">
+<!ENTITY trellis.pdfReader.handTool "Naršyti">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertikali slinktis">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Gulsčia sklinktis">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Lanksti slinktis">
+<!ENTITY trellis.pdfReader.noSpreads "Be atlankos">
+<!ENTITY trellis.pdfReader.oddSpreads "Atverstinis nelyginis">
+<!ENTITY trellis.pdfReader.evenSpreads "Atverstinis lyginis">
+<!ENTITY trellis.pdfReader.scrolled "Vientisas slenkamas">
+<!ENTITY trellis.pdfReader.paginated "Puslapiuotas">
+<!ENTITY trellis.pdfReader.zoomIn "Priartinti">
+<!ENTITY trellis.pdfReader.zoomOut "Atitolinti">
+<!ENTITY trellis.pdfReader.zoomReset "Numatytasis mastelis">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatinis įtalpinimas">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Įtalpinti puslapio plotį">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Įtalpinti puslapio aukštį">
+<!ENTITY trellis.pdfReader.splitVertically "Skaidyti stačiai">
+<!ENTITY trellis.pdfReader.splitHorizontally "Skaidyti gulsčiai">
+<!ENTITY trellis.pdfReader.transferFromPDF "Importuoti anotacijas...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Pasukti kairėn">
+<!ENTITY trellis.pdfReader.rotatePageRight "Pasukti dešinėn">

@@ -6,24 +6,24 @@
   ${CreateShortcutsLog}
 
   ; Remove registry entries for non-existent apps and for apps that point to our
-  ; install location in the Software\Zotero key and uninstall registry entries
+  ; install location in the Software\Trellis key and uninstall registry entries
   ; that point to our install location for both HKCU and HKLM.
   SetShellVarContext current  ; Set SHCTX to the current user (e.g. HKCU)
-  ${RegCleanMain} "Software\Zotero"
+  ${RegCleanMain} "Software\Trellis"
   ${RegCleanUninstall}
   ${UpdateProtocolHandlers}
   ; Win7 taskbar and start menu link maintenance
   Call FixShortcutAppModelIDs
 
   ClearErrors
-  WriteRegStr HKLM "Software\Zotero" "${BrandShortName}InstallerTest" "Write Test"
+  WriteRegStr HKLM "Software\Trellis" "${BrandShortName}InstallerTest" "Write Test"
   ${If} ${Errors}
     StrCpy $TmpVal "HKCU" ; used primarily for logging
   ${Else}
     SetShellVarContext all    ; Set SHCTX to all users (e.g. HKLM)
-    DeleteRegValue HKLM "Software\Zotero" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\Trellis" "${BrandShortName}InstallerTest"
     StrCpy $TmpVal "HKLM" ; used primarily for logging
-    ${RegCleanMain} "Software\Zotero"
+    ${RegCleanMain} "Software\Trellis"
     ${RegCleanUninstall}
     ${UpdateProtocolHandlers}
     ${SetAppLSPCategories} ${LSP_CATEGORIES}
@@ -31,9 +31,9 @@
     ; Win7 taskbar and start menu link maintenance
     Call FixShortcutAppModelIDs
 
-    ReadRegStr $0 HKLM "Software\zotero.org\Zotero" "CurrentVersion"
+    ReadRegStr $0 HKLM "Software\trellis.org\Trellis" "CurrentVersion"
     ${If} "$0" != "${GREVersion}"
-      WriteRegStr HKLM "Software\zotero.org\Zotero" "CurrentVersion" "${GREVersion}"
+      WriteRegStr HKLM "Software\trellis.org\Trellis" "CurrentVersion" "${GREVersion}"
     ${EndIf}
   ${EndIf}
 
@@ -43,114 +43,114 @@
 !macroend
 !define PostUpdate "!insertmacro PostUpdate"
 
-; Adds zotero:// protocol handler and makes Zotero open exported bib files
+; Adds trellis:// protocol handler and makes Trellis open exported bib files
 !macro SetHandlers
   Push "$INSTDIR\${FileMainEXE}"
   Call GetLongPath
   Pop $8
   
-  ${AddHandlerValues} "Software\Classes\zotero" "$\"$8$\" -url $\"%1$\"" \
-      "$8,1" "Zotero Protocol" "true" ""
+  ${AddHandlerValues} "Software\Classes\trellis" "$\"$8$\" -url $\"%1$\"" \
+      "$8,1" "Trellis Protocol" "true" ""
   
   ; Add handlers for reference formats
-  ${AddHandlerValues} "Software\Classes\ZoteroRIS" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisRIS" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "Research Information Systems Document" "" ""
   
-  ${AddHandlerValues} "Software\Classes\ZoteroISI" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisISI" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "ISI Common Export Format Document" "" ""
   
-  ${AddHandlerValues} "Software\Classes\ZoteroMODS" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisMODS" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "Metadata Object Description Schema Document" "" ""
   
-  ${AddHandlerValues} "Software\Classes\ZoteroRDF" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisRDF" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "Resource Description Framework Document" "" ""
   
-  ${AddHandlerValues} "Software\Classes\ZoteroBibTeX" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisBibTeX" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "BibTeX Document" "" ""
   
-  ${AddHandlerValues} "Software\Classes\ZoteroMARC" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisMARC" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "MARC Document" "" ""
   
-  ${AddHandlerValues} "Software\Classes\ZoteroCSL" "$\"$8$\" -file $\"%1$\"" \
+  ${AddHandlerValues} "Software\Classes\TrellisCSL" "$\"$8$\" -file $\"%1$\"" \
       "$8,1" "CSL Citation Style" "" ""
   
   ; Associate file handlers
   ReadRegStr $6 SHCTX "Software\Classes\.ris" ""
-  ${If} "$6" != "ZoteroRIS"
-    WriteRegStr SHCTX "Software\Classes\.ris"   "" "ZoteroRIS"
+  ${If} "$6" != "TrellisRIS"
+    WriteRegStr SHCTX "Software\Classes\.ris"   "" "TrellisRIS"
     WriteRegStr SHCTX "Software\Classes\.ris"   "Content Type" "application/x-research-info-systems"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.mods" ""
-  ${If} "$6" != "ZoteroMODS"
-    WriteRegStr SHCTX "Software\Classes\.mods"  "" "ZoteroMODS"
+  ${If} "$6" != "TrellisMODS"
+    WriteRegStr SHCTX "Software\Classes\.mods"  "" "TrellisMODS"
     WriteRegStr SHCTX "Software\Classes\.mods"   "Content Type" "application/mods+xml"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.isi" ""
-  ${If} "$6" != "ZoteroMODS"
-    WriteRegStr SHCTX "Software\Classes\.isi"  "" "ZoteroISI"
+  ${If} "$6" != "TrellisMODS"
+    WriteRegStr SHCTX "Software\Classes\.isi"  "" "TrellisISI"
     WriteRegStr SHCTX "Software\Classes\.isi"   "Content Type" "application/x-inst-for-Scientific-info"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.rdf" ""
-  ${If} "$6" != "ZoteroRDF"
-    WriteRegStr SHCTX "Software\Classes\.rdf"  "" "ZoteroRDF"
+  ${If} "$6" != "TrellisRDF"
+    WriteRegStr SHCTX "Software\Classes\.rdf"  "" "TrellisRDF"
     WriteRegStr SHCTX "Software\Classes\.rdf"   "Content Type" "application/rdf+xml"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.bib" ""
-  ${If} "$6" != "ZoteroBibTeX"
-    WriteRegStr SHCTX "Software\Classes\.bib"  "" "ZoteroBibTeX"
+  ${If} "$6" != "TrellisBibTeX"
+    WriteRegStr SHCTX "Software\Classes\.bib"  "" "TrellisBibTeX"
     WriteRegStr SHCTX "Software\Classes\.bib"   "Content Type" "application/x-bibtex"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.bibtex" ""
-  ${If} "$6" != "ZoteroMARC"
-    WriteRegStr SHCTX "Software\Classes\.bibtex"  "" "ZoteroBibTeX"
+  ${If} "$6" != "TrellisMARC"
+    WriteRegStr SHCTX "Software\Classes\.bibtex"  "" "TrellisBibTeX"
     WriteRegStr SHCTX "Software\Classes\.bibtex"   "Content Type" "application/x-bibtex"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.marc" ""
-  ${If} "$6" != "ZoteroMARC"
-    WriteRegStr SHCTX "Software\Classes\.marc"  "" "ZoteroMARC"
+  ${If} "$6" != "TrellisMARC"
+    WriteRegStr SHCTX "Software\Classes\.marc"  "" "TrellisMARC"
     WriteRegStr SHCTX "Software\Classes\.marc"   "Content Type" "application/marc"
   ${EndIf}
   
   ReadRegStr $6 SHCTX "Software\Classes\.csl" ""
-  ${If} "$6" != "ZoteroCSL"
-    WriteRegStr SHCTX "Software\Classes\.csl"  "" "ZoteroCSL"
+  ${If} "$6" != "TrellisCSL"
+    WriteRegStr SHCTX "Software\Classes\.csl"  "" "TrellisCSL"
     WriteRegStr SHCTX "Software\Classes\.csl"   "Content Type" "application/vnd.citationstyles.style+xml"
   ${EndIf}
 !macroend
 !define SetHandlers "!insertmacro SetHandlers"
 
-; Add Software\Zotero\ registry entries (uses SHCTX).
+; Add Software\Trellis\ registry entries (uses SHCTX).
 !macro SetAppKeys
   Push $INSTDIR
   Call GetLongPath
   Pop $8
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal}\${AppVersion} (${AB_CD})\Main"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal}\${AppVersion} (${AB_CD})\Main"
   ${WriteRegStr2} $TmpVal "$0" "Install Directory" "$8" 0
   ${WriteRegStr2} $TmpVal "$0" "PathToExe" "$8\${FileMainEXE}" 0
 
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal}\${AppVersion} (${AB_CD})\Uninstall"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal}\${AppVersion} (${AB_CD})\Uninstall"
   ${WriteRegStr2} $TmpVal "$0" "Description" "${BrandFullNameInternal} ${AppVersion} (${ARCH} ${AB_CD})" 0
 
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal}\${AppVersion} (${AB_CD})"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal}\${AppVersion} (${AB_CD})"
   ${WriteRegStr2} $TmpVal  "$0" "" "${AppVersion} (${AB_CD})" 0
 
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal} ${AppVersion}\bin"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal} ${AppVersion}\bin"
   ${WriteRegStr2} $TmpVal "$0" "PathToExe" "$8\${FileMainEXE}" 0
 
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal} ${AppVersion}\extensions"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal} ${AppVersion}\extensions"
   ${WriteRegStr2} $TmpVal "$0" "Components" "$8\components" 0
   ${WriteRegStr2} $TmpVal "$0" "Plugins" "$8\plugins" 0
 
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal} ${AppVersion}"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal} ${AppVersion}"
   ${WriteRegStr2} $TmpVal "$0" "GeckoVer" "${GREVersion}" 0
 
-  StrCpy $0 "Software\Zotero\${BrandFullNameInternal}"
+  StrCpy $0 "Software\Trellis\${BrandFullNameInternal}"
   ${WriteRegStr2} $TmpVal "$0" "" "${GREVersion}" 0
   ${WriteRegStr2} $TmpVal "$0" "CurrentVersion" "${AppVersion} (${AB_CD})" 0
 !macroend
@@ -252,10 +252,10 @@
   ; Only set the file and protocol handlers if the existing one under HKCR is
   ; for this install location.
 
-  ${IsHandlerForInstallDir} "zotero" $R9
+  ${IsHandlerForInstallDir} "trellis" $R9
   ${If} "$R9" == "true"
-     ${AddHandlerValues} "SOFTWARE\Classes\zotero" "$\"$8$\" -url $\"%1$\"" \
-	     "$8,1" "Zotero" "true" ""
+     ${AddHandlerValues} "SOFTWARE\Classes\trellis" "$\"$8$\" -url $\"%1$\"" \
+	     "$8,1" "Trellis" "true" ""
   ${EndIf}
 !macroend
 !define UpdateProtocolHandlers "!insertmacro UpdateProtocolHandlers"

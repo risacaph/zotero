@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Név:">
+
+<!ENTITY trellis.search.searchInLibrary "Keresés könyvtárban:">
+
+<!ENTITY trellis.search.joinMode.prefix "Találat">
+<!ENTITY trellis.search.joinMode.any "bármelyik">
+<!ENTITY trellis.search.joinMode.all "összes">
+<!ENTITY trellis.search.joinMode.suffix "a következők közül:">
+
+<!ENTITY trellis.search.recursive.label "Keresés az almappákban">
+<!ENTITY trellis.search.noChildren "Csak felsőszintű elemek megjelenítése">
+<!ENTITY trellis.search.includeParentsAndChildren "Szülő és gyerek elemek megjelenítése">
+
+<!ENTITY trellis.search.textModes.phrase "Kifejezés">
+<!ENTITY trellis.search.textModes.phraseBinary "Kifejezés (bináris állományokban is)">
+<!ENTITY trellis.search.textModes.regexp "Reguláris kifejezés">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (kis és nagybetűk megkülönböztetése)">
+
+<!ENTITY trellis.search.date.units.days "nap">
+<!ENTITY trellis.search.date.units.months "hónap">
+<!ENTITY trellis.search.date.units.years "év">
+
+<!ENTITY trellis.search.search "Keresés">
+<!ENTITY trellis.search.clear "Törlés">
+<!ENTITY trellis.search.saveSearch "Keresés mentése">

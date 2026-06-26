@@ -15,7 +15,7 @@ info-box {
 	#info-table {
 		@include meta-table;
 		
-		.meta-row .zotero-field-version-button {
+		.meta-row .trellis-field-version-button {
 			padding: 3px;
 		}
 	}
@@ -76,7 +76,7 @@ info-box {
 		visibility: hidden !important;
 	}
 	// Avoids shifting itemBox columns when the svg is initially loaded
-	.meta-label > .zotero-clicky-grippy {
+	.meta-label > .trellis-clicky-grippy {
 		width: 18px !important;
 	}
 
@@ -117,7 +117,7 @@ info-box {
 	}
 
 	// Some spacing between creator buttons
-	.creator-type-value > .zotero-clicky {
+	.creator-type-value > .trellis-clicky {
 		margin-left: 1px; 
 	}
 
@@ -177,7 +177,7 @@ info-box {
 		align-self: center;
 	}
 
-	#zotero-date-field-status
+	#trellis-date-field-status
 	{
 		color: var(--fill-secondary);
 		padding: 0 !important;

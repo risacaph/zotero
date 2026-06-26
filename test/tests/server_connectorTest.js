@@ -12,7 +12,7 @@ let httpRequest = (method, url, options) => {
 		options.headers.set('User-Agent', 'Some-API-Client/1.0');
 	}
 	delete options.testBrowserRequest;
-	return Zotero.HTTP.request(method, url, options);
+	return Trellis.HTTP.request(method, url, options);
 }
 
 describe("Connector Server", function () {
@@ -27,10 +27,10 @@ describe("Connector Server", function () {
 			thisArg: this,
 			skipBundledFiles: true
 		});
-		yield Zotero.Translators.init();
+		yield Trellis.Translators.init();
 		
-		win = yield loadZoteroPane();
-		connectorServerPath = 'http://127.0.0.1:' + Zotero.Server.port;
+		win = yield loadTrellisPane();
+		connectorServerPath = 'http://127.0.0.1:' + Trellis.Server.port;
 	});
 	
 	beforeEach(function () {
@@ -52,11 +52,11 @@ describe("Connector Server", function () {
 	});
 	
 	afterEach(function* () {
-		for (let win of getWindows("chrome://zotero/content/progressQueueDialog.xhtml")) {
+		for (let win of getWindows("chrome://trellis/content/progressQueueDialog.xhtml")) {
 			win.close();
 		}
 		
-		var defer = Zotero.Promise.defer();
+		var defer = Trellis.Promise.defer();
 		httpd.stop(() => defer.resolve());
 		yield defer.promise;
 	});
@@ -74,8 +74,8 @@ describe("Connector Server", function () {
 					testBrowserRequest: true,
 				}
 			));
-			assert.instanceOf(error, Zotero.HTTP.UnexpectedStatusException);
-			assert.include(error.message, Zotero.getString('sync.error.checkConnection'));
+			assert.instanceOf(error, Trellis.HTTP.UnexpectedStatusException);
+			assert.include(error.message, Trellis.getString('sync.error.checkConnection'));
 		});
 		
 		it("should allow browser request if page is loaded directly", async function () {
@@ -89,7 +89,7 @@ describe("Connector Server", function () {
 					testBrowserRequest: true,
 				}
 			);
-			assert.include(response, 'Zotero is running');
+			assert.include(response, 'Trellis is running');
 		});
 	});
 
@@ -97,7 +97,7 @@ describe("Connector Server", function () {
 		it('should respond with translator code', async function () {
 			var code = 'function detectWeb() {}\nfunction doImport() {}';
 			var translator = buildDummyTranslator(4, code);
-			sinon.stub(Zotero.Translators, 'get').returns(translator);
+			sinon.stub(Trellis.Translators, 'get').returns(translator);
 
 			var response = await httpRequest(
 				'POST',
@@ -112,11 +112,11 @@ describe("Connector Server", function () {
 				}
 			);
 
-			assert.isTrue(Zotero.Translators.get.calledWith('dummy-translator'));
-			let translatorCode = await Zotero.Translators.getCodeForTranslator(translator);
+			assert.isTrue(Trellis.Translators.get.calledWith('dummy-translator'));
+			let translatorCode = await Trellis.Translators.getCodeForTranslator(translator);
 			assert.equal(response.response, translatorCode);
 
-			Zotero.Translators.get.restore();
+			Trellis.Translators.get.restore();
 		})
 	});
 	
@@ -125,7 +125,7 @@ describe("Connector Server", function () {
 		it("should return relevant translators with proxies", async function () {
 			var code = 'function detectWeb() {return "newspaperArticle";}\nfunction doWeb() {}';
 			var translator = buildDummyTranslator("web", code, {target: "https://www.example.com/.*"});
-			sinon.stub(Zotero.Translators, 'getAllForType').resolves([translator]);
+			sinon.stub(Trellis.Translators, 'getAllForType').resolves([translator]);
 			
 			var response = await httpRequest(
 				'POST',
@@ -143,7 +143,7 @@ describe("Connector Server", function () {
 			
 			assert.equal(JSON.parse(response.response)[0].proxy.scheme, 'https://%h.proxy.example.com/%p');
 
-			Zotero.Translators.getAllForType.restore();
+			Trellis.Translators.getAllForType.restore();
 		});
 	});
 	
@@ -186,8 +186,8 @@ describe("Connector Server", function () {
 			// Check parent item
 			var ids = await promise;
 			assert.lengthOf(ids, 1);
-			var item = Zotero.Items.get(ids[0]);
-			assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'newspaperArticle');
+			var item = Trellis.Items.get(ids[0]);
+			assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'newspaperArticle');
 			assert.isTrue(collection.hasItem(item.id));
 			
 			var req = await reqPromise;
@@ -235,13 +235,13 @@ describe("Connector Server", function () {
 			// My Library be selected, and the item should be in it
 			var ids = await promise;
 			assert.equal(
-				win.ZoteroPane.collectionsView.getSelectedLibraryID(),
-				Zotero.Libraries.userLibraryID
+				win.TrellisPane.collectionsView.getSelectedLibraryID(),
+				Trellis.Libraries.userLibraryID
 			);
 			assert.lengthOf(ids, 1);
-			var item = Zotero.Items.get(ids[0]);
-			assert.equal(item.libraryID, Zotero.Libraries.userLibraryID);
-			assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'newspaperArticle');
+			var item = Trellis.Items.get(ids[0]);
+			assert.equal(item.libraryID, Trellis.Libraries.userLibraryID);
+			assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'newspaperArticle');
 			
 			var req = await reqPromise;
 			assert.equal(req.status, 201);
@@ -254,7 +254,7 @@ describe("Connector Server", function () {
 			var group = await createGroup();
 			var userCollection = await createDataObject('collection');
 			var groupCollection = await createDataObject('collection', { libraryID: group.libraryID });
-			var cv = win.ZoteroPane.collectionsView;
+			var cv = win.TrellisPane.collectionsView;
 
 			// Reveal the group collection, then focus the My Library collection and toggle the
 			// group collection so it becomes the focused row
@@ -267,17 +267,17 @@ describe("Connector Server", function () {
 			// Sanity check: both rows selected, with the group collection focused
 			assert.equal(cv.selection.focused, groupRow);
 			assert.sameMembers(
-				win.ZoteroPane.getCollectionTreeRows().map(r => r.ref.libraryID),
-				[Zotero.Libraries.userLibraryID, group.libraryID]
+				win.TrellisPane.getCollectionTreeRows().map(r => r.ref.libraryID),
+				[Trellis.Libraries.userLibraryID, group.libraryID]
 			);
 
-			var target = Zotero.Server.Connector.getSaveTarget();
+			var target = Trellis.Server.Connector.getSaveTarget();
 			assert.equal(target.library.libraryID, group.libraryID);
 			assert.equal(target.collection.id, groupCollection.id);
 		});
 
 		it("should use the provided proxy to deproxify item url", async function () {
-			await selectLibrary(win, Zotero.Libraries.userLibraryID);
+			await selectLibrary(win, Trellis.Libraries.userLibraryID);
 			await waitForItemsLoad(win);
 			
 			var body = {
@@ -315,7 +315,7 @@ describe("Connector Server", function () {
 			// Check item
 			var ids = await promise;
 			assert.lengthOf(ids, 1);
-			var item = Zotero.Items.get(ids[0]);
+			var item = Trellis.Items.get(ids[0]);
 			assert.equal(item.getField('url'), 'https://www.example.com/path');
 		});
 	});
@@ -331,8 +331,8 @@ describe("Connector Server", function () {
 			let testDataDirectory = getTestDataDirectory().path;
 			let indexPath = OS.Path.join(testDataDirectory, 'snapshot', 'index.html');
 
-			let title = Zotero.Utilities.randomString();
-			let sessionID = Zotero.Utilities.randomString();
+			let title = Trellis.Utilities.randomString();
+			let sessionID = Trellis.Utilities.randomString();
 			let payload = {
 				sessionID,
 				url: "http://example.com/test",
@@ -355,8 +355,8 @@ describe("Connector Server", function () {
 
 			// Check parent item
 			assert.lengthOf(parentIDs, 1);
-			var item = Zotero.Items.get(parentIDs[0]);
-			assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'webpage');
+			var item = Trellis.Items.get(parentIDs[0]);
+			assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'webpage');
 			assert.isTrue(collection.hasItem(item.id));
 			assert.equal(item.getField('title'), title);
 
@@ -364,7 +364,7 @@ describe("Connector Server", function () {
 			promise = waitForItemEvent('add');
 
 			let body = JSON.stringify(Object.assign(payload, {
-				snapshotContent: await Zotero.File.getContentsAsync(indexPath)
+				snapshotContent: await Trellis.File.getContentsAsync(indexPath)
 			}));
 
 			await httpRequest(
@@ -383,16 +383,16 @@ describe("Connector Server", function () {
 
 			// Check attachment
 			assert.lengthOf(attachmentIDs, 1);
-			item = Zotero.Items.get(attachmentIDs[0]);
+			item = Trellis.Items.get(attachmentIDs[0]);
 			assert.isTrue(item.isImportedAttachment());
 			assert.equal(item.getField('title'), title);
 
 			// Check attachment html file
-			let attachmentDirectory = Zotero.Attachments.getStorageDirectory(item).path;
+			let attachmentDirectory = Trellis.Attachments.getStorageDirectory(item).path;
 			let path = OS.Path.join(attachmentDirectory, item.attachmentFilename);
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
-			let expectedContents = await Zotero.File.getContentsAsync(indexPath);
+			let contents = await Trellis.File.getContentsAsync(path);
+			let expectedContents = await Trellis.File.getContentsAsync(indexPath);
 			assert.equal(contents, expectedContents);
 		});
 
@@ -400,8 +400,8 @@ describe("Connector Server", function () {
 			let collection = await createDataObject('collection');
 			await select(win, collection);
 
-			let title = Zotero.Utilities.randomString();
-			let sessionID = Zotero.Utilities.randomString();
+			let title = Trellis.Utilities.randomString();
+			let sessionID = Trellis.Utilities.randomString();
 			let payload = {
 				sessionID: sessionID,
 				items: [
@@ -436,8 +436,8 @@ describe("Connector Server", function () {
 			// Check parent item
 			let itemIDs = await promise;
 			assert.lengthOf(itemIDs, 1);
-			let item = Zotero.Items.get(itemIDs[0]);
-			assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'newspaperArticle');
+			let item = Trellis.Items.get(itemIDs[0]);
+			assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'newspaperArticle');
 			assert.isTrue(collection.hasItem(item.id));
 
 			// Promise for attachment save
@@ -448,7 +448,7 @@ describe("Connector Server", function () {
 
 			let body = JSON.stringify(Object.assign(payload, {
 				url: `${testServerPath}/attachment`,
-				snapshotContent: await Zotero.File.getContentsAsync(indexPath)
+				snapshotContent: await Trellis.File.getContentsAsync(indexPath)
 			}));
 
 			req = await httpRequest(
@@ -468,16 +468,16 @@ describe("Connector Server", function () {
 
 			// Check attachment
 			assert.lengthOf(attachmentIDs, 1);
-			item = Zotero.Items.get(attachmentIDs[0]);
+			item = Trellis.Items.get(attachmentIDs[0]);
 			assert.isTrue(item.isImportedAttachment());
 			assert.equal(item.getField('title'), 'Test');
 
 			// Check attachment html file
-			let attachmentDirectory = Zotero.Attachments.getStorageDirectory(item).path;
+			let attachmentDirectory = Trellis.Attachments.getStorageDirectory(item).path;
 			let path = OS.Path.join(attachmentDirectory, item.attachmentFilename);
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getContentsAsync(path);
-			let expectedContents = await Zotero.File.getContentsAsync(indexPath);
+			let contents = await Trellis.File.getContentsAsync(path);
+			let expectedContents = await Trellis.File.getContentsAsync(indexPath);
 			assert.equal(contents, expectedContents);
 		});
 	});
@@ -518,8 +518,8 @@ describe("Connector Server", function () {
 
 			// Check item
 			assert.lengthOf(ids, 1);
-			var item = Zotero.Items.get(ids[0]);
-			assert.equal(Zotero.ItemTypes.getName(item.itemTypeID), 'webpage');
+			var item = Trellis.Items.get(ids[0]);
+			assert.equal(Trellis.ItemTypes.getName(item.itemTypeID), 'webpage');
 			assert.isTrue(collection.hasItem(item.id));
 			assert.equal(item.getField('title'), 'Title');
 		});
@@ -549,12 +549,12 @@ describe("Connector Server", function () {
 			// My Library be selected, and the item should be in it
 			var ids = await promise;
 			assert.equal(
-				win.ZoteroPane.collectionsView.getSelectedLibraryID(),
-				Zotero.Libraries.userLibraryID
+				win.TrellisPane.collectionsView.getSelectedLibraryID(),
+				Trellis.Libraries.userLibraryID
 			);
 			assert.lengthOf(ids, 1);
-			var item = Zotero.Items.get(ids[0]);
-			assert.equal(item.libraryID, Zotero.Libraries.userLibraryID);
+			var item = Trellis.Items.get(ids[0]);
+			assert.equal(item.libraryID, Trellis.Libraries.userLibraryID);
 			
 			var req = await reqPromise;
 			assert.equal(req.status, 201);
@@ -565,16 +565,16 @@ describe("Connector Server", function () {
 		const pdfPath = OS.Path.join(getTestDataDirectory().path, 'test.pdf');
 		let pdfSample, pdfArrayBuffer;
 		before(async function () {
-			await selectLibrary(win, Zotero.Libraries.userLibraryID);
-	 		pdfSample = await Zotero.File.getSample(pdfPath);
+			await selectLibrary(win, Trellis.Libraries.userLibraryID);
+	 		pdfSample = await Trellis.File.getSample(pdfPath);
 			pdfArrayBuffer = (await OS.File.read(pdfPath)).buffer;
 		});
 
 		it("should save a child item attachment to the specified parent item", async function () {
 			// First, save multiple items
-			const sessionID = Zotero.Utilities.randomString();
-			const bookItemID = Zotero.Utilities.randomString();
-			const articleItemID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
+			const bookItemID = Trellis.Utilities.randomString();
+			const articleItemID = Trellis.Utilities.randomString();
 			const body = {
 				sessionID,
 				items: [
@@ -605,8 +605,8 @@ describe("Connector Server", function () {
 			
 			assert.equal(saveItemsReq.status, 201);
 			let itemIDs = await itemAddPromise;
-			let bookItem = Zotero.Items.get(itemIDs[0]);
-			let articleItem = Zotero.Items.get(itemIDs[1]);
+			let bookItem = Trellis.Items.get(itemIDs[0]);
+			let articleItem = Trellis.Items.get(itemIDs[1]);
 			assert.equal(bookItem.numAttachments(), 0);
 			assert.equal(articleItem.numAttachments(), 0);
 			
@@ -632,7 +632,7 @@ describe("Connector Server", function () {
 			assert.equal(attachmentReq.status, 201);
 			let attachmentIds = await attachmentAddPromise;
 			assert.lengthOf(attachmentIds, 1);
-			let attachment1 = Zotero.Items.get(attachmentIds[0]);
+			let attachment1 = Trellis.Items.get(attachmentIds[0]);
 			assert.equal(bookItem.numAttachments(), 1);
 			assert.equal(articleItem.numAttachments(), 0);
 			
@@ -664,7 +664,7 @@ describe("Connector Server", function () {
 			assert.equal(attachmentReq.status, 201);
 			attachmentIds = await attachmentAddPromise;
 			assert.lengthOf(attachmentIds, 1);
-			var attachment2 = Zotero.Items.get(attachmentIds[0]);
+			var attachment2 = Trellis.Items.get(attachmentIds[0]);
 			
 			// Verify second attachment was saved correctly
 			assert.equal(attachment2.parentItemID, articleItem.id);
@@ -675,18 +675,18 @@ describe("Connector Server", function () {
 			assert.equal(articleItem.numAttachments(), 1);
 
 			// Verify attachment content
-			let attachmentDirectory = Zotero.Attachments.getStorageDirectory(attachment1).path;
+			let attachmentDirectory = Trellis.Attachments.getStorageDirectory(attachment1).path;
 			let path = OS.Path.join(attachmentDirectory, attachment1.attachmentFilename);
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getSample(path);
+			let contents = await Trellis.File.getSample(path);
 			assert.equal(contents, pdfSample);
 		});
 	});
 
 	describe("/connector/hasAttachmentResolvers", function () {
 		it("should respond with 'true' if the item has OA attachments", async function () {
-			const sessionID = Zotero.Utilities.randomString();
-			const itemID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
+			const itemID = Trellis.Utilities.randomString();
 			const body = {
 				sessionID,
 				items: [
@@ -731,8 +731,8 @@ describe("Connector Server", function () {
 		});
 
 		it("should respond with 'true' if the item has a PMCID", async function () {
-			const sessionID = Zotero.Utilities.randomString();
-			const itemID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
+			const itemID = Trellis.Utilities.randomString();
 			const body = {
 				sessionID,
 				items: [
@@ -777,8 +777,8 @@ describe("Connector Server", function () {
 		});
 
 		it("should respond with 'false' if the item has no OA attachments", async function () {
-			const sessionID = Zotero.Utilities.randomString();
-			const itemID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
+			const itemID = Trellis.Utilities.randomString();
 			const body = {
 				sessionID,
 				items: [
@@ -824,13 +824,13 @@ describe("Connector Server", function () {
 
 	describe("/connector/saveAttachmentFromResolver", function () {
 		it("should save an OA attachment for the specified item and return 201 if OA attachment is available", async function () {
-			let stub = sinon.stub(Zotero.Attachments, 'addFileFromURLs').returns({
-				id: Zotero.Utilities.randomString(),
+			let stub = sinon.stub(Trellis.Attachments, 'addFileFromURLs').returns({
+				id: Trellis.Utilities.randomString(),
 				getDisplayTitle: () => "OA Attachment"
 			});
 			try {
-				const sessionID = Zotero.Utilities.randomString();
-				const itemID = Zotero.Utilities.randomString();
+				const sessionID = Trellis.Utilities.randomString();
+				const itemID = Trellis.Utilities.randomString();
 				const body = {
 					sessionID,
 					items: [
@@ -879,10 +879,10 @@ describe("Connector Server", function () {
 		});
 
 		it("should return 500 if OA attachment is not available", async function () {
-			let stub = sinon.stub(Zotero.Attachments, 'addFileFromURLs').returns(null);
+			let stub = sinon.stub(Trellis.Attachments, 'addFileFromURLs').returns(null);
 			try {
-				const sessionID = Zotero.Utilities.randomString();
-				const itemID = Zotero.Utilities.randomString();
+				const sessionID = Trellis.Utilities.randomString();
+				const itemID = Trellis.Utilities.randomString();
 				const body = {
 					sessionID,
 					items: [
@@ -935,18 +935,18 @@ describe("Connector Server", function () {
 
 	describe("/connector/saveStandaloneAttachment", function () {
 		before(async function () {
-			await selectLibrary(win, Zotero.Libraries.userLibraryID);
+			await selectLibrary(win, Trellis.Libraries.userLibraryID);
 		});
 
 		it("should save a standalone PDF attachment", async function () {
 			const pdfPath = OS.Path.join(getTestDataDirectory().path, 'test.pdf');
-	 		const pdfSample = await Zotero.File.getSample(pdfPath);
+	 		const pdfSample = await Trellis.File.getSample(pdfPath);
 			const pdfArrayBuffer = (await OS.File.read(pdfPath)).buffer;
 			const attachmentInfo = {
 				url: `${testServerPath}/test1.pdf`,
 				title: "Test PDF1",
 				contentType: "application/pdf",
-				sessionID: Zotero.Utilities.randomString()
+				sessionID: Trellis.Utilities.randomString()
 			};
 			let itemIDsPromise = waitForItemEvent('add');
 			let xhr = await httpRequest(
@@ -964,29 +964,29 @@ describe("Connector Server", function () {
 			assert.equal(xhr.status, 201);
 			assert.isTrue(JSON.parse(xhr.responseText).canRecognize);
 			let itemIDs = await itemIDsPromise;
-			let item = Zotero.Items.get(itemIDs[0]);
+			let item = Trellis.Items.get(itemIDs[0]);
 			
 			assert.equal(item.itemType, "attachment");
 			assert.equal(item.attachmentContentType, attachmentInfo.contentType);
 			assert.equal(item.getField("title"), attachmentInfo.title);
 			assert.equal(item.getField("url"), attachmentInfo.url);
 			// Check content
-			let attachmentDirectory = Zotero.Attachments.getStorageDirectory(item).path;
+			let attachmentDirectory = Trellis.Attachments.getStorageDirectory(item).path;
 			let path = OS.Path.join(attachmentDirectory, item.attachmentFilename);
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getSample(path);
+			let contents = await Trellis.File.getSample(path);
 			assert.equal(contents, pdfSample);
 		});
 
 		it("should save a standalone image attachment", async function () {
 			const imagePath = OS.Path.join(getTestDataDirectory().path, 'test.png');
-	 		const imageSample = await Zotero.File.getSample(imagePath);
+	 		const imageSample = await Trellis.File.getSample(imagePath);
 			const imageArrayBuffer = (await OS.File.read(imagePath)).buffer;
 			const attachmentInfo = {
 				url: `${testServerPath}/test.png`,
 				title: "Test PNG",
 				contentType: "image/png",
-				sessionID: Zotero.Utilities.randomString()
+				sessionID: Trellis.Utilities.randomString()
 			};
 			
 			let itemIDsPromise = waitForItemEvent('add');
@@ -1005,17 +1005,17 @@ describe("Connector Server", function () {
 			assert.equal(xhr.status, 201);
 			assert.isFalse(JSON.parse(xhr.responseText).canRecognize);
 			let itemIDs = await itemIDsPromise;
-			let item = Zotero.Items.get(itemIDs[0]);
+			let item = Trellis.Items.get(itemIDs[0]);
 			
 			assert.equal(item.itemType, "attachment");
 			assert.equal(item.attachmentContentType, attachmentInfo.contentType);
 			assert.equal(item.getField("title"), attachmentInfo.title);
 			assert.equal(item.getField("url"), attachmentInfo.url);
 			// Check content
-			let attachmentDirectory = Zotero.Attachments.getStorageDirectory(item).path;
+			let attachmentDirectory = Trellis.Attachments.getStorageDirectory(item).path;
 			let path = OS.Path.join(attachmentDirectory, item.attachmentFilename);
 			assert.isTrue(await OS.File.exists(path));
-			let contents = await Zotero.File.getSample(path);
+			let contents = await Trellis.File.getSample(path);
 			assert.equal(contents, imageSample);
 		});
 	});
@@ -1023,7 +1023,7 @@ describe("Connector Server", function () {
 
 	describe("/connector/getRecognizedItem", function () {
 		it("should return the recognized parent item", async function () {
-			const stub = sinon.stub(Zotero.RecognizeDocument, '_recognize').callsFake(async () => {
+			const stub = sinon.stub(Trellis.RecognizeDocument, '_recognize').callsFake(async () => {
 				return await createDataObject('item', {
 					title: "Recognized Item",
 				});
@@ -1032,7 +1032,7 @@ describe("Connector Server", function () {
 			try {
 				const pdfPath = OS.Path.join(getTestDataDirectory().path, 'test.pdf');
 				const pdfArrayBuffer = (await OS.File.read(pdfPath)).buffer;
-				const sessionID = Zotero.Utilities.randomString();
+				const sessionID = Trellis.Utilities.randomString();
 				const attachmentInfo = {
 					url: `${testServerPath}/test2.pdf`,
 					title: "Test PDF2",
@@ -1055,7 +1055,7 @@ describe("Connector Server", function () {
 				assert.equal(xhr.status, 201);
 				assert.isTrue(JSON.parse(xhr.responseText).canRecognize);
 				let itemIDs = await itemIDsPromise;
-				let standaloneAttachment = Zotero.Items.get(itemIDs[0]);
+				let standaloneAttachment = Trellis.Items.get(itemIDs[0]);
 				
 				assert.isFalse(standaloneAttachment.parentID);
 
@@ -1077,7 +1077,7 @@ describe("Connector Server", function () {
 				assert.equal(xhr.status, 200);
 				assert.equal(JSON.parse(xhr.responseText).title, "Recognized Item");
 				let recognizedItemIDs = await recognizedItemIDsPromise;
-				let recognizedItem = Zotero.Items.get(recognizedItemIDs[0]);
+				let recognizedItem = Trellis.Items.get(recognizedItemIDs[0]);
 				assert.equal(standaloneAttachment.parentID, recognizedItem.id);
 			}
 			finally {
@@ -1093,8 +1093,8 @@ describe("Connector Server", function () {
 			var collection2 = await createDataObject('collection');
 			await select(win, collection2);
 			
-			const id = Zotero.Utilities.randomString();
-			var sessionID = Zotero.Utilities.randomString();
+			const id = Trellis.Utilities.randomString();
+			var sessionID = Trellis.Utilities.randomString();
 			var body = {
 				sessionID,
 				items: [
@@ -1126,7 +1126,7 @@ describe("Connector Server", function () {
 			);
 			
 			var ids = await waitForItemEvent('add');
-			var item = Zotero.Items.get(ids[0]);
+			var item = Trellis.Items.get(ids[0]);
 			assert.isTrue(collection2.hasItem(item.id));
 			var req = await reqPromise;
 			assert.equal(req.status, 201);
@@ -1151,7 +1151,7 @@ describe("Connector Server", function () {
 			let childIDs = await waitForItemEvent('add');
 			req = await reqPromise;
 			assert.equal(req.status, 201);
-			var childItem = Zotero.Items.get(childIDs[0]);
+			var childItem = Trellis.Items.get(childIDs[0]);
 			assert.equal(childItem.getField('title'), "Attachment");
 			assert.equal(childItem.parentID, item.id);
 
@@ -1177,12 +1177,12 @@ describe("Connector Server", function () {
 			assert.isTrue(collection1.hasItem(item.id));
 			assert.isTrue(item.hasTag("A"));
 			assert.isTrue(item.hasTag("B"));
-			let note = Zotero.Items.get(item.getNotes())[0];
+			let note = Trellis.Items.get(item.getNotes())[0];
 			assert.equal(note.getNote(), "Test note");
 		});
 		
 		it("should update collections and tags of a PDF saved via /saveStandaloneAttachment", async function () {
-			const sessionID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
 			
 			let collection1 = await createDataObject('collection');
 			let collection2 = await createDataObject('collection');
@@ -1212,7 +1212,7 @@ describe("Connector Server", function () {
 			);
 			
 			ids = await promise;
-			let item = Zotero.Items.get(ids[0]);
+			let item = Trellis.Items.get(ids[0]);
 			assert.isTrue(collection2.hasItem(item.id));
 			assert.equal(req.status, 201);
 			
@@ -1239,7 +1239,7 @@ describe("Connector Server", function () {
 		});
 		
 		it("should update collections and tags of webpage saved via /saveSnapshot", async function () {
-			var sessionID = Zotero.Utilities.randomString();
+			var sessionID = Trellis.Utilities.randomString();
 			
 			var collection1 = await createDataObject('collection');
 			var collection2 = await createDataObject('collection');
@@ -1289,7 +1289,7 @@ describe("Connector Server", function () {
 			
 			assert.isTrue(promiseFulfilled);
 			
-			var item = Zotero.Items.get(ids1[0]);
+			var item = Trellis.Items.get(ids1[0]);
 			
 			// Update saved item
 			var req = await httpRequest(
@@ -1312,7 +1312,7 @@ describe("Connector Server", function () {
 			assert.isTrue(collection1.hasItem(item.id));
 			assert.isTrue(item.hasTag("A"));
 			assert.isTrue(item.hasTag("B"));
-			let note = Zotero.Items.get(item.getNotes())[0];
+			let note = Trellis.Items.get(item.getNotes())[0];
 			assert.equal(note.getNote(), "Test note");
 		});
 		
@@ -1320,8 +1320,8 @@ describe("Connector Server", function () {
 			var group = await createGroup({ editable: true, filesEditable: false });
 			await select(win, group);
 
-			const id = Zotero.Utilities.randomString();
-			const sessionID = Zotero.Utilities.randomString();
+			const id = Trellis.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
 
 			let saveAttachment = () => {
 				return httpRequest(
@@ -1366,7 +1366,7 @@ describe("Connector Server", function () {
 			);
 			
 			var ids1 = await waitForItemEvent('add');
-			var item1 = Zotero.Items.get(ids1[0]);
+			var item1 = Trellis.Items.get(ids1[0]);
 			var req = await reqPromise;
 			assert.equal(req.status, 201);
 
@@ -1403,7 +1403,7 @@ describe("Connector Server", function () {
 					},
 					body: JSON.stringify({
 						sessionID,
-						target: Zotero.Libraries.userLibrary.treeViewID
+						target: Trellis.Libraries.userLibrary.treeViewID
 					})
 				}
 			);
@@ -1418,17 +1418,17 @@ describe("Connector Server", function () {
 			// Attachment is saved in user library
 			assert.equal(req.status, 201);
 			
-			var item2 = Zotero.Items.get(ids2[0]);
-			assert.isFalse(Zotero.Items.exists(item1.id));
-			assert.equal(item2.libraryID, Zotero.Libraries.userLibraryID);
+			var item2 = Trellis.Items.get(ids2[0]);
+			assert.isFalse(Trellis.Items.exists(item1.id));
+			assert.equal(item2.libraryID, Trellis.Libraries.userLibraryID);
 			assert.equal(item2.numAttachments(), 1);
 			// Make sure the child note remains
 			assert.equal(item2.getNotes().length, 1);
-			let note = Zotero.Items.get(item2.getNotes())[0];
+			let note = Trellis.Items.get(item2.getNotes())[0];
 			let note2ID = note.id;
 			assert.equal(note.getNote(), "Test note");
 			// Make sure the child note from another group is gone
-			assert.isFalse(Zotero.Items.get(note1ID));
+			assert.isFalse(Trellis.Items.get(note1ID));
 			
 			// Move back to the file-editing restricted group
 			reqPromise = httpRequest(
@@ -1447,26 +1447,26 @@ describe("Connector Server", function () {
 			);
 			
 			var ids3 = await waitForItemEvent('add');
-			var item3 = Zotero.Items.get(ids3[0]);
+			var item3 = Trellis.Items.get(ids3[0]);
 			
 			req = await reqPromise;
 			assert.equal(req.status, 200);
-			assert.isFalse(Zotero.Items.exists(item2.id));
+			assert.isFalse(Trellis.Items.exists(item2.id));
 			assert.equal(item3.libraryID, group.libraryID);
 			assert.equal(item3.numAttachments(), 0);
 			// Make sure the child note remains
 			assert.equal(item3.getNotes().length, 1);
-			note = Zotero.Items.get(item3.getNotes())[0];
+			note = Trellis.Items.get(item3.getNotes())[0];
 			assert.equal(note.getNote(), "Test note");
 			// Make sure the child note from another group is gone
-			assert.isFalse(Zotero.Items.get(note2ID));
+			assert.isFalse(Trellis.Items.get(note2ID));
 		});
 		
 		it("should move item saved via /saveSnapshot to another library", async function () {
 			var group = await createGroup({ editable: true, filesEditable: false });
 			await select(win, group);
 
-			const sessionID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
 			let saveSingleFile = () => {
 				return httpRequest(
 					'POST',
@@ -1502,7 +1502,7 @@ describe("Connector Server", function () {
 			var ids1 = await waitForItemEvent('add');
 			var req = await reqPromise;
 			assert.equal(req.status, 201);
-			var item1 = Zotero.Items.get(ids1[0]);
+			var item1 = Trellis.Items.get(ids1[0]);
 			req = await saveSingleFile();
 			assert.equal(req.status, 200);
 			assert.equal(req.responseText, "Library files are not editable.");
@@ -1517,18 +1517,18 @@ describe("Connector Server", function () {
 					},
 					body: JSON.stringify({
 						sessionID,
-						target: Zotero.Libraries.userLibrary.treeViewID
+						target: Trellis.Libraries.userLibrary.treeViewID
 					})
 				}
 			);
 			
 			var ids2 = await waitForItemEvent('add');
-			var item2 = Zotero.Items.get(ids2[0]);
+			var item2 = Trellis.Items.get(ids2[0]);
 			
 			var req = await reqPromise;
 			assert.equal(req.status, 200);
-			assert.isFalse(Zotero.Items.exists(item1.id));
-			assert.equal(item2.libraryID, Zotero.Libraries.userLibraryID);
+			assert.isFalse(Trellis.Items.exists(item1.id));
+			assert.equal(item2.libraryID, Trellis.Libraries.userLibraryID);
 
 			req = await saveSingleFile();
 			assert.equal(req.status, 201);
@@ -1550,11 +1550,11 @@ describe("Connector Server", function () {
 			);
 			
 			var ids3 = await waitForItemEvent('add');
-			var item3 = Zotero.Items.get(ids3[0]);
+			var item3 = Trellis.Items.get(ids3[0]);
 			
 			req = await reqPromise;
 			assert.equal(req.status, 200);
-			assert.isFalse(Zotero.Items.exists(item2.id));
+			assert.isFalse(Trellis.Items.exists(item2.id));
 			assert.equal(item3.libraryID, group.libraryID);
 			assert.equal(item3.numAttachments(), 0);
 		});
@@ -1563,7 +1563,7 @@ describe("Connector Server", function () {
 			let collection = await createDataObject('collection');
 			await select(win, collection);
 
-			let sessionID = Zotero.Utilities.randomString();
+			let sessionID = Trellis.Utilities.randomString();
 			let payload = {
 				sessionID,
 				items: [
@@ -1590,7 +1590,7 @@ describe("Connector Server", function () {
 				}
 			);
 			let ids = await promise;
-			let item = Zotero.Items.get(ids[0]);
+			let item = Trellis.Items.get(ids[0]);
 
 			// Add a note
 			await httpRequest(
@@ -1605,7 +1605,7 @@ describe("Connector Server", function () {
 					})
 				}
 			);
-			let notes = Zotero.Items.get(item.getNotes());
+			let notes = Trellis.Items.get(item.getNotes());
 			assert.isNotEmpty(notes);
 			assert.equal(notes[0].getNote(), "Test note");
 
@@ -1623,7 +1623,7 @@ describe("Connector Server", function () {
 				}
 			);
 			// Make sure the child note is removed
-			notes = Zotero.Items.get(item.getNotes());
+			notes = Trellis.Items.get(item.getNotes());
 			assert.equal(notes.length, 0);
 		});
 	});
@@ -1639,7 +1639,7 @@ describe("Connector Server", function () {
   <info>
     <title>Test1</title>
     <id>http://www.example.com/test2</id>
-    <link href="http://www.zotero.org/styles/cell" rel="independent-parent"/>
+    <link href="http://www.trellis.org/styles/cell" rel="independent-parent"/>
   </info>
 </style>
 `;
@@ -1654,22 +1654,22 @@ describe("Connector Server", function () {
 					body: '{}'
 				}
 			));	
-			assert.instanceOf(error, Zotero.HTTP.UnexpectedStatusException);
+			assert.instanceOf(error, Trellis.HTTP.UnexpectedStatusException);
 			assert.equal(error.xmlhttp.status, 400);
-			assert.equal(error.xmlhttp.responseText, Zotero.getString("styles.installError", "(null)"));
+			assert.equal(error.xmlhttp.responseText, Trellis.getString("styles.installError", "(null)"));
 		});
 		
 		it('should import a style with application/vnd.citationstyles.style+xml content-type', async function () {
-			sinon.stub(Zotero.Styles, 'install').callsFake(function (style) {
+			sinon.stub(Trellis.Styles, 'install').callsFake(function (style) {
 				var parser = new DOMParser(),
 				doc = parser.parseFromString(style, "application/xml");
 				
 				return Promise.resolve({
-					styleTitle: Zotero.Utilities.xpathText(
-						doc, '/csl:style/csl:info[1]/csl:title[1]', Zotero.Styles.ns
+					styleTitle: Trellis.Utilities.xpathText(
+						doc, '/csl:style/csl:info[1]/csl:title[1]', Trellis.Styles.ns
 					),
-					styleID: Zotero.Utilities.xpathText(
-						doc, '/csl:style/csl:info[1]/csl:id[1]', Zotero.Styles.ns
+					styleID: Trellis.Utilities.xpathText(
+						doc, '/csl:style/csl:info[1]/csl:id[1]', Trellis.Styles.ns
 					)
 				});
 			});
@@ -1684,32 +1684,32 @@ describe("Connector Server", function () {
 			);
 			assert.equal(response.status, 201);
 			assert.equal(response.response, JSON.stringify({name: 'Test1'}));
-			Zotero.Styles.install.restore();
+			Trellis.Styles.install.restore();
 		});
 		
-		it('should accept text/plain request with X-Zotero-Connector-API-Version or Zotero-Allowed-Request', async function () {
-			sinon.stub(Zotero.Styles, 'install').callsFake(function (style) {
+		it('should accept text/plain request with X-Trellis-Connector-API-Version or Trellis-Allowed-Request', async function () {
+			sinon.stub(Trellis.Styles, 'install').callsFake(function (style) {
 				var parser = new DOMParser(),
 				doc = parser.parseFromString(style, "application/xml");
 				
 				return Promise.resolve({
-					styleTitle: Zotero.Utilities.xpathText(
-						doc, '/csl:style/csl:info[1]/csl:title[1]', Zotero.Styles.ns
+					styleTitle: Trellis.Utilities.xpathText(
+						doc, '/csl:style/csl:info[1]/csl:title[1]', Trellis.Styles.ns
 					),
-					styleID: Zotero.Utilities.xpathText(
-						doc, '/csl:style/csl:info[1]/csl:id[1]', Zotero.Styles.ns
+					styleID: Trellis.Utilities.xpathText(
+						doc, '/csl:style/csl:info[1]/csl:id[1]', Trellis.Styles.ns
 					)
 				});
 			});
 			
-			// X-Zotero-Connector-API-Version
+			// X-Trellis-Connector-API-Version
 			var response = await httpRequest(
 				'POST',
 				endpoint,
 				{
 					headers: {
 						"Content-Type": "text/plain",
-						"X-Zotero-Connector-API-Version": "2"
+						"X-Trellis-Connector-API-Version": "2"
 					},
 					body: style,
 					testBrowserRequest: true,
@@ -1717,14 +1717,14 @@ describe("Connector Server", function () {
 			);
 			assert.equal(response.status, 201);
 			
-			// Zotero-Allowed-Request
+			// Trellis-Allowed-Request
 			response = await httpRequest(
 				'POST',
 				endpoint,
 				{
 					headers: {
 						"Content-Type": "text/plain",
-						"Zotero-Allowed-Request": "1"
+						"Trellis-Allowed-Request": "1"
 					},
 					body: style,
 					testBrowserRequest: true,
@@ -1732,10 +1732,10 @@ describe("Connector Server", function () {
 			);
 			assert.equal(response.status, 201);
 			
-			Zotero.Styles.install.restore();
+			Trellis.Styles.install.restore();
 		});
 		
-		it('should reject text/plain request without X-Zotero-Connector-API-Version', async function () {
+		it('should reject text/plain request without X-Trellis-Connector-API-Version', async function () {
 			var error = await getPromiseError(httpRequest(
 				'POST',
 				endpoint,
@@ -1748,8 +1748,8 @@ describe("Connector Server", function () {
 					testBrowserRequest: true,
 				}
 			));
-			assert.instanceOf(error, Zotero.HTTP.UnexpectedStatusException);
-			assert.include(error.message, Zotero.getString('sync.error.checkConnection'));
+			assert.instanceOf(error, Trellis.HTTP.UnexpectedStatusException);
+			assert.include(error.message, Trellis.getString('sync.error.checkConnection'));
 		});
 	});
 	
@@ -1761,24 +1761,24 @@ describe("Connector Server", function () {
 		});
 		
 		it('should reject resources that do not contain import data', async function () {
-			const sessionID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
 			var error = await getPromiseError(httpRequest(
 				'POST',
 				endpoint + `?session=${sessionID}`,
 				{
 					headers: {
 						"Content-Type": "text/plain",
-						"X-Zotero-Connector-API-Version": "2"
+						"X-Trellis-Connector-API-Version": "2"
 					},
 					body: 'Owl'
 				}
 			));
-			assert.instanceOf(error, Zotero.HTTP.UnexpectedStatusException);
+			assert.instanceOf(error, Trellis.HTTP.UnexpectedStatusException);
 			assert.equal(error.xmlhttp.status, 400);
 		});
 		
-		it('should reject requests without X-Zotero-Connector-API-Version', async function () {
-			const sessionID = Zotero.Utilities.randomString();
+		it('should reject requests without X-Trellis-Connector-API-Version', async function () {
+			const sessionID = Trellis.Utilities.randomString();
 			var error = await getPromiseError(httpRequest(
 				'POST',
 				endpoint + `?session=${sessionID}`,
@@ -1790,12 +1790,12 @@ describe("Connector Server", function () {
 					testBrowserRequest: true,
 				}
 			));
-			assert.instanceOf(error, Zotero.HTTP.UnexpectedStatusException);
-			assert.include(error.message, Zotero.getString('sync.error.checkConnection'));
+			assert.instanceOf(error, Trellis.HTTP.UnexpectedStatusException);
+			assert.include(error.message, Trellis.getString('sync.error.checkConnection'));
 		});
 		
 		it('should import resources (BibTeX) into selected collection', async function () {
-			const sessionID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
 			var collection = await createDataObject('collection');
 			await select(win, collection);
 			
@@ -1814,7 +1814,7 @@ describe("Connector Server", function () {
 				{
 					headers: {
 						"Content-Type": "application/x-bibtex",
-						"X-Zotero-Connector-API-Version": "2"
+						"X-Trellis-Connector-API-Version": "2"
 					},
 					body: resource
 				}
@@ -1824,13 +1824,13 @@ describe("Connector Server", function () {
 			
 			let itemIDs = await addedItemIDsPromise;
 			assert.isTrue(collection.hasItem(itemIDs[0]));
-			var item = Zotero.Items.get(itemIDs[0]);
+			var item = Trellis.Items.get(itemIDs[0]);
 			assert.sameDeepMembers(item.getTags(), [{ tag: 'A', type: 1 }, { tag: 'B', type: 1 }]);
 		});
 		
 		
 		it('should switch to My Library if read-only library is selected', async function () {
-			const sessionID = Zotero.Utilities.randomString();
+			const sessionID = Trellis.Utilities.randomString();
 			var group = await createGroup({
 				editable: false
 			});
@@ -1850,7 +1850,7 @@ describe("Connector Server", function () {
 				{
 					headers: {
 						"Content-Type": "application/x-bibtex",
-						"X-Zotero-Connector-API-Version": "2"
+						"X-Trellis-Connector-API-Version": "2"
 					},
 					body: resource,
 					successCodes: false
@@ -1859,13 +1859,13 @@ describe("Connector Server", function () {
 			
 			assert.equal(req.status, 201);
 			assert.equal(
-				win.ZoteroPane.collectionsView.getSelectedLibraryID(),
-				Zotero.Libraries.userLibraryID
+				win.TrellisPane.collectionsView.getSelectedLibraryID(),
+				Trellis.Libraries.userLibraryID
 			);
 			
 			let itemIDs = await addedItemIDsPromise;
-			var item = Zotero.Items.get(itemIDs[0]);
-			assert.equal(item.libraryID, Zotero.Libraries.userLibraryID);
+			var item = Trellis.Items.get(itemIDs[0]);
+			assert.equal(item.libraryID, Trellis.Libraries.userLibraryID);
 		});
 	});
 });

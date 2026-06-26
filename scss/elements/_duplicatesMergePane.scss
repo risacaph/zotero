@@ -1,5 +1,5 @@
 duplicates-merge-pane {
-	&, #zotero-duplicates-merge-version-select, #zotero-duplicates-merge-controls {
+	&, #trellis-duplicates-merge-version-select, #trellis-duplicates-merge-controls {
 		&:not([hidden]) {
 			display: flex;
 			flex-direction: column;
@@ -10,11 +10,11 @@ duplicates-merge-pane {
 
 	padding-top: 9px;
 
-	#zotero-duplicates-merge-controls {
+	#trellis-duplicates-merge-controls {
 		flex: 0 0 auto;
 	}
 
-	> #zotero-duplicates-merge-controls > groupbox {
+	> #trellis-duplicates-merge-controls > groupbox {
 		// Override default margin/padding that breaks our styles here
 		margin: 0;
 		padding: 0;
@@ -26,7 +26,7 @@ duplicates-merge-pane {
 		}
 	}
 
-	#zotero-duplicates-merge-view-item {
+	#trellis-duplicates-merge-view-item {
 		flex: 1;
 		min-height: 0;
 		padding-inline: 8px;
@@ -41,7 +41,7 @@ duplicates-merge-pane {
 
 	/* Show duplicates date list item as selected even when not focused
 	(default behavior on other platforms) */
-	#zotero-duplicates-merge-original-date:not(:focus) > richlistitem[selected="true"] {
+	#trellis-duplicates-merge-original-date:not(:focus) > richlistitem[selected="true"] {
 		background-color: -moz-cellhighlight;
 		color: -moz-cellhighlighttext;
 	}

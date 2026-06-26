@@ -16,7 +16,7 @@ item-pane {
 			max-height: $width-sidenav;
 		}
 
-		#zotero-item-pane-content {
+		#trellis-item-pane-content {
 			visibility: collapse;
 		}
 	}
@@ -25,7 +25,7 @@ item-pane {
 		flex-direction: column;
 		height: 0px;
 
-		#zotero-item-pane-content {
+		#trellis-item-pane-content {
 			width: 100%;
 		}
 	}

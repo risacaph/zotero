@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Zotero is a Firefox-based desktop research management application. It runs as a XUL/XHTML application on a Mozilla platform (not Electron, not a web app). The UI uses a mix of XUL/XHTML, custom elements (Web Components), and React components.
+Trellis is a Firefox-based desktop research management application. It runs as a XUL/XHTML application on a Mozilla platform (not Electron, not a web app). The UI uses a mix of XUL/XHTML, custom elements (Web Components), and React components.
 
 ## Build & Development Commands
 
@@ -16,7 +16,7 @@ npm run clean-build      # Clean build output and rebuild
 
 ### Running Tests
 
-Tests run inside a built Zotero application instance via `test/runtests.sh`:
+Tests run inside a built Trellis application instance via `test/runtests.sh`:
 
 ```bash
 test/runtests.sh                   # Run all tests
@@ -39,7 +39,7 @@ Tips:
 
 - Pass flags before test names (e.g., `test/runtests.sh -f item`).
 - `-f` should almost always be used, since test failures can cause later spurious test failures.
-- To view debug logging for a specific test when running multiple tests, add `Zotero.Debug.init(1)` at the beginning of the test and run with `-d 5`.
+- To view debug logging for a specific test when running multiple tests, add `Trellis.Debug.init(1)` at the beginning of the test and run with `-d 5`.
 
 
 ### Linting
@@ -54,23 +54,23 @@ ESLint v9 flat config is in `eslint.config.mjs`. Uses `@zotero/eslint-config`, B
 
 ### Core Layers
 
-- **XPCOM modules** (`chrome/content/zotero/xpcom/`) -- Core business logic. Loaded sequentially by `chrome/content/zotero/zotero.mjs`. All modules attach to the global `Zotero` namespace (e.g., `Zotero.Items`, `Zotero.Sync.Runner`).
+- **XPCOM modules** (`chrome/content/trellis/xpcom/`) -- Core business logic. Loaded sequentially by `chrome/content/trellis/trellis.mjs`. All modules attach to the global `Trellis` namespace (e.g., `Trellis.Items`, `Trellis.Sync.Runner`).
 
-- **Data model** (`chrome/content/zotero/xpcom/data/`) -- ORM-like classes for database entities. `Zotero.DataObject` is the base class; `Zotero.Item`, `Zotero.Collection`, `Zotero.Search`, `Zotero.Library`, etc. extend it. Plural classes (`Zotero.Items`, `Zotero.Collections`) manage object caches and queries. Data objects use an async `saveTx()` pattern for persistence.
+- **Data model** (`chrome/content/trellis/xpcom/data/`) -- ORM-like classes for database entities. `Trellis.DataObject` is the base class; `Trellis.Item`, `Trellis.Collection`, `Trellis.Search`, `Trellis.Library`, etc. extend it. Plural classes (`Trellis.Items`, `Trellis.Collections`) manage object caches and queries. Data objects use an async `saveTx()` pattern for persistence.
 
-- **Database** (`chrome/content/zotero/xpcom/db.js`) -- SQLite via Mozilla's mozStorage API. Accessed through `Zotero.DB.queryAsync()`, `Zotero.DB.executeTransaction()`.
+- **Database** (`chrome/content/trellis/xpcom/db.js`) -- SQLite via Mozilla's mozStorage API. Accessed through `Trellis.DB.queryAsync()`, `Trellis.DB.executeTransaction()`.
 
-- **Sync system** (`chrome/content/zotero/xpcom/sync/`) -- `syncRunner.js` orchestrates sync. `syncEngine.js` handles object-level sync logic. `syncAPIClient.js` communicates with the Zotero API server. `syncLocal.js` manages local sync state. Similar `storage*` files for file syncing, along with zfs.js (Zotero Storage) and webdav.js (WebDAV).
+- **Sync system** (`chrome/content/trellis/xpcom/sync/`) -- `syncRunner.js` orchestrates sync. `syncEngine.js` handles object-level sync logic. `syncAPIClient.js` communicates with the Trellis API server. `syncLocal.js` manages local sync state. Similar `storage*` files for file syncing, along with zfs.js (Trellis Storage) and webdav.js (WebDAV).
 
-- **HTTP server** (`chrome/content/zotero/xpcom/server/`) -- Local HTTP server for browser connector integration and local API.
+- **HTTP server** (`chrome/content/trellis/xpcom/server/`) -- Local HTTP server for browser connector integration and local API.
 
 ### UI Layers
 
-- **Main window**: `chrome/content/zotero/zoteroPane.xhtml` + `zoteroPane.js`
-- **Custom elements** (`chrome/content/zotero/elements/`) -- XUL custom elements inheriting from `XULElementBase` (defined in `elements/base.js`), which provides lifecycle helpers (`init()`, `destroy()`, `content` getter for templates). Registered via `customElements.define()`.
-- **React components** (`chrome/content/zotero/components/`) -- Used for complex interactive UI (tag selector, virtualized table, item tree, collection tree). Major tree views are `itemTree.jsx` and `collectionTree.jsx`.
+- **Main window**: `chrome/content/trellis/trellisPane.xhtml` + `trellisPane.js`
+- **Custom elements** (`chrome/content/trellis/elements/`) -- XUL custom elements inheriting from `XULElementBase` (defined in `elements/base.js`), which provides lifecycle helpers (`init()`, `destroy()`, `content` getter for templates). Registered via `customElements.define()`.
+- **React components** (`chrome/content/trellis/components/`) -- Used for complex interactive UI (tag selector, virtualized table, item tree, collection tree). Major tree views are `itemTree.jsx` and `collectionTree.jsx`.
 - **SCSS styles** (`scss/`) -- Compiled to CSS. Platform-specific overrides in `scss/mac/`, `scss/win/`, `scss/linux/`.
-- **Localization** -- Fluent (`.ftl` files) in `chrome/locale/en-US/zotero/`. Accessed via `data-l10n-id` attributes or `Zotero.getString()` for legacy `.properties` strings. All new strings must be added to `.ftl` files -- do not add new strings to `.properties` or `.dtd` files.
+- **Localization** -- Fluent (`.ftl` files) in `chrome/locale/en-US/trellis/`. Accessed via `data-l10n-id` attributes or `Trellis.getString()` for legacy `.properties` strings. All new strings must be added to `.ftl` files -- do not add new strings to `.properties` or `.dtd` files.
 
 ### Submodules
 
@@ -81,8 +81,8 @@ Several features are developed in separate repos and included as Git submodules:
 - `document-worker/` -- PDF processing (extraction, manipulation)
 - `translators/` -- 760+ web translators for importing metadata from websites
 - `styles/` -- CSL citation styles
-- `chrome/content/zotero/xpcom/utilities/` -- Shared utility library
-- `chrome/content/zotero/xpcom/translate/` -- Translation framework
+- `chrome/content/trellis/xpcom/utilities/` -- Shared utility library
+- `chrome/content/trellis/xpcom/translate/` -- Translation framework
 - `resource/SingleFile/` -- Web page archiving
 
 ### Build System (`js-build/`)
@@ -101,10 +101,10 @@ Custom Node.js build system (not Webpack). `js-build/config.js` defines what get
 - No cuddled braces (opening brace on same line, but `else`/`catch`/etc. on their own line)
 - Use two hyphens `--` in comments, not an em dash
 - Indent blank lines to match surrounding indentation level
-- Objects attach to the `Zotero` global namespace rather than using ES module exports
+- Objects attach to the `Trellis` global namespace rather than using ES module exports
 - Async code uses `async`/`await` throughout
 - Mozilla/XPCOM APIs are available globally: `Cc`, `Ci`, `Cu`, `Cr`, `Services`, `ChromeUtils`, `IOUtils`, `PathUtils`
 
 ## Translators
 
-See `translators/CLAUDE.md` for guidelines. Key rules: **never** generate translators from scratch, **never** generate UUIDs, **never** generate test cases -- all of these must be done through Zotero's Scaffold tool.
+See `translators/CLAUDE.md` for guidelines. Key rules: **never** generate translators from scratch, **never** generate UUIDs, **never** generate test cases -- all of these must be done through Trellis's Scaffold tool.

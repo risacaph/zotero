@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "ชื่อ:">
+
+<!ENTITY trellis.search.searchInLibrary "Search in library:">
+
+<!ENTITY trellis.search.joinMode.prefix "ตรงกับ">
+<!ENTITY trellis.search.joinMode.any "คำใดๆ">
+<!ENTITY trellis.search.joinMode.all "ทั้งหมด">
+<!ENTITY trellis.search.joinMode.suffix "ของรายการดังต่อไปนี้:">
+
+<!ENTITY trellis.search.recursive.label "ค้นหาในคอลเล็คชันย่อย">
+<!ENTITY trellis.search.noChildren "แสดงเฉพาะรายการระดับบนสุด">
+<!ENTITY trellis.search.includeParentsAndChildren "รวมรายการที่ตรงกันทั้งรายการแม่และรายการลูก">
+
+<!ENTITY trellis.search.textModes.phrase "พยางค์">
+<!ENTITY trellis.search.textModes.phraseBinary "พยางค์ (รวมแฟ้มไบนารี)">
+<!ENTITY trellis.search.textModes.regexp "นิพจน์ปรกติ">
+<!ENTITY trellis.search.textModes.regexpCS "นิพจน์ปรกติ (แยกตัวพิมพ์เล็ก-พิมพ์ใหญ่)">
+
+<!ENTITY trellis.search.date.units.days "วัน">
+<!ENTITY trellis.search.date.units.months "เดือน">
+<!ENTITY trellis.search.date.units.years "ปี">
+
+<!ENTITY trellis.search.search "ค้นหา">
+<!ENTITY trellis.search.clear "ล้าง">
+<!ENTITY trellis.search.saveSearch "บันทึกผลการค้นหา">

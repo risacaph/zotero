@@ -110,7 +110,7 @@ for version in "$FROM" "$TO"; do
 		continue
 	fi
 	
-	echo "Getting Zotero version $version"
+	echo "Getting Trellis version $version"
 	
 	versiondir="$UPDATE_STAGE_DIR/$version"
 	
@@ -136,7 +136,7 @@ for version in "$FROM" "$TO"; do
 	mkdir -p "$versiondir"
 	cd "$versiondir"
 	
-	# Determine Linux archive extension by major Zotero version
+	# Determine Linux archive extension by major Trellis version
 	MAJOR_VERSION="${version%%.*}"
 	if [ "$MAJOR_VERSION" -lt 8 ]; then
 		LINUX_EXT="tar.bz2"
@@ -144,20 +144,20 @@ for version in "$FROM" "$TO"; do
 		LINUX_EXT="tar.xz"
 	fi
 	
-	MAC_ARCHIVE="Zotero-${version}.dmg"
-	WIN32_ARCHIVE="Zotero-${version}_win32.zip"
-	WIN_X64_ARCHIVE="Zotero-${version}_win-x64.zip"
-	WIN_ARM64_ARCHIVE="Zotero-${version}_win-arm64.zip"
-	LINUX_X86_ARCHIVE="Zotero-${version}_linux-i686.${LINUX_EXT}"
-	LINUX_X86_64_ARCHIVE="Zotero-${version}_linux-x86_64.${LINUX_EXT}"
-	LINUX_ARM64_ARCHIVE="Zotero-${version}_linux-arm64.${LINUX_EXT}"
+	MAC_ARCHIVE="Trellis-${version}.dmg"
+	WIN32_ARCHIVE="Trellis-${version}_win32.zip"
+	WIN_X64_ARCHIVE="Trellis-${version}_win-x64.zip"
+	WIN_ARM64_ARCHIVE="Trellis-${version}_win-arm64.zip"
+	LINUX_X86_ARCHIVE="Trellis-${version}_linux-i686.${LINUX_EXT}"
+	LINUX_X86_64_ARCHIVE="Trellis-${version}_linux-x86_64.${LINUX_EXT}"
+	LINUX_ARM64_ARCHIVE="Trellis-${version}_linux-arm64.${LINUX_EXT}"
 	
 	CACHE_DIR="$ROOT_DIR/cache"
 	if [ ! -e "$CACHE_DIR" ]; then
 		mkdir "$CACHE_DIR"
 	fi
 	
-	# Build archive list (no Linux arm64 for Zotero 7)
+	# Build archive list (no Linux arm64 for Trellis 7)
 	ARCHIVES=(
 		"$MAC_ARCHIVE"
 		"$WIN32_ARCHIVE"
@@ -238,16 +238,16 @@ for version in "$FROM" "$TO"; do
 	# Delete cached files older than 14 days
 	find "$CACHE_DIR" -ctime +14 -delete
 	
-	# Unpack Zotero.app
+	# Unpack Trellis.app
 	if [ $BUILD_MAC == 1 ]; then
 		if [ -f "$MAC_ARCHIVE" ]; then
 			set +e
-			hdiutil detach -quiet /Volumes/Zotero 2>/dev/null
+			hdiutil detach -quiet /Volumes/Trellis 2>/dev/null
 			set -e
 			hdiutil attach -quiet "$MAC_ARCHIVE"
-			cp -R /Volumes/Zotero/Zotero.app "$versiondir"
+			cp -R /Volumes/Trellis/Trellis.app "$versiondir"
 			rm "$MAC_ARCHIVE"
-			hdiutil detach -quiet /Volumes/Zotero
+			hdiutil detach -quiet /Volumes/Trellis
 			INCREMENTALS_FOUND=1
 		else
 			echo "$MAC_ARCHIVE not found"
@@ -269,7 +269,7 @@ for version in "$FROM" "$TO"; do
 	
 	# Unpack Linux tarballs
 	if [ $BUILD_LINUX == 1 ]; then
-		# Zotero 7 has no Linux arm64 build
+		# Trellis 7 has no Linux arm64 build
 		LINUX_BUILDS_TO_UNPACK=("$LINUX_X86_ARCHIVE" "$LINUX_X86_64_ARCHIVE")
 		if [ "$MAJOR_VERSION" -ge 8 ]; then
 			LINUX_BUILDS_TO_UNPACK+=("$LINUX_ARM64_ARCHIVE")
@@ -303,7 +303,7 @@ export MAR_CHANNEL_ID="$CHANNEL"
 
 CHANGES_MADE=0
 for build in "mac" "win32" "win-x64" "win-arm64" "linux-i686" "linux-x86_64" "linux-arm64"; do
-	# Zotero 7 has no Linux arm64 builds
+	# Trellis 7 has no Linux arm64 builds
 	if [[ $build == "linux-arm64" ]] && [[ $FROM == 7.* ]]; then
 		continue
 	fi
@@ -311,7 +311,7 @@ for build in "mac" "win32" "win-x64" "win-arm64" "linux-i686" "linux-x86_64" "li
 		if [[ $BUILD_MAC == 0 ]]; then
 			continue
 		fi
-		dir="Zotero.app"
+		dir="Trellis.app"
 	else
 		if ([[ $build == "win32" ]] || [[ $build == "win-x64" ]] || [[ $build == "win-arm64" ]]) && [[ $BUILD_WIN == 0 ]]; then
 			continue
@@ -319,26 +319,26 @@ for build in "mac" "win32" "win-x64" "win-arm64" "linux-i686" "linux-x86_64" "li
 		if ([[ $build == "linux-i686" ]] || [[ $build == "linux-x86_64" ]] || [[ $build == "linux-arm64" ]]) && [[ $BUILD_LINUX == 0 ]]; then
 			continue
 		fi
-		dir="Zotero_$build"
+		dir="Trellis_$build"
 	fi
 	if [[ $BUILD_INCREMENTAL == 1 ]] && [[ -d "$UPDATE_STAGE_DIR/$FROM/$dir" ]]; then
 		echo
 		echo "Building incremental $build update from $FROM to $TO"
-		"$SCRIPT_DIR/make_incremental_update.sh" "$DIST_DIR/Zotero-${TO}-${FROM}_$build.mar" "$UPDATE_STAGE_DIR/$FROM/$dir" "$UPDATE_STAGE_DIR/$TO/$dir"
+		"$SCRIPT_DIR/make_incremental_update.sh" "$DIST_DIR/Trellis-${TO}-${FROM}_$build.mar" "$UPDATE_STAGE_DIR/$FROM/$dir" "$UPDATE_STAGE_DIR/$TO/$dir"
 		CHANGES_MADE=1
 		
 		# If it's an incremental patch from a 6.0 build, use bzip instead of xz
 		if [[ $FROM = 6.0* ]]; then
 			echo "Building bzip2 version of incremental $build update from $FROM to $TO"
-			"$SCRIPT_DIR/xz_to_bzip" "$DIST_DIR/Zotero-${TO}-${FROM}_$build.mar" "$DIST_DIR/Zotero-${TO}-${FROM}_${build}_bz.mar"
-			rm "$DIST_DIR/Zotero-${TO}-${FROM}_$build.mar"
-			mv "$DIST_DIR/Zotero-${TO}-${FROM}_${build}_bz.mar" "$DIST_DIR/Zotero-${TO}-${FROM}_$build.mar"
+			"$SCRIPT_DIR/xz_to_bzip" "$DIST_DIR/Trellis-${TO}-${FROM}_$build.mar" "$DIST_DIR/Trellis-${TO}-${FROM}_${build}_bz.mar"
+			rm "$DIST_DIR/Trellis-${TO}-${FROM}_$build.mar"
+			mv "$DIST_DIR/Trellis-${TO}-${FROM}_${build}_bz.mar" "$DIST_DIR/Trellis-${TO}-${FROM}_$build.mar"
 		fi
 	fi
 	if [[ $BUILD_FULL == 1 ]]; then
 		echo
 		echo "Building full $build update for $TO"
-		"$SCRIPT_DIR/make_full_update.sh" "$DIST_DIR/Zotero-${TO}-full_$build.mar" "$UPDATE_STAGE_DIR/$TO/$dir"
+		"$SCRIPT_DIR/make_full_update.sh" "$DIST_DIR/Trellis-${TO}-full_$build.mar" "$UPDATE_STAGE_DIR/$TO/$dir"
 		CHANGES_MADE=1
 			
 		# Make a bzip version of all complete patches for serving to <7.0 builds. Don't bother with
@@ -347,7 +347,7 @@ for build in "mac" "win32" "win-x64" "win-arm64" "linux-i686" "linux-x86_64" "li
 		# We can stop this once we do a waterfall build that all older versions get updated to.
 		if [[ $build != "win-x64" ]] && [[ $build != "win-arm64" ]]; then
 			echo "Building bzip2 version of full $build update for $TO"
-			"$SCRIPT_DIR/xz_to_bzip" "$DIST_DIR/Zotero-${TO}-full_$build.mar" "$DIST_DIR/Zotero-${TO}-full_bz_${build}.mar"
+			"$SCRIPT_DIR/xz_to_bzip" "$DIST_DIR/Trellis-${TO}-full_$build.mar" "$DIST_DIR/Trellis-${TO}-full_bz_${build}.mar"
 		fi
 	fi
 done

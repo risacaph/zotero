@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "sürüm">
+<!ENTITY trellis.whatsNew "Neler Yeni">
+<!ENTITY trellis.createdby "Üreten:">
+<!ENTITY trellis.director "Yönetici:">
+<!ENTITY trellis.directors "Yöneticiler:">
+<!ENTITY trellis.developers "Geliştiriciler:">
+<!ENTITY trellis.alumni "Mezunlar:">
+<!ENTITY trellis.about.localizations "Yerelleştirenler:">
+<!ENTITY trellis.about.additionalSoftware "Üçüncü Taraf Yazılım:">
+<!ENTITY trellis.thanks "Özel teşekkürler:">
+<!ENTITY trellis.about.close "Kapat">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Diğer Katılımcılar ve Teşekkürler">
+<!ENTITY trellis.citationProcessing "Alıntı ve Kaynakça İşlemleri">

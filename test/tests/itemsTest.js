@@ -1,11 +1,11 @@
-describe("Zotero.Items", function () {
+describe("Trellis.Items", function () {
 	var win, collectionsView, zp;
 	
 	before(function* () {
 		this.timeout(10000);
-		win = yield loadZoteroPane();
-		collectionsView = win.ZoteroPane.collectionsView;
-		zp = win.ZoteroPane;
+		win = yield loadTrellisPane();
+		collectionsView = win.TrellisPane.collectionsView;
+		zp = win.TrellisPane;
 	})
 	beforeEach(function () {
 		return selectLibrary(win);
@@ -18,10 +18,10 @@ describe("Zotero.Items", function () {
 	describe("#addToPublications", function () {
 		it("should add an item to My Publications", async function () {
 			var item = await createDataObject('item');
-			await Zotero.Items.addToPublications([item]);
+			await Trellis.Items.addToPublications([item]);
 			assert.isTrue(item.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", item.id))),
 				1
 			);
@@ -32,7 +32,7 @@ describe("Zotero.Items", function () {
 				var item = createUnsavedDataObject('item');
 				item.setField('rights', 'Test');
 				await item.saveTx();
-				await Zotero.Items.addToPublications(
+				await Trellis.Items.addToPublications(
 					[item],
 					{
 						license: 'reserved',
@@ -48,7 +48,7 @@ describe("Zotero.Items", function () {
 				item1.setField('rights', 'Test');
 				await item1.saveTx();
 				var item2 = await createDataObject('item');
-				await Zotero.Items.addToPublications(
+				await Trellis.Items.addToPublications(
 					[item1, item2],
 					{
 						license: 'reserved',
@@ -64,7 +64,7 @@ describe("Zotero.Items", function () {
 				var item = createUnsavedDataObject('item');
 				item.setField('rights', 'Test');
 				await item.saveTx();
-				await Zotero.Items.addToPublications([item]);
+				await Trellis.Items.addToPublications([item]);
 				assert.equal(item.getField('rights'), 'Test');
 			});
 		});
@@ -72,16 +72,16 @@ describe("Zotero.Items", function () {
 		it("should add child notes if .childNotes is true", async function () {
 			var item = await createDataObject('item');
 			var note = await createDataObject('item', { itemType: 'note', parentID: item.id });
-			var attachment = await Zotero.Attachments.linkFromURL({
+			var attachment = await Trellis.Attachments.linkFromURL({
 				url: "http://example.com",
 				parentItemID: item.id,
 				title: "Example"
 			});
 			
-			await Zotero.Items.addToPublications([item], { childNotes: true });
+			await Trellis.Items.addToPublications([item], { childNotes: true });
 			assert.isTrue(note.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", note.id))),
 				1
 			);
@@ -90,7 +90,7 @@ describe("Zotero.Items", function () {
 		
 		it("should add child link attachments if .childLinks is true", async function () {
 			var item = await createDataObject('item');
-			var attachment1 = await Zotero.Attachments.linkFromURL({
+			var attachment1 = await Trellis.Attachments.linkFromURL({
 				url: "http://example.com",
 				parentItemID: item.id,
 				title: "Example"
@@ -98,10 +98,10 @@ describe("Zotero.Items", function () {
 			var attachment2 = await importFileAttachment('test.png', { parentItemID: item.id });
 			var note = await createDataObject('item', { itemType: 'note', parentID: item.id });
 			
-			await Zotero.Items.addToPublications([item], { childLinks: true });
+			await Trellis.Items.addToPublications([item], { childLinks: true });
 			assert.isTrue(attachment1.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", attachment1.id))),
 				1
 			);
@@ -112,17 +112,17 @@ describe("Zotero.Items", function () {
 		it("should add child file attachments if .childFileAttachments is true", async function () {
 			var item = await createDataObject('item');
 			var attachment1 = await importFileAttachment('test.png', { parentItemID: item.id });
-			var attachment2 = await Zotero.Attachments.linkFromURL({
+			var attachment2 = await Trellis.Attachments.linkFromURL({
 				url: "http://example.com",
 				parentItemID: item.id,
 				title: "Example"
 			});
 			var note = await createDataObject('item', { itemType: 'note', parentID: item.id });
 			
-			await Zotero.Items.addToPublications([item], { childFileAttachments: true });
+			await Trellis.Items.addToPublications([item], { childFileAttachments: true });
 			assert.isTrue(attachment1.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", attachment1.id))),
 				1
 			);
@@ -138,14 +138,14 @@ describe("Zotero.Items", function () {
 			item.inPublications = true;
 			await item.saveTx();
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", item.id))),
 				1
 			);
-			await Zotero.Items.removeFromPublications([item]);
+			await Trellis.Items.removeFromPublications([item]);
 			assert.isFalse(item.inPublications);
 			assert.equal(
-				((await Zotero.DB.valueQueryAsync(
+				((await Trellis.DB.valueQueryAsync(
 					"SELECT COUNT(*) FROM publicationsItems WHERE itemID=?", item.id))),
 				0
 			);
@@ -165,16 +165,16 @@ describe("Zotero.Items", function () {
 		});
 		
 		it("should copy annotations from a group library to a personal library", async function () {
-			await Zotero.Users.setCurrentUserID(1);
-			await Zotero.Users.setName(1, 'Name 1');
-			await Zotero.Users.setName(12345, 'Name 2');
+			await Trellis.Users.setCurrentUserID(1);
+			await Trellis.Users.setName(1, 'Name 1');
+			await Trellis.Users.setName(12345, 'Name 2');
 			
-			var userLibraryID = Zotero.Libraries.userLibraryID;
+			var userLibraryID = Trellis.Libraries.userLibraryID;
 			
 			var item = await createDataObject('item', { libraryID: group.libraryID });
 			var file = getTestDataDirectory();
 			file.append('test.pdf');
-			var attachment = await Zotero.Attachments.importFromFile({
+			var attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: item.id
 			});
@@ -199,8 +199,8 @@ describe("Zotero.Items", function () {
 			var newAttachment = attachment.clone(userLibraryID);
 			await newAttachment.saveTx();
 			
-			await Zotero.DB.executeTransaction(async function () {
-				await Zotero.Items.copyChildItems(attachment, newAttachment);
+			await Trellis.DB.executeTransaction(async function () {
+				await Trellis.Items.copyChildItems(attachment, newAttachment);
 			});
 			
 			// Check annotations
@@ -231,18 +231,18 @@ describe("Zotero.Items", function () {
 				assert.isUndefined(item._changed.deleted);
 			});
 			var ids = items.map(item => item.id);
-			await Zotero.Items.trashTx(ids);
+			await Trellis.Items.trashTx(ids);
 			items.forEach(item => {
 				assert.isTrue(item.deleted);
 				// Item should be saved (can't use hasChanged() because that includes .synced)
 				assert.isUndefined(item._changed.deleted);
 				assert.isFalse(item.synced);
 			});
-			assert.equal(((await Zotero.DB.valueQueryAsync(
+			assert.equal(((await Trellis.DB.valueQueryAsync(
 				`SELECT COUNT(*) FROM deletedItems WHERE itemID IN (${ids})`
 			))), 3);
 			for (let item of items) {
-				assert.equal(((await Zotero.DB.valueQueryAsync(
+				assert.equal(((await Trellis.DB.valueQueryAsync(
 					`SELECT synced FROM items WHERE itemID=${item.id}`
 				))), 0);
 			}
@@ -252,7 +252,7 @@ describe("Zotero.Items", function () {
 			var item = await createDataObject('item');
 			var note = await createDataObject('item', { itemType: 'note', parentID: item.id });
 			assert.lengthOf(item.getNotes(), 1);
-			await Zotero.Items.trashTx([note.id]);
+			await Trellis.Items.trashTx([note.id]);
 			assert.lengthOf(item.getNotes(), 0);
 		});
 	});
@@ -271,17 +271,17 @@ describe("Zotero.Items", function () {
 			var id2 = await item2.saveTx();
 			
 			var item3 = createUnsavedDataObject('item', { itemType: 'attachment', parentID: id2 });
-			item3.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_URL;
+			item3.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_URL;
 			item3.deleted = true;
 			var id3 = await item3.saveTx();
 			
-			await collectionsView.selectTrash(Zotero.Libraries.userLibraryID);
+			await collectionsView.selectTrash(Trellis.Libraries.userLibraryID);
 			
-			await Zotero.Items.emptyTrash(Zotero.Libraries.userLibraryID);
+			await Trellis.Items.emptyTrash(Trellis.Libraries.userLibraryID);
 			
-			assert.isFalse(await Zotero.Items.getAsync(id1));
-			assert.isFalse(await Zotero.Items.getAsync(id2));
-			assert.isFalse(await Zotero.Items.getAsync(id3));
+			assert.isFalse(await Trellis.Items.getAsync(id1));
+			assert.isFalse(await Trellis.Items.getAsync(id2));
+			assert.isFalse(await Trellis.Items.getAsync(id3));
 			
 			// TEMP: This is failing on Travis due to a race condition
 			//assert.equal(zp.itemsView.rowCount, 0)
@@ -292,14 +292,14 @@ describe("Zotero.Items", function () {
 		it("should handle single eligible creator", async function () {
 			for (let creatorType of ['author', 'editor', 'contributor']) {
 				assert.equal(
-					Zotero.Items.getFirstCreatorFromData(
-						Zotero.ItemTypes.getID('book'),
+					Trellis.Items.getFirstCreatorFromData(
+						Trellis.ItemTypes.getID('book'),
 						[
 							{
 								fieldMode: 0,
 								firstName: 'A',
 								lastName: 'B',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							}
 						]
 					),
@@ -311,14 +311,14 @@ describe("Zotero.Items", function () {
 		
 		it("should ignore single ineligible creator", async function () {
 			assert.strictEqual(
-				Zotero.Items.getFirstCreatorFromData(
-					Zotero.ItemTypes.getID('book'),
+				Trellis.Items.getFirstCreatorFromData(
+					Trellis.ItemTypes.getID('book'),
 					[
 						{
 							fieldMode: 0,
 							firstName: 'A',
 							lastName: 'B',
-							creatorTypeID: Zotero.CreatorTypes.getID('translator')
+							creatorTypeID: Trellis.CreatorTypes.getID('translator')
 						}
 					]
 				),
@@ -329,20 +329,20 @@ describe("Zotero.Items", function () {
 		it("should handle single eligible creator after ineligible creator", async function () {
 			for (let creatorType of ['author', 'editor', 'contributor']) {
 				assert.equal(
-					Zotero.Items.getFirstCreatorFromData(
-						Zotero.ItemTypes.getID('book'),
+					Trellis.Items.getFirstCreatorFromData(
+						Trellis.ItemTypes.getID('book'),
 						[
 							{
 								fieldMode: 0,
 								firstName: 'A',
 								lastName: 'B',
-								creatorTypeID: Zotero.CreatorTypes.getID('translator')
+								creatorTypeID: Trellis.CreatorTypes.getID('translator')
 							},
 							{
 								fieldMode: 0,
 								firstName: 'C',
 								lastName: 'D',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							}
 						]
 					),
@@ -355,24 +355,24 @@ describe("Zotero.Items", function () {
 		it("should handle two eligible creators", async function () {
 			for (let creatorType of ['author', 'editor', 'contributor']) {
 				assert.equal(
-					Zotero.Items.getFirstCreatorFromData(
-						Zotero.ItemTypes.getID('book'),
+					Trellis.Items.getFirstCreatorFromData(
+						Trellis.ItemTypes.getID('book'),
 						[
 							{
 								fieldMode: 0,
 								firstName: 'A',
 								lastName: 'B',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							},
 							{
 								fieldMode: 0,
 								firstName: 'C',
 								lastName: 'D',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							}
 						]
 					),
-					Zotero.getString(
+					Trellis.getString(
 						'general.andJoiner',
 						['\u2068' + 'B' + '\u2069', '\u2068' + 'D' + '\u2069']
 					),
@@ -384,30 +384,30 @@ describe("Zotero.Items", function () {
 		it("should handle three eligible creators", async function () {
 			for (let creatorType of ['author', 'editor', 'contributor']) {
 				assert.equal(
-					Zotero.Items.getFirstCreatorFromData(
-						Zotero.ItemTypes.getID('book'),
+					Trellis.Items.getFirstCreatorFromData(
+						Trellis.ItemTypes.getID('book'),
 						[
 							{
 								fieldMode: 0,
 								firstName: 'A',
 								lastName: 'B',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							},
 							{
 								fieldMode: 0,
 								firstName: 'C',
 								lastName: 'D',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							},
 							{
 								fieldMode: 0,
 								firstName: 'E',
 								lastName: 'F',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							}
 						]
 					),
-					'B ' + Zotero.getString('general.etAl'),
+					'B ' + Trellis.getString('general.etAl'),
 					creatorType
 				);
 			}
@@ -416,36 +416,36 @@ describe("Zotero.Items", function () {
 		it("should handle two eligible creators with intervening creators", async function () {
 			for (let creatorType of ['author', 'editor', 'contributor']) {
 				assert.equal(
-					Zotero.Items.getFirstCreatorFromData(
-						Zotero.ItemTypes.getID('book'),
+					Trellis.Items.getFirstCreatorFromData(
+						Trellis.ItemTypes.getID('book'),
 						[
 							{
 								fieldMode: 0,
 								firstName: 'A',
 								lastName: 'B',
-								creatorTypeID: Zotero.CreatorTypes.getID('translator')
+								creatorTypeID: Trellis.CreatorTypes.getID('translator')
 							},
 							{
 								fieldMode: 0,
 								firstName: 'C',
 								lastName: 'D',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							},
 							{
 								fieldMode: 0,
 								firstName: 'E',
 								lastName: 'F',
-								creatorTypeID: Zotero.CreatorTypes.getID('translator')
+								creatorTypeID: Trellis.CreatorTypes.getID('translator')
 							},
 							{
 								fieldMode: 0,
 								firstName: 'G',
 								lastName: 'H',
-								creatorTypeID: Zotero.CreatorTypes.getID(creatorType)
+								creatorTypeID: Trellis.CreatorTypes.getID(creatorType)
 							}
 						]
 					),
-					Zotero.getString(
+					Trellis.getString(
 						'general.andJoiner',
 						['\u2068' + 'D' + '\u2069', '\u2068' + 'H' + '\u2069']
 					),
@@ -456,26 +456,26 @@ describe("Zotero.Items", function () {
 	});
 	
 	describe("#getAsync()", function () {
-		it("should return Zotero.Item for item ID", async function () {
-			let item = new Zotero.Item('journalArticle');
+		it("should return Trellis.Item for item ID", async function () {
+			let item = new Trellis.Item('journalArticle');
 			let id = await item.saveTx();
-			item = await Zotero.Items.getAsync(id);
+			item = await Trellis.Items.getAsync(id);
 			assert.notOk(item.isFeedItem);
-			assert.instanceOf(item, Zotero.Item);
-			assert.notInstanceOf(item, Zotero.FeedItem);
+			assert.instanceOf(item, Trellis.Item);
+			assert.notInstanceOf(item, Trellis.FeedItem);
 		});
-		it("should return Zotero.FeedItem for feed item ID", async function () {
-			let feed = new Zotero.Feed({ name: 'foo', url: 'http://www.' + Zotero.randomString() + '.com' });
+		it("should return Trellis.FeedItem for feed item ID", async function () {
+			let feed = new Trellis.Feed({ name: 'foo', url: 'http://www.' + Trellis.randomString() + '.com' });
 			await feed.saveTx();
 			
-			let feedItem = new Zotero.FeedItem('journalArticle', { guid: Zotero.randomString() });
+			let feedItem = new Trellis.FeedItem('journalArticle', { guid: Trellis.randomString() });
 			feedItem.libraryID = feed.libraryID;
 			let id = await feedItem.saveTx();
 			
-			feedItem = await Zotero.Items.getAsync(id);
+			feedItem = await Trellis.Items.getAsync(id);
 			
 			assert.isTrue(feedItem.isFeedItem);
-			assert.instanceOf(feedItem, Zotero.FeedItem);
+			assert.instanceOf(feedItem, Trellis.FeedItem);
 		});
 	});
 	
@@ -489,7 +489,7 @@ describe("Zotero.Items", function () {
 			var otherItem = await createDataObject('item');
 			var item6 = await createDataObject('item', { itemType: 'note', parentItemID: otherItem.id });
 			
-			var items = Zotero.Items.keepTopLevel([item1, item2, item3, item4, item5, item6]);
+			var items = Trellis.Items.keepTopLevel([item1, item2, item3, item4, item5, item6]);
 			assert.sameMembers(
 				// Convert to ids for clearer output
 				items.map(item => item.id),
@@ -501,7 +501,7 @@ describe("Zotero.Items", function () {
 			var item1 = await createDataObject('item');
 			var item2 = await createDataObject('item', { itemType: 'note', parentItemID: item1.id });
 			var item3 = await createDataObject('item', { itemType: 'note', parentItemID: item1.id });
-			var items = Zotero.Items.keepTopLevel([item2, item3]);
+			var items = Trellis.Items.keepTopLevel([item2, item3]);
 			assert.sameMembers(
 				items.map(item => item.id),
 				[item2.id, item3.id]
@@ -517,7 +517,7 @@ describe("Zotero.Items", function () {
 			var attachment2 = await importFileAttachment('test.png', { parentItemID: item1.id });
 			
 			function getNum() {
-				return Zotero.Items.numDistinctFileAttachmentsForLabel(zp.getSelectedItems());
+				return Trellis.Items.numDistinctFileAttachmentsForLabel(zp.getSelectedItems());
 			}
 			
 			zp.itemsView.selection.clearSelection();
@@ -551,7 +551,7 @@ describe("Zotero.Items", function () {
 			var item = await createDataObject('item');
 			var attachment = await importFileAttachment('test.png', { parentItemID: item.id });
 			
-			var numFiles = Zotero.Items.numDistinctFileAttachmentsForLabel(
+			var numFiles = Trellis.Items.numDistinctFileAttachmentsForLabel(
 				[item],
 				item => item.isPDFAttachment()
 			);
@@ -563,8 +563,8 @@ describe("Zotero.Items", function () {
 		it("should mark child items as loaded for an attachment", async function () {
 			var attachment = await importPDFAttachment();
 			var itemID = attachment.id;
-			Zotero.Items.unload([itemID]);
-			attachment = await Zotero.Items.getAsync(itemID);
+			Trellis.Items.unload([itemID]);
+			attachment = await Trellis.Items.getAsync(itemID);
 			await attachment.loadDataType('childItems');
 			assert.isTrue(attachment._loaded.childItems);
 			attachment.getAnnotations();
@@ -584,7 +584,7 @@ describe("Zotero.Items", function () {
 			];
 
 			for (let [input, expected] of tests) {
-				assert.equal(Zotero.Items.getSortTitle(input), expected);
+				assert.equal(Trellis.Items.getSortTitle(input), expected);
 			}
 		});
 
@@ -595,14 +595,14 @@ describe("Zotero.Items", function () {
 				['-- longer title', 'longer title'],
 				['-_ longer title with different second character', '_ longer title with different second character'],
 				['"Quoted title', 'Quoted title'],
-				['@zotero on Twitter', '@zotero on Twitter'],
+				['@trellis on Twitter', '@trellis on Twitter'],
 				['#hashtag', '#hashtag'],
 				['*special', '*special'],
 				['**repeated', '**repeated']
 			];
 
 			for (let [input, expected] of tests) {
-				assert.equal(Zotero.Items.getSortTitle(input), expected);
+				assert.equal(Trellis.Items.getSortTitle(input), expected);
 			}
 		});
 
@@ -615,7 +615,7 @@ describe("Zotero.Items", function () {
 			];
 
 			for (let [input, expected] of tests) {
-				assert.equal(Zotero.Items.getSortTitle(input), expected);
+				assert.equal(Trellis.Items.getSortTitle(input), expected);
 			}
 		});
 
@@ -627,7 +627,7 @@ describe("Zotero.Items", function () {
 			];
 
 			for (let [input, expected] of tests) {
-				assert.equal(Zotero.Items.getSortTitle(input), expected);
+				assert.equal(Trellis.Items.getSortTitle(input), expected);
 			}
 		});
 
@@ -647,8 +647,8 @@ describe("Zotero.Items", function () {
 				],
 			];
 
-			let st = Zotero.Items.getSortTitle;
-			let collation = Zotero.getLocaleCollation();
+			let st = Trellis.Items.getSortTitle;
+			let collation = Trellis.getLocaleCollation();
 			for (let [input, expected] of tests) {
 				input.sort((a, b) => collation.compareString(1, st(a), st(b)));
 				assert.deepEqual(input, expected);
@@ -677,7 +677,7 @@ describe("Zotero.Items", function () {
 			att3.attachmentLastRead = now - (20 * 24 * 60 * 60); // 20 days before
 			await att3.saveTx();
 
-			let ids = await Zotero.Items.getLastRead(libraryID);
+			let ids = await Trellis.Items.getLastRead(libraryID);
 			assert.include(ids, item1.id);
 			assert.include(ids, item2.id);
 			assert.notInclude(ids, item3.id);
@@ -685,7 +685,7 @@ describe("Zotero.Items", function () {
 
 		it("should return empty array when no items have been read", async function () {
 			let group = await createGroup();
-			let ids = await Zotero.Items.getLastRead(group.libraryID);
+			let ids = await Trellis.Items.getLastRead(group.libraryID);
 			assert.lengthOf(ids, 0);
 		});
 
@@ -701,7 +701,7 @@ describe("Zotero.Items", function () {
 			item.deleted = true;
 			await item.saveTx();
 
-			let ids = await Zotero.Items.getLastRead(libraryID);
+			let ids = await Trellis.Items.getLastRead(libraryID);
 			assert.notInclude(ids, item.id);
 		});
 
@@ -720,7 +720,7 @@ describe("Zotero.Items", function () {
 			att2.attachmentLastRead = threeMonthsAgo - (5 * 24 * 60 * 60);
 			await att2.saveTx();
 
-			let ids = await Zotero.Items.getLastRead(libraryID);
+			let ids = await Trellis.Items.getLastRead(libraryID);
 			assert.include(ids, item1.id);
 			assert.include(ids, item2.id);
 		});
@@ -734,7 +734,7 @@ describe("Zotero.Items", function () {
 			att.attachmentLastRead = now;
 			await att.saveTx();
 
-			let ids = await Zotero.Items.getLastRead(libraryID);
+			let ids = await Trellis.Items.getLastRead(libraryID);
 			assert.include(ids, att.id);
 		});
 
@@ -751,7 +751,7 @@ describe("Zotero.Items", function () {
 			await att1.saveTx();
 
 			// First call freezes the cutoff based on this item
-			let ids = await Zotero.Items.getLastRead(libraryID);
+			let ids = await Trellis.Items.getLastRead(libraryID);
 			assert.include(ids, item1.id);
 
 			// Read something new today -- would shift the window if not frozen
@@ -761,7 +761,7 @@ describe("Zotero.Items", function () {
 			await att2.saveTx();
 
 			// item1 should still appear because the cutoff is frozen
-			ids = await Zotero.Items.getLastRead(libraryID);
+			ids = await Trellis.Items.getLastRead(libraryID);
 			assert.include(ids, item1.id);
 			assert.include(ids, item2.id);
 		});
@@ -779,7 +779,7 @@ describe("Zotero.Items", function () {
 			await readAttachment.saveTx();
 			let unreadAttachment = await importPDFAttachment(item);
 
-			let ids = await Zotero.Items.getLastReadAttachmentIDs(libraryID);
+			let ids = await Trellis.Items.getLastReadAttachmentIDs(libraryID);
 			// The read attachment is included, but not its parent or its unread sibling
 			assert.include(ids, readAttachment.id);
 			assert.notInclude(ids, item.id);
@@ -795,7 +795,7 @@ describe("Zotero.Items", function () {
 			att.attachmentLastRead = now;
 			await att.saveTx();
 
-			let ids = await Zotero.Items.getLastReadAttachmentIDs(libraryID);
+			let ids = await Trellis.Items.getLastReadAttachmentIDs(libraryID);
 			assert.include(ids, att.id);
 		});
 	});

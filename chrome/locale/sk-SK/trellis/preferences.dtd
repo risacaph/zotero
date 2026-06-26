@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Možnosti Zotera">
+
+<!ENTITY trellis.preferences.helpButton.label "Pomoc">
+
+<!ENTITY trellis.preferences.default "Predvolené:">
+<!ENTITY trellis.preferences.items "záznamov">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Vlastné...">
+
+<!ENTITY trellis.preferences.prefpane.general "Všeobecné">
+
+<!ENTITY trellis.preferences.interface "Interface">
+<!ENTITY trellis.preferences.fileHandling "Používanie súborov">
+<!ENTITY trellis.preferences.automaticSnapshots "pri vytváraní záznamov z webstránok automaticky urobiť snímku danej stránky">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "pri ukladaní záznamov automaticky priložiť prepojené PDF a ostatné súbory">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Premenovať prelinkované súbory">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Otvoriť PDF pomocou">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Predvolený systém">
+
+<!ENTITY trellis.preferences.miscellaneous "Rôzne">
+<!ENTITY trellis.preferences.autoUpdate "Automaticky hľadať aktualizácie konvertorov a štýlov ">
+<!ENTITY trellis.preferences.updateNow "Aktualizovať teraz">
+<!ENTITY trellis.preferences.reportTranslationFailure "Nahlásiť chybné konvertory">
+<!ENTITY trellis.preferences.parseRISRefer "Použiť Trellis ako predvolený program pre prevzaté BibTeX/RIS/Refer súbory">
+<!ENTITY trellis.preferences.automaticTags "automaticky aplikovať kľúčové slová a predmetové heslá ako značky">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Automaticky odstrániť záznamy vymazané pred viac ako">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "dňami">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Show tabs as">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creator - Year - Title">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Title - Creator - Year">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Názov súboru">
+
+<!ENTITY trellis.preferences.groups "Skupiny">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Pri kopírovaní záznamov medzi knižnicami, zahrnúť:">
+<!ENTITY trellis.preferences.groups.childNotes "vložené poznámky">
+<!ENTITY trellis.preferences.groups.childFiles "vložené snímky a importované súbory">
+<!ENTITY trellis.preferences.groups.annotations "anotácie">
+<!ENTITY trellis.preferences.groups.childLinks "vložené odkazy">
+<!ENTITY trellis.preferences.groups.tags "značky">
+
+<!ENTITY trellis.preferences.feeds "RSS správy">
+<!ENTITY trellis.preferences.feeds.sorting.label "Triedenie:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Najnovšie záznamy ako prvé">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Najstaršie záznamy ako prvé">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Predvolené RSS správy">
+
+<!ENTITY trellis.preferences.prefpane.sync "Synchronizácia">
+<!ENTITY trellis.preferences.sync.username "Meno používateľa:">
+<!ENTITY trellis.preferences.sync.password "Heslo:">
+<!ENTITY trellis.preferences.sync.createAccount "Vytvoriť nový účet">
+<!ENTITY trellis.preferences.sync.lostPassword "Stratené heslo?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Synchronizovať automaticky">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Synchronizovať plno-textový obsah">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis teraz môže synchronizovať plno-textový obsah súborov vo vašich knižniciach Zotera so serverom trellis.org a inými pripojenými zariadeniami, čím sa vám umožňuje ľahké vyhľadávanie vo vašich súboroch, nech ste kdekoľvek. Plno-textový obsah vašich súborov sa verejne nezdieľa.">
+<!ENTITY trellis.preferences.sync.about "O synchronizácii">
+<!ENTITY trellis.preferences.sync.fileSyncing "Synchronizácia súborov">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Na synchronizáciu príloh v Mojej knižnici použiť">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Stiahnuť súbory">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "počas synchronizácie">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "podľa potreby">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Overiť server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Synchronizovať knižnice">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Zvoliť knižnice...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Synchronizovať">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Knižnica">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Nasledujúce operácie treba použiť iba v zriedkavých, špecifických situáciách a nie pre všeobecné odstraňovanie chýb. V mnohých prípadoch obnova zapríčiní dodatočné problémy. Pozri ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Možnosti obnovy synchronizácie">
+<!ENTITY trellis.preferences.sync.reset.warning3 "pre viac informácií.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Vymazať históriu synchronizácie dát">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Zlúčiť lokálne dáta so vzdialenými dátami bez ohľadu na predchádzajúce synchronizácie">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Obnoviť z online knižnice">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Prepísať lokálne dáta Zotera s dátami z online knižnice.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Nahradiť online knižnicu">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Prepísať online knižnicu s lokálnymi dátami Zotera">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Obnoviť históriu synchronizácie súborov">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Porovnať všetky priložené súbory so službou úschovne">
+<!ENTITY trellis.preferences.sync.reset "Obnova">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Obnoviť...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Vyhľadávanie">
+<!ENTITY trellis.preferences.search.fulltextCache "Index pre plnotextové vyhľadávanie">
+<!ENTITY trellis.preferences.search.indexStats "Štatistiky indexu pre plnotextové vyhľadávanie">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indexovaných:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Čiastočne indexovaných:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Neindexovaných:">
+<!ENTITY trellis.preferences.search.indexStats.words "Slov:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Maximálny počet indexovaných znakov z 1 súboru:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Maximálny počet indexovaných strán z jedného súboru:">
+
+<!ENTITY trellis.preferences.prefpane.export "Export">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Možnosti pri citovaní">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Zahrnúť do referencií URL adresy článkov">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Keď táto voľba nie je vybraná, Trellis vloží URL adresy pri citovaní článkov (z odborných a populárnych časopisov alebo novín) iba v prípade, ak článok nemá špecifikovaný rozsah strán.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Rýchle kopírovanie">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Formát záznamu:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Formát poznámky:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopírovať ako HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Nastavenia pre jednotlivé sídla:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "doména/cesta">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(napr. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Formát">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Jazyk">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Zakázať rýchle kopírovanie pri presúvaní viac než">
+
+<!ENTITY trellis.preferences.prefpane.cite "Citovanie">
+<!ENTITY trellis.preferences.cite.wordProcessors "Textové editory">
+<!ENTITY trellis.preferences.styleEditor "Editor štýlov">
+<!ENTITY trellis.preferences.stylePreview "Ukážka štýlov">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Správca štýlov">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Názov">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Aktualizované">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Uložiť do Zotera (ikona v lište pre adresu)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Tabla knižníc Focus">
+<!ENTITY trellis.preferences.keys.quicksearch "Rýchle vyhľadávanie">
+<!ENTITY trellis.preferences.keys.newItem "Vytvoriť nový záznam">
+<!ENTITY trellis.preferences.keys.newNote "Vytvoriť novú poznámku">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Označiť všetky RSS správy ako prečítané/neprečítané">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopírovať vybrané citácie do schránky">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopírovať vybrané záznamy do schránky">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importovať zo schránky">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Zmeny sa prejavia po reštarte">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proxy">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Nastavenia proxy">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis dokáže transparentne presmerovať požiadavky na vybrané sídla cez uložené proxy servery. Viac informácií nájdete v">
+<!ENTITY trellis.preferences.proxies.desc_link "dokumentácii k proxy">
+<!ENTITY trellis.preferences.proxies.desc_after_link ".">
+<!ENTITY trellis.preferences.proxies.transparent "Transparentne presmerovať požiadavky cez v minulosti použité proxy">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Automaticky rozpoznať proxy zdroje ">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Zobraziť upozornenia pri presmerovaní cez proxy">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Vypnúť presmerovanie proxy, ak názov mojej domény obsahuje ">
+<!ENTITY trellis.preferences.proxies.configured "Nastavené proxy">
+<!ENTITY trellis.preferences.proxies.hostname "Názov sídla">
+<!ENTITY trellis.preferences.proxies.scheme "Schéma">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Použiť pre viac sídiel">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Automaticky priradiť nové servery">
+<!ENTITY trellis.preferences.proxies.variables "Vo vašej proxy schéme môžete použiť nasledujúce premenné:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Názov sídla, ku ktorému sa má pripájať cez proxy server (napr. www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Cesta k stránke, ku ktorej sa má pripájať cez proxy bez úvodnej lomky (napr. about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - cesta k adresáru (napr. about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - meno súboru (napr. index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - ľubovoľný reťazec">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Pokročilé">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Súbory a adresáre">
+<!ENTITY trellis.preferences.advanced.keys "Klávesové skratky">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Rozšírená konfigurácia">
+
+<!ENTITY trellis.preferences.prefpane.locate "Nájsť">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Správca motora vyhľadávania článkov">
+<!ENTITY trellis.preferences.locate.description "Popis">
+<!ENTITY trellis.preferences.locate.name "Meno">
+<!ENTITY trellis.preferences.locate.addDescription "Na pridanie vyhľadávacieho motora, ktorý nie je v zozname, navštívte želaný vyhľadávací motor vo svojom prehliadači a vyberte &quot;Pridať&quot; z ponuky Zotera Nájsť.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Obnoviť predvolené">
+
+<!ENTITY trellis.preferences.charset "Kódovanie znakov">
+<!ENTITY trellis.preferences.charset.importCharset "Kódovanie pri importovaní">
+<!ENTITY trellis.preferences.charset.displayExportOption "Zobraziť voľbu kódovania pri exportovaní">
+
+<!ENTITY trellis.preferences.dataDir "Umiestnenie dátového adresára">
+<!ENTITY trellis.preferences.dataDir.useProfile "Použiť adresár, do ktorého Firefox ukladá používateľské dáta">
+<!ENTITY trellis.preferences.dataDir.custom "Vlastné:">
+<!ENTITY trellis.preferences.dataDir.choose "Zvoliť...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(určený v príkazovom riadku)">
+<!ENTITY trellis.preferences.dataDir.reveal "Zobraziť adresár s dátami">
+<!ENTITY trellis.preferences.dataDir.migrate "Presunúť na nové predvolené umiestnenie...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Základný adresár prepojených príloh">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis použije relatívne cesty pre prepojené súbory príloh vo vnútri základného adresára, čím vám sprístupní súbory na rôznych počítačoch pokiaľ štruktúra súborov vo vnútri základného adresára zostáva rovnaká.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Základný adresár:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Zvoliť...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Prepnúť na absolútne cesty...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Údržba databázy">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Skontrolovať integritu databázy">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Obnoviť konvertory a štýly...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Obnoviť konvertory...">
+
+<!ENTITY trellis.preferences.configEditor "Editor konfigurácie">

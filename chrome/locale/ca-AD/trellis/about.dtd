@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "versió">
+<!ENTITY trellis.whatsNew "Què hi ha de nou">
+<!ENTITY trellis.createdby "Creat per:">
+<!ENTITY trellis.director "Director:">
+<!ENTITY trellis.directors "Directors:">
+<!ENTITY trellis.developers "Desenvolupadors:">
+<!ENTITY trellis.alumni "Alumnes:">
+<!ENTITY trellis.about.localizations "Traduccions:">
+<!ENTITY trellis.about.additionalSoftware "Programari de tercers:">
+<!ENTITY trellis.thanks "Agraïments especials:">
+<!ENTITY trellis.about.close "Tanca">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Més crèdits i reconeixements">
+<!ENTITY trellis.citationProcessing "Processament de bibliografia i cites">

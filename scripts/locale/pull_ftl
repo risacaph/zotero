@@ -9,12 +9,12 @@ for i in `ls -d */`; do
 	if [ $i = 'en-US' ]; then
 		continue
 	fi
-	touch ${i}zotero/zotero.json
+	touch ${i}trellis/trellis.json
 done
 
 cd $ROOT_DIR
-tx pull -t -f -m sourceastranslation -r zotero.zoterojson
+tx pull -t -f -m sourceastranslation -r trellis.trellisjson
 
 npm run localize-ftl
 
-find $ROOT_DIR/chrome/locale -type f -name 'zotero.json' -not -path '*/en-US/*' -delete
+find $ROOT_DIR/chrome/locale -type f -name 'trellis.json' -not -path '*/en-US/*' -delete

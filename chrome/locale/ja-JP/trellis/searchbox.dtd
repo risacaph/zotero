@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "検索式名：">
+
+<!ENTITY trellis.search.searchInLibrary "ライブラリの中を検索">
+
+<!ENTITY trellis.search.joinMode.prefix "Match">
+<!ENTITY trellis.search.joinMode.any "のいずれか">
+<!ENTITY trellis.search.joinMode.all "all">
+<!ENTITY trellis.search.joinMode.suffix "を満たす:">
+
+<!ENTITY trellis.search.recursive.label "サブコレクションを検索する">
+<!ENTITY trellis.search.noChildren "最上位階層のアイテムのみを表示">
+<!ENTITY trellis.search.includeParentsAndChildren "一致するアイテムの親アイテムと子アイテムを表示">
+
+<!ENTITY trellis.search.textModes.phrase "フレーズ">
+<!ENTITY trellis.search.textModes.phraseBinary "Phrase (incl. binary files)">
+<!ENTITY trellis.search.textModes.regexp "正規表現">
+<!ENTITY trellis.search.textModes.regexpCS "正規表現（大文字小文字の区別あり）">
+
+<!ENTITY trellis.search.date.units.days "日間">
+<!ENTITY trellis.search.date.units.months "ヶ月間">
+<!ENTITY trellis.search.date.units.years "年間">
+
+<!ENTITY trellis.search.search "検索実行">
+<!ENTITY trellis.search.clear "消去">
+<!ENTITY trellis.search.saveSearch "検索条件を保存">

@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Meno:">
+
+<!ENTITY trellis.search.searchInLibrary "Hľadať v knižnici:">
+
+<!ENTITY trellis.search.joinMode.prefix "Zodpovedá">
+<!ENTITY trellis.search.joinMode.any "ktorémukoľvek">
+<!ENTITY trellis.search.joinMode.all "všetkým">
+<!ENTITY trellis.search.joinMode.suffix "z nasledujúcich pravidiel">
+
+<!ENTITY trellis.search.recursive.label "Hľadať v podadresároch">
+<!ENTITY trellis.search.noChildren "Zobrazovať iba záznamy najvyššej úrovne">
+<!ENTITY trellis.search.includeParentsAndChildren "U zhodných záznamov zobraziť ich nadradené aj podradené úrovne">
+
+<!ENTITY trellis.search.textModes.phrase "Výraz">
+<!ENTITY trellis.search.textModes.phraseBinary "Výraz (vrátane binárnych súborov)">
+<!ENTITY trellis.search.textModes.regexp "regulárny výraz">
+<!ENTITY trellis.search.textModes.regexpCS "regulárny výraz (rozliš. malé a veľké)">
+
+<!ENTITY trellis.search.date.units.days "dni">
+<!ENTITY trellis.search.date.units.months "mesiace">
+<!ENTITY trellis.search.date.units.years "roky">
+
+<!ENTITY trellis.search.search "Hľadať">
+<!ENTITY trellis.search.clear "Vymazať">
+<!ENTITY trellis.search.saveSearch "Uložiť vyhľadávanie">

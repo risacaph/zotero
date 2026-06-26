@@ -1,7 +1,7 @@
 describe("HiddenBrowser", function() {
 	var { HttpServer } = ChromeUtils.importESModule("chrome://remote/content/server/httpd.sys.mjs");;
 	const { HiddenBrowser } = ChromeUtils.importESModule(
-		"chrome://zotero/content/HiddenBrowser.mjs"
+		"chrome://trellis/content/HiddenBrowser.mjs"
 	);
 	
 	describe("#create()", function () {
@@ -38,7 +38,7 @@ describe("HiddenBrowser", function() {
 		it("should fail on non-2xx response with requireSuccessfulStatus", async function () {
 			let browser = new HiddenBrowser();
 			let e = await getPromiseError(browser.load(baseURL + 'nonexistent', { requireSuccessfulStatus: true }));
-			assert.instanceOf(e, Zotero.HTTP.UnexpectedStatusException);
+			assert.instanceOf(e, Trellis.HTTP.UnexpectedStatusException);
 		});
 		
 		it("should prevent a remote request with blockRemoteResources", async function () {
@@ -107,12 +107,12 @@ describe("HiddenBrowser", function() {
 			);
 
 			// Don't show file picker on download - prevents tests from hanging on failure
-			Zotero.Prefs.set('browser.download.useDownloadDir', true, true);
+			Trellis.Prefs.set('browser.download.useDownloadDir', true, true);
 		});
 
 		after(async function () {
 			await new Promise(resolve => httpd.stop(resolve));
-			Zotero.Prefs.clear('browser.download.useDownloadDir', true);
+			Trellis.Prefs.clear('browser.download.useDownloadDir', true);
 		});
 
 		it("should not download a binary file", async function () {

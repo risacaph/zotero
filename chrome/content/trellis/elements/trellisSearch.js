@@ -1,0 +1,1695 @@
+/*
+	***** BEGIN LICENSE BLOCK *****
+	
+	Copyright © 2022 Corporation for Digital Scholarship
+					 Vienna, Virginia, USA
+					 https://www.trellis.org
+	
+	This file is part of Trellis.
+	
+	Trellis is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	Trellis is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+	
+	You should have received a copy of the GNU Affero General Public License
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+	
+	***** END LICENSE BLOCK *****
+*/
+
+"use strict";
+
+{
+	class SearchElementBase extends XULElementBase {
+		get stylesheets() {
+			return [
+				'chrome://global/skin/global.css',
+				'chrome://trellis-platform/content/trellisSearch.css'
+			];
+		}
+	}
+
+	class TrellisSearch extends SearchElementBase {
+		content = MozXULElement.parseXULToFragment(`
+			<search-condition-group root="true"/>
+			<vbox id="search-binding-hint" hidden="true"/>
+			<hbox id="search-option-checkboxes">
+				<checkbox id="recursiveCheckbox" label="&trellis.search.recursive.label;" native="true"/>
+			</hbox>
+			<hbox id="search-legacy-options" align="center" hidden="true">
+				<checkbox id="includeParentsAndChildrenCheckbox" label="&trellis.search.includeParentsAndChildren;" native="true"/>
+			</hbox>
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
+
+		get search() {
+			return this.searchRef;
+		}
+
+		set search(val) {
+			this.searchRef = val;
+			// Setting condition controls' values during a render shouldn't trigger a
+			// rebuild of the search from the half-built tree
+			this._rendering = true;
+			try {
+				this.renderConditions();
+			}
+			finally {
+				this._rendering = false;
+			}
+		}
+
+		init() {
+			this.rootGroup = this.querySelector('search-condition-group[root]');
+			this.addEventListener('keypress', event => this.handleKeyPress(event));
+			// Re-evaluate which remove buttons are enabled and which groups can bind to the
+			// same descendant as the conditions change
+			this.addEventListener('input', () => {
+				this.updateRemoveButtons();
+				this.updateBindingMenus();
+				this.updateBindingHint();
+				this.updateLevelWarning();
+			});
+			this.addEventListener('command', () => {
+				this.updateRemoveButtons();
+				this.updateBindingMenus();
+				this.updateBindingHint();
+				this.updateLevelWarning();
+			});
+		}
+
+		// Build the condition tree (root group, nested groups, and search-global
+		// checkboxes) from the search's flat condition list
+		renderConditions() {
+			var root = this.rootGroup;
+
+			this.querySelector('#recursiveCheckbox').checked = false;
+			// 'Include parent and child items' is a legacy hack subsumed by result levels;
+			// its checkbox is shown only for an existing search that still carries the flag
+			this.querySelector('#includeParentsAndChildrenCheckbox').checked = false;
+			this.querySelector('#search-legacy-options').hidden = true;
+
+			root.clear();
+
+			// Walk the flat conditions, pushing/popping a group stack on the group
+			// markers. A 'joinMode' applies to the group on top of the stack; anything
+			// else becomes a condition row or a nested group within it.
+			var stack = [root];
+			var conditions = this.search.getConditions();
+			for (let id in conditions) {
+				let condition = conditions[id];
+				switch (condition.condition) {
+					case 'recursive':
+						this.querySelector('#recursiveCheckbox').checked = condition.operator == 'true';
+						continue;
+
+					// Legacy "show only top-level items" is exactly result level = item, so
+					// fold it into the root result level rather than a checkbox
+					case 'noChildren':
+						if (condition.operator == 'true') {
+							root.resultLevel = 'item';
+						}
+						continue;
+
+					// Legacy include-parents-and-children: keep it editable for searches that
+					// have it, but don't offer it on new ones
+					case 'includeParentsAndChildren':
+						this.querySelector('#includeParentsAndChildrenCheckbox').checked
+							= condition.operator == 'true';
+						if (condition.operator == 'true') {
+							this.querySelector('#search-legacy-options').hidden = false;
+						}
+						continue;
+
+					case 'joinMode':
+						stack[stack.length - 1].joinMode = condition.operator;
+						continue;
+
+					case 'resultLevel':
+						stack[stack.length - 1].resultLevel = condition.operator;
+						continue;
+
+					case 'groupStart': {
+						let group = document.createXULElement('search-condition-group');
+						stack[stack.length - 1].conditionsContainer.appendChild(group);
+						stack.push(group);
+						continue;
+					}
+
+					case 'groupEnd':
+						if (stack.length > 1) {
+							stack.pop();
+						}
+						continue;
+
+					default:
+						stack[stack.length - 1].addCondition(condition);
+				}
+			}
+
+			// The root always shows at least one condition, even for an empty search
+			if (!root.conditionsContainer.childElementCount) {
+				root.addCondition();
+			}
+
+			this.updateRemoveButtons();
+			this.updateBindingMenus();
+			this.updateBindingHint();
+			this.updateLevelWarning();
+		}
+
+		// Refresh each nested group's same-entity binding menu (visibility and options)
+		updateBindingMenus() {
+			for (let group of this.querySelectorAll('search-condition-group')) {
+				group.updateBindingMenu();
+			}
+		}
+
+		// Refresh every group's level warning. Each group flags only its own conditions, so the
+		// message sits on the group whose conditions actually conflict and speaks to that group's
+		// controls (see SearchConditionGroup.updateLevelWarning).
+		updateLevelWarning() {
+			for (let group of this.querySelectorAll('search-condition-group')) {
+				group.updateLevelWarning();
+			}
+		}
+
+		// Offer to bind ungrouped sibling conditions at the root. The root can't bind itself
+		// (it returns the result level), so 2+ of its conditions sharing a level below the
+		// result level are wrappable into a "same attachment" group -- surfaced as a hint
+		// with a button per such level. Nested groups use their own binding menu instead.
+		updateBindingHint() {
+			var hint = this.querySelector('#search-binding-hint');
+			var resultLevel = this.rootGroup.resultLevel;
+			var counts = {};
+			for (let row of this.rootGroup.conditionsContainer.children) {
+				// Skip rows the user hasn't filled in yet, so a freshly added (or just-retyped)
+				// condition doesn't trigger the hint until it actually has a value
+				if (row.localName != 'trellissearchcondition' || !row.isPopulated()) {
+					continue;
+				}
+				let level = row.conditionLevel;
+				if (Trellis.Search._isAncestorLevel(resultLevel, level)) {
+					counts[level] = (counts[level] || 0) + 1;
+				}
+			}
+			var levels = ['attachment', 'note', 'annotation'].filter(l => counts[l] >= 2);
+			// Only rebuild when the set of bindable levels changes, so re-running this on every
+			// keystroke doesn't recreate the rows and make the hint flicker.
+			let key = levels.join(',');
+			if (key === this._bindingHintKey) {
+				return;
+			}
+			this._bindingHintKey = key;
+			hint.replaceChildren();
+			if (!levels.length) {
+				hint.hidden = true;
+				return;
+			}
+			// One self-contained line per level: a statement naming that level and a button to
+			// group its conditions into one entity. Separate lines when 2+ levels each qualify.
+			for (let level of levels) {
+				let row = document.createXULElement('hbox');
+				row.setAttribute('align', 'center');
+				let label = document.createXULElement('label');
+				label.setAttribute('data-l10n-id', 'advanced-search-binding-hint-' + level);
+				let button = document.createXULElement('button');
+				button.setAttribute('data-l10n-id', 'advanced-search-bind-same-' + level);
+				button.addEventListener('command', () => this.rootGroup.bindSameEntity(level));
+				row.append(label, button);
+				hint.append(row);
+			}
+			hint.hidden = false;
+		}
+
+		// Regenerate the search's flat condition list from the current tree. The DOM is
+		// the source of truth: on any edit we walk the groups in order and rebuild
+		// search._conditions from scratch.
+		updateSearch() {
+			if (this._rendering || !this.search) {
+				return;
+			}
+
+			var flat = [];
+			this.collectGroup(this.rootGroup, flat, true);
+
+			// Search-global options. noChildren is no longer emitted here -- it's carried by
+			// the result level (resultLevel = item). includeParentsAndChildren is emitted only when
+			// its legacy checkbox is present and still checked, so unchecking it drops it.
+			if (this.querySelector('#recursiveCheckbox').checked) {
+				flat.push({ condition: 'recursive', operator: 'true', value: null });
+			}
+			if (this.querySelector('#includeParentsAndChildrenCheckbox').checked) {
+				flat.push({ condition: 'includeParentsAndChildren', operator: 'true', value: null });
+			}
+
+			this.rebuildConditions(flat);
+
+			// Any mutation runs through here (including paths whose menus stopPropagation, like
+			// changing or removing a condition), so refresh the derived UI from one place
+			this.updateBindingMenus();
+			this.updateBindingHint();
+			this.updateLevelWarning();
+		}
+
+		// Append a group's serialized form to `flat`. The root contributes its
+		// conditions directly; a nested group is wrapped in groupStart/groupEnd markers.
+		// A 'joinMode' marker is emitted only for 'any'; 'all' is the default and is omitted.
+		collectGroup(group, flat, isRoot) {
+			if (!isRoot) {
+				flat.push({ condition: 'groupStart', operator: 'true', value: '' });
+			}
+			if (group.joinMode == 'any') {
+				flat.push({ condition: 'joinMode', operator: 'any', value: null });
+			}
+			// A concrete result level is emitted as a marker inside the group, like joinMode; 'any'
+			// (the default) is omitted
+			if (group.resultLevel && group.resultLevel != 'any') {
+				flat.push({ condition: 'resultLevel', operator: group.resultLevel, value: null });
+			}
+			for (let child of group.conditionsContainer.children) {
+				if (child.localName == 'trellissearchcondition') {
+					let data = child.getConditionData();
+					if (data) {
+						flat.push(data);
+					}
+				}
+				else if (child.localName == 'search-condition-group') {
+					this.collectGroup(child, flat, false);
+				}
+			}
+			if (!isRoot) {
+				flat.push({ condition: 'groupEnd', operator: 'true', value: '' });
+			}
+		}
+
+		rebuildConditions(flat) {
+			var search = this.search;
+			var count = Object.keys(search.getConditions()).length;
+			// removeCondition() renumbers the remaining conditions, so 0 is always the
+			// next one to remove
+			for (let i = 0; i < count; i++) {
+				search.removeCondition(0);
+			}
+			for (let condition of flat) {
+				search.addCondition(condition.condition, condition.operator, condition.value);
+			}
+		}
+
+		// Enable the remove (-) button on each condition. The root's last remaining
+		// condition can be removed only once it's populated, which resets it to the
+		// default empty condition.
+		updateRemoveButtons() {
+			var rootContainer = this.rootGroup.conditionsContainer;
+			var loneRootCondition = rootContainer.childElementCount == 1
+					&& rootContainer.firstElementChild.localName == 'trellissearchcondition'
+				? rootContainer.firstElementChild
+				: null;
+			for (let row of this.querySelectorAll('trellissearchcondition')) {
+				if (row == loneRootCondition && !row.isPopulated()) {
+					row.disableRemoveButton();
+				}
+				else {
+					row.enableRemoveButton();
+				}
+			}
+		}
+
+		// Remove a condition row, pruning any groups it empties. The root always keeps
+		// at least one condition, so emptying it resets it to a single empty default.
+		removeRow(row, focusRemoveButton) {
+			var group = row.closest('search-condition-group');
+			// Remember the row's place so focus can move there after a keyboard removal
+			var index = [...group.conditionsContainer.children].indexOf(row);
+			row.remove();
+			// A group left with no conditions is removed, bubbling up toward the root
+			while (!group.isRoot && !group.conditionsContainer.childElementCount) {
+				let parent = group.parentElement.closest('search-condition-group');
+				group.remove();
+				group = parent;
+			}
+
+			var reset = this.ensureNotEmpty();
+			this.updateSearch();
+			this.updateRemoveButtons();
+			if (reset) {
+				// The removed button is gone, so move focus to the new condition's drop-down
+				this.rootGroup.conditionsContainer.firstElementChild
+					.querySelector('#conditionsmenu').focus();
+			}
+			else if (focusRemoveButton && group.isConnected) {
+				// After a keyboard removal, move focus to the remove button of the row
+				// that took the removed row's place, or the last row if the removed row
+				// was last, so conditions can be deleted in succession from the keyboard
+				let rows = group.conditionsContainer.children;
+				let next = rows[index] || rows[rows.length - 1];
+				// A nested group may now hold that slot; focus its first condition
+				if (next && next.localName == 'search-condition-group') {
+					next = next.querySelector('trellissearchcondition');
+				}
+				if (next) {
+					let button = next.querySelector('#remove');
+					// A disabled remove button can't take focus, so fall back to the drop-down
+					let target = button.getAttribute('disabled') == 'true'
+						? next.querySelector('#conditionsmenu')
+						: button;
+					setTimeout(() => target.focus({ focusVisible: true }));
+				}
+			}
+		}
+
+		// The root always shows at least one condition. Returns true if a default
+		// condition had to be added back.
+		ensureNotEmpty() {
+			if (!this.rootGroup.conditionsContainer.childElementCount) {
+				this.rootGroup.addCondition();
+				return true;
+			}
+			return false;
+		}
+
+		handleKeyPress(event) {
+			// Space/Enter on toolbarbutton will click it
+			if (event.target.tagName == "toolbarbutton" && [" ", "Enter"].includes(event.key)) {
+				event.target.click();
+				return;
+			}
+			switch (event.keyCode) {
+				case event.DOM_VK_RETURN:
+					this.active = true;
+
+					if (event.shiftKey) {
+						// Add to the group holding the focused control, falling back to the root
+						let group = event.target.closest
+							&& event.target.closest('search-condition-group');
+						let row = (group || this.rootGroup).addCondition();
+						this.updateSearch();
+						this.updateRemoveButtons();
+						// Move focus to the new row's drop-down so it can be set from the keyboard
+						this.focusNewCondition(row);
+					}
+					else {
+						this.doCommand();
+					}
+					break;
+			}
+		}
+
+		// Move focus to a newly added condition's drop-down. Deferred so it isn't
+		// immediately undone by the platform's own handling of the key event that
+		// triggered the addition (which otherwise keeps focus on the source element).
+		focusNewCondition(row) {
+			let menu = row.querySelector('#conditionsmenu');
+			setTimeout(() => menu.focus({ focusVisible: true }));
+		}
+	}
+	customElements.define("trellissearch", TrellisSearch);
+
+	class SearchConditionGroup extends SearchElementBase {
+		content = MozXULElement.parseXULToFragment(`
+			<groupbox class="search-condition-group">
+				<caption align="center">
+					<label class="result-level-prefix"/>
+					<menulist class="result-level-menu" native="true" data-l10n-id="advanced-search-result-level-menu">
+						<menupopup>
+							<menuitem value="any" data-l10n-id="advanced-search-result-level-any" selected="true"/>
+							<menuitem value="item" data-l10n-id="advanced-search-result-level-item"/>
+							<menuitem value="attachment" data-l10n-id="advanced-search-result-level-attachment"/>
+							<menuitem value="note" data-l10n-id="advanced-search-result-level-note"/>
+							<menuitem value="annotation" data-l10n-id="advanced-search-result-level-annotation"/>
+						</menupopup>
+					</menulist>
+					<label class="join-mode-prefix" value="&trellis.search.joinMode.prefix;"/>
+					<menulist class="join-mode-menu" native="true" aria-label="&trellis.search.joinMode.prefix;">
+						<menupopup>
+							<menuitem label="&trellis.search.joinMode.any;" value="any"/>
+							<menuitem label="&trellis.search.joinMode.all;" value="all" selected="true"/>
+						</menupopup>
+					</menulist>
+					<label class="join-mode-following" data-l10n-id="advanced-search-of-the-following" hidden="true"/>
+					<menulist class="binding-menu" native="true" hidden="true" data-l10n-id="advanced-search-binding-menu">
+						<menupopup/>
+					</menulist>
+					<label class="join-mode-suffix" value="&trellis.search.joinMode.suffix;"/>
+					<spacer flex="1"/>
+					<hbox class="group-actions">
+						<toolbarbutton class="remove-group trellis-clicky trellis-clicky-minus" tabindex="0" hidden="true" data-l10n-id="advanced-search-remove-group-btn" onclick="this.closest('search-condition-group').onRemoveGroupClicked()"/>
+						<toolbarbutton class="add-condition trellis-clicky trellis-clicky-plus" tabindex="0" data-l10n-id="advanced-search-add-btn" onclick="this.closest('search-condition-group').onAddSiblingClicked()"/>
+						<html:div class="group-action-placeholder"/>
+					</hbox>
+				</caption>
+				<vbox class="conditions"/>
+				<hbox class="level-warning" hidden="true">
+					<description/>
+				</hbox>
+			</groupbox>
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
+
+		init() {
+			this.joinMenu = this.querySelector('.join-mode-menu');
+			this.resultLevelMenu = this.querySelector('.result-level-menu');
+			this.bindingMenu = this.querySelector('.binding-menu');
+			this.conditionsContainer = this.querySelector('.conditions');
+			// The group's own warning element, stashed at init to avoid re-querying.
+			this.levelWarning = this.querySelector('.level-warning');
+
+			// The result level is tracked here and reflected to whichever control is active: the root's
+			// result-level menu ("Find ..."), or a nested group's binding menu ("... in the
+			// same attachment"). collectGroup/renderConditions read and write `resultLevel`.
+			this._resultLevel = 'any';
+
+			// The root surfaces the result-level menu; a nested group hides it and instead
+			// shows a binding menu (built on demand by updateBindingMenu) when it holds
+			// conditions that can be bound to the same descendant.
+			this.resultLevelMenu.value = 'any';
+			var scopePrefix = this.querySelector('.result-level-prefix');
+			if (this.isRoot) {
+				// Read as one sentence: "Find [Top-level items] matching [all] of the following:"
+				scopePrefix.setAttribute('data-l10n-id', 'advanced-search-result-level-prefix-root');
+				this.querySelector('.join-mode-prefix').setAttribute('data-l10n-id', 'advanced-search-join-prefix-root');
+				this.resultLevelControl = this.resultLevelMenu;
+			}
+			else {
+				// Nested: "Match [all] of the following:" -- the result level lives on the
+				// root. The binding menu (and its hiding of the suffix) is set up in
+				// updateBindingMenu().
+				this.resultLevelMenu.hidden = true;
+				scopePrefix.hidden = true;
+				this.resultLevelControl = this.bindingMenu;
+			}
+
+			// Keep the stored result level in sync when the user changes the control (the
+			// command target may be the menulist or a menuitem inside it), so a nested
+			// binding that later hides still round-trips its last value
+			this.addEventListener('command', (event) => {
+				if (this.resultLevelControl && this.resultLevelControl.contains(event.target)) {
+					this._resultLevel = this.resultLevelControl.value || 'any';
+				}
+			});
+			// At init the group has no nested groups yet, so these resolve to its own
+			// caption buttons
+			this.addConditionButton = this.querySelector('.add-condition');
+			this.removeGroupButton = this.querySelector('.remove-group');
+
+			// The root group can't be removed and has no parent to add a sibling into, so
+			// its caption's remove ("-") and add ("+") buttons stay hidden; a nested group
+			// shows both
+			if (this.isRoot) {
+				this.addConditionButton.hidden = true;
+			}
+			else {
+				this.removeGroupButton.hidden = false;
+			}
+		}
+
+		get isRoot() {
+			return this.hasAttribute('root');
+		}
+
+		get searchElement() {
+			return this.closest('trellissearch');
+		}
+
+		get search() {
+			return this.searchElement && this.searchElement.search;
+		}
+
+		get joinMode() {
+			return this.joinMenu.value;
+		}
+
+		set joinMode(val) {
+			this.joinMenu.value = val;
+		}
+
+		// The group's result level: 'any' (no level constraint -- mixed result for the root,
+		// plain grouping for a nested group) or a concrete 'item'/'attachment'/'note'/
+		// 'annotation' level for cross-level mapping. The active control's current
+		// selection is the source of truth; fall back to the stored value for a nested
+		// binding menu that's hidden (it has no options to read).
+		get resultLevel() {
+			if (this.resultLevelControl && !this.resultLevelControl.hidden) {
+				return this.resultLevelControl.value || 'any';
+			}
+			return this._resultLevel;
+		}
+
+		set resultLevel(val) {
+			this._resultLevel = val || 'any';
+			// Reflect to the active control if it currently offers a matching option; the
+			// binding menu's options are (re)built by updateBindingMenu()
+			let popup = this.resultLevelControl && this.resultLevelControl.querySelector('menupopup');
+			if (popup && [...popup.children].some(item => item.value == this._resultLevel)) {
+				this.resultLevelControl.value = this._resultLevel;
+			}
+		}
+
+		// Build the nested-group binding menu ("... in the same attachment"), shown only
+		// when binding is meaningful: 2+ conditions sharing a level below the result level.
+		updateBindingMenu() {
+			if (this.isRoot) {
+				return;
+			}
+			let resultLevel = 'any';
+			if (this.searchElement && this.searchElement.rootGroup) {
+				resultLevel = this.searchElement.rootGroup.resultLevel;
+			}
+			// Count this group's direct condition rows by level, keeping only levels below the
+			// result level -- those are what a group can bind to the same entity
+			let counts = {};
+			for (let row of this.conditionsContainer.children) {
+				// Skip rows the user hasn't filled in yet, so a freshly added (or just-retyped)
+				// condition doesn't trigger the hint until it actually has a value
+				if (row.localName != 'trellissearchcondition' || !row.isPopulated()) {
+					continue;
+				}
+				let level = row.conditionLevel;
+				if (Trellis.Search._isAncestorLevel(resultLevel, level)) {
+					counts[level] = (counts[level] || 0) + 1;
+				}
+			}
+			let levels = Object.keys(counts);
+			// Binding is only meaningful when some level has 2+ conditions. When it isn't,
+			// hide the menu but preserve any stored level (a single descendant condition
+			// maps the same way bound or not, so it round-trips losslessly).
+			if (!levels.some(l => counts[l] >= 2)) {
+				this.bindingMenu.hidden = true;
+				// Plain group: "Match [all] of the following:" (the suffix carries the colon)
+				this.querySelector('.join-mode-suffix').hidden = false;
+				this.querySelector('.join-mode-following').hidden = true;
+				this._bindingMenuKey = null;
+				return;
+			}
+			// Drop a stored binding whose level is no longer offered
+			if (this._resultLevel != 'any' && !levels.includes(this._resultLevel)) {
+				this._resultLevel = 'any';
+			}
+
+			// Rebuild the popup only when its option set changes. Rebuilding it on every refresh
+			// would replace the menuitems mid-selection -- when the change came from this menu
+			// itself -- and wedge the drop-down.
+			let optionLevels = ['attachment', 'note', 'annotation'].filter(l => levels.includes(l));
+			let key = optionLevels.join(',');
+			if (key !== this._bindingMenuKey) {
+				this._bindingMenuKey = key;
+				let popup = this.bindingMenu.querySelector('menupopup');
+				popup.replaceChildren();
+				let separate = document.createXULElement('menuitem');
+				separate.setAttribute('value', 'any');
+				separate.setAttribute('data-l10n-id', 'advanced-search-binding-separate');
+				popup.append(separate);
+				for (let level of optionLevels) {
+					let item = document.createXULElement('menuitem');
+					item.setAttribute('value', level);
+					item.setAttribute('data-l10n-id', 'advanced-search-binding-same-' + level);
+					popup.append(item);
+				}
+			}
+			this.bindingMenu.hidden = false;
+			// Bound group: "Match [all] of the following in the same attachment". The binding
+			// phrase ends the caption, so swap the legacy "of the following:" (with its colon)
+			// for the colon-less "of the following" that precedes the binding menu.
+			this.querySelector('.join-mode-suffix').hidden = true;
+			this.querySelector('.join-mode-following').hidden = false;
+			this.bindingMenu.value = this._resultLevel;
+		}
+
+		// The level this group's conditions are actually matched at: its own result level (the
+		// result type for the root, the binding for a nested group) if set, otherwise the level
+		// it inherits from its enclosing group. Mirrors the engine, where an unbound
+		// ("separately") group maps its conditions to the parent's level rather than
+		// combining them at no level.
+		effectiveLevel() {
+			if (this.resultLevel != 'any') {
+				return this.resultLevel;
+			}
+			let parent = this.parentElement && this.parentElement.closest('search-condition-group');
+			return parent ? parent.effectiveLevel() : this.resultLevel;
+		}
+
+		// Warn when this group's own conditions can never combine: a child whose level can't
+		// reach the group's effective level, or -- with no level anywhere up the chain (a mixed
+		// result type) -- an "all" of children on different item-hierarchy branches. Each group
+		// flags only its own conditions, so the message sits where the problem is.
+		updateLevelWarning() {
+			let ownLevel = this.resultLevel;
+			let level = this.effectiveLevel();
+			// This group's direct children's levels: a populated condition row's own level (an
+			// empty row doesn't warn until it's filled in) or a nested group's binding. 'any'
+			// combines with anything, so drop it.
+			let childLevels = [...this.conditionsContainer.children].map((child) => {
+				if (child.localName == 'trellissearchcondition') {
+					return child.isPopulated() ? child.conditionLevel : null;
+				}
+				if (child.localName == 'search-condition-group') {
+					return child.resultLevel;
+				}
+				return null;
+			}).filter(l => l && l != 'any');
+
+			let messageID = null;
+			let args = null;
+			let resultTypeArgs = () => {
+				let item = this.resultLevelMenu.querySelector('menuitem[value="item"]');
+				return { topLevelItems: item ? item.getAttribute('label') : 'top-level items' };
+			};
+			if (level != 'any') {
+				// A child that can't reach the effective level can never match here
+				if (childLevels.some(l => !this.levelsCombine(l, level))) {
+					if (!this.isRoot && ownLevel != 'any') {
+						// This group's own binding is the constraint, so "match separately" fixes it
+						messageID = 'advanced-search-group-warning-unreachable';
+						args = { entity: ownLevel };
+					}
+					else {
+						// The result type (this group's, or one it inherits) is the constraint
+						messageID = 'advanced-search-level-warning-unreachable';
+						args = resultTypeArgs();
+					}
+				}
+			}
+			else if (this.joinMode == 'all' && new Set(childLevels).size >= 2) {
+				// No level anywhere up the chain (mixed result type): ANDing conditions on
+				// different branches can never all match
+				let anyItem = this.joinMenu.querySelector('menuitem[value="any"]');
+				let matchAny = anyItem ? anyItem.getAttribute('label') : 'any';
+				if (this.isRoot) {
+					messageID = 'advanced-search-level-warning-mixed';
+					args = { matchAny, ...resultTypeArgs() };
+				}
+				else {
+					// Reachable only when the result type is "any", so setting one fixes it too
+					messageID = 'advanced-search-group-warning-mixed';
+					args = { matchAny, ...resultTypeArgs() };
+				}
+			}
+
+			// Only touch the DOM when the message changes, so re-running on every keystroke
+			// doesn't re-translate the string and make the warning flicker.
+			let key = messageID ? messageID + '\n' + JSON.stringify(args) : '';
+			if (key === this._levelWarningKey) {
+				return;
+			}
+			this._levelWarningKey = key;
+			if (messageID) {
+				document.l10n.setAttributes(this.levelWarning.querySelector('description'), messageID, args);
+			}
+			this.levelWarning.hidden = !messageID;
+		}
+
+		// Two levels combine if one is an ancestor of the other (or equal); 'any' matches any.
+		levelsCombine(a, b) {
+			return a == 'any' || b == 'any' || a == b
+				|| Trellis.Search._isAncestorLevel(a, b) || Trellis.Search._isAncestorLevel(b, a);
+		}
+
+		// Wrap this group's direct condition rows that match `level` into a new child group
+		// bound to that level ("the same attachment"). Used by the discoverability hint.
+		// Rows are rebuilt from their data rather than moved, since detaching a custom element
+		// wipes its contents.
+		bindSameEntity(level) {
+			let rows = [...this.conditionsContainer.children].filter(
+				row => row.localName == 'trellissearchcondition' && row.conditionLevel == level);
+			if (rows.length < 2) {
+				return;
+			}
+			let newGroup = document.createXULElement('search-condition-group');
+			this.conditionsContainer.insertBefore(newGroup, rows[0]);
+			for (let row of rows) {
+				let data = row.getConditionData();
+				let ref;
+				if (data) {
+					let [condition, mode] = Trellis.SearchConditions.parseCondition(data.condition);
+					ref = { id: undefined, condition, mode, operator: data.operator, value: data.value };
+				}
+				newGroup.addCondition(ref);
+				row.remove();
+			}
+			newGroup.resultLevel = level;
+
+			let search = this.searchElement;
+			search.updateSearch();
+			search.updateRemoveButtons();
+			search.updateBindingMenus();
+			search.updateBindingHint();
+		}
+
+		clear() {
+			this.joinMode = 'all';
+			this.resultLevel = 'any';
+			while (this.conditionsContainer.firstChild) {
+				this.conditionsContainer.removeChild(this.conditionsContainer.firstChild);
+			}
+		}
+
+		// Add a condition row to this group. Inserts before `beforeNode` if given (e.g.
+		// right after the row whose "+" was clicked), otherwise appends.
+		addCondition(ref, beforeNode) {
+			var condition = document.createXULElement('trellissearchcondition');
+			condition.setAttribute('flex', '1');
+			this.conditionsContainer.insertBefore(condition, beforeNode || null);
+
+			// Default to an empty 'title' condition
+			if (!ref) {
+				ref = { id: undefined, condition: 'title', operator: 'contains', value: '', mode: undefined };
+			}
+
+			condition.initWithParentAndCondition(this.searchElement, ref);
+			return condition;
+		}
+
+		// "+" in the group caption: add a sibling condition in the parent group, after
+		// this group -- the group's caption row acts as the group's single line item in
+		// its parent, so its "+" mirrors a condition row's "+". The root has no parent,
+		// so its "+" stays hidden.
+		onAddSiblingClicked() {
+			var parent = this.parentElement.closest('search-condition-group');
+			if (!parent) {
+				return;
+			}
+			var row = parent.addCondition(null, this.nextElementSibling);
+			var search = this.searchElement;
+			search.updateSearch();
+			search.updateRemoveButtons();
+			row.querySelector('#conditionsmenu').focus();
+		}
+
+		onRemoveGroupClicked() {
+			var search = this.searchElement;
+			var parent = this.parentElement.closest('search-condition-group');
+			this.remove();
+			// Removing a group can leave its parent empty; prune up toward the root
+			while (parent && !parent.isRoot && !parent.conditionsContainer.childElementCount) {
+				let grandparent = parent.parentElement.closest('search-condition-group');
+				parent.remove();
+				parent = grandparent;
+			}
+			search.ensureNotEmpty();
+			search.updateSearch();
+			search.updateRemoveButtons();
+		}
+	}
+	customElements.define("search-condition-group", SearchConditionGroup);
+
+	class TrellisSearchCondition extends XULElementBase {
+		content = MozXULElement.parseXULToFragment(`
+			<html:div class="search-condition">
+				<popupset id="condition-tooltips"/>
+				
+				<menulist id="conditionsmenu" oncommand="this.closest('trellissearchcondition').onConditionSelected(event.target.value); event.stopPropagation()" native="true">
+					<menupopup onpopupshown="this.closest('trellissearchcondition').revealSelectedCondition()">
+						<menu id="more-conditions-menu" label="&trellis.general.more;">
+							<menupopup/>
+						</menu>
+					</menupopup>
+				</menulist>
+				<menulist id="operatorsmenu" oncommand="this.closest('trellissearchcondition').onOperatorSelected(); event.stopPropagation()" native="true">
+					<menupopup/>
+				</menulist>
+				<trellissearchtextbox id="valuefield" class="valuefield"/>
+				<menulist id="valuemenu" class="valuemenu" hidden="true" native="true">
+					<menupopup/>
+				</menulist>
+				<trellissearchagefield id="value-date-age" class="value-date-age" hidden="true"/>
+				<toolbarbutton id="remove" tabindex="0" data-l10n-id="advanced-search-remove-btn" class="trellis-clicky trellis-clicky-minus" value="-" onclick="this.closest('trellissearchcondition').onRemoveClicked(event)"/>
+				<toolbarbutton id="add" tabindex="0" data-l10n-id="advanced-search-add-btn" class="trellis-clicky trellis-clicky-plus" value="+" onclick="this.closest('trellissearchcondition').onAddClicked(event)"/>
+				<toolbarbutton id="group" tabindex="0" data-l10n-id="advanced-search-group-btn" class="trellis-clicky search-group-button" onclick="this.closest('trellissearchcondition').onGroupClicked(event)"/>
+			</html:div>
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
+
+		init() {
+			var operators = [
+				'is',
+				'isNot',
+				'beginsWith',
+				'contains',
+				'doesNotContain',
+				'isLessThan',
+				'isGreaterThan',
+				'isBefore',
+				'isAfter',
+				'isInTheLast'
+			];
+			var operatorsList = this.querySelector('#operatorsmenu');
+			
+			// Build operator menu
+			for (let operator of operators) {
+				operatorsList.appendItem(
+					Trellis.getString('searchOperator.' + operator),
+					operator
+				);
+			}
+			
+			// Build conditions menu
+			var conditionsMenu = this.querySelector('#conditionsmenu');
+			var moreConditionsMenu = this.querySelector('#more-conditions-menu');
+			var conditions = Trellis.SearchConditions.getStandardConditions();
+
+			// Cache the (alphabetically sorted) condition list and set up
+			// find-as-you-type on the closed menu
+			this._conditions = conditions;
+			this._typeAheadBuffer = '';
+			this._typeAheadTime = 0;
+			conditionsMenu.addEventListener('keydown', event => this.handleConditionKeyDown(event), true);
+
+			for (let condition of conditions) {
+				let menuitem;
+				if (this.isPrimaryCondition(condition.name)) {
+					menuitem = document.createXULElement('menuitem');
+					menuitem.setAttribute('label', condition.localized);
+					menuitem.setAttribute('value', condition.name);
+					moreConditionsMenu.before(menuitem);
+				}
+				else {
+					menuitem = moreConditionsMenu.appendItem(
+						condition.localized, condition.name
+					);
+				}
+				
+				var baseFields = null;
+				try {
+					baseFields = Trellis.ItemFields.getTypeFieldsFromBase(condition.name);
+				}
+				catch {}
+				
+				// Add tooltip, building it if it doesn't exist
+				if (baseFields) {
+					if (!this.querySelector('#' + condition.name + '-tooltip')) {
+						var fieldName = null;
+						try {
+							fieldName = Trellis.ItemFields.getLocalizedString(condition.name);
+						}
+						catch {}
+						
+						let localized;
+						if (fieldName) {
+							localized = [fieldName];
+						}
+						else {
+							localized = [];
+						}
+						
+						for (let baseField of baseFields) {
+							var str = Trellis.SearchConditions.getLocalizedName(
+								Trellis.ItemFields.getName(baseField)
+							);
+							
+							if (localized.indexOf(str) == -1) {
+								localized.push(str);
+							}
+						}
+						localized.sort();
+						
+						var tt = document.createXULElement('tooltip');
+						tt.setAttribute('id', condition.name + '-tooltip');
+						tt.setAttribute('noautohide', true);
+						
+						var hbox = document.createXULElement('hbox');
+						
+						var label = document.createXULElement('label');
+						label.setAttribute('value', Trellis.getString('search-conditions-tooltip-fields'));
+						hbox.appendChild(label);
+						var vbox = document.createXULElement('vbox');
+						for (let str of localized) {
+							let label = document.createXULElement('label');
+							label.setAttribute('value', str);
+							vbox.appendChild(label);
+						}
+						hbox.appendChild(vbox);
+						tt.appendChild(hbox);
+						
+						this.querySelector('#condition-tooltips').appendChild(tt);
+					}
+					
+					menuitem.setAttribute('tooltip', condition.name + '-tooltip');
+				}
+			}
+			conditionsMenu.selectedIndex = 0;
+		}
+
+		isPrimaryCondition(condition) {
+			switch (condition) {
+				case 'anyField':
+				case 'collection':
+				case 'creator':
+				case 'title':
+				case 'date':
+				case 'dateAdded':
+				case 'dateModified':
+				case 'lastRead':
+				case 'itemType':
+				case 'fileTypeID':
+				case 'publicationTitle':
+				case 'tag':
+				case 'note':
+				case 'childNote':
+				case 'fulltextContent':
+					return true;
+			}
+			
+			return false;
+		}
+
+		onConditionSelected(conditionName, reload) {
+			var conditionsMenu = this.querySelector('#conditionsmenu');
+			var operatorsList = this.querySelector('#operatorsmenu');
+			
+			// Skip if no condition or correct condition already selected
+			if (!conditionName || (conditionName == this.selectedCondition && !reload)) {
+				// When "More" option is selected, the condition value remains unchanged,
+				// so make sure that it still has the checkbox.
+				this.updateMenuCheckboxesRecursive(conditionsMenu, this.selectedCondition);
+				return;
+			}
+			
+			this.selectedCondition = conditionName;
+			this.selectedOperator = operatorsList.value;
+			
+			var condition = Trellis.SearchConditions.get(conditionName);
+			var operators = condition.operators;
+			
+			conditionsMenu.value = conditionName;
+			// Store in attribute as well because the value doesn't get set properly when
+			// the value is from a menuitem in the More menu, and we need this to select
+			// the previous condition when creating a new row
+			conditionsMenu.setAttribute('data-value', conditionName);
+			
+			// Parent state isn't set automatically for submenu selections
+			if (!this.isPrimaryCondition(conditionName)) {
+				conditionsMenu.selectedIndex = -1;
+				conditionsMenu.setAttribute(
+					'label',
+					Trellis.SearchConditions.getLocalizedName(conditionName)
+				);
+			}
+			
+			this.updateMenuCheckboxesRecursive(conditionsMenu, this.selectedCondition);
+			
+			// Display appropriate operators for condition
+			var selectThis = null;
+			for (var i = 0, len = operatorsList.firstChild.childNodes.length; i < len; i++) {
+				var val = operatorsList.firstChild.childNodes[i].getAttribute('value');
+				var hidden = !operators[val];
+				operatorsList.firstChild.childNodes[i].setAttribute('hidden', hidden);
+				if (!hidden && (selectThis === null || this.selectedOperator == val)) {
+					selectThis = i;
+				}
+			}
+			operatorsList.selectedIndex = selectThis;
+			this.updateMenuCheckboxesRecursive(operatorsList, operatorsList.selectedItem.getAttribute('value'));
+			
+			// Generate drop-down menu instead of textbox for certain conditions
+			switch (conditionName) {
+				case 'collection':
+				{
+					let rows = [];
+
+					var libraryID = this.parent.search.libraryID;
+
+					// Add collections
+					let cols = Trellis.Collections.getByLibrary(libraryID, true);
+					for (let col of cols) {
+						// Indent subcollections
+						var indent = '';
+						if (col.level) {
+							for (let j = 1; j < col.level; j++) {
+								indent += '    ';
+							}
+							indent += '- ';
+						}
+						rows.push({
+							name: indent + Trellis.Utilities.trimInternal(col.name),
+							value: 'C' + col.key,
+							image: Trellis.Collection.prototype.treeViewImage
+						});
+					}
+
+					// Add saved searches
+					let searches = Trellis.Searches.getByLibrary(libraryID);
+					for (let search of searches) {
+						if (search.id != this.parent.search.id) {
+							rows.push({
+								name: search.name,
+								value: 'S' + search.key,
+								image: Trellis.Search.prototype.treeViewImage
+							});
+						}
+					}
+					this.createValueMenu(rows);
+					break;
+				}
+				case 'itemType':
+				{
+					let rows = Trellis.ItemTypes.getTypes().map(type => ({
+						name: Trellis.ItemTypes.getLocalizedString(type.id),
+						value: type.name
+					}));
+					
+					// Sort by localized name
+					let collation = Trellis.getLocaleCollation();
+					rows.sort((a, b) => collation.compareString(1, a.name, b.name));
+					
+					this.createValueMenu(rows);
+					break;
+				}
+				case 'fileTypeID':
+				{
+					let rows = Trellis.FileTypes.getTypes().map(type => ({
+						name: Trellis.getString('file-type-' + type.name),
+						value: type.id
+					}));
+					
+					// Sort by localized name
+					let collation = Trellis.getLocaleCollation();
+					rows.sort((a, b) => collation.compareString(1, a.name, b.name));
+					
+					this.createValueMenu(rows);
+					break;
+				}
+				default:
+				{
+					if (operatorsList.value == 'isInTheLast') {
+						this.querySelector('#value-date-age').value = this.value;
+					}
+					
+					// Textbox
+					else {
+						// If switching from menu to textbox, clear value
+						if (this.querySelector('#valuefield').hidden) {
+							this.querySelector('#valuefield').value = '';
+						}
+						// If switching between textbox conditions, get loaded value for new one
+						else {
+							this.querySelector('#valuefield').value = this.value;
+						}
+						
+						// Update field drop-down if applicable
+						this.querySelector('#valuefield').update(
+							conditionName, this.mode, this.parent && this.parent.scopeLibraryIDs
+						);
+					}
+				}
+			}
+			
+			this.onOperatorSelected();
+		}
+
+		onOperatorSelected() {
+			var operatorsList = this.querySelector('#operatorsmenu');
+			
+			// Drop-down menu
+			if (this.selectedCondition == 'collection'
+					|| this.selectedCondition == 'itemType'
+					|| this.selectedCondition == 'fileTypeID') {
+				this.querySelector('#valuefield').hidden = true;
+				this.querySelector('#valuemenu').hidden = false;
+				this.querySelector('#value-date-age').hidden = true;
+			}
+			
+			// Textbox + units dropdown for isInTheLast operator
+			else if (operatorsList.value == 'isInTheLast') {
+				// If switching from text field, clear value
+				if (this.querySelector('#value-date-age').hidden) {
+					this.value = '';
+				}
+				this.querySelector('#valuefield').hidden = true;
+				this.querySelector('#valuemenu').hidden = true;
+				this.querySelector('#value-date-age').hidden = false;
+			}
+			
+			// Textbox
+			else {
+				// If switching from date age, clear value
+				if (this.querySelector('#valuefield').hidden) {
+					this.value = '';
+				}
+				this.querySelector('#valuefield').hidden = false;
+				this.querySelector('#valuemenu').hidden = true;
+				this.querySelector('#value-date-age').hidden = true;
+			}
+			var conditionsMenu = this.querySelector('#conditionsmenu');
+			document.l10n.setAttributes(conditionsMenu, 'advanced-search-conditions-menu', { label: conditionsMenu.label });
+			document.l10n.setAttributes(operatorsList, 'advanced-search-operators-menu', { label: operatorsList.label });
+			var valueMenu = this.querySelector("#valuemenu");
+			if (!valueMenu.hidden) {
+				document.l10n.setAttributes(valueMenu, 'advanced-search-condition-input', { label: valueMenu.label });
+			}
+			this.updateMenuCheckboxesRecursive(operatorsList, operatorsList.selectedItem.getAttribute('value'));
+
+			// Changing the condition or operator is a mutation like add/remove, so rebuild the
+			// search and refresh the derived UI (binding hint, level warning) right away. The
+			// condition/operator menus stopPropagation, so this won't happen via event bubbling.
+			// (updateSearch no-ops during the initial render via its own guard.)
+			if (this.parent) {
+				this.parent.updateSearch();
+			}
+		}
+
+		createValueMenu(rows) {
+			let valueMenu = this.querySelector('#valuemenu');
+
+			while (valueMenu.hasChildNodes()) {
+				valueMenu.removeChild(valueMenu.firstChild);
+			}
+			
+			for (let row of rows) {
+				let menuitem = valueMenu.appendItem(row.name, row.value);
+				if (row.image) {
+					menuitem.className = 'menuitem-iconic';
+					menuitem.setAttribute('image', row.image);
+				}
+			}
+			valueMenu.selectedIndex = 0;
+			
+			if (this.value) {
+				valueMenu.value = this.value;
+				// If the value isn't in the menu (e.g., a collection from another
+				// library after a library change), fall back to the first item
+				if (!valueMenu.selectedItem) {
+					valueMenu.selectedIndex = 0;
+				}
+			}
+		}
+
+		initWithParentAndCondition(parent, condition) {
+			this.parent = parent;
+			this.conditionID = condition.id;
+			var menu = this.querySelector('#conditionsmenu');
+
+			// Collection and saved search conditions resolve within a single library, so
+			// remove the Collection condition (which also covers saved searches) when the
+			// selection spans multiple libraries
+			if (this.parent.scopeLibraryIDs && this.parent.scopeLibraryIDs.length > 1) {
+				let collectionItem = menu.querySelector('menuitem[value="collection"]');
+				if (collectionItem) {
+					collectionItem.remove();
+				}
+			}
+
+			if (this.parent.search) {
+				this.dontupdate = true;	//so that the search doesn't get updated while we are creating controls.
+				var prefix = '';
+				
+				// Handle special conditions
+				switch (condition.condition) {
+					case 'savedSearch':
+						prefix = 'S';
+						break;
+					
+					case 'collection':
+						prefix = 'C';
+						break;
+				}
+				
+				// Map certain conditions to other menu items
+				let uiCondition = condition.condition;
+				switch (condition.condition) {
+					case 'savedSearch':
+						uiCondition = 'collection';
+						break;
+				}
+				
+				menu.setAttribute('value', uiCondition);
+				
+				// Convert datetimes from UTC to localtime
+				if ((condition.condition == 'accessDate'
+						|| condition.condition == 'dateAdded'
+						|| condition.condition == 'dateModified')
+						&& Trellis.Date.isSQLDateTime(condition.value)) {
+					condition.value
+						= Trellis.Date.dateToSQL(Trellis.Date.sqlToDate(condition.value, true));
+				}
+				
+				this.mode = condition.mode;
+				this.querySelector('#operatorsmenu').value = condition.operator;
+				this.value = prefix
+					+ (condition.value ? condition.value : '');
+
+				this.dontupdate = false;
+			}
+			
+			this.onConditionSelected(menu.value);
+		}
+
+		// Return this row's current {condition, operator, value} for serialization.
+		// The owning <trellissearch> collects these across the tree and rebuilds the
+		// search from scratch. Returns null while the row is still being set up.
+		getConditionData() {
+			if (!(this.parent && this.parent.search) || this.dontupdate) {
+				return null;
+			}
+
+			var condition = this.selectedCondition;
+			var operator = this.querySelector('#operatorsmenu').value;
+			let value;
+
+			// Regular text field
+			if (!this.querySelector('#valuefield').hidden) {
+				value = this.querySelector('#valuefield').value;
+
+				// Convert datetimes to UTC before saving
+				switch (condition) {
+					case 'accessDate':
+					case 'dateAdded':
+					case 'dateModified':
+						if (Trellis.Date.isSQLDateTime(value)) {
+							value = Trellis.Date.dateToSQL(Trellis.Date.sqlToDate(value), true);
+						}
+				}
+
+				// Append mode to condition
+				if (this.querySelector('#valuefield').mode) {
+					condition += '/' + this.querySelector('#valuefield').mode;
+				}
+			}
+
+			// isInTheLast operator
+			else if (!this.querySelector('#value-date-age').hidden) {
+				value = this.querySelector('#value-date-age').value;
+			}
+
+			// Handle special C1234 and S5678 form for
+			// collections and searches
+			else if (condition == 'collection') {
+				var letter = this.querySelector('#valuemenu').value.substr(0, 1);
+				if (letter == 'C') {
+					condition = 'collection';
+				}
+				else if (letter == 'S') {
+					condition = 'savedSearch';
+				}
+				value = this.querySelector('#valuemenu').value.substr(1);
+			}
+
+			// Regular drop-down menu
+			else {
+				value = this.querySelector('#valuemenu').value;
+			}
+
+			return { condition, operator, value };
+		}
+
+		updateMenuCheckboxesRecursive(menu, value) {
+			for (let i = 0; i < menu.itemCount; i++) {
+				let item = menu.getItemAtIndex(i);
+				if (item.localName == 'menuitem') {
+					if (item.getAttribute('value') == value) {
+						item.setAttribute('checked', true);
+						item.setAttribute('selected', true);
+					}
+					else {
+						item.removeAttribute('checked');
+						item.removeAttribute('selected');
+					}
+				}
+				else {
+					this.updateMenuCheckboxesRecursive(item, value);
+				}
+			}
+		}
+
+		revealSelectedCondition(menu) {
+			if (!this.selectedCondition || this.isPrimaryCondition(this.selectedCondition)) {
+				return false;
+			}
+			
+			if (!menu) {
+				menu = this.querySelector('#conditionsmenu');
+			}
+			for (let i = 0; i < menu.itemCount; i++) {
+				let item = menu.getItemAtIndex(i);
+				if (item.localName == 'menuitem') {
+					if (item.getAttribute('value') == this.selectedCondition) {
+						menu.open = true;
+						return true;
+					}
+				}
+				else {
+					var opened = this.revealSelectedCondition(item);
+					if (opened) {
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+
+		// Find-as-you-type on the closed conditions menu. The native incremental
+		// find within the open popup only matches the visible top-level items, so
+		// this handles typing while the menu is closed to reach any condition,
+		// including the ~67 in the "More" submenu.
+		handleConditionKeyDown(event) {
+			var menu = this.querySelector('#conditionsmenu');
+			// Let the native incremental find handle typing while the popup is open,
+			// and ignore in-progress IME composition (event.key is "Process")
+			if (menu.open || event.isComposing || event.ctrlKey || event.metaKey || event.altKey) {
+				return;
+			}
+			// Only act on a single printable character. Count code points rather
+			// than UTF-16 units so supplementary-plane characters (e.g. some CJK
+			// extension blocks) aren't treated as multi-key sequences.
+			if (Array.from(event.key).length != 1) {
+				return;
+			}
+
+			var now = Date.now();
+			// Start a new search if enough time has passed since the last keystroke
+			if (now - this._typeAheadTime > 1000) {
+				this._typeAheadBuffer = '';
+			}
+			this._typeAheadTime = now;
+
+			// With no search in progress, a space opens the menu instead of starting
+			// a search, matching the native menulist behavior
+			if (event.key == ' ' && !this._typeAheadBuffer) {
+				return;
+			}
+
+			this._typeAheadBuffer += event.key.toLowerCase();
+
+			var conditionName = this.findConditionByPrefix();
+			if (conditionName) {
+				event.preventDefault();
+				event.stopPropagation();
+				this.onConditionSelected(conditionName);
+			}
+		}
+
+		findConditionByPrefix() {
+			var buffer = this._typeAheadBuffer;
+			var conditions = this._conditions;
+
+			// When the same character is typed repeatedly, cycle through the
+			// matching conditions, starting after the currently selected one
+			var cycling = buffer.length > 1 && [...buffer].every(c => c == buffer[0]);
+			var prefix = cycling ? buffer[0] : buffer;
+
+			var startIndex = 0;
+			if (cycling) {
+				startIndex = conditions.findIndex(c => c.name == this.selectedCondition) + 1;
+			}
+
+			for (let i = 0; i < conditions.length; i++) {
+				let condition = conditions[(startIndex + i) % conditions.length];
+				if (condition.localized.toLowerCase().startsWith(prefix)) {
+					return condition.name;
+				}
+			}
+			return null;
+		}
+
+		onLibraryChange() {
+			switch (this.selectedCondition) {
+				case 'collection':
+					this.onConditionSelected(this.selectedCondition, true);
+					break;
+			}
+		}
+
+		onRemoveClicked(event) {
+			if (this.parent) {
+				// A keyboard-synthesized click has detail 0, unlike a mouse click
+				this.parent.removeRow(this, event?.detail === 0);
+			}
+		}
+
+		onAddClicked(event) {
+			event.preventDefault();
+			if (!this.parent) {
+				return;
+			}
+			// Add a sibling condition right after this one, seeded with this row's
+			// condition and operator
+			let group = this.closest('search-condition-group');
+			let row = group.addCondition({
+				id: undefined,
+				condition: this.querySelector('#conditionsmenu').getAttribute('data-value'),
+				operator: this.querySelector('#operatorsmenu').value,
+				value: '',
+				mode: undefined
+			}, this.nextElementSibling);
+			this.parent.updateSearch();
+			this.parent.updateRemoveButtons();
+			// When activated from the keyboard (a synthesized click has detail 0,
+			// unlike a mouse click), move focus to the new row's drop-down
+			if (event.detail === 0) {
+				this.parent.focusNewCondition(row);
+			}
+		}
+
+		// Wrap this condition in a new group in its place, so further conditions can be
+		// added to the group to combine with it under a separate join mode
+		onGroupClicked(event) {
+			event.preventDefault();
+			if (!this.parent) {
+				return;
+			}
+			var group = this.closest('search-condition-group');
+			// Rebuild the condition inside the new group rather than moving the row, since
+			// detaching a custom element wipes its contents
+			var ref;
+			var data = this.getConditionData();
+			if (data) {
+				let [condition, mode] = Trellis.SearchConditions.parseCondition(data.condition);
+				ref = { id: undefined, condition, mode, operator: data.operator, value: data.value };
+			}
+			var newGroup = document.createXULElement('search-condition-group');
+			group.conditionsContainer.insertBefore(newGroup, this);
+			newGroup.addCondition(ref);
+			this.remove();
+
+			this.parent.updateSearch();
+			this.parent.updateRemoveButtons();
+			newGroup.conditionsContainer.firstElementChild.querySelector('#conditionsmenu').focus();
+		}
+
+		// The item level this condition matches at ('item' by default), used to decide
+		// cross-level binding in a group
+		get conditionLevel() {
+			let data = this.selectedCondition && Trellis.SearchConditions.get(this.selectedCondition);
+			return (data && data.level) || 'item';
+		}
+
+		// Whether a value has been entered, used to decide whether the last
+		// remaining condition can be cleared back to the default state
+		isPopulated() {
+			let valueField = this.querySelector('#valuefield');
+			if (!valueField.hidden) {
+				return !!valueField.value;
+			}
+			let ageField = this.querySelector('#value-date-age');
+			if (!ageField.hidden) {
+				return !!ageField.querySelector('.input').value;
+			}
+			// The drop-down value menus (collection, item type, etc.) always have a selection
+			return true;
+		}
+
+		disableRemoveButton() {
+			var button = this.querySelector("#remove");
+			button.setAttribute('disabled', true);
+			button.removeAttribute('onclick');
+		}
+
+		enableRemoveButton() {
+			var button = this.querySelector("#remove");
+			button.setAttribute('disabled', false);
+			button.setAttribute('onclick', "this.closest('trellissearchcondition').onRemoveClicked(event)");
+		}
+	}
+	customElements.define("trellissearchcondition", TrellisSearchCondition);
+
+	class TrellisSearchTextbox extends XULElementBase {
+		content = MozXULElement.parseXULToFragment(`
+			<xul:stack
+					xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+					xmlns:html="http://www.w3.org/1999/xhtml"
+					flex="1">
+				<html:input id="search-textbox"
+					is="shadow-autocomplete-input"
+					autocompletesearch="trellis"
+					autocompletepopup="search-autocomplete-popup"
+					timeout="250"
+					type="search"
+					data-l10n-id="advanced-search-condition-input"
+					/>
+				
+				<xul:toolbarbutton
+						id="textbox-button"
+						type="menu">
+					<dropmarker type="menu" class="toolbarbutton-menu-dropmarker"/>
+					<xul:menupopup id="textbox-fulltext-menu">
+						<xul:menuitem type="radio" label="&trellis.search.textModes.phrase;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.phraseBinary;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.regexp;"/>
+						<xul:menuitem type="radio" label="&trellis.search.textModes.regexpCS;"/>
+					</xul:menupopup>
+				</xul:toolbarbutton>
+			</xul:stack>
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
+
+		get value() {
+			return this.querySelector('#search-textbox').value;
+		}
+
+		set value(val) {
+			this.querySelector('#search-textbox').value = val;
+		}
+
+		get mode() {
+			if (this.getAttribute('hasOptions') != 'true') {
+				return false;
+			}
+			
+			var menu = this.querySelector('#textbox-fulltext-menu');
+			
+			var selectedIndex = -1;
+			for (var i = 0; i < menu.childNodes.length; i++) {
+				if (menu.childNodes[i].getAttribute('checked') == 'true') {
+					selectedIndex = i;
+					break;
+				}
+			}
+			switch (selectedIndex) {
+				case 0:
+					return false;
+				
+				case 1:
+					return 'phraseBinary';
+				
+				case 2:
+					return 'regexp';
+				
+				case 3:
+					return 'regexpCS';
+			}
+			
+			throw new Error('Invalid search textbox popup');
+		}
+
+		update(condition, mode, scopeLibraryIDs) {
+			var textbox = this.querySelector('#search-textbox');
+			var button = this.querySelector('#textbox-button');
+			
+			switch (condition) {
+				case 'fulltextContent':
+					var menu = this.querySelector('#textbox-fulltext-menu');
+					this.setAttribute('hasOptions', true);
+					button.removeAttribute('hidden');
+					
+					var selectedIndex = 0;
+					if (mode) {
+						switch (mode) {
+							case 'phrase':
+								selectedIndex = 0;
+								break;
+							
+							case 'phraseBinary':
+								selectedIndex = 1;
+								break;
+							
+							case 'regexp':
+								selectedIndex = 2;
+								break;
+							
+							case 'regexpCS':
+								selectedIndex = 3;
+								break;
+						}
+					}
+					menu.childNodes[selectedIndex].setAttribute('checked', true);
+					textbox.setAttribute('disableautocomplete', 'true');
+					break;
+					
+				default:
+					this.setAttribute('hasOptions', false);
+					button.setAttribute('hidden', true);
+					
+					// Set textbox to autocomplete mode
+					switch (condition) {
+						// Skip autocomplete for these fields
+						case 'date':
+						case 'note':
+						case 'extra':
+							textbox.setAttribute('disableautocomplete', 'true');
+							break;
+						
+						default:
+							textbox.setAttribute('disableautocomplete', 'false');
+
+							var autocompleteParams = {
+								fieldName: condition
+							};
+							// Scope suggestions to the selected libraries (the same set the
+							// collection condition menu uses). Empty/unset falls back to all libraries.
+							if (scopeLibraryIDs && scopeLibraryIDs.length) {
+								autocompleteParams.libraryIDs = scopeLibraryIDs;
+							}
+							switch (condition) {
+								case 'creator':
+								case 'author':
+								case 'bookAuthor':
+								case 'editor':
+									autocompleteParams.fieldMode = 2;
+									break;
+							}
+							textbox.setAttribute(
+								'autocompletesearchparam',
+								JSON.stringify(autocompleteParams)
+							);
+					}
+			}
+		}
+	}
+	customElements.define("trellissearchtextbox", TrellisSearchTextbox);
+
+	class TrellisSearchAgeField extends XULElementBase {
+		content = MozXULElement.parseXULToFragment(`
+			<html:div class="search-in-the-last">
+				<html:input class="input"/>
+				<menulist class="age-list" native="true">
+					<menupopup>
+						<menuitem label="&trellis.search.date.units.days;" value="days" selected="true"/>
+						<menuitem label="&trellis.search.date.units.months;" value="months"/>
+						<menuitem label="&trellis.search.date.units.years;" value="years"/>
+					</menupopup>
+				</menulist>
+			</html:div>
+		`, ['chrome://trellis/locale/trellis.dtd', 'chrome://trellis/locale/searchbox.dtd']);
+
+		get value() {
+			var input = this.querySelector('.input');
+			var menulist = this.querySelector('.age-list');
+			return input.value + ' '
+				+ menulist.firstChild.childNodes[menulist.selectedIndex].getAttribute('value');
+		}
+
+		set value(val) {
+			var input = this.querySelector('.input');
+
+			var [num, units] = val.split(' ');
+			input.setAttribute('value', num);
+			
+			var menulist = this.querySelector('.age-list');
+			var menupopup = menulist.firstChild;
+			
+			var selectThis = 0;
+			for (var i = 0; i < menupopup.childNodes.length; i++) {
+				if (menupopup.childNodes[i].value == units) {
+					selectThis = i;
+					break;
+				}
+			}
+			menulist.selectedIndex = selectThis;
+			// Setting `selected` does not change `checked`. Should explicitly set it.
+			menulist.selectedItem.setAttribute('checked', true);
+		}
+	}
+	customElements.define("trellissearchagefield", TrellisSearchAgeField);
+}

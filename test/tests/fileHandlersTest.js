@@ -1,23 +1,23 @@
-describe("Zotero.FileHandlers", () => {
+describe("Trellis.FileHandlers", () => {
 	describe("open()", () => {
 		var win;
 		
 		function clearPrefs() {
-			Zotero.Prefs.clear('fileHandler.pdf');
-			Zotero.Prefs.clear('fileHandler.epub');
-			Zotero.Prefs.clear('fileHandler.snapshot');
-			Zotero.Prefs.clear('openReaderInNewWindow');
+			Trellis.Prefs.clear('fileHandler.pdf');
+			Trellis.Prefs.clear('fileHandler.epub');
+			Trellis.Prefs.clear('fileHandler.snapshot');
+			Trellis.Prefs.clear('openReaderInNewWindow');
 		}
 		
 		before(async function () {
 			clearPrefs();
-			win = await loadZoteroPane();
+			win = await loadTrellisPane();
 		});
 
 		afterEach(function () {
 			clearPrefs();
-			delete Zotero.FileHandlers._mockHandlers;
-			for (let reader of Zotero.Reader._readers) {
+			delete Trellis.FileHandlers._mockHandlers;
+			for (let reader of Trellis.Reader._readers) {
 				reader.close();
 			}
 		});
@@ -28,10 +28,10 @@ describe("Zotero.FileHandlers", () => {
 		
 		it("should open a PDF internally when no handler is set", async function () {
 			let pdf = await importFileAttachment('wonderland_short.pdf');
-			await Zotero.FileHandlers.open(pdf, {
+			await Trellis.FileHandlers.open(pdf, {
 				location: { pageIndex: 2 }
 			});
-			let reader = Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID);
+			let reader = Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID);
 			assert.ok(reader);
 			
 			// let notifierPromise = waitForNotifierEvent('add', 'setting');
@@ -45,10 +45,10 @@ describe("Zotero.FileHandlers", () => {
 		it("should open an EPUB internally when no handler is set", async function () {
 			let epub = await importFileAttachment('recognizeEPUB_test_content.epub');
 			let annotation = await createAnnotation('highlight', epub);
-			await Zotero.FileHandlers.open(epub, {
+			await Trellis.FileHandlers.open(epub, {
 				location: { annotationID: annotation.key }
 			});
-			let reader = Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID);
+			let reader = Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID);
 			assert.ok(reader);
 			await reader._waitForReader();
 		});
@@ -56,29 +56,29 @@ describe("Zotero.FileHandlers", () => {
 		it("should open a snapshot internally when no handler is set", async function () {
 			let snapshot = await importFileAttachment('test.html');
 			let annotation = await createAnnotation('highlight', snapshot);
-			await Zotero.FileHandlers.open(snapshot, {
+			await Trellis.FileHandlers.open(snapshot, {
 				location: { annotationID: annotation.key }
 			});
-			let reader = Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID);
+			let reader = Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID);
 			assert.ok(reader);
 			await reader._waitForReader();
 		});
 
 		it("should open a PDF in a new window when no handler is set and openInWindow is passed", async function () {
 			let pdf = await importFileAttachment('wonderland_short.pdf');
-			await Zotero.FileHandlers.open(pdf, {
+			await Trellis.FileHandlers.open(pdf, {
 				location: { pageIndex: 2 },
 				openInWindow: true
 			});
-			assert.notOk(Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID));
-			assert.isNotEmpty(Zotero.Reader.getWindowStates());
+			assert.notOk(Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID));
+			assert.isNotEmpty(Trellis.Reader.getWindowStates());
 		});
 		
 		it("should use matching handler", async function () {
 			let pdf = await importFileAttachment('wonderland_short.pdf');
 			let wasRun = false;
-			let readerOpenSpy = sinon.spy(Zotero.Reader, 'open');
-			Zotero.FileHandlers._mockHandlers = {
+			let readerOpenSpy = sinon.spy(Trellis.Reader, 'open');
+			Trellis.FileHandlers._mockHandlers = {
 				pdf: [
 					{
 						name: /mock/,
@@ -88,13 +88,13 @@ describe("Zotero.FileHandlers", () => {
 					}
 				]
 			};
-			Zotero.Prefs.set('fileHandler.pdf', 'mock');
+			Trellis.Prefs.set('fileHandler.pdf', 'mock');
 			
-			await Zotero.FileHandlers.open(pdf);
+			await Trellis.FileHandlers.open(pdf);
 			assert.isTrue(wasRun);
 			assert.isFalse(readerOpenSpy.called);
-			assert.notOk(Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID));
-			assert.isEmpty(Zotero.Reader.getWindowStates());
+			assert.notOk(Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID));
+			assert.isEmpty(Trellis.Reader.getWindowStates());
 
 			readerOpenSpy.restore();
 		});
@@ -103,8 +103,8 @@ describe("Zotero.FileHandlers", () => {
 			let pdf = await importFileAttachment('wonderland_short.pdf');
 			let annotation = await createAnnotation('highlight', pdf);
 			let wasRun = false;
-			let readerOpenSpy = sinon.spy(Zotero.Reader, 'open');
-			Zotero.FileHandlers._mockHandlers = {
+			let readerOpenSpy = sinon.spy(Trellis.Reader, 'open');
+			Trellis.FileHandlers._mockHandlers = {
 				pdf: [
 					{
 						name: /mock/,
@@ -115,13 +115,13 @@ describe("Zotero.FileHandlers", () => {
 					}
 				]
 			};
-			Zotero.Prefs.set('fileHandler.pdf', 'mock');
+			Trellis.Prefs.set('fileHandler.pdf', 'mock');
 			
-			await Zotero.FileHandlers.open(pdf, { location: { annotationID: annotation.key } });
+			await Trellis.FileHandlers.open(pdf, { location: { annotationID: annotation.key } });
 			assert.isTrue(wasRun);
 			assert.isFalse(readerOpenSpy.called);
-			assert.notOk(Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID));
-			assert.isEmpty(Zotero.Reader.getWindowStates());
+			assert.notOk(Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID));
+			assert.isEmpty(Trellis.Reader.getWindowStates());
 
 			readerOpenSpy.restore();
 		});
@@ -129,8 +129,8 @@ describe("Zotero.FileHandlers", () => {
 		it("should fall back to fallback handler when location is passed", async function () {
 			let pdf = await importFileAttachment('wonderland_short.pdf');
 			let wasRun = false;
-			let readerOpenSpy = sinon.spy(Zotero.Reader, 'open');
-			Zotero.FileHandlers._mockHandlers = {
+			let readerOpenSpy = sinon.spy(Trellis.Reader, 'open');
+			Trellis.FileHandlers._mockHandlers = {
 				pdf: [
 					{
 						name: /mock/,
@@ -145,15 +145,15 @@ describe("Zotero.FileHandlers", () => {
 
 			// Set our custom handler to something nonexistent,
 			// and stub the system handler to something nonexistent as well
-			Zotero.Prefs.set('fileHandler.pdf', 'some nonexistent tool');
-			let getSystemHandlerStub = sinon.stub(Zotero.FileHandlers, '_getSystemHandler');
+			Trellis.Prefs.set('fileHandler.pdf', 'some nonexistent tool');
+			let getSystemHandlerStub = sinon.stub(Trellis.FileHandlers, '_getSystemHandler');
 			getSystemHandlerStub.returns('some other nonexistent tool');
 
-			await Zotero.FileHandlers.open(pdf, { location: {} });
+			await Trellis.FileHandlers.open(pdf, { location: {} });
 			assert.isTrue(wasRun);
 			assert.isFalse(readerOpenSpy.called);
-			assert.notOk(Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID));
-			assert.isEmpty(Zotero.Reader.getWindowStates());
+			assert.notOk(Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID));
+			assert.isEmpty(Trellis.Reader.getWindowStates());
 
 			readerOpenSpy.restore();
 			getSystemHandlerStub.restore();
@@ -162,9 +162,9 @@ describe("Zotero.FileHandlers", () => {
 		it("should fall back when handler is set to system and we can't retrieve the system handler", async function () {
 			let pdf = await importFileAttachment('wonderland_short.pdf');
 			let wasRun = false;
-			let readerOpenSpy = sinon.spy(Zotero.Reader, 'open');
-			let launchFileStub = sinon.stub(Zotero, 'launchFile');
-			Zotero.FileHandlers._mockHandlers = {
+			let readerOpenSpy = sinon.spy(Trellis.Reader, 'open');
+			let launchFileStub = sinon.stub(Trellis, 'launchFile');
+			Trellis.FileHandlers._mockHandlers = {
 				pdf: [
 					{
 						name: new RegExp(''),
@@ -177,16 +177,16 @@ describe("Zotero.FileHandlers", () => {
 
 			// Set our custom handler to something nonexistent,
 			// and stub the system handler to something nonexistent as well
-			Zotero.Prefs.set('fileHandler.pdf', 'system');
-			let getSystemHandlerStub = sinon.stub(Zotero.FileHandlers, '_getSystemHandler');
+			Trellis.Prefs.set('fileHandler.pdf', 'system');
+			let getSystemHandlerStub = sinon.stub(Trellis.FileHandlers, '_getSystemHandler');
 			getSystemHandlerStub.returns(false);
 
-			await Zotero.FileHandlers.open(pdf, { location: {} });
+			await Trellis.FileHandlers.open(pdf, { location: {} });
 			assert.isFalse(wasRun);
 			assert.isFalse(readerOpenSpy.called);
 			assert.isTrue(launchFileStub.called);
-			assert.notOk(Zotero.Reader.getByTabID(win.Zotero_Tabs.selectedID));
-			assert.isEmpty(Zotero.Reader.getWindowStates());
+			assert.notOk(Trellis.Reader.getByTabID(win.Trellis_Tabs.selectedID));
+			assert.isEmpty(Trellis.Reader.getWindowStates());
 
 			readerOpenSpy.restore();
 			launchFileStub.restore();

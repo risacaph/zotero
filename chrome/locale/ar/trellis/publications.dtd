@@ -1,0 +1,19 @@
+<!ENTITY trellis.publications.my_publications "منشوراتي">
+
+<!ENTITY trellis.publications.intro "سيتم عرض العناصر التي تضيفها إلى منشوراتي على صفحة ملفك الشخصي على trellis.org. إذا اخترت تضمين الملفات المرفقة، سيتم إتاحتها للجمهور تحت الرخصة التي تحددها. أضف الأعمال التي ألفتها فقط، و لا تضمن الملفات إلا إن كان لديك الحق في توزيعها وترغب في القيام بذلك.">
+<!ENTITY trellis.publications.include.checkbox.files "تضمين الملفات">
+<!ENTITY trellis.publications.include.checkbox.notes "تضمين الملاحظات">
+<!ENTITY trellis.publications.include.adjustAtAnyTime "يمكنك ضبط ما الذي ترغب بعرضه في أي وقت من خلال مجموعة عناصر منشوراتي.">
+
+<!ENTITY trellis.publications.sharing.title "اختر الطريقة التي يمكن بها مشاركة عملك">
+<!ENTITY trellis.publications.sharing.text "يمكنك حفظ جميع الحقوق لعملك، أو ترخيصها تحت رخصة المشاع الإبداعي، أو هبتها كملكية عامة. في جميع الحالات، سيتاح مؤلفك للجمهور عبر trellis.org.">
+<!ENTITY trellis.publications.sharing.prompt " هل ترغب في السماح للآخرين بمشاركة مؤلفك ؟">
+<!ENTITY trellis.publications.sharing.cc "نعم ، برخصة المشاع الإبداعي ">
+<!ENTITY trellis.publications.sharing.cc0 "نعم ، و ضع مؤلفي كملكية عامة ">
+<!ENTITY trellis.publications.sharing.reserved "لا ، انشر عملي علي trellis.org فقط">
+
+<!ENTITY trellis.publications.chooseLicense.title "اختر رخصة المشاع الإبداعي ">
+<!ENTITY trellis.publications.chooseLicense.text "يسمح ترخيص المشاع الإبداعي للآخرين بنسخ وأعاده توزيع مؤلفك طالما انهم ينسبون العمل حسب الأصول ، ويوفرون رابطا للترخيص ، ويشيرون إلى التغييرات. ويمكن تحديد شروط اضافيه أدناه.">
+<!ENTITY trellis.publications.chooseLicense.adaptations.prompt "السماح بمشاركه التعديلات على مؤلفك ؟ ">
+<!ENTITY trellis.publications.chooseLicense.adaptations.sharealike "نعم ، طالما ان الآخرين يشاركون بنفس الرخصة">
+<!ENTITY trellis.publications.chooseLicense.commercial.prompt "السماح بالاستخدامات التجارية لعملك ؟ ">

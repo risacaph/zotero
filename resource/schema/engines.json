@@ -7,9 +7,9 @@
 		"_urlParams": [],
 		"_urlNamespaces": {
 			"rft": "info:ofi/fmt:kev:mtx:journal",
-			"z": "http://www.zotero.org/namespaces/openSearch#",
+			"z": "http://www.trellis.org/namespaces/openSearch#",
 			"": "http://a9.com/-/spec/opensearch/1.1/"
 		},
-		"_iconSourceURI": "chrome://zotero/skin/logos/google-scholar.ico"
+		"_iconSourceURI": "chrome://trellis/skin/logos/google-scholar.ico"
 	}
 ]

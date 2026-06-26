@@ -17,7 +17,7 @@
 $scaffold-toolbarbutton-icons: (
 		load: 'folder-open',
 		save: 'save',
-		saveToZotero: 'save-to-zotero',
+		saveToTrellis: 'save-to-trellis',
 		detect: 'run-detect',
 		do: 'run-do',
 		template: 'plus'
@@ -33,7 +33,7 @@ $scaffold-toolbarbutton-icons: (
 	--monospace-font: 0.92em Monaco, Consolas, Inconsolata, monospace;
 }
 
-#scaffold, #zotero-select-item-dialog {
+#scaffold, #trellis-select-item-dialog {
 	@include contain-richlistbox;
 	@include macOS-normalize-controls;
 }
@@ -42,17 +42,17 @@ $scaffold-toolbarbutton-icons: (
 	min-height: 600px;
 }
 
-#zotero-select-item-dialog {
+#trellis-select-item-dialog {
 	max-width: 400px;
 	min-height: 330px;
 	max-height: 330px;
 }
 
-#zotero-selectitems-links {
+#trellis-selectitems-links {
 	flex: 1 1 0;
 }
 
-#zotero-select-items-buttons {
+#trellis-select-items-buttons {
 	// Prevent contain-richlistbox from squishing the buttons
 	flex-shrink: 0;
 	gap: 6px;
@@ -69,7 +69,7 @@ $scaffold-toolbarbutton-icons: (
 	}
 }
 
-#zotero-toolbar {
+#trellis-toolbar {
 	@media not (-moz-platform: macos) {
 		appearance: none;
 		background: var(--material-sidepane);

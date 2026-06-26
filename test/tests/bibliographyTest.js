@@ -4,9 +4,9 @@ describe("Create Bibliography Dialog", function () {
 	var win, zp;
 	
 	before(async function () {
-		win = await loadZoteroPane();
-		await Zotero.Styles.init();
-		zp = win.ZoteroPane;
+		win = await loadTrellisPane();
+		await Trellis.Styles.init();
+		zp = win.TrellisPane;
 	});
 	
 	after(function () {
@@ -18,8 +18,8 @@ describe("Create Bibliography Dialog", function () {
 		
 		let styleID;
 		
-		var deferred = Zotero.Promise.defer();
-		waitForWindow("chrome://zotero/content/bibliography.xhtml", function (dialog) {
+		var deferred = Trellis.Promise.defer();
+		waitForWindow("chrome://trellis/content/bibliography.xhtml", function (dialog) {
 			(async function () {
 				await dialog.isLoadedPromise;
 				let styleSelector = dialog.document.getElementById('style-selector');
@@ -31,26 +31,26 @@ describe("Create Bibliography Dialog", function () {
 				deferred.resolve();
 			})();
 		});
-		await win.Zotero_File_Interface.bibliographyFromItems();
+		await win.Trellis_File_Interface.bibliographyFromItems();
 		await deferred.promise;
 
-		assert.equal(styleID, "http://www.zotero.org/styles/chicago-notes-bibliography");
+		assert.equal(styleID, "http://www.trellis.org/styles/chicago-notes-bibliography");
 	});
 	
 	it("should open the Cite prefpane when Manage Styles… is clicked", async function () {
 		var item = await createDataObject('item');
 		
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		var called = false;
-		waitForWindow("chrome://zotero/content/bibliography.xhtml", function (dialog) {
-			waitForWindow("chrome://zotero/content/preferences/preferences.xhtml", function (window) {
+		waitForWindow("chrome://trellis/content/bibliography.xhtml", function (dialog) {
+			waitForWindow("chrome://trellis/content/preferences/preferences.xhtml", function (window) {
 				// Wait for switch to Cite pane
 				(async function () {
 					do {
-						Zotero.debug("Checking for pane");
-						await Zotero.Promise.delay(5);
+						Trellis.debug("Checking for pane");
+						await Trellis.Promise.delay(5);
 					}
-					while (!window.document.querySelector('[value=zotero-prefpane-cite]').selected);
+					while (!window.document.querySelector('[value=trellis-prefpane-cite]').selected);
 					called = true;
 					window.close();
 					deferred.resolve();
@@ -58,7 +58,7 @@ describe("Create Bibliography Dialog", function () {
 			});
 			dialog.document.getElementById('manage-styles').click();
 		});
-		await win.Zotero_File_Interface.bibliographyFromItems();
+		await win.Trellis_File_Interface.bibliographyFromItems();
 		await deferred.promise;
 		
 		assert.ok(called);

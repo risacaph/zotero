@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "名稱：">
+
+<!ENTITY trellis.search.searchInLibrary "於文獻庫搜尋：">
+
+<!ENTITY trellis.search.joinMode.prefix "比對">
+<!ENTITY trellis.search.joinMode.any "任一個">
+<!ENTITY trellis.search.joinMode.all "全部">
+<!ENTITY trellis.search.joinMode.suffix "下列的：">
+
+<!ENTITY trellis.search.recursive.label "搜尋子文獻集">
+<!ENTITY trellis.search.noChildren "只顯示頂層的項目">
+<!ENTITY trellis.search.includeParentsAndChildren "包括符合比對項目的上層項目與下屬項目">
+
+<!ENTITY trellis.search.textModes.phrase "詞語">
+<!ENTITY trellis.search.textModes.phraseBinary "詞語 (包括二進制檔)">
+<!ENTITY trellis.search.textModes.regexp "語詞類型式">
+<!ENTITY trellis.search.textModes.regexpCS "語詞類型式 (區分大小寫)">
+
+<!ENTITY trellis.search.date.units.days "日">
+<!ENTITY trellis.search.date.units.months "月">
+<!ENTITY trellis.search.date.units.years "年">
+
+<!ENTITY trellis.search.search "搜尋">
+<!ENTITY trellis.search.clear "清除">
+<!ENTITY trellis.search.saveSearch "儲存搜尋">

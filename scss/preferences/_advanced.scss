@@ -1,16 +1,16 @@
 /* General pane */
-#zotero-prefpane-advanced-general-tab #openurl-menu {
+#trellis-prefpane-advanced-general-tab #openurl-menu {
 	width: 400px;
 }
 
 /* Shortcut Keys pane */
-#zotero-prefpane-advanced-keys-tab input
+#trellis-prefpane-advanced-keys-tab input
 {
 	margin-inline-start: 0;
 }
 
 /* Advanced pane */
-#zotero-keys-grid {
+#trellis-keys-grid {
 	display: grid;
 	align-items: center;
 	grid-template-columns: 1fr max-content max-content;
@@ -29,12 +29,12 @@
 	padding-bottom: .4em;
 }
 
-#zotero-prefpane-advanced-feeds-feedDefaults .html-input {
+#trellis-prefpane-advanced-feeds-feedDefaults .html-input {
 	width: 50px;
 	text-align: end;
 }
 
-#zotero-prefpane-advanced-feeds-feedDefaults hbox {
+#trellis-prefpane-advanced-feeds-feedDefaults hbox {
 	display: flex;
 	align-items: center;
 }
@@ -66,7 +66,7 @@
 	margin-top: 4px;
 }
 
-#zotero-prefpane-advanced-open-buttons {
+#trellis-prefpane-advanced-open-buttons {
 	display: block;
 	text-align: end;
 	margin-top: 1em;
@@ -95,7 +95,7 @@
 	gap: 6px;
 }
 
-#zotero-prefpane-advanced-server-disabled {
+#trellis-prefpane-advanced-server-disabled {
 	color: var(--accent-red);
 	
 	button {

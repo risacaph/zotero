@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Nimi:">
+
+<!ENTITY trellis.search.searchInLibrary "Otsing kataloogist:">
+
+<!ENTITY trellis.search.joinMode.prefix "Valik">
+<!ENTITY trellis.search.joinMode.any "üks">
+<!ENTITY trellis.search.joinMode.all "kõik">
+<!ENTITY trellis.search.joinMode.suffix "järgnevatest:">
+
+<!ENTITY trellis.search.recursive.label "Otsida alamkataloogidest">
+<!ENTITY trellis.search.noChildren "Näidata vaid juurtasandi kirjeid">
+<!ENTITY trellis.search.includeParentsAndChildren "Näidata leitud kirje sõltuvaid ja valitsevaid kirjeid">
+
+<!ENTITY trellis.search.textModes.phrase "Fraas">
+<!ENTITY trellis.search.textModes.phraseBinary "Fraas (ka binaarfailidest)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (tõstutundlik)">
+
+<!ENTITY trellis.search.date.units.days "päevi">
+<!ENTITY trellis.search.date.units.months "kuid">
+<!ENTITY trellis.search.date.units.years "aastaid">
+
+<!ENTITY trellis.search.search "Otsing">
+<!ENTITY trellis.search.clear "Tühjendada">
+<!ENTITY trellis.search.saveSearch "Otsing salvestada">

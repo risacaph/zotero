@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--
+    ***** BEGIN LICENSE BLOCK *****
+    
+    Copyright © 2009 Center for History and New Media
+                     George Mason University, Fairfax, Virginia, USA
+                     http://trellis.org
+    
+    This file is part of Trellis.
+    
+    Trellis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    Trellis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+    
+    ***** END LICENSE BLOCK *****
+-->
+<?xml-stylesheet href="chrome://global/skin/global.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+
+<!DOCTYPE window [
+	<!ENTITY % csleditDTD SYSTEM "chrome://trellis/locale/csledit.dtd"> %csleditDTD;
+	<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
+]>
+
+<window
+	id="csl-edit"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	windowtype="trellis:style-editor"
+	onload="Trellis_CSL_Editor.init();"
+	title="&styles.editor;">
+	
+	<script src="chrome://trellis/content/include.js"/>
+	<script src="csledit.js"/>
+	
+	<linkset>
+		<html:link rel="localization" href="trellis.ftl"/>
+	</linkset>
+
+	<vbox flex="1">
+		<vbox class="csl-edit-toolbars">
+			<hbox class="csl-edit-toolbar">
+				<button id="preview-refresh-button" label="&trellis.general.refresh;" command="cmd_refresh"/>
+				<button id="trellis-csl-save" label="&trellis.general.saveAs;" oncommand="Trellis_CSL_Editor.save()"/>
+				<html:div class="divider" />
+				<menulist id="trellis-csl-page-type" oncommand="Trellis_CSL_Editor.generateBibliography()" native="true" data-l10n-id="styleEditor-locatorType"/>
+				<label value=":" />
+				<label id="locator-input" data-l10n-id="styleEditor-locatorInput" hidden="true"/>
+				<html:input size="5" id="preview-pages" oninput="Trellis_CSL_Editor.generateBibliographyDebounced()" aria-labelledby="trellis-csl-page-type locator-input"/>
+				<html:div class="divider" />
+				<checkbox oncommand="Trellis_CSL_Editor.generateBibliography()" id="preview-suppress-author" label="&trellis.citation.suppressAuthor.label;" native="true" />
+				<html:div class="divider" />
+				<label value="&styles.editor.citePosition;" control="trellis-ref-position"/>
+				<menulist id="trellis-ref-position" oncommand="Trellis_CSL_Editor.generateBibliography()" native="true">
+					<menupopup>
+						<menuitem label="first" value="0"/>
+						<menuitem label="subsequent" value="1"/>
+						<menuitem label="ibid" value="2"/>
+						<menuitem label="ibid-with-locator" value="3"/>
+						<menuitem label="near-note" value="4"/>
+					</menupopup>
+				</menulist>
+			</hbox>
+			<hbox class="csl-edit-toolbar">
+				<label data-l10n-id="styleEditor-citationStyle" control="trellis-csl-list"/>
+				<menulist id="trellis-csl-list" oncommand="Trellis_CSL_Editor.onStyleSelected(this.value)" native="true"/>
+				<html:div class="divider" />
+				<label data-l10n-id="styleEditor-locale" control="locale-menu"/>
+				<menulist id="locale-menu" oncommand="Trellis.Prefs.set('export.lastLocale', this.value); Trellis_CSL_Editor.generateBibliography()" native="true" />
+				
+			</hbox>
+		</vbox>
+		<iframe id="trellis-csl-editor-iframe" src="chrome://scaffold/content/monaco/monaco.html" flex="1"
+			onmousedown="this.focus()" data-l10n-id="styleEditor-editor"/>
+		<splitter id="csledit-splitter" collapse="before" persist="state" orient="vertical">
+			<grippy/>
+		</splitter>
+		<iframe id="trellis-csl-preview-box" type="content" data-l10n-id="styleEditor-preview"/>
+	</vbox>
+	
+	<keyset>
+		<key id="key_close" key="W" modifiers="accel" oncommand="window.close()"/>
+		<key keycode="VK_F5" command="cmd_refresh"/>
+		<key key="R" modifiers="accel" command="cmd_refresh"/>
+	</keyset>
+	
+	<commandset>
+		<command id="cmd_refresh" oncommand="Trellis_CSL_Editor.generateBibliography()"/>
+	</commandset>
+</window>

@@ -1,10 +1,10 @@
-describe("Zotero_Tabs", function() {
+describe("Trellis_Tabs", function() {
 	var win, doc, zp;
 
 	before(async function () {
-		win = await loadZoteroPane();
+		win = await loadTrellisPane();
 		doc = win.document;
-		zp = win.ZoteroPane;
+		zp = win.TrellisPane;
 	});
 
 	after(function () {
@@ -17,10 +17,10 @@ describe("Zotero_Tabs", function() {
 				title: 'Not italic, <i>italic</i>'
 			});
 			let attachment = await importPDFAttachment(item);
-			let reader = await Zotero.Reader.open(attachment.id);
+			let reader = await Trellis.Reader.open(attachment.id);
 			let tab;
 			while (!tab?.textContent.includes('Not italic, italic')) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 				tab = doc.querySelector(`#tab-bar-container .tab[data-id="${reader.tabID}"]`);
 			}
 			assert.include(tab.querySelector('i').textContent, 'italic');
@@ -31,10 +31,10 @@ describe("Zotero_Tabs", function() {
 				title: 'Something bad <img src="missing.jpg" onerror="alert(1)">'
 			});
 			let attachment = await importPDFAttachment(item);
-			let reader = await Zotero.Reader.open(attachment.id);
+			let reader = await Trellis.Reader.open(attachment.id);
 			let tab;
 			while (!tab?.textContent.includes('Something bad <img src="missing.jpg" onerror="alert(1)">')) {
-				await Zotero.Promise.delay(10);
+				await Trellis.Promise.delay(10);
 				tab = doc.querySelector(`#tab-bar-container .tab[data-id="${reader.tabID}"]`);
 			}
 			assert.notOk(tab.querySelector('img'));

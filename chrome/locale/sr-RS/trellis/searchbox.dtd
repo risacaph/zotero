@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Име:">
+
+<!ENTITY trellis.search.searchInLibrary "Потражи у библиотеци:">
+
+<!ENTITY trellis.search.joinMode.prefix "Поклопи">
+<!ENTITY trellis.search.joinMode.any "било шта">
+<!ENTITY trellis.search.joinMode.all "све">
+<!ENTITY trellis.search.joinMode.suffix "од следећег:">
+
+<!ENTITY trellis.search.recursive.label "Претражи подзбирке">
+<!ENTITY trellis.search.noChildren "Прикажи само ставке на највишем нивоу">
+<!ENTITY trellis.search.includeParentsAndChildren "Укључи родитеља и дете ставке која се преклапа са нађеним ставкама">
+
+<!ENTITY trellis.search.textModes.phrase "Израз">
+<!ENTITY trellis.search.textModes.phraseBinary "Израз (укључујући бинарне датотеке)">
+<!ENTITY trellis.search.textModes.regexp "Регуларни израз">
+<!ENTITY trellis.search.textModes.regexpCS "Регуларни израз (препознаје велика/мала слова)">
+
+<!ENTITY trellis.search.date.units.days "дани">
+<!ENTITY trellis.search.date.units.months "месеци">
+<!ENTITY trellis.search.date.units.years "године">
+
+<!ENTITY trellis.search.search "Претражи">
+<!ENTITY trellis.search.clear "Очисти">
+<!ENTITY trellis.search.saveSearch "Сачувај претрагу">

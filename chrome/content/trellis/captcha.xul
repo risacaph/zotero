@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
+
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	onload="Trellis_Captcha.onLoad();"
+	id="trellis-captcha"
+	onkeypress="if(event.keyCode === KeyEvent.DOM_VK_ESCAPE) Trellis_Captcha.cancel();">
+	
+	<script src="include.js"/>
+	<script src="captcha.js"/>
+	
+	<vbox style="padding:10px" align="center" flex="1">
+		<description id="trellis-captcha-description"></description>
+		<image id="trellis-captcha-image" onload="Trellis_Captcha.imageOnLoad();" />
+		<description id="trellis-captcha-error"></description>
+		<textbox id="trellis-captcha-input"
+			onkeypress="if(event.keyCode === KeyEvent.DOM_VK_RETURN) Trellis_Captcha.resolve();" />
+		<hbox>
+			<button label="&trellis.general.ok;" default="true" oncommand="Trellis_Captcha.resolve();" />
+			<button label="&trellis.general.cancel;" oncommand="Trellis_Captcha.cancel();" />
+		</hbox>
+	</vbox>
+</window>

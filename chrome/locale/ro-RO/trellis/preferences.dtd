@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Preferințe Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "Ajutor">
+
+<!ENTITY trellis.preferences.default "Implicite:">
+<!ENTITY trellis.preferences.items "înregistrări">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Personalizare...">
+
+<!ENTITY trellis.preferences.prefpane.general "Generale">
+
+<!ENTITY trellis.preferences.interface "Interfață">
+<!ENTITY trellis.preferences.fileHandling "Operațiuni fișier">
+<!ENTITY trellis.preferences.automaticSnapshots "Creează automat instantanee, atunci când sunt create înregistrări din paginile web">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Anexează automat fișierele PDF asociate, precum și alte fișiere, atunci când sunt salvate înregistrările">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Redenumește fișierele legate">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Deschide PDF-urile folosind">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Sistem implicit">
+
+<!ENTITY trellis.preferences.miscellaneous "Diverse">
+<!ENTITY trellis.preferences.autoUpdate "Verifică în mod automat dacă există translatori și stiluri actualizate">
+<!ENTITY trellis.preferences.updateNow "Actualizează acum">
+<!ENTITY trellis.preferences.reportTranslationFailure "Raportează site-uri cu legături rupte (la translatare)">
+<!ENTITY trellis.preferences.parseRISRefer "Folosește Trellis pentru fișierele descărcate de tip BibTeX/RIS/Refer">
+<!ENTITY trellis.preferences.automaticTags "Creează automat etichetele pentru înregistrări, împreună cu cuvintele cheie și cu titlurile">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Șterge automat din coșul de gunoi înregistrările mai vechi de">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "zile în urmă">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Afișează filele ca">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creator - An - Titlu">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Titlu - Creator - An">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Nume fișier">
+
+<!ENTITY trellis.preferences.groups "Grupuri">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Când se copiază înregistrările între biblioteci se vor include:">
+<!ENTITY trellis.preferences.groups.childNotes "note copil">
+<!ENTITY trellis.preferences.groups.childFiles "instantanee copil și fișiere importate">
+<!ENTITY trellis.preferences.groups.annotations "adnotări">
+<!ENTITY trellis.preferences.groups.childLinks "legături copil">
+<!ENTITY trellis.preferences.groups.tags "etichete">
+
+<!ENTITY trellis.preferences.feeds "Fluxuri">
+<!ENTITY trellis.preferences.feeds.sorting.label "Sortare:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Înregistrările cele mai noi primele">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Înregistrările cele mai vechi primele">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Flux pentru implicite">
+
+<!ENTITY trellis.preferences.prefpane.sync "Sincronizare">
+<!ENTITY trellis.preferences.sync.username "Nume de utilizator:">
+<!ENTITY trellis.preferences.sync.password "Parolă:">
+<!ENTITY trellis.preferences.sync.createAccount "Creează cont">
+<!ENTITY trellis.preferences.sync.lostPassword "Ai uitat parola?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Sincronizare automată">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Sincronizează conținutul textului complet">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis poate sincroniza, cu trellis.org și alte dispozitive legate, conținutul textului complet al fișierelor din bibliotecile tale Trellis, permițându-ți să cauți cu ușurință în fișierele tale oriunde ai fi. Conținutul textului complet al fișierelor tale nu va fi partajat public.">
+<!ENTITY trellis.preferences.sync.about "Despre sincronizare">
+<!ENTITY trellis.preferences.sync.fileSyncing "Sincronizare fișier">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Sincronizare fișiere anexate în Biblioteca mea folosind">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Descarcă fișiere">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "în timpul sincronizării">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "când e nevoie">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Verifică server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Biblioteci de sincronizat">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Alege biblioteci...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sincronizare">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Bibliotecă">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Următoarele operații sunt pentru a fi folosite în situații rare și specifice și nu ar trebui folosite pentru probleme generale. În multe cazuri, resetarea va cauza probleme în plus. Vezi ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Opțiuni de resetare sincronizare">
+<!ENTITY trellis.preferences.sync.reset.warning3 "pentru mai multe informații.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Resetează istoria sincronizării datelor">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Unește datele locale cu datele la distanță, ignorând istoria sincronizărilor">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Restaurează din biblioteca online">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Suprascrie datele locale din Trellis cu datele din biblioteca online.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Înlocuiește biblioteca online">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Suprascrie datele din biblioteca online cu datele locale din Trellis">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Resetează istoria sincronizării fișierelor">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Compară toate fișierele anexate cu serviciul de stocare">
+<!ENTITY trellis.preferences.sync.reset "Resetare">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Afișează opțiunile de resetare…">
+<!ENTITY trellis.preferences.sync.reset.button "Resetare...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Căutare">
+<!ENTITY trellis.preferences.search.fulltextCache "Căutare text complet">
+<!ENTITY trellis.preferences.search.indexStats "Statistici index">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indexate:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Parțial:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Neindexate:">
+<!ENTITY trellis.preferences.search.indexStats.words "Cuvinte:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Numărul maxim de caractere al indexului per fişier">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Numărul maxim de pagini ale indexului per fişier">
+
+<!ENTITY trellis.preferences.prefpane.export "Exportare">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Opțiuni citare">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Include URL-urile articolelor în referințe">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Când această opțiune nu este funcțională, Trellis include URL-urile în timp ce citează articole de jurnale, reviste și ziare doar dacă pentru articol nu a s-a specificat un interval de pagini.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Copiere rapidă">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Format item:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Format notă:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Copiază ca HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Setări specifice site:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domeniu/Cale">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(de ex., wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Format">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Limbă">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Dezactivează Copierea rapidă în timpul tragerii a mai mult de">
+
+<!ENTITY trellis.preferences.prefpane.cite "Citează">
+<!ENTITY trellis.preferences.cite.wordProcessors "Procesoare de text">
+<!ENTITY trellis.preferences.styleEditor "Editor de stil">
+<!ENTITY trellis.preferences.stylePreview "Previzualizare stil">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Manager de stiluri">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Titlu">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Actualizat">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Salvează în Trellis (iconița din bara de adrese)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Panou de focalizare biblioteci">
+<!ENTITY trellis.preferences.keys.quicksearch "Căutare rapidă">
+<!ENTITY trellis.preferences.keys.newItem "Creează o nouă înregistrare">
+<!ENTITY trellis.preferences.keys.newNote "Creează o notă nouă">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Marchează toate fluxurile de înregistrări ca citite/necitite">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Copiază citările înregistrărilor selectate în memoria Clipboard">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Copiază înregistrările selectate în memoria Clipboard">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Importă din memoria Clipboard">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Schimbările vor fi efectuate după repornire">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Servere proxy">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Opțiuni pentru serverele proxy">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis va redirecționa cererile prin serverele proxy salvate. Vezi">
+<!ENTITY trellis.preferences.proxies.desc_link "documentația pentru serverele proxy">
+<!ENTITY trellis.preferences.proxies.desc_after_link "pentru mai multe informații.">
+<!ENTITY trellis.preferences.proxies.transparent "Reamintește automat resursele proxy">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Recunoaște automat resursele proxy">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Afișează notificările la redirecționarea printr-un proxy">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Dezactivează redirectarea proxy când numele meu de domeniu conține ">
+<!ENTITY trellis.preferences.proxies.configured "Servere proxy configurate">
+<!ENTITY trellis.preferences.proxies.hostname "Nume gazdă">
+<!ENTITY trellis.preferences.proxies.scheme "Schemă">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Multi-site">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Asociază automat noile gazde">
+<!ENTITY trellis.preferences.proxies.variables "Ai putea folosi următoarele variabile în schema serverului tău proxy:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Numele gazdă pentru site-ul proxy (de ex., www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Calea paginii proxy, excluzând primele bare oblice (de ex., despre/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Calea dosarului (de ex., despre/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Numele fișierului (de ex., index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Orice șir">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Avansate">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Fișiere și dosare">
+<!ENTITY trellis.preferences.advanced.keys "Scurtături">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Configurare avansată">
+
+<!ENTITY trellis.preferences.prefpane.locate "Localizează">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Manager pentru motorul de căutare a articolelor">
+<!ENTITY trellis.preferences.locate.description "Descriere">
+<!ENTITY trellis.preferences.locate.name "Nume">
+<!ENTITY trellis.preferences.locate.addDescription "Pentru a adăuga un motor de căutare care nu este în listă, vizitați în browser motorul de căutare dorit și selectați „Adaugă” din meniul Localizare din Trellis.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Restaurează valorile implicite">
+
+<!ENTITY trellis.preferences.charset "Codificarea caracterelor">
+<!ENTITY trellis.preferences.charset.importCharset "Importă codificarea caracterelor">
+<!ENTITY trellis.preferences.charset.displayExportOption "Afișează la export opțiunea pentru codificarea caracterelor">
+
+<!ENTITY trellis.preferences.dataDir "Locația dosarului cu date">
+<!ENTITY trellis.preferences.dataDir.useProfile "Folosește dosarul de profil din Firefox">
+<!ENTITY trellis.preferences.dataDir.custom "Personalizare:">
+<!ENTITY trellis.preferences.dataDir.choose "Alege...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(specificat prin linia de comandă)">
+<!ENTITY trellis.preferences.dataDir.reveal "Afișează dosarul de date">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrează la o nouă locație implicită...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Dosarul de bază pentru anexe atașate">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis va folosi căi relative pentru fișierele anexate în directorul de bază, permițând accesarea fișierelor pe diferite calculatoare atâta timp cât structura fișierelor în dosarul de bază rămâne aceeași.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Dosar de bază:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Alege…">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Revino la căi absolute...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Întreținerea bazei de date">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Controlează integritatea bazei de date">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Resetează traducătorii și stilurile...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Resetează traducători...">
+
+<!ENTITY trellis.preferences.configEditor "Editor de configurare">

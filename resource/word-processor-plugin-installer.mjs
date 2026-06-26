@@ -1,23 +1,23 @@
 /*
     ***** BEGIN LICENSE BLOCK *****
 	
-	Copyright (c) 2009  Zotero
+	Copyright (c) 2009  Trellis
 	                    Center for History and New Media
 						George Mason University, Fairfax, Virginia, USA
-						http://zotero.org
+						http://trellis.org
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
@@ -27,7 +27,7 @@
  * installable and available in the cite preferences pane.
  */
 
-import { Zotero } from "chrome://zotero/content/zotero.mjs";
+import { Trellis } from "chrome://trellis/content/trellis.mjs";
 
 import { setTimeout } from "resource://gre/modules/Timer.sys.mjs";
 
@@ -47,7 +47,7 @@ var installationInProgress = false;
  * @param force {Boolean} force install even if the plugin version is up-to-date
  * @constructor
  */
-export var ZoteroPluginInstaller = function (addon, failSilently, force) {
+export var TrellisPluginInstaller = function (addon, failSilently, force) {
 	this._addon = addon;
 	this.failSilently = failSilently;
 	this.force = force;
@@ -60,11 +60,11 @@ export var ZoteroPluginInstaller = function (addon, failSilently, force) {
 	this.init();
 };
 
-ZoteroPluginInstaller.prototype = {
+TrellisPluginInstaller.prototype = {
 	init: async function () {
 		this.debug('Fetching addon info');
 		
-		this._currentPluginVersion = (await Zotero.File.getContentsFromURLAsync(this._addon.VERSION_FILE)).trim();
+		this._currentPluginVersion = (await Trellis.File.getContentsFromURLAsync(this._addon.VERSION_FILE)).trim();
 		let lastInstalledVersion = this.prefBranch.getCharPref("version");
 		let lastAttemptedVersion = this.prefBranch.getCharPref("lastAttemptedVersion", "");
 		let lastPluginFileVersion = this._addon.LAST_INSTALLED_FILE_UPDATE;
@@ -107,7 +107,7 @@ ZoteroPluginInstaller.prototype = {
 			if (!this._addon.DISABLE_PROGRESS_WINDOW && !this.failSilently) {
 				this._progressWindow = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
 					.getService(Components.interfaces.nsIWindowWatcher)
-					.openWindow(null, "chrome://zotero/content/progressWindow.xhtml", '',
+					.openWindow(null, "chrome://trellis/content/progressWindow.xhtml", '',
 						"chrome,resizable=no,close=no,centerscreen", null);
 				this._progressWindow.addEventListener("load", () => this._firstRunListener(), false);
 			}
@@ -117,7 +117,7 @@ ZoteroPluginInstaller.prototype = {
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			this.error(e);
 		}
 		finally {
@@ -149,7 +149,7 @@ ZoteroPluginInstaller.prototype = {
 				Services.prompt.alert(
 					null,
 					this._addon.EXTENSION_STRING,
-					Zotero.getString("zotero.preferences.wordProcessors.installationSuccess")
+					Trellis.getString("trellis.preferences.wordProcessors.installationSuccess")
 				);
 			});
 		}
@@ -169,9 +169,9 @@ ZoteroPluginInstaller.prototype = {
 		}
 		if (this._errorDisplayed) return;
 		this._errorDisplayed = true;
-		let errorMessage = await Zotero.getString("zotero.preferences.wordProcessors.installationError", [
+		let errorMessage = await Trellis.getString("trellis.preferences.wordProcessors.installationError", [
 			this._addon.APP,
-			Zotero.appName
+			Trellis.appName
 		]);
 		if (error) {
 			errorMessage += "\n\n" + error;
@@ -184,10 +184,10 @@ ZoteroPluginInstaller.prototype = {
 				this._addon.EXTENSION_STRING,
 				errorMessage,
 				buttonFlags,
-				Zotero.getString('general-view-troubleshooting-instructions'),
+				Trellis.getString('general-view-troubleshooting-instructions'),
 				null, null, null, {});
 			if (result == 0) {
-				Zotero.launchURL("https://www.zotero.org/support/kb/word_processor_plugin_installation_error");
+				Trellis.launchURL("https://www.trellis.org/support/kb/word_processor_plugin_installation_error");
 			}
 		});
 	},
@@ -213,8 +213,8 @@ ZoteroPluginInstaller.prototype = {
 
 		var description = document.createXULElement("description");
 		description.appendChild(document.createTextNode(isInstalled
-			? Zotero.getString('zotero.preferences.wordProcessors.installed', this._addon.APP)
-			: Zotero.getString('zotero.preferences.wordProcessors.notInstalled', this._addon.APP)));
+			? Trellis.getString('trellis.preferences.wordProcessors.installed', this._addon.APP)
+			: Trellis.getString('trellis.preferences.wordProcessors.notInstalled', this._addon.APP)));
 		groupbox.appendChild(description);
 
 		var hbox = document.createXULElement("hbox");
@@ -222,17 +222,17 @@ ZoteroPluginInstaller.prototype = {
 		var button = document.createXULElement("button"),
 			addon = this._addon;
 		button.setAttribute("label", isInstalled
-			? Zotero.getString('zotero.preferences.wordProcessors.reinstall', this._addon.APP)
-			: Zotero.getString('zotero.preferences.wordProcessors.install', this._addon.APP));
+			? Trellis.getString('trellis.preferences.wordProcessors.reinstall', this._addon.APP)
+			: Trellis.getString('trellis.preferences.wordProcessors.install', this._addon.APP));
 			
 		button.addEventListener("command", () => {
 			this.debug('Install button pressed');
 			try {
-				var zpi = new ZoteroPluginInstaller(addon, false, true);
+				var zpi = new TrellisPluginInstaller(addon, false, true);
 				zpi.showPreferences(document);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}, false);
 		hbox.appendChild(button);
@@ -253,33 +253,33 @@ ZoteroPluginInstaller.prototype = {
 		var isInstalled = this.isInstalled();
 		var description = this.prefPaneDoc.querySelector(`#${this._addon.EXTENSION_DIR} description`);
 		description.replaceChild(this.prefPaneDoc.createTextNode(isInstalled
-			? Zotero.getString('zotero.preferences.wordProcessors.installed', this._addon.APP)
-			: Zotero.getString('zotero.preferences.wordProcessors.notInstalled', this._addon.APP)
+			? Trellis.getString('trellis.preferences.wordProcessors.installed', this._addon.APP)
+			: Trellis.getString('trellis.preferences.wordProcessors.notInstalled', this._addon.APP)
 		), description.childNodes[0]);
 		var button = this.prefPaneDoc.querySelector(`#${this._addon.EXTENSION_DIR} button`);
 		button.setAttribute("label", isInstalled
-			? Zotero.getString('zotero.preferences.wordProcessors.reinstall', this._addon.APP)
-			: Zotero.getString('zotero.preferences.wordProcessors.install', this._addon.APP));
+			? Trellis.getString('trellis.preferences.wordProcessors.reinstall', this._addon.APP)
+			: Trellis.getString('trellis.preferences.wordProcessors.install', this._addon.APP));
 	},
 	
 	_firstRunListener: async function () {
 		this._progressWindowLabel = this._progressWindow.document.getElementById("progress-label");
-		this._progressWindowLabel.value = Zotero.getString('zotero.preferences.wordProcessors.installing', this._addon.EXTENSION_STRING);
+		this._progressWindowLabel.value = Trellis.getString('trellis.preferences.wordProcessors.installing', this._addon.EXTENSION_STRING);
 		this._progressWindow.sizeToContent();
-		await Zotero.Promise.delay(100);
+		await Trellis.Promise.delay(100);
 		this._progressWindow.focus();
-		await Zotero.Promise.delay(500);
+		await Trellis.Promise.delay(500);
 		this._progressWindow.focus();
 		try {
 			await this._addon.install(this);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			this.error(e);
 		}
 	},
 	
 	debug: function (message) {
-		Zotero.debug(`PluginInstaller ${this._addon.APP}: ${message}`);
+		Trellis.debug(`PluginInstaller ${this._addon.APP}: ${message}`);
 	}
 };

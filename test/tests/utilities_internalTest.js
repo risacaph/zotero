@@ -1,10 +1,10 @@
 "use strict";
 
-describe("Zotero.Utilities.Internal", function () {
+describe("Trellis.Utilities.Internal", function () {
 	var ZUI;
 		
 	before(function () {
-		ZUI = Zotero.Utilities.Internal;
+		ZUI = Trellis.Utilities.Internal;
 	});
 	
 	
@@ -13,7 +13,7 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should generate hex string given file path", async function () {
 			var file = OS.Path.join(getTestDataDirectory().path, 'test.png');
 			assert.equal(
-				Zotero.Utilities.Internal.md5(Zotero.File.pathToFile(file)),
+				Trellis.Utilities.Internal.md5(Trellis.File.pathToFile(file)),
 				'93da8f1e5774c599f0942dcecf64b11c'
 			);
 		})
@@ -24,13 +24,13 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should generate hex string given file path", async function () {
 			var file = OS.Path.join(getTestDataDirectory().path, 'test.png');
 			assert.equal(
-				await Zotero.Utilities.Internal.md5Async(file),
+				await Trellis.Utilities.Internal.md5Async(file),
 				'93da8f1e5774c599f0942dcecf64b11c'
 			);
 		});
 		
 		it("should generate hex string given file path for file bigger than chunk size", async function () {
-			var tmpDir = Zotero.getTempDirectory().path;
+			var tmpDir = Trellis.getTempDirectory().path;
 			var file = OS.Path.join(tmpDir, 'md5Async');
 			
 			let encoder = new TextEncoder();
@@ -38,7 +38,7 @@ describe("Zotero.Utilities.Internal", function () {
 			await OS.File.writeAtomic(file, arr);
 			
 			assert.equal(
-				await Zotero.Utilities.Internal.md5Async(file),
+				await Trellis.Utilities.Internal.md5Async(file),
 				'1af6d6f2f682f76f80e606aeaaee1680'
 			);
 			
@@ -46,7 +46,7 @@ describe("Zotero.Utilities.Internal", function () {
 		});
 		
 		it("should return false for a nonexistent file", async function () {
-			var tmpDir = Zotero.getTempDirectory().path;
+			var tmpDir = Trellis.getTempDirectory().path;
 			var file = OS.Path.join(tmpDir, 'nonexistent-asawefaweoihafa');
 			assert.isFalse(await ZUI.md5Async(file));
 		});
@@ -54,7 +54,7 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should return hash for an empty file", async function () {
 			const emptyHash = 'd41d8cd98f00b204e9800998ecf8427e';
 			
-			var tmpDir = Zotero.getTempDirectory().path;
+			var tmpDir = Trellis.getTempDirectory().path;
 			var file = OS.Path.join(tmpDir, 'empty-file');
 			await IOUtils.write(file, new Uint8Array());
 			
@@ -68,10 +68,10 @@ describe("Zotero.Utilities.Internal", function () {
 	describe("#gzip()/gunzip()", function () {
 		it("should compress and decompress a Unicode text string", async function () {
 			var text = "Voilà! \u1F429";
-			var compstr = await Zotero.Utilities.Internal.gzip(text);
+			var compstr = await Trellis.Utilities.Internal.gzip(text);
 			assert.isAbove(compstr.length, 0);
 			assert.notEqual(compstr.length, text.length);
-			var str = await Zotero.Utilities.Internal.gunzip(compstr);
+			var str = await Trellis.Utilities.Internal.gunzip(compstr);
 			assert.equal(str, text);
 		});
 	});
@@ -80,7 +80,7 @@ describe("Zotero.Utilities.Internal", function () {
 	describe("#decodeUTF8()", function () {
 		it("should properly decode binary string", async function () {
 			let text = String.fromCharCode.apply(null, new Uint8Array([226, 130, 172]));
-			let utf8 = Zotero.Utilities.Internal.decodeUTF8(text);
+			let utf8 = Trellis.Utilities.Internal.decodeUTF8(text);
 			assert.equal(utf8, "€");
 		});
 	});
@@ -88,19 +88,19 @@ describe("Zotero.Utilities.Internal", function () {
 	
 	describe("#containsEmoji()", function () {
 		it("should return true for text with an emoji", function () {
-			assert.isTrue(Zotero.Utilities.Internal.containsEmoji("🐩 Hello 🐩"));
+			assert.isTrue(Trellis.Utilities.Internal.containsEmoji("🐩 Hello 🐩"));
 		});
 		
 		it("should return true for text with an emoji with text representation that use Variation Selector-16", function () {
-			assert.isTrue(Zotero.Utilities.Internal.containsEmoji("This is a ⭐️"));
+			assert.isTrue(Trellis.Utilities.Internal.containsEmoji("This is a ⭐️"));
 		});
 		
 		it("should return true for text with an emoji made up of multiple characters with ZWJ", function () {
-			assert.isTrue(Zotero.Utilities.Internal.containsEmoji("I am a 👨‍🌾"));
+			assert.isTrue(Trellis.Utilities.Internal.containsEmoji("I am a 👨‍🌾"));
 		});
 		
 		it("should return false for integer", function () {
-			assert.isFalse(Zotero.Utilities.Internal.containsEmoji("0"));
+			assert.isFalse(Trellis.Utilities.Internal.containsEmoji("0"));
 		});
 	});
 	
@@ -108,7 +108,7 @@ describe("Zotero.Utilities.Internal", function () {
 		var spy;
 		
 		before(function () {
-			spy = sinon.spy(Zotero.Promise, "delay");
+			spy = sinon.spy(Trellis.Promise, "delay");
 		});
 		
 		afterEach(function () {
@@ -121,7 +121,7 @@ describe("Zotero.Utilities.Internal", function () {
 		
 		it("should delay for given amounts of time without limit", async function () {
 			var intervals = [1, 2];
-			var gen = Zotero.Utilities.Internal.delayGenerator(intervals);
+			var gen = Trellis.Utilities.Internal.delayGenerator(intervals);
 			
 			// When intervals are exhausted, keep using last interval
 			var testIntervals = intervals.slice();
@@ -137,7 +137,7 @@ describe("Zotero.Utilities.Internal", function () {
 		
 		it("should return false when maxTime is reached", async function () {
 			var intervals = [5, 10];
-			var gen = Zotero.Utilities.Internal.delayGenerator(intervals, 30);
+			var gen = Trellis.Utilities.Internal.delayGenerator(intervals, 30);
 			
 			// When intervals are exhausted, keep using last interval
 			var testIntervals = intervals.slice();
@@ -162,7 +162,7 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should ignore 'Type: note', 'Type: attachment', and 'Type: annotation'", function () {
 			for (let type of ['note', 'attachment', 'annotation']) {
 				let str = `Type: ${type}`;
-				let { itemType, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+				let { itemType, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 				assert.isNull(itemType, type);
 				assert.equal(extra, `Type: ${type}`, type);
 			}
@@ -171,22 +171,22 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should ignore numeric values for Type", function () {
 			for (let type of ['3']) {
 				let str = `Type: ${type}`;
-				let { itemType, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+				let { itemType, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 				assert.isNull(itemType, type);
 				assert.equal(extra, `Type: ${type}`, type);
 			}
 		});
 		
-		it("should use the first mapped Zotero type for a CSL type", function () {
+		it("should use the first mapped Trellis type for a CSL type", function () {
 			var str = 'type: personal_communication';
-			var { itemType, fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { itemType, fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(itemType, 'letter');
 		});
 		
 		it("should extract a field", function () {
 			var val = '10.1234/abcdef';
 			var str = `DOI: ${val}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('DOI'), val);
 			assert.strictEqual(extra, '');
@@ -196,7 +196,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'journalArticle' });
 			var val = '10.1234/abcdef';
 			var str = `DOI: ${val}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('DOI'), val);
 			assert.strictEqual(extra, '');
@@ -206,7 +206,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'book' });
 			var val = 'Foo';
 			var str = `medium: ${val}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('medium'), val);
 			assert.strictEqual(extra, '');
@@ -215,8 +215,8 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should extract a CSL field", function () {
 			var val = '10.1234/abcdef';
 			var str = `container-title: ${val}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
-			assert.equal(fields.size, Zotero.Schema.CSL_TEXT_MAPPINGS['container-title'].length);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
+			assert.equal(fields.size, Trellis.Schema.CSL_TEXT_MAPPINGS['container-title'].length);
 			assert.equal(fields.get('publicationTitle'), val);
 			assert.strictEqual(extra, '');
 		});
@@ -225,7 +225,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'journalArticle' });
 			var val = '10.1234/abcdef';
 			var str = `container-title: ${val}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('publicationTitle'), val);
 			assert.strictEqual(extra, '');
@@ -234,7 +234,7 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should extract a field with different case", function () {
 			var val = '10.1234/abcdef';
 			var str = `doi: ${val}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('DOI'), val);
 			assert.strictEqual(extra, '');
@@ -244,7 +244,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var date = '2020-04-01';
 			var doi = '10.1234/abcdef';
 			var str = `Line 1\nDate: ${date}\nFoo: Bar\nDOI: ${doi}\n\nLine 2`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 2);
 			assert.equal(fields.get('date'), date);
 			assert.equal(fields.get('DOI'), doi);
@@ -255,7 +255,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var date1 = '2020-04-01';
 			var date2 = '2020-04-02';
 			var str = `Date: ${date1}\nDate: ${date2}`;
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('date'), date1);
 			assert.equal(extra, "Date: " + date2);
@@ -263,7 +263,7 @@ describe("Zotero.Utilities.Internal", function () {
 		
 		it("shouldn't extract a field from a line that begins with a whitespace", function () {
 			var str = '\n number-of-pages: 11';
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 0);
 		});
 		
@@ -271,13 +271,13 @@ describe("Zotero.Utilities.Internal", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'book' });
 			item.setField('numPages', 10);
 			var str = 'number-of-pages: 11';
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.equal(fields.size, 0);
 		});
 		
 		it("should extract a CSL date field", function () {
 			var str = 'issued: 2000';
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 1);
 			assert.equal(fields.get('date'), 2000);
 			assert.strictEqual(extra, '');
@@ -285,7 +285,7 @@ describe("Zotero.Utilities.Internal", function () {
 		
 		it("should extract a CSL name", function () {
 			var str = 'container-author: Last || First';
-			var { creators, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { creators, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.lengthOf(creators, 1);
 			assert.propertyVal(creators[0], 'creatorType', 'bookAuthor');
 			assert.propertyVal(creators[0], 'firstName', 'First');
@@ -296,7 +296,7 @@ describe("Zotero.Utilities.Internal", function () {
 		it("should extract a CSL name that's valid for a given item type", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'bookSection' });
 			var str = 'container-author: Last || First';
-			var { creators, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { creators, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.lengthOf(creators, 1);
 			assert.propertyVal(creators[0], 'creatorType', 'bookAuthor');
 			assert.propertyVal(creators[0], 'firstName', 'First');
@@ -307,7 +307,7 @@ describe("Zotero.Utilities.Internal", function () {
 		it("shouldn't extract a CSL name that's not valid for a given item type", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'journalArticle' });
 			var str = 'container-author: Last || First';
-			var { creators, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { creators, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.lengthOf(creators, 0);
 			assert.strictEqual(extra, str);
 		});
@@ -316,7 +316,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'book' });
 			item.setCreator(0, { creatorType: 'author', name: 'Foo' });
 			var str = 'author: Bar';
-			var { fields, creators, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { fields, creators, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.equal(fields.size, 0);
 			assert.lengthOf(creators, 0);
 		});
@@ -325,7 +325,7 @@ describe("Zotero.Utilities.Internal", function () {
 			var item = createUnsavedDataObject('item', { itemType: 'book' });
 			item.setCreator(0, { creatorType: 'author', name: 'Foo' });
 			var str = 'editor: Bar';
-			var { fields, creators, extra } = Zotero.Utilities.Internal.extractExtraFields(str, item);
+			var { fields, creators, extra } = Trellis.Utilities.Internal.extractExtraFields(str, item);
 			assert.equal(fields.size, 0);
 			assert.lengthOf(creators, 1);
 			assert.equal(creators[0].creatorType, 'editor');
@@ -334,7 +334,7 @@ describe("Zotero.Utilities.Internal", function () {
 		
 		it("should extract the citeproc-js cheater syntax", function () {
 			var issued = '{:number-of-pages:11}\n{:issued:2014}';
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(issued);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(issued);
 			assert.equal(fields.size, 2);
 			assert.equal(fields.get('numPages'), 11);
 			assert.equal(fields.get('date'), 2014);
@@ -343,7 +343,7 @@ describe("Zotero.Utilities.Internal", function () {
 		
 		it("should ignore empty creator in citeproc-js cheater syntax", function () {
 			var str = '{:author: }\n';
-			var { fields, extra } = Zotero.Utilities.Internal.extractExtraFields(str);
+			var { fields, extra } = Trellis.Utilities.Internal.extractExtraFields(str);
 			assert.equal(fields.size, 0);
 			assert.strictEqual(extra, str);
 		});
@@ -459,7 +459,7 @@ describe("Zotero.Utilities.Internal", function () {
 		});
 		
 		function resolve(locale) {
-			return Zotero.Utilities.Internal.resolveLocale(locale, availableLocales);
+			return Trellis.Utilities.Internal.resolveLocale(locale, availableLocales);
 		}
 		
 		it("should return en-US for en-US", function () {
@@ -501,15 +501,15 @@ describe("Zotero.Utilities.Internal", function () {
 	
 	describe("#camelToTitleCase()", function () {
 		it("should convert 'fooBar' to 'Foo Bar'", function () {
-			assert.equal(Zotero.Utilities.Internal.camelToTitleCase('fooBar'), 'Foo Bar');
+			assert.equal(Trellis.Utilities.Internal.camelToTitleCase('fooBar'), 'Foo Bar');
 		});
 		
 		it("should keep all-caps strings intact", function () {
-			assert.equal(Zotero.Utilities.Internal.camelToTitleCase('DOI'), 'DOI');
+			assert.equal(Trellis.Utilities.Internal.camelToTitleCase('DOI'), 'DOI');
 		});
 		
 		it("should convert 'fooBAR' to 'Foo BAR'", function () {
-			assert.equal(Zotero.Utilities.Internal.camelToTitleCase('fooBAR'), 'Foo BAR');
+			assert.equal(Trellis.Utilities.Internal.camelToTitleCase('fooBAR'), 'Foo BAR');
 		});
 
 	});
@@ -517,29 +517,29 @@ describe("Zotero.Utilities.Internal", function () {
 	describe("#getNextName()", function () {
 		it("should get the next available numbered name", function () {
 			var existing = ['Name', 'Name 1', 'Name 3'];
-			assert.equal(Zotero.Utilities.Internal.getNextName('Name', existing), 'Name 2');
+			assert.equal(Trellis.Utilities.Internal.getNextName('Name', existing), 'Name 2');
 		});
 		
 		it("should return 'Name 1' if no numbered names", function () {
 			var existing = ['Name'];
-			assert.equal(Zotero.Utilities.Internal.getNextName('Name', existing), 'Name 1');
+			assert.equal(Trellis.Utilities.Internal.getNextName('Name', existing), 'Name 1');
 		});
 		
 		it("should return 'Name' if only numbered names", function () {
 			var existing = ['Name 1', 'Name 3'];
-			assert.equal(Zotero.Utilities.Internal.getNextName('Name', existing), 'Name');
+			assert.equal(Trellis.Utilities.Internal.getNextName('Name', existing), 'Name');
 		});
 		
 		it("should trim given name if trim=true", function () {
 			var existing = ['Name', 'Name 1', 'Name 2', 'Name 3'];
-			assert.equal(Zotero.Utilities.Internal.getNextName('Name 2', existing, true), 'Name 4');
+			assert.equal(Trellis.Utilities.Internal.getNextName('Name 2', existing, true), 'Name 4');
 		});
 	});
 
 	describe("#parseURL()", function () {
 		var f;
 		before(() => {
-			f = Zotero.Utilities.Internal.parseURL;
+			f = Trellis.Utilities.Internal.parseURL;
 		});
 
 		describe("#fileName", function () {
@@ -592,7 +592,7 @@ describe("Zotero.Utilities.Internal", function () {
 				ar2: [1, 2]
 			};
 			var template = `{{ v1}}{{v2 a1= "1"  a2 =' 2' a3 = "3 "}}{{v3}}{{v4}}{{if ar1}}ar1{{endif}}{{if ar2}}{{ar2}}{{endif}}{{if v5}}yes{{endif}}{{if v3}}no1{{endif}}{{if v2}}{{v2}}{{endif}}`;
-			var html = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			var html = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(html, '11 23 1,2yes');
 		});
 
@@ -601,7 +601,7 @@ describe("Zotero.Utilities.Internal", function () {
 				length: ({ string }) => string.length.toString(),
 			};
 			const template = `"" has a length of {{ length string="" }} and "hello" has a length of {{ length string="hello" }}`;
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, '"" has a length of 0 and "hello" has a length of 5');
 		});
 
@@ -614,63 +614,63 @@ describe("Zotero.Utilities.Internal", function () {
 				onlyOne: 'actually == 1'
 			};
 			const template = `{{if {{ sum a="1" b="2" }} == "3"}}1 + 2 = {{sum a="1" b="2"}}{{else}}no speak math{{endif}}`;
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, '1 + 2 = 3');
 
 			const template2 = '{{if false != "false"}}no{{elseif false == "false"}}yes{{else}}no{{endif}}';
-			const out2 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template2, vars);
+			const out2 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template2, vars);
 			assert.equal(out2, 'yes');
 
 			const template3 = '{{ if twoWords == "two words" }}yes{{else}}no{{endif}}';
-			const out3 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template3, vars);
+			const out3 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template3, vars);
 			assert.equal(out3, 'yes');
 
 			const template4 = '{{ if onlyOne == \'actually == 1\' }}yes{{else}}no{{endif}}';
-			const out4 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template4, vars);
+			const out4 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template4, vars);
 			assert.equal(out4, 'yes');
 
 			const template5 = '{{ if "3" == {{ sum a="1" b="2" }} }}yes{{else}}no{{endif}}';
-			const out5 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template5, vars);
+			const out5 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template5, vars);
 			assert.equal(out5, 'yes');
 
 			const template6 = '{{ if {{ sum a="1" b="2" }} }}yes{{else}}no{{endif}}';
-			const out6 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template6, vars);
+			const out6 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template6, vars);
 			assert.equal(out6, 'yes');
 
 			const template7 = '{{ if {{ twoWords }} }}yes{{else}}no{{endif}}';
-			const out7 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template7, vars);
+			const out7 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template7, vars);
 			assert.equal(out7, 'yes');
 
 			const template8 = '{{ if twoWords }}yes{{else}}no{{endif}}';
-			const out8 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template8, vars);
+			const out8 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template8, vars);
 			assert.equal(out8, 'yes');
 
 			const template9 = '{{ if missing }}no{{else}}yes{{endif}}';
-			const out9 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template9, vars);
+			const out9 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template9, vars);
 			assert.equal(out9, 'yes');
 
 			const template10 = '{{ if {{ missing foo="bar" }} }}no{{else}}yes{{endif}}';
-			const out10 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template10, vars);
+			const out10 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template10, vars);
 			assert.equal(out10, 'yes');
 
 			const template11 = '{{ if {{ missing foo="bar" }} == "" }}yes{{else}}no{{endif}}';
-			const out11 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template11, vars);
+			const out11 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template11, vars);
 			assert.equal(out11, 'yes');
 
 			const template12 = '{{ if fooBar == "bar" }}yes{{else}}no{{endif}}';
-			const out12 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template12, vars);
+			const out12 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template12, vars);
 			assert.equal(out12, 'yes');
 
 			const template13 = '{{ if {{ fooBar }} == "bar" }}yes{{else}}no{{endif}}';
-			const out13 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template13, vars);
+			const out13 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template13, vars);
 			assert.equal(out13, 'yes');
 
 			const template14 = `{{if {{ sum a="1" b="2" }}=="3"}}1 + 2 = {{sum a="1" b="2"}}{{else}}no{{endif}}`;
-			const out14 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template14, vars);
+			const out14 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template14, vars);
 			assert.equal(out14, '1 + 2 = 3');
 			
 			const template15 = `{{if "two words"==twoWords}}yes{{else}}no{{endif}}`;
-			const out15 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template15, vars);
+			const out15 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template15, vars);
 			assert.equal(out15, 'yes');
 		});
 
@@ -685,28 +685,28 @@ describe("Zotero.Utilities.Internal", function () {
 			};
 
 			const template1 = `{{if v1 > π}}more than π{{elseif v1 <= π}}less or equal to π{{endif}}`;
-			const out1 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template1, vars);
+			const out1 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template1, vars);
 			assert.equal(out1, 'less or equal to π');
 
 			const template2 = `{{if {{ sum a="2" b="3" }} > π}}more than π{{else}}less or equal to π{{endif}}`;
-			const out2 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template2, vars);
+			const out2 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template2, vars);
 			assert.equal(out2, 'more than π');
 
 			const template3 = `{{if 3.14 >= π}}more than or equal to π{{else}}less than π{{endif}}`;
-			const out3 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template3, vars);
+			const out3 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template3, vars);
 			assert.equal(out3, 'more than or equal to π');
 
 			const template4 = `{{if v3 > v4}}100 is more than 99{{else}}string "100" would be sorted before "99"{{endif}}`;
-			const out4 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template4, vars);
+			const out4 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template4, vars);
 			assert.equal(out4, '100 is more than 99');
 
 			// This is undocumented and unsupported behavior, but comparing strings should work
 			const template5 = `{{if "test" > v2}}"test" > "foo"{{else}}no{{endif}}`;
-			const out5 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template5, vars);
+			const out5 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template5, vars);
 			assert.equal(out5, '"test" > "foo"');
 
 			const template6 = `{{if "bar" < v2 }}"bar" < "foo"{{else}}no{{endif}}`;
-			const out6 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template6, vars);
+			const out6 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template6, vars);
 			assert.equal(out6, '"bar" < "foo"');
 		});
 
@@ -715,7 +715,7 @@ describe("Zotero.Utilities.Internal", function () {
 				fooBar: ({ isFoo }) => (isFoo === 'true' ? 'foo' : 'bar'),
 			};
 			const template = '{{ foo-bar is-foo="true" }}{{ if {{ foo-bar is-foo="false" }} == "bar" }}{{ foo-bar is-foo="false" }}{{ endif }}';
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, 'foobar');
 		});
 
@@ -725,7 +725,7 @@ describe("Zotero.Utilities.Internal", function () {
 			};
 			// An {{endif}} without a matching {{if}} shouldn't pop the base level and crash
 			const template = 'foo{{endif}}bar{{if v1 == "1"}}baz{{endif}}';
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, 'foobarbaz');
 		});
 
@@ -734,7 +734,7 @@ describe("Zotero.Utilities.Internal", function () {
 				v1: '1',
 			};
 			const template = 'test {{ if v1 == "1" }}yes{{ else }}no{{ endif }} foobar';
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, 'test yes foobar');
 		});
 
@@ -743,17 +743,17 @@ describe("Zotero.Utilities.Internal", function () {
 				foo: 'foo',
 			};
 			const template = '{{bar}}{{ if foo == "" }}no{{elseif foo}}{{foo}}{{else}}no{{endif}}';
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, 'foo');
 
 			const template2 = 'test: {{ if bar == "" }}yes{{else}}no{{endif}}';
-			const out2 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template2, vars);
+			const out2 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template2, vars);
 			assert.equal(out2, 'test: yes');
 		});
 
 		it("should preserve whitespace outside of brackets", function () {
 			const template = ' starts }} with {{ whitespace  	{"test"}  ==  \'foobar\'   ';
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, {});
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, {});
 			assert.equal(out, template);
 			const vars = {
 				space: ' ',
@@ -761,7 +761,7 @@ describe("Zotero.Utilities.Internal", function () {
 			};
 
 			const whitespace = ' {{if spaceFn}}{{else}}  {{endif}}{{space}} {{space-fn}}';
-			const out2 = Zotero.Utilities.Internal.generateHTMLFromTemplate(whitespace, vars);
+			const out2 = Trellis.Utilities.Internal.generateHTMLFromTemplate(whitespace, vars);
 			assert.equal(out2, '    ');
 		});
 
@@ -771,11 +771,11 @@ describe("Zotero.Utilities.Internal", function () {
 				tags: ({ join }) => (join ? someTags.join(join) : someTags),
 			};
 			const template = '{{ if tags }}#{{ tags join=" #" }}{{else}}no tags{{endif}}';
-			const out = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out, '#foo #bar');
 
 			someTags = [];
-			const out2 = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			const out2 = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(out2, 'no tags');
 		});
 
@@ -787,10 +787,10 @@ describe("Zotero.Utilities.Internal", function () {
 				array: () => [],
 				fn: () => 1,
 			};
-			assert.throws(() => Zotero.Utilities.Internal.generateHTMLFromTemplate('{{ number }}', vars), /Identifier "number" does not evaluate to a string/);
-			assert.throws(() => Zotero.Utilities.Internal.generateHTMLFromTemplate('{{ logic }}', vars), /Identifier "logic" does not evaluate to a string/);
-			assert.throws(() => Zotero.Utilities.Internal.generateHTMLFromTemplate('{{ if fn }}no{{endif}}', vars), /Identifier "fn" does not evaluate to a string/);
-			assert.throws(() => Zotero.Utilities.Internal.generateHTMLFromTemplate('{{ if {{ fn foo="bar" }} }}no{{endif}}', vars), /Identifier "fn" does not evaluate to a string/);
+			assert.throws(() => Trellis.Utilities.Internal.generateHTMLFromTemplate('{{ number }}', vars), /Identifier "number" does not evaluate to a string/);
+			assert.throws(() => Trellis.Utilities.Internal.generateHTMLFromTemplate('{{ logic }}', vars), /Identifier "logic" does not evaluate to a string/);
+			assert.throws(() => Trellis.Utilities.Internal.generateHTMLFromTemplate('{{ if fn }}no{{endif}}', vars), /Identifier "fn" does not evaluate to a string/);
+			assert.throws(() => Trellis.Utilities.Internal.generateHTMLFromTemplate('{{ if {{ fn foo="bar" }} }}no{{endif}}', vars), /Identifier "fn" does not evaluate to a string/);
 		});
 
 		it("should support nested 'if' statements", function () {
@@ -799,7 +799,7 @@ describe("Zotero.Utilities.Internal", function () {
 				v2: 'H',
 			};
 			var template = `{{if v1 == '1'}}yes1{{if x}}no{{elseif v2  == "h" }}yes2{{endif}}{{elseif v2 == "2"}}no{{else}}no{{endif}} {{if v2 == "1"}}not{{elseif x}}not{{else}}yes3{{ endif}}`;
-			var html = Zotero.Utilities.Internal.generateHTMLFromTemplate(template, vars);
+			var html = Trellis.Utilities.Internal.generateHTMLFromTemplate(template, vars);
 			assert.equal(html, 'yes1yes2 yes3');
 		});
 	});
@@ -812,31 +812,31 @@ describe("Zotero.Utilities.Internal", function () {
 		})
 		
 		after(function () {
-			Zotero.Prefs.clear('openURL.resolver');
+			Trellis.Prefs.clear('openURL.resolver');
 		});
 		
 		describe("#resolve()", function () {
 			it("should add trailing '?' if no query string", async function () {
-				Zotero.Prefs.set("openURL.resolver", "https://resolver.ebsco.com/c/abcdef/result");
-				var url = Zotero.Utilities.Internal.OpenURL.resolve(item);
+				Trellis.Prefs.set("openURL.resolver", "https://resolver.ebsco.com/c/abcdef/result");
+				var url = Trellis.Utilities.Internal.OpenURL.resolve(item);
 				assert.include(url, 'result?url_ver=Z39.88-2004');
 			});
 			
 			it("should add trailing '&' if already a query string", async function () {
-				Zotero.Prefs.set("openURL.resolver", "https://resolver.ebscohost.com/openurl?custid=abcdef&groupid=main&profile=ftf&authtype=ip,uid");
-				var url = Zotero.Utilities.Internal.OpenURL.resolve(item);
+				Trellis.Prefs.set("openURL.resolver", "https://resolver.ebscohost.com/openurl?custid=abcdef&groupid=main&profile=ftf&authtype=ip,uid");
+				var url = Trellis.Utilities.Internal.OpenURL.resolve(item);
 				assert.include(url, 'authtype=ip,uid&url_ver=Z39.88-2004');
 			});
 			
 			it("should add trailing '?' after /login?url=", async function () {
-				Zotero.Prefs.set("openURL.resolver", "https://proxy.school.edu/login?url=https://resolver.ebscohost.com/openurl");
-				var url = Zotero.Utilities.Internal.OpenURL.resolve(item);
+				Trellis.Prefs.set("openURL.resolver", "https://proxy.school.edu/login?url=https://resolver.ebscohost.com/openurl");
+				var url = Trellis.Utilities.Internal.OpenURL.resolve(item);
 				assert.include(url, 'openurl?url_ver=Z39.88-2004');
 			});
 			
 			it("shouldn't add trailing '?' after /login?url= if URL already ends in '?'", async function () {
-				Zotero.Prefs.set("openURL.resolver", "https://proxy.school.edu/login?url=https://resolver.ebscohost.com/openurl?");
-				var url = Zotero.Utilities.Internal.OpenURL.resolve(item);
+				Trellis.Prefs.set("openURL.resolver", "https://proxy.school.edu/login?url=https://resolver.ebscohost.com/openurl?");
+				var url = Trellis.Utilities.Internal.OpenURL.resolve(item);
 				assert.include(url, 'openurl?url_ver=Z39.88-2004');
 			});
 		});
@@ -846,7 +846,7 @@ describe("Zotero.Utilities.Internal", function () {
 		function renderToElement(title) {
 			let elem = new DOMParser().parseFromString('<div></div>', 'text/html')
 				.querySelector('div');
-			Zotero.Utilities.Internal.renderItemTitle(title, elem);
+			Trellis.Utilities.Internal.renderItemTitle(title, elem);
 			return elem;
 		}
 		
@@ -859,7 +859,7 @@ describe("Zotero.Utilities.Internal", function () {
 		}
 		
 		function renderToText(title) {
-			return Zotero.Utilities.Internal.renderItemTitle(title);
+			return Trellis.Utilities.Internal.renderItemTitle(title);
 		}
 		
 		it("should render a title without tags unchanged", function () {

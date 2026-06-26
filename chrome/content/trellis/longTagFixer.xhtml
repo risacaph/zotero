@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
+
+<window
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	id="trellis-long-tag-fixer-window"
+	data-l10n-id="long-tag-fixer-window-title"
+	class="trellis-dialog"
+	drawintitlebar-platforms="mac"
+	onload="Trellis_Long_Tag_Fixer.init()">
+<dialog
+	id="trellis-long-tag-fixer"
+	class="trellis-dialog-window"
+	buttons="cancel,accept,extra1"
+	buttonidextra1="long-tag-fixer-button-dont-split"
+>
+	<html:link rel="localization" href="trellis.ftl" />
+	<html:div id="intro">
+		<html:h1>&trellis.sync.longTagFixer.followingTagTooLong;</html:h1>
+		<html:textarea id="trellis-old-tag" readonly="readonly" />
+		<label>&trellis.sync.longTagFixer.syncedTagSizeLimit;</label>
+		<label value="&trellis.sync.longTagFixer.splitEditDelete;"/>
+	</html:div>
+	<tabbox id="trellis-new-tag-actions">
+		<tabs>
+			<tab label="&trellis.sync.longTagFixer.split;"/>
+			<tab label="&trellis.general.edit;"/>
+			<tab label="&trellis.general.delete;"/>
+		</tabs>
+		<tabpanels>
+			<!-- Split -->
+			<tabpanel class="split-tab">
+				<hbox class="delimiter-input-wrap">
+					<label>&trellis.sync.longTagFixer.splitAtThe;</label>
+					<html:input
+						type="text"
+						class="delimiter-input"
+						id="trellis-old-tag-delimiter" />
+					<label id="delimiter-label"></label>
+				</hbox>
+				<richlistbox id="trellis-new-tag-list" class="tag-list" flex="1" tabindex="0" />
+				<hbox class="select-actions">
+					<label value="&trellis.sync.longTagFixer.uncheckedTagsNotSaved;" />
+					<div>
+						<button label="&trellis.general.deselectAll;" oncommand="Trellis_Long_Tag_Fixer.deselectAll()"/>
+						<button label="&trellis.general.selectAll;" oncommand="Trellis_Long_Tag_Fixer.selectAll()"/>
+					</div>
+				</hbox>
+			</tabpanel>
+			
+			<!-- Edit -->
+			<tabpanel class="edit-tab">
+				<html:textarea id="trellis-new-tag-editor"/>
+				<html:div id="trellis-new-tag-characters">
+					<html:span id="trellis-new-tag-character-count" />
+					<html:span>&trellis.sync.longTagFixer.characters;</html:span>
+				</html:div>
+			</tabpanel>
+			
+			<!-- Delete -->
+			<tabpanel align="center" pack="center">
+				<label value="&trellis.sync.longTagFixer.tagWillBeDeleted;"/>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+	<script src="include.js"/>
+	<script src="titlebar.js"/>
+	<script src="longTagFixer.js"/>
+</dialog>
+</window>

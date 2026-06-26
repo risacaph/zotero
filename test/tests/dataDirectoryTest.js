@@ -1,6 +1,6 @@
 "use strict";
 
-describe("Zotero.DataDirectory", function () {
+describe("Trellis.DataDirectory", function () {
 	var tmpDir, oldDir, newDir, dbFilename, oldDBFile, newDBFile, oldStorageDir, newStorageDir,
 		oldTranslatorsDir, newTranslatorsDir, translatorName1, translatorName2,
 		oldStorageDir1, newStorageDir1, storageFile1, oldStorageDir2, newStorageDir2, storageFile2,
@@ -12,7 +12,7 @@ describe("Zotero.DataDirectory", function () {
 		tmpDir = yield getTempDirectory();
 		oldDir = OS.Path.join(tmpDir, "old");
 		newDir = OS.Path.join(tmpDir, "new");
-		dbFilename = Zotero.DataDirectory.getDatabaseFilename();
+		dbFilename = Trellis.DataDirectory.getDatabaseFilename();
 		oldDBFile = OS.Path.join(oldDir, dbFilename);
 		newDBFile = OS.Path.join(newDir, dbFilename);
 		oldStorageDir = OS.Path.join(oldDir, "storage");
@@ -33,12 +33,12 @@ describe("Zotero.DataDirectory", function () {
 		str4 = '4';
 		str5 = '5';
 		str6 = '6';
-		oldMigrationMarker = OS.Path.join(oldDir, Zotero.DataDirectory.MIGRATION_MARKER);
-		newMigrationMarker = OS.Path.join(newDir, Zotero.DataDirectory.MIGRATION_MARKER);
+		oldMigrationMarker = OS.Path.join(oldDir, Trellis.DataDirectory.MIGRATION_MARKER);
+		newMigrationMarker = OS.Path.join(newDir, Trellis.DataDirectory.MIGRATION_MARKER);
 		
-		stubs.canMigrate = sinon.stub(Zotero.DataDirectory, "canMigrate").returns(true);
-		stubs.setDataDir = sinon.stub(Zotero.DataDirectory, "set");
-		stubs.isNewDirOnDifferentDrive = sinon.stub(Zotero.DataDirectory, 'isNewDirOnDifferentDrive').resolves(true);
+		stubs.canMigrate = sinon.stub(Trellis.DataDirectory, "canMigrate").returns(true);
+		stubs.setDataDir = sinon.stub(Trellis.DataDirectory, "set");
+		stubs.isNewDirOnDifferentDrive = sinon.stub(Trellis.DataDirectory, 'isNewDirOnDifferentDrive').resolves(true);
 	});
 	
 	beforeEach(function* () {
@@ -48,10 +48,10 @@ describe("Zotero.DataDirectory", function () {
 	afterEach(function* () {
 		yield removeDir(oldDir);
 		yield removeDir(newDir);
-		Zotero.skipLoading = false;
-		Zotero.hideZoteroPaneOverlays();
-		Zotero.DataDirectory._cache(false);
-		yield Zotero.DataDirectory.init();
+		Trellis.skipLoading = false;
+		Trellis.hideTrellisPaneOverlays();
+		Trellis.DataDirectory._cache(false);
+		yield Trellis.DataDirectory.init();
 	});
 	
 	after(function* () {
@@ -65,7 +65,7 @@ describe("Zotero.DataDirectory", function () {
 	// Force non-mv mode
 	var disableCommandMode = function () {
 		if (!stubs.canMoveDirectoryWithCommand) {
-			stubs.canMoveDirectoryWithCommand = sinon.stub(Zotero.File, "canMoveDirectoryWithCommand")
+			stubs.canMoveDirectoryWithCommand = sinon.stub(Trellis.File, "canMoveDirectoryWithCommand")
 				.returns(false);
 		}
 	};
@@ -73,7 +73,7 @@ describe("Zotero.DataDirectory", function () {
 	// Force non-OS.File.move() mode
 	var disableFunctionMode = function () {
 		if (!stubs.canMoveDirectoryWithFunction) {
-			stubs.canMoveDirectoryWithFunction = sinon.stub(Zotero.File, "canMoveDirectoryWithFunction")
+			stubs.canMoveDirectoryWithFunction = sinon.stub(Trellis.File, "canMoveDirectoryWithFunction")
 				.returns(false);
 		}
 	};
@@ -98,25 +98,25 @@ describe("Zotero.DataDirectory", function () {
 		let storageDir1 = OS.Path.join(storageDir, 'AAAAAAAA');
 		let storageDir2 = OS.Path.join(storageDir, 'BBBBBBBB');
 		let translatorsDir = OS.Path.join(dir, 'translators');
-		let migrationMarker = OS.Path.join(dir, Zotero.DataDirectory.MIGRATION_MARKER);
+		let migrationMarker = OS.Path.join(dir, Trellis.DataDirectory.MIGRATION_MARKER);
 		
 		// Database
-		await Zotero.File.putContentsAsync(OS.Path.join(dir, dbFilename), str1);
+		await Trellis.File.putContentsAsync(OS.Path.join(dir, dbFilename), str1);
 		// Database backup
-		await Zotero.File.putContentsAsync(OS.Path.join(dir, dbFilename + '.bak'), str2);
+		await Trellis.File.putContentsAsync(OS.Path.join(dir, dbFilename + '.bak'), str2);
 		// 'storage' directory
 		await OS.File.makeDir(storageDir, { unixMode: 0o755 });
 		// 'storage' folders
 		await OS.File.makeDir(storageDir1, { unixMode: 0o755 });
-		await Zotero.File.putContentsAsync(OS.Path.join(storageDir1, storageFile1), str2);
+		await Trellis.File.putContentsAsync(OS.Path.join(storageDir1, storageFile1), str2);
 		await OS.File.makeDir(storageDir2, { unixMode: 0o755 });
-		await Zotero.File.putContentsAsync(OS.Path.join(storageDir2, storageFile2), str3);
+		await Trellis.File.putContentsAsync(OS.Path.join(storageDir2, storageFile2), str3);
 		// 'translators' and some translators
 		await OS.File.makeDir(translatorsDir, { unixMode: 0o755 });
-		await Zotero.File.putContentsAsync(OS.Path.join(translatorsDir, translatorName1), str4);
-		await Zotero.File.putContentsAsync(OS.Path.join(translatorsDir, translatorName2), str5);
+		await Trellis.File.putContentsAsync(OS.Path.join(translatorsDir, translatorName1), str4);
+		await Trellis.File.putContentsAsync(OS.Path.join(translatorsDir, translatorName2), str5);
 		// Migration marker
-		await Zotero.File.putContentsAsync(
+		await Trellis.File.putContentsAsync(
 			migrationMarker,
 			JSON.stringify({
 				sourceDir: srcDir || dir,
@@ -129,21 +129,21 @@ describe("Zotero.DataDirectory", function () {
 		if (!options.skipOldDir) {
 			assert.isFalse(await OS.File.exists(oldDir));
 		}
-		assert.equal(await Zotero.File.getContentsAsync(newDBFile), str1);
-		assert.equal(await Zotero.File.getContentsAsync(newDBFile + '.bak'), str2);
+		assert.equal(await Trellis.File.getContentsAsync(newDBFile), str1);
+		assert.equal(await Trellis.File.getContentsAsync(newDBFile + '.bak'), str2);
 		if (!options.skipStorageFile1) {
 			assert.equal(
-				await Zotero.File.getContentsAsync(OS.Path.join(newStorageDir1, storageFile1)), str2
+				await Trellis.File.getContentsAsync(OS.Path.join(newStorageDir1, storageFile1)), str2
 			);
 		}
 		assert.equal(
-			await Zotero.File.getContentsAsync(OS.Path.join(newStorageDir2, storageFile2)), str3
+			await Trellis.File.getContentsAsync(OS.Path.join(newStorageDir2, storageFile2)), str3
 		);
 		assert.equal(
-			await Zotero.File.getContentsAsync(OS.Path.join(newTranslatorsDir, translatorName1)), str4
+			await Trellis.File.getContentsAsync(OS.Path.join(newTranslatorsDir, translatorName1)), str4
 		);
 		assert.equal(
-			await Zotero.File.getContentsAsync(OS.Path.join(newTranslatorsDir, translatorName2)), str5
+			await Trellis.File.getContentsAsync(OS.Path.join(newTranslatorsDir, translatorName2)), str5
 		);
 		if (!options.skipNewMarker) {
 			assert.isFalse(await OS.File.exists(newMigrationMarker));
@@ -181,9 +181,9 @@ describe("Zotero.DataDirectory", function () {
 			await populateDataDirectory(oldDir);
 			await OS.File.remove(oldMigrationMarker);
 			await OS.File.makeDir(newDir, { unixMode: 0o755 });
-			await Zotero.File.putContentsAsync(OS.Path.join(newDir, 'a'), '');
+			await Trellis.File.putContentsAsync(OS.Path.join(newDir, 'a'), '');
 			
-			assert.isFalse(await Zotero.DataDirectory.checkForMigration(oldDir, newDir));
+			assert.isFalse(await Trellis.DataDirectory.checkForMigration(oldDir, newDir));
 		});
 		
 		it("should skip automatic migration and show prompt if target directory is on a different drive", async function () {
@@ -198,11 +198,11 @@ describe("Zotero.DataDirectory", function () {
 			var promise = waitForDialog(function (dialog) {
 				assert.include(
 					dialog.document.documentElement.textContent,
-					Zotero.getString(`dataDir.migration.failure.full.automatic.newDirOnDifferentDrive`, Zotero.clientName)
+					Trellis.getString(`dataDir.migration.failure.full.automatic.newDirOnDifferentDrive`, Trellis.clientName)
 				);
 			}, 'cancel');
 			
-			assert.isNotOk(await Zotero.DataDirectory.checkForMigration(oldDir, newDir));
+			assert.isNotOk(await Trellis.DataDirectory.checkForMigration(oldDir, newDir));
 			await promise;
 
 			stubs.isNewDirOnDifferentDrive.resolves(false);
@@ -221,24 +221,24 @@ describe("Zotero.DataDirectory", function () {
 						return origFunc(...arguments);
 					}
 				});
-				let stub1 = sinon.stub(Zotero.File, "reveal").returns(Promise.resolve());
-				let stub2 = sinon.stub(Zotero.Utilities.Internal, "quitZotero");
+				let stub1 = sinon.stub(Trellis.File, "reveal").returns(Promise.resolve());
+				let stub2 = sinon.stub(Trellis.Utilities.Internal, "quitTrellis");
 				
 				var promise2;
-				// Click "Try Again" the first time, and then "Show Directories and Quit Zotero"
+				// Click "Try Again" the first time, and then "Show Directories and Quit Trellis"
 				var promise = waitForDialog(function (dialog) {
 					promise2 = waitForDialog(null, 'extra1');
 					
 					// Make sure we're displaying the right message for this mode (automatic or manual)
 					assert.include(
 						dialog.document.documentElement.textContent,
-						Zotero.getString(
+						Trellis.getString(
 							`dataDir.migration.failure.partial.${automatic ? 'automatic' : 'manual'}.text`,
-							[ZOTERO_CONFIG.CLIENT_NAME, Zotero.appName]
+							[TRELLIS_CONFIG.CLIENT_NAME, Trellis.appName]
 						)
 					);
 				});
-				yield Zotero.DataDirectory.checkForMigration(oldDir, newDir);
+				yield Trellis.DataDirectory.checkForMigration(oldDir, newDir);
 				yield promise;
 				yield promise2;
 				
@@ -266,20 +266,20 @@ describe("Zotero.DataDirectory", function () {
 						return origFunc(...arguments);
 					}
 				});
-				let stub2 = sinon.stub(Zotero.File, "reveal").returns(Promise.resolve());
-				let stub3 = sinon.stub(Zotero.Utilities.Internal, "quitZotero");
+				let stub2 = sinon.stub(Trellis.File, "reveal").returns(Promise.resolve());
+				let stub3 = sinon.stub(Trellis.Utilities.Internal, "quitTrellis");
 				
 				var promise = waitForDialog(function (dialog) {
 					// Make sure we're displaying the right message for this mode (automatic or manual)
 					assert.include(
 						dialog.document.documentElement.textContent,
-						Zotero.getString(
+						Trellis.getString(
 							`dataDir.migration.failure.full.${automatic ? 'automatic' : 'manual'}.text1`,
-							ZOTERO_CONFIG.CLIENT_NAME
+							TRELLIS_CONFIG.CLIENT_NAME
 						)
 					);
 				});
-				yield Zotero.DataDirectory.checkForMigration(oldDir, newDir);
+				yield Trellis.DataDirectory.checkForMigration(oldDir, newDir);
 				yield promise;
 				
 				assert.isTrue(stub2.calledOnce);
@@ -306,7 +306,7 @@ describe("Zotero.DataDirectory", function () {
 		
 		it("should remove marker if old directory doesn't exist", async function () {
 			await populateDataDirectory(newDir, oldDir);
-			await Zotero.DataDirectory.checkForMigration(newDir, newDir);
+			await Trellis.DataDirectory.checkForMigration(newDir, newDir);
 			await checkMigration({
 				skipSetDataDirectory: true
 			});
@@ -324,7 +324,7 @@ describe("Zotero.DataDirectory", function () {
 		
 		add("should move all files and folders", function* () {
 			yield populateDataDirectory(oldDir);
-			yield Zotero.DataDirectory.migrate(oldDir, newDir);
+			yield Trellis.DataDirectory.migrate(oldDir, newDir);
 			yield checkMigration();
 		});
 		
@@ -334,7 +334,7 @@ describe("Zotero.DataDirectory", function () {
 			
 			yield OS.File.copy(oldMigrationMarker, newMigrationMarker);
 			
-			yield Zotero.DataDirectory.migrate(oldDir, newDir, true);
+			yield Trellis.DataDirectory.migrate(oldDir, newDir, true);
 			yield checkMigration();
 		});
 		
@@ -345,7 +345,7 @@ describe("Zotero.DataDirectory", function () {
 			yield OS.File.copy(oldMigrationMarker, newMigrationMarker);
 			yield OS.File.move(OS.Path.join(oldDir, dbFilename), OS.Path.join(newDir, dbFilename));
 			
-			yield Zotero.DataDirectory.migrate(oldDir, newDir, true);
+			yield Trellis.DataDirectory.migrate(oldDir, newDir, true);
 			yield checkMigration();
 		});
 		
@@ -361,7 +361,7 @@ describe("Zotero.DataDirectory", function () {
 			yield removeDir(newTranslatorsDir);
 			yield removeDir(newStorageDir2);
 			
-			yield Zotero.DataDirectory.migrate(oldDir, newDir, true);
+			yield Trellis.DataDirectory.migrate(oldDir, newDir, true);
 			yield checkMigration();
 		});
 		
@@ -396,7 +396,7 @@ describe("Zotero.DataDirectory", function () {
 					}
 				});
 				
-				await Zotero.DataDirectory.migrate(oldDir, newDir);
+				await Trellis.DataDirectory.migrate(oldDir, newDir);
 				
 				stub1.restore();
 				

@@ -8,9 +8,9 @@ describe("Advanced Search", function () {
 			thisArg: this,
 			skipBundledFiles: true
 		});
-		win = yield loadZoteroPane();
-		zp = win.ZoteroPane;
-		deck = win.document.getElementById('zotero-advanced-search-pane-deck');
+		win = yield loadTrellisPane();
+		zp = win.TrellisPane;
+		deck = win.document.getElementById('trellis-advanced-search-pane-deck');
 	});
 	
 	after(function () {
@@ -29,7 +29,7 @@ describe("Advanced Search", function () {
 		assert.equal(zp.itemsView.rowCount, 2);
 		
 		// Add condition
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = item.libraryID;
 		s.addCondition('title', 'is', item.getField('title'));
 		pane.search = s;
@@ -57,7 +57,7 @@ describe("Advanced Search", function () {
 		var partial = await createDataObject('item', { title: "alpha gamma" });
 		var neither = await createDataObject('item', { title: "delta" });
 
-		var searchBox = win.document.getElementById('zotero-tb-search');
+		var searchBox = win.document.getElementById('trellis-tb-search');
 		searchBox.value = 'alpha beta';
 		await zp.itemsView.setFilter('search', 'alpha beta');
 
@@ -81,7 +81,7 @@ describe("Advanced Search", function () {
 		await iv.waitForLoad();
 		assert.equal(iv.rowCount, 3);
 
-		await Zotero.Items.erase([match.id, partial.id, neither.id]);
+		await Trellis.Items.erase([match.id, partial.id, neither.id]);
 	});
 	
 	it("should seed an \"Everything\" quick search as full-text groups", async function () {
@@ -129,7 +129,7 @@ describe("Advanced Search", function () {
 	});
 
 	it("should run a cross-level search across a multi-collection selection", async function () {
-		var word = 'zmc' + Zotero.Utilities.randomString();
+		var word = 'zmc' + Trellis.Utilities.randomString();
 		var makeMatch = async function (collection) {
 			var item = await createDataObject('item', { collections: [collection.id] });
 			var attachment = await importPDFAttachment(item);
@@ -152,8 +152,8 @@ describe("Advanced Search", function () {
 		await zp.itemsView.waitForLoad();
 		
 		// Top-level items with a descendant annotation matching the comment
-		var s = new Zotero.Search();
-		s.libraryID = Zotero.Libraries.userLibraryID;
+		var s = new Trellis.Search();
+		s.libraryID = Trellis.Libraries.userLibraryID;
 		s.addCondition('resultLevel', 'item');
 		s.addCondition('annotationComment', 'contains', word);
 		
@@ -173,8 +173,8 @@ describe("Advanced Search", function () {
 		
 		await iv.setFilter('advanced-search', null);
 		await selectLibrary(win);
-		await Zotero.Items.erase([itemA.id, itemB.id, itemC.id]);
-		await Zotero.Collections.erase([c1.id, c2.id, c3.id]);
+		await Trellis.Items.erase([itemA.id, itemB.id, itemC.id]);
+		await Trellis.Collections.erase([c1.id, c2.id, c3.id]);
 	});
 	
 
@@ -186,7 +186,7 @@ describe("Advanced Search", function () {
 		await zp.toggleAdvancedSearchState('open');
 		var pane = deck.pane;
 
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = item.libraryID;
 		s.addCondition('title', 'is', item.getField('title'));
 		pane.search = s;
@@ -208,7 +208,7 @@ describe("Advanced Search", function () {
 		await zp.toggleAdvancedSearchState('open');
 		var pane = deck.pane;
 
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = item.libraryID;
 		s.addCondition('title', 'is', item.getField('title'));
 		pane.search = s;
@@ -219,7 +219,7 @@ describe("Advanced Search", function () {
 		assert.isNumber(iv.getRowIndexByID(item.id));
 
 		// Trashing the item should remove it from the results
-		await Zotero.Items.trashTx(item.id);
+		await Trellis.Items.trashTx(item.id);
 		assert.isFalse(iv.getRowIndexByID(item.id));
 
 		// Re-running the search shouldn't bring it back
@@ -242,7 +242,7 @@ describe("Advanced Search", function () {
 		await zp.toggleAdvancedSearchState('open');
 		var pane = deck.pane;
 
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = item.libraryID;
 		s.addCondition('title', 'is', item.getField('title'));
 		pane.search = s;
@@ -263,7 +263,7 @@ describe("Advanced Search", function () {
 		var item = await createDataObject('item', { setTitle: true });
 		
 		await zp.toggleAdvancedSearchState('open');
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = item.libraryID;
 		s.addCondition('title', 'is', 'nomatch');
 		deck.pane.search = s;
@@ -288,15 +288,15 @@ describe("Advanced Search", function () {
 		var inSavedOnly = await createDataObject('item', { title: "foo baz" });
 		var inAdvancedOnly = await createDataObject('item', { title: "bar qux" });
 		
-		var saved = new Zotero.Search();
-		saved.libraryID = Zotero.Libraries.userLibraryID;
+		var saved = new Trellis.Search();
+		saved.libraryID = Trellis.Libraries.userLibraryID;
 		saved.name = "Scope Test";
 		saved.addCondition('title', 'contains', 'foo');
 		await saved.saveTx();
 		await select(win, saved);
 		
 		await zp.toggleAdvancedSearchState('open');
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = saved.libraryID;
 		s.addCondition('title', 'contains', 'bar');
 		deck.pane.search = s;
@@ -314,7 +314,7 @@ describe("Advanced Search", function () {
 		
 		await zp.setAdvancedSearchState('closed');
 		
-		await Zotero.Items.erase([inBoth.id, inSavedOnly.id, inAdvancedOnly.id]);
+		await Trellis.Items.erase([inBoth.id, inSavedOnly.id, inAdvancedOnly.id]);
 		await saved.eraseTx();
 	});
 	
@@ -334,8 +334,8 @@ describe("Advanced Search", function () {
 		await zp.itemsView.waitForLoad();
 		
 		await zp.toggleAdvancedSearchState('open');
-		var s = new Zotero.Search();
-		s.libraryID = Zotero.Libraries.userLibraryID;
+		var s = new Trellis.Search();
+		s.libraryID = Trellis.Libraries.userLibraryID;
 		s.addCondition('title', 'contains', 'foo');
 		deck.pane.search = s;
 		
@@ -354,8 +354,8 @@ describe("Advanced Search", function () {
 		await zp.setAdvancedSearchState('closed');
 		await selectLibrary(win);
 		
-		await Zotero.Items.erase([inFirst.id, inSecond.id, noMatch.id, notInCollections.id]);
-		await Zotero.Collections.erase([collection1.id, collection2.id]);
+		await Trellis.Items.erase([inFirst.id, inSecond.id, noMatch.id, notInCollections.id]);
+		await Trellis.Collections.erase([collection1.id, collection2.id]);
 	});
 	
 	it("should search across feeds in Feeds view", async function () {
@@ -367,8 +367,8 @@ describe("Advanced Search", function () {
 		await waitForItemsLoad(win);
 		
 		await zp.toggleAdvancedSearchState('open');
-		var s = new Zotero.Search();
-		s.libraryID = Zotero.Libraries.userLibraryID;
+		var s = new Trellis.Search();
+		s.libraryID = Trellis.Libraries.userLibraryID;
 		s.addCondition('title', 'is', feedItem.getField('title'));
 		deck.pane.search = s;
 		
@@ -386,10 +386,10 @@ describe("Advanced Search", function () {
 	});
 
 	it("should scope value autocomplete to the given libraries", async function () {
-		// Run the 'zotero' autocomplete provider directly with given params
+		// Run the 'trellis' autocomplete provider directly with given params
 		function autocomplete(searchString, params) {
 			return new Promise((resolve) => {
-				let search = Cc["@mozilla.org/autocomplete/search;1?name=zotero"]
+				let search = Cc["@mozilla.org/autocomplete/search;1?name=trellis"]
 					.createInstance(Ci.nsIAutoCompleteSearch);
 				let listener = {
 					onSearchResult(_search, result) {
@@ -411,7 +411,7 @@ describe("Advanced Search", function () {
 		var group = await getGroup();
 		var groupLibraryID = group.libraryID;
 		// Autocomplete matches a value prefix, so both values start with the token
-		var token = Zotero.Utilities.randomString() + ' ';
+		var token = Trellis.Utilities.randomString() + ' ';
 		var userPublisher = token + 'User';
 		var groupPublisher = token + 'Group';
 		var userItem = await createDataObject('item', { itemType: 'book' });
@@ -422,17 +422,17 @@ describe("Advanced Search", function () {
 		await groupItem.saveTx();
 		
 		// Scoped to the user library: only its value
-		var userOnly = await autocomplete(token, { fieldName: 'publisher', libraryIDs: [Zotero.Libraries.userLibraryID] });
+		var userOnly = await autocomplete(token, { fieldName: 'publisher', libraryIDs: [Trellis.Libraries.userLibraryID] });
 		assert.deepEqual(userOnly, [userPublisher]);
 		
 		// Scoped to both libraries: both values
 		var both = await autocomplete(token, {
 			fieldName: 'publisher',
-			libraryIDs: [Zotero.Libraries.userLibraryID, groupLibraryID]
+			libraryIDs: [Trellis.Libraries.userLibraryID, groupLibraryID]
 		});
 		assert.includeMembers(both, [userPublisher, groupPublisher]);
 		
-		await Zotero.Items.erase([userItem.id, groupItem.id]);
+		await Trellis.Items.erase([userItem.id, groupItem.id]);
 	});
 	
 	it("should save a search in an editable group library root but not a collection", async function () {
@@ -447,7 +447,7 @@ describe("Advanced Search", function () {
 		// Saving should be enabled at an editable group library root
 		assert.isFalse(pane._saveButton.disabled);
 		
-		var s = new Zotero.Search();
+		var s = new Trellis.Search();
 		s.libraryID = groupLibraryID;
 		s.addCondition('title', 'contains', 'foo');
 		pane.search = s;
@@ -467,7 +467,7 @@ describe("Advanced Search", function () {
 		}
 		
 		// The search should have been saved to the group library
-		var searches = await Zotero.Searches.getAll(groupLibraryID);
+		var searches = await Trellis.Searches.getAll(groupLibraryID);
 		assert.lengthOf(searches, 1);
 		var conditions = Object.values(searches[0].getConditions());
 		assert.lengthOf(conditions, 1);
@@ -480,7 +480,7 @@ describe("Advanced Search", function () {
 		assert.isTrue(deck.pane._saveButton.disabled);
 		
 		await zp.setAdvancedSearchState('closed');
-		await Zotero.Searches.erase(searches.map(s => s.id));
+		await Trellis.Searches.erase(searches.map(s => s.id));
 		await collection.eraseTx();
 		await selectLibrary(win);
 	});
@@ -496,7 +496,7 @@ describe("Advanced Search", function () {
 		// save-changes prompt (which would otherwise block here)
 		await saved.eraseTx();
 		for (let i = 0; i < 60 && deck.state !== 'closed'; i++) {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		assert.equal(deck.state, 'closed');
 
@@ -512,7 +512,7 @@ describe("Advanced Search", function () {
 		await zp.setSavedSearchEditorState('open');
 		assert.equal(deck.selectedSearchType, 'saved');
 
-		// zoteroPane.js uses the pane window's Services, so stub there. Set it before
+		// trellisPane.js uses the pane window's Services, so stub there. Set it before
 		// touching the selection so no prompt can reach the real (modal) service.
 		let stub = sinon.stub().returns(1); // Cancel
 		let promptService = win.Services.prompt;
@@ -534,15 +534,15 @@ describe("Advanced Search", function () {
 		}
 
 		await zp.setSavedSearchEditorState('closed');
-		await Zotero.Searches.erase([search1.id, search2.id]);
+		await Trellis.Searches.erase([search1.id, search2.id]);
 		await selectLibrary(win);
 	});
 
 	it("should prompt for a name when saving a new search", async function () {
 		await selectLibrary(win);
 		await zp.toggleAdvancedSearchState('open');
-		var s = new Zotero.Search();
-		s.libraryID = Zotero.Libraries.userLibraryID;
+		var s = new Trellis.Search();
+		s.libraryID = Trellis.Libraries.userLibraryID;
 		s.addCondition('title', 'contains', 'foo');
 		deck.pane.search = s;
 
@@ -566,7 +566,7 @@ describe("Advanced Search", function () {
 			Services.prompt = promptService;
 		}
 
-		var searches = await Zotero.Searches.getAll(Zotero.Libraries.userLibraryID);
+		var searches = await Trellis.Searches.getAll(Trellis.Libraries.userLibraryID);
 		var saved = searches.find(x => x.name === 'My Named Search');
 		assert.ok(saved);
 		assert.equal(deck.state, 'closed');
@@ -580,7 +580,7 @@ describe("Advanced Search", function () {
 		before(async function () {
 			await zp.toggleAdvancedSearchState('open');
 			pane = deck.pane;
-			searchBox = pane.querySelector('zoterosearch');
+			searchBox = pane.querySelector('trellissearch');
 			conditions = searchBox.querySelector('.conditions');
 		});
 		
@@ -589,8 +589,8 @@ describe("Advanced Search", function () {
 		});
 
 		it("should reset to a single empty condition when the last populated condition is removed", async function () {
-			var s = new Zotero.Search();
-			s.libraryID = Zotero.Libraries.userLibraryID;
+			var s = new Trellis.Search();
+			s.libraryID = Trellis.Libraries.userLibraryID;
 			s.addCondition('title', 'contains', 'foo');
 			pane.search = s;
 
@@ -613,8 +613,8 @@ describe("Advanced Search", function () {
 			assert.equal(win.document.activeElement, newRow.querySelector('#conditionsmenu'));
 		});
 		it("should hide the value textbox for a menu-based condition", async function () {
-			var s = new Zotero.Search();
-			s.libraryID = Zotero.Libraries.userLibraryID;
+			var s = new Trellis.Search();
+			s.libraryID = Trellis.Libraries.userLibraryID;
 			s.addCondition('title', 'is', '');
 			pane.search = s;
 			
@@ -642,8 +642,8 @@ describe("Advanced Search", function () {
 			}
 
 			it("should select a condition from the More submenu by typing its name", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 
@@ -657,8 +657,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should cycle through matches when the same letter is typed repeatedly", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 
@@ -671,8 +671,8 @@ describe("Advanced Search", function () {
 				var second = searchCondition.selectedCondition;
 
 				assert.notEqual(first, second);
-				assert.match(Zotero.SearchConditions.getLocalizedName(first), /^d/i);
-				assert.match(Zotero.SearchConditions.getLocalizedName(second), /^d/i);
+				assert.match(Trellis.SearchConditions.getLocalizedName(first), /^d/i);
+				assert.match(Trellis.SearchConditions.getLocalizedName(second), /^d/i);
 			});
 		});
 
@@ -683,8 +683,8 @@ describe("Advanced Search", function () {
 			}
 
 			it("should focus the new row's condition drop-down when adding via the + button", async function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 
@@ -703,8 +703,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("shouldn't move focus when adding via the + button with the mouse", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 
@@ -721,8 +721,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should add a condition and focus its drop-down on Shift-Enter", async function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 
@@ -746,8 +746,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("shouldn't run the search on Shift-Enter", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 
@@ -784,8 +784,8 @@ describe("Advanced Search", function () {
 			}
 
 			function threeConditionSearch() {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'a');
 				s.addCondition('title', 'contains', 'b');
 				s.addCondition('title', 'contains', 'c');
@@ -825,8 +825,8 @@ describe("Advanced Search", function () {
 		});
 
 		it("should insert a condition right after the row whose + is clicked", function () {
-			var s = new Zotero.Search();
-			s.libraryID = Zotero.Libraries.userLibraryID;
+			var s = new Trellis.Search();
+			s.libraryID = Trellis.Libraries.userLibraryID;
 			s.addCondition('title', 'contains', 'a');
 			s.addCondition('title', 'contains', 'b');
 			pane.search = s;
@@ -850,8 +850,8 @@ describe("Advanced Search", function () {
 				var search2 = await createDataObject('search', { name: "B" });
 				
 				// Add condition
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 				
@@ -884,15 +884,15 @@ describe("Advanced Search", function () {
 				assert.equal(valueMenuItem.getAttribute('label'), search2.name);
 				assert.equal(valueMenuItem.getAttribute('value'), "S" + search2.key);
 				
-				await Zotero.Collections.erase([col1.id, col2.id, col3.id, col4.id]);
-				await Zotero.Searches.erase([search1.id, search2.id]);
+				await Trellis.Collections.erase([col1.id, col2.id, col3.id, col4.id]);
+				await Trellis.Searches.erase([search1.id, search2.id]);
 			});
 			
 			it("should be selected for 'savedSearch' condition", async function () {
 				var search = await createDataObject('search', { name: "A" });
 				
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('savedSearch', 'is', search.key);
 				pane.search = s;
 				
@@ -911,8 +911,8 @@ describe("Advanced Search", function () {
 				var collection = await createDataObject('collection', { name: "A" });
 				var search = await createDataObject('search', { name: "B" });
 				
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 				
@@ -954,8 +954,8 @@ describe("Advanced Search", function () {
 				var collection2 = await createDataObject('collection', { name: "C", libraryID: groupLibraryID });
 				var search2 = await createDataObject('search', { name: "D", libraryID: groupLibraryID });
 				
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'is', '');
 				pane.search = s;
 				
@@ -999,8 +999,8 @@ describe("Advanced Search", function () {
 				
 				await selectLibrary(win);
 
-				await Zotero.Collections.erase([collection1.id, collection2.id]);
-				await Zotero.Searches.erase([search1.id, search2.id]);
+				await Trellis.Collections.erase([collection1.id, collection2.id]);
+				await Trellis.Searches.erase([search1.id, search2.id]);
 			});
 			
 			it("shouldn't appear in a cross-library scope", async function () {
@@ -1009,10 +1009,10 @@ describe("Advanced Search", function () {
 				
 				// Simulate the cross-library scope that advancedSearchPane.refresh() sets
 				// from a multi-library collection selection
-				searchBox.scopeLibraryIDs = [Zotero.Libraries.userLibraryID, groupLibraryID];
+				searchBox.scopeLibraryIDs = [Trellis.Libraries.userLibraryID, groupLibraryID];
 				try {
-					var s = new Zotero.Search();
-					s.libraryID = Zotero.Libraries.userLibraryID;
+					var s = new Trellis.Search();
+					s.libraryID = Trellis.Libraries.userLibraryID;
 					s.addCondition('title', 'is', '');
 					pane.search = s;
 					
@@ -1047,8 +1047,8 @@ describe("Advanced Search", function () {
 
 		describe("Groups", function () {
 			function groupedSearch() {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'foo');
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('joinMode', 'any');
@@ -1080,8 +1080,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should wrap a condition in a new group in its place", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'foo');
 				pane.search = s;
 
@@ -1115,8 +1115,8 @@ describe("Advanced Search", function () {
 
 			it("should reset the root to an empty condition when its last group empties", function () {
 				// A search whose only content is a single group with a single condition
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('tag', 'is', 'x');
 				s.addCondition('groupEnd', 'true', '');
@@ -1140,8 +1140,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should render and serialize the root result level", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'annotation');
 				s.addCondition('annotationText', 'contains', 'foo');
 				pane.search = s;
@@ -1158,8 +1158,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should render and serialize a nested group result level", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('creator', 'contains', 'Smith');
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('resultLevel', 'annotation');
@@ -1178,8 +1178,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should show a binding menu for a group of same-level descendant conditions", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item'); // result level
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('annotationText', 'contains', 'foo');
@@ -1206,8 +1206,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should not show a binding menu for a group of item-level conditions", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('title', 'contains', 'a');
@@ -1220,8 +1220,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should render a stored group binding into the menu", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('resultLevel', 'annotation');
@@ -1237,8 +1237,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should offer a binding hint for ungrouped sibling descendant conditions", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('annotationText', 'contains', 'foo');
 				s.addCondition('annotationComment', 'contains', 'bar');
@@ -1251,8 +1251,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should not offer a binding hint for item-level sibling conditions", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('title', 'contains', 'a');
 				s.addCondition('title', 'contains', 'b');
@@ -1264,8 +1264,8 @@ describe("Advanced Search", function () {
 			it("should not offer a binding hint for an unpopulated condition", function () {
 				// One populated annotation condition plus an empty one: not enough to suggest
 				// binding until the second is actually filled in
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('annotationText', 'contains', 'foo');
 				s.addCondition('annotationComment', 'contains', '');
@@ -1275,8 +1275,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should wrap conditions into a bound group when the hint is taken", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('annotationText', 'contains', 'foo');
 				s.addCondition('annotationComment', 'contains', 'bar');
@@ -1289,7 +1289,7 @@ describe("Advanced Search", function () {
 				assert.ok(group);
 				assert.equal(group.resultLevel, 'annotation');
 				assert.lengthOf(
-					[...group.conditionsContainer.children].filter(c => c.localName == 'zoterosearchcondition'),
+					[...group.conditionsContainer.children].filter(c => c.localName == 'trellissearchcondition'),
 					2);
 
 				searchBox.updateSearch();
@@ -1302,8 +1302,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should fold a legacy noChildren into the result level", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('noChildren', 'true');
 				s.addCondition('title', 'contains', 'foo');
 				pane.search = s;
@@ -1321,8 +1321,8 @@ describe("Advanced Search", function () {
 			it("should warn when ALL conditions can't match the same item at a mixed result level", function () {
 				// No result type (mixed), so an item-level and an annotation-level condition
 				// can't both be true of one row
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'a');
 				s.addCondition('annotationText', 'contains', 'b');
 				pane.search = s;
@@ -1332,8 +1332,8 @@ describe("Advanced Search", function () {
 
 			it("should not warn when a result type lets the conditions combine", function () {
 				// Result type item: the annotation condition maps up, so it's satisfiable
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('title', 'contains', 'a');
 				s.addCondition('annotationText', 'contains', 'b');
@@ -1344,8 +1344,8 @@ describe("Advanced Search", function () {
 
 			it("should warn when a condition can't reach the result type", function () {
 				// A note can never be (or be under) an attachment
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'attachment');
 				s.addCondition('note', 'contains', 'a');
 				pane.search = s;
@@ -1356,8 +1356,8 @@ describe("Advanced Search", function () {
 			it("should warn on the group when a condition can't reach its binding", function () {
 				// A group bound to "same annotation" with a note condition: the conflict is the
 				// group's binding, so the warning belongs on the group, not at the root.
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('resultLevel', 'annotation');
@@ -1375,8 +1375,8 @@ describe("Advanced Search", function () {
 				// "Separately" inherits the result level (item), so annotations and a note all
 				// roll up independently -- satisfiable, no warning (so "match separately" really
 				// does clear the bound-group warning)
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('resultLevel', 'item');
 				s.addCondition('groupStart', 'true', '');
 				s.addCondition('annotationComment', 'contains', 'a');
@@ -1394,8 +1394,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should keep a legacy includeParentsAndChildren editable and round-tripping", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'foo');
 				s.addCondition('includeParentsAndChildren', 'true');
 				pane.search = s;
@@ -1409,8 +1409,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should drop includeParentsAndChildren when its legacy checkbox is unchecked", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'foo');
 				s.addCondition('includeParentsAndChildren', 'true');
 				pane.search = s;
@@ -1422,8 +1422,8 @@ describe("Advanced Search", function () {
 			});
 
 			it("should add a sibling condition outside the group from the group's +", function () {
-				var s = new Zotero.Search();
-				s.libraryID = Zotero.Libraries.userLibraryID;
+				var s = new Trellis.Search();
+				s.libraryID = Trellis.Libraries.userLibraryID;
 				s.addCondition('title', 'contains', 'foo');
 				pane.search = s;
 
@@ -1440,7 +1440,7 @@ describe("Advanced Search", function () {
 
 				assert.lengthOf(conditions.children, 2);
 				var rows = [...conditions.children]
-					.filter(c => c.localName === 'zoterosearchcondition');
+					.filter(c => c.localName === 'trellissearchcondition');
 				assert.lengthOf(rows, 1);
 				assert.equal(rows[0].selectedCondition, 'title');
 				// Nothing was added inside the group

@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "versão">
+<!ENTITY trellis.whatsNew "O que há de novo">
+<!ENTITY trellis.createdby "Criado por:">
+<!ENTITY trellis.director "Director:">
+<!ENTITY trellis.directors "Directores:">
+<!ENTITY trellis.developers "Desenvolvedores:">
+<!ENTITY trellis.alumni "Antigos Colaboradores:">
+<!ENTITY trellis.about.localizations "Localizações:">
+<!ENTITY trellis.about.additionalSoftware "Software de Terceiros:">
+<!ENTITY trellis.thanks "Agradecimentos Especiais:">
+<!ENTITY trellis.about.close "Fechar">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Mais Créditos e Reconhecimentos">
+<!ENTITY trellis.citationProcessing "Processamento de Citações e Bibliografias">

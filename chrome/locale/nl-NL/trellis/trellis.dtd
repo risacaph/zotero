@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Ja">
+<!ENTITY trellis.general.no "Nee">
+<!ENTITY trellis.general.optional "(Optioneel)">
+<!ENTITY trellis.general.note "Aantekening:">
+<!ENTITY trellis.general.selectAll "Alles selecteren">
+<!ENTITY trellis.general.deselectAll "Selectie ongedaan maken">
+<!ENTITY trellis.general.edit "Bewerken">
+<!ENTITY trellis.general.delete "Verwijderen">
+<!ENTITY trellis.general.moveToTrash "Naar Prullenbak verplaatsen">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Annuleren">
+<!ENTITY trellis.general.refresh "Vernieuwen">
+<!ENTITY trellis.general.saveAs "Opslaan als...">
+<!ENTITY trellis.general.options "Opties">
+<!ENTITY trellis.general.advancedOptions.label "Geavanceerde opties">
+<!ENTITY trellis.general.tools "Opties">
+<!ENTITY trellis.general.more "Meer">
+<!ENTITY trellis.general.moreInformation "Meer informatie">
+<!ENTITY trellis.general.loading "Laden…">
+<!ENTITY trellis.general.close "Sluiten">
+<!ENTITY trellis.general.minimize "Minimaliseren">
+<!ENTITY trellis.general.other "Andere...">
+<!ENTITY trellis.general.bigger "Groter">
+<!ENTITY trellis.general.smaller "Kleiner">
+<!ENTITY trellis.general.reset "Herstellen">
+
+
+<!ENTITY trellis.errorReport.title "Trellis-foutrapportage">
+<!ENTITY trellis.errorReport.submissionInProgress "Even geduld a.u.b. totdat het foutenrapport is verstuurd.">
+<!ENTITY trellis.errorReport.submitted "Het foutenrapport is verstuurd.">
+<!ENTITY trellis.errorReport.reportID "Rapport ID:">
+<!ENTITY trellis.errorReport.postToForums "Plaats een bericht op het (Engelstalige) Trellis-forum (forums.trellis.org) onder vermelding van het Rapport ID, een omschrijving van het probleem, en de stappen die nodig zijn om het probleem te reproduceren.">
+<!ENTITY trellis.errorReport.notReviewed "Foutenrapporten worden niet bekeken tenzij u ernaar verwijst in het forum.">
+
+<!ENTITY trellis.upgrade.title "Trellis-Upgrade Wizard">
+<!ENTITY trellis.upgrade.newVersionInstalled "U heeft een nieuwe versie van Trellis geïnstalleerd.">
+<!ENTITY trellis.upgrade.upgradeRequired "Uw Trellis-database moet bijgewerkt worden om te kunnen werken met de nieuwe versie.">
+<!ENTITY trellis.upgrade.autoBackup "Er zal een reservekopie van uw bestaande database worden gemaakt voordat er wijzigingen worden doorgevoerd.">
+<!ENTITY trellis.upgrade.majorUpgrade "Dit is een omvangrijke upgrade.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Lees daarom eerst de">
+<!ENTITY trellis.upgrade.majorUpgradeLink "upgrade-instructies">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "voordat u verder gaat.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Wacht totdat het upgradeproces is voltooid. Dit kan enige minuten duren.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Uw Trellis-database is met succes bijgewerkt.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Bekijk">
+<!ENTITY trellis.upgrade.changeLogLink "het logboek van veranderingen">
+<!ENTITY trellis.upgrade.changeLogAfterLink "om te zien wat er in de nieuwe versie veranderd is.">
+
+<!ENTITY trellis.tabs.notes.label "Aantekeningen">
+<!ENTITY trellis.tabs.attachments.label "Bijlagen">
+
+<!ENTITY trellis.toolbar.duplicate.label "Duplicaten tonen">
+<!ENTITY trellis.collections.showUnfiledItems "Ongesorteerde items tonen">
+<!ENTITY trellis.collections.showRetractedItems "Ingetrokken items tonen">
+
+<!ENTITY trellis.items.itemType "Type item">
+<!ENTITY trellis.items.creator_column "Maker">
+<!ENTITY trellis.items.year_column "Jaar">
+<!ENTITY trellis.items.dateModified_column "Bewerkingsdatum">
+<!ENTITY trellis.items.moreColumns.label "Meer kolommen">
+<!ENTITY trellis.items.restoreColumnOrder.label "Herstel kolomvolgorde">
+
+<!ENTITY trellis.items.menu.showInLibrary "In bibliotheek tonen">
+<!ENTITY trellis.items.menu.attach.note "Aantekening toevoegen">
+<!ENTITY trellis.items.menu.attach "Bijlage toevoegen">
+<!ENTITY trellis.items.menu.attach.link.uri "Koppeling naar URI toevoegen…">
+<!ENTITY trellis.items.menu.attach.file "Kopie van bestand toevoegen…">
+<!ENTITY trellis.items.menu.attach.fileLink "Koppeling naar bestand toevoegen…">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Terugzetten in bibliotheek">
+<!ENTITY trellis.items.menu.duplicateItem "Maak kopie van geselecteerd item">
+<!ENTITY trellis.items.menu.mergeItems "Items samenvoegen">
+<!ENTITY trellis.items.menu.unrecognize "Ophalen van metadata ongedaan maken">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Kies de versie van het item om te gebruiken als het meest voornaamste item:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Selecteer velden om te behouden ten opzichte van andere versie van het item:">
+
+<!ENTITY trellis.toolbar.newItem.label "Nieuw item">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Meer">
+<!ENTITY trellis.toolbar.lookup.label "Item(s) toevoegen via identificatiecode">
+<!ENTITY trellis.toolbar.removeItem.label "Item verwijderen…">
+<!ENTITY trellis.toolbar.newGroup "Nieuwe groep…">
+<!ENTITY trellis.toolbar.newSubcollection.label "Nieuwe deelverzameling…">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nieuwe bewaarde zoekopdracht…">
+<!ENTITY trellis.toolbar.emptyTrash.label "Prullenbak legen">
+<!ENTITY trellis.toolbar.tagSelector.label "Labelkiezer tonen/verbergen">
+<!ENTITY trellis.toolbar.actions.label "Acties">
+<!ENTITY trellis.toolbar.import.label "Importeren…">
+<!ENTITY trellis.toolbar.importFromClipboard "Importeer van klembord">
+<!ENTITY trellis.toolbar.export.label "Bibliotheek exporteren…">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF Scan">
+<!ENTITY trellis.toolbar.preferences.label "Voorkeuren…">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Ondersteuning en documentatie">
+<!ENTITY trellis.toolbar.about.label "Over Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Uitgebreid zoeken">
+<!ENTITY trellis.toolbar.openURL.label "Opzoeken">
+<!ENTITY trellis.toolbar.openURL.tooltip "Via uw lokale bibliotheek opzoeken">
+
+<!ENTITY trellis.toolbar.feeds.new "Nieuwe feed">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Van URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Van OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Feed bewerken…">
+
+<!ENTITY trellis.item.add "Toevoegen">
+<!ENTITY trellis.item.attachment.file.show "Bestand tonen">
+<!ENTITY trellis.item.textTransform "Hoofdlettergebruik wijzigen">
+<!ENTITY trellis.item.textTransform.titlecase "Alle woorden (Elke Eerste Letter)">
+<!ENTITY trellis.item.textTransform.sentencecase "Eerste woord (van een zin)">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Eerste/laatste verwisselen">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Kopieer als URL">
+<!ENTITY trellis.item.deletePermanently "Permanent verwijderen…">
+
+<!ENTITY trellis.item.tags.removeAll "Alle labels verwijderen…">
+
+<!ENTITY trellis.toolbar.newNote "Nieuwe aantekening">
+<!ENTITY trellis.toolbar.note.standalone "Nieuwe zelfstandige aantekening">
+<!ENTITY trellis.toolbar.note.child "Bijbehorende aantekening toevoegen">
+<!ENTITY trellis.toolbar.lookup "Opzoeken via identificatiecode…">
+<!ENTITY trellis.toolbar.attachment.linked "Koppeling naar bestand maken…">
+<!ENTITY trellis.toolbar.attachment.add "Kopie van bestand bewaren…">
+<!ENTITY trellis.toolbar.attachment.weblink "Koppeling naar huidige webpagina bewaren">
+<!ENTITY trellis.toolbar.attachment.snapshot "Maak snapshot van huidige webpagina">
+<!ENTITY trellis.toolbar.context.item "Item">
+<!ENTITY trellis.toolbar.context.notes "Aantekeningen">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Geen labels om te tonen">
+<!ENTITY trellis.tagSelector.loadingTags "Labels laden…">
+<!ENTITY trellis.tagSelector.showAutomatic "Automatisch labels tonen">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Toon alle labels in deze bibliotheek">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Automatische labels in deze bibliotheek verwijderen…">
+<!ENTITY trellis.tagSelector.clearAll "Niets selecteren">
+<!ENTITY trellis.tagSelector.assignColor "Wijs een kleur toe...">
+<!ENTITY trellis.tagSelector.renameTag "Label hernoemen…">
+<!ENTITY trellis.tagSelector.deleteTag "Label verwijderen…">
+<!ENTITY trellis.tagSelector.splitTag "Splitsen…">
+
+<!ENTITY trellis.tagColorChooser.title "Kies een labelkleur en plaats voor het label">
+<!ENTITY trellis.tagColorChooser.color "Kleur:">
+<!ENTITY trellis.tagColorChooser.position "Positie:">
+<!ENTITY trellis.tagColorChooser.setColor "Kies kleur">
+<!ENTITY trellis.tagColorChooser.removeColor "Verwijder kleur">
+
+<!ENTITY trellis.lookup.description "Geef ISBN’s, DOI’s, PMID’s, arXiv ID’s, or ADS Bibcode’s op om aan uw bibliotheek toe te voegen:">
+<!ENTITY trellis.lookup.button.search "Zoeken">
+
+<!ENTITY trellis.createParent.title "Maak hoofditem">
+<!ENTITY trellis.createParent.button.manual "Handmatig invoeren">
+
+<!ENTITY trellis.selectitems.title "Items selecteren">
+<!ENTITY trellis.selectitems.intro.label "Selecteer de items die u aan uw bibliotheek wilt toevoegen">
+<!ENTITY trellis.selectitems.cancel.label "Annuleren">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Verwijzing/Bibliografie aanmaken">
+<!ENTITY trellis.bibliography.style.label "Citeerstijl:">
+<!ENTITY trellis.bibliography.manageStyles "Stijlen beheren…">
+<!ENTITY trellis.bibliography.locale.label "Taal:">
+<!ENTITY trellis.bibliography.outputMode "Weergavemodus:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografie">
+<!ENTITY trellis.bibliography.outputMethod "Weergavemethode:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Bewaar als RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Bewaar als HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopieer naar klembord">
+<!ENTITY trellis.bibliography.print.label "Afdrukken">
+
+<!ENTITY trellis.integration.docPrefs.title "Documentvoorkeuren">
+<!ENTITY trellis.integration.addEditCitation.title "Verwijzing toevoegen/aanpassen">
+<!ENTITY trellis.integration.editBibliography.title "Bibliografie bewerken">
+
+<!ENTITY trellis.progress.title "Voortgang">
+
+<!ENTITY trellis.import "Importeren">
+<!ENTITY trellis.import.whereToImportFrom "Waaruit wilt u importeren?">
+<!ENTITY trellis.import.source.file "Een bestand (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "Een map met PDF’s of andere bestanden">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importeren…">
+<!ENTITY trellis.import.database "Database">
+<!ENTITY trellis.import.lastModified "Laatst gewijzigd">
+<!ENTITY trellis.import.size "Grootte">
+<!ENTITY trellis.import.createCollection "Geïmporteerde verzamelingen en items in een nieuwe verzameling plaatsen">
+<!ENTITY trellis.import.fileHandling "Bestandsverwerking">
+<!ENTITY trellis.import.online.newItemsOnly "Nieuwe items alleen downloaden; eerder geïmporteerde items niet bijwerken">
+
+<!ENTITY trellis.exportOptions.title "Exporteren…">
+<!ENTITY trellis.exportOptions.format.label "Formaat:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Vertaler-opties">
+
+<!ENTITY trellis.charset.label "Tekensetcodering">
+<!ENTITY trellis.moreEncodings.label "Meer coderingen">
+
+<!ENTITY trellis.citation.keepSorted.label "Bronnen gesorteerd houden">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Auteur weglaten">
+<!ENTITY trellis.citation.prefix.label "Voorvoegsel:">
+<!ENTITY trellis.citation.suffix.label "Achtervoegsel:">
+<!ENTITY trellis.citation.editorWarning.label "Waarschuwing: Als u een verwijzing bewerkt in de editor dan zal het niet geüpdate worden in uw database of in de citeerstijl.">
+
+<!ENTITY trellis.richText.italic.label "Cursief">
+<!ENTITY trellis.richText.bold.label "Vet">
+<!ENTITY trellis.richText.underline.label "Onderstrepen">
+<!ENTITY trellis.richText.superscript.label "Superscript">
+<!ENTITY trellis.richText.subscript.label "Subscript">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Annotatie toevoegen">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Alle annotaties inklappen">
+<!ENTITY trellis.annotate.toolbar.expand.label "Alle annotaties uitklappen">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Tekst markeren">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Tekst niet meer markeren">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Toon verwijzingen als:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Voetnoten">
+<!ENTITY trellis.integration.prefs.endnotes.label "Eindnoten">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Verwijzingen bewaren als:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Bladwijzers">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Bladwijzers worden behouden tussen Microsoft Word en OpenOffice, maar kunnen fouten veroorzaken als deze per ongeluk aangepast worden en kunnen niet toegevoegd worden aan voetnoten.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Verwijzingen automatisch bijwerken">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Verwijzingen die bijgewerkt moeten worden, worden gearceerd in het document">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Uitschakelen van updates kan het invoegen van verwijzingen in grote documenten versnellen. Klik op Vernieuwen om verwijzingen handmatig bij te werken.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Gebruik MEDLINE tijdschriftafkortingen">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Het veld ‘Tijdschrift-afkorting’ wordt genegeerd">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Verander van tekstverwerker…">
+
+<!ENTITY trellis.integration.showEditor.label "Bewerker tonen">
+<!ENTITY trellis.integration.classicView.label "Klassieke weergave">
+
+<!ENTITY trellis.integration.references.label "Verwijzingen in bibliografie">
+
+<!ENTITY trellis.sync.stop "Stop synchronisatie">
+<!ENTITY trellis.sync.error "Synchroniseerfout">
+<!ENTITY trellis.sync.storage.progress "Voortgang:">
+<!ENTITY trellis.sync.storage.downloads "Downloads:">
+<!ENTITY trellis.sync.storage.uploads "Uploads:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Het volgende label in uw Trellis-bibliotheek is te lang om met de server te kunnen synchroniseren:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Gesynchroniseerde labels moeten korten zijn dan 256 tekens.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "U kunt het label opdelen in meerdere labels, het label handmatig inkorten, of het label verwijderen.">
+<!ENTITY trellis.sync.longTagFixer.split "Opdelen">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Opdelen bij het/de">
+<!ENTITY trellis.sync.longTagFixer.character "teken">
+<!ENTITY trellis.sync.longTagFixer.characters "tekens">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Niet aangevinkte labels worden niet bewaard.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Het label zal van alle items worden verwijderd.">
+
+<!ENTITY trellis.merge.title "Probleemoplosser">
+<!ENTITY trellis.merge.of "of">
+<!ENTITY trellis.merge.deleted "Verwijderd">
+
+<!ENTITY trellis.proxy.recognized.title "Proxy herkend">
+<!ENTITY trellis.proxy.recognized.warning "Voeg alleen proxies toe van uw bibliotheek-, school- of bedrijfswebsite.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Door het toevoegen van andere proxies kunnen kwaadwillende webpagina's zich als betrouwbare webpagina's voordoen.">
+<!ENTITY trellis.proxy.recognized.disable.label "Stuur dataverkeer niet automatisch door via eerder herkende proxies">
+<!ENTITY trellis.proxy.recognized.ignore.label "Negeren">
+
+<!ENTITY trellis.feedSettings.title "Feed-instellingen">
+<!ENTITY trellis.feedSettings.saveButton.label "Opslaan">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Titel:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Update feed elke">
+<!ENTITY trellis.feedSettings.refresh.label2 "uur">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Verwijder ongelezen feed items na">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dag(en)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Verwijder gelezen feed items na">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dag(en)">
+
+<!ENTITY trellis.rtfScan.title "RTF-scan">
+<!ENTITY trellis.rtfScan.cancel.label "Annuleren">
+<!ENTITY trellis.rtfScan.citation.label "Verwijzing">
+<!ENTITY trellis.rtfScan.itemName.label "Naam item">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Niet-herkende verwijzingen">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Meerduidige verwijzingen">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Herkende verwijzingen">
+<!ENTITY trellis.rtfScan.introPage.label "Introductie">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis kan automatisch verwijzingen in RTF-bestanden herkennen, opnieuw opmaken en een bibliografie toevoegen. De RTF-scan-functie ondersteunt momenteel alleen verwijzingen die opgemaakt zijn volgens de onderstaande formaten:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Selecteer een RTF-invoerbestand en een uitvoerbestand om te beginnen:">
+<!ENTITY trellis.rtfScan.scanPage.label "Bezig met zoeken naar verwijzingen">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis is uw document aan het doorzoeken naar verwijzingen. Even geduld a.u.b.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Controleer geciteerde items">
+<!ENTITY trellis.rtfScan.citationsPage.description "Bekijk de lijst met herkende verwijzingen om er zeker van te zijn dat Trellis de juiste corresponderende items heeft gevonden. Niet-herkende of meerduidige verwijzingen moeten worden nagekeken voordat naar de volgende stap kan worden gegaan.">
+<!ENTITY trellis.rtfScan.stylePage.label "Opmaken van het document">
+<!ENTITY trellis.rtfScan.formatPage.label "Verwijzingen opmaken">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis is het RTF-bestand aan het verwerken en opmaken. Even geduld a.u.b.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF-scan voltooid">
+<!ENTITY trellis.rtfScan.completePage.description "Uw document is gescand en verwerkt. Controleer of de tekst goed is opgemaakt.">
+<!ENTITY trellis.rtfScan.inputFile.label "Invoerbestand">
+<!ENTITY trellis.rtfScan.outputFile.label "Uitvoerbestand">
+
+<!ENTITY trellis.file.choose.label "Kies bestand…">
+<!ENTITY trellis.file.noneSelected.label "Geen bestand geselecteerd">
+
+<!ENTITY trellis.attachLink.title "Koppel verwijzing aan een URI">
+<!ENTITY trellis.attachLink.label.link "Verwijzing:">
+<!ENTITY trellis.attachLink.label.title "Titel:">
+
+<!ENTITY trellis.context.addChildNote "Aantekening bij item toevoegen">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Aantekening bij item toevoegen uit annotaties">
+<!ENTITY trellis.context.addStandaloneNote "Op zich zelf staande aantekening toevoegen">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Op zich zelf staande aantekening toevoegen vanuit annotaties">
+<!ENTITY trellis.context.editInWindow "In een afzonderlijk scherm bewerken">
+
+<!ENTITY trellis.pdfReader.firstPage "Eerste pagina">
+<!ENTITY trellis.pdfReader.lastPage "Laatste pagina">
+<!ENTITY trellis.pdfReader.back "Terug">
+<!ENTITY trellis.pdfReader.forward "Forward">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom In">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom Out">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

@@ -1,4 +1,4 @@
-describe("Zotero.Annotations", function() {
+describe("Trellis.Annotations", function() {
 	var exampleHighlight = {
 		"libraryID": null,
 		"key": "92JLMCVT",
@@ -59,7 +59,7 @@ describe("Zotero.Annotations", function() {
 		"type": "image",
 		"isExternal": false,
 		"readOnly": false,
-		"image": "zotero://attachment/library/items/LB417FR4",
+		"image": "trellis://attachment/library/items/LB417FR4",
 		"comment": "This is a comment",
 		"color": "#ffec00",
 		"pageLabel": "XVI",
@@ -133,7 +133,7 @@ describe("Zotero.Annotations", function() {
 	
 	describe("#toJSON()", function () {
 		it("should generate an object for a highlight", async function () {
-			var annotation = new Zotero.Item('annotation');
+			var annotation = new Trellis.Item('annotation');
 			annotation.libraryID = attachment.libraryID;
 			annotation.key = exampleHighlight.key;
 			await annotation.loadPrimaryData();
@@ -146,8 +146,8 @@ describe("Zotero.Annotations", function() {
 			annotation.addTag("math");
 			annotation.addTag("chemistry");
 			await annotation.saveTx();
-			await Zotero.Tags.setColor(annotation.libraryID, "math", "#ff0000", 0);
-			var json = await Zotero.Annotations.toJSON(annotation);
+			await Trellis.Tags.setColor(annotation.libraryID, "math", "#ff0000", 0);
+			var json = await Trellis.Annotations.toJSON(annotation);
 			
 			assert.sameMembers(Object.keys(json), Object.keys(exampleHighlight));
 			for (let prop of Object.keys(exampleHighlight)) {
@@ -161,7 +161,7 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should generate an object for a note", async function () {
-			var annotation = new Zotero.Item('annotation');
+			var annotation = new Trellis.Item('annotation');
 			annotation.libraryID = attachment.libraryID;
 			annotation.key = exampleNote.key;
 			await annotation.loadPrimaryData();
@@ -172,7 +172,7 @@ describe("Zotero.Annotations", function() {
 				annotation[itemProp] = exampleNoteAlt[prop];
 			}
 			await annotation.saveTx();
-			var json = await Zotero.Annotations.toJSON(annotation);
+			var json = await Trellis.Annotations.toJSON(annotation);
 			
 			assert.sameMembers(Object.keys(json), Object.keys(exampleNote));
 			for (let prop of Object.keys(exampleNote)) {
@@ -186,7 +186,7 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should generate an object for an image", async function () {
-			var annotation = new Zotero.Item('annotation');
+			var annotation = new Trellis.Item('annotation');
 			annotation.libraryID = attachment.libraryID;
 			annotation.key = exampleImage.key;
 			await annotation.loadPrimaryData();
@@ -200,15 +200,15 @@ describe("Zotero.Annotations", function() {
 			
 			// Get Blob from file and attach it
 			var path = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var imageData = await Zotero.File.getBinaryContentsAsync(path);
+			var imageData = await Trellis.File.getBinaryContentsAsync(path);
 			var array = new Uint8Array(imageData.length);
 			for (let i = 0; i < imageData.length; i++) {
 				array[i] = imageData.charCodeAt(i);
 			}
 			var blob = new Blob([array], { type: 'image/png' });
-			var file = await Zotero.Annotations.saveCacheImage(annotation, blob);
+			var file = await Trellis.Annotations.saveCacheImage(annotation, blob);
 			
-			var json = await Zotero.Annotations.toJSON(annotation);
+			var json = await Trellis.Annotations.toJSON(annotation);
 			
 			assert.sameMembers(Object.keys(json), Object.keys(exampleImage));
 			for (let prop of Object.keys(exampleImage)) {
@@ -219,7 +219,7 @@ describe("Zotero.Annotations", function() {
 				assert.deepEqual(json[prop], exampleImage[prop], `'${prop}' doesn't match`);
 			}
 			
-			var imageVal = await new Zotero.Promise((resolve) => {
+			var imageVal = await new Trellis.Promise((resolve) => {
 				var reader = new FileReader();
 				reader.readAsDataURL(blob);
 				reader.onloadend = function() {
@@ -232,9 +232,9 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should generate an object for a highlight by another user in a group library", async function () {
-			await Zotero.Users.setName(12345, 'First Last');
+			await Trellis.Users.setName(12345, 'First Last');
 			
-			var annotation = new Zotero.Item('annotation');
+			var annotation = new Trellis.Item('annotation');
 			annotation.libraryID = groupAttachment.libraryID;
 			annotation.key = exampleGroupHighlight.key;
 			await annotation.loadPrimaryData();
@@ -248,7 +248,7 @@ describe("Zotero.Annotations", function() {
 			await annotation.saveTx({
 				skipEditCheck: true
 			});
-			var json = await Zotero.Annotations.toJSON(annotation);
+			var json = await Trellis.Annotations.toJSON(annotation);
 			
 			assert.equal(json.authorName, 'First Last');
 			
@@ -258,8 +258,8 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should generate an object for a highlight by another user modified by the current user in a group library", async function () {
-			await Zotero.Users.setName(1, 'My Name');
-			await Zotero.Users.setName(12345, 'Their Name');
+			await Trellis.Users.setName(1, 'My Name');
+			await Trellis.Users.setName(12345, 'Their Name');
 			
 			var annotation = await createAnnotation('highlight', groupAttachment);
 			annotation.createdByUserID = 12345;
@@ -267,7 +267,7 @@ describe("Zotero.Annotations", function() {
 			await annotation.saveTx({
 				skipEditCheck: true
 			});
-			var json = await Zotero.Annotations.toJSON(annotation);
+			var json = await Trellis.Annotations.toJSON(annotation);
 			
 			assert.equal(json.authorName, 'Their Name');
 			assert.equal(json.lastModifiedByUser, 'My Name');
@@ -282,7 +282,7 @@ describe("Zotero.Annotations", function() {
 			annotation.annotationAuthorName = 'First Last';
 			await annotation.saveTx();
 			
-			var json = await Zotero.Annotations.toJSON(annotation);
+			var json = await Trellis.Annotations.toJSON(annotation);
 			
 			assert.equal(json.authorName, 'First Last');
 			
@@ -293,7 +293,7 @@ describe("Zotero.Annotations", function() {
 	
 	describe("#saveFromJSON()", function () {
 		it("should create an item from a highlight", async function () {
-			var annotation = await Zotero.Annotations.saveFromJSON(attachment, exampleHighlight);
+			var annotation = await Trellis.Annotations.saveFromJSON(attachment, exampleHighlight);
 			
 			assert.equal(annotation.key, exampleHighlight.key);
 			for (let prop of ['text', 'comment', 'color', 'pageLabel', 'sortIndex', 'position']) {
@@ -306,7 +306,7 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should create an item from a note", async function () {
-			var annotation = await Zotero.Annotations.saveFromJSON(attachment, exampleNote);
+			var annotation = await Trellis.Annotations.saveFromJSON(attachment, exampleNote);
 			
 			assert.equal(annotation.key, exampleNote.key);
 			for (let prop of ['comment', 'color', 'pageLabel', 'sortIndex', 'position']) {
@@ -316,9 +316,9 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should create an item from an image", async function () {
-			var annotation = await Zotero.Annotations.saveFromJSON(attachment, exampleImage);
+			var annotation = await Trellis.Annotations.saveFromJSON(attachment, exampleImage);
 			
-			// Note: Image is created separately using Zotero.Annotations.saveCacheImage()
+			// Note: Image is created separately using Trellis.Annotations.saveCacheImage()
 			
 			assert.equal(annotation.key, exampleImage.key);
 			for (let prop of ['comment', 'color', 'pageLabel', 'sortIndex', 'position']) {
@@ -328,11 +328,11 @@ describe("Zotero.Annotations", function() {
 		});
 		
 		it("should remove empty fields", async function () {
-			var annotation = await Zotero.Annotations.saveFromJSON(attachment, exampleHighlight);
+			var annotation = await Trellis.Annotations.saveFromJSON(attachment, exampleHighlight);
 			var json = Object.assign({}, exampleHighlight);
 			json.comment = '';
 			json.pageLabel = '';
-			await Zotero.Annotations.saveFromJSON(attachment, json);
+			await Trellis.Annotations.saveFromJSON(attachment, json);
 			
 			assert.isNull(annotation.annotationComment);
 			assert.isNull(annotation.annotationPageLabel);
@@ -341,7 +341,7 @@ describe("Zotero.Annotations", function() {
 
 	describe("#splitAnnotations()", function () {
 		it("should split a highlight annotation", async function () {
-			await Zotero.Items.erase(attachment.getAnnotations().map(x => x.id));
+			await Trellis.Items.erase(attachment.getAnnotations().map(x => x.id));
 			let annotation = await createAnnotation('highlight', attachment);
 			let position = {
 				pageIndex: 1,
@@ -354,7 +354,7 @@ describe("Zotero.Annotations", function() {
 			annotation.annotationText = 'test';
 			await annotation.saveTx();
 
-			await Zotero.Annotations.splitAnnotations([annotation]);
+			await Trellis.Annotations.splitAnnotations([annotation]);
 
 			let splitAnnotations = attachment.getAnnotations();
 			assert.equal(splitAnnotations.length, 3);
@@ -365,12 +365,12 @@ describe("Zotero.Annotations", function() {
 			assert.equal(splitAnnotations[1].annotationText, 'test');
 			assert.equal(splitAnnotations[2].annotationText, 'test');
 
-			assert.equal(Zotero.Items.get(annotation.id), false);
-			await Zotero.Items.erase(splitAnnotations.map(x => x.id));
+			assert.equal(Trellis.Items.get(annotation.id), false);
+			await Trellis.Items.erase(splitAnnotations.map(x => x.id));
 		});
 
 		it("should split an ink annotation", async function () {
-			await Zotero.Items.erase(attachment.getAnnotations().map(x => x.id));
+			await Trellis.Items.erase(attachment.getAnnotations().map(x => x.id));
 			let annotation = await createAnnotation('ink', attachment);
 			let position = {
 				pageIndex: 1,
@@ -388,7 +388,7 @@ describe("Zotero.Annotations", function() {
 			annotation.annotationComment = 'test';
 			await annotation.saveTx();
 
-			await Zotero.Annotations.splitAnnotations([annotation]);
+			await Trellis.Annotations.splitAnnotations([annotation]);
 
 			let splitAnnotations = attachment.getAnnotations();
 			assert.equal(splitAnnotations.length, 3);
@@ -399,8 +399,8 @@ describe("Zotero.Annotations", function() {
 			assert.equal(splitAnnotations[1].annotationComment, 'test');
 			assert.equal(splitAnnotations[2].annotationComment, 'test');
 
-			assert.equal(Zotero.Items.get(annotation.id), false);
-			await Zotero.Items.erase(splitAnnotations.map(x => x.id));
+			assert.equal(Trellis.Items.get(annotation.id), false);
+			await Trellis.Items.erase(splitAnnotations.map(x => x.id));
 		});
 	});
 });
@@ -413,7 +413,7 @@ describe("Create a note from annotations from multiple items and attachments", f
 		annotations.push(annotation1);
 		let annotation2 = await createAnnotation('highlight', attachment);
 		annotations.push(annotation2);
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations(annotations);
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations(annotations);
 		assert.equal(note.note.split('test').length - 1, 1);
 		assert.equal(note.note.split(annotation1.annotationText).length - 1, 1);
 		assert.equal(note.note.split(annotation2.annotationText).length - 1, 1);
@@ -428,7 +428,7 @@ describe("Create a note from annotations from multiple items and attachments", f
 		annotations.push(annotation1);
 		let annotation2 = await createAnnotation('highlight', attachment2);
 		annotations.push(annotation2);
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations(annotations);
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations(annotations);
 		assert.equal(note.note.split('test').length - 1, 2);
 		assert.equal(note.note.split('>' + item.getField('title') + '<').length - 1, 0);
 		assert.equal(note.note.split(annotation1.annotationText).length - 1, 1);
@@ -445,7 +445,7 @@ describe("Create a note from annotations from multiple items and attachments", f
 		annotations.push(annotation1);
 		let annotation2 = await createAnnotation('highlight', attachment2);
 		annotations.push(annotation2);
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations(annotations);
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations(annotations);
 		assert.equal(note.note.split('test').length - 1, 0);
 		assert.equal(note.note.split('>' + item1.getField('title') + '<').length - 1, 1);
 		assert.equal(note.note.split('>' + item2.getField('title') + '<').length - 1, 1);
@@ -468,21 +468,21 @@ describe("Create a note from annotations from multiple items and attachments", f
 		annotations.push(annotation3);
 		let annotation4 = await createAnnotation('highlight', attachment3);
 		annotations.push(annotation4);
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations(annotations);
-		Zotero.debug(note.note);
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations(annotations);
+		Trellis.debug(note.note);
 		assert.equal(note.note.split('test').length - 1, 2);
 		assert.equal(note.note.split('>' + item1.getField('title') + '<').length - 1, 1);
 		assert.equal(note.note.split('>' + item2.getField('title') + '<').length - 1, 1);
 		assert.equal(note.note.split(annotation1.annotationText).length - 1, 1);
 		assert.equal(note.note.split(annotation2.annotationText).length - 1, 1);
 		// Check item URIs count
-		assert.equal(note.note.split('zotero.org').length - 1, 16);
+		assert.equal(note.note.split('trellis.org').length - 1, 16);
 	});
 
 	it("should create a note from annotations without saving to DB", async function () {
 		// Fetch .png file for image and ink annotations
 		let path = OS.Path.join(getTestDataDirectory().path, 'test.png');
-		let imageData = await Zotero.File.getBinaryContentsAsync(path);
+		let imageData = await Trellis.File.getBinaryContentsAsync(path);
 		let array = new Uint8Array(imageData.length);
 		for (let i = 0; i < imageData.length; i++) {
 			array[i] = imageData.charCodeAt(i);
@@ -512,7 +512,7 @@ describe("Create a note from annotations from multiple items and attachments", f
 		inkAnnotation.annotationPosition = JSON.stringify(position);
 		inkAnnotation.annotationComment = 'ink test';
 		await inkAnnotation.saveTx();
-		await Zotero.Annotations.saveCacheImage(inkAnnotation, blob);
+		await Trellis.Annotations.saveCacheImage(inkAnnotation, blob);
 
 		let highlightAnnotation = await createAnnotation('highlight', attachment1);
 		highlightAnnotation.annotationText = 'highlighted text';
@@ -535,11 +535,11 @@ describe("Create a note from annotations from multiple items and attachments", f
 		};
 		imageAnnotation.annotationPosition = JSON.stringify(imagePosition);
 		await imageAnnotation.saveTx();
-		await Zotero.Annotations.saveCacheImage(imageAnnotation, blob);
+		await Trellis.Annotations.saveCacheImage(imageAnnotation, blob);
 		
 		// Create a note without saving to DB
 		let annotations = [inkAnnotation, highlightAnnotation, underlineAnnotation, imageAnnotation];
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations(annotations, { noSave: true });
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations(annotations, { noSave: true });
 		assert.notOk(note.id);
 		
 		// Verify the note contains all annotation texts
@@ -560,10 +560,10 @@ describe("Create a note from annotations from multiple items and attachments", f
 	it("should show placeholder for image annotation with comment but without cache image", async function () {
 		let attachment = await importPDFAttachment();
 		let annotation = await createAnnotation('image', attachment);
-		let cachePath = Zotero.Annotations.getCacheImagePath(annotation);
+		let cachePath = Trellis.Annotations.getCacheImagePath(annotation);
 		await OS.File.remove(cachePath, { ignoreAbsent: true });
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations([annotation]);
-		let placeholder = Zotero.getString('annotation-image-not-available');
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations([annotation]);
+		let placeholder = Trellis.getString('annotation-image-not-available');
 		assert.include(note.note, placeholder);
 		assert.include(note.note, annotation.annotationComment);
 	});
@@ -571,10 +571,10 @@ describe("Create a note from annotations from multiple items and attachments", f
 	it("should show placeholder for image annotation without comment or cache image", async function () {
 		let attachment = await importPDFAttachment();
 		let annotation = await createAnnotation('image', attachment, { comment: '' });
-		let cachePath = Zotero.Annotations.getCacheImagePath(annotation);
+		let cachePath = Trellis.Annotations.getCacheImagePath(annotation);
 		await OS.File.remove(cachePath, { ignoreAbsent: true });
-		let note = await Zotero.EditorInstance.createNoteFromAnnotations([annotation]);
-		let placeholder = Zotero.getString('annotation-image-not-available');
+		let note = await Trellis.EditorInstance.createNoteFromAnnotations([annotation]);
+		let placeholder = Trellis.getString('annotation-image-not-available');
 		assert.include(note.note, placeholder);
 	});
 });

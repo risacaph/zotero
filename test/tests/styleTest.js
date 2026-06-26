@@ -1,45 +1,45 @@
 "use strict";
 
-describe("Zotero.Styles", function () {
-	var styleID = "http://www.zotero.org/styles/cell";
+describe("Trellis.Styles", function () {
+	var styleID = "http://www.trellis.org/styles/cell";
 	var stylePath = OS.Path.join(getTestDataDirectory().path, 'cell.csl');
-	var styleFile = Zotero.File.pathToFile(stylePath);
+	var styleFile = Trellis.File.pathToFile(stylePath);
 	var style;
 	
 	before(function* () {
-		yield Zotero.Styles.init();
-		style = yield Zotero.File.getContentsAsync(stylePath);
+		yield Trellis.Styles.init();
+		style = yield Trellis.File.getContentsAsync(stylePath);
 	});
 	
-	describe("Zotero.Styles.install", function () {
+	describe("Trellis.Styles.install", function () {
 		afterEach(`${styleID} style should be installed`, function* (){
-			assert.isOk(Zotero.Styles.get(styleID));
-			yield Zotero.Styles.get(styleID).remove();
+			assert.isOk(Trellis.Styles.get(styleID));
+			yield Trellis.Styles.get(styleID).remove();
 		});
 		
 		it("should install the style from string", async function () {
-			await Zotero.Styles.install(style, styleID, true);
+			await Trellis.Styles.install(style, styleID, true);
 		});
 		
 		it("should install the style from nsIFile", async function () {
-			await Zotero.Styles.install(styleFile, styleID, true);
+			await Trellis.Styles.install(styleFile, styleID, true);
 		});
 
 		it("should install the style from url", async function () {
-			var getContentsFromURLAsync = Zotero.File.getContentsFromURLAsync;
-			sinon.stub(Zotero.File, 'getContentsFromURLAsync').callsFake(function (url) {
+			var getContentsFromURLAsync = Trellis.File.getContentsFromURLAsync;
+			sinon.stub(Trellis.File, 'getContentsFromURLAsync').callsFake(function (url) {
 				if (url === styleID) {
 					return Promise.resolve(style);
 				} else {
-					return getContentsFromURLAsync.apply(Zotero.File, arguments);
+					return getContentsFromURLAsync.apply(Trellis.File, arguments);
 				}
 			});
-			await Zotero.Styles.install({url: styleID}, styleID, true);
-			Zotero.File.getContentsFromURLAsync.restore();
+			await Trellis.Styles.install({url: styleID}, styleID, true);
+			Trellis.File.getContentsFromURLAsync.restore();
 		});
 		
 		it("should install the style from file path", async function () {
-			await Zotero.Styles.install({file: stylePath}, styleID, true);
+			await Trellis.Styles.install({file: stylePath}, styleID, true);
 		})
 	});
 	
@@ -60,25 +60,25 @@ describe("Zotero.Styles", function () {
 		});
 		
 		it("should capitalize subtitles in APA", async function () {
-			var o = Zotero.QuickCopy.getContentFromItems(
+			var o = Trellis.QuickCopy.getContentFromItems(
 				[item],
-				'bibliography=http://www.zotero.org/styles/apa'
+				'bibliography=http://www.trellis.org/styles/apa'
 			);
 			assert.equal(o.text, 'Foo bar: Baz qux. (2019).\n');
 		});
 		
 		it("shouldn't capitalize subtitles in AMA", async function () {
-			var o = Zotero.QuickCopy.getContentFromItems(
+			var o = Trellis.QuickCopy.getContentFromItems(
 				[item],
-				'bibliography=http://www.zotero.org/styles/american-medical-association'
+				'bibliography=http://www.trellis.org/styles/american-medical-association'
 			);
 			assert.equal(o.text, '1. Foo bar: baz qux. Published online 2019.\n');
 		});
 		
 		it("shouldn't capitalize subtitles in Vancouver", async function () {
-			var o = Zotero.QuickCopy.getContentFromItems(
+			var o = Trellis.QuickCopy.getContentFromItems(
 				[item],
-				'bibliography=http://www.zotero.org/styles/nlm-citation-sequence'
+				'bibliography=http://www.trellis.org/styles/nlm-citation-sequence'
 			);
 			assert.equal(o.text, '1. Foo bar: baz qux. 2019.\n');
 		});
@@ -90,8 +90,8 @@ describe("Zotero.Styles", function () {
 		<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0">
 		  <info>
 			<title>Test</title>
-			<id>http://www.zotero.org/styles/test</id>
-			<link href="http://www.zotero.org/styles/test" rel="self"/>
+			<id>http://www.trellis.org/styles/test</id>
+			<link href="http://www.trellis.org/styles/test" rel="self"/>
 			<updated>2022-04-14T13:48:43+00:00</updated>
 		  </info>
 		  <bibliography>
@@ -120,21 +120,21 @@ describe("Zotero.Styles", function () {
 		});
 		
 		it("should substitute `event-title` in style using `event`", function () {
-			var style = new Zotero.Style(eventStyleXML);
+			var style = new Trellis.Style(eventStyleXML);
 			var cslEngine = style.getCiteProc('en-US', 'text');
-			var text = Zotero.Cite.makeFormattedBibliographyOrCitationList(cslEngine, [item], "text");
+			var text = Trellis.Cite.makeFormattedBibliographyOrCitationList(cslEngine, [item], "text");
 			cslEngine.free();
 			assert.equal(text, 'Conference - Conference - Place\n');
 		});
 	});
 
 	describe("Cached CSL.Engine instances", function () {
-		if (Zotero.Prefs.get('cite.useCiteprocRs')) {
+		if (Trellis.Prefs.get('cite.useCiteprocRs')) {
 			this.skip();
 		}
 		
 		it("should correctly handle disambiguation", async function () {
-			let style = Zotero.Styles.get('http://www.zotero.org/styles/apa');
+			let style = Trellis.Styles.get('http://www.trellis.org/styles/apa');
 			
 			let testItem1 = await createDataObject('item');
 			testItem1.setField('title', `title1`);
@@ -168,10 +168,10 @@ describe("Zotero.Styles", function () {
 	describe("renamed styles", function () {
 		var oldName = "vancouver";
 		var newName = "nlm-citation-sequence";
-		var prefix = "http://www.zotero.org/styles/";
+		var prefix = "http://www.trellis.org/styles/";
 
 		it("should map a renamed style to its new ID via get()", function () {
-			var style = Zotero.Styles.get(prefix + oldName);
+			var style = Trellis.Styles.get(prefix + oldName);
 			assert.isOk(style);
 			assert.equal(style.styleID, prefix + newName);
 		});
@@ -189,52 +189,52 @@ describe("Zotero.Styles", function () {
 			  <bibliography><layout><text variable="title"/></layout></bibliography>
 			</style>`;
 
-			var stylesDir = Zotero.getStylesDirectory().path;
+			var stylesDir = Trellis.getStylesDirectory().path;
 			var oldPath = OS.Path.join(stylesDir, oldName + '.csl');
-			await Zotero.File.putContentsAsync(oldPath, oldCSL);
+			await Trellis.File.putContentsAsync(oldPath, oldCSL);
 
-			await Zotero.Styles.reinit();
+			await Trellis.Styles.reinit();
 
 			assert.isFalse(await OS.File.exists(oldPath));
-			var style = Zotero.Styles.get(prefix + oldName);
+			var style = Trellis.Styles.get(prefix + oldName);
 			assert.isOk(style);
 			assert.equal(style.styleID, prefix + newName);
-			var visible = Zotero.Styles.getVisible();
+			var visible = Trellis.Styles.getVisible();
 			assert.isFalse(visible.some(s => s.styleID === prefix + oldName));
 		});
 	});
 
-	describe("Zotero.Style#effectiveLocale", function () {
+	describe("Trellis.Style#effectiveLocale", function () {
 		it("should return the style's own default-locale", function () {
 			let xml = `<?xml version="1.0" encoding="utf-8"?>
 			<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" default-locale="fr-FR">
 			  <info>
 				<title>Test</title>
-				<id>http://www.zotero.org/styles/test-own-locale</id>
-				<link href="http://www.zotero.org/styles/test-own-locale" rel="self"/>
+				<id>http://www.trellis.org/styles/test-own-locale</id>
+				<link href="http://www.trellis.org/styles/test-own-locale" rel="self"/>
 				<updated>2024-01-01T00:00:00+00:00</updated>
 			  </info>
 			  <citation><layout><text variable="title"/></layout></citation>
 			</style>`;
-			let style = new Zotero.Style(xml);
+			let style = new Trellis.Style(xml);
 			assert.equal(style.effectiveLocale, "fr-FR");
 		});
 
 		it("should fall back to the parent's default-locale when the dependent has none", function () {
-			let parentID = "http://www.zotero.org/styles/american-medical-association";
-			assert.equal(Zotero.Styles.get(parentID).locale, "en-US");
+			let parentID = "http://www.trellis.org/styles/american-medical-association";
+			assert.equal(Trellis.Styles.get(parentID).locale, "en-US");
 
 			let xml = `<?xml version="1.0" encoding="utf-8"?>
 			<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0">
 			  <info>
 				<title>Test Dependent</title>
-				<id>http://www.zotero.org/styles/test-dependent</id>
-				<link href="http://www.zotero.org/styles/test-dependent" rel="self"/>
+				<id>http://www.trellis.org/styles/test-dependent</id>
+				<link href="http://www.trellis.org/styles/test-dependent" rel="self"/>
 				<link href="${parentID}" rel="independent-parent"/>
 				<updated>2024-01-01T00:00:00+00:00</updated>
 			  </info>
 			</style>`;
-			let style = new Zotero.Style(xml);
+			let style = new Trellis.Style(xml);
 			assert.isNull(style.locale);
 			assert.equal(style.effectiveLocale, "en-US");
 		});

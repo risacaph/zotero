@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Inställningar i Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "Hjälp">
+
+<!ENTITY trellis.preferences.default "Standardvärde:">
+<!ENTITY trellis.preferences.items "källor">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Anpassad...">
+
+<!ENTITY trellis.preferences.prefpane.general "Allmänt">
+
+<!ENTITY trellis.preferences.interface "Gränssnitt">
+<!ENTITY trellis.preferences.fileHandling "Filhantering">
+<!ENTITY trellis.preferences.automaticSnapshots "Ta automatiskt lokala kopior när källor skapas av hemsidor">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Bifoga automatiskt associerade PDF:er och andra filer när källor sparas">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Byt namn på länkade filer">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Öppna PDF:er med">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Systemets standardval">
+
+<!ENTITY trellis.preferences.miscellaneous "Övrigt">
+<!ENTITY trellis.preferences.autoUpdate "Kolla automatiskt efter uppdaterade källfångare och stilar">
+<!ENTITY trellis.preferences.updateNow "Uppdatera nu">
+<!ENTITY trellis.preferences.reportTranslationFailure "Rapportera felaktiga källfångare">
+<!ENTITY trellis.preferences.parseRISRefer "Använd Trellis för nedladdade BibTeX/RIS/Refer-filer">
+<!ENTITY trellis.preferences.automaticTags "Lägg automatiskt till etiketter med nyckelord och ämnesord">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Ta automatiskt bort källor från papperskorgen som lagts dit för mer än">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "dagar sen">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Show tabs as">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creator - Year - Title">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Title - Creator - Year">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Filnamn">
+
+<!ENTITY trellis.preferences.groups "Grupper">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "När källor kopieras mellan bibliotek, ta med:">
+<!ENTITY trellis.preferences.groups.childNotes "tillhörande anteckningar">
+<!ENTITY trellis.preferences.groups.childFiles "tillhörande sparade hemsidor och lokala filer">
+<!ENTITY trellis.preferences.groups.annotations "annotations">
+<!ENTITY trellis.preferences.groups.childLinks "tillhörande länkar">
+<!ENTITY trellis.preferences.groups.tags "etiketter">
+
+<!ENTITY trellis.preferences.feeds "Matningar">
+<!ENTITY trellis.preferences.feeds.sorting.label "Sortering:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Nyast först">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Äldst först">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Matningens standardvärden">
+
+<!ENTITY trellis.preferences.prefpane.sync "Synkronisera">
+<!ENTITY trellis.preferences.sync.username "Användarnamn:">
+<!ENTITY trellis.preferences.sync.password "Lösenord:">
+<!ENTITY trellis.preferences.sync.createAccount "Skapa konto">
+<!ENTITY trellis.preferences.sync.lostPassword "Glömt lösenord?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Synkronisera automatiskt">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Synkronisera innehållet i fulltext">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis kan synkronisera fulltextinnehållet i dina filer i Trellis-biblioteket till trellis.org och andra anslutna enheter, så att du enkelt söka efter dina filer var du än är. Innehållet i dina filer kommer inte att delas offentligt.">
+<!ENTITY trellis.preferences.sync.about "Om synkronisering">
+<!ENTITY trellis.preferences.sync.fileSyncing "Filsynkronisering">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Synkronisera bifogade filer i mitt bibliotek med:">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Ladda ner filer">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "vid synkronisering">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "efter behov">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Verifiera Server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Bibliotek att synkronisera">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Välj bibliotek...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Synkronisera">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Bibliotek">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Följande åtgärder är endast till för sällsynta, särskilda situationer och ska inte användas för vanlig felsökning. I många fall kan en återställning istället orsaka nya problem. Se">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Återställningsalternativ för synkronisering">
+<!ENTITY trellis.preferences.sync.reset.warning3 "för mer information.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Återställ datasynkroniseringshistorik">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Sammanfoga lokala data med fjärrdata, strunta i synkroniseringshistorik">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Återställ från onlinebibliotek">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Överskriv lokal Trellis-data med data från onlinebiblioteket.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Ersätt onlinebibliotek">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Skriv över onlinebiblioteket med lokala Trellis-data">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Återställ filsynkroniseringshistorik">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Jämför alla bifogade filer med lagringstjänsten">
+<!ENTITY trellis.preferences.sync.reset "Återställ">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Återställ...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Sök">
+<!ENTITY trellis.preferences.search.fulltextCache "Fulltext-cache">
+<!ENTITY trellis.preferences.search.indexStats "Index-statistik">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Indexerat:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Delvis:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Ej indexerat:">
+<!ENTITY trellis.preferences.search.indexStats.words "Ord:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Maximalt antal tecken att indexera per fil:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Maximalt antal sidor att indexera per fil:">
+
+<!ENTITY trellis.preferences.prefpane.export "Exportera">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Inställningar för källhänvisningar">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Ta med URL:er för forskningsartiklar i källförteckningen">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "När detta är bortvalt lägger Trellis bara till webblänken om artikeln inte har ett sidintervall specificerat.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Snabbkopiera">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Item Format:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Note Format:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Kopiera som HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Webbplats-specifika inställningar:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domän/sökväg">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(ex. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Format">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Språk">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Stäng av snabbkopiering om fler än ... filer är markerade.">
+
+<!ENTITY trellis.preferences.prefpane.cite "Källhänvisa">
+<!ENTITY trellis.preferences.cite.wordProcessors "Ordbehandlare">
+<!ENTITY trellis.preferences.styleEditor "Stilredigerare">
+<!ENTITY trellis.preferences.stylePreview "Förhandsvisa stil">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Stilhanterare">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Titel">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Uppdaterad">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Spara till Trellis (adressradsikon)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Ruta för fokusbibliotek">
+<!ENTITY trellis.preferences.keys.quicksearch "Snabbsökning">
+<!ENTITY trellis.preferences.keys.newItem "Lagra en ny källa">
+<!ENTITY trellis.preferences.keys.newNote "Skapa en ny anteckning">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Markera alla matningsobjekt som lästa">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Kopiera markerade källor som noter till urklipp">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Kopiera markerade källor till urklipp">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Klistra in från urklipp">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Ändringarna börjar gälla efter omstart">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proxyservrar">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Proxyinställningar">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis skickar frågor genomsynligt genom sparade proxyservrar. Läs">
+<!ENTITY trellis.preferences.proxies.desc_link "manualen om proxyservrar">
+<!ENTITY trellis.preferences.proxies.desc_after_link "för mer information.">
+<!ENTITY trellis.preferences.proxies.transparent "Kom ihåg tidigare proxyservrar automatiskt">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Upptäck proxytjänster automatiskt">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Visa meddelande vid omdirigering via en proxy.">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Inaktivera proxy-omdirigering när mitt domännamn innehåller">
+<!ENTITY trellis.preferences.proxies.configured "Inställda proxyservrar">
+<!ENTITY trellis.preferences.proxies.hostname "Värdnamn">
+<!ENTITY trellis.preferences.proxies.scheme "Inställningar">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Multisajt">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Associera nya värdar automatiskt">
+<!ENTITY trellis.preferences.proxies.variables "Du kan använda följande inställningar för din proxyserver:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Proxysajtens värdnamn (t.ex., www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Sökvägen till proxysidan utan föregående / (t.ex., about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Mappnamnet (t.ex., about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Filnamnet (t.ex., index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Vilken sträng som helst">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Avancerat">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Filer och kataloger">
+<!ENTITY trellis.preferences.advanced.keys "Genvägar">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Avancerad konfiguration">
+
+<!ENTITY trellis.preferences.prefpane.locate "Hitta">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Hantera söktjänst för artiklar">
+<!ENTITY trellis.preferences.locate.description "Beskrivning">
+<!ENTITY trellis.preferences.locate.name "Namn">
+<!ENTITY trellis.preferences.locate.addDescription "För att lägga till en söktjänst som inte finns på listan, gå till söktjänstens hemsida i din webbläsare och välj “Lägg till” i Trelliss Hitta-meny.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Återställ till standard">
+
+<!ENTITY trellis.preferences.charset "Teckenkod">
+<!ENTITY trellis.preferences.charset.importCharset "Importera teckenkod">
+<!ENTITY trellis.preferences.charset.displayExportOption "Visa val för teckenkod vid export">
+
+<!ENTITY trellis.preferences.dataDir "Plats för Datakatalog">
+<!ENTITY trellis.preferences.dataDir.useProfile "Använd profilkatalog">
+<!ENTITY trellis.preferences.dataDir.custom "Egen:">
+<!ENTITY trellis.preferences.dataDir.choose "Välj...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(angiven via kommandoraden)">
+<!ENTITY trellis.preferences.dataDir.reveal "Visa Datakatalog">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrera till ny standardplats...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Baskatalog för länkande bilagor">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis använder relativa sökvägar för länkade filbilagor inom baskatalogen, vilket gör att du kan använda nå filerna på olika datorer så länge filstrukturen inom baskatalogen är densamma.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Baskatalog:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Välj...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Återgå till absoluta sökvägar…">
+
+<!ENTITY trellis.preferences.dbMaintenance "Databasunderhåll">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Undersök om databasen är oskadd">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Återställ översättare och stilar...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Återställ översättare...">
+
+<!ENTITY trellis.preferences.configEditor "Konfigurationsredigerare">

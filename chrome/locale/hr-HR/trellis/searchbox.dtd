@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Naziv:">
+
+<!ENTITY trellis.search.searchInLibrary "Traži u biblioteci:">
+
+<!ENTITY trellis.search.joinMode.prefix "Podudaraj">
+<!ENTITY trellis.search.joinMode.any "bilo koji">
+<!ENTITY trellis.search.joinMode.all "sve">
+<!ENTITY trellis.search.joinMode.suffix "od sljedećeg:">
+
+<!ENTITY trellis.search.recursive.label "Pretraži podzbirke">
+<!ENTITY trellis.search.noChildren "Prikaži samo stavke najviše razine">
+<!ENTITY trellis.search.includeParentsAndChildren "Uključi nadređene i podređene stavke podudarnih stavki">
+
+<!ENTITY trellis.search.textModes.phrase "Fraza">
+<!ENTITY trellis.search.textModes.phraseBinary "Fraza (uključujući binarne datoteke)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (osjetljivo na velika i mala slova)">
+
+<!ENTITY trellis.search.date.units.days "dana">
+<!ENTITY trellis.search.date.units.months "mjeseci">
+<!ENTITY trellis.search.date.units.years "godina">
+
+<!ENTITY trellis.search.search "Pretraživanje">
+<!ENTITY trellis.search.clear "Očisti">
+<!ENTITY trellis.search.saveSearch "Spremi pretraživanje">

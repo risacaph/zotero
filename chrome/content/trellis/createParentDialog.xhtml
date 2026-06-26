@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+
+<!DOCTYPE dialog [
+		<!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD;
+]>
+
+<window
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	title="&trellis.createParent.title;"
+	drawintitlebar-platforms="mac"
+	onload="TrellisCreateParentDialog.init()"
+>
+<dialog
+	id="trellis-parent-dialog"
+	orient="vertical"
+	buttons="cancel,accept,extra2"
+	buttondisabledaccept="true"
+	buttonlabelextra2="&trellis.createParent.button.manual;"
+	buttonlabelaccept="&trellis.createParent.title;"
+	style="padding: 20px 15px; min-width: 500px">
+
+	<script src="chrome://global/content/globalOverlay.js"/>
+	<script src="include.js"/>
+	<script src="titlebar.js"/>
+	<script src="editMenuOverlay.js"/>
+	<script src="lookup.js"/>
+	<script src="createParentDialog.js"/>
+	
+	<html:link rel="localization" href="trellis.ftl"/>
+	
+	<vbox id="trellis-create-parent-container">
+		<html:h1 id="title" class="title" />
+		<html:label for="parent-item-identifier" class="intro" id="intro" data-l10n-id="create-parent-intro"/>
+		<html:div class="body">
+			<html:input type="text" id="parent-item-identifier" aria-labelledby="intro" />
+			<image id="progress" class="trellis-spinner-16" />
+		</html:div>
+	</vbox>
+</dialog>
+</window>

@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "تفضيلات زوتيرو">
+
+<!ENTITY trellis.preferences.helpButton.label "مساعدة">
+
+<!ENTITY trellis.preferences.default "الإفتراضي:">
+<!ENTITY trellis.preferences.items "عناصر">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "مخصص...">
+
+<!ENTITY trellis.preferences.prefpane.general "عام">
+
+<!ENTITY trellis.preferences.interface "واجهة">
+<!ENTITY trellis.preferences.fileHandling "معاملة الملف">
+<!ENTITY trellis.preferences.automaticSnapshots "أخذ لقطات تلقائية عند إنشاء العناصر من صفحات الويب">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "الارفاق التلقائي لملفات PDF والملفات الاخرى عند اضافة عنصر جديد من صفحة ويب">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "إعادة تسمية الملفات المرتبطة">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "افتح ملفات PDF مستخدماً">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "افتراضي النظام">
+
+<!ENTITY trellis.preferences.miscellaneous "أخرى">
+<!ENTITY trellis.preferences.autoUpdate "التأكد التلقائي من وجود مترجمات مواقع محدثة">
+<!ENTITY trellis.preferences.updateNow "التحديث الآن">
+<!ENTITY trellis.preferences.reportTranslationFailure "الإبلاغ عن مترجمات مواقع معطلة">
+<!ENTITY trellis.preferences.parseRISRefer "استخدم زوتيرو لتحميل انواع ملفات  BibTeX/RIS/Refer">
+<!ENTITY trellis.preferences.automaticTags "اضف اوسمة  تلقائية للعناصر بالكلمات المفتاحية ورؤوس الموضوعات">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "الافراغ التلقائي لسلة المحذوفات. ازالة اللملفات المحذوفة منذ">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "يوم">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "إظهار علامات التبويب ك">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "المؤلف - السنة - العنوان">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "العنوان - المؤلف - السنة">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "اسم الملف">
+
+<!ENTITY trellis.preferences.groups "المجموعات">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "عند نسخ العناصر بين المكتبات، يجب ان تتضمن العناصر على:">
+<!ENTITY trellis.preferences.groups.childNotes "الملاحظات الفرعية">
+<!ENTITY trellis.preferences.groups.childFiles "اللقطات الفرعية والملفات المستوردة">
+<!ENTITY trellis.preferences.groups.annotations "تعليقات توضيحية">
+<!ENTITY trellis.preferences.groups.childLinks "الروابط الفرعية">
+<!ENTITY trellis.preferences.groups.tags "سمات">
+
+<!ENTITY trellis.preferences.feeds "الخلاصات">
+<!ENTITY trellis.preferences.feeds.sorting.label "الفرز">
+<!ENTITY trellis.preferences.feeds.sorting.newest "العناصر الأحدث أولاً">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "العناصر الأقدم أولاً">
+<!ENTITY trellis.preferences.feeds.feedDefaults "إعدادات الخلاصة الافتراضية">
+
+<!ENTITY trellis.preferences.prefpane.sync "التزامن">
+<!ENTITY trellis.preferences.sync.username "اسم المستخدم:">
+<!ENTITY trellis.preferences.sync.password "كلمة المرور:">
+<!ENTITY trellis.preferences.sync.createAccount "تسجيل اشتراك جديد">
+<!ENTITY trellis.preferences.sync.lostPassword "نسيت كلمة المرور؟">
+<!ENTITY trellis.preferences.sync.syncAutomatically "التزامن التلقائي">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "مزامنة محتوى النص الكامل">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "يمكن لبرنامج زوتيرو مزامنة محتوى النص الكامل للملفات في مكتبات زوتيرو الخاصة بك مع موقع trellis.org والاجهزة الاخرى المتصلة، لتسمح لك بالبحث بملفاتك في اي مكان. لن يتم مشاركة محتوى النص الكامل لملفاتك مع العامة.">
+<!ENTITY trellis.preferences.sync.about "نبذة عن التزامن">
+<!ENTITY trellis.preferences.sync.fileSyncing "تزامن الملفات">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "الرابط:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "قم بمزامنة الملفات المرفقة في مكتبتي باستخدام">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "تحميل الملفات">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "في وقت التزامن">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "عند الحاجة">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "تحقق من الخادم">
+<!ENTITY trellis.preferences.sync.librariesToSync "المكتبات المراد تزامنها">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "اختر المكتبات...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "تزامن">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "مكتبة">
+<!ENTITY trellis.preferences.sync.reset.warning1 "العمليات التالية تستخدم في حالات نادة و  محددة و لا يجب أن تستخدم في لاستصلاح المشاكل العامة . في حالات عديدة، إعادة الضبط ستنتج مشاكل إضافية. انظر">
+<!ENTITY trellis.preferences.sync.reset.warning2 "خيارات اعادة ضبط التزامن">
+<!ENTITY trellis.preferences.sync.reset.warning3 "لمزيد من المعلومات.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "إعادة تعيين سجل مزامنة البيانات">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "دمج البيانات المحلية مع البيانات البعيدة، متجاهلاً سجل المزامنة">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "الاستعاد من مكتبة الشبكة">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "استبدل بيانات زوتيرو المحلية ببيانات مكتبة الشبكة.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "استبدال مكتبة الشبكة">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "استبدل مكتبة الشبكة ببيانات زوتيرو المحلية">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "إعادة تعيين ملف سجل المزامنة">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "مقارنة جميع الملفات المرفقة مع خدمة التخزين">
+<!ENTITY trellis.preferences.sync.reset "اعادة ضبط">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "إظهار خيارات إعادة الضبط">
+<!ENTITY trellis.preferences.sync.reset.button "إعادة التعيين...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "بحث">
+<!ENTITY trellis.preferences.search.fulltextCache "الذاكرة المخبأة للنص الكامل">
+<!ENTITY trellis.preferences.search.indexStats "احصائيات التكشيف">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "مكشف:">
+<!ENTITY trellis.preferences.search.indexStats.partial "مكشف جزئياً:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "غير مكشف:">
+<!ENTITY trellis.preferences.search.indexStats.words "الكلمات:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "الحد الاقصى من الاحرف المكشفة للملف الواحد:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "الحد الاقصى من الصفحات المكشفة للملف الواحد:">
+
+<!ENTITY trellis.preferences.prefpane.export "تصدير">
+
+<!ENTITY trellis.preferences.citationOptions.caption "خيارات الاستشهاد">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "تضمين روابط الويب للمقالات البحثية في المراجع">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "عند تعطيل هذه الخاصية، يقوم زوتيرو بتضمين روابط الويب فقط عند توثيق مقالات (الدوريات أو المجلات أو الجرائد) التي لم يعين لها مدى للصفحات.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "النسخ السريع">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "صيغة العنصر:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "صيغة الملاحظة:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "نسخ كترميز HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "إعدادات خاصة حسب الموقع:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "نطاق الانترنت/المسار">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(مثلاً: wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "الصيغة">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "اللغة">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "تعطيل النسخ السريع عند السحب بالماوس لأكثر من">
+
+<!ENTITY trellis.preferences.prefpane.cite "استشهاد">
+<!ENTITY trellis.preferences.cite.wordProcessors "معالجات النصوص">
+<!ENTITY trellis.preferences.styleEditor "محرر النمط">
+<!ENTITY trellis.preferences.stylePreview "عرض النمط">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "مدير الانماط">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "اسم النمط">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "آخر تحديث">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "لغة نمط الاستشهاد">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "احفظ في زوتيرو (ايقونة شريط العنوان)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "ركز على جزء المكتبات">
+<!ENTITY trellis.preferences.keys.quicksearch "البحث السريع">
+<!ENTITY trellis.preferences.keys.newItem "انشئ عنصر جديد">
+<!ENTITY trellis.preferences.keys.newNote "انشئ ملاحظة جديدة">
+<!ENTITY trellis.preferences.keys.toggleAllRead "علم كل عناصر الخلاصة كمقروءة / غير مقروءة">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "نسخ استشهادات العنصر المختار للحافظة">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "انسخ العناصر المحددة للحافظة">
+<!ENTITY trellis.preferences.keys.importFromClipboard "الاستيراد من الحافظة">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "تسري التغييرات بعد إعادة التشغيل">
+
+<!ENTITY trellis.preferences.prefpane.proxies "الوكيل">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "خيارات الوكيل">
+<!ENTITY trellis.preferences.proxies.desc_before_link "سيقوم زوتيرو بتوجيه الطلبات عن طريق الوكلاء المخزنين.اطلع على">
+<!ENTITY trellis.preferences.proxies.desc_link "معلومات عن الوكيل">
+<!ENTITY trellis.preferences.proxies.desc_after_link "لمزيد من المعلومات.">
+<!ENTITY trellis.preferences.proxies.transparent "اعادة التوجيه عن طريق الوكلاء المستخدمين مسبقا">
+<!ENTITY trellis.preferences.proxies.autoRecognize "التعرف التلقائي على الوكلاء">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "اظهر اشعار عند اعادة التوجيه عبر خادم وسيط">
+<!ENTITY trellis.preferences.proxies.disableByDomain "تعطيل اعادة توجيه الوكيل عندما يحتوي اسم النطاق على ">
+<!ENTITY trellis.preferences.proxies.configured "الوكلاء المخزنين">
+<!ENTITY trellis.preferences.proxies.hostname "المضيف">
+<!ENTITY trellis.preferences.proxies.scheme "المخطط">
+
+<!ENTITY trellis.preferences.proxies.multiSite "مواقع متعددة">
+<!ENTITY trellis.preferences.proxies.autoAssociate "الاضافة التلقائية للمضيفات الجديدة">
+<!ENTITY trellis.preferences.proxies.variables "يمكنك استخدام المتغيرات التالية في مخطط الوكيل لديك:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - اسم المضيف لموقع الوكيل (مثل، www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - مسار الصفحة (مثل، about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - مسار المجلد (مثل، about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - اسم الملف (مثل، index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - لأي سلسلة حرفية">
+
+<!ENTITY trellis.preferences.prefpane.advanced "متقدم">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "الملفات والمجلدات">
+<!ENTITY trellis.preferences.advanced.keys "اختصارات">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "إعدادات متقدمة">
+
+<!ENTITY trellis.preferences.prefpane.locate "تحديد موقع المقتنى">
+<!ENTITY trellis.preferences.locate.locateEngineManager "إدارة محرك البحث">
+<!ENTITY trellis.preferences.locate.description "الوصف">
+<!ENTITY trellis.preferences.locate.name "الاسم">
+<!ENTITY trellis.preferences.locate.addDescription "لأضافه محرك بحث غير مدرج في القائمة ، قم بزيارة محرك البحث المطلوب في  متصفحك وحدد &quot;إضافة&quot; من قائمة تحديد زوتيرو.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "استعادة الاعدادات الافتراضية">
+
+<!ENTITY trellis.preferences.charset "ترميز الحروف">
+<!ENTITY trellis.preferences.charset.importCharset "استيراد ترميز الحروف">
+<!ENTITY trellis.preferences.charset.displayExportOption "اظهار خطائص ترميز الحروف عند التصدير">
+
+<!ENTITY trellis.preferences.dataDir "مكان تخزين البيانات">
+<!ENTITY trellis.preferences.dataDir.useProfile "استخدم مجلد الملف الشخصي لفايرفوكس">
+<!ENTITY trellis.preferences.dataDir.custom "تخصيص:">
+<!ENTITY trellis.preferences.dataDir.choose "اختر...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(محدد عبر سطر الأوامر)">
+<!ENTITY trellis.preferences.dataDir.reveal "عرض مجلد البيانات">
+<!ENTITY trellis.preferences.dataDir.migrate "الترحيل إلى الموقع الافتراضي الجديد...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "المجلد الرئيسي للمرفقات المرتبطة">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "زوتيرو سيستخدم مسارات نسبية لمرفقات الملف المرتبطة داخل المجلد الأساسي، مما يسمح لك بالوصول إلى الملفات على أجهزة حاسبات مختلفة طالما ظلت بنية الملف داخل المجلد الأساسي نفسها.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "الفهرس الرئيسي:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "اختار...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "حول الى مسارات مطلقة">
+
+<!ENTITY trellis.preferences.dbMaintenance "صيانة قاعدة البيانات">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "التأكد من سلامة قاعدة البيانات">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "اعادة تعيين المترجمات والأنماط...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "اعادة تعيين المترجمات...">
+
+<!ENTITY trellis.preferences.configEditor "تهيئة المحرر">

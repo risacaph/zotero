@@ -1,0 +1,19 @@
+<!ENTITY trellis.publications.my_publications "Mes publications">
+
+<!ENTITY trellis.publications.intro "Les documents que vous ajoutez dans Mes publications seront publiés dans votre profil sur trellis.org. Si vous choisissez d'inclure des fichiers attachés, ces derniers seront rendus publics sous la licence que vous spécifiez. N'ajoutez que des travaux que vous avez créés vous-mêmes et n'ajoutez des fichiers que si vous avez le droit de les distribuer publiquement et seulement si vous le souhaitez.">
+<!ENTITY trellis.publications.include.checkbox.files "Inclure les fichiers">
+<!ENTITY trellis.publications.include.checkbox.notes "Inclure les notes">
+<!ENTITY trellis.publications.include.adjustAtAnyTime "Vous pouvez en tout temps ajuster ce qui s'affiche dans la collection Mes publications.">
+
+<!ENTITY trellis.publications.sharing.title "Choisissez comment votre travail peut être partagé">
+<!ENTITY trellis.publications.sharing.text "Vous pouvez vous réserver tous les droits sur votre travail, le publier sous licence Creative Commons, ou le placer dans le domaine public. Dans tous les cas, le travail sera rendu public via trellis.org.">
+<!ENTITY trellis.publications.sharing.prompt "Comment votre travail peut-il être partagé par les autres ?">
+<!ENTITY trellis.publications.sharing.cc "Oui, sous licence Creative Commons">
+<!ENTITY trellis.publications.sharing.cc0 "Oui, et placer mon travail dans le domaine public">
+<!ENTITY trellis.publications.sharing.reserved "Non, ne publier mon travail que sur trellis.org">
+
+<!ENTITY trellis.publications.chooseLicense.title "Choisir une licence Creative Commons">
+<!ENTITY trellis.publications.chooseLicense.text "Une licence Creative Commons permet aux autres de copier et redistribuer votre travail pour autant qu'il vous crédite correctement, fournisse le lien de la licence et indique si des modifications ont été apportées. Des conditions supplémentaires peuvent être spécifiées plus bas.">
+<!ENTITY trellis.publications.chooseLicense.adaptations.prompt "Autoriser de modifier et partager votre travail ?">
+<!ENTITY trellis.publications.chooseLicense.adaptations.sharealike "Oui, tant que les autres le partage selon les mêmes conditions">
+<!ENTITY trellis.publications.chooseLicense.commercial.prompt "Autoriser une utilisation commerciale de votre travail ?">

@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "העדפות Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "עזרה">
+
+<!ENTITY trellis.preferences.default "ברירת מחדל:">
+<!ENTITY trellis.preferences.items "פריטים">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "התאמה אישית…">
+
+<!ENTITY trellis.preferences.prefpane.general "כללי">
+
+<!ENTITY trellis.preferences.interface "מנשק">
+<!ENTITY trellis.preferences.fileHandling "טיפול בקבצים">
+<!ENTITY trellis.preferences.automaticSnapshots "ללכוד תמונת מצב אוטומטית בעת יצירת פריטים מאתרים">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "לצרף אוטומטית PDFים וקבצים אחרים משויכים בעת שמירת פריטים">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "שינוי שמות של קבצים מקושרים">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "פתיחת PDFים באמצעות">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "ברירת המחדל של המערכת">
+
+<!ENTITY trellis.preferences.miscellaneous "שונות">
+<!ENTITY trellis.preferences.autoUpdate "לבדוק אוטומטית אם יש מתרגמים וסגנונות עדכניים">
+<!ENTITY trellis.preferences.updateNow "לעדכן עכשיו">
+<!ENTITY trellis.preferences.reportTranslationFailure "דיווח על מתרגמי אתרים פגומים">
+<!ENTITY trellis.preferences.parseRISRefer "להשתמש ב־Trellis לטובת קובצי BibTeX/RIS/Refer שהתקבלו">
+<!ENTITY trellis.preferences.automaticTags "לתייג פריטים עם מילות מפתח וכותרות נושא אוטומטית">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "להסיר אוטומטית פריטים מהאשפה שנמחקו לפני למעלה מ־">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "ימים">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "הצגת לשוניות בתור">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "יוצר/ת - שנה - כותרת">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "כותרת - יוצר/ת - שנה">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "שם קובץ">
+
+<!ENTITY trellis.preferences.groups "קבוצות">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "בעת העתקת פריטים בין ספריות, לכלול:">
+<!ENTITY trellis.preferences.groups.childNotes "הערות על צאצאים">
+<!ENTITY trellis.preferences.groups.childFiles "תמונות מצב של צאצאים וקבצים שייובאו">
+<!ENTITY trellis.preferences.groups.annotations "הסברים">
+<!ENTITY trellis.preferences.groups.childLinks "קישורי צאצאים">
+<!ENTITY trellis.preferences.groups.tags "תגיות">
+
+<!ENTITY trellis.preferences.feeds "ערוצי עדכונים">
+<!ENTITY trellis.preferences.feeds.sorting.label "מיון:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "פריטים חדשים תחילה">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "פריטים ישנים תחילה">
+<!ENTITY trellis.preferences.feeds.feedDefaults "ברירות המחדל של ערוץ העדכונים">
+
+<!ENTITY trellis.preferences.prefpane.sync "סנכרון">
+<!ENTITY trellis.preferences.sync.username "שם משתמש:">
+<!ENTITY trellis.preferences.sync.password "סיסמה:">
+<!ENTITY trellis.preferences.sync.createAccount "יצירת חשבון">
+<!ENTITY trellis.preferences.sync.lostPassword "איבדת סיסמה?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "סנכרון אוטומטית">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "סנכרון תוכן טקסט מלא">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis יכול לסנכרן את התוכן בטקסט מלא של הקבצים בספריות ה־Trellis שלך מול trellis.org ומכשירים מקושרים נוספים, מה שמאפשר לך לחפש את הקבצים שלך בקלות מכל מקום שהוא. תוכן הטקסט המלא של הקבצים שלך לא ישותף לציבור.">
+<!ENTITY trellis.preferences.sync.about "על הסנכרון">
+<!ENTITY trellis.preferences.sync.fileSyncing "סנכרון קבצים">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "כתובת:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "סנכרון קובצי הצרופות בספרייה שלי עם">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "להוריד קבצים">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "בזמן הסנכרון">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "לפי הצורך">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "אימות השרת">
+<!ENTITY trellis.preferences.sync.librariesToSync "ספריות לסנכרון">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "בחירת ספריות…">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "סנכרון">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "ספרייה">
+<!ENTITY trellis.preferences.sync.reset.warning1 "הפעולות הבאות מיועדות לשימוש במצבים נדירים ומסוימים ואינן מיועדות לפתרון תקלות כללי. במקרים רבים, איפוס יגרום לבעיות נוספות. ניתן לעיין">
+<!ENTITY trellis.preferences.sync.reset.warning2 "באפשרויות איפוס סנכרון">
+<!ENTITY trellis.preferences.sync.reset.warning3 "למידע נוסף.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "היסטוריית איפוס סנכרון נתונים">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "מיזוג הנתונים המקומיים עם הנתונים המרוחקים תוך התעלמות מהיסטוריית הסנכרון">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "שחזור מתיקייה מקוונת">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "לשכתב על הנתונים המקומיים של Trellis עם נתונים מהספרייה המקוונת.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "החלפת הספרייה המרוחקת">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "שכתוב הספרייה המרוחקת עם הנתונים המקומיים של Trellis">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "איפוס היסטוריית סנכרון קבצים">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "השוואת כל קובצי הצרופות עם שירות האחסון">
+<!ENTITY trellis.preferences.sync.reset "איפוס">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "הצגת אפשרויות איפוס…">
+<!ENTITY trellis.preferences.sync.reset.button "איפוס…">
+
+
+<!ENTITY trellis.preferences.prefpane.search "חיפוש">
+<!ENTITY trellis.preferences.search.fulltextCache "מטמון טקסט מלא">
+<!ENTITY trellis.preferences.search.indexStats "סטטיסטיקות אינדקס">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "באינדקס:">
+<!ENTITY trellis.preferences.search.indexStats.partial "חלקי:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "לא באינדקס:">
+<!ENTITY trellis.preferences.search.indexStats.words "מילים:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "מס׳ התווים המרבי להוספה לאינדקס לכל קובץ:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "מספר העמודים המרבי להוספה לאינקדס לכל קובץ:">
+
+<!ENTITY trellis.preferences.prefpane.export "ייצוא">
+
+<!ENTITY trellis.preferences.citationOptions.caption "אפשרויות ציטוט">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "לכלול כתובות של מאמרי נייר בהפניות">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "כאשר אפשרות זו מושבתת, Trellis כולל כתובות בעת ציטוט מכתבי עת, מגזינים וכתבות בעתון רק אם לא צוין טווח עמודים למאמר.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "העתקה מהירה">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "עיצוב הפריט:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "עיצוב ההערה:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "העתקה בתור HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "הגדרות נקודתיות לאתר:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "שם תחום/נתיב">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(למשל: wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "עיצוב">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "שפה">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "השבתת ההעתקה המהירה בעת גרירה של יותר מ־">
+
+<!ENTITY trellis.preferences.prefpane.cite "ציטוט">
+<!ENTITY trellis.preferences.cite.wordProcessors "מעבדי תמלילים">
+<!ENTITY trellis.preferences.styleEditor "עורך סגנונות">
+<!ENTITY trellis.preferences.stylePreview "תצוגה מקדימה של סגנון">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "מנהל סגנונות">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "כותרת">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "עודכן">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL (שפת סגנון ציטוטים)">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "שמירה ל־Trellis (סמל שורת כתובת)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "התמקדות על חלונית הספריות">
+<!ENTITY trellis.preferences.keys.quicksearch "חיפוש מהיר">
+<!ENTITY trellis.preferences.keys.newItem "יצירת פריט חדש">
+<!ENTITY trellis.preferences.keys.newNote "יצירת הערה חדשה">
+<!ENTITY trellis.preferences.keys.toggleAllRead "סימון כל הפריטים בערוץ העדכונים כנקראו/לא נקראו">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "העתקת ציטוטי הפריט הנבחר ללוח הגזירים">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "העתקת הפריטים הנבחרים ללוח הגזירים">
+<!ENTITY trellis.preferences.keys.importFromClipboard "ייבוא מלוח הגזירים">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "השינויים יוחלו אחרי הפעלה מחדש">
+
+<!ENTITY trellis.preferences.prefpane.proxies "מתווכים">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "אפשרויות מתווך">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis יפנה בקשות באופן שקוף דרך המתווכים שנשמרו. כדאי לעיין">
+<!ENTITY trellis.preferences.proxies.desc_link "בתיעוד על המתווכים">
+<!ENTITY trellis.preferences.proxies.desc_after_link "למידע נוסף.">
+<!ENTITY trellis.preferences.proxies.transparent "הפעלת הפניית מתווך">
+<!ENTITY trellis.preferences.proxies.autoRecognize "לזהות משאבים שתווכו אוטומטית">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "הצגת התראה כשמתבצעת הפניה דרך מתווך">
+<!ENTITY trellis.preferences.proxies.disableByDomain "השבתת הפניה דרך מתווכים כאשר שם התחום מכיל">
+<!ENTITY trellis.preferences.proxies.configured "מתווכים מוגדרים">
+<!ENTITY trellis.preferences.proxies.hostname "שם מארח">
+<!ENTITY trellis.preferences.proxies.scheme "סכמה">
+
+<!ENTITY trellis.preferences.proxies.multiSite "ריבוי אתרים">
+<!ENTITY trellis.preferences.proxies.autoAssociate "הקצאת מארחים חדשים אוטומטית">
+<!ENTITY trellis.preferences.proxies.variables "אפשר להשתמש במשתנים הבאים בסכמת התיווך שלך:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - שם המארח של האתר המתווך (למשל: www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - נתיב העמוד המתווך ללא הלוכסן בהתחלה (למשל: about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - נתיב התיקייה (למשל: about/‎)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - שם הקובץ (למשל: index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - כל מחרוזת שהיא">
+
+<!ENTITY trellis.preferences.prefpane.advanced "מתקדם">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "קבצים ותיקיות">
+<!ENTITY trellis.preferences.advanced.keys "צירופי מקשים">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "הגדרות מתקדמות">
+
+<!ENTITY trellis.preferences.prefpane.locate "איתור">
+<!ENTITY trellis.preferences.locate.locateEngineManager "מנהל מנוע חיפוש כתבות">
+<!ENTITY trellis.preferences.locate.description "תיאור">
+<!ENTITY trellis.preferences.locate.name "שם">
+<!ENTITY trellis.preferences.locate.addDescription "כדי להוסיף מנוע חיפוש שאינו ברשימה, יש לבקר במנוע החיפוש הרצוי דרך הדפדפן שלך ולבחור ב„הוספה” מתפריט האיתור של Trellis.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "שחזור ברירות מחדל">
+
+<!ENTITY trellis.preferences.charset "קידוד תווים">
+<!ENTITY trellis.preferences.charset.importCharset "ייבוא קידוד תווים">
+<!ENTITY trellis.preferences.charset.displayExportOption "הצגת אפשרות קידוד תווים בייצוא">
+
+<!ENTITY trellis.preferences.dataDir "מיקום תיקיית נתונים">
+<!ENTITY trellis.preferences.dataDir.useProfile "להשתמש בתיקיית הפרופיל">
+<!ENTITY trellis.preferences.dataDir.custom "מותאם אישית:">
+<!ENTITY trellis.preferences.dataDir.choose "בחירה…">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(צוין דרך שורת הפקודה)">
+<!ENTITY trellis.preferences.dataDir.reveal "הצגת תיקיית הנתונים">
+<!ENTITY trellis.preferences.dataDir.migrate "הסבה למיקום ברירת מחדל חדש…">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "תיקיית בסיס לצרופה מקושרת">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis ישתמש בנתיבים יחסיים לקובצי צרופות מקושרים בתוך תיקיית הבסיס, מה שמאפשר לך לגשת לקבצים במחשבים אחרים כל עוד מבנה הקבצים בתיקיית הבסיס נשאר זהה.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "תיקיית בסיס:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "בחירה…">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "העברה לנתיבים מוחלטים…">
+
+<!ENTITY trellis.preferences.dbMaintenance "תחזוקת מסד נתונים">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "בדיקת שלמות מסד נתונים">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "איפוס מתרגמים וסגנונות…">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "איפוס מתרגמים…">
+
+<!ENTITY trellis.preferences.configEditor "עורך הגדרות">

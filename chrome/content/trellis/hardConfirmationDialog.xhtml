@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+    ***** BEGIN LICENSE BLOCK *****
+    
+    Copyright © 2016 Center for History and New Media
+                     George Mason University, Fairfax, Virginia, USA
+                     http://trellis.org
+    
+    This file is part of Trellis.
+    
+    Trellis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    Trellis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+    
+    ***** END LICENSE BLOCK *****
+-->
+
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://global/content/commonDialog.css" type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/commonDialog.css" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/hardConfirmationDialog.css" type="text/css"?>
+
+<!DOCTYPE overlay [ <!ENTITY % trellisDTD SYSTEM "chrome://trellis/locale/trellis.dtd"> %trellisDTD; ]>
+
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+		xmlns:html="http://www.w3.org/1999/xhtml"
+		id="trellis-hardConfirmationDialog"
+		title=""
+		onload="Trellis.HardConfirmationDialog.init(); sizeToContent();"
+		style="display: flex;">
+<dialog 
+	buttons="cancel,accept"
+	id="commonDialog">
+	
+	<script src="chrome://trellis/content/include.js"/>
+	<script src="hardConfirmationDialog.js"/>
+	
+	<hbox>
+		<hbox id="iconContainer" align="start"><image id="info.icon" class="spaced alert-icon"/></hbox>
+		<vbox id="infoContainer" flex="1">
+			<description id="infoTitle" hidden="true"/>
+			<description id="infoBody"/>
+			
+			<separator class="thin"/>
+
+			<checkbox id="trellis-hardConfirmationDialog-checkbox" hidden="true" oncommand="Trellis.HardConfirmationDialog.onCheckbox(event)" native="true"/>
+			<html:input id="trellis-hardConfirmationDialog-textbox" type="text" hidden="true" onkeyup="Trellis.HardConfirmationDialog.onKeyUp(event)"/>
+		</vbox>
+	</hbox>
+</dialog>
+</window>

@@ -1,0 +1,288 @@
+<!--
+    ***** BEGIN LICENSE BLOCK *****
+    
+    Copyright © 2006–2022 Center for History and New Media
+                     George Mason University, Fairfax, Virginia, USA
+                     http://trellis.org
+    
+    This file is part of Trellis.
+    
+    Trellis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    Trellis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+    
+    ***** END LICENSE BLOCK *****
+-->
+<vbox id="trellis-prefpane-general"
+	onload="Trellis_Preferences.General.init()"
+	onunload="Trellis_Preferences.General.uninit()"
+>
+	<linkset>
+		<!-- Load file renaming dialog strings for search keywords -->
+		<html:link rel="localization" href="fileRenaming.ftl"/>
+	</linkset>
+	
+	<vbox class="main-section">
+		<groupbox aria-labelledby="preferences-appearance-title">
+			<label><html:h2 id="preferences-appearance-title" data-l10n-id="preferences-appearance-title"/></label>
+		
+			<groupbox aria-labelledby="color-scheme-label">
+				<hbox align="center">
+					<label id="color-scheme-label" data-l10n-id="preferences-color-scheme"/>
+					<radiogroup orient="horizontal" id="color-scheme" preference="browser.theme.toolbar-theme">
+						<radio data-l10n-id="preferences-color-scheme-auto" value="2"/>
+						<radio data-l10n-id="preferences-color-scheme-light" value="1"/>
+						<radio data-l10n-id="preferences-color-scheme-dark" value="0"/>
+					</radiogroup>
+				</hbox>
+			</groupbox>
+		
+			<hbox align="center">
+				<label value="&trellis.bibliography.locale.label;" control="locale-menu"/>
+				<menulist id="locale-menu"
+						onblur="if (!Trellis.isMac) Trellis_Preferences.General.onLocaleChange()"
+						native="true">
+					<menupopup onpopuphidden="Trellis_Preferences.General.onLocaleChange()"/>
+				</menulist>
+			</hbox>
+
+			<hbox align="center">
+				<label data-l10n-id="preferences-item-pane-header" control="item-pane-header-menulist"/>
+				<menulist id="item-pane-header-menulist" preference="extensions.trellis.itemPaneHeader" native="true">
+					<menupopup>
+						<menuitem data-l10n-id="item-pane-header-none" value="none"/>
+						<menuitem data-l10n-id="item-pane-header-title" value="title"/>
+						<menuitem data-l10n-id="item-pane-header-titleCreatorYear" value="titleCreatorYear"/>
+						<menuitem data-l10n-id="item-pane-header-bibEntry" value="bibEntry"/>
+					</menupopup>
+				</menulist>
+			</hbox>
+
+			<vbox id="item-pane-header-bib-entry-options" class="indented-pref">
+				<hbox align="center">
+					<label data-l10n-id="preferences-item-pane-header-style" control="item-pane-header-style-menu"/>
+					<menulist
+							id="item-pane-header-style-menu"
+							preference="extensions.trellis.itemPaneHeader.bibEntry.style"
+							native="true"
+							flex="1"
+					><menupopup/></menulist>
+				</hbox>
+
+				<hbox align="center">
+					<label data-l10n-id="preferences-item-pane-header-locale" control="item-pane-header-locale-menu"/>
+					<menulist
+							id="item-pane-header-locale-menu"
+							preference="extensions.trellis.itemPaneHeader.bibEntry.locale"
+							native="true"
+					><menupopup/></menulist>
+				</hbox>
+			</vbox>
+		</groupbox>
+		
+		<groupbox id="trellis-prefpane-file-handling-groupbox" aria-label="&trellis.preferences.fileHandling;">
+			<label><html:h2>&trellis.preferences.fileHandling;</html:h2></label>
+			
+			<vbox>
+				<checkbox label="&trellis.preferences.downloadAssociatedFiles;"
+					preference="extensions.trellis.downloadAssociatedFiles"
+					native="true"
+				/>
+				<checkbox data-l10n-id="preferences-auto-recognize-files"
+					preference="extensions.trellis.autoRecognizeFiles"
+					native="true"
+				/>
+				<checkbox id="automaticSnapshots-checkbox"
+					label="&trellis.preferences.automaticSnapshots;"
+					preference="extensions.trellis.automaticSnapshots"
+					native="true"
+				/>
+			</vbox>
+		
+		</groupbox>
+		
+		<groupbox id="trellis-prefpane-file-renaming-groupbox" aria-labelledby="preferences-file-renaming-title" aria-describedby="preferences-file-renaming-intro">
+			<label><html:h2 id="preferences-file-renaming-title" data-l10n-id="preferences-file-renaming-title"/></label>
+
+			<vbox align="start">
+				<label id="preferences-file-renaming-intro" data-l10n-id="preferences-file-renaming-intro"/>
+				<separator class="thin"/>
+				<button id="file-renaming-configure-button"
+					data-l10n-id="preferences-file-renaming-configure-button"
+					data-search-strings="file-renaming-format-title, file-renaming-format-template, file-renaming-auto-rename-files"
+					oncommand="Trellis_Preferences.General.openFileRenamingDialog()"
+				/>
+			</vbox>
+		</groupbox>
+		
+		<groupbox>
+			<label><html:h2 data-l10n-id="preferences-attachment-titles-title"/></label>
+			
+			<description data-l10n-id="preferences-attachment-titles-intro">
+				<label is="trellis-text-link" href="https://www.trellis.org/support/kb/attachment_title_vs_filename" data-l10n-name="wiki-link"/>
+			</description>
+			
+			<checkbox
+				data-l10n-id="preferences-attachment-titles-show-filenames"
+				preference="extensions.trellis.showAttachmentFilenames"
+				native="true"
+			/>
+		</groupbox>
+		
+		<groupbox id="trellis-prefpane-reader-groupbox" aria-labelledby="preferences-reader-title">
+			<label><html:h2 id="preferences-reader-title" data-l10n-id="preferences-reader-title"/></label>
+			
+			<vbox class="fileHandler-menus">
+				<label control="fileHandler-pdf">&trellis.preferences.fileHandler.openPDFsUsing;</label>
+				<menulist id="fileHandler-pdf" class="fileHandler-menu" native="true">
+					<menupopup>
+						<menuitem class="fileHandler-internal"
+								oncommand="Trellis_Preferences.General.setFileHandler('pdf', '')"/>
+						<menuitem label="&trellis.preferences.fileHandler.systemDefault;"
+								oncommand="Trellis_Preferences.General.setFileHandler('pdf', 'system')"/>
+						<menuitem class="fileHandler-custom"/>
+						<menuitem label="&trellis.preferences.custom;"
+								oncommand="Trellis_Preferences.General.chooseFileHandler('pdf')"/>
+					</menupopup>
+				</menulist>
+				<label data-l10n-id="preferences-reader-open-epubs-using" control="fileHandler-epub"/>
+				<menulist id="fileHandler-epub" class="fileHandler-menu" native="true">
+					<menupopup>
+						<menuitem class="fileHandler-internal"
+								oncommand="Trellis_Preferences.General.setFileHandler('epub', '')"/>
+						<menuitem label="&trellis.preferences.fileHandler.systemDefault;"
+								oncommand="Trellis_Preferences.General.setFileHandler('epub', 'system')"/>
+						<menuitem class="fileHandler-custom"/>
+						<menuitem label="&trellis.preferences.custom;"
+								oncommand="Trellis_Preferences.General.chooseFileHandler('epub')"/>
+					</menupopup>
+				</menulist>
+				<label data-l10n-id="preferences-reader-open-snapshots-using" control="fileHandler-snapshot"/>
+				<menulist id="fileHandler-snapshot" class="fileHandler-menu" native="true">
+					<menupopup>
+						<menuitem class="fileHandler-internal"
+								oncommand="Trellis_Preferences.General.setFileHandler('snapshot', '')"/>
+						<menuitem label="&trellis.preferences.fileHandler.systemDefault;"
+								oncommand="Trellis_Preferences.General.setFileHandler('snapshot', 'system')"/>
+						<menuitem class="fileHandler-custom"/>
+						<menuitem label="&trellis.preferences.custom;"
+								oncommand="Trellis_Preferences.General.chooseFileHandler('snapshot')"/>
+					</menupopup>
+				</menulist>
+			</vbox>
+			<vbox class="indented-pref">
+				<checkbox id="open-reader-in-new-window"
+					data-l10n-id="preferences-reader-open-in-new-window"
+					preference="extensions.trellis.openReaderInNewWindow"
+					native="true"
+				/>
+			</vbox>
+			
+			<hbox align="center">
+				<label value="&trellis.preferences.reader.tabsTitle.label;" control="reader-tabs-title"/>
+				<menulist id="reader-tabs-title" preference="extensions.trellis.tabs.title.reader" native="true">
+					<menupopup>
+						<menuitem label="&trellis.preferences.reader.tabsTitle.titleCreatorYear;" value="titleCreatorYear"/>
+						<menuitem label="&trellis.preferences.reader.tabsTitle.creatorYearTitle;" value="creatorYearTitle"/>
+						<menuitem label="&trellis.preferences.reader.tabsTitle.filename;" value="filename"/>
+					</menupopup>
+				</menulist>
+			</hbox>
+			
+			<vbox>
+				<checkbox
+					id="auto-disable-tool"
+					data-l10n-id="preferences-reader-auto-disable-tool"
+					native="true"
+				/>
+			</vbox>
+			
+			<hbox align="center">
+				<label data-l10n-id="preferences-reader-ebook-font" control="reader-ebook-font-family"/>
+				<menulist id="reader-ebook-font-family" preference="extensions.trellis.reader.ebookFontFamily" native="true">
+					<menupopup/>
+				</menulist>
+			</hbox>
+
+			<vbox class="indented-pref">
+				<checkbox
+					preference="extensions.trellis.reader.ebookHyphenate"
+					data-l10n-id="preferences-reader-ebook-hyphenate"
+					native="true"
+				/>
+			</vbox>
+		</groupbox>
+
+		<groupbox id="trellis-prefpane-note-groupbox" aria-labelledby="preferences-note-title">
+			<label><html:h2 id="preferences-note-title" data-l10n-id="preferences-note-title"/></label>
+			<checkbox id="open-note-in-new-window"
+				data-l10n-id="preferences-note-open-in-new-window"
+				preference="extensions.trellis.openNoteInNewWindow"
+				native="true"
+			/>
+		</groupbox>
+		
+		<groupbox id="trellis-prefpane-locate-groupbox" aria-label="&trellis.preferences.prefpane.locate;" aria-describedby="preferences-locate-library-lookup-intro">
+			<label><html:h2>&trellis.preferences.prefpane.locate;</html:h2></label>
+			
+			<label id="preferences-locate-library-lookup-intro" data-l10n-id="preferences-locate-library-lookup-intro"/>
+			<separator class="thin"/>
+			
+			<hbox align="center">
+				<label control="openurl-menu" data-l10n-id="preferences-locate-resolver"></label>
+				<menulist id="openurl-menu" native="true">
+					<menupopup
+							id="openurl-primary-popup"
+							onpopupshowing="Trellis_Preferences.General.handleOpenURLPopupShowing(event)"
+							onpopuphidden="Trellis_Preferences.General.handleOpenURLPopupHidden(event)"
+							oncommand="Trellis_Preferences.General.handleOpenURLSelected(event)">
+						<menuitem/>
+					</menupopup>
+				</menulist>
+			</hbox>
+			
+			<hbox style="display: flex; align-items: center;">
+				<label control="openURLServerField" data-l10n-id="preferences-locate-base-url"/>
+				<html:input type="text" id="openURLServerField" style="flex: 1;"
+					oninput="Trellis_Preferences.General.onOpenURLCustomized();"
+					preference="extensions.trellis.openURL.resolver"
+					dir="ltr"
+				/>
+			</hbox>
+			
+		</groupbox>
+		
+		<groupbox id="trellis-prefpane-miscellaneous-groupbox" aria-label="&trellis.preferences.miscellaneous;">
+			<label><html:h2>&trellis.preferences.miscellaneous;</html:h2></label>
+			
+			<checkbox label="&trellis.preferences.automaticTags;" preference="extensions.trellis.automaticTags" native="true"/>
+			<hbox align="center">
+				<label id="trashAutoEmpty-label1" value="&trellis.preferences.trashAutoEmptyDaysPre;"/>
+				<html:input aria-labelledby="trashAutoEmpty-label1 trashAutoEmpty-label2" type="text" size="2" preference="extensions.trellis.trashAutoEmptyDays"/>
+				<label id="trashAutoEmpty-label2" value="&trellis.preferences.trashAutoEmptyDaysPost;"/>
+			</hbox>
+		</groupbox>
+
+		<groupbox aria-label="&trellis.preferences.groups;" aria-description="&trellis.preferences.groups.whenCopyingInclude;">
+			<label><html:h2>&trellis.preferences.groups;</html:h2></label>
+
+			<label value="&trellis.preferences.groups.whenCopyingInclude;"/>
+			<vbox class="indented-pref">
+				<checkbox label="&trellis.preferences.groups.childNotes;" preference="extensions.trellis.groups.copyChildNotes" native="true"/>
+				<checkbox label="&trellis.preferences.groups.childFiles;" preference="extensions.trellis.groups.copyChildFileAttachments" native="true"/>
+				<checkbox label="&trellis.preferences.groups.annotations;" preference="extensions.trellis.groups.copyAnnotations" native="true"/>
+				<checkbox label="&trellis.preferences.groups.childLinks;" preference="extensions.trellis.groups.copyChildLinks" native="true"/>
+				<checkbox label="&trellis.preferences.groups.tags;" preference="extensions.trellis.groups.copyTags" native="true"/>
+			</vbox>
+		</groupbox>
+	</vbox>
+</vbox>

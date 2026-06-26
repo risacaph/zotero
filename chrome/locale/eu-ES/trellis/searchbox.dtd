@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Izena:">
+
+<!ENTITY trellis.search.searchInLibrary "Liburutegian bilatu:">
+
+<!ENTITY trellis.search.joinMode.prefix "Bat etortzea">
+<!ENTITY trellis.search.joinMode.any "edozein">
+<!ENTITY trellis.search.joinMode.all "guztiak">
+<!ENTITY trellis.search.joinMode.suffix "hauetatik:">
+
+<!ENTITY trellis.search.recursive.label "Bilatu azpi-bildumatan">
+<!ENTITY trellis.search.noChildren "Lehen mailako elementuak bakarrik erakutsi">
+<!ENTITY trellis.search.includeParentsAndChildren "Bat datozen elementuen ume zein gurasoak erakutsi ">
+
+<!ENTITY trellis.search.textModes.phrase "Esaldia">
+<!ENTITY trellis.search.textModes.phraseBinary "Esaldia (fitxategi binarioak barne)">
+<!ENTITY trellis.search.textModes.regexp "Adi.erreg.">
+<!ENTITY trellis.search.textModes.regexpCS "Adi.erreg. (maiuskulak/minuskulak bereiziz)">
+
+<!ENTITY trellis.search.date.units.days "egun">
+<!ENTITY trellis.search.date.units.months "hilabete">
+<!ENTITY trellis.search.date.units.years "urte">
+
+<!ENTITY trellis.search.search "Bilatu">
+<!ENTITY trellis.search.clear "Garbitu">
+<!ENTITY trellis.search.saveSearch "Bilaketa gorde">

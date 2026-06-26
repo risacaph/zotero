@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/trellis.css"?>
+<!DOCTYPE window SYSTEM "chrome://trellis/locale/trellis.dtd">
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	title="&trellis.proxy.recognized.title;" buttons="cancel,accept" id="proxy-dialog"
+	buttonlabelcancel="&trellis.proxy.recognized.ignore.label;"
+	ondialogaccept="Trellis_Proxy_Dialog.accept()" ondialogcancel="Trellis_Proxy_Dialog.cancel()"
+	onload="Trellis_Proxy_Dialog.init()">
+	
+	<script src="include.js"/>
+	<script src="proxy.js"/>
+	
+	<vbox flex="1" style="width:510px">
+		<hbox align="start">
+			<image class="alert-icon"/>
+			<vbox flex="1">
+				<description class="trellis-warning">&trellis.proxy.recognized.warning;</description>
+				<description>&trellis.proxy.recognized.warning.secondary;</description>
+			</vbox>
+		</hbox>
+		<spacer flex="1"/>
+		<description id="description"> </description>
+	</vbox>
+</dialog>

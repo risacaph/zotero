@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Όνομα:">
+
+<!ENTITY trellis.search.searchInLibrary "Αναζήτηση στην βιβλιοθήκη:">
+
+<!ENTITY trellis.search.joinMode.prefix "Ταίριασμα">
+<!ENTITY trellis.search.joinMode.any "οποιαδήποτε">
+<!ENTITY trellis.search.joinMode.all "όλες">
+<!ENTITY trellis.search.joinMode.suffix "από τα παρακάτω:">
+
+<!ENTITY trellis.search.recursive.label "Αναζήτηση στους υποφακέλους">
+<!ENTITY trellis.search.noChildren "Να εμφανίζονται μόνο τα αντικείμενα ανώτατου επιπέδου">
+<!ENTITY trellis.search.includeParentsAndChildren "Να περιλαμβάνονται τα μητρικά και δευτερεύοντα αντικείμενα των αντικειμένων που ταιριάζουν">
+
+<!ENTITY trellis.search.textModes.phrase "Φράση">
+<!ENTITY trellis.search.textModes.phraseBinary "Φράση (συμπ. δυαδικά αρχεία)">
+<!ENTITY trellis.search.textModes.regexp "Κανονική έκφραση regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (διακριση πεζών-κεφαλαίων)">
+
+<!ENTITY trellis.search.date.units.days "ημέρες">
+<!ENTITY trellis.search.date.units.months "μήνες">
+<!ENTITY trellis.search.date.units.years "έτη">
+
+<!ENTITY trellis.search.search "Αναζήτηση">
+<!ENTITY trellis.search.clear "Καθαρισμός">
+<!ENTITY trellis.search.saveSearch "Αποθήκευση αναζήτησης">

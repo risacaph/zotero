@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "الإصدار">
+<!ENTITY trellis.whatsNew "ما الجديد">
+<!ENTITY trellis.createdby "أنْشأه:">
+<!ENTITY trellis.director "المدير:">
+<!ENTITY trellis.directors "المديرون:">
+<!ENTITY trellis.developers "المطورون:">
+<!ENTITY trellis.alumni "الخريجون:">
+<!ENTITY trellis.about.localizations "الترجمات:">
+<!ENTITY trellis.about.additionalSoftware "برامج الطرف الثالث:">
+<!ENTITY trellis.thanks "شكر خاص:">
+<!ENTITY trellis.about.close "إغلاق">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "المزيد من الشكر والتقدير">
+<!ENTITY trellis.citationProcessing "معالجة الاستشهادات والمراجع">

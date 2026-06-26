@@ -11,7 +11,7 @@ index a85fdbfebe0f..819475717ffb 100644
  MOZ_RUNINIT Bootstrap::UniquePtr gBootstrap;
  
  static int do_main(int argc, char* argv[], char* envp[]) {
-+  // Allow profile downgrade for Zotero
++  // Allow profile downgrade for Trellis
 +  _putenv_s("MOZ_ALLOW_DOWNGRADE", "1");
 +  // Don't create dedicated profile (default-esr)
 +  _putenv_s("MOZ_LEGACY_PROFILES", "1");
@@ -48,19 +48,19 @@ index 8167d2b81c91..a1ef657232bf 100644
    }
  
 -  if (mozilla::CheckArg(aArgc, aArgv, "no-deelevate") == mozilla::ARG_FOUND) {
-+  // Disable deelevation for Zotero
++  // Disable deelevation for Trellis
 +  //
 +  // If people are running as Administrator, or in some cases running with
 +  // UAC disabled, Word runs at integrity level High and deelevation drops
-+  // Zotero down to Medium, which causes 'Could not find a running Word
++  // Trellis down to Medium, which causes 'Could not find a running Word
 +  // instance' errors.
 +  //
 +  // Even when not running as administrator, the process switch involved in
 +  // deelevation also seems to be causing various security software, such as
-+  // Cisco Secure Endpoint, to block Zotero from running:
-+  // https://forums.zotero.org/discussion/116762
++  // Cisco Secure Endpoint, to block Trellis from running:
++  // https://forums.trellis.org/discussion/116762
 +  //
-+  // Disabling deelevation returns us to the behavior of Zotero 6, Word, and
++  // Disabling deelevation returns us to the behavior of Trellis 6, Word, and
 +  // most other programs
 +  if (true || mozilla::CheckArg(aArgc, aArgv, "no-deelevate") == mozilla::ARG_FOUND) {
      result |= mozilla::LauncherFlags::eNoDeelevate;
@@ -85,7 +85,7 @@ index 0ba9fcef9417..ed286476fec3 100644
  // directory name to attempt to ensure that it will be created by this code and
  // won't already exist with the wrong permissions.
 -#  define ROOT_UPDATE_DIR_NAME "Mozilla-1de4eec8-1241-4177-a864-e594e8d1fb38"
-+#  define ROOT_UPDATE_DIR_NAME "Zotero"
++#  define ROOT_UPDATE_DIR_NAME "Trellis"
  // This describes the directory between the "Mozilla" directory and the install
  // path hash (i.e. C:\ProgramData\Mozilla\<UPDATE_PATH_MID_DIR_NAME>\<hash>)
  #  define UPDATE_PATH_MID_DIR_NAME "updates"

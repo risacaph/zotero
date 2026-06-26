@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "version">
+<!ENTITY trellis.whatsNew "Hvad er nyt">
+<!ENTITY trellis.createdby "Oprettet af:">
+<!ENTITY trellis.director "Instruktør:">
+<!ENTITY trellis.directors "Instruktører:">
+<!ENTITY trellis.developers "Udviklere:">
+<!ENTITY trellis.alumni "Alumner:">
+<!ENTITY trellis.about.localizations "Oversættelser:">
+<!ENTITY trellis.about.additionalSoftware "Trediepartsprogrammer:">
+<!ENTITY trellis.thanks "Særlig tak til:">
+<!ENTITY trellis.about.close "Luk">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Flere anerkendelser">
+<!ENTITY trellis.citationProcessing "Citations- og bibliografiprocessering">

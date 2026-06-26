@@ -1,8 +1,8 @@
 {
-  "name": "zotero",
+  "name": "trellis",
   "private": true,
   "version": "7.0.0",
-  "description": "Zotero",
+  "description": "Trellis",
   "main": "",
   "scripts": {
     "start": "node ./js-build/build.js && node ./js-build/watch.js",

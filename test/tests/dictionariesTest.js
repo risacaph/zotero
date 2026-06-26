@@ -24,16 +24,16 @@ describe("Dictionaries", function () {
 			name,
 			manifest_version: 2
 		};
-		await Zotero.File.putContentsAsync(
+		await Trellis.File.putContentsAsync(
 			OS.Path.join(extDir, 'manifest.json'),
 			JSON.stringify(manifest)
 		);
-		await Zotero.File.putContentsAsync(
+		await Trellis.File.putContentsAsync(
 			OS.Path.join(dictDir, locale + '.dic'),
 			"1\n0/nm"
 		);
 		var path = OS.Path.join(dir, id + '.xpi');
-		await Zotero.File.zipDirectory(extDir, path);
+		await Trellis.File.zipDirectory(extDir, path);
 		return path;
 	}
 	
@@ -73,12 +73,12 @@ describe("Dictionaries", function () {
 	});
 	
 	beforeEach(async function () {
-		for (let id of Zotero.Dictionaries.dictionaries.map(x => x.id)) {
-			await Zotero.Dictionaries.remove(id);
+		for (let id of Trellis.Dictionaries.dictionaries.map(x => x.id)) {
+			await Trellis.Dictionaries.remove(id);
 		}
 		
-		sandbox.stub(Zotero.File, 'download').callsFake(async (url, downloadPath) => {
-			Zotero.debug("Fake downloading " + url);
+		sandbox.stub(Trellis.File, 'download').callsFake(async (url, downloadPath) => {
+			Trellis.debug("Fake downloading " + url);
 			if (url.includes('en-GB')) {
 				return OS.File.copy(enGBXPIOld, downloadPath);
 			}
@@ -90,13 +90,13 @@ describe("Dictionaries", function () {
 			}
 			throw new Error("Unexpected URL " + url);
 		});
-		await Zotero.Dictionaries.install('@fake-en-GB-dictionary', "5");
-		await Zotero.Dictionaries.install('@fake-fr-FR-dictionary', "1");
-		await Zotero.Dictionaries.install('@fake-xx-UN-dictionary', "5");
+		await Trellis.Dictionaries.install('@fake-en-GB-dictionary', "5");
+		await Trellis.Dictionaries.install('@fake-fr-FR-dictionary', "1");
+		await Trellis.Dictionaries.install('@fake-xx-UN-dictionary', "5");
 		sandbox.restore();
 		
 		// Create metadata response for available dictionaries
-		sandbox.stub(Zotero.Dictionaries, 'fetchDictionariesList')
+		sandbox.stub(Trellis.Dictionaries, 'fetchDictionariesList')
 			.resolves([
 				{
 					id: '@another-fake-en-GB-dictionary',
@@ -112,8 +112,8 @@ describe("Dictionaries", function () {
 				}
 			]);
 		
-		sandbox.stub(Zotero.File, 'download').callsFake(async (url, downloadPath) => {
-			Zotero.debug("Fake downloading " + url);
+		sandbox.stub(Trellis.File, 'download').callsFake(async (url, downloadPath) => {
+			Trellis.debug("Fake downloading " + url);
 			if (url.includes('en-GB') && url.includes("-1.xpi")) {
 				return OS.File.copy(enGBXPINew, downloadPath);
 			}
@@ -128,23 +128,23 @@ describe("Dictionaries", function () {
 		sandbox.restore();
 	});
 	
-	describe("Zotero.Dictionaries", function () {
+	describe("Trellis.Dictionaries", function () {
 		describe("#update()", function () {
 			it("should update outdated dictionary and replace an installed dictionary with a new one with a different id", async function () {
-				var numDictionaries = Zotero.Dictionaries.dictionaries.length;
+				var numDictionaries = Trellis.Dictionaries.dictionaries.length;
 				function updated() {
 					return !!(
-						!Zotero.Dictionaries.dictionaries.find(x => x.id == '@fake-en-GB-dictionary')
-							&& Zotero.Dictionaries.dictionaries.find(x => x.id == '@another-fake-en-GB-dictionary')
+						!Trellis.Dictionaries.dictionaries.find(x => x.id == '@fake-en-GB-dictionary')
+							&& Trellis.Dictionaries.dictionaries.find(x => x.id == '@another-fake-en-GB-dictionary')
 							// Version update happens too
-							&& !Zotero.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 1)
-							&& Zotero.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 2)
+							&& !Trellis.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 1)
+							&& Trellis.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 2)
 					);
 				}
 				assert.isFalse(updated());
-				await Zotero.Dictionaries.update();
+				await Trellis.Dictionaries.update();
 				assert.isTrue(updated());
-				assert.lengthOf(Zotero.Dictionaries.dictionaries, numDictionaries);
+				assert.lengthOf(Trellis.Dictionaries.dictionaries, numDictionaries);
 			});
 		});
 	});
@@ -153,13 +153,13 @@ describe("Dictionaries", function () {
 		beforeEach(async function () {
 			win = Services.ww.openWindow(
 				null,
-				'chrome://zotero/content/dictionaryManager.xhtml',
+				'chrome://trellis/content/dictionaryManager.xhtml',
 				'dictionary-manager',
 				'chrome,centerscreen',
 				{}
 			);
 			while (!win.document.querySelectorAll('input[type="checkbox"]').length) {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 		});
 		
@@ -174,22 +174,22 @@ describe("Dictionaries", function () {
 		});
 		
 		it("should update outdated dictionary and replace an installed dictionary with a new one with a different id", async function () {
-			var numDictionaries = Zotero.Dictionaries.dictionaries.length;
+			var numDictionaries = Trellis.Dictionaries.dictionaries.length;
 			function updated() {
 				return !!(
-					!Zotero.Dictionaries.dictionaries.find(x => x.id == '@fake-en-GB-dictionary')
-						&& Zotero.Dictionaries.dictionaries.find(x => x.id == '@another-fake-en-GB-dictionary')
+					!Trellis.Dictionaries.dictionaries.find(x => x.id == '@fake-en-GB-dictionary')
+						&& Trellis.Dictionaries.dictionaries.find(x => x.id == '@another-fake-en-GB-dictionary')
 						// Version update happens too
-						&& !Zotero.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 1)
-						&& Zotero.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 2)
+						&& !Trellis.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 1)
+						&& Trellis.Dictionaries.dictionaries.find(x => x.id == '@fake-fr-FR-dictionary' && x.version == 2)
 				);
 			}
 			assert.isFalse(updated());
 			win.document.querySelector('button[dlgtype="accept"]').click();
 			while (!updated()) {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
-			assert.lengthOf(Zotero.Dictionaries.dictionaries, numDictionaries);
+			assert.lengthOf(Trellis.Dictionaries.dictionaries, numDictionaries);
 		});
 	});
 });

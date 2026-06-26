@@ -6,22 +6,22 @@ describe("Retractions", function () {
 	var retractedDOI = '10.1056/NEJMoa1200303'; // mixed case
 	
 	before(async function () {
-		userLibraryID = Zotero.Libraries.userLibraryID;
-		win = await loadZoteroPane();
-		zp = win.ZoteroPane;
+		userLibraryID = Trellis.Libraries.userLibraryID;
+		win = await loadTrellisPane();
+		zp = win.TrellisPane;
 		
-		await Zotero.Retractions.updateFromServer();
+		await Trellis.Retractions.updateFromServer();
 		
 		// Remove debouncing on checkQueuedItems()
-		checkQueueItemsStub = sinon.stub(Zotero.Retractions, 'checkQueuedItems').callsFake(() => {
-			return Zotero.Retractions._checkQueuedItemsInternal();
+		checkQueueItemsStub = sinon.stub(Trellis.Retractions, 'checkQueuedItems').callsFake(() => {
+			return Trellis.Retractions._checkQueuedItemsInternal();
 		});
 	});
 	
 	beforeEach(async function () {
-		var ids = await Zotero.DB.columnQueryAsync("SELECT itemID FROM retractedItems");
+		var ids = await Trellis.DB.columnQueryAsync("SELECT itemID FROM retractedItems");
 		if (ids.length) {
-			await Zotero.Items.erase(ids);
+			await Trellis.Items.erase(ids);
 		}
 	});
 	
@@ -34,9 +34,9 @@ describe("Retractions", function () {
 		win.close();
 		checkQueueItemsStub.restore();
 		
-		var ids = await Zotero.DB.columnQueryAsync("SELECT itemID FROM retractedItems");
+		var ids = await Trellis.DB.columnQueryAsync("SELECT itemID FROM retractedItems");
 		if (ids.length) {
-			await Zotero.Items.erase(ids);
+			await Trellis.Items.erase(ids);
 		}
 	});
 	
@@ -47,7 +47,7 @@ describe("Retractions", function () {
 		Object.assign(o, options);
 		var item = createUnsavedDataObject('item', o);
 		item.setField('DOI', retractedDOI);
-		if (Zotero.DB.inTransaction()) {
+		if (Trellis.DB.inTransaction()) {
 			await item.save();
 		}
 		else {
@@ -55,7 +55,7 @@ describe("Retractions", function () {
 		}
 		
 		while (!checkQueueItemsStub.called) {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		await checkQueueItemsStub.returnValues[0];
 		checkQueueItemsStub.resetHistory();
@@ -70,7 +70,7 @@ describe("Retractions", function () {
 		Object.assign(o, options);
 		var item = createUnsavedDataObject('item', o);
 		item.setField('extra', 'DOI: ' + retractedDOI);
-		if (Zotero.DB.inTransaction()) {
+		if (Trellis.DB.inTransaction()) {
 			await item.save();
 		}
 		else {
@@ -78,7 +78,7 @@ describe("Retractions", function () {
 		}
 		
 		while (!checkQueueItemsStub.called) {
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 		}
 		await checkQueueItemsStub.returnValues[0];
 		checkQueueItemsStub.resetHistory();
@@ -103,8 +103,8 @@ describe("Retractions", function () {
 		var baseURL;
 		
 		before(function () {
-			Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
-			baseURL = ZOTERO_CONFIG.API_URL + 'retractions/';
+			Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
+			baseURL = TRELLIS_CONFIG.API_URL + 'retractions/';
 		});
 		
 		beforeEach(function () {
@@ -113,22 +113,22 @@ describe("Retractions", function () {
 		});
 		
 		after(async function () {
-			Zotero.HTTP.mock = null;
+			Trellis.HTTP.mock = null;
 			// Restore the real list from the server. We could just mock it as part of the suite.
-			await Zotero.Retractions.updateFromServer();
+			await Trellis.Retractions.updateFromServer();
 		});
 		
 		/*it("shouldn't show banner or virtual collection for already flagged items on list update", async function () {
-			await Zotero.Retractions.updateFromServer();
+			await Trellis.Retractions.updateFromServer();
 		});*/
 		
 		it("should remove retraction flag from items that no longer match prefix list", async function () {
 			var doi = '10.1234/abcde';
-			var hash = Zotero.Utilities.Internal.sha1(doi);
+			var hash = Trellis.Utilities.Internal.sha1(doi);
 			var prefix = hash.substr(0, 5);
 			var lines = [
-				Zotero.Retractions.TYPE_DOI + prefix + ' 12345\n',
-				Zotero.Retractions.TYPE_DOI + 'aaaaa 23456\n'
+				Trellis.Retractions.TYPE_DOI + prefix + ' 12345\n',
+				Trellis.Retractions.TYPE_DOI + 'aaaaa 23456\n'
 			];
 			
 			var listCount = 0;
@@ -181,7 +181,7 @@ describe("Retractions", function () {
 				}
 			});
 			
-			await Zotero.Retractions.updateFromServer();
+			await Trellis.Retractions.updateFromServer();
 			
 			// Create item with DOI from list
 			var promise = waitForItemEvent('refresh');
@@ -190,14 +190,14 @@ describe("Retractions", function () {
 			await item.saveTx();
 			await promise;
 			
-			assert.isTrue(Zotero.Retractions.isRetracted(item));
+			assert.isTrue(Trellis.Retractions.isRetracted(item));
 			
 			// Make a second request, with the entry removed
 			promise = waitForItemEvent('refresh');
-			await Zotero.Retractions.updateFromServer();
+			await Trellis.Retractions.updateFromServer();
 			await promise;
 			
-			assert.isFalse(Zotero.Retractions.isRetracted(item));
+			assert.isFalse(Trellis.Retractions.isRetracted(item));
 		});
 	});
 	
@@ -205,23 +205,23 @@ describe("Retractions", function () {
 	describe("#shouldShowCitationWarning()", function () {
 		it("should return false if citation warning is hidden", async function () {
 			var item = await createRetractedItem();
-			assert.isTrue(Zotero.Retractions.shouldShowCitationWarning(item));
-			await Zotero.Retractions.disableCitationWarningsForItem(item);
-			assert.isFalse(Zotero.Retractions.shouldShowCitationWarning(item));
+			assert.isTrue(Trellis.Retractions.shouldShowCitationWarning(item));
+			await Trellis.Retractions.disableCitationWarningsForItem(item);
+			assert.isFalse(Trellis.Retractions.shouldShowCitationWarning(item));
 		});
 		
 		it("should return false if retraction is hidden", async function () {
 			var item = await createRetractedItem();
-			assert.isTrue(Zotero.Retractions.shouldShowCitationWarning(item));
-			await Zotero.Retractions.hideRetraction(item);
-			assert.isFalse(Zotero.Retractions.shouldShowCitationWarning(item));
+			assert.isTrue(Trellis.Retractions.shouldShowCitationWarning(item));
+			await Trellis.Retractions.hideRetraction(item);
+			assert.isFalse(Trellis.Retractions.shouldShowCitationWarning(item));
 		});
 	});
 	
 	
 	describe("#getRetractionsFromJSON()", function () {
 		it("should identify object with retracted DOI", async function () {
-			var spy = sinon.spy(Zotero.HTTP, 'request');
+			var spy = sinon.spy(Trellis.HTTP, 'request');
 			var json = [
 				{
 					
@@ -234,11 +234,11 @@ describe("Retractions", function () {
 				}
 			];
 			
-			var indexes = await Zotero.Retractions.getRetractionsFromJSON(json);
+			var indexes = await Trellis.Retractions.getRetractionsFromJSON(json);
 			assert.sameMembers(indexes, [1]);
 			assert.equal(spy.callCount, 1);
 			
-			indexes = await Zotero.Retractions.getRetractionsFromJSON(json);
+			indexes = await Trellis.Retractions.getRetractionsFromJSON(json);
 			assert.sameMembers(indexes, [1]);
 			// Result should've been cached, so we should have it without another API request
 			assert.equal(spy.callCount, 1);
@@ -254,7 +254,7 @@ describe("Retractions", function () {
 				}
 			];
 			
-			var indexes = await Zotero.Retractions.getRetractionsFromJSON(json);
+			var indexes = await Trellis.Retractions.getRetractionsFromJSON(json);
 			assert.sameMembers(indexes, [0]);
 		});
 		
@@ -265,7 +265,7 @@ describe("Retractions", function () {
 				}
 			];
 			
-			var indexes = await Zotero.Retractions.getRetractionsFromJSON(json);
+			var indexes = await Trellis.Retractions.getRetractionsFromJSON(json);
 			assert.sameMembers(indexes, [0]);
 		});
 	});
@@ -335,7 +335,7 @@ describe("Retractions", function () {
 			// Erase item
 			item.deleted = true;
 			await item.saveTx();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			// Retracted Items should be gone
 			assert.isFalse(zp.collectionsView.getRowIndexByID(rowID));
 			// And My Library should be selected
@@ -353,9 +353,9 @@ describe("Retractions", function () {
 			await zp.collectionsView.selectByID(rowID);
 			await waitForItemsLoad(win);
 			
-			await Zotero.Retractions.hideRetraction(item);
+			await Trellis.Retractions.hideRetraction(item);
 			
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			// Retracted Items should be gone
 			assert.isFalse(zp.collectionsView.getRowIndexByID(rowID));
 			// And My Library should be selected
@@ -373,9 +373,9 @@ describe("Retractions", function () {
 			await zp.collectionsView.selectByID(rowID);
 			await waitForItemsLoad(win);
 			
-			await Zotero.Retractions.disableCitationWarningsForItem(item);
+			await Trellis.Retractions.disableCitationWarningsForItem(item);
 			
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			// Should still be showing
 			assert.ok(zp.collectionsView.getRowIndexByID("R" + userLibraryID));
 		});
@@ -383,42 +383,42 @@ describe("Retractions", function () {
 		it("should show Retracted Items collection when retracted item is restored from trash", async function () {
 			// Create trashed item
 			var item = await createRetractedItem({ deleted: true });
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			assert.isFalse(zp.collectionsView.getRowIndexByID("R" + userLibraryID));
 			
 			// Restore item
 			item.deleted = false;
 			await item.saveTx();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			assert.ok(zp.collectionsView.getRowIndexByID("R" + userLibraryID));
 		});
 	});
 	
 	describe("retractions.enabled", function () {
 		beforeEach(function () {
-			Zotero.Prefs.clear('retractions.enabled');
+			Trellis.Prefs.clear('retractions.enabled');
 		});
 		
 		it("should hide virtual collection and banner when false", async function () {
 			var item = await createRetractedItem();
-			await Zotero.Promise.delay(50);
+			await Trellis.Promise.delay(50);
 			var itemRetractionBox = win.document.getElementById('retraction-box');
 			assert.isFalse(itemRetractionBox.hidden);
 			
 			var spies = [
-				sinon.spy(Zotero.Retractions, '_removeAllEntries'),
-				sinon.spy(Zotero.Retractions, 'isRetracted')
+				sinon.spy(Trellis.Retractions, '_removeAllEntries'),
+				sinon.spy(Trellis.Retractions, 'isRetracted')
 			];
-			Zotero.Prefs.set('retractions.enabled', false);
+			Trellis.Prefs.set('retractions.enabled', false);
 			
 			while (!spies[0].called || !spies[1].called) {
-				await Zotero.Promise.delay(50);
+				await Trellis.Promise.delay(50);
 			}
 			await spies[0].returnValues[0];
 			await spies[1].returnValues[0];
 			spies.forEach(spy => spy.restore());
 			
-			assert.isFalse(Zotero.Retractions.isRetracted(item));
+			assert.isFalse(Trellis.Retractions.isRetracted(item));
 			assert.isFalse(zp.collectionsView.getRowIndexByID("R" + userLibraryID));
 			assert.isFalse(bannerShown());
 			

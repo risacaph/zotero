@@ -3,28 +3,28 @@
     
     Copyright © 2011 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Services.scriptloader.loadSubScript("chrome://zotero/content/include.js", this);
-Services.scriptloader.loadSubScript("chrome://zotero/content/customElements.js", this);
+Services.scriptloader.loadSubScript("chrome://trellis/content/include.js", this);
+Services.scriptloader.loadSubScript("chrome://trellis/content/customElements.js", this);
 
 var Scaffold_Load = new function () {
 	this.onLoad = async function () {
@@ -34,7 +34,7 @@ var Scaffold_Load = new function () {
 		var listbox = document.getElementById("listbox");
 		
 		listbox.addEventListener('dblclick', () => {
-			var translatorID = document.getElementById("listbox").selectedItem.dataset.zoteroID;
+			var translatorID = document.getElementById("listbox").selectedItem.dataset.trellisID;
 			if (!translatorID) return;
 			this.accept();
 			window.close();
@@ -52,7 +52,7 @@ var Scaffold_Load = new function () {
 		var translatorProvider = window.arguments[0].translatorProvider;
 		var url = window.arguments[0].url;
 		var rootUrl = window.arguments[0].rootUrl;
-		url = Zotero.Proxies.proxyToProper(url);
+		url = Trellis.Proxies.proxyToProper(url);
 		translators["Matching Translators"] = (await translatorProvider.getWebTranslatorsForLocation(url, rootUrl))[0];
 		translators["Web Translators"] = (await translatorProvider.getAllForType("web"))
 			.sort((a, b) => a.label.localeCompare(b.label));
@@ -77,7 +77,7 @@ var Scaffold_Load = new function () {
 				// set search label for type-to-find functionality. This is not displayed.
 				listitem.searchLabel = translator.label;
 				// And the ID goes in DOM user data
-				listitem.dataset.zoteroID = translator.translatorID;
+				listitem.dataset.trellisID = translator.translatorID;
 
 				listcell = document.createXULElement("hbox");
 				listcell.setAttribute('flex', '1');
@@ -90,10 +90,10 @@ var Scaffold_Load = new function () {
 	};
 	
 	this.accept = function () {
-		var translatorID = document.getElementById("listbox").selectedItem.dataset.zoteroID;
+		var translatorID = document.getElementById("listbox").selectedItem.dataset.trellisID;
 		var translator = window.arguments[0].translatorProvider.get(translatorID);
 		
-		Zotero.debug(translatorID);
+		Trellis.debug(translatorID);
 		window.arguments[0].dataOut = translator;
 	};
 };

@@ -1,18 +1,18 @@
 "use strict";
 
-describe("Zotero.DataObjects", function () {
+describe("Trellis.DataObjects", function () {
 	var types = ['collection', 'item', 'search'];
 	
 	describe("#get()", function () {
 		it("should return false for nonexistent objects", async function () {
-			assert.isFalse(Zotero.Items.get(3464363));
+			assert.isFalse(Trellis.Items.get(3464363));
 		});
 	});
 	
 	describe("#getAsync()", function () {
 		// TEMP: Currently just a warning
 		it.skip("show throw if passed an invalid id", function* () {
-			var e = yield getPromiseError(Zotero.Items.getAsync("[Object]"));
+			var e = yield getPromiseError(Trellis.Items.getAsync("[Object]"));
 			assert.ok(e);
 			assert.include(e.message, '(string)');
 		});
@@ -21,13 +21,13 @@ describe("Zotero.DataObjects", function () {
 	describe("#getLibraryAndKeyFromID()", function () {
 		it("should return a libraryID and key within a transaction", async function () {
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
-				await Zotero.DB.executeTransaction(async function () {
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
+				await Trellis.DB.executeTransaction(async function () {
 					let obj = createUnsavedDataObject(type);
 					await obj.save();
 					
 					var {libraryID, key} = objectsClass.getLibraryAndKeyFromID(obj.id);
-					assert.equal(libraryID, Zotero.Libraries.userLibraryID);
+					assert.equal(libraryID, Trellis.Libraries.userLibraryID);
 					assert.ok(key);
 					assert.typeOf(key, 'string');
 					assert.equal(key, obj.key);
@@ -39,10 +39,10 @@ describe("Zotero.DataObjects", function () {
 		
 		it("should return false after a save failure", async function () {
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				var obj;
 				try {
-					await Zotero.DB.executeTransaction(async function () {
+					await Trellis.DB.executeTransaction(async function () {
 						obj = createUnsavedDataObject(type);
 						await obj.save();
 						throw 'Aborting transaction -- ignore';
@@ -62,7 +62,7 @@ describe("Zotero.DataObjects", function () {
 	describe("#exists()", function () {
 		it("should return false after object is deleted", async function () {
 			for (let type of types) {
-				let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+				let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 				let obj = await createDataObject(type);
 				let id = obj.id;
 				await obj.eraseTx();
@@ -105,13 +105,13 @@ describe("Zotero.DataObjects", function () {
 			var c8 = await createDataObject('collection', { "name": "H", parentID: c7.id });
 			var c9 = await createDataObject('collection', { "name": "I", parentID: c6.id });
 			
-			var arr = Zotero.Collections.sortByLevel([c1, c3, c4, c5, c6, c8, c9]);
-			//Zotero.debug(arr.map(id => Zotero.Collections.get(id).name));
+			var arr = Trellis.Collections.sortByLevel([c1, c3, c4, c5, c6, c8, c9]);
+			//Trellis.debug(arr.map(id => Trellis.Collections.get(id).name));
 			check(arr);
 			
 			// Check reverse order
-			arr = Zotero.Collections.sortByLevel([c1, c3, c4, c5, c6, c8, c9].reverse());
-			//Zotero.debug(arr.map(id => Zotero.Collections.get(id).name));
+			arr = Trellis.Collections.sortByLevel([c1, c3, c4, c5, c6, c8, c9].reverse());
+			//Trellis.debug(arr.map(id => Trellis.Collections.get(id).name));
 			check(arr);
 		});
 	});
@@ -166,28 +166,28 @@ describe("Zotero.DataObjects", function () {
 			var g = await createAnnotation('image', f, { tags: [{ tag: 'G' }] });
 			var h = await createAnnotation('highlight', f, { tags: [{ tag: 'H' }] });
 			
-			var arr = Zotero.Items.sortByParent([a, c, d, e, f, h]);
-			Zotero.debug(arr.map(o => title(o)));
+			var arr = Trellis.Items.sortByParent([a, c, d, e, f, h]);
+			Trellis.debug(arr.map(o => title(o)));
 			check(arr);
 			
 			// Reverse order
-			arr = Zotero.Items.sortByParent([a, c, d, e, f, h].reverse());
-			Zotero.debug(arr.map(o => title(o)));
+			arr = Trellis.Items.sortByParent([a, c, d, e, f, h].reverse());
+			Trellis.debug(arr.map(o => title(o)));
 			check(arr);
 			
 			// Top-level first
-			arr = Zotero.Items.sortByParent([a, e, c, d, f, h]);
-			Zotero.debug(arr.map(o => title(o)));
+			arr = Trellis.Items.sortByParent([a, e, c, d, f, h]);
+			Trellis.debug(arr.map(o => title(o)));
 			check(arr);
 			
 			// Child first
-			arr = Zotero.Items.sortByParent([c, h, d, f, a, e]);
-			Zotero.debug(arr.map(o => title(o)));
+			arr = Trellis.Items.sortByParent([c, h, d, f, a, e]);
+			Trellis.debug(arr.map(o => title(o)));
 			check(arr);
 			
 			// Random
-			arr = Zotero.Items.sortByParent([e, d, h, c, a, f]);
-			Zotero.debug(arr.map(o => title(o)));
+			arr = Trellis.Items.sortByParent([e, d, h, c, a, f]);
+			Trellis.debug(arr.map(o => title(o)));
 			check(arr);
 		});
 	});
@@ -209,7 +209,7 @@ describe("Zotero.DataObjects", function () {
 		it("should not allow a key change", async function () {
 			var item = await createDataObject('item');
 			try {
-				item.key = Zotero.DataObjectUtilities.generateKey();
+				item.key = Trellis.DataObjectUtilities.generateKey();
 			}
 			catch (e) {
 				assert.equal(e.message, "Key cannot be changed");
@@ -220,10 +220,10 @@ describe("Zotero.DataObjects", function () {
 		
 		it("should not allow key to be set if id is set", async function () {
 			var item = createUnsavedDataObject('item');
-			item.id = Zotero.Utilities.rand(100000, 1000000);
+			item.id = Trellis.Utilities.rand(100000, 1000000);
 			try {
-				item.libraryID = Zotero.Libraries.userLibraryID;
-				item.key = Zotero.DataObjectUtilities.generateKey();
+				item.libraryID = Trellis.Libraries.userLibraryID;
+				item.key = Trellis.DataObjectUtilities.generateKey();
 			}
 			catch (e) {
 				assert.equal(e.message, "Cannot set key if id is already set");
@@ -234,10 +234,10 @@ describe("Zotero.DataObjects", function () {
 		
 		it("should not allow id to be set if key is set", async function () {
 			var item = createUnsavedDataObject('item');
-			item.libraryID = Zotero.Libraries.userLibraryID;
-			item.key = Zotero.DataObjectUtilities.generateKey();
+			item.libraryID = Trellis.Libraries.userLibraryID;
+			item.key = Trellis.DataObjectUtilities.generateKey();
 			try {
-				item.id = Zotero.Utilities.rand(100000, 1000000);
+				item.id = Trellis.Utilities.rand(100000, 1000000);
 			}
 			catch (e) {
 				assert.equal(e.message, "Cannot set id if key is already set");
@@ -249,7 +249,7 @@ describe("Zotero.DataObjects", function () {
 		it("should not allow key to be set if library isn't set", async function () {
 			var item = createUnsavedDataObject('item');
 			try {
-				item.key = Zotero.DataObjectUtilities.generateKey();
+				item.key = Trellis.DataObjectUtilities.generateKey();
 			}
 			catch (e) {
 				assert.equal(e.message, "libraryID must be set before key");

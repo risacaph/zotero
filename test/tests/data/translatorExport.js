@@ -41,7 +41,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/VXDHRHNP",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/VXDHRHNP",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -111,7 +111,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/H9KMDMKK",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/H9KMDMKK",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -164,7 +164,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/7UF9TWRI",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/7UF9TWRI",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -215,7 +215,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/ABZPI5RA",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/ABZPI5RA",
 		"url": "http://www.example.com",
 		"version": 0,
 		"websiteType": "Type"
@@ -287,7 +287,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/GW3SAWW6",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/GW3SAWW6",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -365,7 +365,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/RIPPV55H",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/RIPPV55H",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -416,7 +416,7 @@
 		"rights": "Rights",
 		"shortTitle": "Short title",
 		"tags": [],
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/QHZWSBCZ",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/QHZWSBCZ",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -464,7 +464,7 @@
 		"system": "System",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/KKPZKHNF",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/KKPZKHNF",
 		"url": "http://www.example.com",
 		"version": 0,
 		"versionNumber": "Version number"
@@ -535,7 +535,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/6N2HGGGC",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/6N2HGGGC",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -584,7 +584,7 @@
 		"tags": [],
 		"title": "Title",
 		"type": "Type",
-		"uri": "http://zotero.org/users/local/35kRWXym/items/Y7VY3S4B",
+		"uri": "http://trellis.org/users/local/35kRWXym/items/Y7VY3S4B",
 		"url": "http://www.example.com",
 		"version": 0,
 		"versionNumber": "Version number"
@@ -652,7 +652,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/JPNX3J45",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/JPNX3J45",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -714,7 +714,7 @@
 		"tags": [],
 		"title": "Title",
 		"type": "Type",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/JC3ZJTHP",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/JC3ZJTHP",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -763,7 +763,7 @@
 		"shortTitle": "Short title",
 		"subject": "Title",
 		"tags": [],
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/W2WFJDDP",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/W2WFJDDP",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -830,7 +830,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/IQ4VQRZK",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/IQ4VQRZK",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -913,7 +913,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/ASGNK9V4",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/ASGNK9V4",
 		"url": "http://www.example.com",
 		"version": 0,
 		"videoRecordingFormat": "Medium"
@@ -955,7 +955,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/VUMWB9BZ",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/VUMWB9BZ",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -998,7 +998,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/3XQMN9Q5",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/3XQMN9Q5",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1042,7 +1042,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/XEATTJU2",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/XEATTJU2",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1098,7 +1098,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/7WKVQVAR",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/7WKVQVAR",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1171,7 +1171,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/SWW5XKNW",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/SWW5XKNW",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -1227,7 +1227,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/X3A224PG",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/X3A224PG",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1286,7 +1286,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/CP6IHEZW",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/CP6IHEZW",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -1340,7 +1340,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/V7VMFMWK",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/V7VMFMWK",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1395,7 +1395,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/EE37TTFA",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/EE37TTFA",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1456,7 +1456,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/AF7D3DBU",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/AF7D3DBU",
 		"url": "http://www.example.com",
 		"version": 0,
 		"volume": "6"
@@ -1513,7 +1513,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/PJTMWECG",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/PJTMWECG",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1598,7 +1598,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/QE7NSW5T",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/QE7NSW5T",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1662,7 +1662,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/NHq2tGeA/items/IEKTBA5B",
+		"uri": "http://trellis.org/users/local/NHq2tGeA/items/IEKTBA5B",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1721,7 +1721,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/VCJG5RX7",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/VCJG5RX7",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1815,7 +1815,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/H9KMVJH9",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/H9KMVJH9",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1882,7 +1882,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/Z2IZ9JEP",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/Z2IZ9JEP",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -1942,7 +1942,7 @@
 		"tags": [],
 		"title": "Title",
 		"type": "Type",
-		"uri": "http://zotero.org/users/local/35kRWXym/items/B5FEI3EJ",
+		"uri": "http://trellis.org/users/local/35kRWXym/items/B5FEI3EJ",
 		"url": "http://www.example.com",
 		"version": 0,
 		"versionNumber": "Version number"
@@ -1989,7 +1989,7 @@
 		"session": "Session",
 		"shortTitle": "Short title",
 		"tags": [],
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/SJE3PIJT",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/SJE3PIJT",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -2040,7 +2040,7 @@
 		"thesisType": "Type",
 		"title": "Title",
 		"university": "Publisher",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/68UVS8EK",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/68UVS8EK",
 		"url": "http://www.example.com",
 		"version": 0
 	},
@@ -2133,7 +2133,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/7WGRBEFW",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/7WGRBEFW",
 		"url": "http://www.example.com",
 		"version": 0,
 		"videoRecordingFormat": "Medium"
@@ -2228,7 +2228,7 @@
 		"studio": "Publisher",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/55G9KHBH",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/55G9KHBH",
 		"url": "http://www.example.com",
 		"version": 0,
 		"videoRecordingFormat": "Medium",
@@ -2276,7 +2276,7 @@
 		"shortTitle": "Short title",
 		"tags": [],
 		"title": "Title",
-		"uri": "http://zotero.org/users/local/riiZoBgm/items/M7X5Q2MA",
+		"uri": "http://trellis.org/users/local/riiZoBgm/items/M7X5Q2MA",
 		"url": "http://www.example.com",
 		"version": 0,
 		"websiteTitle": "Publication title",

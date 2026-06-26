@@ -1,8 +1,8 @@
 "use strict";
 
-describe("Zotero.Sync.Runner", function () {
-	var apiKey = Zotero.Utilities.randomString(24);
-	var baseURL = "http://local.zotero/";
+describe("Trellis.Sync.Runner", function () {
+	var apiKey = Trellis.Utilities.randomString(24);
+	var baseURL = "http://local.trellis/";
 	var userLibraryID, runner, caller, server, stub, spy;
 	
 	var responses = {
@@ -171,20 +171,20 @@ describe("Zotero.Sync.Runner", function () {
 	beforeEach(function* () {
 		yield resetData();
 		
-		userLibraryID = Zotero.Libraries.userLibraryID;
+		userLibraryID = Trellis.Libraries.userLibraryID;
 		
-		Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+		Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 		server = sinon.fakeServer.create();
 		server.autoRespond = true;
 		
-		runner = new Zotero.Sync.Runner_Module({ baseURL, apiKey });
+		runner = new Trellis.Sync.Runner_Module({ baseURL, apiKey });
 		
-		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 		caller = new ConcurrentCaller(1);
-		caller.setLogger(msg => Zotero.debug(msg));
+		caller.setLogger(msg => Trellis.debug(msg));
 		caller.stopOnError = true;
 		caller.onError = function (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			if (options.onError) {
 				options.onError(e);
 			}
@@ -194,15 +194,15 @@ describe("Zotero.Sync.Runner", function () {
 			}
 		};
 		
-		yield Zotero.Users.setCurrentUserID(1);
-		yield Zotero.Users.setCurrentUsername("A");
+		yield Trellis.Users.setCurrentUserID(1);
+		yield Trellis.Users.setCurrentUsername("A");
 	})
 	afterEach(function () {
 		if (stub) stub.restore();
 		if (spy) spy.restore();
 	})
 	after(function () {
-		Zotero.HTTP.mock = null;
+		Trellis.HTTP.mock = null;
 	})
 	
 	describe("#checkAccess()", function () {
@@ -218,17 +218,17 @@ describe("Zotero.Sync.Runner", function () {
 	
 	describe("#checkLibraries()", function () {
 		beforeEach(function* () {
-			Zotero.Prefs.clear('sync.librariesToSkip');
+			Trellis.Prefs.clear('sync.librariesToSkip');
 		});
 		
 		afterEach(function* () {
-			Zotero.Prefs.clear('sync.librariesToSkip');
+			Trellis.Prefs.clear('sync.librariesToSkip');
 			
-			var group = Zotero.Groups.get(responses.groups.ownerGroup.json.id);
+			var group = Trellis.Groups.get(responses.groups.ownerGroup.json.id);
 			if (group) {
 				yield group.eraseTx();
 			}
-			group = Zotero.Groups.get(responses.groups.memberGroup.json.id);
+			group = Trellis.Groups.get(responses.groups.memberGroup.json.id);
 			if (group) {
 				yield group.eraseTx();
 			}
@@ -303,7 +303,7 @@ describe("Zotero.Sync.Runner", function () {
 		it("should filter out nonexistent skipped libraries if library list not provided", async function () {
 			var unskippedGroupID = responses.groups.ownerGroup.json.id;
 			var skippedGroupID = responses.groups.memberGroup.json.id;
-			Zotero.Prefs.set('sync.librariesToSkip', `["L4", "G${skippedGroupID}"]`);
+			Trellis.Prefs.set('sync.librariesToSkip', `["L4", "G${skippedGroupID}"]`);
 			
 			setResponse('userGroups.groupVersions');
 			setResponse('groups.ownerGroup');
@@ -314,17 +314,17 @@ describe("Zotero.Sync.Runner", function () {
 				responses.keyInfo.fullAccess.json
 			);
 			
-			var group = Zotero.Groups.get(unskippedGroupID);
+			var group = Trellis.Groups.get(unskippedGroupID);
 			assert.lengthOf(libraries, 2);
 			assert.sameMembers(libraries, [userLibraryID, group.libraryID]);
 			
-			assert.isFalse(Zotero.Groups.get(skippedGroupID));
+			assert.isFalse(Trellis.Groups.get(skippedGroupID));
 		});
 		
 		it("should filter out existing skipped libraries if library list not provided", async function () {
 			var unskippedGroupID = responses.groups.ownerGroup.json.id;
 			var skippedGroupID = responses.groups.memberGroup.json.id;
-			Zotero.Prefs.set('sync.librariesToSkip', `["L4", "G${skippedGroupID}"]`);
+			Trellis.Prefs.set('sync.librariesToSkip', `["L4", "G${skippedGroupID}"]`);
 			
 			var skippedGroup = await createGroup({
 				id: skippedGroupID,
@@ -340,7 +340,7 @@ describe("Zotero.Sync.Runner", function () {
 				responses.keyInfo.fullAccess.json
 			);
 			
-			var group = Zotero.Groups.get(unskippedGroupID);
+			var group = Trellis.Groups.get(unskippedGroupID);
 			assert.lengthOf(libraries, 2);
 			assert.sameMembers(libraries, [userLibraryID, group.libraryID]);
 			
@@ -376,7 +376,7 @@ describe("Zotero.Sync.Runner", function () {
 					userLibraryID,
 					ownerGroup.libraryID,
 					// Nonexistent group should've been created
-					Zotero.Groups.getLibraryIDFromGroupID(responses.groups.memberGroup.json.id)
+					Trellis.Groups.getLibraryIDFromGroupID(responses.groups.memberGroup.json.id)
 				]
 			);
 		});
@@ -420,7 +420,7 @@ describe("Zotero.Sync.Runner", function () {
 				version: groupData.json.version
 			});
 			
-			Zotero.Prefs.set('sync.librariesToSkip', `["L4", "G${group.id}"]`);
+			Trellis.Prefs.set('sync.librariesToSkip', `["L4", "G${group.id}"]`);
 			
 			setResponse('userGroups.groupVersions');
 			setResponse('groups.ownerGroup');
@@ -455,7 +455,7 @@ describe("Zotero.Sync.Runner", function () {
 			setResponse('groups.ownerGroup');
 			setResponse('groups.memberGroup');
 			// Simulate acceptance of library reset for group 2 editable change
-			var stub = sinon.stub(Zotero.Sync.Data.Local, "checkLibraryForAccess")
+			var stub = sinon.stub(Trellis.Sync.Data.Local, "checkLibraryForAccess")
 				.returns(Promise.resolve(true));
 			
 			var libraries = await runner.checkLibraries(
@@ -492,18 +492,18 @@ describe("Zotero.Sync.Runner", function () {
 				editable: true
 			});
 			
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE groups SET version=0 WHERE groupID IN (?, ?)", [group1.id, group2.id]
 			);
-			await Zotero.Libraries.init();
-			group1 = Zotero.Groups.get(group1.id);
-			group2 = Zotero.Groups.get(group2.id);
+			await Trellis.Libraries.init();
+			group1 = Trellis.Groups.get(group1.id);
+			group2 = Trellis.Groups.get(group2.id);
 			
 			setResponse('userGroups.groupVersions');
 			setResponse('groups.ownerGroup');
 			setResponse('groups.memberGroup');
 			// Simulate acceptance of library reset for group 2 editable change
-			var stub = sinon.stub(Zotero.Sync.Data.Local, "checkLibraryForAccess")
+			var stub = sinon.stub(Trellis.Sync.Data.Local, "checkLibraryForAccess")
 				.returns(Promise.resolve(true));
 			
 			var libraries = await runner.checkLibraries(
@@ -535,9 +535,9 @@ describe("Zotero.Sync.Runner", function () {
 			);
 			assert.lengthOf(libraries, 3);
 			var groupData1 = responses.groups.ownerGroup;
-			var group1 = Zotero.Groups.get(groupData1.json.id);
+			var group1 = Trellis.Groups.get(groupData1.json.id);
 			var groupData2 = responses.groups.memberGroup;
-			var group2 = Zotero.Groups.get(groupData2.json.id);
+			var group2 = Trellis.Groups.get(groupData2.json.id);
 			assert.ok(group1);
 			assert.ok(group2);
 			assert.sameMembers(
@@ -566,8 +566,8 @@ describe("Zotero.Sync.Runner", function () {
 			);
 			assert.lengthOf(libraries, 2);
 			assert.sameMembers(libraries, [userLibraryID, group2.libraryID]);
-			assert.isFalse(Zotero.Groups.exists(groupData1.json.id));
-			assert.isTrue(Zotero.Groups.exists(groupData2.json.id));
+			assert.isFalse(Trellis.Groups.exists(groupData1.json.id));
+			assert.isTrue(Trellis.Groups.exists(groupData2.json.id));
 		})
 		
 		it("should keep remotely missing groups", async function () {
@@ -604,7 +604,7 @@ describe("Zotero.Sync.Runner", function () {
 			assert.sameMembers(libraries, [userLibraryID]);
 			// Groups should still exist but be read-only and archived
 			[group1, group2].forEach((group) => {
-				assert.isTrue(Zotero.Groups.exists(group.id));
+				assert.isTrue(Trellis.Groups.exists(group.id));
 				assert.isTrue(group.archived);
 				assert.isFalse(group.editable);
 				assert.isFalse(group.filesEditable);
@@ -624,7 +624,7 @@ describe("Zotero.Sync.Runner", function () {
 				runner.getAPIClient({ apiKey }), false, responses.keyInfo.fullAccess.json
 			);
 			assert.lengthOf(libraries, 0);
-			assert.isTrue(Zotero.Groups.exists(groupData.json.id));
+			assert.isTrue(Trellis.Groups.exists(groupData.json.id));
 		})
 		
 		it("should prompt to revert local changes on loss of library write access", async function () {
@@ -673,7 +673,7 @@ describe("Zotero.Sync.Runner", function () {
 			});
 			
 			// First, test cancelling
-			var stub = sinon.stub(Zotero.Sync.Data.Local, "checkLibraryForAccess")
+			var stub = sinon.stub(Trellis.Sync.Data.Local, "checkLibraryForAccess")
 				.returns(Promise.resolve(false));
 			var libraries = await runner.checkLibraries(
 				runner.getAPIClient({ apiKey }), false, responses.keyInfo.fullAccess.json
@@ -904,20 +904,20 @@ describe("Zotero.Sync.Runner", function () {
 			
 			// Check local library versions
 			assert.equal(
-				Zotero.Libraries.getVersion(userLibraryID),
+				Trellis.Libraries.getVersion(userLibraryID),
 				5
 			);
 			assert.equal(
-				Zotero.Libraries.getVersion(Zotero.Groups.getLibraryIDFromGroupID(1623562)),
+				Trellis.Libraries.getVersion(Trellis.Groups.getLibraryIDFromGroupID(1623562)),
 				15
 			);
 			assert.equal(
-				Zotero.Libraries.getVersion(Zotero.Groups.getLibraryIDFromGroupID(2694172)),
+				Trellis.Libraries.getVersion(Trellis.Groups.getLibraryIDFromGroupID(2694172)),
 				20
 			);
 			
 			// Last sync time should be within the last few seconds
-			var lastSyncTime = Zotero.Sync.Data.Local.getLastSyncTime();
+			var lastSyncTime = Trellis.Sync.Data.Local.getLastSyncTime();
 			assert.isAbove(lastSyncTime.getTime(), startTime);
 			assert.isBelow(lastSyncTime.getTime(), new Date().getTime());
 		})
@@ -929,10 +929,10 @@ describe("Zotero.Sync.Runner", function () {
 			setResponse('groups.ownerGroup');
 			setResponse('groups.memberGroup');
 			
-			var stub = sinon.stub(Zotero.Sync.Data.Engine.prototype, "start");
+			var stub = sinon.stub(Trellis.Sync.Data.Engine.prototype, "start");
 			
 			stub.onCall(0).returns(Promise.resolve());
-			var e = new Zotero.Sync.UserCancelledException();
+			var e = new Trellis.Sync.UserCancelledException();
 			e.handledRejection = true;
 			stub.onCall(1).returns(Promise.reject(e));
 			// Shouldn't be reached
@@ -952,10 +952,10 @@ describe("Zotero.Sync.Runner", function () {
 			setResponse('groups.ownerGroup');
 			setResponse('groups.memberGroup');
 			
-			var stub = sinon.stub(Zotero.Sync.Data.Engine.prototype, "start");
+			var stub = sinon.stub(Trellis.Sync.Data.Engine.prototype, "start");
 			
 			stub.returns(Promise.resolve());
-			var e = new Zotero.Sync.UserCancelledException(true);
+			var e = new Trellis.Sync.UserCancelledException(true);
 			e.handledRejection = true;
 			stub.onCall(1).returns(Promise.reject(e));
 			
@@ -971,7 +971,7 @@ describe("Zotero.Sync.Runner", function () {
 	
 	describe("#createAPIKeyFromCredentials()", function () {
 		var data = {
-			name: "Automatic Zotero Client Key",
+			name: "Automatic Trellis Client Key",
 			username: "Username",
 			access: {
 				user: {
@@ -1021,11 +1021,11 @@ describe("Zotero.Sync.Runner", function () {
 
 	describe("#deleteAPIKey()", function () {
 		it("should send DELETE request with correct key", async function () {
-			Zotero.Sync.Data.Local.setAPIKey(apiKey);
+			Trellis.Sync.Data.Local.setAPIKey(apiKey);
 
 			server.respond(function (req) {
 				if (req.method == "DELETE") {
-					assert.propertyVal(req.requestHeaders, 'Zotero-API-Key', apiKey);
+					assert.propertyVal(req.requestHeaders, 'Trellis-API-Key', apiKey);
 					assert.equal(req.url, baseURL + "keys/current");
 				}
 				req.respond(204);
@@ -1046,7 +1046,7 @@ describe("Zotero.Sync.Runner", function () {
 		});
 		
 		it("should show the sync error icon on error", async function () {
-			let library = Zotero.Libraries.userLibrary;
+			let library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 1;
 			await library.save();
 			
@@ -1067,8 +1067,8 @@ describe("Zotero.Sync.Runner", function () {
 		
 		
 		it("should show a custom button in the error panel", async function () {
-			win = await loadZoteroPane();
-			var libraryID = Zotero.Libraries.userLibraryID;
+			win = await loadTrellisPane();
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			setResponse({
 				method: "GET",
@@ -1082,18 +1082,18 @@ describe("Zotero.Sync.Runner", function () {
 			});
 			
 			var doc = win.document;
-			var errorIcon = doc.getElementById('zotero-tb-sync-error');
+			var errorIcon = doc.getElementById('trellis-tb-sync-error');
 			assert.isFalse(errorIcon.hidden);
 			errorIcon.click();
-			var panel = win.document.getElementById('zotero-sync-error-panel');
+			var panel = win.document.getElementById('trellis-sync-error-panel');
 			var buttons = panel.getElementsByTagName('button');
 			assert.lengthOf(buttons, 1);
-			assert.equal(buttons[0].label, Zotero.ftl.formatValueSync('account-log-in'));
+			assert.equal(buttons[0].label, Trellis.ftl.formatValueSync('account-log-in'));
 		});
 		
 		
 		it("should show a button in error panel to select a too-long note", async function () {
-			win = await loadZoteroPane();
+			win = await loadTrellisPane();
 			var doc = win.document;
 			
 			var text = "".padStart(256, "a");
@@ -1118,7 +1118,7 @@ describe("Zotero.Sync.Runner", function () {
 							failed: {
 								"0": {
 									code: 413,
-									message: `Note ${Zotero.Utilities.ellipsize(text, 100)} too long`
+									message: `Note ${Trellis.Utilities.ellipsize(text, 100)} too long`
 								}
 							}
 						})
@@ -1126,21 +1126,21 @@ describe("Zotero.Sync.Runner", function () {
 				}
 			});
 			
-			await runner.sync({ libraries: [Zotero.Libraries.userLibraryID] });
+			await runner.sync({ libraries: [Trellis.Libraries.userLibraryID] });
 			
-			var errorIcon = doc.getElementById('zotero-tb-sync-error');
+			var errorIcon = doc.getElementById('trellis-tb-sync-error');
 			assert.isFalse(errorIcon.hidden);
 			errorIcon.click();
-			var panel = win.document.getElementById('zotero-sync-error-panel');
+			var panel = win.document.getElementById('trellis-sync-error-panel');
 			assert.include(panel.innerHTML, text.substr(0, 10));
 			var buttons = panel.getElementsByTagName('button');
 			assert.lengthOf(buttons, 1);
-			assert.include(buttons[0].label, Zotero.getString('pane.items.showItemInLibrary'));
+			assert.include(buttons[0].label, Trellis.getString('pane.items.showItemInLibrary'));
 		});
 		
 		
 		it("should show an error for invalid My Library data", async function () {
-			let library = Zotero.Libraries.userLibrary;
+			let library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 1;
 			await library.save();
 			
@@ -1189,7 +1189,7 @@ describe("Zotero.Sync.Runner", function () {
 		
 		
 		it("should show a warning in the sync button tooltip for invalid group data", async function () {
-			win = await loadZoteroPane();
+			win = await loadTrellisPane();
 			var doc = win.document;
 			
 			// Create group with same id and version as groups response
@@ -1238,13 +1238,13 @@ describe("Zotero.Sync.Runner", function () {
 			
 			await runner.sync({ libraries: [group.libraryID] });
 			
-			assert.isTrue(doc.getElementById('zotero-tb-sync-error').hidden);
+			assert.isTrue(doc.getElementById('trellis-tb-sync-error').hidden);
 			
 			// Fake what happens on button mouseover
-			var tooltip = doc.getElementById('zotero-tb-sync-tooltip');
+			var tooltip = doc.getElementById('trellis-tb-sync-tooltip');
 			runner.registerSyncStatus(tooltip);
 			
-			var html = doc.getElementById('zotero-tb-sync-tooltip').innerHTML;
+			var html = doc.getElementById('trellis-tb-sync-tooltip').innerHTML;
 			assert.match(html, /Some data in .+\. Other data will continue to sync\./);
 			
 			runner.registerSyncStatus();
@@ -1254,7 +1254,7 @@ describe("Zotero.Sync.Runner", function () {
 		// TODO: Test multiple long tags and tags across libraries
 		describe("Long Tag Fixer", function () {
 			it("should split a tag", async function () {
-				win = await loadZoteroPane();
+				win = await loadTrellisPane();
 				
 				var item = await createDataObject('item');
 				var tag = "title;feeling;matter;drum;treatment;caring;earthy;shrill;unit;obedient;hover;healthy;cheap;clever;wren;wicked;clip;shoe;jittery;shape;clear;dime;increase;complete;level;milk;false;infamous;lamentable;measure;cuddly;tasteless;peace;top;pencil;caption;unusual;depressed;frantic";
@@ -1316,15 +1316,15 @@ describe("Zotero.Sync.Runner", function () {
 					}
 				});
 				
-				waitForDialog(null, 'accept', 'chrome://zotero/content/longTagFixer.xhtml');
-				await runner.sync({ libraries: [Zotero.Libraries.userLibraryID] });
+				waitForDialog(null, 'accept', 'chrome://trellis/content/longTagFixer.xhtml');
+				await runner.sync({ libraries: [Trellis.Libraries.userLibraryID] });
 				
-				assert.isFalse(Zotero.Tags.getID(tag));
-				assert.isNumber(Zotero.Tags.getID('feeling'));
+				assert.isFalse(Trellis.Tags.getID(tag));
+				assert.isNumber(Trellis.Tags.getID('feeling'));
 			});
 			
 			it("should delete a tag", async function () {
-				win = await loadZoteroPane();
+				win = await loadTrellisPane();
 				
 				var item = await createDataObject('item');
 				var tag = "title;feeling;matter;drum;treatment;caring;earthy;shrill;unit;obedient;hover;healthy;cheap;clever;wren;wicked;clip;shoe;jittery;shape;clear;dime;increase;complete;level;milk;false;infamous;lamentable;measure;cuddly;tasteless;peace;top;pencil;caption;unusual;depressed;frantic";
@@ -1387,12 +1387,12 @@ describe("Zotero.Sync.Runner", function () {
 				});
 				
 				waitForDialog(function (window) {
-					window.Zotero_Long_Tag_Fixer.switchMode(2);
-				}, 'accept', 'chrome://zotero/content/longTagFixer.xhtml');
-				await runner.sync({ libraries: [Zotero.Libraries.userLibraryID] });
+					window.Trellis_Long_Tag_Fixer.switchMode(2);
+				}, 'accept', 'chrome://trellis/content/longTagFixer.xhtml');
+				await runner.sync({ libraries: [Trellis.Libraries.userLibraryID] });
 				
-				assert.isFalse(Zotero.Tags.getID(tag));
-				assert.isFalse(Zotero.Tags.getID('feeling'));
+				assert.isFalse(Trellis.Tags.getID(tag));
+				assert.isFalse(Trellis.Tags.getID('feeling'));
 			});
 		});
 	});

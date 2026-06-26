@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Nume:">
+
+<!ENTITY trellis.search.searchInLibrary "Caută în bibliotecă:">
+
+<!ENTITY trellis.search.joinMode.prefix "Potrivire">
+<!ENTITY trellis.search.joinMode.any "oricare">
+<!ENTITY trellis.search.joinMode.all "toate">
+<!ENTITY trellis.search.joinMode.suffix "din următoarele:">
+
+<!ENTITY trellis.search.recursive.label "Caută în subdosare">
+<!ENTITY trellis.search.noChildren "Arată doar înregistrările de nivel înalt">
+<!ENTITY trellis.search.includeParentsAndChildren "Include înregistrările părinte și copil, dintre cele care se potrivesc căutării">
+
+<!ENTITY trellis.search.textModes.phrase "Expresie">
+<!ENTITY trellis.search.textModes.phraseBinary "Expresie (include fișierele binare)">
+<!ENTITY trellis.search.textModes.regexp "Expresii regulate">
+<!ENTITY trellis.search.textModes.regexpCS "Expresii regulate (diferențiază între caracterele minuscule și cele majuscule)">
+
+<!ENTITY trellis.search.date.units.days "zile">
+<!ENTITY trellis.search.date.units.months "luni">
+<!ENTITY trellis.search.date.units.years "ani">
+
+<!ENTITY trellis.search.search "Caută">
+<!ENTITY trellis.search.clear "Șterge">
+<!ENTITY trellis.search.saveSearch "Salvează căutarea">

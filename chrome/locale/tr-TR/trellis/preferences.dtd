@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Trellis Tercihleri">
+
+<!ENTITY trellis.preferences.helpButton.label "Yardım">
+
+<!ENTITY trellis.preferences.default "Varsayılan:">
+<!ENTITY trellis.preferences.items "Eser">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Özel...">
+
+<!ENTITY trellis.preferences.prefpane.general "Genel">
+
+<!ENTITY trellis.preferences.interface "Arayüz">
+<!ENTITY trellis.preferences.fileHandling "Dosya Kullanımı">
+<!ENTITY trellis.preferences.automaticSnapshots "Web sayfalarından eserler yaratırken sayfanın anlık görüntüsünü otomatik olarak kaydet">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Eserleri kaydederken ilişkili PDF ve diğer dosyaları da otomatik olarak ekle">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Bağlantılı dosyaları yeniden adlandır">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "PDF dosyalarını bununla Aç:">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Sistem Varsayılanı">
+
+<!ENTITY trellis.preferences.miscellaneous "Diğer Ayarlar">
+<!ENTITY trellis.preferences.autoUpdate "Güncellenmiş çevirmen ve stilleri otomatik olarak ara">
+<!ENTITY trellis.preferences.updateNow "Şimdi Güncelle">
+<!ENTITY trellis.preferences.reportTranslationFailure "Bozuk site çevirmenlerini bildir">
+<!ENTITY trellis.preferences.parseRISRefer "İndirilmiş BibTeX/RIS/Refer dosyaları için, Trellis'yu kullan">
+<!ENTITY trellis.preferences.automaticTags "Anahtar kelimeler ve konu başlıkları ile eserleri otomatik olarak etiketle">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Bu kadar zaman önce Çöp Sepetine gönderilmiş eserleri otomatik olarak sil:">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "gün">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Sekmeleri böyle göster:">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Yaratan - Yıl - Başlık">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Başlık - Yaratan - Yıl">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Dosya adı">
+
+<!ENTITY trellis.preferences.groups "Gruplar">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Kitaplıklar arası eserler kopyalanırken, bunları ekle:">
+<!ENTITY trellis.preferences.groups.childNotes "alt notlar">
+<!ENTITY trellis.preferences.groups.childFiles "alt anlık görüntüler ve içeri aktarılan dosyalar">
+<!ENTITY trellis.preferences.groups.annotations "ek açıklamalar">
+<!ENTITY trellis.preferences.groups.childLinks "alt bağlantılar">
+<!ENTITY trellis.preferences.groups.tags "etiketler">
+
+<!ENTITY trellis.preferences.feeds "Beslemeler">
+<!ENTITY trellis.preferences.feeds.sorting.label "Sıralama:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "En yeni eserler ilk">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "En eski eserler ilk">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Besleme Varsayılanları">
+
+<!ENTITY trellis.preferences.prefpane.sync "Eşitle">
+<!ENTITY trellis.preferences.sync.username "Kullanıcı:">
+<!ENTITY trellis.preferences.sync.password "Şifre:">
+<!ENTITY trellis.preferences.sync.createAccount "Hesap Oluştur">
+<!ENTITY trellis.preferences.sync.lostPassword "Unutulan Şifre?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "Kendiliğinden eşitle">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Tüm-metin içeriği eşitle">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis, Trellis kitaplıklarınızdaki dosyaların tüm-metin içeriklerini trellis.org ve diğer bağlantılı cihazlarla eşitliyebilir. Bu sayede her yerden kolayca dosyalarınızı arayabilirsiniz. Dosyalarınızın tüm-metin içerikleri herkese açık olarak paylaşılmayacaktır.">
+<!ENTITY trellis.preferences.sync.about "Eşitleme Hakkında">
+<!ENTITY trellis.preferences.sync.fileSyncing "Dosya Eşitlemesi">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Kitaplığımda kullanılan ek dosyalarını bununla eşitle:">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Dosyaları bu anlarda indir:">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "Eşitleme anında">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "Gerek duyulduğunda">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Sunucuyu Doğrula">
+<!ENTITY trellis.preferences.sync.librariesToSync "Eşitlenecek Kitaplıklar">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Kitaplıkları Seç...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Eşitle">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Kitaplık">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Aşağıdaki işlemler, yalnızca ender ve özel durumlar altında kullanılmalı, ve genel sorun giderme amaçlı kullanılmamalıdırlar. Birçok durumda, sıfırlama ek sorunlara neden olacaktır. Daha fazla bilgi için ">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Eşitlemeyi Sıfırlama Seçenekleri">
+<!ENTITY trellis.preferences.sync.reset.warning3 " bakınız.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Veri Eşitleme Geçmişini Sıfırla">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Eşitleme geçmişini yok sayarak, yerel verileri uzaktaki verilerle birleştir">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Çevrimiçi Kitaplıktan Geri Yükle">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Yerel Trellis verilerinin üzerine çevrimiçi kitaplıktaki verileri yaz.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Çevrimiçi Kitaplığı Değiştir">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Çevrimiçi kitaplıktaki verilerin üzerine yerel Trellis verilerini yaz.">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Dosya Eşitleme Geçmişini Sıfırla">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Tüm ek dosyaları depolama hizmetindekilerle karşılaştır">
+<!ENTITY trellis.preferences.sync.reset "Sıfırla">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Sıfırlama Seçeneklerini Göster...">
+<!ENTITY trellis.preferences.sync.reset.button "Sıfırla...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Ara">
+<!ENTITY trellis.preferences.search.fulltextCache "Tüm-Metin Önbellek">
+<!ENTITY trellis.preferences.search.indexStats "İndeks İstatistikleri">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "İndeklenmiş:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Kısmi:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "İndekslenmemiş:">
+<!ENTITY trellis.preferences.search.indexStats.words "Sozcükler:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Her dosyada indekslenecek en fazla karakter sayısı:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Her dosyada indekslenecek en fazla sayfa sayısı:">
+
+<!ENTITY trellis.preferences.prefpane.export "Dışarı Aktar">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Alıntı Seçenekleri">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Kaynakçalara makale URL'leri dahil edilsin">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Bu seçenek devre dışı bırakıldığında, Trellis, bilimsel dergi, magazin ve gazete makalelerine olan alıntılara URL'leri, yalnızca bir sayfa aralığı belirtilmediği halde ekleyecektir.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Çabuk Kopyala">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Eser Biçimi:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Not Biçimi:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "HTML olarak kopyala">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Siteye Özgü Ayarlar:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Etki alanı/Yol">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(ör. wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Biçim">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Dil">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Bu kadardan daha fazlası sürüklendiğinde Çabuk Kopyalamayı devre dışı bırak:">
+
+<!ENTITY trellis.preferences.prefpane.cite "Alıntı Yap">
+<!ENTITY trellis.preferences.cite.wordProcessors "Sözcük İşlemcileri">
+<!ENTITY trellis.preferences.styleEditor "Stil Düzenleyicisi">
+<!ENTITY trellis.preferences.stylePreview "Stil Önizleyicisi">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Stil Yöneticisi">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Başlık">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Güncellenme">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Trellis'ya Kaydet (adres çubuğu ikonu)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Dermeler Bölmesine Odaklan">
+<!ENTITY trellis.preferences.keys.quicksearch "Çabuk Arama">
+<!ENTITY trellis.preferences.keys.newItem "Yeni Eser Oluştur">
+<!ENTITY trellis.preferences.keys.newNote "Yeni Not Oluştur">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Tüm Besleme Eserlerini Okunmuş/Okunmamış İşaretle">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Seçili Eserin Alıntılarını Panoya Kopyala">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Seçili Eserleri Panoya Kopyala">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Panodan İçeri Aktar">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Değişiklikler, Trellis tekrar başlatıldıktan sonra etkinleşir">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Vekil Sunucular">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Vekil Sunucu Seçenekleri">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis, istekleri kayıtlı vekil sunucular aracılığı ile açık bir şekilde yönlendirecektir. Daha fazla bilgi için">
+<!ENTITY trellis.preferences.proxies.desc_link "vekil sunucu belgelerine">
+<!ENTITY trellis.preferences.proxies.desc_after_link "bakınız.">
+<!ENTITY trellis.preferences.proxies.transparent "Vekil sunucu yönlendirmelerini etkinleştir">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Vekil sunuculu kaynakları kendiliğinden tanı">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Bir vekil sunucu aracılığıyla yönlendirirken mesaj göster.">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Etki alanı adı bunları içeriyorsa vekil sunucuya yönlendirmeyi devre dışı bırak: ">
+<!ENTITY trellis.preferences.proxies.configured "Ayarlanmış Vekil Sunucular">
+<!ENTITY trellis.preferences.proxies.hostname "Ana Sunucu">
+<!ENTITY trellis.preferences.proxies.scheme "Düzen">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Çoklu-Site">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Yeni ana sunucuları kendiliğinden ilişkilendir">
+<!ENTITY trellis.preferences.proxies.variables "Vekil düzeninde aşağıdaki değişkenleri kullanabilirsiniz:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Yetkili sitenin anabilgisayar adı (ör., www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Yetkili sayfanın başındaki kesme işaretinin çıkartılmış yolu (ör., about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Dizin yolu (ör., about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Dosyaadı (ör., index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - Herhangi bir dizi">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Gelişmiş">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "Dosyalar ve Klasörler">
+<!ENTITY trellis.preferences.advanced.keys "Kısayollar">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Gelişmiş Yapılandırma">
+
+<!ENTITY trellis.preferences.prefpane.locate "Yerini Bul">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Makale Bakma Motoru Yöneticisi">
+<!ENTITY trellis.preferences.locate.description "Tanım">
+<!ENTITY trellis.preferences.locate.name "Ad">
+<!ENTITY trellis.preferences.locate.addDescription "Listede olmayan bir Bakma Motoru eklemek için, tarayıcınızda istediğiniz arama moturunu ziyaret edip Trellis'nun Yerini Bul menüsünden &quot;Ekle&quot;yi seçiniz.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Varsayılanları Geri Yükle">
+
+<!ENTITY trellis.preferences.charset "Karakter Kodlaması">
+<!ENTITY trellis.preferences.charset.importCharset "İçeri Aktarmada Kullanılan Karakter Kodlaması">
+<!ENTITY trellis.preferences.charset.displayExportOption "Dışarı aktarırken karakter kodlama seçeneğini göster">
+
+<!ENTITY trellis.preferences.dataDir "Veri Dizini Konumu">
+<!ENTITY trellis.preferences.dataDir.useProfile "Firefox profil dizinini kullan">
+<!ENTITY trellis.preferences.dataDir.custom "Özel:">
+<!ENTITY trellis.preferences.dataDir.choose "Seç...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(komut satırı kullanarak belirlenir)">
+<!ENTITY trellis.preferences.dataDir.reveal "Veri Dizinini Göster">
+<!ENTITY trellis.preferences.dataDir.migrate "Yeni Varsayılan Konuma Geç...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Bağlantılı Ek Taban Dizini">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis, bağlantılı dosya ekleri için göreceli yollar kullanacaktır. Bu, temel dizininizdeki dosya yapınız aynı kaldığı sürece, dosyalarınıza değişik bilgisayarlarda ulaşımınızı sağlamaktadır.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Temel dizin:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Seç...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Mutlak Yollara Geri Döndür...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Veritabanı Bakımı">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Veritabanı Bütünlüğünü Denetle">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Çevirmenleri ve Stilleri Sıfırla...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Çevirmenleri Sıfırla...">
+
+<!ENTITY trellis.preferences.configEditor "Yapılandırma Düzenleyicisi">

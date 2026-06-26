@@ -19,7 +19,7 @@ $localeCodeInOutputXML = true; // set to true for XPI, false for BZ
 $locale_re = '/^([a-z]{2})(\-[A-Z]{2})?$/';
 $locale_file_re = '/^[a-z].+\.(dtd|properties)$/';
 
-// Zotero files
+// Trellis files
 $english_files = array_filter(
 	scandir($english_path),
 	fn ($path) => preg_match($locale_file_re, $path)
@@ -39,7 +39,7 @@ foreach ($locales as $locale) {
 	if (!$matches) {
 		continue;
 	}
-	$dir = $output_dir . '/' . $locale . '/zotero/';
+	$dir = $output_dir . '/' . $locale . '/trellis/';
 	@mkdir($dir, 0775, true);
 }
 
@@ -63,8 +63,8 @@ foreach ($all_english_files as $file) {
 			$locale .= $matches[2];
 		}
 		
-		$locale_source_file = "$locale_path/$locale/zotero/$file";
-		$output_locale_dir = "$output_dir/$locale/zotero/";
+		$locale_source_file = "$locale_path/$locale/trellis/$file";
+		$output_locale_dir = "$output_dir/$locale/trellis/";
 		
 		if (!file_exists($output_locale_dir . '/mozilla')) {
 			mkdir($output_locale_dir . '/mozilla', 0755);
@@ -210,7 +210,7 @@ function generate_locale($type, $english_file, $locale_file, $locale, $preserveW
 		switch ($type) {
 			case 'dtd':
 				// Don't replace string with space, only truly empty string, or else we mess up
-				// zotero.merge.of in Estonian, which apparently doesn't exist
+				// trellis.merge.of in Estonian, which apparently doesn't exist
 				if (empty($locale_val[4])) {
 					$locale_val = $english_val;
 				}

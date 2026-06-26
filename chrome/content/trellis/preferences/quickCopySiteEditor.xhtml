@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+    ***** BEGIN LICENSE BLOCK *****
+    
+    Copyright © 2007 Center for History and New Media
+                     George Mason University, Fairfax, Virginia, USA
+                     http://trellis.org
+    
+    This file is part of Trellis.
+    
+    Trellis is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    Trellis is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+    
+    ***** END LICENSE BLOCK *****
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/preferences.css"?>
+
+
+<!DOCTYPE window [
+  <!ENTITY % prefWindow SYSTEM "chrome://trellis/locale/preferences.dtd">
+  %prefWindow;
+  <!ENTITY % common SYSTEM "chrome://trellis/locale/trellis.dtd">
+  %common;
+]>
+
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	title=""
+	onload="Trellis_QuickCopySiteEditor.onLoad(); Trellis_Preferences.Export.updateQuickCopyUI(); sizeToContent()">
+<dialog 
+	buttons="cancel,accept"
+	id="trellis-quickCopySiteEditor">
+	
+	<script src="chrome://trellis/content/include.js"/>
+	<script src="preferences.js"/>
+	<script src="preferences_export.js"/>
+	
+	<vbox id="trellis-preferences-quickCopySiteEditor">
+		<label value="&trellis.preferences.quickCopy.siteEditor.domainPath; &trellis.preferences.quickCopy.siteEditor.domainPath.example;" control="trellis-quickCopy-domain"/>
+		<html:input type="text" id="trellis-quickCopy-domain" oninput="Trellis_QuickCopySiteEditor.onDomainInput(event)"/>
+		
+		<separator class="thin"/>
+		
+		<label value="&trellis.preferences.quickCopy.siteEditor.format;" control="trellis-quickCopy-menu"/>
+		<menulist id="trellis-quickCopy-menu" native="true"/>
+		
+		<separator class="thin"/>
+		
+		<label id="trellis-quickCopy-locale-menu-label" value="&trellis.preferences.quickCopy.siteEditor.locale;" control="trellis-quickCopy-locale-menu"/>
+		<hbox align="center">
+			<menulist id="trellis-quickCopy-locale-menu" oncommand="Trellis_Preferences.Export._lastSelectedLocale = this.value" native="true"/>
+		</hbox>
+		
+		<separator class="thin"/>
+		
+		<checkbox id="trellis-quickCopy-copyAsHTML" label="&trellis.preferences.quickCopy.copyAsHTML;"
+			oncommand="Trellis_Preferences.Export.buildQuickCopyFormatDropDown(
+				document.getElementById('trellis-quickCopy-menu'),
+				this.checked ? 'html' : '',
+				null,
+				io.translators
+			)"
+			native="true"/>
+	</vbox>
+	
+	<script>
+	<![CDATA[
+		document.addEventListener('dialogaccept', () => Trellis_QuickCopySiteEditor.onAccept());
+
+		var Trellis_QuickCopySiteEditor = new function () {
+			var menu = document.getElementById('trellis-quickCopy-menu');
+			
+			this.onLoad = function () {
+				// Hide OK button initially if domain field is empty
+				document.getElementById('trellis-quickCopySiteEditor').getButton('accept').disabled
+					= document.getElementById('trellis-quickCopy-domain').value.trim() === '';
+			};
+			
+			this.onAccept = function () {
+				var io = window.arguments[0];
+				io.domain = document.getElementById('trellis-quickCopy-domain').value;
+				io.format = menu.value;
+				
+				io.locale = '';
+				if (!document.getElementById('trellis-quickCopy-locale-menu').disabled) {
+					io.locale = document.getElementById('trellis-quickCopy-locale-menu').value;
+				}
+				
+				io.ok = true;
+			}
+			
+			this.onDomainInput = function (event) {
+				// Hide OK button if domain field is empty
+				document.getElementById('trellis-quickCopySiteEditor').getButton('accept').disabled = event.target.value.trim() === '';
+				
+				// Auto-select Wikipedia Citation Templates
+				if (event.target.value == 'wikipedia.org') {
+					menu.value = 'export=3f50aaac-7acc-4350-acd0-59cb77faf620';
+					Trellis_Preferences.Export.updateQuickCopyUI();
+				}
+			};
+		}
+		
+		var io = window.arguments[0];
+		var contentType = io.asHTML ? 'html' : '';
+		document.getElementById('trellis-quickCopy-domain').value = io.domain ? io.domain : '';
+		Trellis_Preferences.Export.buildQuickCopyFormatDropDown(
+			document.getElementById('trellis-quickCopy-menu'),
+			contentType,
+			io.format,
+			io.translators
+		);
+		Trellis.Styles.populateLocaleList(
+			document.getElementById('trellis-quickCopy-locale-menu')
+		);
+		document.getElementById('trellis-quickCopy-copyAsHTML').checked = io.asHTML;
+		Trellis_Preferences.Export._lastSelectedLocale = io.locale;
+	]]>
+	</script>
+</dialog>
+</window>

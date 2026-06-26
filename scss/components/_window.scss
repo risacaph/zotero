@@ -1,9 +1,9 @@
-@mixin zotero-window {
+@mixin trellis-window {
 	background: var(--material-sidepane);
 	--color-form-element-base-background: var(--material-sidepane);
 }
 
-@mixin zotero-dialog {
+@mixin trellis-dialog {
 	background: var(--material-background);
 	--color-form-element-base-background: var(--material-background);
 }
@@ -11,25 +11,25 @@
 window:root,
 window:root > wizard,
 body {
-	@include zotero-window();
+	@include trellis-window();
 }
 
 window:root > dialog {
-	@include zotero-dialog();
+	@include trellis-dialog();
 }
 
 // Can overwrite default style
-window:root .zotero-window {
-	@include zotero-window();
+window:root .trellis-window {
+	@include trellis-window();
 }
 
-window:root .zotero-dialog {
-	@include zotero-dialog();
+window:root .trellis-dialog {
+	@include trellis-dialog();
 }
 
 // Dialogs (e.g. the integration doc prefs window) has 20px padding on MacOS
-window:root dialog.zotero-dialog-window {
-	@include zotero-window();
+window:root dialog.trellis-dialog-window {
+	@include trellis-window();
 
 	@media (-moz-platform: macos) {
 		padding: 20px;

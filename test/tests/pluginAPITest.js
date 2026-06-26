@@ -1,5 +1,5 @@
 describe("Plugin API", function () {
-	var win, doc, ZoteroPane, Zotero_Tabs, ZoteroContextPane, _itemsView, infoSection, caches;
+	var win, doc, TrellisPane, Trellis_Tabs, TrellisContextPane, _itemsView, infoSection, caches;
 
 	function resetCaches() {
 		caches = {};
@@ -9,7 +9,7 @@ describe("Plugin API", function () {
 		if (!caches[key]) {
 			caches[key] = {};
 		}
-		caches[key].deferred = Zotero.Promise.defer();
+		caches[key].deferred = Trellis.Promise.defer();
 		caches[key].result = "";
 	}
 
@@ -27,13 +27,13 @@ describe("Plugin API", function () {
 	}
 
 	before(async function () {
-		win = await loadZoteroPane();
+		win = await loadTrellisPane();
 		doc = win.document;
-		ZoteroPane = win.ZoteroPane;
-		Zotero_Tabs = win.Zotero_Tabs;
-		ZoteroContextPane = win.ZoteroContextPane;
-		_itemsView = win.ZoteroPane.itemsView;
-		infoSection = win.ZoteroPane.itemPane._itemDetails.getPane('info');
+		TrellisPane = win.TrellisPane;
+		Trellis_Tabs = win.Trellis_Tabs;
+		TrellisContextPane = win.TrellisContextPane;
+		_itemsView = win.TrellisPane.itemsView;
+		infoSection = win.TrellisPane.itemPane._itemDetails.getPane('info');
 	});
 
 	after(function () {
@@ -43,7 +43,7 @@ describe("Plugin API", function () {
 	describe("Item pane info box custom section", function () {
 		let defaultOption = {
 			rowID: "default-test",
-			pluginID: "zotero@zotero.org",
+			pluginID: "trellis@trellis.org",
 			label: {
 				l10nID: "general-print",
 			},
@@ -57,14 +57,14 @@ describe("Plugin API", function () {
 		let waitForRegister = async (option) => {
 			initCache("onGetData");
 			let getDataPromise = getCache("onGetData");
-			let rowID = Zotero.ItemPaneManager.registerInfoRow(option);
+			let rowID = Trellis.ItemPaneManager.registerInfoRow(option);
 			await getDataPromise;
 			return rowID;
 		};
 
 		let waitForUnregister = async (rowID) => {
 			let unregisterPromise = waitForNotifierEvent("refresh", "infobox");
-			let success = Zotero.ItemPaneManager.unregisterInfoRow(rowID);
+			let success = Trellis.ItemPaneManager.unregisterInfoRow(rowID);
 			await unregisterPromise;
 			return success;
 		};
@@ -74,18 +74,18 @@ describe("Plugin API", function () {
 		});
 
 		afterEach(function () {
-			Zotero_Tabs.select("zotero-pane");
-			Zotero_Tabs.closeAll();
+			Trellis_Tabs.select("trellis-pane");
+			Trellis_Tabs.closeAll();
 		});
 
 		it("should render custom row and call onGetData hook", async function () {
 			initCache("onGetData");
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let getDataPromise = getCache("onGetData");
-			let rowID = Zotero.ItemPaneManager.registerInfoRow(defaultOption);
+			let rowID = Trellis.ItemPaneManager.registerInfoRow(defaultOption);
 			let result = await getDataPromise;
 
 			// Should render custom row
@@ -107,9 +107,9 @@ describe("Plugin API", function () {
 				},
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let rowID = await waitForRegister(option);
 
@@ -144,9 +144,9 @@ describe("Plugin API", function () {
 
 			initCache("onItemChange");
 
-			let bookItem = new Zotero.Item('book');
+			let bookItem = new Trellis.Item('book');
 			await bookItem.saveTx();
-			await ZoteroPane.selectItem(bookItem.id);
+			await TrellisPane.selectItem(bookItem.id);
 			
 			let itemChangePromise = getCache("onItemChange");
 			let rowID = await waitForRegister(option);
@@ -163,9 +163,9 @@ describe("Plugin API", function () {
 
 			initCache("onItemChange");
 			itemChangePromise = getCache("onItemChange");
-			let docItem = new Zotero.Item('document');
+			let docItem = new Trellis.Item('document');
 			await docItem.saveTx();
-			await ZoteroPane.selectItem(docItem.id);
+			await TrellisPane.selectItem(docItem.id);
 			result = await itemChangePromise;
 
 			// Should be enabled and not editable
@@ -176,7 +176,7 @@ describe("Plugin API", function () {
 
 			let file = getTestDataDirectory();
 			file.append('test.pdf');
-			let attachment = await Zotero.Attachments.importFromFile({
+			let attachment = await Trellis.Attachments.importFromFile({
 				file,
 				parentItemID: docItem.id
 			});
@@ -184,15 +184,15 @@ describe("Plugin API", function () {
 			initCache("onItemChange");
 			itemChangePromise = getCache("onItemChange");
 
-			await ZoteroPane.viewItems([attachment]);
-			let tabID = Zotero_Tabs.selectedID;
-			let reader = Zotero.Reader.getByTabID(tabID);
+			await TrellisPane.viewItems([attachment]);
+			let tabID = Trellis_Tabs.selectedID;
+			let reader = Trellis.Reader.getByTabID(tabID);
 			await reader._initPromise;
 			// Ensure context pane is open
-			ZoteroContextPane.collapsed = false;
+			TrellisContextPane.collapsed = false;
 			result = await itemChangePromise;
 
-			let itemDetails = ZoteroContextPane.context._getItemContext(tabID);
+			let itemDetails = TrellisContextPane.context._getItemContext(tabID);
 			rowElem = itemDetails.getPane("info").querySelector(`[data-custom-row-id="${CSS.escape(rowID)}"]`);
 			valueElem = rowElem.querySelector(".value");
 
@@ -214,9 +214,9 @@ describe("Plugin API", function () {
 				position: "end",
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			// Row at start
 			let rowID = await waitForRegister(startOption);
@@ -249,9 +249,9 @@ describe("Plugin API", function () {
 				editable: false,
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			let rowID = await waitForRegister(defaultOption);
 
@@ -289,9 +289,9 @@ describe("Plugin API", function () {
 				multiline: false,
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let rowID = await waitForRegister(defaultOption);
 
@@ -329,9 +329,9 @@ describe("Plugin API", function () {
 				nowrap: false,
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let rowID = await waitForRegister(defaultOption);
 
@@ -362,9 +362,9 @@ describe("Plugin API", function () {
 		});
 
 		it("should refresh custom row value", async function () {
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let rowID = await waitForRegister(defaultOption);
 
@@ -381,7 +381,7 @@ describe("Plugin API", function () {
 			let notifyPromise = waitForNotifierEvent("refresh", "infobox");
 
 			// Manually refresh the row
-			Zotero.ItemPaneManager.refreshInfoRow(rowID);
+			Trellis.ItemPaneManager.refreshInfoRow(rowID);
 			await notifyPromise;
 
 			assert.equal(oldValue, valueElem.value);
@@ -390,11 +390,11 @@ describe("Plugin API", function () {
 		});
 
 		it("should render custom row value after item change", async function () {
-			// https://github.com/zotero/zotero/issues/4874
+			// https://github.com/trellis/trellis/issues/4874
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let rowID = await waitForRegister(defaultOption);
 
@@ -407,9 +407,9 @@ describe("Plugin API", function () {
 			initCache("onGetData");
 			let getDataPromise = getCache("onGetData");
 
-			let docItem = new Zotero.Item('document');
+			let docItem = new Trellis.Item('document');
 			await docItem.saveTx();
-			await ZoteroPane.selectItem(docItem.id);
+			await TrellisPane.selectItem(docItem.id);
 			await getDataPromise;
 
 			value = valueElem.value;
@@ -423,7 +423,7 @@ describe("Plugin API", function () {
 		// Only test hooks, as other column options are covered in item tree tests
 		let defaultOption = {
 			columnID: "default-test",
-			pluginID: "zotero@zotero.org",
+			pluginID: "trellis@trellis.org",
 			dataKey: "api-test",
 			label: "APITest",
 			dataProvider: (item) => {
@@ -436,7 +436,7 @@ describe("Plugin API", function () {
 		let waitForRegister = async (option) => {
 			initCache("dataProvider");
 			let getDataPromise = getCache("dataProvider");
-			let columnKey = Zotero.ItemTreeManager.registerColumn(option);
+			let columnKey = Trellis.ItemTreeManager.registerColumn(option);
 			await getDataPromise;
 			return columnKey;
 		};
@@ -459,19 +459,19 @@ describe("Plugin API", function () {
 
 			// Wait for column header to render
 			await waitForCallback(
-				() => !!doc.querySelector(`#zotero-items-tree .virtualized-table-header .cell.${CSS.escape(dataKey)}`),
+				() => !!doc.querySelector(`#trellis-items-tree .virtualized-table-header .cell.${CSS.escape(dataKey)}`),
 				100, 3);
 		};
 
 		let waitForUnregister = async (columnID) => {
 			let unregisterPromise = waitForNotifierEvent("refresh", "itemtree");
-			let success = Zotero.ItemTreeManager.unregisterColumn(columnID);
+			let success = Trellis.ItemTreeManager.unregisterColumn(columnID);
 			await unregisterPromise;
 			return success;
 		};
 
 		let getSelectedRowCell = (dataKey) => {
-			let cell = doc.querySelector(`#zotero-items-tree .row.selected .${CSS.escape(dataKey)}`);
+			let cell = doc.querySelector(`#trellis-items-tree .row.selected .${CSS.escape(dataKey)}`);
 			return cell;
 		};
 
@@ -480,14 +480,14 @@ describe("Plugin API", function () {
 		});
 
 		afterEach(function () {
-			Zotero_Tabs.select("zotero-pane");
-			Zotero_Tabs.closeAll();
+			Trellis_Tabs.select("trellis-pane");
+			Trellis_Tabs.closeAll();
 		});
 
 		it("should render custom column and call dataProvider hook", async function () {
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let columnKey = await waitForRegister(defaultOption);
 
@@ -524,9 +524,9 @@ describe("Plugin API", function () {
 				},
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 
 			let columnKey = await waitForRegister(option);
 
@@ -555,9 +555,9 @@ describe("Plugin API", function () {
 				}
 			});
 
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
-			await ZoteroPane.selectItem(item.id);
+			await TrellisPane.selectItem(item.id);
 			
 			let columnKey = await waitForRegister(option);
 
@@ -574,7 +574,7 @@ describe("Plugin API", function () {
 	describe("Custom menu", function () {
 		let defaultOption = {
 			menuID: "default-test",
-			pluginID: "zotero@zotero.org",
+			pluginID: "trellis@trellis.org",
 			menus: [{
 				menuType: "menuitem",
 				l10nID: "menu-print",
@@ -632,7 +632,7 @@ describe("Plugin API", function () {
 			let target = option.target;
 
 			initCache("onShowing");
-			let menuID = Zotero.MenuManager.registerMenu(option);
+			let menuID = Trellis.MenuManager.registerMenu(option);
 			assert.isString(menuID);
 
 			let popup;
@@ -660,7 +660,7 @@ describe("Plugin API", function () {
 				await simulateMenuClosed(popup);
 			}
 
-			assert.isTrue(Zotero.MenuManager.unregisterMenu(menuID));
+			assert.isTrue(Trellis.MenuManager.unregisterMenu(menuID));
 		}
 
 		beforeEach(async function () {
@@ -668,8 +668,8 @@ describe("Plugin API", function () {
 		});
 
 		afterEach(function () {
-			Zotero_Tabs.select("zotero-pane");
-			Zotero_Tabs.closeAll();
+			Trellis_Tabs.select("trellis-pane");
+			Trellis_Tabs.closeAll();
 		});
 
 		it("should register custom menu and call hooks", async function () {
@@ -700,7 +700,7 @@ describe("Plugin API", function () {
 			initCache("onHiding");
 			initCache("onHidden");
 			initCache("onCommand");
-			let menuID = Zotero.MenuManager.registerMenu(option);
+			let menuID = Trellis.MenuManager.registerMenu(option);
 			assert.isString(menuID);
 
 			let popup = doc.querySelector("#menu_FilePopup");
@@ -722,11 +722,11 @@ describe("Plugin API", function () {
 			]);
 
 			// Unregister the menu
-			assert.isTrue(Zotero.MenuManager.unregisterMenu(menuID));
+			assert.isTrue(Trellis.MenuManager.unregisterMenu(menuID));
 
 			// After unregistering and re-opening the popup, the menu should not exist
 			popup.addEventListener("popupshown", () => {
-				assert.notExists(popup.querySelector('.zotero-custom-menu-item'));
+				assert.notExists(popup.querySelector('.trellis-custom-menu-item'));
 			}, { once: true });
 
 			// Since the event is manually dispatched, the above listener will be triggered before the promise resolves
@@ -785,7 +785,7 @@ describe("Plugin API", function () {
 			let epubItem = await importFileAttachment('stub.epub');
 			let snapshotItem = await importFileAttachment('test.html');
 
-			let menuID = Zotero.MenuManager.registerMenu(option);
+			let menuID = Trellis.MenuManager.registerMenu(option);
 			assert.isString(menuID);
 			let popup = doc.querySelector("#menu_FilePopup");
 
@@ -814,9 +814,9 @@ describe("Plugin API", function () {
 			await simulateMenuClosed(popup);
 
 			// Switch to PDF tab
-			await ZoteroPane.viewItems([pdfItem]);
-			let pdfTabID = Zotero_Tabs.selectedID;
-			await Zotero.Reader.getByTabID(pdfTabID)._initPromise;
+			await TrellisPane.viewItems([pdfItem]);
+			let pdfTabID = Trellis_Tabs.selectedID;
+			await Trellis.Reader.getByTabID(pdfTabID)._initPromise;
 			await simulateMenuOpen(popup);
 			// Should show PDF and anyReader menu items
 			assertMenuVisibility(popup, {
@@ -829,9 +829,9 @@ describe("Plugin API", function () {
 			await simulateMenuClosed(popup);
 
 			// Switch to EPUB tab
-			await ZoteroPane.viewItems([epubItem]);
-			let epubTabID = Zotero_Tabs.selectedID;
-			await Zotero.Reader.getByTabID(epubTabID)._initPromise;
+			await TrellisPane.viewItems([epubItem]);
+			let epubTabID = Trellis_Tabs.selectedID;
+			await Trellis.Reader.getByTabID(epubTabID)._initPromise;
 			await simulateMenuOpen(popup);
 			// Should show EPUB and anyReader menu items
 			assertMenuVisibility(popup, {
@@ -844,9 +844,9 @@ describe("Plugin API", function () {
 			await simulateMenuClosed(popup);
 
 			// Switch to Snapshot tab
-			await ZoteroPane.viewItems([snapshotItem]);
-			let snapshotTabID = Zotero_Tabs.selectedID;
-			await Zotero.Reader.getByTabID(snapshotTabID)._initPromise;
+			await TrellisPane.viewItems([snapshotItem]);
+			let snapshotTabID = Trellis_Tabs.selectedID;
+			await Trellis.Reader.getByTabID(snapshotTabID)._initPromise;
 			await simulateMenuOpen(popup);
 			// Should show Snapshot and anyReader menu items
 			assertMenuVisibility(popup, {
@@ -859,7 +859,7 @@ describe("Plugin API", function () {
 			await simulateMenuClosed(popup);
 
 			// Unregister the menu
-			assert.isTrue(Zotero.MenuManager.unregisterMenu(menuID));
+			assert.isTrue(Trellis.MenuManager.unregisterMenu(menuID));
 		});
 
 		it("should register recursive submenu", async function () {
@@ -888,7 +888,7 @@ describe("Plugin API", function () {
 			initCache("onCommand");
 			initCache("onShowing");
 
-			let menuID = Zotero.MenuManager.registerMenu(option);
+			let menuID = Trellis.MenuManager.registerMenu(option);
 			assert.isString(menuID);
 
 			let popup = doc.querySelector("#menu_FilePopup");
@@ -910,7 +910,7 @@ describe("Plugin API", function () {
 			context = await getCache("onCommand");
 			assert.exists(context, "Submenu command context should exist");
 
-			assert.isTrue(Zotero.MenuManager.unregisterMenu(menuID));
+			assert.isTrue(Trellis.MenuManager.unregisterMenu(menuID));
 		});
 
 		it("should register main window menu", async function () {
@@ -937,8 +937,8 @@ describe("Plugin API", function () {
 			let menuTargetMap = {
 				"main/library/item": {
 					popupSelector: () => {
-						ZoteroPane.onItemsContextMenuOpen(new MouseEvent("contextmenu"), 0, 0);
-						return doc.querySelector("#zotero-itemmenu");
+						TrellisPane.onItemsContextMenuOpen(new MouseEvent("contextmenu"), 0, 0);
+						return doc.querySelector("#trellis-itemmenu");
 					},
 					contextKeys: [
 						...defaultContextKeys,
@@ -949,8 +949,8 @@ describe("Plugin API", function () {
 				},
 				"main/library/collection": {
 					popupSelector: () => {
-						ZoteroPane.onCollectionsContextMenuOpen(new MouseEvent("contextmenu"), 0, 0);
-						return doc.querySelector("#zotero-collectionmenu");
+						TrellisPane.onCollectionsContextMenuOpen(new MouseEvent("contextmenu"), 0, 0);
+						return doc.querySelector("#trellis-collectionmenu");
 					},
 					contextKeys: [
 						...defaultContextKeys,
@@ -983,8 +983,8 @@ describe("Plugin API", function () {
 			let menuTargetMap = {
 				"main/tab": {
 					popupSelector: async () => {
-						let tabID = Zotero_Tabs.selectedID;
-						return Zotero_Tabs._openMenu(0, 0, tabID);
+						let tabID = Trellis_Tabs.selectedID;
+						return Trellis_Tabs._openMenu(0, 0, tabID);
 					},
 					contextKeys: [
 						...defaultContextKeys,
@@ -993,10 +993,10 @@ describe("Plugin API", function () {
 				},
 				"itemPane/info/row": {
 					popupSelector: async () => {
-						let item = new Zotero.Item('book');
+						let item = new Trellis.Item('book');
 						await item.saveTx();
-						await ZoteroPane.selectItem(item.id);
-						let itemDetails = ZoteroPane.itemPane._itemDetails;
+						await TrellisPane.selectItem(item.id);
+						let itemDetails = TrellisPane.itemPane._itemDetails;
 						let infoBox = itemDetails.getPane("info");
 						let row = infoBox.querySelector("#itembox-field-value-title");
 						row.focus();
@@ -1005,7 +1005,7 @@ describe("Plugin API", function () {
 							cancelable: true,
 						});
 						row.dispatchEvent(event);
-						let popup = infoBox.querySelector("#zotero-field-menu");
+						let popup = infoBox.querySelector("#trellis-field-menu");
 						return popup;
 					},
 					contextKeys: [
@@ -1018,10 +1018,10 @@ describe("Plugin API", function () {
 				},
 				"sidenav/locate": {
 					popupSelector: async () => {
-						let item = new Zotero.Item('book');
+						let item = new Trellis.Item('book');
 						await item.saveTx();
-						await ZoteroPane.selectItem(item.id);
-						let sidenav = ZoteroPane.itemPane._sidenav;
+						await TrellisPane.selectItem(item.id);
+						let sidenav = TrellisPane.itemPane._sidenav;
 						let button = sidenav.querySelector("toolbarbutton[data-action='locate']");
 						let event = new MouseEvent("mousedown", {
 							bubbles: true,
@@ -1068,16 +1068,16 @@ describe("Plugin API", function () {
 				}
 			};
 			
-			let item = new Zotero.Item('book');
+			let item = new Trellis.Item('book');
 			await item.saveTx();
 			let pdfItem = await importFileAttachment('test.pdf', {
 				parentItemID: item.id
 			});
-			await ZoteroPane.viewItems([pdfItem]);
-			await Zotero.Reader.getByTabID(Zotero_Tabs.selectedID)._initPromise;
-			ZoteroContextPane.collapsed = false;
-			ZoteroContextPane.sidenav._contextNotesPaneVisible = true;
-			let contextPane = ZoteroContextPane.context;
+			await TrellisPane.viewItems([pdfItem]);
+			await Trellis.Reader.getByTabID(Trellis_Tabs.selectedID)._initPromise;
+			TrellisContextPane.collapsed = false;
+			TrellisContextPane.sidenav._contextNotesPaneVisible = true;
+			let contextPane = TrellisContextPane.context;
 			let notesContext = contextPane._getCurrentNotesContext();
 			let notesList = notesContext.notesList;
 
@@ -1096,7 +1096,7 @@ describe("Plugin API", function () {
 			};
 
 			let pdfAttachment = await importFileAttachment('test.pdf');
-			let reader = await Zotero.Reader.open(pdfAttachment.id, undefined, {
+			let reader = await Trellis.Reader.open(pdfAttachment.id, undefined, {
 				openInWindow: true,
 			});
 			await reader._initPromise;
@@ -1112,27 +1112,27 @@ describe("Plugin API", function () {
 		});
 
 		it("should remove menu DOM elements on plugin shutdown", async function () {
-			let pluginID = "test-plugin@zotero.org";
+			let pluginID = "test-plugin@trellis.org";
 			let option = Object.assign({}, defaultOption, {
 				pluginID,
 				target: "main/menubar/file",
 			});
 
 			initCache("onShowing");
-			let menuID = Zotero.MenuManager.registerMenu(option);
+			let menuID = Trellis.MenuManager.registerMenu(option);
 			assert.isString(menuID);
 
 			let popup = doc.querySelector("#menu_FilePopup");
 			await simulateMenuOpen(popup);
 			await getCache("onShowing");
 
-			let menuSelector = `.zotero-custom-menu-item.${CSS.escape(menuID)}`;
+			let menuSelector = `.trellis-custom-menu-item.${CSS.escape(menuID)}`;
 			assert.exists(popup.querySelector(menuSelector),
 				"Menu element should exist after registration");
 
 			await simulateMenuClosed(popup);
 
-			await Zotero.MenuManager._menuManager._unregisterByPluginID(pluginID);
+			await Trellis.MenuManager._menuManager._unregisterByPluginID(pluginID);
 
 			assert.notExists(popup.querySelector(menuSelector),
 				"Menu element should be removed after plugin shutdown");
@@ -1150,22 +1150,22 @@ describe("Plugin API", function () {
 			initCache("onShowing");
 			initCache("onCommand");
 
-			let menuID = Zotero.MenuManager.registerMenu(option);
+			let menuID = Trellis.MenuManager.registerMenu(option);
 			assert.isString(menuID);
 
-			let popup = doc.querySelector("#zotero-itemmenu");
+			let popup = doc.querySelector("#trellis-itemmenu");
 
 			let promise = new Promise((resolve) => {
 				popup.addEventListener("popupshown", resolve, { once: true });
 			});
 
-			ZoteroPane.onItemsContextMenuOpen(new MouseEvent("contextmenu"), 0, 0);
+			TrellisPane.onItemsContextMenuOpen(new MouseEvent("contextmenu"), 0, 0);
 			await promise;
 
-			let groupedMenus = popup.querySelector(".zotero-custom-menu-group-submenu");
+			let groupedMenus = popup.querySelector(".trellis-custom-menu-group-submenu");
 			assert.exists(groupedMenus, "Grouped menus should be created");
 
-			assert.isTrue(Zotero.MenuManager.unregisterMenu(menuID));
+			assert.isTrue(Trellis.MenuManager.unregisterMenu(menuID));
 		});
 	});
 });

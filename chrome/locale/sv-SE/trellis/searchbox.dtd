@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Namn:">
+
+<!ENTITY trellis.search.searchInLibrary "Sök i bibliotek:">
+
+<!ENTITY trellis.search.joinMode.prefix "Hitta">
+<!ENTITY trellis.search.joinMode.any "vilken som helst">
+<!ENTITY trellis.search.joinMode.all "alla">
+<!ENTITY trellis.search.joinMode.suffix "av följande:">
+
+<!ENTITY trellis.search.recursive.label "Sök i undermappar">
+<!ENTITY trellis.search.noChildren "Visa bara poster på högsta nivå">
+<!ENTITY trellis.search.includeParentsAndChildren "Inkludera över- och underordnade poster för matchande poster">
+
+<!ENTITY trellis.search.textModes.phrase "Fras">
+<!ENTITY trellis.search.textModes.phraseBinary "Fras (inkl. binära filer)">
+<!ENTITY trellis.search.textModes.regexp "Reguljärt uttryck">
+<!ENTITY trellis.search.textModes.regexpCS "Reguljärt uttryck (matcha gemener/VERSALER)">
+
+<!ENTITY trellis.search.date.units.days "dagar">
+<!ENTITY trellis.search.date.units.months "månader">
+<!ENTITY trellis.search.date.units.years "år">
+
+<!ENTITY trellis.search.search "Sök">
+<!ENTITY trellis.search.clear "Rensa">
+<!ENTITY trellis.search.saveSearch "Spara sökning">

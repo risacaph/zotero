@@ -2,11 +2,11 @@
 
 var { NetUtil } = ChromeUtils.importESModule("resource://gre/modules/NetUtil.sys.mjs");
 
-describe("Zotero.Server", function () {
+describe("Trellis.Server", function () {
 	var serverPath;
 	
 	before(function* () {
-		serverPath = 'http://127.0.0.1:' + Zotero.Server.port;
+		serverPath = 'http://127.0.0.1:' + Trellis.Server.port;
 	});
 	
 	describe('DataListener', function () {
@@ -15,7 +15,7 @@ describe("Zotero.Server", function () {
 				it("integer return", async function () {
 					var called = false;
 					
-					var endpoint = "/test/" + Zotero.Utilities.randomString();
+					var endpoint = "/test/" + Trellis.Utilities.randomString();
 					var handler = function () {};
 					handler.prototype = {
 						supportedMethods: ["POST"],
@@ -28,9 +28,9 @@ describe("Zotero.Server", function () {
 							return 204;
 						}
 					};
-					Zotero.Server.Endpoints[endpoint] = handler;
+					Trellis.Server.Endpoints[endpoint] = handler;
 					
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"POST",
 						serverPath + endpoint,
 						{
@@ -52,7 +52,7 @@ describe("Zotero.Server", function () {
 				it("array return", async function () {
 					var called = false;
 					
-					var endpoint = "/test/" + Zotero.Utilities.randomString();
+					var endpoint = "/test/" + Trellis.Utilities.randomString();
 					var handler = function () {};
 					handler.prototype = {
 						supportedMethods: ["GET"],
@@ -64,9 +64,9 @@ describe("Zotero.Server", function () {
 							return [201, "text/plain", "Test"];
 						}
 					};
-					Zotero.Server.Endpoints[endpoint] = handler;
+					Trellis.Server.Endpoints[endpoint] = handler;
 					
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"GET",
 						serverPath + endpoint,
 						{
@@ -83,7 +83,7 @@ describe("Zotero.Server", function () {
 				it("integer promise return", async function () {
 					var called = false;
 					
-					var endpoint = "/test/" + Zotero.Utilities.randomString();
+					var endpoint = "/test/" + Trellis.Utilities.randomString();
 					var handler = function () {};
 					handler.prototype = {
 						supportedMethods: ["GET"],
@@ -95,9 +95,9 @@ describe("Zotero.Server", function () {
 							return 204;
 						}
 					};
-					Zotero.Server.Endpoints[endpoint] = handler;
+					Trellis.Server.Endpoints[endpoint] = handler;
 					
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"GET",
 						serverPath + endpoint,
 						{
@@ -112,7 +112,7 @@ describe("Zotero.Server", function () {
 				it("array promise return", async function () {
 					var called = false;
 					
-					var endpoint = "/test/" + Zotero.Utilities.randomString();
+					var endpoint = "/test/" + Trellis.Utilities.randomString();
 					var handler = function () {};
 					handler.prototype = {
 						supportedMethods: ["GET"],
@@ -124,9 +124,9 @@ describe("Zotero.Server", function () {
 							return [201, "text/plain", "Test"];
 						}
 					};
-					Zotero.Server.Endpoints[endpoint] = handler;
+					Trellis.Server.Endpoints[endpoint] = handler;
 					
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"GET",
 						serverPath + endpoint,
 						{
@@ -144,10 +144,10 @@ describe("Zotero.Server", function () {
 			describe("multipart/form-data", function () {
 				it("should support text", async function () {
 					var called = false;
-					var endpoint = "/test/" + Zotero.Utilities.randomString();
+					var endpoint = "/test/" + Trellis.Utilities.randomString();
 
-					Zotero.Server.Endpoints[endpoint] = function () {};
-					Zotero.Server.Endpoints[endpoint].prototype = {
+					Trellis.Server.Endpoints[endpoint] = function () {};
+					Trellis.Server.Endpoints[endpoint].prototype = {
 						supportedMethods: ["POST"],
 						supportedDataTypes: ["multipart/form-data"],
 						
@@ -174,7 +174,7 @@ describe("Zotero.Server", function () {
 					let formData = new FormData();
 					formData.append("foo", "bar");
 
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"POST",
 						serverPath + endpoint,
 						{
@@ -191,13 +191,13 @@ describe("Zotero.Server", function () {
 				
 				it("should support binary", async function () {
 					let called = false;
-					let endpoint = "/test/" + Zotero.Utilities.randomString();
+					let endpoint = "/test/" + Trellis.Utilities.randomString();
 					let file = getTestDataDirectory();
 					file.append('test.png');
-					let contents = await Zotero.File.getBinaryContentsAsync(file);
+					let contents = await Trellis.File.getBinaryContentsAsync(file);
 
-					Zotero.Server.Endpoints[endpoint] = function () {};
-					Zotero.Server.Endpoints[endpoint].prototype = {
+					Trellis.Server.Endpoints[endpoint] = function () {};
+					Trellis.Server.Endpoints[endpoint].prototype = {
 						supportedMethods: ["POST"],
 						supportedDataTypes: ["multipart/form-data"],
 						
@@ -225,7 +225,7 @@ describe("Zotero.Server", function () {
 					let formData = new FormData();
 					formData.append("image", image);
 
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"POST",
 						serverPath + endpoint,
 						{
@@ -242,10 +242,10 @@ describe("Zotero.Server", function () {
 
 				it("should support an empty body", async function () {
 					var called = false;
-					var endpoint = "/test/" + Zotero.Utilities.randomString();
+					var endpoint = "/test/" + Trellis.Utilities.randomString();
 
-					Zotero.Server.Endpoints[endpoint] = function () {};
-					Zotero.Server.Endpoints[endpoint].prototype = {
+					Trellis.Server.Endpoints[endpoint] = function () {};
+					Trellis.Server.Endpoints[endpoint].prototype = {
 						supportedMethods: ["POST"],
 						supportedDataTypes: ["multipart/form-data"],
 
@@ -272,7 +272,7 @@ describe("Zotero.Server", function () {
 					let formData = new FormData();
 					formData.append("foo", "");
 
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"POST",
 						serverPath + endpoint,
 						{
@@ -290,13 +290,13 @@ describe("Zotero.Server", function () {
 			describe("application/pdf", function () {
 				it('should provide a stream', async function () {
 					let called = false;
-					let endpoint = "/test/" + Zotero.Utilities.randomString();
+					let endpoint = "/test/" + Trellis.Utilities.randomString();
 					let file = getTestDataDirectory();
 					file.append('test.pdf');
-					let contents = await Zotero.File.getBinaryContentsAsync(file);
+					let contents = await Trellis.File.getBinaryContentsAsync(file);
 
-					Zotero.Server.Endpoints[endpoint] = function () {};
-					Zotero.Server.Endpoints[endpoint].prototype = {
+					Trellis.Server.Endpoints[endpoint] = function () {};
+					Trellis.Server.Endpoints[endpoint].prototype = {
 						supportedMethods: ["POST"],
 						supportedDataTypes: ["application/pdf"],
 
@@ -315,7 +315,7 @@ describe("Zotero.Server", function () {
 
 					let pdf = await File.createFromFileName(OS.Path.join(getTestDataDirectory().path, 'test.pdf'));
 
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"POST",
 						serverPath + endpoint,
 						{
@@ -332,7 +332,7 @@ describe("Zotero.Server", function () {
 
 				it('should decode UTF-8 quoted-printable encoded custom headers', async function () {
 					let called = false;
-					let endpoint = "/test/" + Zotero.Utilities.randomString();
+					let endpoint = "/test/" + Trellis.Utilities.randomString();
 					let file = getTestDataDirectory();
 					file.append('test.pdf');
 
@@ -358,8 +358,8 @@ describe("Zotero.Server", function () {
 					}
 					let rfc2047Header = `=?utf-8?Q?${encoded}?=`;
 
-					Zotero.Server.Endpoints[endpoint] = function () {};
-					Zotero.Server.Endpoints[endpoint].prototype = {
+					Trellis.Server.Endpoints[endpoint] = function () {};
+					Trellis.Server.Endpoints[endpoint].prototype = {
 						supportedMethods: ["POST"],
 						supportedDataTypes: ["application/pdf"],
 
@@ -376,7 +376,7 @@ describe("Zotero.Server", function () {
 
 					let pdf = await File.createFromFileName(OS.Path.join(getTestDataDirectory().path, 'test.pdf'));
 
-					let req = await Zotero.HTTP.request(
+					let req = await Trellis.HTTP.request(
 						"POST",
 						serverPath + endpoint,
 						{

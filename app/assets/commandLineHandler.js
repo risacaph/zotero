@@ -1,4 +1,4 @@
-let { CommandLineOptions, TestOptions } = ChromeUtils.importESModule("chrome://zotero/content/modules/commandLineOptions.mjs");
+let { CommandLineOptions, TestOptions } = ChromeUtils.importESModule("chrome://trellis/content/modules/commandLineOptions.mjs");
 
 // Only allow BrowserContentHandler to open a new window if this is the initial launch,
 // meaning our CLH isn't registered yet.
@@ -7,11 +7,11 @@ if (cmdLine.state != Ci.nsICommandLine.STATE_INITIAL_LAUNCH) {
 }
 
 // Force debug output to window
-if (cmdLine.handleFlag("ZoteroDebug", false)) {
+if (cmdLine.handleFlag("TrellisDebug", false)) {
 	CommandLineOptions.forceDebugLog = 2;
 }
 // Force debug output to text console
-else if (cmdLine.handleFlag("ZoteroDebugText", false)) {
+else if (cmdLine.handleFlag("TrellisDebugText", false)) {
 	CommandLineOptions.forceDebugLog = 1;
 }
 // Pressing Ctrl-C via the terminal is interpreted as a crash, and after three crashes
@@ -30,14 +30,14 @@ if (CommandLineOptions.url) {
 }
 
 var processTestOptions = false;
-if (cmdLine.handleFlag("ZoteroTest", false)) {
+if (cmdLine.handleFlag("TrellisTest", false)) {
 	CommandLineOptions.test = true;
 	processTestOptions = true;
 }
-if (cmdLine.handleFlag("ZoteroAutomatedTest", false)) {
+if (cmdLine.handleFlag("TrellisAutomatedTest", false)) {
 	CommandLineOptions.automatedTest = true;
 }
-if (cmdLine.handleFlag("ZoteroSkipBundledFiles", false)) {
+if (cmdLine.handleFlag("TrellisSkipBundledFiles", false)) {
 	CommandLineOptions.skipBundledFiles = true;
 }
 
@@ -51,12 +51,12 @@ if (processTestOptions) {
 	TestOptions.startAt = cmdLine.handleFlagWithParam("startAtTestFile", false);
 	TestOptions.stopAt = cmdLine.handleFlagWithParam("stopAtTestFile", false);
 	TestOptions.grep = cmdLine.handleFlagWithParam("grep", false);
-	TestOptions.timeout = cmdLine.handleFlagWithParam("ZoteroTestTimeout", false);
+	TestOptions.timeout = cmdLine.handleFlagWithParam("TrellisTestTimeout", false);
 	TestOptions.retries = cmdLine.handleFlagWithParam("retries", false) || 0;
 	
 	Services.ww.openWindow(
 		null,
-		"chrome://zotero-unit/content/runtests.html",
+		"chrome://trellis-unit/content/runtests.html",
 		"_blank",
 		"chrome,dialog=no,all",
 		Cc["@mozilla.org/array;1"].createInstance(Ci.nsIMutableArray)

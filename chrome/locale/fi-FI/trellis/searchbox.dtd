@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Nimi:">
+
+<!ENTITY trellis.search.searchInLibrary "Etsi kirjastosta:">
+
+<!ENTITY trellis.search.joinMode.prefix "Vertaa">
+<!ENTITY trellis.search.joinMode.any "mikä tahansa">
+<!ENTITY trellis.search.joinMode.all "kaikki">
+<!ENTITY trellis.search.joinMode.suffix "seuraavista:">
+
+<!ENTITY trellis.search.recursive.label "Etsi alikansioista">
+<!ENTITY trellis.search.noChildren "Näytä vain ylätason kohteet">
+<!ENTITY trellis.search.includeParentsAndChildren "Ota mukaan vertailua vastaavien kohteiden isäntä- ja lapsikohteet">
+
+<!ENTITY trellis.search.textModes.phrase "Lause">
+<!ENTITY trellis.search.textModes.phraseBinary "Lause (sis. binääritiedostot)">
+<!ENTITY trellis.search.textModes.regexp "Säännöllinen lauseke">
+<!ENTITY trellis.search.textModes.regexpCS "Säännöllinen lauseke (merkkikokoriippuvainen)">
+
+<!ENTITY trellis.search.date.units.days "päivää">
+<!ENTITY trellis.search.date.units.months "kuukautta">
+<!ENTITY trellis.search.date.units.years "vuotta">
+
+<!ENTITY trellis.search.search "Hae">
+<!ENTITY trellis.search.clear "Tyhjennä">
+<!ENTITY trellis.search.saveSearch "Tallenna haku">

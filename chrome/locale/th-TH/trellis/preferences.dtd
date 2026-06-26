@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "ตั้งค่าพึงใจสำหรับ Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "วิธีใช้">
+
+<!ENTITY trellis.preferences.default "ค่าโดยปริยาย:">
+<!ENTITY trellis.preferences.items "รายการ">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Custom…">
+
+<!ENTITY trellis.preferences.prefpane.general "ทั่วไป">
+
+<!ENTITY trellis.preferences.interface "Interface">
+<!ENTITY trellis.preferences.fileHandling "File Handling">
+<!ENTITY trellis.preferences.automaticSnapshots "เก็บภาพหน้าจอโดยอัตโนมัติเมื่อสร้างรายการจากหน้าเว็บ">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "แนบแฟ้ม PDF และแฟ้มอื่นโดยอัตโนมัติเมื่อบันทึกรายการ">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Rename linked files">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Open PDFs using">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "System Default">
+
+<!ENTITY trellis.preferences.miscellaneous "อื่น ๆ">
+<!ENTITY trellis.preferences.autoUpdate "Automatically check for updated translators and styles">
+<!ENTITY trellis.preferences.updateNow "อัพเดตเดี๋ยวนี้">
+<!ENTITY trellis.preferences.reportTranslationFailure "รายงานตัวช่วยแปลเว็บไซต์ใช้งานไม่ได้">
+<!ENTITY trellis.preferences.parseRISRefer "Use Trellis for downloaded BibTeX/RIS/Refer files">
+<!ENTITY trellis.preferences.automaticTags "สร้างแท็กด้วยคำสำคัญและหัวเรื่องโดยอัตโนมัติ">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "ล้างรายการในถังขยะที่เคยลบนานกว่า ">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "วันที่แล้ว">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Show tabs as">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Creator - Year - Title">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Title - Creator - Year">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Filename">
+
+<!ENTITY trellis.preferences.groups "กลุ่ม">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "เมื่อสำเนารายการระหว่างไลบรารี ให้รวมถึง:">
+<!ENTITY trellis.preferences.groups.childNotes "ข้อความรายการลูก">
+<!ENTITY trellis.preferences.groups.childFiles "ภาพหน้าจอและแฟ้มที่นำเข้าของรายการลูก">
+<!ENTITY trellis.preferences.groups.annotations "annotations">
+<!ENTITY trellis.preferences.groups.childLinks "ลิงค์ลูก">
+<!ENTITY trellis.preferences.groups.tags "แท็ก">
+
+<!ENTITY trellis.preferences.feeds "Feeds">
+<!ENTITY trellis.preferences.feeds.sorting.label "Sorting:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Newest items first">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Oldest items first">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Feed Defaults">
+
+<!ENTITY trellis.preferences.prefpane.sync "ประสานข้อมูล">
+<!ENTITY trellis.preferences.sync.username "ชื่อผู้ใช้: ">
+<!ENTITY trellis.preferences.sync.password "รหัสผ่าน: ">
+<!ENTITY trellis.preferences.sync.createAccount "สร้างบัญชีผู้ใช้">
+<!ENTITY trellis.preferences.sync.lostPassword "รหัสผ่านหาย?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "ประสานข้อมูลโดยอัตโนมัติ">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Sync full-text content">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis can sync the full-text content of files in your Trellis libraries with trellis.org and other linked devices, allowing you to easily search for your files wherever you are. The full-text content of your files will not be shared publicly.">
+<!ENTITY trellis.preferences.sync.about "เกี่ยวกับการประสานข้อมูล">
+<!ENTITY trellis.preferences.sync.fileSyncing "ประสานข้อมูลในแฟ้ม">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "ประสานข้อมูลในแฟ้มแนบในไลบรารีโดยใช้ ">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "ดาวน์โหลดแฟ้ม">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "ที่ช่วงการประสานข้อมูล">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "ตามที่ต้องการ">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Verify Server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Libraries to Sync">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Choose Libraries…">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "ประสานข้อมูล">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "ไลบรารี่">
+<!ENTITY trellis.preferences.sync.reset.warning1 "การดำเนินการต่อไปนี้ใช้ในบางกรณีเท่านั้น สถานการณ์เฉพาะและไม่ควรใช้สำหรับแก้ปัญหาทั่วไป ในหลายกรณีการเริ่มต้นใหม่จะก่อให้เกิดปัญหามากขึ้น ดูที่">
+<!ENTITY trellis.preferences.sync.reset.warning2 "ตัวเลือกตั้งค่าประสานข้อมูลใหม่">
+<!ENTITY trellis.preferences.sync.reset.warning3 "สำหรับข้อมูลเพิ่มเติม">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Reset Data Sync History">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Merge local data with remote data, ignoring sync history">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Restore from Online Library">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Overwrite local Trellis data with data from the online library.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Replace Online Library">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Overwrite online library with local Trellis data">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "ตั้งค่าประวัติการประสานข้อมูลแฟ้มใหม่">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Compare all attachment files with the storage service">
+<!ENTITY trellis.preferences.sync.reset "ตั้งค่าใหม่">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Reset…">
+
+
+<!ENTITY trellis.preferences.prefpane.search "ค้นหา">
+<!ENTITY trellis.preferences.search.fulltextCache "แคชข้อความทั้งหมด">
+<!ENTITY trellis.preferences.search.indexStats "สถิติดัชนี">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "ทำดัชนีแล้ว:">
+<!ENTITY trellis.preferences.search.indexStats.partial "บางส่วน:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "ไม่ทำดัชนี:">
+<!ENTITY trellis.preferences.search.indexStats.words "คำ:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "จำนวนอักขระสูงสุดที่จะทำดัชนีต่อแฟ้ม:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "จำนวนหน้าสูงสุดที่จะทำดัชนีต่อแฟ้ม:">
+
+<!ENTITY trellis.preferences.prefpane.export "ส่งออก">
+
+<!ENTITY trellis.preferences.citationOptions.caption "ตัวเลือกการอ้างอิง">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "รวม URLs ของบทความในเอกสารอ้างอิง">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "เมื่อไม่ใช้งานตัวเลือกนี้ Trellis จะรวม URLs เมื่ออ้างถึงวารสาร นิตยสารและหนังสือพิมพ์เฉพาะกรณีที่บทความนั้นไม่มีเลขหน้าเท่านั้น">
+
+<!ENTITY trellis.preferences.quickCopy.caption "ทำสำเนาอย่างเร็ว">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Item Format:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Note Format:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "ทำสำเนาเป็น HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "ตั้งค่าที่ตั้งเฉพาะ:">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "โดเมน/พาธ">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(e.g., wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "รูปแบบ">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "ภาษา">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "ไม่ใช้การสำเนาแบบเร็วเมื่อลากรายการมากกว่า ">
+
+<!ENTITY trellis.preferences.prefpane.cite "อ้างอิง">
+<!ENTITY trellis.preferences.cite.wordProcessors "โปรแกรมประมวลคำ">
+<!ENTITY trellis.preferences.styleEditor "Style Editor">
+<!ENTITY trellis.preferences.stylePreview "Style Preview">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "ตัวจัดการรูปแบบ">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "ชื่อเรื่อง">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "ปรับเป็นรุ่นปัจจุบันแล้ว">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Save to Trellis (address bar icon)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "โฟกัสที่ช่องไลบรารี">
+<!ENTITY trellis.preferences.keys.quicksearch "ค้นหาแบบเร็ว">
+<!ENTITY trellis.preferences.keys.newItem "Create a New Item">
+<!ENTITY trellis.preferences.keys.newNote "Create a New Note">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Mark All Feed Items As Read/Unread">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "ทำสำเนารายการอ้างอิงที่เลือกไว้ไปยังคลิปบอร์ด">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "ทำสำเนารายการที่เลือกไปยังคลิปบอร์ด">
+<!ENTITY trellis.preferences.keys.importFromClipboard "นำเข้าจากคลิปบอร์ด">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Changes take effect after restart">
+
+<!ENTITY trellis.preferences.prefpane.proxies "พร็อกซี่">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "ตัวเลือกของพร็อกซี่">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis จะเปลี่ยนทิศทางคำขอผ่านการบันทึกพร็อกซี่แบบเงียบๆ ดูที่">
+<!ENTITY trellis.preferences.proxies.desc_link "เอกสารพร็อกซี่">
+<!ENTITY trellis.preferences.proxies.desc_after_link "สำหรับข้อมูลเพิ่มเติม">
+<!ENTITY trellis.preferences.proxies.transparent "เปิดการเปลี่ยนทิศทางพร็อกซี่">
+<!ENTITY trellis.preferences.proxies.autoRecognize "จดจำพร็อกซี่โดยอัตโนมัติ">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Show notification when redirecting through a proxy">
+<!ENTITY trellis.preferences.proxies.disableByDomain "เลิกใช้การเปลี่ยนทิศทางพร็อกซี่เมื่อชื่อโดเมนมีคำว่า">
+<!ENTITY trellis.preferences.proxies.configured "ติดตั้งค่าพร็อกซี่">
+<!ENTITY trellis.preferences.proxies.hostname "ชื่อแม่ข่าย">
+<!ENTITY trellis.preferences.proxies.scheme "แบบแผน">
+
+<!ENTITY trellis.preferences.proxies.multiSite "หลายที่ตั้ง">
+<!ENTITY trellis.preferences.proxies.autoAssociate "เชื่อมโยงแม่ข่ายใหม่โดยอัตโนมัติ">
+<!ENTITY trellis.preferences.proxies.variables "คุณอาจใช้ตัวแปรต่อไปนี้ในแบบแผนพร็อกซี่ของคุณ:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - ชื่อแม่ข่ายของที่ตั้งพร็อกซี่ (เช่น www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - เส้นทางของหน้าพร็อกซี่ไม่ใส่เครื่องหมายทับ &quot;/&quot; นำหน้า (เช่น about/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - เส้นทางไดเร็กทอรี่ (เช่น about/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - ชื่อแฟ้มข้อมูล (เช่น index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - คำใดๆ">
+
+<!ENTITY trellis.preferences.prefpane.advanced "ขั้นสูง">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "แฟ้มและโฟลเดอร์">
+<!ENTITY trellis.preferences.advanced.keys "คีย์ลัด">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Advanced Configuration">
+
+<!ENTITY trellis.preferences.prefpane.locate "หาที่ตั้ง">
+<!ENTITY trellis.preferences.locate.locateEngineManager "ตัวจัดการเครื่องมือค้นหาบทความ">
+<!ENTITY trellis.preferences.locate.description "รายละเอียด">
+<!ENTITY trellis.preferences.locate.name "ชื่อ">
+<!ENTITY trellis.preferences.locate.addDescription "To add a Lookup Engine that is not on the list, visit the desired search engine in your browser and select “Add” from Trellis’s Locate menu.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "ใช้ค่าโดยปริยาย">
+
+<!ENTITY trellis.preferences.charset "รหัสอักขระ">
+<!ENTITY trellis.preferences.charset.importCharset "นำเข้ารหัสอักขระ">
+<!ENTITY trellis.preferences.charset.displayExportOption "แสดงตัวเลือกรหัสอักขระเมื่อส่งออก">
+
+<!ENTITY trellis.preferences.dataDir "ที่ตั้งของพื้นที่เก็บข้อมูล">
+<!ENTITY trellis.preferences.dataDir.useProfile "ใช้ไดเรคทอรีของโพรไฟล์">
+<!ENTITY trellis.preferences.dataDir.custom "กำหนดเอง:">
+<!ENTITY trellis.preferences.dataDir.choose "เลือก...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(specified via command line)">
+<!ENTITY trellis.preferences.dataDir.reveal "แสดงไดเรคทอรีข้อมูล">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrate To New Default Location…">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "เชื่อมโยงสารบบแฟ้มแนบแล้ว">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis จะใช้เส้นทางซึ่งสัมพันธ์กันสำหรับเชื่อมโยงแฟ้มแนบในสารบบฐาน ช่วยให้คุณเข้าถึงแฟ้มจากคอมพิวเตอร์เครื่องอื่นได้ตราบที่โครงสร้างแฟ้มในสารบบฐานยังคงเหมือนเดิม">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "สารบบฐาน:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "เลือก...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "ย้อนกลับสู่เส้นทางแท้จริง…">
+
+<!ENTITY trellis.preferences.dbMaintenance "การบำรุงรักษาฐานข้อมูล">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "ตรวจสอบความถูกต้องของฐานข้อมูล">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Reset Translators and Styles…">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Reset Translators…">
+
+<!ENTITY trellis.preferences.configEditor "Config Editor">

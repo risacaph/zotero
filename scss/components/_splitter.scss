@@ -68,9 +68,9 @@ splitter {
 	}
 }
 
-#zotero-items-splitter,
-#zotero-context-splitter,
-#zotero-context-splitter-stacked {
+#trellis-items-splitter,
+#trellis-context-splitter,
+#trellis-context-splitter-stacked {
 	&[orient=vertical] {
 		&[state="collapsed"] {
 			margin-bottom: -1px;

@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Ja">
+<!ENTITY trellis.general.no "Nej">
+<!ENTITY trellis.general.optional "(Valfritt)">
+<!ENTITY trellis.general.note "Anteckning:">
+<!ENTITY trellis.general.selectAll "Markera allt">
+<!ENTITY trellis.general.deselectAll "Avmarkera allt">
+<!ENTITY trellis.general.edit "Ändra">
+<!ENTITY trellis.general.delete "Radera">
+<!ENTITY trellis.general.moveToTrash "Flytta till papperskorgen">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Avbryt">
+<!ENTITY trellis.general.refresh "Uppdatera">
+<!ENTITY trellis.general.saveAs "Spara som…">
+<!ENTITY trellis.general.options "Alternativ">
+<!ENTITY trellis.general.advancedOptions.label "Avancerade alternativ">
+<!ENTITY trellis.general.tools "Verktyg">
+<!ENTITY trellis.general.more "Mera">
+<!ENTITY trellis.general.moreInformation "Mer information">
+<!ENTITY trellis.general.loading "Laddar...">
+<!ENTITY trellis.general.close "Stäng">
+<!ENTITY trellis.general.minimize "Minimera">
+<!ENTITY trellis.general.other "Annat…">
+<!ENTITY trellis.general.bigger "Större">
+<!ENTITY trellis.general.smaller "Mindre">
+<!ENTITY trellis.general.reset "Återställ">
+
+
+<!ENTITY trellis.errorReport.title "Trellis-felrapporting">
+<!ENTITY trellis.errorReport.submissionInProgress "Var vänlig vänta medan felrapporten skickas.">
+<!ENTITY trellis.errorReport.submitted "Felrapporten har skickats.">
+<!ENTITY trellis.errorReport.reportID "Rapport-ID:">
+<!ENTITY trellis.errorReport.postToForums "Skriv ett meddelande på Trelliss forum (forums.trellis.org) med detta rapport-ID, en beskrivning av problemet, och vad man behöver göra för att få samma fel igen.">
+<!ENTITY trellis.errorReport.notReviewed "Felrapporter brukar inte kontrolleras om ingen skriver om dem på forumen.">
+
+<!ENTITY trellis.upgrade.title "Trellis uppgraderingsguide">
+<!ENTITY trellis.upgrade.newVersionInstalled "Du har installerat en ny version av Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "Din Trellisdatabas måste uppgraderas för att fungera med den nya versionen.">
+<!ENTITY trellis.upgrade.autoBackup "Din existerande databas kommer att säkerhetskopieras innan några ändringar görs.">
+<!ENTITY trellis.upgrade.majorUpgrade "Detta är en stor uppgradering.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Var säker på att du läst igenom">
+<!ENTITY trellis.upgrade.majorUpgradeLink "uppgraderingsinstruktionerna">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "innan du fortsätter.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Var vänlig vänta tills uppgraderingsprocessen avslutas. Det kan ta några minuter.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Trellis lyckades uppdatera databasen">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Gå till">
+<!ENTITY trellis.upgrade.changeLogLink "Changelog">
+<!ENTITY trellis.upgrade.changeLogAfterLink "för att se vad som är nytt eller ändrat.">
+
+<!ENTITY trellis.tabs.notes.label "Anteckningar">
+<!ENTITY trellis.tabs.attachments.label "Bilagor">
+
+<!ENTITY trellis.toolbar.duplicate.label "Visa dubletter">
+<!ENTITY trellis.collections.showUnfiledItems "Visa oregistererade källor">
+<!ENTITY trellis.collections.showRetractedItems "Visa återtagna källor">
+
+<!ENTITY trellis.items.itemType "Källtyp">
+<!ENTITY trellis.items.creator_column "Skapare">
+<!ENTITY trellis.items.year_column "År">
+<!ENTITY trellis.items.dateModified_column "Ändrat datum">
+<!ENTITY trellis.items.moreColumns.label "Fler kolumner">
+<!ENTITY trellis.items.restoreColumnOrder.label "Återställ kolumnordning">
+
+<!ENTITY trellis.items.menu.showInLibrary "Visa i bibliotek">
+<!ENTITY trellis.items.menu.attach.note "Lägg till anteckning">
+<!ENTITY trellis.items.menu.attach "Lägg till bilaga">
+<!ENTITY trellis.items.menu.attach.link.uri "Bifoga länk till URI...">
+<!ENTITY trellis.items.menu.attach.file "Bifoga Lagrad kopia av filen...">
+<!ENTITY trellis.items.menu.attach.fileLink "Bifoga länk till fil...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Återställ till bibliotek">
+<!ENTITY trellis.items.menu.duplicateItem "Duplicera vald post">
+<!ENTITY trellis.items.menu.mergeItems "Sammanfoga källor…">
+<!ENTITY trellis.items.menu.unrecognize "Ångra avläsning av metadata">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Välj vilken version av källan som ska vara utgångspunkt:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Välj fält att behålla från andra versioner av källan:">
+
+<!ENTITY trellis.toolbar.newItem.label "Ny post">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Mer">
+<!ENTITY trellis.toolbar.lookup.label "Lägg till källa via referensnummer">
+<!ENTITY trellis.toolbar.removeItem.label "Radera källa...">
+<!ENTITY trellis.toolbar.newGroup "Ny grupp...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Ny undersamling...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Ny sparad sökning...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Töm papperskorg">
+<!ENTITY trellis.toolbar.tagSelector.label "Visa/göm etikettväljare">
+<!ENTITY trellis.toolbar.actions.label "Åtgärder">
+<!ENTITY trellis.toolbar.import.label "Importera...">
+<!ENTITY trellis.toolbar.importFromClipboard "Importera från urklipp">
+<!ENTITY trellis.toolbar.export.label "Exportera bibliotek...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF skanning">
+<!ENTITY trellis.toolbar.preferences.label "Inställningar...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Hjälp och dokumentation">
+<!ENTITY trellis.toolbar.about.label "Om Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Avancerad sökning">
+<!ENTITY trellis.toolbar.openURL.label "Hitta">
+<!ENTITY trellis.toolbar.openURL.tooltip "Hitta på ditt lokala bibliotek">
+
+<!ENTITY trellis.toolbar.feeds.new "Nytt flöde">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Från URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Från OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Redigera flöde…">
+
+<!ENTITY trellis.item.add "Lägg till">
+<!ENTITY trellis.item.attachment.file.show "Visa fil">
+<!ENTITY trellis.item.textTransform "Omvandla text">
+<!ENTITY trellis.item.textTransform.titlecase "Engelsk Titelskrivning">
+<!ENTITY trellis.item.textTransform.sentencecase "Vanlig versalisering">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Kopiera som URL">
+<!ENTITY trellis.item.deletePermanently "Radera permanent…">
+
+<!ENTITY trellis.item.tags.removeAll "Radera alla etiketter…">
+
+<!ENTITY trellis.toolbar.newNote "Ny anteckning">
+<!ENTITY trellis.toolbar.note.standalone "Ny fristående anteckning">
+<!ENTITY trellis.toolbar.note.child "Lägg till underliggande anteckning">
+<!ENTITY trellis.toolbar.lookup "Sök med referensnummer...">
+<!ENTITY trellis.toolbar.attachment.linked "Länk till fil...">
+<!ENTITY trellis.toolbar.attachment.add "Lagra kopia av fil...">
+<!ENTITY trellis.toolbar.attachment.weblink "Spara länk till aktuell sida">
+<!ENTITY trellis.toolbar.attachment.snapshot "Ta lokal kopia av aktuell sida">
+<!ENTITY trellis.toolbar.context.item "Källa">
+<!ENTITY trellis.toolbar.context.notes "Anteckningar">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Inga etiketter att visa">
+<!ENTITY trellis.tagSelector.loadingTags "Laddar etiketter…">
+<!ENTITY trellis.tagSelector.showAutomatic "Visa automatiskt">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Visa alla etiketter i detta bibliotek">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Ta bort automatiska etiketter i detta bibliotek…">
+<!ENTITY trellis.tagSelector.clearAll "Avmarkera alla">
+<!ENTITY trellis.tagSelector.assignColor "Ange färg…">
+<!ENTITY trellis.tagSelector.renameTag "Ändra namn på etikett...">
+<!ENTITY trellis.tagSelector.deleteTag "Radera etikett...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Ange etikettens färg och plats">
+<!ENTITY trellis.tagColorChooser.color "Färg:">
+<!ENTITY trellis.tagColorChooser.position "Plats:">
+<!ENTITY trellis.tagColorChooser.setColor "Ställ in färg">
+<!ENTITY trellis.tagColorChooser.removeColor "Ta bort färg">
+
+<!ENTITY trellis.lookup.description "Ange ISBN, DOI, PMID, arXiv ID, eller ADS Bibcode för att lägga till ditt bibliotek:">
+<!ENTITY trellis.lookup.button.search "Sök">
+
+<!ENTITY trellis.createParent.title "Skapa föräldra-källa">
+<!ENTITY trellis.createParent.button.manual "Manuell inmatning">
+
+<!ENTITY trellis.selectitems.title "Markera källor">
+<!ENTITY trellis.selectitems.intro.label "Välj vilka källor du vill lägga till i ditt bibliotek">
+<!ENTITY trellis.selectitems.cancel.label "Ångra">
+<!ENTITY trellis.selectitems.select.label "Ok">
+
+<!ENTITY trellis.bibliography.title "Skapa referens/källförteckning">
+<!ENTITY trellis.bibliography.style.label "Referensstil">
+<!ENTITY trellis.bibliography.manageStyles "Hantera stilar…">
+<!ENTITY trellis.bibliography.locale.label "Språk:">
+<!ENTITY trellis.bibliography.outputMode "Utmatningsläge">
+<!ENTITY trellis.bibliography.bibliography "Källförteckning">
+<!ENTITY trellis.bibliography.outputMethod "Utmatningsmetod">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Spara som RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Spara som HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopiera till urklipp">
+<!ENTITY trellis.bibliography.print.label "Skriv ut">
+
+<!ENTITY trellis.integration.docPrefs.title "Dokumentinställningar">
+<!ENTITY trellis.integration.addEditCitation.title "Lägg till/redigera källhänvisning">
+<!ENTITY trellis.integration.editBibliography.title "Redigera källförteckning">
+
+<!ENTITY trellis.progress.title "Förlopp">
+
+<!ENTITY trellis.import "Importera">
+<!ENTITY trellis.import.whereToImportFrom "Varifrån vill du importera?">
+<!ENTITY trellis.import.source.file "En fil (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importerar…">
+<!ENTITY trellis.import.database "Databas">
+<!ENTITY trellis.import.lastModified "Senast ändrad">
+<!ENTITY trellis.import.size "Storlek">
+<!ENTITY trellis.import.createCollection "Lägg importerade samlingar och källor i en ny samling">
+<!ENTITY trellis.import.fileHandling "Filhantering">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Exportera...">
+<!ENTITY trellis.exportOptions.format.label "Format:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Inställningar för källfångare">
+
+<!ENTITY trellis.charset.label "Teckenkodning">
+<!ENTITY trellis.moreEncodings.label "Fler teckenkodningar">
+
+<!ENTITY trellis.citation.keepSorted.label "Håll källor sorterade">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Prefix:">
+<!ENTITY trellis.citation.suffix.label "Suffix:">
+<!ENTITY trellis.citation.editorWarning.label "Varning: Om du redigerar en referens i redigeraren så kommer den inte längre uppdateras för att spegla förändringar i databasen eller referensstilen.">
+
+<!ENTITY trellis.richText.italic.label "Kursiv">
+<!ENTITY trellis.richText.bold.label "Fet">
+<!ENTITY trellis.richText.underline.label "Understrykning">
+<!ENTITY trellis.richText.superscript.label "Upphöjd">
+<!ENTITY trellis.richText.subscript.label "Nedsänkt">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Lägg till kommentar">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Göm alla kommentarer">
+<!ENTITY trellis.annotate.toolbar.expand.label "Visa alla kommentarer">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Framhäv text">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Sluta framhäv text">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Visa källor som:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Fotnoter">
+<!ENTITY trellis.integration.prefs.endnotes.label "Slutnoter">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Lagra källor som:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Bokmärken">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Bokmärken kan delas mellan Word och LibreOffice, men kan orsaka fel om de ändras av misstag. De kan inte infogas i fotnoter.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Uppdatera referenser automatiskt">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Referenser med väntande uppdateringar markeras i dokumentet">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Slå av uppdateringar för att snabba upp infogandet av referenser i stora dokument. Klicka på Uppdatera för att manuellt uppdatera referenserna.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Använd MEDLINE:s tidskriftsförkortningar">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Tidskriftsförkortningsfältet kommer att ignoreras.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Byt till en annan ordbehandlare…">
+
+<!ENTITY trellis.integration.showEditor.label "Visa redigerare">
+<!ENTITY trellis.integration.classicView.label "Klassisk vy">
+
+<!ENTITY trellis.integration.references.label "Referenser i källförteckningen">
+
+<!ENTITY trellis.sync.stop "Stoppa synkronisering">
+<!ENTITY trellis.sync.error "Synkroniseringsfel">
+<!ENTITY trellis.sync.storage.progress "Förlopp:">
+<!ENTITY trellis.sync.storage.downloads "Nedladdningar:">
+<!ENTITY trellis.sync.storage.uploads "Uppladdningar:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Följande etikett i ditt Trellis-bibliotek är för lång för att synkronisera med servern:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Synkroniserade etiketter måste vara kortare än 256 tecken.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Du kan antingen dela upp etiketten i flera etiketter, förkorta den, eller radera den.">
+<!ENTITY trellis.sync.longTagFixer.split "Dela">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Dela vid det">
+<!ENTITY trellis.sync.longTagFixer.character "tecken">
+<!ENTITY trellis.sync.longTagFixer.characters "tecken">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Omarkerade etiketter kommer inte att sparas.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Etiketten kommer att raderas från alla källor.">
+
+<!ENTITY trellis.merge.title "Hantera konflikt">
+<!ENTITY trellis.merge.of "av">
+<!ENTITY trellis.merge.deleted "Raderad">
+
+<!ENTITY trellis.proxy.recognized.title "Proxy hittad">
+<!ENTITY trellis.proxy.recognized.warning "Lägg bara till proxies från ditt bibliotek, din skola, eller från ett känt företag">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Andra proxyservrar kan innehålla elakartad kod som kan låtsas vara hemsidor du litar på.">
+<!ENTITY trellis.proxy.recognized.disable.label "Skicka inte automatiskt vidare frågor genom tidigare funna proxies">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignorera">
+
+<!ENTITY trellis.feedSettings.title "Flödesinställningar">
+<!ENTITY trellis.feedSettings.saveButton.label "Spara">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Titel:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Uppdatera flöde varje">
+<!ENTITY trellis.feedSettings.refresh.label2 "timme(ar)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Ta bort olästa flödesobjekt efter">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dag(ar)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Ta bort lästa flödesobjekt efter">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dag(ar)">
+
+<!ENTITY trellis.rtfScan.title "RTF-scanning">
+<!ENTITY trellis.rtfScan.cancel.label "Ångra">
+<!ENTITY trellis.rtfScan.citation.label "Referens">
+<!ENTITY trellis.rtfScan.itemName.label "Källnamn">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Överblivna källhänvisningar">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Mångtydiga källhänvisningar">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Källhänvisningar kopplade till källa">
+<!ENTITY trellis.rtfScan.introPage.label "Introduktion">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis kan automatiskt läsa av och omformatera hänvisningar och sätta in en bibliografi i RTF-filer. Välj en RTF-fil nedan för att börja.">
+<!ENTITY trellis.rtfScan.introPage.description2 "Välj en RTF-fil nedan att ladda in och en att spara till:">
+<!ENTITY trellis.rtfScan.scanPage.label "Letar efter hänvisningar">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis letar i ditt dokument efter hänvisningar.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Bekräfta hänvisade källor">
+<!ENTITY trellis.rtfScan.citationsPage.description "Gå igenom listan nedan över igenkända källhänvisningar för att försäkra dig om att Trellis har valt motsvarande källor korrekt. Eventuella överblivna eller mångtydiga källhänvisningar måste åtgärdas innan nästa steg.">
+<!ENTITY trellis.rtfScan.stylePage.label "Dokumentformat">
+<!ENTITY trellis.rtfScan.formatPage.label "Justerar källhänvisningar">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis bearbetar och justerar din RTF-fil. ">
+<!ENTITY trellis.rtfScan.completePage.label "RTF-scanning färdig">
+<!ENTITY trellis.rtfScan.completePage.description "Ditt dokument har blivit bearbetat. Försäkra dig om att det är korrekt formaterat.">
+<!ENTITY trellis.rtfScan.inputFile.label "Infil">
+<!ENTITY trellis.rtfScan.outputFile.label "Utfil">
+
+<!ENTITY trellis.file.choose.label "Välj fil...">
+<!ENTITY trellis.file.noneSelected.label "Ingen fil vald">
+
+<!ENTITY trellis.attachLink.title "Bifoga länk till URI">
+<!ENTITY trellis.attachLink.label.link "Länk:">
+<!ENTITY trellis.attachLink.label.title "Titel:">
+
+<!ENTITY trellis.context.addChildNote "Lägg till anteckning för källa">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Lägg till anteckning för källa från kommentarer">
+<!ENTITY trellis.context.addStandaloneNote "Lägg till fristående anteckning">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Lägg till fristående anteckning från kommentarer">
+<!ENTITY trellis.context.editInWindow "Redigera i eget fönster">
+
+<!ENTITY trellis.pdfReader.firstPage "Första sidan">
+<!ENTITY trellis.pdfReader.lastPage "Sista sidan">
+<!ENTITY trellis.pdfReader.back "Bakåt">
+<!ENTITY trellis.pdfReader.forward "Framåt">
+<!ENTITY trellis.pdfReader.handTool "Handverktyget">
+<!ENTITY trellis.pdfReader.verticalScrolling "Lodrät rullning">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Vågrät rullning">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Överlappande rullning">
+<!ENTITY trellis.pdfReader.noSpreads "Inga uppslag">
+<!ENTITY trellis.pdfReader.oddSpreads "Udda uppslag">
+<!ENTITY trellis.pdfReader.evenSpreads "Jämna uppslag">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zooma in">
+<!ENTITY trellis.pdfReader.zoomOut "Zooma ut">
+<!ENTITY trellis.pdfReader.zoomReset "Återställ zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Anpassa storlek automatiskt">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Anpassa till sidbredd">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zooma till sidhöjd">
+<!ENTITY trellis.pdfReader.splitVertically "Dela vertikalt">
+<!ENTITY trellis.pdfReader.splitHorizontally "Dela horisontellt">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

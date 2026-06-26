@@ -1,24 +1,24 @@
-describe("Zotero.Library", function () {
+describe("Trellis.Library", function () {
 	describe("#constructor()", function () {
 		it("should allow no arguments", function () {
-			assert.doesNotThrow(() => new Zotero.Library());
+			assert.doesNotThrow(() => new Trellis.Library());
 		});
 	});
 	
 	describe("#libraryID", function () {
 		it("should not allow setting a library ID", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			assert.throws(() => library.libraryID = 1);
 		});
 		it("should return a  library ID for a saved library", function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.isAbove(library.libraryID, 0);
 		})
 	});
 	
 	describe("#libraryType", function () {
 		it("should not allow creating a non-basic library", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			assert.throws(() => library.libraryType = 'group', /^Invalid library type /);
 			
 		});
@@ -27,9 +27,9 @@ describe("Zotero.Library", function () {
 			assert.throws(() => library.libraryType = 'feed');
 		});
 		it("should not allow creating new unique libraries", async function () {
-			for (let i=0; i<Zotero.Library.prototype.fixedLibraries.length; i++) {
-				let libraryType = Zotero.Library.prototype.fixedLibraries[i];
-				assert.throws(function () {new Zotero.Library({ libraryType })}, /^Cannot create library of type /, 'cannot create a new ' + libraryType + ' library');
+			for (let i=0; i<Trellis.Library.prototype.fixedLibraries.length; i++) {
+				let libraryType = Trellis.Library.prototype.fixedLibraries[i];
+				assert.throws(function () {new Trellis.Library({ libraryType })}, /^Cannot create library of type /, 'cannot create a new ' + libraryType + ' library');
 			}
 		});
 	});
@@ -44,7 +44,7 @@ describe("Zotero.Library", function () {
 	
 	describe("#libraryVersion", function () {
 		it("should be settable to increasing values", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			assert.throws(() => library.libraryVersion = -2);
 			assert.throws(() => library.libraryVersion = "a");
 			assert.throws(() => library.libraryVersion = 1.1);
@@ -52,12 +52,12 @@ describe("Zotero.Library", function () {
 			assert.doesNotThrow(() => library.libraryVersion = 5);
 		});
 		it("should not be possible to decrement", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			library.libraryVersion = 5;
 			assert.throws(() => library.libraryVersion = 0);
 		});
 		it("should be possible to set to -1", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			library.libraryVersion = 5;
 			assert.doesNotThrow(() => library.libraryVersion = -1);
 		});
@@ -65,21 +65,21 @@ describe("Zotero.Library", function () {
 	
 	describe("#editable", function () {
 		it("should return editable status", function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.isTrue(library.editable, 'user library is editable');
 		});
 		it("should allow setting editable status", async function () {
 			let library = await createGroup({ editable: true });
 			
 			assert.isTrue(library.editable);
-			assert.isTrue(Zotero.Libraries.isEditable(library.libraryID), "sets editable in cache to true");
-			assert.equal(((await Zotero.DB.valueQueryAsync("SELECT editable FROM libraries WHERE libraryID=?", library.libraryID))), 1)
+			assert.isTrue(Trellis.Libraries.isEditable(library.libraryID), "sets editable in cache to true");
+			assert.equal(((await Trellis.DB.valueQueryAsync("SELECT editable FROM libraries WHERE libraryID=?", library.libraryID))), 1)
 			
 			library.editable = false;
 			await library.saveTx();
 			assert.isFalse(library.editable);
-			assert.isFalse(Zotero.Libraries.isEditable(library.libraryID), "sets editable in cache to false");
-			assert.equal(((await Zotero.DB.valueQueryAsync("SELECT editable FROM libraries WHERE libraryID=?", library.libraryID))), 0)
+			assert.isFalse(Trellis.Libraries.isEditable(library.libraryID), "sets editable in cache to false");
+			assert.equal(((await Trellis.DB.valueQueryAsync("SELECT editable FROM libraries WHERE libraryID=?", library.libraryID))), 0)
 		});
 		
 		it("should also set filesEditable to false", async function () {
@@ -89,22 +89,22 @@ describe("Zotero.Library", function () {
 			library.editable = false;
 			await library.saveTx();
 			assert.isFalse(library.filesEditable);
-			assert.equal(((await Zotero.DB.valueQueryAsync("SELECT filesEditable FROM libraries WHERE libraryID=?", library.libraryID))), 0)
+			assert.equal(((await Trellis.DB.valueQueryAsync("SELECT filesEditable FROM libraries WHERE libraryID=?", library.libraryID))), 0)
 		});
 		
 		it("should not be settable for user libraries", async function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.throws(function () {library.editable = false}, /^Cannot change _libraryEditable for user library$/, "does not allow setting user library as not editable");
 		});
 	});
 	
 	describe("#filesEditable", function () {
 		it("should always return true for user library", function () {
-			assert.isTrue(Zotero.Libraries.userLibrary.filesEditable);
+			assert.isTrue(Trellis.Libraries.userLibrary.filesEditable);
 		});
 		
 		it("should return files editable status", function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.isTrue(library.filesEditable, 'user library is files editable');
 		});
 		
@@ -112,23 +112,23 @@ describe("Zotero.Library", function () {
 			let library = await createGroup({ filesEditable: true });
 			
 			assert.isTrue(library.filesEditable);
-			assert.isTrue(Zotero.Libraries.isFilesEditable(library.libraryID), "sets files editable in cache to true");
+			assert.isTrue(Trellis.Libraries.isFilesEditable(library.libraryID), "sets files editable in cache to true");
 			
 			library.filesEditable = false;
 			await library.saveTx();
 			assert.isFalse(library.filesEditable);
-			assert.isFalse(Zotero.Libraries.isFilesEditable(library.libraryID), "sets files editable in cache to false");
+			assert.isFalse(Trellis.Libraries.isFilesEditable(library.libraryID), "sets files editable in cache to false");
 		});
 		
 		it("should not be settable for user libraries", async function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.throws(function () {library.filesEditable = false}, /^Cannot change _libraryFilesEditable for user library$/, "does not allow setting user library as not files editable");
 		});
 	});
 	
 	describe("#allowsLinkedFiles", function () {
 		it("should return true for personal library", function () {
-			assert.isTrue(Zotero.Libraries.userLibrary.allowsLinkedFiles);
+			assert.isTrue(Trellis.Libraries.userLibrary.allowsLinkedFiles);
 		});
 		
 		it("should return false for group libraries", async function () {
@@ -139,23 +139,23 @@ describe("Zotero.Library", function () {
 	
 	describe("#archived", function () {
 		it("should return archived status", function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.isFalse(library.archived, 'user library is not archived');
 		});
 		
 		it("should allow setting archived status", async function () {
 			let library = await createGroup({ editable: false, archived: true });
 			assert.isTrue(library.archived);
-			assert.equal(((await Zotero.DB.valueQueryAsync("SELECT archived FROM libraries WHERE libraryID=?", library.libraryID))), 1)
+			assert.equal(((await Trellis.DB.valueQueryAsync("SELECT archived FROM libraries WHERE libraryID=?", library.libraryID))), 1)
 			
 			library.archived = false;
 			await library.saveTx();
 			assert.isFalse(library.archived);
-			assert.equal(((await Zotero.DB.valueQueryAsync("SELECT archived FROM libraries WHERE libraryID=?", library.libraryID))), 0)
+			assert.equal(((await Trellis.DB.valueQueryAsync("SELECT archived FROM libraries WHERE libraryID=?", library.libraryID))), 0)
 		});
 		
 		it("should not be settable for user libraries", async function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.throws(() => library.archived = true, /^Cannot change _libraryArchived for user library$/, "does not allow setting user library as archived");
 		});
 		
@@ -167,31 +167,31 @@ describe("Zotero.Library", function () {
 	
 	describe("#save()", function () {
 		it("should require mandatory parameters to be set", async function () {
-			let library = new Zotero.Library({ editable: true, filesEditable: true });
+			let library = new Trellis.Library({ editable: true, filesEditable: true });
 			assert.equal((await getPromiseError(library.saveTx())).message, 'libraryType must be set before saving');
 			
 			// Required group params
-			let groupID = Zotero.Utilities.rand(1000, 10000);
+			let groupID = Trellis.Utilities.rand(1000, 10000);
 			let name = 'foo';
 			let description = '';
-			let version = Zotero.Utilities.rand(1000, 10000);
-			library = new Zotero.Group({ filesEditable: true, groupID, name, description, version });
+			let version = Trellis.Utilities.rand(1000, 10000);
+			library = new Trellis.Group({ filesEditable: true, groupID, name, description, version });
 			assert.equal((await getPromiseError(library.saveTx())).message, 'editable must be set before saving');
 			
-			library = new Zotero.Group({ editable: true, groupID, name, description, version });
+			library = new Trellis.Group({ editable: true, groupID, name, description, version });
 			assert.equal((await getPromiseError(library.saveTx())).message, 'filesEditable must be set before saving');
 			
-			library = new Zotero.Group({ editable: true, filesEditable: true, groupID, name, description, version });
+			library = new Trellis.Group({ editable: true, filesEditable: true, groupID, name, description, version });
 			await library.saveTx();
 		});
 		it("should save new library to DB", async function () {
 			let library = await createGroup({});
 			
 			assert.isAbove(library.libraryID, 0, "sets a libraryID");
-			assert.isTrue(Zotero.Libraries.exists(library.libraryID));
+			assert.isTrue(Trellis.Libraries.exists(library.libraryID));
 			assert.equal(library.libraryType, 'group');
 			
-			let inDB = await Zotero.DB.valueQueryAsync('SELECT COUNT(*) FROM libraries WHERE libraryID=?', library.libraryID);
+			let inDB = await Trellis.DB.valueQueryAsync('SELECT COUNT(*) FROM libraries WHERE libraryID=?', library.libraryID);
 			assert.ok(inDB, 'added to DB');
 		});
 		it("should save library changes to DB", async function () {
@@ -199,12 +199,12 @@ describe("Zotero.Library", function () {
 			
 			library.editable = false;
 			await library.saveTx();
-			assert.isFalse(Zotero.Libraries.isEditable(library.libraryID));
+			assert.isFalse(Trellis.Libraries.isEditable(library.libraryID));
 		});
 		
 		it("should initialize library after creation", async function () {
 			let library = await createGroup({});
-			Zotero.SyncedSettings.get(library.libraryID, "tagColors");
+			Trellis.SyncedSettings.get(library.libraryID, "tagColors");
 		});
 	});
 	describe("#erase()", function () {
@@ -214,9 +214,9 @@ describe("Zotero.Library", function () {
 			let libraryID = library.libraryID;
 			await library.eraseTx();
 			
-			assert.isFalse(Zotero.Libraries.exists(libraryID), "library no longer exists in cache");assert.isFalse(Zotero.Libraries.exists(libraryID));
+			assert.isFalse(Trellis.Libraries.exists(libraryID), "library no longer exists in cache");assert.isFalse(Trellis.Libraries.exists(libraryID));
 			
-			let inDB = await Zotero.DB.valueQueryAsync('SELECT COUNT(*) FROM libraries WHERE libraryID=?', libraryID);
+			let inDB = await Trellis.DB.valueQueryAsync('SELECT COUNT(*) FROM libraries WHERE libraryID=?', libraryID);
 			assert.notOk(inDB, 'removed from DB');
 		});
 		
@@ -227,12 +227,12 @@ describe("Zotero.Library", function () {
 		});
 		
 		it("should not allow erasing permanent libraries", async function () {
-			let library = Zotero.Libraries.get(Zotero.Libraries.userLibraryID);
+			let library = Trellis.Libraries.get(Trellis.Libraries.userLibraryID);
 			assert.equal((await getPromiseError(library.eraseTx())).message, "Cannot erase library of type 'user'");
 		});
 		
 		it("should not allow erasing unsaved libraries", async function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			assert.ok(await getPromiseError(library.eraseTx()));
 		});
 		it("should throw when accessing erased library methods, except for #libraryID and #name", async function () {
@@ -247,19 +247,19 @@ describe("Zotero.Library", function () {
 			let libraryID = group.libraryID;
 			
 			let collection = await createDataObject('collection', { libraryID });
-			assert.ok(await Zotero.Collections.getAsync(collection.id));
+			assert.ok(await Trellis.Collections.getAsync(collection.id));
 			
 			let item = await createDataObject('item', { libraryID });
-			assert.ok(await Zotero.Items.getAsync(item.id));
+			assert.ok(await Trellis.Items.getAsync(item.id));
 			
 			let search = await createDataObject('search', { libraryID });
-			assert.ok(await Zotero.Searches.getAsync(search.id));
+			assert.ok(await Trellis.Searches.getAsync(search.id));
 			
 			await group.eraseTx();
 			
-			assert.notOk(((await Zotero.Searches.getAsync(search.id))), 'search was unloaded');
-			assert.notOk(((await Zotero.Collections.getAsync(collection.id))), 'collection was unloaded');
-			assert.notOk(((await Zotero.Items.getAsync(item.id))), 'item was unloaded');
+			assert.notOk(((await Trellis.Searches.getAsync(search.id))), 'search was unloaded');
+			assert.notOk(((await Trellis.Collections.getAsync(collection.id))), 'collection was unloaded');
+			assert.notOk(((await Trellis.Items.getAsync(item.id))), 'item was unloaded');
 		});
 		
 		it("should delete attachment files", async function () {
@@ -289,7 +289,7 @@ describe("Zotero.Library", function () {
 	
 	describe("#hasCollections()", function () {
 		it("should throw if called before saving a library", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			assert.throws(() => library.hasCollections());
 		});
 		it("should stay up to date as collections are added and removed", async function () {
@@ -312,7 +312,7 @@ describe("Zotero.Library", function () {
 	});
 	describe("#hasSearches()", function () {
 		it("should throw if called before saving a library", function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			assert.throws(() => library.hasSearches());
 		});
 		it("should stay up to date as searches are added and removed", async function () {
@@ -335,7 +335,7 @@ describe("Zotero.Library", function () {
 	});
 	describe("#hasItems()", function () {
 		it("should throw if called before saving a library", async function () {
-			let library = new Zotero.Library();
+			let library = new Trellis.Library();
 			try {
 				await library.hasItems();
 				assert.isFalse(true, "Library#hasItems did not throw an error");
@@ -377,7 +377,7 @@ describe("Zotero.Library", function () {
 			
 			await group.saveTx();
 			
-			let dbTime = await Zotero.DB.valueQueryAsync('SELECT lastSync FROM libraries WHERE libraryID=?', group.libraryID);
+			let dbTime = await Trellis.DB.valueQueryAsync('SELECT lastSync FROM libraries WHERE libraryID=?', group.libraryID);
 			assert.equal(dbTime*1000, group.lastSync.getTime());
 		})
 	});

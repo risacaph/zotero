@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Ναι">
+<!ENTITY trellis.general.no "Όχι">
+<!ENTITY trellis.general.optional "(Προαιρετικό)">
+<!ENTITY trellis.general.note "Σημείωση:">
+<!ENTITY trellis.general.selectAll "Επιλογή όλων">
+<!ENTITY trellis.general.deselectAll "Αποεπιλογή όλων">
+<!ENTITY trellis.general.edit "Επεξεργασία">
+<!ENTITY trellis.general.delete "Διαγραφή">
+<!ENTITY trellis.general.moveToTrash "Μετακίνηση στον Κάδο απορριμμάτων">
+<!ENTITY trellis.general.ok "ΟΚ">
+<!ENTITY trellis.general.cancel "Ακύρωση">
+<!ENTITY trellis.general.refresh "Ανανέωση">
+<!ENTITY trellis.general.saveAs "Αποθήκευση ως...">
+<!ENTITY trellis.general.options "Επιλογές">
+<!ENTITY trellis.general.advancedOptions.label "Προχωρημένες επιλογές">
+<!ENTITY trellis.general.tools "Εργαλεία">
+<!ENTITY trellis.general.more "Περισσότερα">
+<!ENTITY trellis.general.moreInformation "Περισσότερες πληροφορίες">
+<!ENTITY trellis.general.loading "Φόρτωση...">
+<!ENTITY trellis.general.close "Κλείσιμο">
+<!ENTITY trellis.general.minimize "Ελαχιστοποίηση">
+<!ENTITY trellis.general.other "Άλλο-α ...">
+<!ENTITY trellis.general.bigger "Μεγαλύτερο">
+<!ENTITY trellis.general.smaller "Μικρότερο">
+<!ENTITY trellis.general.reset "Επαναφορά">
+
+
+<!ENTITY trellis.errorReport.title "Αναφορά σφάλματος Trellis">
+<!ENTITY trellis.errorReport.submissionInProgress "Περιμένετε μέχρι να υποβληθεί η αναφορά σφάλματος.">
+<!ENTITY trellis.errorReport.submitted "Η αναφορά σας σφάλματος υποβλήθηκε.">
+<!ENTITY trellis.errorReport.reportID "Ταυτότητα αναφοράς:">
+<!ENTITY trellis.errorReport.postToForums "Παρακαλώ, στείλτε ένα μήνυμα στο φόρουμ του Trellis (forums.trellis.org) με αυτή την Ταυτότητα Σφάλματος, μια περιγραφή του προβλήματος και τα απαραίτητα βήματα για την αναπαραγωγή του.">
+<!ENTITY trellis.errorReport.notReviewed "Οι αναφορές σφαλμάτων δεν εξετάζονται αν πρώτα δεν αναφερθούν στα φόρα.">
+
+<!ENTITY trellis.upgrade.title "Μάγος Αναβάθμισης Trellis">
+<!ENTITY trellis.upgrade.newVersionInstalled "Εγκαταστήσατε μια νέα έκδοση του Trellis.">
+<!ENTITY trellis.upgrade.upgradeRequired "Η βάση δεδομένων του Trellis πρέπει να αναβαθμιστεί ώστε να λειτουργεί με την νέα έκδοση.">
+<!ENTITY trellis.upgrade.autoBackup "Θα δημιουργηθεί αυτόματα αντίγραφο ασφαλείας της υπάρχουσας βάσης δεδομένων σας, πριν γίνουν οι οποιεσδήποτε αλλαγές.">
+<!ENTITY trellis.upgrade.majorUpgrade "Αυτή είναι μια κύρια αναβάθμιση.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Βεβαιωθείτε ότι έχετε επανεξετάσει τις">
+<!ENTITY trellis.upgrade.majorUpgradeLink "οδηγίες αναβάθμισης">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "πριν συνεχίσετε.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Παρακαλώ περιμένετε ώστε να ολοκληρωθεί η διαδικασία αναβάθμισης. Αυτό μπορεί να διαρκέσει μερικά λεπτά.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Η βάση δεδομένων σας Trellis αναβαθμίστηκε επιτυχώς.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Παρακαλώ διαβάστε">
+<!ENTITY trellis.upgrade.changeLogLink "τον κατάλογο των αλλαγών (changelog)">
+<!ENTITY trellis.upgrade.changeLogAfterLink "για να δείτε τι νεότερο υπάρχει.">
+
+<!ENTITY trellis.tabs.notes.label "Σημειώσεις">
+<!ENTITY trellis.tabs.attachments.label "Προσαρτήματα">
+
+<!ENTITY trellis.toolbar.duplicate.label "Εμφάνιση διπλότυπων">
+<!ENTITY trellis.collections.showUnfiledItems "Εμφάνιση Αταξινόμητων στοιχείων">
+<!ENTITY trellis.collections.showRetractedItems "Εμφάνιση Ανακληθέντων Στοιχείων">
+
+<!ENTITY trellis.items.itemType "Τύπος στοιχείου">
+<!ENTITY trellis.items.creator_column "Δημιουργός">
+<!ENTITY trellis.items.year_column "Έτος">
+<!ENTITY trellis.items.dateModified_column "Ημερομηνία τροποποίησης">
+<!ENTITY trellis.items.moreColumns.label "Περισσότερες στήλες">
+<!ENTITY trellis.items.restoreColumnOrder.label "Αποκατάσταση διάταξης στηλών">
+
+<!ENTITY trellis.items.menu.showInLibrary "Εμφάνιση στην Βιβλιοθήκη">
+<!ENTITY trellis.items.menu.attach.note "Προσθήκη σημείωσης">
+<!ENTITY trellis.items.menu.attach "Προσθήκη προσαρτήματος">
+<!ENTITY trellis.items.menu.attach.link.uri "Προσάρτηση Συνδέσμου προς το URI...">
+<!ENTITY trellis.items.menu.attach.file "Προσκόληση αποθηκευμένου αντιγράφου αρχείου...">
+<!ENTITY trellis.items.menu.attach.fileLink "Προσκόληση συνδέσμου προς αρχείο...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Αποκατάσταση στην Βιβλιοθήκη">
+<!ENTITY trellis.items.menu.duplicateItem "Δημιουργία Διπλότυπου για το Στοιχείο">
+<!ENTITY trellis.items.menu.mergeItems "Συνένωση Στοιχείων...">
+<!ENTITY trellis.items.menu.unrecognize "Αναίρεση ανάκτησης Μεταδεδομένων">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Επιλέξτε την έκδοση του Στοιχείου που θα χρησιμοποιηθεί ως κύριο στοιχείο:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Επιλέξτε πεδία που θα διατηρηθούν από άλλες εκδόσεις του στοιχείου:">
+
+<!ENTITY trellis.toolbar.newItem.label "Νέο στοιχείο">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Περισσότερα">
+<!ENTITY trellis.toolbar.lookup.label "Προσθήκη στοιχείου/ων μέσω Ταυτότητας">
+<!ENTITY trellis.toolbar.removeItem.label "Απομάκρυνση στοιχείου...">
+<!ENTITY trellis.toolbar.newGroup "Νέα ομάδα...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Νέα δευτερεύουσα συλλογή...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Νέα αποθηκευμένη αναζήτηση...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Άδειασμα κάδου ανακύκλωσης...">
+<!ENTITY trellis.toolbar.tagSelector.label "Εμφάνιση/Απόκρυψη επιλογέα ετικετών">
+<!ENTITY trellis.toolbar.actions.label "Ενέργειες">
+<!ENTITY trellis.toolbar.import.label "Εισαγωγή">
+<!ENTITY trellis.toolbar.importFromClipboard "Εισαγωγή από την προσωρινή μνήμη">
+<!ENTITY trellis.toolbar.export.label "Εξαγωγή βιβλιοθήκης...">
+<!ENTITY trellis.toolbar.rtfScan.label "Σάρωση RTF">
+<!ENTITY trellis.toolbar.preferences.label "Προτιμήσεις...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Υποστήριξη και Τεκμηρίωση">
+<!ENTITY trellis.toolbar.about.label "Σχετικά με το Trellis">
+<!ENTITY trellis.toolbar.advancedSearch "Προχωρημένη αναζήτηση">
+<!ENTITY trellis.toolbar.openURL.label "Εντοπισμός">
+<!ENTITY trellis.toolbar.openURL.tooltip "Αναζήτηση μέσα από την τοπική βιβλιοθήκη σας">
+
+<!ENTITY trellis.toolbar.feeds.new "Νέα τροφοδότηση">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "Από URL...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "Από OPML...">
+<!ENTITY trellis.toolbar.feeds.edit "Επεξεργασία τροφοδότησης...">
+
+<!ENTITY trellis.item.add "Προσθήκη">
+<!ENTITY trellis.item.attachment.file.show "Εμφάνιση αρχείου">
+<!ENTITY trellis.item.textTransform "Μετασχηματισμός κειμένου">
+<!ENTITY trellis.item.textTransform.titlecase "Μορφή γραμμάτων τίτλου">
+<!ENTITY trellis.item.textTransform.sentencecase "Μορφή γραμμάτων πρότασης">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Αντιγραφή ως URL">
+<!ENTITY trellis.item.deletePermanently "Μόνιμη διαγραφή...;">
+
+<!ENTITY trellis.item.tags.removeAll "Απομάκρυνση όλων των ετικετών...">
+
+<!ENTITY trellis.toolbar.newNote "Νέα σημείωση">
+<!ENTITY trellis.toolbar.note.standalone "Νέα αυτόνομη σημείωση">
+<!ENTITY trellis.toolbar.note.child "Προσθήκη θυγατρικής σημείωσης">
+<!ENTITY trellis.toolbar.lookup "Εντοπισμός μέσω ταυτοποιητή...">
+<!ENTITY trellis.toolbar.attachment.linked "Σύνδεση με αρχείο....">
+<!ENTITY trellis.toolbar.attachment.add "Αποθήκευση αντιγράφου του αρχείου...">
+<!ENTITY trellis.toolbar.attachment.weblink "Αποθήκευση Συνδέσμου στην Τρέχουσα Σελίδα">
+<!ENTITY trellis.toolbar.attachment.snapshot "Λήψη Στιγμιότυπου της Τρέχουσας Σελίδας">
+<!ENTITY trellis.toolbar.context.item "Είδος">
+<!ENTITY trellis.toolbar.context.notes "Σημείωση">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Δεν υπάρχουν ετικέτες προς εμφάνιση">
+<!ENTITY trellis.tagSelector.loadingTags "Φόρτωση ετικετών...">
+<!ENTITY trellis.tagSelector.showAutomatic "Αυτόματη προβολή">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Εμφάνιση όλων των ετικετών αυτής της βιβλιοθήκης">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Διαγραφή αυτόματων ετικετών σε αυτή τη βιβλιοθήκη...">
+<!ENTITY trellis.tagSelector.clearAll "Αποεπιλογή όλων">
+<!ENTITY trellis.tagSelector.assignColor "Απόδοση χρώματος...">
+<!ENTITY trellis.tagSelector.renameTag "Μετονομασία ετικέτας...">
+<!ENTITY trellis.tagSelector.deleteTag "Διαγραφή ετικέτας...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Επιλέξτε χρώμα ετικέτας και θέση">
+<!ENTITY trellis.tagColorChooser.color "Χρώμα:">
+<!ENTITY trellis.tagColorChooser.position "Θέση:">
+<!ENTITY trellis.tagColorChooser.setColor "Καθορισμός χρώματος">
+<!ENTITY trellis.tagColorChooser.removeColor "Απομάκρυνση χρώματος">
+
+<!ENTITY trellis.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
+<!ENTITY trellis.lookup.button.search "Αναζήτηση">
+
+<!ENTITY trellis.createParent.title "Δημιουργία Γονικού Στοιχείου">
+<!ENTITY trellis.createParent.button.manual "Μη αυτόματη Εισαγωγή">
+
+<!ENTITY trellis.selectitems.title "Επιλέξτε στοιχεία">
+<!ENTITY trellis.selectitems.intro.label "Επιλέξτε ποια στοιχεία θέλετε να προσθέσετε στην βιβλιοθήκη σας">
+<!ENTITY trellis.selectitems.cancel.label "Άκυρο">
+<!ENTITY trellis.selectitems.select.label "ΟΚ">
+
+<!ENTITY trellis.bibliography.title "Δημιουργία Παραπομπής/Βιβλιογραφίας">
+<!ENTITY trellis.bibliography.style.label "Στυλ παραπομπής:">
+<!ENTITY trellis.bibliography.manageStyles "Διαχείριση στυλ...">
+<!ENTITY trellis.bibliography.locale.label "Γλώσσα:">
+<!ENTITY trellis.bibliography.outputMode "Λειτουργία αποτελέσματος:">
+<!ENTITY trellis.bibliography.bibliography "Βιβλιογραφία">
+<!ENTITY trellis.bibliography.outputMethod "Μέθοδος αποτελέσματος:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Αποθήκευση ως RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Αποθήκευση ως HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Αντιγραφή στο Προχειρο">
+<!ENTITY trellis.bibliography.print.label "Εκτύπωση">
+
+<!ENTITY trellis.integration.docPrefs.title "Προτιμήσεις εγγράφου">
+<!ENTITY trellis.integration.addEditCitation.title "Προσθήκη/Επεξεργασία Παραπομπής">
+<!ENTITY trellis.integration.editBibliography.title "Επεξεργασία Βιβλιογραφίας">
+
+<!ENTITY trellis.progress.title "Πρόοδος">
+
+<!ENTITY trellis.import "Εισαγωγή">
+<!ENTITY trellis.import.whereToImportFrom "Από πού θέλετε να εισαγάγετε;">
+<!ENTITY trellis.import.source.file "Ένα αρχείο (BibTeX, RIS, Trellis RDF, κλπ.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Εισαγωγή ...">
+<!ENTITY trellis.import.database "Βάση Δεδομένων">
+<!ENTITY trellis.import.lastModified "Τελευταία Τροποποίηση">
+<!ENTITY trellis.import.size "Μέγεθος">
+<!ENTITY trellis.import.createCollection "Τοποθετήστε τις εισαγόμενες συλλογές και τα αντικείμενα σε νέα συλλογή">
+<!ENTITY trellis.import.fileHandling "Χειρισμός Αρχείων">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Εξαγωγή...">
+<!ENTITY trellis.exportOptions.format.label "Μορφή:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Επιλογές μεταφραστή">
+
+<!ENTITY trellis.charset.label "Κωδικοποίηση χαρακτήρων">
+<!ENTITY trellis.moreEncodings.label "Περισσότερες κωδικοποιησεις">
+
+<!ENTITY trellis.citation.keepSorted.label "Διατήρηση της ταξινόμησης των πηγών">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Πρόθεμα:">
+<!ENTITY trellis.citation.suffix.label "Επίθημα:">
+<!ENTITY trellis.citation.editorWarning.label "Προειδοποίηση: Αν επεξεργαστείτε κάποια παραπομπή με το επεξεργαστή, δεν θα ενημερωθεί ώστε να αντανακλά τις αλλαγές μέσα στην βάση δεδομένων σας ή στο στυλ των παραπομπών.">
+
+<!ENTITY trellis.richText.italic.label "Πλάγια">
+<!ENTITY trellis.richText.bold.label "Έντονα">
+<!ENTITY trellis.richText.underline.label "Υπογραμμισμένα">
+<!ENTITY trellis.richText.superscript.label "Εκθέτης">
+<!ENTITY trellis.richText.subscript.label "Δείκτης">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Προσθήκη σχολίων">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Σύμπτυξη όλων των σχολιασμών">
+<!ENTITY trellis.annotate.toolbar.expand.label "Ανάπτυξη όλων των σχολιασμών">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Υπογράμμιση κειμένου">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Αναίρεση υπογράμμισης κειμένου">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Προβολή παραπομπών ως:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Υποσημειώσεις">
+<!ENTITY trellis.integration.prefs.endnotes.label "Σημειώσεις τέλους">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Αποθήκευση παραθέσεων ως:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Σελιδοδείκτες">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Οι σελιδοδείκτες μπορούν να είναι κοινοί σε Word και LibreOffice αλλά αυτό ίσως προκαλέσει προβλήματα αν τροποποιηθούν κατά λάθος και δεν θα μπορούν να εισαχθούν μέσα σε υποσημειώσεις..">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Αυτόματη ενημέρωση αναφορών">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Οι αναφορές με εκκρεμείς ενημερώσεις θα επισημαίνονται στο έγγραφο">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Η απενεργοποίηση ενημερώσεων μπορεί να επιταχύνει την εισαγωγή μιας παραπομπής σε μεγάλα έγγραφα. Κάντε κλικ στην επιλογή Ανανέωση για ενημέρωση.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Χρήση των συντομεύσεων περιοδικών, MEDLINE">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Το πεδίο «Συντομογραφία περιοδικού» θα αγνοηθεί.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Μετάβαση σε διαφορετικό επεξεργαστή κειμένου ...">
+
+<!ENTITY trellis.integration.showEditor.label "Εμφάνιση επεξεργαστή">
+<!ENTITY trellis.integration.classicView.label "Κλασική προβολή">
+
+<!ENTITY trellis.integration.references.label "Αναφορές μέσα στη Βιβλιογραφία">
+
+<!ENTITY trellis.sync.stop "Διακοπή συγχρονισμού">
+<!ENTITY trellis.sync.error "Σφάλμα συγχρονισμού">
+<!ENTITY trellis.sync.storage.progress "Πρόοδος:">
+<!ENTITY trellis.sync.storage.downloads "Λήψεις:">
+<!ENTITY trellis.sync.storage.uploads "Μεταφορτώσεις:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Η ακόλουθη ετικέτα στην βιβλιοθήκη σας Trellis είναι πολύ μεγάλη για να συγχρονιστεί με τον διακομιστή:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Οι συγχρονιζόμενες ετικέτες πρέπει να είναι μικρότερες των 256 χαρακτήρων.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Μπορείτε είτε να διαιρέσετε την ετικέτα σε πολλαπλές ετικέτες, να επεξεργαστείτε χειροκίνητα την ετικέτα ώστε να την μικρύνετε ή να την διαγράψετε.">
+<!ENTITY trellis.sync.longTagFixer.split "Διαίρεση">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Διαίρεση στον">
+<!ENTITY trellis.sync.longTagFixer.character "χαρακτήρα">
+<!ENTITY trellis.sync.longTagFixer.characters "χαρακτήρες">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Οι μη επιλεγμένες ετικέτες δεν θα αποθηκευθούν.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Η ετικέτα θα διαγραφεί από όλα τα στοιχεία.">
+
+<!ENTITY trellis.merge.title "Επίλυση διενέξεων">
+<!ENTITY trellis.merge.of "από">
+<!ENTITY trellis.merge.deleted "Διαγραμμένων">
+
+<!ENTITY trellis.proxy.recognized.title "Διαμεσολαβητές που αναγνωρίστηκαν">
+<!ENTITY trellis.proxy.recognized.warning "Προσθήκη μόνον διαμεσολαβητών που συνδέονται με την βιβλιοθήκη σας, το σχολείο ή εταιρικό ιστότοπο.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Η προσθήκη άλλων διαμεσολαβητών επιτρέπει σε βλαπτικούς ιστότοπους να μεταμφιέζονται σε ιστότοπους που εμπιστεύεστε.">
+<!ENTITY trellis.proxy.recognized.disable.label "Να μην γίνεται αυτόματη ανακατεύθυνση των αιτήσεων μέσω προηγουμένως αναγνωρισμένων διαμεσολαβητών.">
+<!ENTITY trellis.proxy.recognized.ignore.label "Αγνόηση">
+
+<!ENTITY trellis.feedSettings.title "Ρυθμίσεις τροφοδότησης">
+<!ENTITY trellis.feedSettings.saveButton.label "Αποθήκευση">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Τίτλος:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Ανανέωση τροφοδότησης κάθε">
+<!ENTITY trellis.feedSettings.refresh.label2 "ώρα(/ες)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Να απομακρύνονται τα μη αναγνωσμένα στοιχεία τροφοδότησης μετά από">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "ημέρα(/ες)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Να απομακρύνονται τα αναγνωσμένα στοιχεία τροφοδότησης μετά από">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "ημέρα(/ες)">
+
+<!ENTITY trellis.rtfScan.title "Σάρωση RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Ακύρωση">
+<!ENTITY trellis.rtfScan.citation.label "Παραπομπή">
+<!ENTITY trellis.rtfScan.itemName.label "Όνομα στοιχείου">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Αχαρτογράφητες παραπομπές">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Ασαφής παραπομπή">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Χαρτογραφημένες παραπομπές">
+<!ENTITY trellis.rtfScan.introPage.label "Εισαγωγή">
+<!ENTITY trellis.rtfScan.introPage.description "Το Trellis μπορεί αυτόματα να εξάγει και να αναδιαμορφώσει τις παραπομπές και να εισάγει βιβλιογραφία μέσα σε αρχεία τύπου RTF. Η λειτουργία Σάρωσης RTF υποστηρίζει τις παρακάτω μορφές παραπομπών/παραθέσεων: ">
+<!ENTITY trellis.rtfScan.introPage.description2 "Για να ξεκινήσετε επιλέξτε παρακάτω ένα αρχείο εισόδου RTF και ένα αρχείο εξόδου:">
+<!ENTITY trellis.rtfScan.scanPage.label "Σάρωση για παραπομπές">
+<!ENTITY trellis.rtfScan.scanPage.description "Το Trellis σαρώνει τα έγγραφά σας για παραπομπές. Παρακαλώ περιμένετε.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Εξακρίβωση παρατιθέμενων στοιχείων">
+<!ENTITY trellis.rtfScan.citationsPage.description "Παρακαλώ εξετάστε τον κατάλογο των αναγνωρισμένων παραπομπών που ακολουθεί για να βεβαιωθείτε ότι το Trellis έχει επιλέξει τα αντίστοιχα στοιχεία σωστά. Κάθε αχαρτογράφητη ή ασαφής παραπομπή πρέπει να αποσαφηνιστεί πριν προχωρήσετε στο επόμενο βήμα.">
+<!ENTITY trellis.rtfScan.stylePage.label "Μορφοποίηση εγγράφου">
+<!ENTITY trellis.rtfScan.formatPage.label "Μορφοποίηση παπομπών/παραθέσεων">
+<!ENTITY trellis.rtfScan.formatPage.description "Το Trellis επεξεργάζεται και μορφοποιεί τα αρχεία σας RTF. Παρακαλώ δείξτε υπομονή.">
+<!ENTITY trellis.rtfScan.completePage.label "Η Σάρωση RTF ολοκληρώθηκε">
+<!ENTITY trellis.rtfScan.completePage.description "Το έγγραφό σας σαρώθηκε και επεξεργάστηκε. Παρααλώ βεβαιωθείτε ότι μοφροποιήθηκε σωστά.">
+<!ENTITY trellis.rtfScan.inputFile.label "Αρχείο εισαγωγής">
+<!ENTITY trellis.rtfScan.outputFile.label "Αρχείο εξαγωγής">
+
+<!ENTITY trellis.file.choose.label "Επιλέξτε αρχείο...">
+<!ENTITY trellis.file.noneSelected.label "Δεν επιλέχθηκε αρχείο">
+
+<!ENTITY trellis.attachLink.title "Προσάρτηση συνδέσμου στο URI">
+<!ENTITY trellis.attachLink.label.link "Σύνδεσμος:">
+<!ENTITY trellis.attachLink.label.title "Τίτλος:">
+
+<!ENTITY trellis.context.addChildNote "Add Item Note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
+<!ENTITY trellis.context.addStandaloneNote "Add Standalone Note">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Add Standalone Note from Annotations">
+<!ENTITY trellis.context.editInWindow "Edit in a Separate Window">
+
+<!ENTITY trellis.pdfReader.firstPage "Πρώτη Σελίδα">
+<!ENTITY trellis.pdfReader.lastPage "Last Page">
+<!ENTITY trellis.pdfReader.back "Επιστροφή">
+<!ENTITY trellis.pdfReader.forward "Forward">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom In">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom Out">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Διαχωρισμός Κάθετα">
+<!ENTITY trellis.pdfReader.splitHorizontally "Διαχωρισμός Οριζόντια">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

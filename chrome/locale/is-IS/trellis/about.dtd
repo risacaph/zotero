@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "útgáfa">
+<!ENTITY trellis.whatsNew "Nýjustu tíðindi">
+<!ENTITY trellis.createdby "Höfundar:">
+<!ENTITY trellis.director "Stjórnandi:">
+<!ENTITY trellis.directors "Stjórnendur:">
+<!ENTITY trellis.developers "Hönnuðir:">
+<!ENTITY trellis.alumni "Fyrrum nemandi:">
+<!ENTITY trellis.about.localizations "Staðir:">
+<!ENTITY trellis.about.additionalSoftware "Forrit utanaðkomandi aðila:">
+<!ENTITY trellis.thanks "Sérstakar þakkir:">
+<!ENTITY trellis.about.close "Loka">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Viðurkenningar">
+<!ENTITY trellis.citationProcessing "Tilvísunar- og heimildavinnsla">

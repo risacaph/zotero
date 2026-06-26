@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Anv:">
+
+<!ENTITY trellis.search.searchInLibrary "Klask el levraoueg:">
+
+<!ENTITY trellis.search.joinMode.prefix "Kenglotus">
+<!ENTITY trellis.search.joinMode.any "unan">
+<!ENTITY trellis.search.joinMode.all "pep-tra">
+<!ENTITY trellis.search.joinMode.suffix "gant ar pezh a zo da-heul:">
+
+<!ENTITY trellis.search.recursive.label "Klask en is-dastumadegoù">
+<!ENTITY trellis.search.noChildren "Diskouez an elfennoù a live-pennañ">
+<!ENTITY trellis.search.includeParentsAndChildren "Enklozañ an elfennoù kar ha bugale kenglotus">
+
+<!ENTITY trellis.search.textModes.phrase "Frazenn">
+<!ENTITY trellis.search.textModes.phraseBinary "Frazenn (restroù daoueel enkl.)">
+<!ENTITY trellis.search.textModes.regexp "Troienn reoliataet (RegExp)">
+<!ENTITY trellis.search.textModes.regexpCS "Troienn reoliataet (kizidig ouzh ar c'hombo)">
+
+<!ENTITY trellis.search.date.units.days "devezhioù">
+<!ENTITY trellis.search.date.units.months "mizioù">
+<!ENTITY trellis.search.date.units.years "bloavezhioù">
+
+<!ENTITY trellis.search.search "Klask">
+<!ENTITY trellis.search.clear "Diverkañ">
+<!ENTITY trellis.search.saveSearch "Enrollañ an enklask">

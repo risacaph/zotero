@@ -1,6 +1,6 @@
 "use strict";
 
-describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
+describe("Trellis.Sync.Storage.Mode.WebDAV", function () {
 	//
 	// Setup
 	//
@@ -157,7 +157,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 	}
 	
 	function generateLastSyncID() {
-		return "" + Zotero.Utilities.randomString(controller._lastSyncIDLength);
+		return "" + Trellis.Utilities.randomString(controller._lastSyncIDLength);
 	}
 	
 	function parseQueryString(str) {
@@ -178,27 +178,27 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		davHostPath = `localhost:${port}${davBasePath}`;
 		davURL = `${davScheme}://${davHostPath}`;
 		
-		await Zotero.Users.setCurrentUserID(1);
-		await Zotero.Users.setCurrentUsername("testuser");
+		await Trellis.Users.setCurrentUserID(1);
+		await Trellis.Users.setCurrentUsername("testuser");
 		
-		Zotero.Sync.Storage.Local.setModeForLibrary(Zotero.Libraries.userLibraryID, 'webdav');
-		controller = new Zotero.Sync.Storage.Mode.WebDAV;
+		Trellis.Sync.Storage.Local.setModeForLibrary(Trellis.Libraries.userLibraryID, 'webdav');
+		controller = new Trellis.Sync.Storage.Mode.WebDAV;
 		controller.ERROR_DELAY_INTERVALS = [1];
 		controller.ERROR_DELAY_MAX = [5];
-		Zotero.Prefs.set("sync.storage.scheme", davScheme);
-		Zotero.Prefs.set("sync.storage.url", davHostPath);
-		Zotero.Prefs.set("sync.storage.username", davUsername);
+		Trellis.Prefs.set("sync.storage.scheme", davScheme);
+		Trellis.Prefs.set("sync.storage.url", davHostPath);
+		Trellis.Prefs.set("sync.storage.username", davUsername);
 		await controller.setPassword(davPassword);
 		
 		// Set download-on-sync by default
-		Zotero.Sync.Storage.Local.downloadOnSync(
-			Zotero.Libraries.userLibraryID, true
+		Trellis.Sync.Storage.Local.downloadOnSync(
+			Trellis.Libraries.userLibraryID, true
 		);
 	})
 	
 	var setup = async function (options = {}) {
-		var engine = new Zotero.Sync.Storage.Engine({
-			libraryID: options.libraryID || Zotero.Libraries.userLibraryID,
+		var engine = new Trellis.Sync.Storage.Engine({
+			libraryID: options.libraryID || Trellis.Libraries.userLibraryID,
 			controller,
 			stopOnError: true
 		});
@@ -207,22 +207,22 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			// Register handlers for server verification
 			setResponse({
 				method: "PROPFIND",
-				url: "zotero/",
+				url: "trellis/",
 				status: 207
 			});
 			setResponse({
 				method: "PUT",
-				url: "zotero/zotero-test-file.prop",
+				url: "trellis/trellis-test-file.prop",
 				status: 201
 			});
 			setResponse({
 				method: "GET",
-				url: "zotero/zotero-test-file.prop",
+				url: "trellis/trellis-test-file.prop",
 				status: 200
 			});
 			setResponse({
 				method: "DELETE",
-				url: "zotero/zotero-test-file.prop",
+				url: "trellis/trellis-test-file.prop",
 				status: 200
 			});
 			await controller.checkServer();
@@ -254,7 +254,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		it("should skip downloads if not marked as needed", async function () {
 			var engine = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			
@@ -272,12 +272,12 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		it("should ignore a remotely missing file", async function () {
 			var engine = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			item.attachmentSyncState = "to_download";
@@ -285,7 +285,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 404
 			});
 			var result = await engine.start();
@@ -300,19 +300,19 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			assert.equal(library.storageVersion, library.libraryVersion);
 			assert.equal(
 				item.attachmentSyncState,
-				Zotero.Sync.Storage.Local.SYNC_STATE_IN_SYNC
+				Trellis.Sync.Storage.Local.SYNC_STATE_IN_SYNC
 			);
 		})
 		
 		it("should handle a remotely failing .prop file", async function () {
 			var engine = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			item.attachmentSyncState = "to_download";
@@ -320,7 +320,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 500
 			});
 			
@@ -329,7 +329,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var e = await getPromiseError(engine.start());
 			assert.include(
 				e.message,
-				Zotero.getString('sync.storage.error.webdav.requestError', [500, "GET"])
+				Trellis.getString('sync.storage.error.webdav.requestError', [500, "GET"])
 			);
 			
 			assert.isAbove(requestCount, 1);
@@ -341,12 +341,12 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		it("should handle a remotely failing .zip file", async function () {
 			var engine = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:test.txt';
 			item.attachmentSyncState = "to_download";
@@ -354,7 +354,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 200,
 				text: '<properties version="1">'
 					+ '<mtime>1234567890</mtime>'
@@ -362,7 +362,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 					+ '</properties>'
 			});
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/${item.key}.zip`,
+				`${davBasePath}trellis/${item.key}.zip`,
 				{
 					handle: function (request, response) {
 						response.setStatusLine(null, 500, null);
@@ -374,7 +374,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var e = await getPromiseError(engine.start());
 			assert.include(
 				e.message,
-				Zotero.getString('sync.storage.error.webdav.requestError', [500, "GET"])
+				Trellis.getString('sync.storage.error.webdav.requestError', [500, "GET"])
 			);
 			
 			assert.isTrue(library.storageDownloadNeeded);
@@ -385,40 +385,40 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		it("should download a missing file", async function () {
 			var engine = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
 			var fileName = "test.txt";
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:' + fileName;
 			// TODO: Test binary data
-			var text = Zotero.Utilities.randomString();
+			var text = Trellis.Utilities.randomString();
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
 			// Create ZIP file containing above text file
-			var tmpPath = Zotero.getTempDirectory().path;
-			var tmpID = "webdav_download_" + Zotero.Utilities.randomString();
+			var tmpPath = Trellis.getTempDirectory().path;
+			var tmpID = "webdav_download_" + Trellis.Utilities.randomString();
 			var zipDirPath = OS.Path.join(tmpPath, tmpID);
 			var zipPath = OS.Path.join(tmpPath, tmpID + ".zip");
 			await OS.File.makeDir(zipDirPath);
-			await Zotero.File.putContentsAsync(OS.Path.join(zipDirPath, fileName), text);
-			await Zotero.File.zipDirectory(zipDirPath, zipPath);
+			await Trellis.File.putContentsAsync(OS.Path.join(zipDirPath, fileName), text);
+			await Trellis.File.zipDirectory(zipDirPath, zipPath);
 			await OS.File.removeDir(zipDirPath);
-			await Zotero.Promise.delay(1000);
-			var zipContents = await Zotero.File.getBinaryContentsAsync(zipPath);
+			await Trellis.Promise.delay(1000);
+			var zipContents = await Trellis.File.getBinaryContentsAsync(zipPath);
 			
 			var mtime = "1441252524905";
-			var md5 = await Zotero.Utilities.Internal.md5Async(zipPath);
+			var md5 = await Trellis.Utilities.Internal.md5Async(zipPath);
 			
 			await OS.File.remove(zipPath);
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 200,
 				text: '<properties version="1">'
 					+ `<mtime>${mtime}</mtime>`
@@ -426,7 +426,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 					+ '</properties>'
 			});
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/${item.key}.zip`,
+				`${davBasePath}trellis/${item.key}.zip`,
 				{
 					handle: function (request, response) {
 						response.setStatusLine(null, 200, "OK");
@@ -441,7 +441,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			assert.isFalse(result.remoteChanges);
 			assert.isFalse(result.syncRequired);
 			
-			var contents = await Zotero.File.getContentsAsync(await item.getFilePathAsync());
+			var contents = await Trellis.File.getContentsAsync(await item.getFilePathAsync());
 			assert.equal(contents, text);
 			
 			assert.isFalse(library.storageDownloadNeeded);
@@ -453,7 +453,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.synced = true;
 			await item.saveTx();
 			var mtime = await item.attachmentModificationTime;
@@ -462,19 +462,19 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var filename = 'test.png';
 			var size = ((await OS.File.stat(path))).size;
 			var contentType = 'image/png';
-			var fileContents = await Zotero.File.getContentsAsync(path);
+			var fileContents = await Trellis.File.getContentsAsync(path);
 			
-			var zipVerifyDeferred = Zotero.Promise.defer();
+			var zipVerifyDeferred = Trellis.Promise.defer();
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 404
 			});
 			
 			// Handler for PUT .zip
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/${item.key}.zip`,
+				`${davBasePath}trellis/${item.key}.zip`,
 				{
 					handle: function (request, response) {
 						if (request.method !== 'PUT') return;
@@ -495,15 +495,15 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 								bis.close();
 								
 								let tmpZipPath = OS.Path.join(
-									Zotero.getTempDirectory().path,
-									Zotero.Utilities.randomString() + '.zip'
+									Trellis.getTempDirectory().path,
+									Trellis.Utilities.randomString() + '.zip'
 								);
 								await IOUtils.write(tmpZipPath, new Uint8Array(bytes));
 								
 								// Make sure ZIP file contains the necessary entries
 								var zr = Components.classes["@mozilla.org/libjar/zip-reader;1"]
 									.createInstance(Components.interfaces.nsIZipReader);
-								zr.open(Zotero.File.pathToFile(tmpZipPath));
+								zr.open(Trellis.File.pathToFile(tmpZipPath));
 								zr.test(null);
 								var entries = zr.findEntries('*');
 								var entryNames = [];
@@ -532,7 +532,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			// Handler for PUT .prop
 			setResponse({
 				method: "PUT",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				handler: function (request, response) {
 					// Read and verify request body
 					let bodyStream = request.bodyInputStream;
@@ -576,7 +576,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.txt');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.synced = true;
 			await item.saveTx();
 			
@@ -592,7 +592,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				text: '<properties version="1">'
 					+ `<mtime>${syncedModTime}</mtime>`
 					+ `<hash>${syncedHash}</hash>`
@@ -600,17 +600,17 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			});
 			setResponse({
 				method: "DELETE",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 204
 			});
 			setResponse({
 				method: "PUT",
-				url: `zotero/${item.key}.zip`,
+				url: `trellis/${item.key}.zip`,
 				status: 204
 			});
 			setResponse({
 				method: "PUT",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 204
 			});
 			
@@ -633,7 +633,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.synced = true;
 			await item.saveTx();
 			var mtime = await item.attachmentModificationTime;
@@ -641,7 +641,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 200,
 				text: '<properties version="1">'
 					+ `<mtime>${mtime}</mtime>`
@@ -667,7 +667,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var engine = await setup();
 			
 			var file = OS.Path.join(getTestDataDirectory().path, 'test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			await item.saveTx();
 			var fmtime = await item.attachmentModificationTime;
 			var hash = await item.attachmentHash;
@@ -682,7 +682,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 200,
 				text: '<properties version="1">'
 					+ `<mtime>${mtime2}</mtime>`
@@ -691,7 +691,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			});
 			setResponse({
 				method: "PUT",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 204
 			});
 			
@@ -712,48 +712,48 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		
 		// As a security measure, Nextcloud sets a regular cookie and two SameSite cookies and
 		// throws a 503 if the regular cookie gets returned without the SameSite cookies.
-		// As of Fx60 (Zotero 5.0.78), which added SameSite support, SameSite cookies don't get
+		// As of Fx60 (Trellis 5.0.78), which added SameSite support, SameSite cookies don't get
 		// returned properly (because we don't have a load context?), triggering the 503. To avoid
 		// this, we just don't store or send any cookies for WebDAV requests.
 		//
-		// https://forums.zotero.org/discussion/80429/sync-error-in-5-0-80
+		// https://forums.trellis.org/discussion/80429/sync-error-in-5-0-80
 		it("shouldn't send cookies", async function () {
 			// Skip initial verification for this test
 			controller.verified = true;
 			var engine = await setup();
 			
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.libraryVersion = 5;
 			await library.saveTx();
 			library.storageDownloadNeeded = true;
 			
 			var fileName = "test.txt";
-			var item = new Zotero.Item("attachment");
+			var item = new Trellis.Item("attachment");
 			item.attachmentLinkMode = 'imported_file';
 			item.attachmentPath = 'storage:' + fileName;
-			var text = Zotero.Utilities.randomString();
+			var text = Trellis.Utilities.randomString();
 			item.attachmentSyncState = "to_download";
 			await item.saveTx();
 			
 			// Create ZIP file containing above text file
-			var tmpPath = Zotero.getTempDirectory().path;
-			var tmpID = "webdav_download_" + Zotero.Utilities.randomString();
+			var tmpPath = Trellis.getTempDirectory().path;
+			var tmpID = "webdav_download_" + Trellis.Utilities.randomString();
 			var zipDirPath = OS.Path.join(tmpPath, tmpID);
 			var zipPath = OS.Path.join(tmpPath, tmpID + ".zip");
 			await OS.File.makeDir(zipDirPath);
-			await Zotero.File.putContentsAsync(OS.Path.join(zipDirPath, fileName), text);
-			await Zotero.File.zipDirectory(zipDirPath, zipPath);
+			await Trellis.File.putContentsAsync(OS.Path.join(zipDirPath, fileName), text);
+			await Trellis.File.zipDirectory(zipDirPath, zipPath);
 			await OS.File.removeDir(zipDirPath);
-			var zipContents = await Zotero.File.getBinaryContentsAsync(zipPath);
+			var zipContents = await Trellis.File.getBinaryContentsAsync(zipPath);
 			
 			var mtime = "1441252524905";
-			var md5 = await Zotero.Utilities.Internal.md5Async(zipPath);
+			var md5 = await Trellis.Utilities.Internal.md5Async(zipPath);
 			
 			await OS.File.remove(zipPath);
 			
 			// PROPFIND request to cache credentials
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/`,
+				`${davBasePath}trellis/`,
 				{
 					handle: function (request, response) {
 						if (request.method == 'PROPFIND') {
@@ -774,7 +774,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							response.write('<?xml version="1.0" encoding="utf-8"?>'
 								+ '<D:multistatus xmlns:D="DAV:">'
 								+ '<D:response>'
-								+ `<D:href>${davBasePath}zotero/</D:href>`
+								+ `<D:href>${davBasePath}trellis/</D:href>`
 								+ '<D:propstat>'
 								+ '<D:prop><D:getcontentlength/></D:prop>'
 								+ '<D:status>HTTP/1.1 200 OK</D:status>'
@@ -786,7 +786,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/${item.key}.prop`,
+				`${davBasePath}trellis/${item.key}.prop`,
 				{
 					handle: function (request, response) {
 						if (request.method != 'GET') {
@@ -814,7 +814,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/${item.key}.zip`,
+				`${davBasePath}trellis/${item.key}.zip`,
 				{
 					handle: function (request, response) {
 						// Make sure the cookie isn't returned
@@ -846,7 +846,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.synced = true;
 			await item.saveTx();
 			var mtime = await item.attachmentModificationTime;
@@ -855,14 +855,14 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var filename = 'test.png';
 			var size = ((await OS.File.stat(path))).size;
 			var contentType = 'image/png';
-			var fileContents = await Zotero.File.getContentsAsync(path);
+			var fileContents = await Trellis.File.getContentsAsync(path);
 			
 			var newModTime = mtime + 5000;
 			var newHash = "4f69f43d8ac8788190b13ff7f4a0a915";
 			
 			setResponse({
 				method: "GET",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 200,
 				text: '<properties version="1">'
 					+ `<mtime>${newModTime}</mtime>`
@@ -882,7 +882,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			// Check local object
 			//
 			// Item should be marked as in conflict
-			assert.equal(item.attachmentSyncState, Zotero.Sync.Storage.Local.SYNC_STATE_IN_CONFLICT);
+			assert.equal(item.attachmentSyncState, Trellis.Sync.Storage.Local.SYNC_STATE_IN_CONFLICT);
 			// Synced mod time should have been changed, because that's what's shown in the
 			// conflict dialog
 			assert.equal(item.attachmentSyncedModificationTime, newModTime);
@@ -892,17 +892,17 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 	
 	describe("Verify Server", function () {
 		it("should show an error for a connection error", async function () {
-			Zotero.Prefs.set("sync.storage.url", "127.0.0.1:9999");
+			Trellis.Prefs.set("sync.storage.url", "127.0.0.1:9999");
 			
 			// Begin install procedure
 			var win = await loadPrefPane('account');
 			var button = win.document.getElementById('storage-verify');
 			
-			var spy = sinon.spy(win.Zotero_Preferences.Sync, "verifyStorageServer");
+			var spy = sinon.spy(win.Trellis_Preferences.Sync, "verifyStorageServer");
 			var promise1 = waitForDialog(function (dialog) {
 				assert.include(
 					dialog.document.documentElement.textContent,
-					Zotero.getString('sync.storage.error.serverCouldNotBeReached', '127.0.0.1')
+					Trellis.getString('sync.storage.error.serverCouldNotBeReached', '127.0.0.1')
 				);
 			});
 			button.click();
@@ -916,10 +916,10 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		});
 		
 		it("should show an error for a non-DAV URL", async function () {
-			Zotero.Prefs.set("sync.storage.url", davHostPath);
+			Trellis.Prefs.set("sync.storage.url", davHostPath);
 			
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/`,
+				`${davBasePath}trellis/`,
 				{
 					handle: function (request, response) {
 						// Force Basic Auth
@@ -938,13 +938,13 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var win = await loadPrefPane('account');
 			var button = win.document.getElementById('storage-verify');
 			
-			var spy = sinon.spy(win.Zotero_Preferences.Sync, "verifyStorageServer");
+			var spy = sinon.spy(win.Trellis_Preferences.Sync, "verifyStorageServer");
 			var promise1 = waitForDialog(function (dialog) {
 				assert.include(
 					dialog.document.documentElement.textContent,
-					Zotero.getString(
+					Trellis.getString(
 						'sync.storage.error.webdav.invalidURL',
-						davScheme + '://' + davHostPath + 'zotero/'
+						davScheme + '://' + davHostPath + 'trellis/'
 					)
 				);
 			});
@@ -960,7 +960,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		
 		it("should show an error for a 403", async function () {
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/`,
+				`${davBasePath}trellis/`,
 				{
 					handle: function (request, response) {
 						response.setStatusLine(null, 403, null);
@@ -968,17 +968,17 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			
-			Zotero.Prefs.set("sync.storage.url", davHostPath);
+			Trellis.Prefs.set("sync.storage.url", davHostPath);
 			
 			// Begin install procedure
 			var win = await loadPrefPane('account');
 			var button = win.document.getElementById('storage-verify');
 			
-			var spy = sinon.spy(win.Zotero_Preferences.Sync, "verifyStorageServer");
+			var spy = sinon.spy(win.Trellis_Preferences.Sync, "verifyStorageServer");
 			var promise1 = waitForDialog(function (dialog) {
 				assert.include(
 					dialog.document.documentElement.textContent,
-					Zotero.getString('sync.storage.error.webdav.permissionDenied', davBasePath + 'zotero/')
+					Trellis.getString('sync.storage.error.webdav.permissionDenied', davBasePath + 'trellis/')
 				);
 			});
 			button.click();
@@ -993,10 +993,10 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		
 		
 		it("should show an error for a 404 for the parent directory", async function () {
-			Zotero.Prefs.set("sync.storage.url", davHostPath);
+			Trellis.Prefs.set("sync.storage.url", davHostPath);
 			
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/`,
+				`${davBasePath}trellis/`,
 				{
 					handle: function (request, response) {
 						// Force Basic Auth
@@ -1029,11 +1029,11 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var win = await loadPrefPane('account');
 			var button = win.document.getElementById('storage-verify');
 			
-			var spy = sinon.spy(win.Zotero_Preferences.Sync, "verifyStorageServer");
+			var spy = sinon.spy(win.Trellis_Preferences.Sync, "verifyStorageServer");
 			var promise1 = waitForDialog(function (dialog) {
 				assert.include(
 					dialog.document.documentElement.textContent,
-					Zotero.getString('sync.storage.error.doesNotExist', davURL)
+					Trellis.getString('sync.storage.error.doesNotExist', davURL)
 				);
 			});
 			button.click();
@@ -1049,7 +1049,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		
 		it("should show an error for a 200 for a nonexistent file", async function () {
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/`,
+				`${davBasePath}trellis/`,
 				{
 					handle: function (request, response) {
 						// Force Basic Auth
@@ -1070,7 +1070,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/nonexistent.prop`,
+				`${davBasePath}trellis/nonexistent.prop`,
 				{
 					handle: function (request, response) {
 						response.setStatusLine(null, 200, null);
@@ -1078,17 +1078,17 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			
-			Zotero.Prefs.set("sync.storage.url", davHostPath);
+			Trellis.Prefs.set("sync.storage.url", davHostPath);
 			
 			// Begin install procedure
 			var win = await loadPrefPane('account');
 			var button = win.document.getElementById('storage-verify');
 			
-			var spy = sinon.spy(win.Zotero_Preferences.Sync, "verifyStorageServer");
+			var spy = sinon.spy(win.Trellis_Preferences.Sync, "verifyStorageServer");
 			var promise1 = waitForDialog(function (dialog) {
 				assert.include(
 					dialog.document.documentElement.textContent,
-					Zotero.getString('sync.storage.error.webdav.nonexistentFileNotMissing', davBasePath + 'zotero/')
+					Trellis.getString('sync.storage.error.webdav.nonexistentFileNotMissing', davBasePath + 'trellis/')
 				);
 			});
 			button.click();
@@ -1107,9 +1107,9 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			// 2. PROPFIND triggers Digest 401, Firefox negotiates, we cache params
 			// 3. Subsequent GET/PUT/DELETE use our computed Digest auth headers
 			//    with correct method/URI hashes that the server validates
-			let digestNonce = 'test' + Zotero.Utilities.randomString(16);
+			let digestNonce = 'test' + Trellis.Utilities.randomString(16);
 			let digestRealm = 'WebDAV-Digest';
-			let md5 = Zotero.Utilities.Internal.md5;
+			let md5 = Trellis.Utilities.Internal.md5;
 
 			function sendDigest401(response) {
 				response.setStatusLine(null, 401, "Unauthorized");
@@ -1172,7 +1172,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			let computedDigestMethods = [];
 
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/`,
+				`${davBasePath}trellis/`,
 				{
 					handle: function (request, response) {
 						if (request.method == 'OPTIONS') {
@@ -1196,7 +1196,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							response.write('<?xml version="1.0" encoding="utf-8"?>'
 								+ '<D:multistatus xmlns:D="DAV:">'
 								+ '<D:response>'
-								+ `<D:href>${davBasePath}zotero/</D:href>`
+								+ `<D:href>${davBasePath}trellis/</D:href>`
 								+ '<D:propstat>'
 								+ '<D:prop><D:getcontentlength/></D:prop>'
 								+ '<D:status>HTTP/1.1 200 OK</D:status>'
@@ -1210,7 +1210,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/nonexistent.prop`,
+				`${davBasePath}trellis/nonexistent.prop`,
 				{
 					handle: function (request, response) {
 						if (!validateDigestAuth(request, response)) return;
@@ -1220,7 +1220,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 			httpd.registerPathHandler(
-				`${davBasePath}zotero/zotero-test-file.prop`,
+				`${davBasePath}trellis/trellis-test-file.prop`,
 				{
 					handle: function (request, response) {
 						if (!validateDigestAuth(request, response)) return;
@@ -1238,7 +1238,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				}
 			);
 
-			Zotero.Prefs.set("sync.storage.url", davHostPath);
+			Trellis.Prefs.set("sync.storage.url", davHostPath);
 
 			await controller.checkServer();
 			assert.isTrue(controller.verified);
@@ -1260,25 +1260,25 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		})
 		
 		it("should delete files on storage server that were deleted locally", async function () {
-			var libraryID = Zotero.Libraries.userLibraryID;
+			var libraryID = Trellis.Libraries.userLibraryID;
 			
 			var file = getTestDataDirectory();
 			file.append('test.png');
-			var item = await Zotero.Attachments.importFromFile({ file });
+			var item = await Trellis.Attachments.importFromFile({ file });
 			item.synced = true;
 			await item.saveTx();
 			await item.eraseTx();
 			
-			assert.lengthOf(((await Zotero.Sync.Storage.Local.getDeletedFiles(libraryID))), 1);
+			assert.lengthOf(((await Trellis.Sync.Storage.Local.getDeletedFiles(libraryID))), 1);
 			
 			setResponse({
 				method: "DELETE",
-				url: `zotero/${item.key}.prop`,
+				url: `trellis/${item.key}.prop`,
 				status: 204
 			});
 			setResponse({
 				method: "DELETE",
-				url: `zotero/${item.key}.zip`,
+				url: `trellis/${item.key}.zip`,
 				status: 204
 			});
 			var results = await controller.purgeDeletedStorageFiles(libraryID);
@@ -1290,18 +1290,18 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			assert.lengthOf(results.error, 0);
 			
 			// Storage delete log should be empty
-			assert.lengthOf(((await Zotero.Sync.Storage.Local.getDeletedFiles(libraryID))), 0);
+			assert.lengthOf(((await Trellis.Sync.Storage.Local.getDeletedFiles(libraryID))), 0);
 		})
 	})
 	
 	describe("#purgeOrphanedStorageFiles()", function () {
 		beforeEach(function () {
 			resetRequestCount();
-			Zotero.Prefs.clear('lastWebDAVOrphanPurge');
+			Trellis.Prefs.clear('lastWebDAVOrphanPurge');
 		})
 		
 		it("should delete orphaned files more than a week older than the last sync time", async function () {
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.updateLastSyncTime();
 			await library.saveTx();
 			
@@ -1309,8 +1309,8 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			var item1 = await createDataObject('item');
 			var item1Key = item1.key;
 			// Add another item to sync queue
-			var item2Key = Zotero.DataObjectUtilities.generateKey();
-			await Zotero.Sync.Data.Local.addObjectsToSyncQueue('item', library.id, [item2Key]);
+			var item2Key = Trellis.DataObjectUtilities.generateKey();
+			await Trellis.Sync.Data.Local.addObjectsToSyncQueue('item', library.id, [item2Key]);
 			
 			const daysBeforeSyncTime = 7;
 			
@@ -1319,7 +1319,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "PROPFIND",
-				url: `zotero/`,
+				url: `trellis/`,
 				status: 207,
 				headers: {
 					"Content-Type": 'text/xml; charset="utf-8"'
@@ -1329,7 +1329,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 						
 						// Orphaned files to delete
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/</D:href>`
+							+ `<D:href>${davBasePath}trellis/</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1338,7 +1338,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/lastsync.txt</D:href>`
+							+ `<D:href>${davBasePath}trellis/lastsync.txt</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1347,7 +1347,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/lastsync</D:href>`
+							+ `<D:href>${davBasePath}trellis/lastsync</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1356,7 +1356,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/AAAAAAAA.zip</D:href>`
+							+ `<D:href>${davBasePath}trellis/AAAAAAAA.zip</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1365,7 +1365,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/AAAAAAAA.prop</D:href>`
+							+ `<D:href>${davBasePath}trellis/AAAAAAAA.prop</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1374,7 +1374,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/BBBBBBBB.zip</D:href>`
+							+ `<D:href>${davBasePath}trellis/BBBBBBBB.zip</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1383,7 +1383,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/BBBBBBBB.prop</D:href>`
+							+ `<D:href>${davBasePath}trellis/BBBBBBBB.prop</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1394,7 +1394,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 						
 						// Orphaned files that aren't old enough to delete
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/CCCCCCCC.zip</D:href>`
+							+ `<D:href>${davBasePath}trellis/CCCCCCCC.zip</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${currentTime}</lp1:getlastmodified>`
@@ -1403,7 +1403,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/CCCCCCCC.prop</D:href>`
+							+ `<D:href>${davBasePath}trellis/CCCCCCCC.prop</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${currentTime}</lp1:getlastmodified>`
@@ -1414,7 +1414,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 						
 						// Item that exists
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/${item1Key}.zip</D:href>`
+							+ `<D:href>${davBasePath}trellis/${item1Key}.zip</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1423,7 +1423,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/${item1Key}.prop</D:href>`
+							+ `<D:href>${davBasePath}trellis/${item1Key}.prop</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1434,7 +1434,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 						
 						// Item in sync queue
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/${item2Key}.zip</D:href>`
+							+ `<D:href>${davBasePath}trellis/${item2Key}.zip</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1443,7 +1443,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}zotero/${item2Key}.prop</D:href>`
+							+ `<D:href>${davBasePath}trellis/${item2Key}.prop</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1455,32 +1455,32 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			});
 			setResponse({
 				method: "DELETE",
-				url: 'zotero/AAAAAAAA.prop',
+				url: 'trellis/AAAAAAAA.prop',
 				status: 204
 			});
 			setResponse({
 				method: "DELETE",
-				url: 'zotero/AAAAAAAA.zip',
+				url: 'trellis/AAAAAAAA.zip',
 				status: 204
 			});
 			setResponse({
 				method: "DELETE",
-				url: 'zotero/BBBBBBBB.prop',
+				url: 'trellis/BBBBBBBB.prop',
 				status: 204
 			});
 			setResponse({
 				method: "DELETE",
-				url: 'zotero/BBBBBBBB.zip',
+				url: 'trellis/BBBBBBBB.zip',
 				status: 204
 			});
 			setResponse({
 				method: "DELETE",
-				url: 'zotero/lastsync.txt',
+				url: 'trellis/lastsync.txt',
 				status: 204
 			});
 			setResponse({
 				method: "DELETE",
-				url: 'zotero/lastsync',
+				url: 'trellis/lastsync',
 				status: 204
 			});
 			
@@ -1503,14 +1503,14 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 		})
 		
 		it("shouldn't purge if purged recently", async function () {
-			Zotero.Prefs.set("lastWebDAVOrphanPurge", Math.round(new Date().getTime() / 1000) - 3600);
+			Trellis.Prefs.set("lastWebDAVOrphanPurge", Math.round(new Date().getTime() / 1000) - 3600);
 			assert.equal(await controller.purgeOrphanedStorageFiles(), false);
 			assertRequestCount(0);
 		});
 		
 		
 		it("should handle unnormalized Unicode characters", async function () {
-			var library = Zotero.Libraries.userLibrary;
+			var library = Trellis.Libraries.userLibrary;
 			library.updateLastSyncTime();
 			await library.saveTx();
 			
@@ -1526,7 +1526,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 			
 			setResponse({
 				method: "PROPFIND",
-				url: `${encodedStrC}/zotero/`,
+				url: `${encodedStrC}/trellis/`,
 				status: 207,
 				headers: {
 					"Content-Type": 'text/xml; charset="utf-8"'
@@ -1534,7 +1534,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 				text: '<?xml version="1.0" encoding="utf-8"?>'
 					+ '<D:multistatus xmlns:D="DAV:" xmlns:ns0="DAV:">'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}${encodedStrD}/zotero/</D:href>`
+							+ `<D:href>${davBasePath}${encodedStrD}/trellis/</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1543,7 +1543,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}${encodedStrD}/zotero/lastsync</D:href>`
+							+ `<D:href>${davBasePath}${encodedStrD}/trellis/lastsync</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1553,7 +1553,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 						+ '</D:response>'
 						
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}${encodedStrD}/zotero/AAAAAAAA.zip</D:href>`
+							+ `<D:href>${davBasePath}${encodedStrD}/trellis/AAAAAAAA.zip</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1562,7 +1562,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 							+ '</D:propstat>'
 						+ '</D:response>'
 						+ '<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/">'
-							+ `<D:href>${davBasePath}${encodedStrD}/zotero/AAAAAAAA.prop</D:href>`
+							+ `<D:href>${davBasePath}${encodedStrD}/trellis/AAAAAAAA.prop</D:href>`
 							+ '<D:propstat>'
 								+ '<D:prop>'
 								+ `<lp1:getlastmodified>${beforeTime}</lp1:getlastmodified>`
@@ -1573,7 +1573,7 @@ describe("Zotero.Sync.Storage.Mode.WebDAV", function () {
 					+ '</D:multistatus>'
 			});
 			
-			Zotero.Prefs.set("sync.storage.url", davHostPath + strC + "/");
+			Trellis.Prefs.set("sync.storage.url", davHostPath + strC + "/");
 			await controller.purgeOrphanedStorageFiles();
 		})
 	})

@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Tên:">
+
+<!ENTITY trellis.search.searchInLibrary "Tìm trong thư viện:">
+
+<!ENTITY trellis.search.joinMode.prefix "Tìm các biểu ghi thỏa mãn">
+<!ENTITY trellis.search.joinMode.any "một trong">
+<!ENTITY trellis.search.joinMode.all "tất cả">
+<!ENTITY trellis.search.joinMode.suffix "các điều kiện sau:">
+
+<!ENTITY trellis.search.recursive.label "Tìm kiếm trong cả các thư mục con">
+<!ENTITY trellis.search.noChildren "Chỉ hiển thị các các biểu ghi cấp cao nhất">
+<!ENTITY trellis.search.includeParentsAndChildren "Hiển thị các biểu ghi mẹ và con của biểu ghi thỏa mãn điều kiện tìm kiếm">
+
+<!ENTITY trellis.search.textModes.phrase "Cụm từ">
+<!ENTITY trellis.search.textModes.phraseBinary "Cụm từ (bao gồm cả các tập tin nhị phân)">
+<!ENTITY trellis.search.textModes.regexp "Biểu thức chính quy">
+<!ENTITY trellis.search.textModes.regexpCS "Biểu thức chính quy (có phân biệt chữ thường/hoa)">
+
+<!ENTITY trellis.search.date.units.days "ngày">
+<!ENTITY trellis.search.date.units.months "tháng">
+<!ENTITY trellis.search.date.units.years "năm">
+
+<!ENTITY trellis.search.search "Thực hiện Tìm kiếm">
+<!ENTITY trellis.search.clear "Xóa">
+<!ENTITY trellis.search.saveSearch "Ghi nhớ Tìm kiếm Định sẵn">

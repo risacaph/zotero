@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Evet">
+<!ENTITY trellis.general.no "Hayır">
+<!ENTITY trellis.general.optional "(İsteğe bağlı)">
+<!ENTITY trellis.general.note "Not:">
+<!ENTITY trellis.general.selectAll "Hepsini Seç">
+<!ENTITY trellis.general.deselectAll "Hiçbirini Seçme">
+<!ENTITY trellis.general.edit "Düzenle">
+<!ENTITY trellis.general.delete "Sil">
+<!ENTITY trellis.general.moveToTrash "Çöp Sepetine Gönder">
+<!ENTITY trellis.general.ok "Tamam">
+<!ENTITY trellis.general.cancel "İptal Et">
+<!ENTITY trellis.general.refresh "Yenile">
+<!ENTITY trellis.general.saveAs "Farklı Kaydet...">
+<!ENTITY trellis.general.options "Seçenekler">
+<!ENTITY trellis.general.advancedOptions.label "Gelişmiş Seçenekler">
+<!ENTITY trellis.general.tools "Araçlar">
+<!ENTITY trellis.general.more "Daha Başka">
+<!ENTITY trellis.general.moreInformation "Daha Fazla Bilgi">
+<!ENTITY trellis.general.loading "Yükleniyor...">
+<!ENTITY trellis.general.close "Kapat">
+<!ENTITY trellis.general.minimize "Küçült">
+<!ENTITY trellis.general.other "Diğerleri...">
+<!ENTITY trellis.general.bigger "Büyült">
+<!ENTITY trellis.general.smaller "Küçült">
+<!ENTITY trellis.general.reset "Sıfırla">
+
+
+<!ENTITY trellis.errorReport.title "Trellis Hata Raporu">
+<!ENTITY trellis.errorReport.submissionInProgress "Lütfen hata raporu gönderilene kadar bekleyiniz.">
+<!ENTITY trellis.errorReport.submitted "Hata raporu gönderilmiştir.">
+<!ENTITY trellis.errorReport.reportID "Rapor Kimlik Numarası:">
+<!ENTITY trellis.errorReport.postToForums "Lütfen Trellis forumlarına (forums.trellis.org) bir ileti gönderiniz, ve bu iletide bu Rapor Kimlik Numarasını, sorunun bir tanımı ve bu sorunu yeniden oluşturabilmek için yapılanları adım adım yazınız.">
+<!ENTITY trellis.errorReport.notReviewed "Genellikle hata raporları forumlara gönderilmediği sürece incelenmez.">
+
+<!ENTITY trellis.upgrade.title "Trellis Yükseltme Yardımcısı">
+<!ENTITY trellis.upgrade.newVersionInstalled "Trellis'nun yeni bir sürümünü kurdunuz.">
+<!ENTITY trellis.upgrade.upgradeRequired "Trellis veritabanınızın, yeni sürüm ile birlikte çalışabilmesi için yükseltilmesi gerekir.">
+<!ENTITY trellis.upgrade.autoBackup "Herhangi bir değişiklik yapılmadan önce, varolan veritabanınız otomatik olarak yedeklenecektir.">
+<!ENTITY trellis.upgrade.majorUpgrade "Bu büyük bir yükseltmedir.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Gözden geçirdiğinize emin olunuz">
+<!ENTITY trellis.upgrade.majorUpgradeLink "yükseltme yönergeleri">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "devam etmeden önce.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Lütfen yükseltme işleni bitene kadar bekleyiniz. Bu bir miktar zaman alabilir.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Trellis veritabanınız başarılı olarak yükseltilmiştir.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Yeni olanları öğrenmek için, lütfen">
+<!ENTITY trellis.upgrade.changeLogLink "değişiklik kaydına">
+<!ENTITY trellis.upgrade.changeLogAfterLink "bakınız.">
+
+<!ENTITY trellis.tabs.notes.label "Notlar">
+<!ENTITY trellis.tabs.attachments.label "Ekler">
+
+<!ENTITY trellis.toolbar.duplicate.label "Yinelenmiş Eserleri Göster">
+<!ENTITY trellis.collections.showUnfiledItems "Dosyalanmamış Eserleri Göster">
+<!ENTITY trellis.collections.showRetractedItems "Geri Çekilmiş Eserleri Göster">
+
+<!ENTITY trellis.items.itemType "Eser Türü">
+<!ENTITY trellis.items.creator_column "Oluşturan">
+<!ENTITY trellis.items.year_column "Yıl">
+<!ENTITY trellis.items.dateModified_column "Değiştirildiği Tarih">
+<!ENTITY trellis.items.moreColumns.label "Diğer Sütunlar">
+<!ENTITY trellis.items.restoreColumnOrder.label "Sütun Sırasını Geri Yükle">
+
+<!ENTITY trellis.items.menu.showInLibrary "Kitaplıkta Göster">
+<!ENTITY trellis.items.menu.attach.note "Not Ekle">
+<!ENTITY trellis.items.menu.attach "Ek Ekle">
+<!ENTITY trellis.items.menu.attach.link.uri "URI'ye Bağlantı Ekle">
+<!ENTITY trellis.items.menu.attach.file "Dosyanın Kaydedilmiş Kopyasını Ekle">
+<!ENTITY trellis.items.menu.attach.fileLink "Dosyaya Bağlantı Ekle...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Kitaplığa geri yükle">
+<!ENTITY trellis.items.menu.duplicateItem "Seçili Eseri Çoğalt">
+<!ENTITY trellis.items.menu.mergeItems "Eserleri Birleştir...">
+<!ENTITY trellis.items.menu.unrecognize "Üstveri Alma İşlemini Geri Al">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Eserin hangi versiyonunun asıl eser olarak kullanılacağını seç:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Eserin diğer versiyonlarından hangi alanların tutulacağını seç:">
+
+<!ENTITY trellis.toolbar.newItem.label "Yeni Eser">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Diğer türler">
+<!ENTITY trellis.toolbar.lookup.label "Eser(ler)i Tanımlayıcılarını Kullanarak Ekle">
+<!ENTITY trellis.toolbar.removeItem.label "Eseri Kaldır...">
+<!ENTITY trellis.toolbar.newGroup "Yeni Grup...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Yeni Alt Derme...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Yeni Kaydedilen Arama...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Çöp Sepetini Boşalt">
+<!ENTITY trellis.toolbar.tagSelector.label "Etiket Seçiciyi Göster/Gizle">
+<!ENTITY trellis.toolbar.actions.label "Eylemler">
+<!ENTITY trellis.toolbar.import.label "İçeri Aktar...">
+<!ENTITY trellis.toolbar.importFromClipboard "Panodan İçeri Aktar">
+<!ENTITY trellis.toolbar.export.label "Kitaplığı Dışarı Aktar...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF Tarama">
+<!ENTITY trellis.toolbar.preferences.label "Tercihler...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Destek ve Belgeleme">
+<!ENTITY trellis.toolbar.about.label "Trellis Hakkında">
+<!ENTITY trellis.toolbar.advancedSearch "Gelişmiş Arama">
+<!ENTITY trellis.toolbar.openURL.label "Yerini Bul">
+<!ENTITY trellis.toolbar.openURL.tooltip "Yerel Kitaplığınızda Bul">
+
+<!ENTITY trellis.toolbar.feeds.new "Yeni Besleme">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "URL'den...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "OPML'den...">
+<!ENTITY trellis.toolbar.feeds.edit "Beslemeyi Düzenle...">
+
+<!ENTITY trellis.item.add "Ekle">
+<!ENTITY trellis.item.attachment.file.show "Dosyayı Göster">
+<!ENTITY trellis.item.textTransform "Metni Dönüştür">
+<!ENTITY trellis.item.textTransform.titlecase "Başlık Biçimi">
+<!ENTITY trellis.item.textTransform.sentencecase "Cümle Biçimi">
+<!ENTITY trellis.item.creatorTransform.nameSwap "İlk ve Soyadları Takas Et">
+<!ENTITY trellis.item.creatorTransform.fixCase "Büyük Harfleri Düzelt">
+<!ENTITY trellis.item.copyAsURL "URL'i Kopyala">
+<!ENTITY trellis.item.deletePermanently "Kalıcı Olarak Sil...">
+
+<!ENTITY trellis.item.tags.removeAll "Tüm Etiketleri Kaldır...">
+
+<!ENTITY trellis.toolbar.newNote "Yeni Not">
+<!ENTITY trellis.toolbar.note.standalone "Yeni Bağımsız Not">
+<!ENTITY trellis.toolbar.note.child "Alt Not Ekle">
+<!ENTITY trellis.toolbar.lookup "Tanımlayıcı ile Arama...">
+<!ENTITY trellis.toolbar.attachment.linked "Dosyaya Bağlantı Kur...">
+<!ENTITY trellis.toolbar.attachment.add "Dosyanın bir Kopyasının Sakla">
+<!ENTITY trellis.toolbar.attachment.weblink "Geçerli Sayfaya Bağlantıyı Kaydet">
+<!ENTITY trellis.toolbar.attachment.snapshot "Geçerli Sayfanın Anlık Görüntüsünü Al">
+<!ENTITY trellis.toolbar.context.item "Eser">
+<!ENTITY trellis.toolbar.context.notes "Notlar">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Gösterilecek etiket yok">
+<!ENTITY trellis.tagSelector.loadingTags "Etiketleri yüklüyor...">
+<!ENTITY trellis.tagSelector.showAutomatic "Otomatik Etiketleri Göster">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Bu Kitaplık İçindeki Tüm Etiketleri Göster">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Bu Kitaplık İçindeki Otomatik Etiketleri Sil...">
+<!ENTITY trellis.tagSelector.clearAll "Hiçbirini Seçme">
+<!ENTITY trellis.tagSelector.assignColor "Etikete Renk Ata...">
+<!ENTITY trellis.tagSelector.renameTag "Etiketi Yeniden Adlandır...">
+<!ENTITY trellis.tagSelector.deleteTag "Etiketi Sil...">
+<!ENTITY trellis.tagSelector.splitTag "Böl...">
+
+<!ENTITY trellis.tagColorChooser.title "Etiket Rengi ve Konumunu Seç">
+<!ENTITY trellis.tagColorChooser.color "Renk:">
+<!ENTITY trellis.tagColorChooser.position "Konum:">
+<!ENTITY trellis.tagColorChooser.setColor "Rengi Ayarla">
+<!ENTITY trellis.tagColorChooser.removeColor "Rengi Kaldır">
+
+<!ENTITY trellis.lookup.description "ISBN, DOI, PMID, arXiv ID ya da ADS Bibcode tanımlayıcılarını girerek kitaplığınıza ekleyin:">
+<!ENTITY trellis.lookup.button.search "Ara">
+
+<!ENTITY trellis.createParent.title "Ana Eser Yarat">
+<!ENTITY trellis.createParent.button.manual "Elle Veri Girişi">
+
+<!ENTITY trellis.selectitems.title "Eser Seç">
+<!ENTITY trellis.selectitems.intro.label "Kitaplığınıza eklemek istediğiniz eserleri seçiniz">
+<!ENTITY trellis.selectitems.cancel.label "İptal et">
+<!ENTITY trellis.selectitems.select.label "Tamam">
+
+<!ENTITY trellis.bibliography.title "Alıntı/Kaynakça Yarat">
+<!ENTITY trellis.bibliography.style.label "Alıntı Stili:">
+<!ENTITY trellis.bibliography.manageStyles "Stilleri Yönet...">
+<!ENTITY trellis.bibliography.locale.label "Dil:">
+<!ENTITY trellis.bibliography.outputMode "Çıktı Modu:">
+<!ENTITY trellis.bibliography.bibliography "Kaynakça">
+<!ENTITY trellis.bibliography.outputMethod "Çıktı Metodu:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "RTF Olarak Kaydet">
+<!ENTITY trellis.bibliography.saveAsHTML.label "HTML olarak Kaydet">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Panoya Kopyala">
+<!ENTITY trellis.bibliography.print.label "Yazdır">
+
+<!ENTITY trellis.integration.docPrefs.title "Belge Tercihleri">
+<!ENTITY trellis.integration.addEditCitation.title "Alıntı Ekle/Düzenle">
+<!ENTITY trellis.integration.editBibliography.title "Kaynakça Düzenle">
+
+<!ENTITY trellis.progress.title "İşlem">
+
+<!ENTITY trellis.import "İçeri Aktar">
+<!ENTITY trellis.import.whereToImportFrom "Nereden içeri aktarmak istiyorsunuz?">
+<!ENTITY trellis.import.source.file "Bir dosya (BibTeX, RIS, Trellis RDF, vb.)">
+<!ENTITY trellis.import.source.folder "PDF'lerin veya diğer dosyaların bulunduğu bir klasör">
+<!ENTITY trellis.import.onlineImport "çevrimiçi içe aktarma">
+<!ENTITY trellis.import.importing "İçeri aktarılıyor...">
+<!ENTITY trellis.import.database "Veritabanı">
+<!ENTITY trellis.import.lastModified "Son Değiştirilmesi">
+<!ENTITY trellis.import.size "Boyut">
+<!ENTITY trellis.import.createCollection "İçeri aktarılmış dermeler ve eserleri yeni bir dermeye yerleştir">
+<!ENTITY trellis.import.fileHandling "Dosyaların İdare Edilmesi">
+<!ENTITY trellis.import.online.newItemsOnly "Yalnızca yeni eserleri indir; daha önce içeri aktarılmış olan eserleri güncelleme">
+
+<!ENTITY trellis.exportOptions.title "Dışarı Aktar...">
+<!ENTITY trellis.exportOptions.format.label "Biçim">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Çevirmen Seçenekleri">
+
+<!ENTITY trellis.charset.label "Karakter Kodlaması">
+<!ENTITY trellis.moreEncodings.label "Diğer Kodlamalar">
+
+<!ENTITY trellis.citation.keepSorted.label "Kaynakları Sıralı Tut">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Yazar Adını Sakla">
+<!ENTITY trellis.citation.prefix.label "Önek:">
+<!ENTITY trellis.citation.suffix.label "Sonek:">
+<!ENTITY trellis.citation.editorWarning.label "Uyarı: Eğer düzenleyicide bir alıntı düzenlerseniz, bu veritabanınızdaki ya da alıntı stilinizdeki değişikliklerle güncellenmeyecektir.">
+
+<!ENTITY trellis.richText.italic.label "İtalik">
+<!ENTITY trellis.richText.bold.label "Kalın">
+<!ENTITY trellis.richText.underline.label "Altçizgi">
+<!ENTITY trellis.richText.superscript.label "Üstsimge">
+<!ENTITY trellis.richText.subscript.label "Altsimge">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Ek Açıklama Ekle">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Tüm Ek Açıklamaları Daralt">
+<!ENTITY trellis.annotate.toolbar.expand.label "Tüm Ek Açıklamaları Genişlet">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Metni Vurgula">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Metni Vurgulama">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Alıntıları Göster:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Dipnot">
+<!ENTITY trellis.integration.prefs.endnotes.label "Son notlar">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Alıntıları Kaydetme Biçimi:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Yer imleri">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Yer imleri Word ve LibreOffice arasında paylaşılabilirler, ama yanlışlıkla değiştirilirlerse hatalara neden olabilirler ve dipnotlara konulamazlar.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Alıntıları otomatik olarak güncelle">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Bekleyen güncellemeleri olan alıntılar belgede vurgulanacaktırlar.">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Güncellemeleri devre dışı bırakmak, büyük belgelerde alıntı koymayı hızlandırabilir. Alıntıları güncellemek için Yenile'ye tıklayınız.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "MEDLINE dergi kısaltmalarını kullan">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "“Dergi Kısaltması” alanı yok sayılacaktır.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Başka Bir Sözcük İşlemcisine Geç...">
+
+<!ENTITY trellis.integration.showEditor.label "Düzenleyiciyi Göster">
+<!ENTITY trellis.integration.classicView.label "Klasik Görünüm">
+
+<!ENTITY trellis.integration.references.label "Kaynakçadaki Kaynaklar">
+
+<!ENTITY trellis.sync.stop "Eşitlemeyi Durdur">
+<!ENTITY trellis.sync.error "Eşitleme Hatası">
+<!ENTITY trellis.sync.storage.progress "İşlem:">
+<!ENTITY trellis.sync.storage.downloads "İndirilenler:">
+<!ENTITY trellis.sync.storage.uploads "Yüklenenler:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Trellis kitaplığınızda bulunan bu etiket sunucuya eşitlenmek için çok uzundur:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Eşitlenecek etiketler 256 karakterden daha kısa olmalıdır.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Bir etiketi birden fazla etikete bölebilirsiniz, etiketi kısaltmak için düzenleyebilirsiniz, ya da silebilirsiniz.">
+<!ENTITY trellis.sync.longTagFixer.split "Böl">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Böl">
+<!ENTITY trellis.sync.longTagFixer.character "karaktere">
+<!ENTITY trellis.sync.longTagFixer.characters "karaktere">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Seçilmemiş etiketler kaydedilmeyecek.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Etiket tüm eserlerden silinecek.">
+
+<!ENTITY trellis.merge.title "Çakışma Çözümü:">
+<!ENTITY trellis.merge.of "/">
+<!ENTITY trellis.merge.deleted "Silindi">
+
+<!ENTITY trellis.proxy.recognized.title "Vekil Sunucu Onaylandı">
+<!ENTITY trellis.proxy.recognized.warning "Yalnızca kütüphane, okul veya kurumsal web siteniz tarafından bağlantı verilen vekil sunucuları ekleyiniz.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Başka vekil sunucuların eklenmesi kötü niyetli sitelere onaylanan site izni verebilir.">
+<!ENTITY trellis.proxy.recognized.disable.label "İsteği otomatik olarak bir önce onaylanan vekil sunucu üzerinden yönlendirme.">
+<!ENTITY trellis.proxy.recognized.ignore.label "Yoksay">
+
+<!ENTITY trellis.feedSettings.title "Besleme Ayarları">
+<!ENTITY trellis.feedSettings.saveButton.label "Kaydet">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Başlık:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Beslemeyi her">
+<!ENTITY trellis.feedSettings.refresh.label2 "saatte yenile">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Okunmamış beslemeleri">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "gün sonra kaldır">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Okunmuş beslemeleri">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "gün sonra kaldır">
+
+<!ENTITY trellis.rtfScan.title "RTF Tarama">
+<!ENTITY trellis.rtfScan.cancel.label "İptal et">
+<!ENTITY trellis.rtfScan.citation.label "Alıntı">
+<!ENTITY trellis.rtfScan.itemName.label "Eser Adı">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Eşlenmemiş Alıntılar">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Belirsiz Alıntılar">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Eşlenmiş Alıntılar">
+<!ENTITY trellis.rtfScan.introPage.label "Giriş">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis, alıntıları otomatik olarak ayıklayıp düzenleyebilir ve RTF dosyalarının içine kaynakça olarak koyabilir. RTF tarama özelliği, halen aşağıdaki biçimlendirme şekillerinde yaratılmış alıntıları desteklemektedir:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Başlamak için, aşağıdan bir RTF girdi dosyası ve bir çıktı dosyası seçiniz:">
+<!ENTITY trellis.rtfScan.scanPage.label "Alıntılar için Tarama">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis, belgenizi alıntı bulmak için tarıyor. Lütfen bekleyiniz.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Alıntıların Onaylanması">
+<!ENTITY trellis.rtfScan.citationsPage.description "Lütfen aşağıdaki listede tanınan alıntıları Trellis'nun doğru olarak eşlendirip eşlendirmediğini gözden geçiriniz. Bir sonraki adıma geçmeden önce eşlenmemiş veya belirsiz alıntılar çözümlenmelidir.">
+<!ENTITY trellis.rtfScan.stylePage.label "Belge Biçimlendirme">
+<!ENTITY trellis.rtfScan.formatPage.label "Alıntı Biçimlendirme">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis, RTF dosyanızı işliyor ve biçimlendiriyor. Lütfen bekleyiniz.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF Taraması Tamamlandı">
+<!ENTITY trellis.rtfScan.completePage.description "Belgenizin taranması ve işlenmesi tamamlandı. Lütfen biçimlendirmesinin doğruluğunu kontrol ediniz.">
+<!ENTITY trellis.rtfScan.inputFile.label "Girdi Dosyası">
+<!ENTITY trellis.rtfScan.outputFile.label "Çıktı Dosyası">
+
+<!ENTITY trellis.file.choose.label "Dosya Seçiniz...">
+<!ENTITY trellis.file.noneSelected.label "Dosya seçilmedi">
+
+<!ENTITY trellis.attachLink.title "URI'ye Bağlantı Ekle.">
+<!ENTITY trellis.attachLink.label.link "Bağlantı">
+<!ENTITY trellis.attachLink.label.title "Başlık">
+
+<!ENTITY trellis.context.addChildNote "Eser Notu Ekle">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Ek Açıklamalardan Eser Notu Ekle">
+<!ENTITY trellis.context.addStandaloneNote "Bağımsız Not Ekle">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Ek Açıklamalardan Bağımsız Not Ekle">
+<!ENTITY trellis.context.editInWindow "Ayrı Bir Pencerede Düzenle">
+
+<!ENTITY trellis.pdfReader.firstPage "İlk Sayfa">
+<!ENTITY trellis.pdfReader.lastPage "Son Sayfa">
+<!ENTITY trellis.pdfReader.back "Geri">
+<!ENTITY trellis.pdfReader.forward "İleri">
+<!ENTITY trellis.pdfReader.handTool "El Aracı">
+<!ENTITY trellis.pdfReader.verticalScrolling "Dikey Kaydırma">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Yatay Kaydırma">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Yan Yana Kaydırma">
+<!ENTITY trellis.pdfReader.noSpreads "Birleştirme">
+<!ENTITY trellis.pdfReader.oddSpreads "Tek Numaralı">
+<!ENTITY trellis.pdfReader.evenSpreads "Çift Numaralı">
+<!ENTITY trellis.pdfReader.scrolled "Kaydırmalı">
+<!ENTITY trellis.pdfReader.paginated "Sayfalanmış">
+<!ENTITY trellis.pdfReader.zoomIn "Yakınlaştır">
+<!ENTITY trellis.pdfReader.zoomOut "Uzaklaştır">
+<!ENTITY trellis.pdfReader.zoomReset "Yakınlaştırmayı Sıfırla">
+<!ENTITY trellis.pdfReader.zoomAuto "Otomatik Olarak Yeniden Boyutlandır">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Sayfa Genişliğine Yakınlaştır">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Sayfa Yüksekliğine Yakınlaştır">
+<!ENTITY trellis.pdfReader.splitVertically "Dikey Olarak Böl">
+<!ENTITY trellis.pdfReader.splitHorizontally "Yatay Olarak Böl">
+<!ENTITY trellis.pdfReader.transferFromPDF "Ek Açıklamaları İçeri Aktar...">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Sayfayı Sola Döndür">
+<!ENTITY trellis.pdfReader.rotatePageRight "Sayfayı Sağa Döndür">

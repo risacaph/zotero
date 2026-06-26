@@ -40,26 +40,26 @@
     @if $has2x {
         @if $prefix {
             @return image-set(
-                url('chrome://zotero/skin/#{$prefix}/#{$size}/#{$color}/#{$icon}.svg') 1x,
-                url('chrome://zotero/skin/#{$prefix}/#{$size}/#{$color}/#{$icon}@2x.svg') 2x
+                url('chrome://trellis/skin/#{$prefix}/#{$size}/#{$color}/#{$icon}.svg') 1x,
+                url('chrome://trellis/skin/#{$prefix}/#{$size}/#{$color}/#{$icon}@2x.svg') 2x
             );
         }
 
         @else {
             @return image-set(
-                url('chrome://zotero/skin/#{$size}/#{$color}/#{$icon}.svg') 1x,
-                url('chrome://zotero/skin/#{$size}/#{$color}/#{$icon}@2x.svg') 2x
+                url('chrome://trellis/skin/#{$size}/#{$color}/#{$icon}.svg') 1x,
+                url('chrome://trellis/skin/#{$size}/#{$color}/#{$icon}@2x.svg') 2x
             );
         }
     }
 
     @else {
         @if $prefix {
-            @return url('chrome://zotero/skin/#{$prefix}/#{$size}/#{$color}/#{$icon}.svg');
+            @return url('chrome://trellis/skin/#{$prefix}/#{$size}/#{$color}/#{$icon}.svg');
         }
 
         @else {
-            @return url('chrome://zotero/skin/#{$size}/#{$color}/#{$icon}.svg');
+            @return url('chrome://trellis/skin/#{$size}/#{$color}/#{$icon}.svg');
         }
     }
 }

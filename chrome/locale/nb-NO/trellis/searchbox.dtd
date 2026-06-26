@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Navn:">
+
+<!ENTITY trellis.search.searchInLibrary "Søk i bibliotek:">
+
+<!ENTITY trellis.search.joinMode.prefix "Finn">
+<!ENTITY trellis.search.joinMode.any "hvilken som helst">
+<!ENTITY trellis.search.joinMode.all "alle">
+<!ENTITY trellis.search.joinMode.suffix "av følgende:">
+
+<!ENTITY trellis.search.recursive.label "Søk i under-samlinger">
+<!ENTITY trellis.search.noChildren "Vis kun overordnede elementer">
+<!ENTITY trellis.search.includeParentsAndChildren "Inkluder under- og overordnede elementer">
+
+<!ENTITY trellis.search.textModes.phrase "Frase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (inkl. binærfiler)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (versalsensitiv)">
+
+<!ENTITY trellis.search.date.units.days "dager">
+<!ENTITY trellis.search.date.units.months "måneder">
+<!ENTITY trellis.search.date.units.years "år">
+
+<!ENTITY trellis.search.search "Søk">
+<!ENTITY trellis.search.clear "Fjern">
+<!ENTITY trellis.search.saveSearch "Lagre søk">

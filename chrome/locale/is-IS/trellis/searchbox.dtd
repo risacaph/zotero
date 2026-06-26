@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Nafn:">
+
+<!ENTITY trellis.search.searchInLibrary "Leita í færslusafni:">
+
+<!ENTITY trellis.search.joinMode.prefix "Leita að">
+<!ENTITY trellis.search.joinMode.any "einhverju">
+<!ENTITY trellis.search.joinMode.all "öllum">
+<!ENTITY trellis.search.joinMode.suffix "eftirtaldra orða:">
+
+<!ENTITY trellis.search.recursive.label "Leita í undirsöfnum">
+<!ENTITY trellis.search.noChildren "Sýna eingöngu fyrstu kennileiti úr færslum">
+<!ENTITY trellis.search.includeParentsAndChildren "Taka með allar undirskrár í færslum sem finnast">
+
+<!ENTITY trellis.search.textModes.phrase "Setningaliður">
+<!ENTITY trellis.search.textModes.phraseBinary "Setningaliður (með stafrænum skrám)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Leitartexti (næmur fyrir há- og lágstöfum)">
+
+<!ENTITY trellis.search.date.units.days "dagar">
+<!ENTITY trellis.search.date.units.months "mánuðir">
+<!ENTITY trellis.search.date.units.years "ár">
+
+<!ENTITY trellis.search.search "Leita">
+<!ENTITY trellis.search.clear "Hreinsa">
+<!ENTITY trellis.search.saveSearch "Vista leit">

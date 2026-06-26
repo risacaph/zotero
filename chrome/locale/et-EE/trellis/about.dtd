@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "versioon">
+<!ENTITY trellis.whatsNew "What’s new">
+<!ENTITY trellis.createdby "Loodud:">
+<!ENTITY trellis.director "Juhataja:">
+<!ENTITY trellis.directors "Juhatajad:">
+<!ENTITY trellis.developers "Arendajad:">
+<!ENTITY trellis.alumni "Kaastöötajad:">
+<!ENTITY trellis.about.localizations "Tõlked:">
+<!ENTITY trellis.about.additionalSoftware "Third-Party Software:">
+<!ENTITY trellis.thanks "Tänud:">
+<!ENTITY trellis.about.close "Sulge">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Veel autoreid ja tänusõnu">
+<!ENTITY trellis.citationProcessing "Tsiteeringute ja bibliograafia töötlemine">

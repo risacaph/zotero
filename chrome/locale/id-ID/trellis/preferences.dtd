@@ -1,0 +1,194 @@
+<!ENTITY trellis.preferences.title "Preferensi Trellis">
+
+<!ENTITY trellis.preferences.helpButton.label "Bantuan">
+
+<!ENTITY trellis.preferences.default "Default:">
+<!ENTITY trellis.preferences.items "Item">
+<!ENTITY trellis.preferences.period ".">
+<!ENTITY trellis.preferences.custom "Kustom...">
+
+<!ENTITY trellis.preferences.prefpane.general "General">
+
+<!ENTITY trellis.preferences.interface "Antarmuka">
+<!ENTITY trellis.preferences.fileHandling "File Handling">
+<!ENTITY trellis.preferences.automaticSnapshots "Ambil foto secara automatis ketika menyusun item dari laman web">
+<!ENTITY trellis.preferences.downloadAssociatedFiles "Lampirkan PDF dan berkas terkait lainnya secara automatis saat menyimpan item">
+<!ENTITY trellis.preferences.autoRenameFiles.renameLinked "Ganti nama file yang ditautkan">
+<!ENTITY trellis.preferences.fileHandler.openPDFsUsing "Buka PDF menggunakan">
+<!ENTITY trellis.preferences.fileHandler.systemDefault "Default Sistem">
+
+<!ENTITY trellis.preferences.miscellaneous "Lain-lain">
+<!ENTITY trellis.preferences.autoUpdate "Secara otomatis memeriksa penerjemah dan gaya yang diperbarui">
+<!ENTITY trellis.preferences.updateNow "Mutakhirkan sekarang">
+<!ENTITY trellis.preferences.reportTranslationFailure "Laporkan kerusakan translator situs">
+<!ENTITY trellis.preferences.parseRISRefer "Gunakan Trellis untuk mengunduh file BibTeX/RIS/Refer">
+<!ENTITY trellis.preferences.automaticTags "Berikan tag pada item dengan kata kunci dan bagian utama subjek secara automatis">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPre "Buang item-item di dalam kantung sampah yang telah dihapus lebih dari">
+<!ENTITY trellis.preferences.trashAutoEmptyDaysPost "hari yang lalu secara automatis">
+
+<!ENTITY trellis.preferences.reader.tabsTitle.label "Tampilkan tab sebagai">
+<!ENTITY trellis.preferences.reader.tabsTitle.creatorYearTitle "Pembuat - Tahun - Judul">
+<!ENTITY trellis.preferences.reader.tabsTitle.titleCreatorYear "Judul - Pembuat - Tahun">
+<!ENTITY trellis.preferences.reader.tabsTitle.filename "Nama dokumen">
+
+<!ENTITY trellis.preferences.groups "Grup">
+<!ENTITY trellis.preferences.groups.whenCopyingInclude "Saat menyalin item antarperpustakaan, turut masukkan:">
+<!ENTITY trellis.preferences.groups.childNotes "catatan anak">
+<!ENTITY trellis.preferences.groups.childFiles "foto anak dan berkar terimpor">
+<!ENTITY trellis.preferences.groups.annotations "anotasi">
+<!ENTITY trellis.preferences.groups.childLinks "tautan anak">
+<!ENTITY trellis.preferences.groups.tags "tags">
+
+<!ENTITY trellis.preferences.feeds "Umpan">
+<!ENTITY trellis.preferences.feeds.sorting.label "Penyortiran:">
+<!ENTITY trellis.preferences.feeds.sorting.newest "Item terbaru terlebih dahulu">
+<!ENTITY trellis.preferences.feeds.sorting.oldest "Item terlama terlebih dahulu">
+<!ENTITY trellis.preferences.feeds.feedDefaults "Umpan Default">
+
+<!ENTITY trellis.preferences.prefpane.sync "Sinkronisasi">
+<!ENTITY trellis.preferences.sync.username "Nama pengguna:">
+<!ENTITY trellis.preferences.sync.password "Password:">
+<!ENTITY trellis.preferences.sync.createAccount "Buat Akun">
+<!ENTITY trellis.preferences.sync.lostPassword "Kehilangan Password?">
+<!ENTITY trellis.preferences.sync.syncAutomatically "SInkronisasikan secara automatis">
+<!ENTITY trellis.preferences.sync.syncFullTextContent "Sinkronisasi konten teks lengkap">
+<!ENTITY trellis.preferences.sync.syncFullTextContent.desc "Trellis dapat menyinkronkan konten teks lengkap file di perpustakaan Trellis Anda dengan trellis.org dan perangkat lain yang ditautkan, memungkinkan Anda untuk dengan mudah mencari file Anda di mana pun Anda berada. Konten teks lengkap file Anda tidak akan dibagikan secara publik.">
+<!ENTITY trellis.preferences.sync.about "Tentang Sinkronisasi">
+<!ENTITY trellis.preferences.sync.fileSyncing "Sinkronisasi Berkas">
+<!ENTITY trellis.preferences.sync.fileSyncing.url "URL:">
+<!ENTITY trellis.preferences.sync.fileSyncing.myLibrary "Sinkronisasikan berkas-berkas lampiran di dalam Perpustakaanku menggunakan">
+
+<!ENTITY trellis.preferences.sync.fileSyncing.download "Unduh file">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.atSyncTime "pada waktu sinkronisasi">
+<!ENTITY trellis.preferences.sync.fileSyncing.download.onDemand "sebagaimana dibutuhkan">
+<!ENTITY trellis.preferences.sync.fileSyncing.verifyServer "Verifikasi Server">
+<!ENTITY trellis.preferences.sync.librariesToSync "Perpustakaan untuk Disinkronkan">
+<!ENTITY trellis.preferences.sync.librariesToSync.button "Pilih perpustakaan...">
+<!ENTITY trellis.preferences.sync.librariesToSync.sync "Sinkronisasi">
+<!ENTITY trellis.preferences.sync.librariesToSync.library "Perpustakaan">
+<!ENTITY trellis.preferences.sync.reset.warning1 "Pengoperasian berikut ini hanya untuk digunakan dalam situasi spesifik yang jarang terjadi, dan tidak boleh digunakan untuk pemecahan masalah umum. Dalam banyak kasus, pengaturan ulang akan menyebabkan masalah tambahan. Lihat">
+<!ENTITY trellis.preferences.sync.reset.warning2 "Opsi Pengaturan Ulang Sinkronisasi">
+<!ENTITY trellis.preferences.sync.reset.warning3 "untuk informasi lebih lanjut.">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory "Atur Ulang Riwayat Sinkronisasi Data">
+<!ENTITY trellis.preferences.sync.reset.resetDataSyncHistory.desc "Gabungkan data lokal dengan data jarak jauh, mengabaikan riwayat sinkronisasi">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary "Kembalikan dari Perpustakaan Online">
+<!ENTITY trellis.preferences.sync.reset.restoreFromOnlineLibrary.desc "Timpa data Trellis lokal dengan data dari perpustakaan online.">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary "Ganti Perpustakaan Online">
+<!ENTITY trellis.preferences.sync.reset.restoreToOnlineLibrary.desc "Timpa perpustakaan online dengan data Trellis lokal">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory "Reset Riwayat Sinkronisasi Berkas">
+<!ENTITY trellis.preferences.sync.reset.resetFileSyncHistory.desc "Bandingkan semua file lampiran dengan layanan penyimpanan">
+<!ENTITY trellis.preferences.sync.reset "Reset">
+<!ENTITY trellis.preferences.sync.reset.showResetOptions "Show Reset Options…">
+<!ENTITY trellis.preferences.sync.reset.button "Reset...">
+
+
+<!ENTITY trellis.preferences.prefpane.search "Pencarian">
+<!ENTITY trellis.preferences.search.fulltextCache "Full-Text Cache">
+<!ENTITY trellis.preferences.search.indexStats "Statistik Indeks">
+
+<!ENTITY trellis.preferences.search.indexStats.indexed "Terindeksi:">
+<!ENTITY trellis.preferences.search.indexStats.partial "Parsial:">
+<!ENTITY trellis.preferences.search.indexStats.unindexed "Belum Terindeksi:">
+<!ENTITY trellis.preferences.search.indexStats.words "Kata:">
+
+<!ENTITY trellis.preferences.fulltext.textMaxLength "Jumlah maksimal karakter untuk diindeks per berkas:">
+<!ENTITY trellis.preferences.fulltext.pdfMaxPages "Jumlah maksimal halaman untuk diindeks per berkas:">
+
+<!ENTITY trellis.preferences.prefpane.export "Ekspor">
+
+<!ENTITY trellis.preferences.citationOptions.caption "Pilihan Sitasi">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL "Masukkan URL artikel tulisan di dalam referensi">
+<!ENTITY trellis.preferences.export.citePaperJournalArticleURL.description "Ketika opsi ini dimatikan, Trellis hanya akan memasukkan URL pada saat mengutip artikel  jurnal, majalah, dan koran yang tidak memiliki rentang halaman spesifik.">
+
+<!ENTITY trellis.preferences.quickCopy.caption "Salin Cepat">
+<!ENTITY trellis.preferences.quickCopy.itemFormat "Format item:">
+<!ENTITY trellis.preferences.quickCopy.noteFormat "Format Catatan:">
+<!ENTITY trellis.preferences.quickCopy.copyAsHTML "Salin sebagai HTML">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.setings "Pengaturan Spesifik-Situs">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath "Domain/Rute">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.domainPath.example "(misalnya, wikipedia.org)">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.format "Format">
+<!ENTITY trellis.preferences.quickCopy.siteEditor.locale "Bahasa">
+<!ENTITY trellis.preferences.quickCopy.dragLimit "Matikan fitur Salin Cepat saat menarik lebih dari">
+
+<!ENTITY trellis.preferences.prefpane.cite "Mengutip">
+<!ENTITY trellis.preferences.cite.wordProcessors "Pengolah Kata">
+<!ENTITY trellis.preferences.styleEditor "Editor Gaya">
+<!ENTITY trellis.preferences.stylePreview "Pratinjau Gaya">
+
+<!ENTITY trellis.preferences.cite.styles.styleManager "Pengelola Gaya">
+<!ENTITY trellis.preferences.cite.styles.styleManager.title "Judul">
+<!ENTITY trellis.preferences.cite.styles.styleManager.updated "Diperbarui">
+<!ENTITY trellis.preferences.cite.styles.styleManager.csl "CSL">
+
+<!ENTITY trellis.preferences.keys.saveToTrellis "Simpan ke Trellis (ikon bilah alamat)">
+<!ENTITY trellis.preferences.keys.focusLibrariesPane "Fokus Jendela Pustaka">
+<!ENTITY trellis.preferences.keys.quicksearch "Pencarian Cepat">
+<!ENTITY trellis.preferences.keys.newItem "Buat Item baru">
+<!ENTITY trellis.preferences.keys.newNote "Buat catatan baru">
+<!ENTITY trellis.preferences.keys.toggleAllRead "Tandai Semua Item Feed Sebagai Dibaca/Tidak Dibaca">
+<!ENTITY trellis.preferences.keys.copySelectedItemCitationsToClipboard "Salin Sitasi Item Terpilih ke Clipboard">
+<!ENTITY trellis.preferences.keys.copySelectedItemsToClipboard "Salin Item Terpilih ke Clipboard">
+<!ENTITY trellis.preferences.keys.importFromClipboard "Impor dari Clipboard">
+<!ENTITY trellis.preferences.keys.changesTakeEffect "Perubahan berlaku setelah memulai ulang">
+
+<!ENTITY trellis.preferences.prefpane.proxies "Proksi">
+
+<!ENTITY trellis.preferences.proxies.proxyOptions "Pilihan Proksi">
+<!ENTITY trellis.preferences.proxies.desc_before_link "Trellis akan secara jelas mengalihkan permintaan melalui proksi yang tersimpan. Lihat">
+<!ENTITY trellis.preferences.proxies.desc_link "dokumentasi proksi">
+<!ENTITY trellis.preferences.proxies.desc_after_link "untuk informasi lebih lanjut.">
+<!ENTITY trellis.preferences.proxies.transparent "Aktifkan pengalihan proksi">
+<!ENTITY trellis.preferences.proxies.autoRecognize "Kenali secara automatis sumber-sumber yang terproksi">
+<!ENTITY trellis.preferences.proxies.showRedirectNotification "Tampilkan notifikasi ketika mengarahkan ulang melalui proxy">
+<!ENTITY trellis.preferences.proxies.disableByDomain "Nonaktifkan pengalihan proksi ketika nama domain saya mengandung">
+<!ENTITY trellis.preferences.proxies.configured "Proksi Terkonfigurasi">
+<!ENTITY trellis.preferences.proxies.hostname "Nama Host">
+<!ENTITY trellis.preferences.proxies.scheme "Skema">
+
+<!ENTITY trellis.preferences.proxies.multiSite "Multisitus">
+<!ENTITY trellis.preferences.proxies.autoAssociate "Asosiasikan host baru secara automatis">
+<!ENTITY trellis.preferences.proxies.variables "Anda dapat menggunakan variabel-variabel berikut ini dalam skema proksi Anda:">
+<!ENTITY trellis.preferences.proxies.h_variable "&#37;h - Nama host situs yang terproksi (misalnya, www.trellis.org)">
+<!ENTITY trellis.preferences.proxies.p_variable "&#37;p - Path laman yang terproksi selain daripada slash utama (misalnya, tentang/index.html)">
+<!ENTITY trellis.preferences.proxies.d_variable "&#37;d - Path direktori (misalnya, tentang/)">
+<!ENTITY trellis.preferences.proxies.f_variable "&#37;f - Nama berkas (misalnya, index.html)">
+<!ENTITY trellis.preferences.proxies.a_variable "&#37;a - String apapun">
+
+<!ENTITY trellis.preferences.prefpane.advanced "Lebih Lanjut">
+<!ENTITY trellis.preferences.advanced.filesAndFolders "File dan Folder">
+<!ENTITY trellis.preferences.advanced.keys "Shortcut">
+
+<!ENTITY trellis.preferences.advanced.advancedConfiguration "Pengaturan Lanjutan">
+
+<!ENTITY trellis.preferences.prefpane.locate "Temukan">
+<!ENTITY trellis.preferences.locate.locateEngineManager "Pengelola Mesin Pencarian Artikel">
+<!ENTITY trellis.preferences.locate.description "Deskripsi">
+<!ENTITY trellis.preferences.locate.name "Nama">
+<!ENTITY trellis.preferences.locate.addDescription "Untuk menambahkan Mesin Pencari yang tidak ada dalam daftar, kunjungi mesin pencari yang diinginkan di browser Anda dan pilih &quot;Tambah&quot; dari menu Locate Trellis.">
+<!ENTITY trellis.preferences.locate.restoreDefaults "Kembalikan Default">
+
+<!ENTITY trellis.preferences.charset "Pengkodean karakter">
+<!ENTITY trellis.preferences.charset.importCharset "Impor Pengkodean Karakter">
+<!ENTITY trellis.preferences.charset.displayExportOption "Tampilkan pilihan pengkodean karakter saat mengekspor">
+
+<!ENTITY trellis.preferences.dataDir "Lokasi Direktori Data">
+<!ENTITY trellis.preferences.dataDir.useProfile "Gunakan direktori profil">
+<!ENTITY trellis.preferences.dataDir.custom "Buatan:">
+<!ENTITY trellis.preferences.dataDir.choose "Pilih...">
+<!ENTITY trellis.preferences.dataDir.viaCommandLine "(ditentukan melalui baris perintah)">
+<!ENTITY trellis.preferences.dataDir.reveal "Tunjukkan Direktori Data">
+<!ENTITY trellis.preferences.dataDir.migrate "Migrasi Ke Lokasi Default Baru...">
+
+<!ENTITY trellis.preferences.attachmentBaseDir.caption "Direktori Dasar Lampiran Tertaut">
+<!ENTITY trellis.preferences.attachmentBaseDir.message "Trellis akan menggunakan jalur relatif untuk lampiran file yang ditautkan di dalam direktori dasar, memungkinkan Anda untuk mengakses file di komputer yang berbeda selama struktur file di dalam direktori dasar tetap sama.">
+<!ENTITY trellis.preferences.attachmentBaseDir.basePath "Direktori dasar:">
+<!ENTITY trellis.preferences.attachmentBaseDir.selectBasePath "Pilih...">
+<!ENTITY trellis.preferences.attachmentBaseDir.resetBasePath "Kembali ke Jalur Absolut...">
+
+<!ENTITY trellis.preferences.dbMaintenance "Pemeliharaan Database">
+<!ENTITY trellis.preferences.dbMaintenance.integrityCheck "Periksa Integritas Database">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslatorsAndStyles "Atur Ulang Penerjemah dan Gaya...">
+<!ENTITY trellis.preferences.dbMaintenance.resetTranslators "Atur Ulang Penerjemah...">
+
+<!ENTITY trellis.preferences.configEditor "Editor Konfigurasi">

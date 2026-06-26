@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Da">
+<!ENTITY trellis.general.no "Ne">
+<!ENTITY trellis.general.optional "(neobavezno)">
+<!ENTITY trellis.general.note "Bilješka:">
+<!ENTITY trellis.general.selectAll "Označi sve">
+<!ENTITY trellis.general.deselectAll "Odznači sve">
+<!ENTITY trellis.general.edit "Uredi">
+<!ENTITY trellis.general.delete "Izbriši">
+<!ENTITY trellis.general.moveToTrash "Premjesti u otpad">
+<!ENTITY trellis.general.ok "U redu">
+<!ENTITY trellis.general.cancel "Odustani">
+<!ENTITY trellis.general.refresh "Osvježi">
+<!ENTITY trellis.general.saveAs "Spremi kao...">
+<!ENTITY trellis.general.options "Mogućnosti">
+<!ENTITY trellis.general.advancedOptions.label "Napredne mogućnosti">
+<!ENTITY trellis.general.tools "Alati">
+<!ENTITY trellis.general.more "Više">
+<!ENTITY trellis.general.moreInformation "Još informacija">
+<!ENTITY trellis.general.loading "Učitavanje…">
+<!ENTITY trellis.general.close "Zatvori">
+<!ENTITY trellis.general.minimize "Minimiziraj">
+<!ENTITY trellis.general.other "Ostalo...">
+<!ENTITY trellis.general.bigger "Veće">
+<!ENTITY trellis.general.smaller "Manje">
+<!ENTITY trellis.general.reset "Ponovno postavi">
+
+
+<!ENTITY trellis.errorReport.title "Trellis Error Report">
+<!ENTITY trellis.errorReport.submissionInProgress "Pričekajte da se pošalje izvješće o grešci.">
+<!ENTITY trellis.errorReport.submitted "Vaše izvješće o grešci je poslano.">
+<!ENTITY trellis.errorReport.reportID "ID izvješća:">
+<!ENTITY trellis.errorReport.postToForums "Objavite poruku na Trellisvom forumu (forums.trellis.org) s ovim ID-om izvješća, opisom problema i koracima koji vode do njega.">
+<!ENTITY trellis.errorReport.notReviewed "Prijave grešaka se ne pregledavaju, ako nisu objavljene na forumu.">
+
+<!ENTITY trellis.upgrade.title "Trellis Upgrade Wizard">
+<!ENTITY trellis.upgrade.newVersionInstalled "Instalirali ste novu verziju Zotera.">
+<!ENTITY trellis.upgrade.upgradeRequired "Trellisva baza podataka mora se nadograditi da bi radila s novom verzijom.">
+<!ENTITY trellis.upgrade.autoBackup "Postojeća baza podataka bit će automatski sigurnosno kopirana prije primjene bilo kakvih izmjena.">
+<!ENTITY trellis.upgrade.majorUpgrade "Ovo je velika nadogradnja.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Provjerite">
+<!ENTITY trellis.upgrade.majorUpgradeLink "upute za nadogradnju">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "prije nastavljanja.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Pričekajte da završi proces nadogradnje. Ovo može potrajati nekoliko minuta.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Trellisva baza podataka je uspješno nadograđena.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Pogledajte">
+<!ENTITY trellis.upgrade.changeLogLink "zapisnik o promjenama">
+<!ENTITY trellis.upgrade.changeLogAfterLink "kako biste saznali što je novo.">
+
+<!ENTITY trellis.tabs.notes.label "Bilješke">
+<!ENTITY trellis.tabs.attachments.label "Prilozi">
+
+<!ENTITY trellis.toolbar.duplicate.label "Prikaži duplikate">
+<!ENTITY trellis.collections.showUnfiledItems "Prikaži nesvrstane stavke">
+<!ENTITY trellis.collections.showRetractedItems "Show Retracted Items">
+
+<!ENTITY trellis.items.itemType "Vrsta stavke">
+<!ENTITY trellis.items.creator_column "Stvoritelj">
+<!ENTITY trellis.items.year_column "Godina">
+<!ENTITY trellis.items.dateModified_column "Datum izmjene">
+<!ENTITY trellis.items.moreColumns.label "More Columns">
+<!ENTITY trellis.items.restoreColumnOrder.label "Restore Column Order">
+
+<!ENTITY trellis.items.menu.showInLibrary "Prikaži u biblioteci">
+<!ENTITY trellis.items.menu.attach.note "Dodaj bilješku">
+<!ENTITY trellis.items.menu.attach "Dodaj prilog">
+<!ENTITY trellis.items.menu.attach.link.uri "Priloži poveznicu na URI...">
+<!ENTITY trellis.items.menu.attach.file "Priloži pohranjenu kopiju datoteke...">
+<!ENTITY trellis.items.menu.attach.fileLink "Priloži poveznicu na datoteku...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Vrati iz biblioteke">
+<!ENTITY trellis.items.menu.duplicateItem "Duplicate Item">
+<!ENTITY trellis.items.menu.mergeItems "Merge Items…">
+<!ENTITY trellis.items.menu.unrecognize "Undo Retrieve Metadata">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Choose the version of the item to use as the master item:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Select fields to keep from other versions of the item:">
+
+<!ENTITY trellis.toolbar.newItem.label "Nova stavka">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Više">
+<!ENTITY trellis.toolbar.lookup.label "Add Item(s) by Identifier">
+<!ENTITY trellis.toolbar.removeItem.label "Ukloni stavku...">
+<!ENTITY trellis.toolbar.newGroup "Nova grupa...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Nova podzbirka...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Nova spremljena pretraga...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Isprazni otpad">
+<!ENTITY trellis.toolbar.tagSelector.label "Prikaži/Sakrij birač oznaka">
+<!ENTITY trellis.toolbar.actions.label "Radnje">
+<!ENTITY trellis.toolbar.import.label "Uvoz...">
+<!ENTITY trellis.toolbar.importFromClipboard "Uvoz iz međuspremnika">
+<!ENTITY trellis.toolbar.export.label "Izvoz biblioteke...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF skeniranje">
+<!ENTITY trellis.toolbar.preferences.label "Postavke...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Podrška i dokumentacija">
+<!ENTITY trellis.toolbar.about.label "O Zoteru">
+<!ENTITY trellis.toolbar.advancedSearch "Napredna pretraga">
+<!ENTITY trellis.toolbar.openURL.label "Lociraj">
+<!ENTITY trellis.toolbar.openURL.tooltip "Pronađi kroz lokalnu knjižnicu">
+
+<!ENTITY trellis.toolbar.feeds.new "New Feed">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "From URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "From OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Edit Feed…">
+
+<!ENTITY trellis.item.add "Dodaj">
+<!ENTITY trellis.item.attachment.file.show "Prikaži datoteku">
+<!ENTITY trellis.item.textTransform "Pretvori tekst">
+<!ENTITY trellis.item.textTransform.titlecase "Velika početna slova riječi">
+<!ENTITY trellis.item.textTransform.sentencecase "Veliko početno slovo rečenice">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Copy as URL">
+<!ENTITY trellis.item.deletePermanently "Trajno izbriši...">
+
+<!ENTITY trellis.item.tags.removeAll "Remove All Tags…">
+
+<!ENTITY trellis.toolbar.newNote "Nova bilješka">
+<!ENTITY trellis.toolbar.note.standalone "Nova samostalna bilješka">
+<!ENTITY trellis.toolbar.note.child "Dodaj podređenu bilješku">
+<!ENTITY trellis.toolbar.lookup "Potraži prema identifikatoru...">
+<!ENTITY trellis.toolbar.attachment.linked "Poveznica na datoteku...">
+<!ENTITY trellis.toolbar.attachment.add "Pohrani kopiju datoteke...">
+<!ENTITY trellis.toolbar.attachment.weblink "Spremi poveznicu na trenutnu stranicu">
+<!ENTITY trellis.toolbar.attachment.snapshot "Stvori snimku trenutne stranice">
+<!ENTITY trellis.toolbar.context.item "Stavka">
+<!ENTITY trellis.toolbar.context.notes "Bilješke">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Nema oznaka za prikaz">
+<!ENTITY trellis.tagSelector.loadingTags "Loading tags…">
+<!ENTITY trellis.tagSelector.showAutomatic "Prikaži automatski">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Prikaži sve oznake u ovoj biblioteci">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Delete Automatic Tags in This Library…">
+<!ENTITY trellis.tagSelector.clearAll "Odznači sve">
+<!ENTITY trellis.tagSelector.assignColor "Assign Color…">
+<!ENTITY trellis.tagSelector.renameTag "Preimenuj oznaku...">
+<!ENTITY trellis.tagSelector.deleteTag "Izbriši oznaku...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Choose a Tag Color and Position">
+<!ENTITY trellis.tagColorChooser.color "Color:">
+<!ENTITY trellis.tagColorChooser.position "Position:">
+<!ENTITY trellis.tagColorChooser.setColor "Set Color">
+<!ENTITY trellis.tagColorChooser.removeColor "Remove Color">
+
+<!ENTITY trellis.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
+<!ENTITY trellis.lookup.button.search "Pretraži">
+
+<!ENTITY trellis.createParent.title "Create Parent Item">
+<!ENTITY trellis.createParent.button.manual "Manual Entry">
+
+<!ENTITY trellis.selectitems.title "Odaberi stavke">
+<!ENTITY trellis.selectitems.intro.label "Odaberite stavke koje želite dodati u svoju biblioteku">
+<!ENTITY trellis.selectitems.cancel.label "Odustani">
+<!ENTITY trellis.selectitems.select.label "U redu">
+
+<!ENTITY trellis.bibliography.title "Create Citation/Bibliography">
+<!ENTITY trellis.bibliography.style.label "Stil citiranja:">
+<!ENTITY trellis.bibliography.manageStyles "Manage Styles…">
+<!ENTITY trellis.bibliography.locale.label "Jezik:">
+<!ENTITY trellis.bibliography.outputMode "Output Mode:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografija">
+<!ENTITY trellis.bibliography.outputMethod "Output Method:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Spremi kao RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Spremi kao HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Kopiraj u međuspremnik">
+<!ENTITY trellis.bibliography.print.label "Ispiši">
+
+<!ENTITY trellis.integration.docPrefs.title "Postavke dokumenta">
+<!ENTITY trellis.integration.addEditCitation.title "Dodaj/Uredi citat">
+<!ENTITY trellis.integration.editBibliography.title "Uredi bibliografiju">
+
+<!ENTITY trellis.progress.title "Napredak">
+
+<!ENTITY trellis.import "Uvoz">
+<!ENTITY trellis.import.whereToImportFrom "Where do you want to import from?">
+<!ENTITY trellis.import.source.file "A file (BibTeX, RIS, Trellis RDF, etc.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Importing…">
+<!ENTITY trellis.import.database "Database">
+<!ENTITY trellis.import.lastModified "Last Modified">
+<!ENTITY trellis.import.size "Veličina">
+<!ENTITY trellis.import.createCollection "Place imported collections and items into new collection">
+<!ENTITY trellis.import.fileHandling "Upravljanje datotekom">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Izvoz...">
+<!ENTITY trellis.exportOptions.format.label "Format:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Opcije prevoditelja">
+
+<!ENTITY trellis.charset.label "Kodiranje znakova">
+<!ENTITY trellis.moreEncodings.label "Više kodiranja">
+
+<!ENTITY trellis.citation.keepSorted.label "Zadrži izvore sortiranima">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Prefiks:">
+<!ENTITY trellis.citation.suffix.label "Sufiks:">
+<!ENTITY trellis.citation.editorWarning.label "Warning: If you edit a citation in the editor it will no longer update to reflect changes in your database or the citation style.">
+
+<!ENTITY trellis.richText.italic.label "Ukošeno">
+<!ENTITY trellis.richText.bold.label "Podebljano">
+<!ENTITY trellis.richText.underline.label "Podcrtano">
+<!ENTITY trellis.richText.superscript.label "Eksponent">
+<!ENTITY trellis.richText.subscript.label "Indeks">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Dodaj anotaciju">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Sklopi sve anotacije">
+<!ENTITY trellis.annotate.toolbar.expand.label "Proširi sve anotacije">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Istakni tekst">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Ukloni isticanje teksta">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Prikaži citiranje kao:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Fusnote">
+<!ENTITY trellis.integration.prefs.endnotes.label "Završne bilješke">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Store Citations as:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Zabilješke">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Bookmarks can be shared between Word and LibreOffice, but may cause errors if accidentally modified and cannot be inserted into footnotes.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Automatically update citations">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Citations with pending updates will be highlighted in the document">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Disabling updates can speed up citation insertion in large documents. Click Refresh to update citations manually.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Use MEDLINE journal abbreviations">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "The “Journal Abbr” field will be ignored.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Switch to a Different Word Processor…">
+
+<!ENTITY trellis.integration.showEditor.label "Prikaži uređivač">
+<!ENTITY trellis.integration.classicView.label "Klasični prikaz">
+
+<!ENTITY trellis.integration.references.label "Reference u bibliografiji">
+
+<!ENTITY trellis.sync.stop "Zaustavi sinkr.">
+<!ENTITY trellis.sync.error "Greška sinkronizacije">
+<!ENTITY trellis.sync.storage.progress "Napredak:">
+<!ENTITY trellis.sync.storage.downloads "Preuzimanja:">
+<!ENTITY trellis.sync.storage.uploads "Prijenosi:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Sljedeća oznaka u Vašoj biblioteci u Zoteru je preduga za sinkronizaciju s poslužiteljem:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Sinkronizirane oznake moraju biti kraće od 256 znakova.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Možete razdijeliti oznaku na više njih, ručno ju skratiti ili ju izbrisati.">
+<!ENTITY trellis.sync.longTagFixer.split "Razdijeli">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Razdijeli kod">
+<!ENTITY trellis.sync.longTagFixer.character "znaka">
+<!ENTITY trellis.sync.longTagFixer.characters "znak(ov)a">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Neoznačene oznake neće biti spremljene.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Oznaka će biti uklonjena sa svih stavki.">
+
+<!ENTITY trellis.merge.title "Rješavanje konflikata">
+<!ENTITY trellis.merge.of "of">
+<!ENTITY trellis.merge.deleted "Izbrisano">
+
+<!ENTITY trellis.proxy.recognized.title "Prepoznat je proxy">
+<!ENTITY trellis.proxy.recognized.warning "Dodajte proxyje samo s web-stranice Vaše knjižnice, škole ili tvrtke.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Dodavanje drugih proxyja može omogućiti zlonamjernim stranicama da se predstavljaju kao stranice kojima vjerujete.">
+<!ENTITY trellis.proxy.recognized.disable.label "Nemoj automatski preusmjeravati zahtjeve kroz prethodno prepoznate proxyje">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ignoriraj">
+
+<!ENTITY trellis.feedSettings.title "Postavke feeda">
+<!ENTITY trellis.feedSettings.saveButton.label "Spremi">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Naslov:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Ažuriraj feed svaka/ih">
+<!ENTITY trellis.feedSettings.refresh.label2 "sat(i)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Ukloni nepročitane stavke u feedu nakon">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "dan(a)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Ukloni pročitanje stavke u feedu nakon">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "dan(a)">
+
+<!ENTITY trellis.rtfScan.title "RTF skeniranje">
+<!ENTITY trellis.rtfScan.cancel.label "Odustani">
+<!ENTITY trellis.rtfScan.citation.label "Citat">
+<!ENTITY trellis.rtfScan.itemName.label "Naziv stavke">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Nemapirani citati">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Dvosmisleni citati">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Mapirani citati">
+<!ENTITY trellis.rtfScan.introPage.label "Uvod">
+<!ENTITY trellis.rtfScan.introPage.description "Trellis može automatski izdvojiti i formatirati citate i umetnuti bibliografiju u RTF datoteke. Značajka „RTF skeniranje” trenutno podržava citate u varijantama sljedećih formata:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Za početak, u nastavku odaberite ulaznu RTF datoteku i izlaznu datoteku:">
+<!ENTITY trellis.rtfScan.scanPage.label "Skeniranje citata">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis trenutno skenira citate u Vašem dokumentu. Budite strpljivi.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Potvrdi citirane stavke">
+<!ENTITY trellis.rtfScan.citationsPage.description "U nastavku pregledajte popis prepoznatih citata kako biste se uvjerili da je Trellis ispravno odabrao odgovarajuće stavke. Nemapirane i dvosmislene citate morate riješiti prije nastavka na sljedeći korak.">
+<!ENTITY trellis.rtfScan.stylePage.label "Oblikovanje dokumenta">
+<!ENTITY trellis.rtfScan.formatPage.label "Oblikovanje citata">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis obrađuje i formatira Vašu RTF datoteku. Budite strpljivi.">
+<!ENTITY trellis.rtfScan.completePage.label "Završeno je RTF skeniranje">
+<!ENTITY trellis.rtfScan.completePage.description "Vaš dokument je skeniran i obrađen. Provjerite je li ispravno oblikovan.">
+<!ENTITY trellis.rtfScan.inputFile.label "Ulazna datoteka">
+<!ENTITY trellis.rtfScan.outputFile.label "Izlazna datoteka">
+
+<!ENTITY trellis.file.choose.label "Odaberi datoteku...">
+<!ENTITY trellis.file.noneSelected.label "Nije odabrana nijedna datoteka">
+
+<!ENTITY trellis.attachLink.title "Priloži poveznicu na URI...">
+<!ENTITY trellis.attachLink.label.link "Poveznica:">
+<!ENTITY trellis.attachLink.label.title "Naslov:">
+
+<!ENTITY trellis.context.addChildNote "Dodaj bilješku stavke">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Dodaj bilješku stavke iz anotacija">
+<!ENTITY trellis.context.addStandaloneNote "Dodaj samostalnu bilješku">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Dodaj samostalnu bilješku iz anotacija">
+<!ENTITY trellis.context.editInWindow "Uredi u odvojenom prozoru">
+
+<!ENTITY trellis.pdfReader.firstPage "Prva stranica">
+<!ENTITY trellis.pdfReader.lastPage "Posljednja stranica">
+<!ENTITY trellis.pdfReader.back "Natrag">
+<!ENTITY trellis.pdfReader.forward "Naprijed">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Povećaj zum">
+<!ENTITY trellis.pdfReader.zoomOut "Smanji zum">
+<!ENTITY trellis.pdfReader.zoomReset "Resetiraj zum">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Podijeli vertikalno">
+<!ENTITY trellis.pdfReader.splitHorizontally "Podijeli horizontalno">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

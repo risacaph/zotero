@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Bai">
+<!ENTITY trellis.general.no "Ez">
+<!ENTITY trellis.general.optional "(aukerakoa)">
+<!ENTITY trellis.general.note "Oharra:">
+<!ENTITY trellis.general.selectAll "Hautatu guztiak">
+<!ENTITY trellis.general.deselectAll "Desautatu guztiak">
+<!ENTITY trellis.general.edit "Editatu">
+<!ENTITY trellis.general.delete "Ezabatu">
+<!ENTITY trellis.general.moveToTrash "Zakarrontzira mugitu">
+<!ENTITY trellis.general.ok "Ados">
+<!ENTITY trellis.general.cancel "Ezeztatu">
+<!ENTITY trellis.general.refresh "Freskatu">
+<!ENTITY trellis.general.saveAs "Gorde honela...">
+<!ENTITY trellis.general.options "Aukerak">
+<!ENTITY trellis.general.advancedOptions.label "Aukera aurreratuak">
+<!ENTITY trellis.general.tools "Tresnak">
+<!ENTITY trellis.general.more "Gehiago">
+<!ENTITY trellis.general.moreInformation "Informazio gehiago">
+<!ENTITY trellis.general.loading "Kargatzen...">
+<!ENTITY trellis.general.close "Itxi">
+<!ENTITY trellis.general.minimize "Minimizatu">
+<!ENTITY trellis.general.other "Besterik...">
+<!ENTITY trellis.general.bigger "Handiagoa">
+<!ENTITY trellis.general.smaller "Txikiagoa">
+<!ENTITY trellis.general.reset "Berrezarri">
+
+
+<!ENTITY trellis.errorReport.title "Trellis errore txostena">
+<!ENTITY trellis.errorReport.submissionInProgress "Mesedez, itxoin errore txostena bidaltzen den bitartean.">
+<!ENTITY trellis.errorReport.submitted "Zure errore txostena bidali da.">
+<!ENTITY trellis.errorReport.reportID "Txostenaren IDa:">
+<!ENTITY trellis.errorReport.postToForums "Mesedez, bidal ezazu mezu bat Trellis foroetara (forums.trellis.org) Txosten ID hau, arazoaren deskribapen bat, eta arazoa sortzeko urratsak azalduz.">
+<!ENTITY trellis.errorReport.notReviewed "Errore txostenak ez daude ikusgarri foroetan erreferentziarik egiten ez zaien artean.">
+
+<!ENTITY trellis.upgrade.title "Trellis bertsio-berritzeko morroia">
+<!ENTITY trellis.upgrade.newVersionInstalled "Trellis-ren bertsio berria instalatu egin duzu.">
+<!ENTITY trellis.upgrade.upgradeRequired "Zure Trellis datu-basea bertsio-berritu egin behar da bertsio berriarekin erabili ahal izateko.">
+<!ENTITY trellis.upgrade.autoBackup "Zure oraingo datu-basea gorde egingo da inolako aldaketarik egin baino lehen..">
+<!ENTITY trellis.upgrade.majorUpgrade "Bertsio-berritze hau garrantzitsua da.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Irakur itzazu">
+<!ENTITY trellis.upgrade.majorUpgradeLink "bertsio-berritzerako argibideak">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "jarraitu aurretik.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Mesedez, itxaron bertsio-berritzea burutu arte. Horrek minutu batzuk iraun ditzake.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Zure Trellis datu-basea bertsio-berritu egin da.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Ikus ezazu">
+<!ENTITY trellis.upgrade.changeLogLink "aldaketen erregistroa">
+<!ENTITY trellis.upgrade.changeLogAfterLink "berrikuntzen berri izateko.">
+
+<!ENTITY trellis.tabs.notes.label "Oharrak">
+<!ENTITY trellis.tabs.attachments.label "Eranskinak">
+
+<!ENTITY trellis.toolbar.duplicate.label "Bikoiztuak erakutsi">
+<!ENTITY trellis.collections.showUnfiledItems "Erakutsi artxibatu gabeko elemetuak">
+<!ENTITY trellis.collections.showRetractedItems "Erakutsi erretiratutako elementuak">
+
+<!ENTITY trellis.items.itemType "Elementu mota">
+<!ENTITY trellis.items.creator_column "Egilea">
+<!ENTITY trellis.items.year_column "Urtea">
+<!ENTITY trellis.items.dateModified_column "Noiz aldatua">
+<!ENTITY trellis.items.moreColumns.label "Zutabe gehiago">
+<!ENTITY trellis.items.restoreColumnOrder.label "Zutabeen ordena berrezarri">
+
+<!ENTITY trellis.items.menu.showInLibrary "Erakutsi liburutegian">
+<!ENTITY trellis.items.menu.attach.note "Oharra gehitu">
+<!ENTITY trellis.items.menu.attach "Eranskina gehitu">
+<!ENTITY trellis.items.menu.attach.link.uri "URI baterako esteka erantsi...">
+<!ENTITY trellis.items.menu.attach.file "Gordetako dokumentu baten kopia erantsi">
+<!ENTITY trellis.items.menu.attach.fileLink "Fitxategi baterako esteka erantsi...">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Leheneratu liburutegira">
+<!ENTITY trellis.items.menu.duplicateItem "Elementua bikoiztu">
+<!ENTITY trellis.items.menu.mergeItems "Elementuak bateratu...">
+<!ENTITY trellis.items.menu.unrecognize "Metadatuak berreskuratzea desegin">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Elementu nagusi gisa erabiltzeko elementuaren bertsioa aukeratu:">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Elementuaren beste bertsioetatik mantentzeko eremuak hautatu:">
+
+<!ENTITY trellis.toolbar.newItem.label "Elementu berria">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Gehiago">
+<!ENTITY trellis.toolbar.lookup.label "Elementua(k) identifikatzaile bidez gehitu">
+<!ENTITY trellis.toolbar.removeItem.label "Elementua kendu...">
+<!ENTITY trellis.toolbar.newGroup "Talde berria...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Azpi-bilduma berria...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Gordetako bilaketa berria...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Paperontzia hustu">
+<!ENTITY trellis.toolbar.tagSelector.label "Erakutsi/ezkutatu etiketa hautatzailea">
+<!ENTITY trellis.toolbar.actions.label "Ekintzak">
+<!ENTITY trellis.toolbar.import.label "Inportatu...">
+<!ENTITY trellis.toolbar.importFromClipboard "Inportatu arbeletik">
+<!ENTITY trellis.toolbar.export.label "Liburutegia esportatu...">
+<!ENTITY trellis.toolbar.rtfScan.label "RTF eskaneatzea">
+<!ENTITY trellis.toolbar.preferences.label "Hobespenak...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Laguntza eta dokumentazioa">
+<!ENTITY trellis.toolbar.about.label "Trellis-ri buruz">
+<!ENTITY trellis.toolbar.advancedSearch "Bilaketa aurreratua">
+<!ENTITY trellis.toolbar.openURL.label "Aurkitu">
+<!ENTITY trellis.toolbar.openURL.tooltip "Zure tokiko liburutegiaren bitartez bilatu">
+
+<!ENTITY trellis.toolbar.feeds.new "Jario berria">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "URL batetik...">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "OPML bitartez...">
+<!ENTITY trellis.toolbar.feeds.edit "Editatu jarioa...">
+
+<!ENTITY trellis.item.add "Gehitu">
+<!ENTITY trellis.item.attachment.file.show "Fitxategia erakutsi">
+<!ENTITY trellis.item.textTransform "Testua bihurtu">
+<!ENTITY trellis.item.textTransform.titlecase "Hitz Bakoitza Letra Larriz">
+<!ENTITY trellis.item.textTransform.sentencecase "Lehen letra letra larriz">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Trukatu lehena/azkena">
+<!ENTITY trellis.item.creatorTransform.fixCase "Konpondu letra-kaxa">
+<!ENTITY trellis.item.copyAsURL "Kopiatu URL gisa">
+<!ENTITY trellis.item.deletePermanently "Betirako ezabatu...">
+
+<!ENTITY trellis.item.tags.removeAll "Etiketa guztiak ezabatu...">
+
+<!ENTITY trellis.toolbar.newNote "Ohar berria">
+<!ENTITY trellis.toolbar.note.standalone "Ohar autonomo berria...">
+<!ENTITY trellis.toolbar.note.child "Ohar umea gehitu">
+<!ENTITY trellis.toolbar.lookup "Identifkatzailearen bidez gehitu...">
+<!ENTITY trellis.toolbar.attachment.linked "Fitxategi bat estekatu...">
+<!ENTITY trellis.toolbar.attachment.add "Fitxategi baten kopia gorde...">
+<!ENTITY trellis.toolbar.attachment.weblink "Oraingo orriaren esteka gorde">
+<!ENTITY trellis.toolbar.attachment.snapshot "Oraingo orrialdearen pantaila-irudia gorde">
+<!ENTITY trellis.toolbar.context.item "Elementua">
+<!ENTITY trellis.toolbar.context.notes "Oharrak">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Etiketarik ez erakusgarri">
+<!ENTITY trellis.tagSelector.loadingTags "Etiketak kargatzen...">
+<!ENTITY trellis.tagSelector.showAutomatic "Erakutsi automatikoki">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Liburutegi honetako etiketa guztiak erakutsi">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Liburutegi honetako etiketa automatikoak ezabatu...">
+<!ENTITY trellis.tagSelector.clearAll "Guztiak desautatu">
+<!ENTITY trellis.tagSelector.assignColor "Kolorea esleitu...">
+<!ENTITY trellis.tagSelector.renameTag "Etiketaren izena aldatu...">
+<!ENTITY trellis.tagSelector.deleteTag "Etiketa ezabatu...">
+<!ENTITY trellis.tagSelector.splitTag "Banatu...">
+
+<!ENTITY trellis.tagColorChooser.title "Etiketaren kolorea eta posizioa aukeratu">
+<!ENTITY trellis.tagColorChooser.color "Kolorea:">
+<!ENTITY trellis.tagColorChooser.position "Posizioa:">
+<!ENTITY trellis.tagColorChooser.setColor "Ezarri kolorea">
+<!ENTITY trellis.tagColorChooser.removeColor "Ezabatu kolorea">
+
+<!ENTITY trellis.lookup.description "Adierazi liburutegira gehitu nahi dituzun ISBN, DOI, PMID edo arXiv IDak:">
+<!ENTITY trellis.lookup.button.search "Bilatu">
+
+<!ENTITY trellis.createParent.title "Elementu gurasoa sortu">
+<!ENTITY trellis.createParent.button.manual "Eskuz sartu">
+
+<!ENTITY trellis.selectitems.title "Hautatu elementuak">
+<!ENTITY trellis.selectitems.intro.label "Hautatu liburutegira gehitu nahi dituzun elementuak">
+<!ENTITY trellis.selectitems.cancel.label "Ezeztatu">
+<!ENTITY trellis.selectitems.select.label "Ados">
+
+<!ENTITY trellis.bibliography.title "Aipua/bibliografia sortu">
+<!ENTITY trellis.bibliography.style.label "Aipu estiloa:">
+<!ENTITY trellis.bibliography.manageStyles "Estiloak kudeatu...">
+<!ENTITY trellis.bibliography.locale.label "Hizkuntza:">
+<!ENTITY trellis.bibliography.outputMode "Irteera modua:">
+<!ENTITY trellis.bibliography.bibliography "Bibliografia">
+<!ENTITY trellis.bibliography.outputMethod "Irteera metodoa:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "RTF gisa gorde">
+<!ENTITY trellis.bibliography.saveAsHTML.label "HTML gisa gorde">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Arbelera kopiatu">
+<!ENTITY trellis.bibliography.print.label "Inprimatu">
+
+<!ENTITY trellis.integration.docPrefs.title "Dokumentuaren hobespenak">
+<!ENTITY trellis.integration.addEditCitation.title "Aipua gehitu/editatu">
+<!ENTITY trellis.integration.editBibliography.title "Bibliografia editatu">
+
+<!ENTITY trellis.progress.title "Aurrerapena">
+
+<!ENTITY trellis.import "Inportatu">
+<!ENTITY trellis.import.whereToImportFrom "Nondik inportatu nahi duzu?">
+<!ENTITY trellis.import.source.file "Fitxategi bat (BibTex, RIS, Trellis RDF etab.)">
+<!ENTITY trellis.import.source.folder "PDF edo bestelako fitxategidun karpeta">
+<!ENTITY trellis.import.onlineImport "lineako inportazioa">
+<!ENTITY trellis.import.importing "Inportatzen...">
+<!ENTITY trellis.import.database "Datubasea">
+<!ENTITY trellis.import.lastModified "Azkenekoz aldatua">
+<!ENTITY trellis.import.size "Tamaina">
+<!ENTITY trellis.import.createCollection "Inportatutako bilduma eta elementuak bilduma berri batean kokatu">
+<!ENTITY trellis.import.fileHandling "Fitxategien erabilera">
+<!ENTITY trellis.import.online.newItemsOnly "Deskargatu elementu berriak bakarrik; ez eguneratu lehenago inportatutako elementurik">
+
+<!ENTITY trellis.exportOptions.title "Esportatu...">
+<!ENTITY trellis.exportOptions.format.label "Formatua:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Itzultzailearen aukerak">
+
+<!ENTITY trellis.charset.label "Karaktere-kodeketa">
+<!ENTITY trellis.moreEncodings.label "Kodeketa gehiago">
+
+<!ENTITY trellis.citation.keepSorted.label "Iturriak ordenaturik mantendu">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Egilerik ez aipatu">
+<!ENTITY trellis.citation.prefix.label "Aurrizkia:">
+<!ENTITY trellis.citation.suffix.label "Atzizkia:">
+<!ENTITY trellis.citation.editorWarning.label "Kontuz: aipu bat editorearen bitartez editatzen baduzu, ez da gehiago eguneratuko zure datubasean edo aipuen estiloan egon daitezkeen aldaketak islatzeko.">
+
+<!ENTITY trellis.richText.italic.label "Etzana">
+<!ENTITY trellis.richText.bold.label "Lodia">
+<!ENTITY trellis.richText.underline.label "Azpimarra">
+<!ENTITY trellis.richText.superscript.label "Goi-indizea">
+<!ENTITY trellis.richText.subscript.label "Azpiindizea">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Oharpena gehitu">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Oharpenak ezkutatu">
+<!ENTITY trellis.annotate.toolbar.expand.label "Oharpen guztiak zabaldu">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Testua nabarmendu">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Nabarmentzea kendu">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Aipuak honela erakutsi:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Oin-oharrak">
+<!ENTITY trellis.integration.prefs.endnotes.label "Amaiera-oharrak">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Aipuak honela gorde:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Lastermarkak">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Lastermarkak Word eta LibreOffice-en artean parteka daitezke, baina erroreak sor ditzakete nahi gabe aldatuko balira eta ezin dira oin-oharretan gehitu.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Aipuak automatikoki eguneratu">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Burutu gabeko eguneraketak dituzten aipuak nabarmenduta agertuko dira dokumentuan">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Eguneraketak ezgaitzeak aipuak azkarrago sartzen lagun dezake dokumentu handietan. Klik egin Freskatu aukeran aipuak eskuz eguneratzeko.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "MEDLINE aldizkari laburdurak erabili">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "&quot;Aldizkariaren labur.&quot; eremua baztertua izango da">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Beste testu prozesatzaile batera aldatu...">
+
+<!ENTITY trellis.integration.showEditor.label "Editorea erakutsi">
+<!ENTITY trellis.integration.classicView.label "Ikuspegi klasikoa">
+
+<!ENTITY trellis.integration.references.label "Erreferentziak bibliografian">
+
+<!ENTITY trellis.sync.stop "Sinkronizatzea gelditu">
+<!ENTITY trellis.sync.error "Errorea sinkronizatzean">
+<!ENTITY trellis.sync.storage.progress "Aurrerapena:">
+<!ENTITY trellis.sync.storage.downloads "Deskargak:">
+<!ENTITY trellis.sync.storage.uploads "Igoerak:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Zure Trellis liburutegiko ondorengo etiketa luzeegia da zerbitzarian gordetzeko:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Sinkronizatutako etiketek 256 karaktere baino gutxiago izan behar dituzte.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Etiketa ugaritan banatu ala eskuz editatu dezakezu etiketa laburragoa egiteko, edo ezabatu egin dezakezu.">
+<!ENTITY trellis.sync.longTagFixer.split "Banatu">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Banatu hemen:">
+<!ENTITY trellis.sync.longTagFixer.character "karakterea">
+<!ENTITY trellis.sync.longTagFixer.characters "karaktere">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Hautatu gabeko etiketak ez dira gordeko.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Etiketa hau elementu guztietatik kenduko da.">
+
+<!ENTITY trellis.merge.title "Gatazkak konpondu">
+<!ENTITY trellis.merge.of "(e)tik">
+<!ENTITY trellis.merge.deleted "Ezabatuta">
+
+<!ENTITY trellis.proxy.recognized.title "Proxya ezagututa">
+<!ENTITY trellis.proxy.recognized.warning "Zure liburutegi, eskola edo webgune korporatibotik estekatutako proxiak gehitu bakarrik.">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Bestelako proxiak gehitzeak asmo txarreko guneak zure konfiantzazkoak direnen gisara ezkutzatzeko aukera ekar dezake.">
+<!ENTITY trellis.proxy.recognized.disable.label "Ez zuzendu eskaerak automatikoki aldez aurretik ezagututako proxyen bitartez.">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ezikusi">
+
+<!ENTITY trellis.feedSettings.title "Jarioaren ezarpenak">
+<!ENTITY trellis.feedSettings.saveButton.label "Gorde">
+<!ENTITY trellis.feedSettings.url.label "URLa:">
+<!ENTITY trellis.feedSettings.title.label "Izenburua:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Eguneratu jarioa">
+<!ENTITY trellis.feedSettings.refresh.label2 "orduro">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Ezabatu irakurri gabeko jarioko elementuak ">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "egun ondoren">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Ezabatu irakurritako jarioko elementuak">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "egun ondoren">
+
+<!ENTITY trellis.rtfScan.title "RTF eskaneatzea">
+<!ENTITY trellis.rtfScan.cancel.label "Ezeztatu">
+<!ENTITY trellis.rtfScan.citation.label "Aipua">
+<!ENTITY trellis.rtfScan.itemName.label "Elementuaren izena">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Mapeatu gabeko aipuak">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Aipu anbiguoak">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Mapeatutako aipuak">
+<!ENTITY trellis.rtfScan.introPage.label "Sarrera">
+<!ENTITY trellis.rtfScan.introPage.description "Trellisk automatitkoki erauzi eta birformatu ditzake aipuak eta bibliografia bat txertatu RTF fitxategietan. RTF eskaneatzeko ezaugarriak honako formatuen aldagaiak darabiltzaten aipuak onartzen ditu:">
+<!ENTITY trellis.rtfScan.introPage.description2 "Hasteko, aukeratu RTF sarrera eta irteera fitxategiak behean:">
+<!ENTITY trellis.rtfScan.scanPage.label "Aipuak eskaneatzen">
+<!ENTITY trellis.rtfScan.scanPage.description "Trellis zure fitxategia eskaneatzen ari da aipu bila. Mesedez, pazientzia izan.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Baieztatu aipatutako elementuak">
+<!ENTITY trellis.rtfScan.citationsPage.description "Mesedez, gainbegiratu honako ezagututako aipuen zerrenda, Trellisk dagozkion elementuak egoki hautatu dituela baieztatzeko. Mapeatu gabeko edo anbiguoa den edozein elementu zuzendu beharko da hurrengo urratsarekin jarraitu aurretik.">
+<!ENTITY trellis.rtfScan.stylePage.label "Dokumentuaren formatua">
+<!ENTITY trellis.rtfScan.formatPage.label "Aipuen formatua">
+<!ENTITY trellis.rtfScan.formatPage.description "Trellis zure RTF fitxategia prozesatzen eta formateatzen ari da. Mesedez, pazientzia izan.">
+<!ENTITY trellis.rtfScan.completePage.label "RTF eskaneatzea amaituta">
+<!ENTITY trellis.rtfScan.completePage.description "Zure dokumentua eskaneatua eta prozesatua izan da. Mesedez, ziurtatu egoki formateatua dagoela.">
+<!ENTITY trellis.rtfScan.inputFile.label "Sarrera fitxategia">
+<!ENTITY trellis.rtfScan.outputFile.label "Irteera fitxategia">
+
+<!ENTITY trellis.file.choose.label "Fitxategia aukeratu...">
+<!ENTITY trellis.file.noneSelected.label "Ez dago hautatutako fitxategirik">
+
+<!ENTITY trellis.attachLink.title "URI baterako esteka erantsi">
+<!ENTITY trellis.attachLink.label.link "Esteka:">
+<!ENTITY trellis.attachLink.label.title "Izenburua:">
+
+<!ENTITY trellis.context.addChildNote "Elementuaren oharra gehitu">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Elementuaren oharra gehitu oharpenetara">
+<!ENTITY trellis.context.addStandaloneNote "Ohar autonomoa gehitu">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Ohar autonomoa gehitu oharpenetatik">
+<!ENTITY trellis.context.editInWindow "Aparteko leihoan editatu">
+
+<!ENTITY trellis.pdfReader.firstPage "Lehen orrialdea">
+<!ENTITY trellis.pdfReader.lastPage "Azken orrialdea">
+<!ENTITY trellis.pdfReader.back "Atzera">
+<!ENTITY trellis.pdfReader.forward "Aurrera">
+<!ENTITY trellis.pdfReader.handTool "Esku tresna">
+<!ENTITY trellis.pdfReader.verticalScrolling "Desplazamendu bertikala">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Desplazamendu horizontala">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Desplazamendu egokitua">
+<!ENTITY trellis.pdfReader.noSpreads "Xaflarik ez">
+<!ENTITY trellis.pdfReader.oddSpreads "Xafla bakoitiak">
+<!ENTITY trellis.pdfReader.evenSpreads "Xafla bikoitiak">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Gerturatu">
+<!ENTITY trellis.pdfReader.zoomOut "Urrundu">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Tamaina automatikoki egokitu">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Orrialdearen zabalerara zoom egin">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Orrialdearen altuerara zoom egin">
+<!ENTITY trellis.pdfReader.splitVertically "Zatitu bertikalean">
+<!ENTITY trellis.pdfReader.splitHorizontally "Zatitu horizontalean">
+<!ENTITY trellis.pdfReader.transferFromPDF "Oharpenak inportatu">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Biratu orrialdea ezkerretara">
+<!ENTITY trellis.pdfReader.rotatePageRight "Biratu orrialdea eskubitara">

@@ -68,7 +68,7 @@ function isString(node) {
 const jsmExtPattern = /\.(jsm|js|jsm\.js)$/;
 
 function esmifyExtension(path) {
-  if (path.includes('/zotero/')) {
+  if (path.includes('/trellis/')) {
     return path.replace(jsmExtPattern, ".mjs");
   } else {
     return path.replace(jsmExtPattern, ".sys.mjs");

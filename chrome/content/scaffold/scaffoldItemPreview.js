@@ -3,22 +3,22 @@
 	
 	Copyright © 2025 Corporation for Digital Scholarship
 					 Vienna, Virginia, USA
-					 https://www.zotero.org
+					 https://www.trellis.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -26,7 +26,7 @@
 "use strict";
 
 {
-	let { diff } = ChromeUtils.importESModule('chrome://zotero/content/xpcom/translate/testTranslators/diff.mjs');
+	let { diff } = ChromeUtils.importESModule('chrome://trellis/content/xpcom/translate/testTranslators/diff.mjs');
 	
 	class ScaffoldItemPreview extends XULElementBase {
 		content = MozXULElement.parseXULToFragment(`
@@ -52,11 +52,11 @@
 			this._preItem = this._normalizeItem(preItem);
 			if (!postItem) {
 				// Default to cleaned version of preItem
-				let zoteroPreItem = new Zotero.Item();
-				zoteroPreItem.libraryID = Zotero.Libraries.userLibraryID;
-				zoteroPreItem.fromJSON(this._preItem);
+				let trellisPreItem = new Trellis.Item();
+				trellisPreItem.libraryID = Trellis.Libraries.userLibraryID;
+				trellisPreItem.fromJSON(this._preItem);
 
-				postItem = Zotero.Utilities.Internal.itemToExportFormat(zoteroPreItem, {
+				postItem = Trellis.Utilities.Internal.itemToExportFormat(trellisPreItem, {
 					legacy: true,
 					skipBaseFields: true
 				});
@@ -127,39 +127,39 @@
 
 			let postItem = this._postItem;
 
-			let zoteroPostItem = new Zotero.Item();
-			zoteroPostItem.libraryID = Zotero.Libraries.userLibraryID;
+			let trellisPostItem = new Trellis.Item();
+			trellisPostItem.libraryID = Trellis.Libraries.userLibraryID;
 			if (Object.entries(postItem).length) {
-				zoteroPostItem.fromJSON(postItem);
+				trellisPostItem.fromJSON(postItem);
 			}
 
 			let [diffBox, infoBox, abstractBox, attachmentsPreview, notesPreview, tagsBox] = this.children;
 			for (let box of [infoBox, abstractBox, tagsBox]) {
 				box.mode = 'view';
 				box.editable = false;
-				box.item = zoteroPostItem;
+				box.item = trellisPostItem;
 				box._forceRenderAll();
 			}
 
 			attachmentsPreview.replaceChildren(
 				...(postItem.attachments ?? []).map((jsonAttachment) => {
-					let zoteroAttachment = new Zotero.Item('attachment');
+					let trellisAttachment = new Trellis.Item('attachment');
 					
 					let displayTitle = jsonAttachment.title;
 					let urlOrPath = jsonAttachment.url || jsonAttachment.path;
 					if (urlOrPath) {
 						displayTitle += ` (${urlOrPath})`;
 					}
-					zoteroAttachment.setField('title', displayTitle);
-					zoteroAttachment.attachmentContentType = jsonAttachment.mimeType;
+					trellisAttachment.setField('title', displayTitle);
+					trellisAttachment.attachmentContentType = jsonAttachment.mimeType;
 					if (jsonAttachment.snapshot === false && jsonAttachment.mimeType === 'text/html') {
-						zoteroAttachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_LINKED_URL;
+						trellisAttachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_LINKED_URL;
 					}
 					else {
-						zoteroAttachment.attachmentLinkMode = Zotero.Attachments.LINK_MODE_IMPORTED_URL;
+						trellisAttachment.attachmentLinkMode = Trellis.Attachments.LINK_MODE_IMPORTED_URL;
 					}
 					let row = document.createXULElement('attachment-row');
-					row.attachment = zoteroAttachment;
+					row.attachment = trellisAttachment;
 					row._handleAttachmentClick = () => {};
 					return row;
 				})
@@ -169,7 +169,7 @@
 					let row = document.createXULElement('note-row');
 					row.note = {
 						title: '',
-						body: Zotero.Utilities.cleanTags(jsonNote.note),
+						body: Trellis.Utilities.cleanTags(jsonNote.note),
 					};
 					return row;
 				})
@@ -200,15 +200,15 @@
 
 			// _itemDone() sets 'title' in addition to the item type's mapped
 			// title field for some reason. Delete it so it doesn't show up in the diff.
-			let titleField = Zotero.ItemFields.getName(
-				Zotero.ItemFields.getFieldIDFromTypeAndBase(jsonItem.itemType, 'title')
+			let titleField = Trellis.ItemFields.getName(
+				Trellis.ItemFields.getFieldIDFromTypeAndBase(jsonItem.itemType, 'title')
 			);
 			if (titleField !== 'title' && jsonItem[titleField]) {
 				delete jsonItem.title;
 			}
 
 			if (jsonItem.accessDate === 'CURRENT_TIMESTAMP') {
-				jsonItem.accessDate = Zotero.Date.dateToISO(new Date());
+				jsonItem.accessDate = Trellis.Date.dateToISO(new Date());
 			}
 			
 			return jsonItem;

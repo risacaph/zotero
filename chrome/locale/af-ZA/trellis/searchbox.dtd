@@ -1,0 +1,25 @@
+<!ENTITY trellis.search.name "Naam:">
+
+<!ENTITY trellis.search.searchInLibrary "Search in library:">
+
+<!ENTITY trellis.search.joinMode.prefix "Pas">
+<!ENTITY trellis.search.joinMode.any "enige">
+<!ENTITY trellis.search.joinMode.all "alles">
+<!ENTITY trellis.search.joinMode.suffix "van die volgende:">
+
+<!ENTITY trellis.search.recursive.label "Deursoek subvouers">
+<!ENTITY trellis.search.noChildren "Wys net topvlak-items">
+<!ENTITY trellis.search.includeParentsAndChildren "Sluit ouer- en kind-items van passende items in">
+
+<!ENTITY trellis.search.textModes.phrase "Frase">
+<!ENTITY trellis.search.textModes.phraseBinary "Frase (binêre lêers ingesl)">
+<!ENTITY trellis.search.textModes.regexp "Regexp">
+<!ENTITY trellis.search.textModes.regexpCS "Regexp (kassensitief)">
+
+<!ENTITY trellis.search.date.units.days "dae">
+<!ENTITY trellis.search.date.units.months "maande">
+<!ENTITY trellis.search.date.units.years "jare">
+
+<!ENTITY trellis.search.search "Soek">
+<!ENTITY trellis.search.clear "Skoon">
+<!ENTITY trellis.search.saveSearch "Stoor soektog">

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+		***** BEGIN LICENSE BLOCK *****
+		
+		Copyright © 2007 Center for History and New Media
+										 George Mason University, Fairfax, Virginia, USA
+										 http://trellis.org
+		
+		This file is part of Trellis.
+		
+		Trellis is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Affero General Public License as published by
+		the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+		
+		Trellis is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Affero General Public License for more details.
+		
+		You should have received a copy of the GNU Affero General Public License
+		along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
+		
+		***** END LICENSE BLOCK *****
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://trellis/skin/preferences.css"?>
+<?xml-stylesheet href="chrome://trellis-platform/content/trellis.css"?>
+
+
+<!DOCTYPE window [
+	<!ENTITY % prefWindow SYSTEM "chrome://trellis/locale/preferences.dtd">
+	%prefWindow;
+	<!ENTITY % common SYSTEM "chrome://trellis/locale/trellis.dtd">
+	%common;
+]>
+
+<window
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	title=""
+	onload="Trellis_Preferences.Sync.initLibrariesToSync(); sizeToContent()"
+	style="display: flex;">
+<dialog buttons="accept"
+	id="trellis-librariesToSync">
+	
+	<script src="chrome://trellis/content/include.js"/>
+	<script src="preferences.js"/>
+	<script src="preferences_account.js"/>
+
+	<label style="font-size: 14px; margin-bottom: 0.5em;" value="&trellis.preferences.sync.librariesToSync;"/>
+	
+	<hbox class="virtualized-table-container" style="display: flex; min-height: 200px; min-width: 600px;">
+		<html:div id="libraries-to-sync-tree"/>
+	</hbox>
+	
+	<script>
+	<![CDATA[
+		var io = window.arguments[0];
+	]]>
+	</script>
+</dialog>
+</window>

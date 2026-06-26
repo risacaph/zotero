@@ -1,0 +1,329 @@
+<!ENTITY trellis.general.yes "Да">
+<!ENTITY trellis.general.no "Не">
+<!ENTITY trellis.general.optional "(По желание)">
+<!ENTITY trellis.general.note "Бележка:">
+<!ENTITY trellis.general.selectAll "Избор на всички">
+<!ENTITY trellis.general.deselectAll "Отказ на всички">
+<!ENTITY trellis.general.edit "Редактиране">
+<!ENTITY trellis.general.delete "Изтриване">
+<!ENTITY trellis.general.moveToTrash "Премества в кошчето за боклук">
+<!ENTITY trellis.general.ok "OK">
+<!ENTITY trellis.general.cancel "Отказ">
+<!ENTITY trellis.general.refresh "Опресняване">
+<!ENTITY trellis.general.saveAs "Запиши като...">
+<!ENTITY trellis.general.options "Опции">
+<!ENTITY trellis.general.advancedOptions.label "Разширени опции">
+<!ENTITY trellis.general.tools "Инструменти">
+<!ENTITY trellis.general.more "Още">
+<!ENTITY trellis.general.moreInformation "Повече информация">
+<!ENTITY trellis.general.loading "Зареждане...">
+<!ENTITY trellis.general.close "Затвори">
+<!ENTITY trellis.general.minimize "Минимизирай">
+<!ENTITY trellis.general.other "Други...">
+<!ENTITY trellis.general.bigger "Bigger">
+<!ENTITY trellis.general.smaller "Smaller">
+<!ENTITY trellis.general.reset "Нулиране">
+
+
+<!ENTITY trellis.errorReport.title "Зотеро доклад за проблем">
+<!ENTITY trellis.errorReport.submissionInProgress "Моля изчакайте докато бъде подаден отчета с грешките.">
+<!ENTITY trellis.errorReport.submitted "Отчета с грешките беше подаден.">
+<!ENTITY trellis.errorReport.reportID "Идентификационен номер на отчета:">
+<!ENTITY trellis.errorReport.postToForums "Моля оставете съобщение във форумите на Trellis (forums.trellis.org) с идентификационият номер на отчета, описание на проблема и стъпките необходими, за да бъде възпроизведен.">
+<!ENTITY trellis.errorReport.notReviewed "В общия случай, отчетите с грешки няма да бъдат разглеждани, освен ако не са оповестени във форумите.">
+
+<!ENTITY trellis.upgrade.title "Помощник за актуализиране на Зотеро">
+<!ENTITY trellis.upgrade.newVersionInstalled "Инсталирахте нова версия на Зотеро.">
+<!ENTITY trellis.upgrade.upgradeRequired "Вашата база дани на Зотеро трябва да бъде осъвременена за да може да работи с новата версия.">
+<!ENTITY trellis.upgrade.autoBackup "Автоматично ще бъде направено копие на Вашата база дани, преди да бъдат въвеждани каквито и да било промени.">
+<!ENTITY trellis.upgrade.majorUpgrade "Това е голяма актуализация.">
+<!ENTITY trellis.upgrade.majorUpgradeBeforeLink "Убедете се, че сте прочели">
+<!ENTITY trellis.upgrade.majorUpgradeLink "инструкциите за надграждане">
+<!ENTITY trellis.upgrade.majorUpgradeAfterLink "преди да продължите.">
+<!ENTITY trellis.upgrade.upgradeInProgress "Моля изчакайте процеса на актуализиране да приключи. Това може да отнеме няколко минути.">
+<!ENTITY trellis.upgrade.upgradeSucceeded "Вашата база дани на Зотеро беше актуализирана успешно.">
+<!ENTITY trellis.upgrade.changeLogBeforeLink "Моля прегледайте">
+<!ENTITY trellis.upgrade.changeLogLink "дневника на промените">
+<!ENTITY trellis.upgrade.changeLogAfterLink "за да видите какво беше актуализирано и какво е новото.">
+
+<!ENTITY trellis.tabs.notes.label "Бележки">
+<!ENTITY trellis.tabs.attachments.label "Прикачени файлове">
+
+<!ENTITY trellis.toolbar.duplicate.label "Показване на дупликатите">
+<!ENTITY trellis.collections.showUnfiledItems "Показване на непопълнените записи">
+<!ENTITY trellis.collections.showRetractedItems "Show Retracted Items">
+
+<!ENTITY trellis.items.itemType "Вид запис">
+<!ENTITY trellis.items.creator_column "Създател">
+<!ENTITY trellis.items.year_column "Година">
+<!ENTITY trellis.items.dateModified_column "Променен на">
+<!ENTITY trellis.items.moreColumns.label "Повече колони">
+<!ENTITY trellis.items.restoreColumnOrder.label "Възстановяване на подредбата на колоните">
+
+<!ENTITY trellis.items.menu.showInLibrary "Показване в библиотеката">
+<!ENTITY trellis.items.menu.attach.note "Добавяне на бележка">
+<!ENTITY trellis.items.menu.attach "Добавяне на прикачен файл">
+<!ENTITY trellis.items.menu.attach.link.uri "Добавяне на връзка към URI…">
+<!ENTITY trellis.items.menu.attach.file "Добавяне на съхранено копие на файл от твърдия диск...">
+<!ENTITY trellis.items.menu.attach.fileLink "Добавяне на връзка към файл">
+
+<!ENTITY trellis.items.menu.restoreToLibrary "Възстановяване в библиотеката">
+<!ENTITY trellis.items.menu.duplicateItem "Удвояване на избраните записи">
+<!ENTITY trellis.items.menu.mergeItems "Сливане на записите...">
+<!ENTITY trellis.items.menu.unrecognize "Отменяне на извличането на данни">
+
+<!ENTITY trellis.duplicatesMerge.versionSelect "Изберете версията на записа, която да използвате като главен запис">
+<!ENTITY trellis.duplicatesMerge.fieldSelect "Изберете полета за запазване от другите версии на записа">
+
+<!ENTITY trellis.toolbar.newItem.label "Нов запис">
+<!ENTITY trellis.toolbar.moreItemTypes.label "Още">
+<!ENTITY trellis.toolbar.lookup.label "Добавяне на запис(и) чрез идентификатор">
+<!ENTITY trellis.toolbar.removeItem.label "Премахване на запис...">
+<!ENTITY trellis.toolbar.newGroup "Нова група...">
+<!ENTITY trellis.toolbar.newSubcollection.label "Нова подколекция...">
+<!ENTITY trellis.toolbar.newSavedSearch.label "Ново запазено търсене...">
+<!ENTITY trellis.toolbar.emptyTrash.label "Изпразване на кошчето за боклук">
+<!ENTITY trellis.toolbar.tagSelector.label "Показване/скриване на изборателя на маркери">
+<!ENTITY trellis.toolbar.actions.label "Действия">
+<!ENTITY trellis.toolbar.import.label "Внасяне...">
+<!ENTITY trellis.toolbar.importFromClipboard "Внасяне от клипборда">
+<!ENTITY trellis.toolbar.export.label "Изнасяне на библиотека...">
+<!ENTITY trellis.toolbar.rtfScan.label "Сканиране на RTF">
+<!ENTITY trellis.toolbar.preferences.label "Предпочитания...">
+<!ENTITY trellis.toolbar.supportAndDocumentation "Подръжка и документация">
+<!ENTITY trellis.toolbar.about.label "За Зотеро">
+<!ENTITY trellis.toolbar.advancedSearch "Сложно търсене">
+<!ENTITY trellis.toolbar.openURL.label "Откриване">
+<!ENTITY trellis.toolbar.openURL.tooltip "Откриване чрез Вашата локална библиотека">
+
+<!ENTITY trellis.toolbar.feeds.new "Новинарска емисия">
+<!ENTITY trellis.toolbar.feeds.new.fromURL "От URL…">
+<!ENTITY trellis.toolbar.feeds.new.fromOPML "От OPML…">
+<!ENTITY trellis.toolbar.feeds.edit "Редактиране на емисиите">
+
+<!ENTITY trellis.item.add "Добавяне">
+<!ENTITY trellis.item.attachment.file.show "Показване на файл">
+<!ENTITY trellis.item.textTransform "Преобразуване на текст">
+<!ENTITY trellis.item.textTransform.titlecase "Главни букви">
+<!ENTITY trellis.item.textTransform.sentencecase "Първа главна буква">
+<!ENTITY trellis.item.creatorTransform.nameSwap "Swap First/Last">
+<!ENTITY trellis.item.creatorTransform.fixCase "Fix Case">
+<!ENTITY trellis.item.copyAsURL "Копирай като URL">
+<!ENTITY trellis.item.deletePermanently "Изтриване окончателно...">
+
+<!ENTITY trellis.item.tags.removeAll "Премахване на всички маркери">
+
+<!ENTITY trellis.toolbar.newNote "Нова бележка">
+<!ENTITY trellis.toolbar.note.standalone "Нова самостоятелна бележка">
+<!ENTITY trellis.toolbar.note.child "Нова дъщерна бележка">
+<!ENTITY trellis.toolbar.lookup "Търсене чрез идентификатор...">
+<!ENTITY trellis.toolbar.attachment.linked "Свържи към файл...">
+<!ENTITY trellis.toolbar.attachment.add "Запазване на копие от файл">
+<!ENTITY trellis.toolbar.attachment.weblink "Запазване на връзка към настоящата страница">
+<!ENTITY trellis.toolbar.attachment.snapshot "Направи &quot;моментна снимка&quot; на настоящата страница">
+<!ENTITY trellis.toolbar.context.item "Елемент">
+<!ENTITY trellis.toolbar.context.notes "Notes">
+
+<!ENTITY trellis.tagSelector.noTagsToDisplay "Няма маркери, които да бъдат показани">
+<!ENTITY trellis.tagSelector.loadingTags "Зареждане на маркери...">
+<!ENTITY trellis.tagSelector.showAutomatic "Автоматично показване">
+<!ENTITY trellis.tagSelector.displayAllInLibrary "Показване на всички маркери в тази библиотека">
+<!ENTITY trellis.tagSelector.deleteAutomaticInLibrary "Изтриване на автоматичните маркери в тази библиотека...">
+<!ENTITY trellis.tagSelector.clearAll "Отмаркиране на всички">
+<!ENTITY trellis.tagSelector.assignColor "Прилагане на цвят...">
+<!ENTITY trellis.tagSelector.renameTag "Преименуване на маркера...">
+<!ENTITY trellis.tagSelector.deleteTag "Изтриване на маркера...">
+<!ENTITY trellis.tagSelector.splitTag "Split…">
+
+<!ENTITY trellis.tagColorChooser.title "Избиране на цвят и позиция на маркера">
+<!ENTITY trellis.tagColorChooser.color "Цвят:">
+<!ENTITY trellis.tagColorChooser.position "Позиция:">
+<!ENTITY trellis.tagColorChooser.setColor "Задаване на цвят">
+<!ENTITY trellis.tagColorChooser.removeColor "Премахване на цвят">
+
+<!ENTITY trellis.lookup.description "Enter ISBNs, DOIs, PMIDs, arXiv IDs, or ADS Bibcodes to add to your library:">
+<!ENTITY trellis.lookup.button.search "Търсене">
+
+<!ENTITY trellis.createParent.title "Create Parent Item">
+<!ENTITY trellis.createParent.button.manual "Manual Entry">
+
+<!ENTITY trellis.selectitems.title "Избране на записи">
+<!ENTITY trellis.selectitems.intro.label "Изберете кои записи искате да добавите към Вашата библиотека">
+<!ENTITY trellis.selectitems.cancel.label "Отказ">
+<!ENTITY trellis.selectitems.select.label "OK">
+
+<!ENTITY trellis.bibliography.title "Създаване на библиография">
+<!ENTITY trellis.bibliography.style.label "Стил на цитиране:">
+<!ENTITY trellis.bibliography.manageStyles "Редактиране на стилове...">
+<!ENTITY trellis.bibliography.locale.label "Език:">
+<!ENTITY trellis.bibliography.outputMode "Изходен тип:">
+<!ENTITY trellis.bibliography.bibliography "Библиография">
+<!ENTITY trellis.bibliography.outputMethod "Изходен метод:">
+<!ENTITY trellis.bibliography.saveAsRTF.label "Записване като RTF">
+<!ENTITY trellis.bibliography.saveAsHTML.label "Записване като HTML">
+<!ENTITY trellis.bibliography.copyToClipboard.label "Копиране в клипборда">
+<!ENTITY trellis.bibliography.print.label "Отпечатване">
+
+<!ENTITY trellis.integration.docPrefs.title "Предпочитания за докумета">
+<!ENTITY trellis.integration.addEditCitation.title "Добавяне/редактиране на цитат">
+<!ENTITY trellis.integration.editBibliography.title "Редактиране на библиографията">
+
+<!ENTITY trellis.progress.title "Напредък">
+
+<!ENTITY trellis.import "Внасяне">
+<!ENTITY trellis.import.whereToImportFrom "Откъде желаете да извършите внасянето?">
+<!ENTITY trellis.import.source.file "Файл (BibTeX, RIS, Trellis RDF, и др.)">
+<!ENTITY trellis.import.source.folder "A folder of PDFs or other files">
+<!ENTITY trellis.import.onlineImport "online import">
+<!ENTITY trellis.import.importing "Внасяне...">
+<!ENTITY trellis.import.database "База данни">
+<!ENTITY trellis.import.lastModified "Променено за последно">
+<!ENTITY trellis.import.size "Размер">
+<!ENTITY trellis.import.createCollection "Поместване на внесените колекции и записи в нова колекция">
+<!ENTITY trellis.import.fileHandling "Обработка на файловете">
+<!ENTITY trellis.import.online.newItemsOnly "Download new items only; don’t update previously imported items">
+
+<!ENTITY trellis.exportOptions.title "Изнасяне...">
+<!ENTITY trellis.exportOptions.format.label "Формат:">
+<!ENTITY trellis.exportOptions.translatorOptions.label "Параметри на извличащите данни програми">
+
+<!ENTITY trellis.charset.label "Кодиране на символите">
+<!ENTITY trellis.moreEncodings.label "Повече кодирания">
+
+<!ENTITY trellis.citation.keepSorted.label "Запазване на подредбата на източниците">
+
+<!ENTITY trellis.citation.suppressAuthor.label "Omit Author">
+<!ENTITY trellis.citation.prefix.label "Представка:">
+<!ENTITY trellis.citation.suffix.label "Надставка:">
+<!ENTITY trellis.citation.editorWarning.label "Внимание: Ако промените цитиране / бележка под линия в редактора, тя повече няма да се актуализира и да отразява промените, които са направени в базата данни и в стила на цитиране.">
+
+<!ENTITY trellis.richText.italic.label "Наклонен">
+<!ENTITY trellis.richText.bold.label "Удебелен">
+<!ENTITY trellis.richText.underline.label "Подчертан">
+<!ENTITY trellis.richText.superscript.label "Суперскрипт / Горни букви">
+<!ENTITY trellis.richText.subscript.label "Субскрипт / Долни букви">
+
+<!ENTITY trellis.annotate.toolbar.add.label "Добавяне на анотация">
+<!ENTITY trellis.annotate.toolbar.collapse.label "Свиване на всички анотации">
+<!ENTITY trellis.annotate.toolbar.expand.label "Разгръщане на всички анотации">
+<!ENTITY trellis.annotate.toolbar.highlight.label "Акцентиране на текст">
+<!ENTITY trellis.annotate.toolbar.unhighlight.label "Остраняване на акцентирането">
+
+<!ENTITY trellis.integration.prefs.displayAs.label "Показване на цитатите като:">
+<!ENTITY trellis.integration.prefs.footnotes.label "Бележки под линия">
+<!ENTITY trellis.integration.prefs.endnotes.label "Бележки в края на документа">
+
+<!ENTITY trellis.integration.prefs.formatUsing.label "Запази бележките като:">
+<!ENTITY trellis.integration.prefs.bookmarks.label "Отметки">
+<!ENTITY trellis.integration.prefs.bookmarks.caption "Отметките могат да бъдат споделяни между Word и LibreOffice, но могат да предизвикат грешка ако са променени по случайност и не могат да бъдат добавени като бележки под линия.">
+
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.label "Автоматично актуализиране на бележките под линия">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.tooltip "Бележките под линия с предстоящо актуализиране ще бъдат актентирани в документа">
+<!ENTITY trellis.integration.prefs.automaticCitationUpdates.description "Изключването на автоматичното актуализиране може да ускори добавянето на бележки под линия в големи документи. Използвайте &quot;Опресняване&quot; за да ги актуализирате ръчно.">
+
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.label "Използване на MEDLINE абревиатури на периодично издание">
+<!ENTITY trellis.integration.prefs.automaticJournalAbbeviations.caption "Полето “Абревиатура на периодично издание” ще бъде игнорирано.">
+
+<!ENTITY trellis.integration.prefs.exportDocument "Switch to a Different Word Processor…">
+
+<!ENTITY trellis.integration.showEditor.label "Показване на редактора">
+<!ENTITY trellis.integration.classicView.label "Класически изглед">
+
+<!ENTITY trellis.integration.references.label "Препратки в библиографията">
+
+<!ENTITY trellis.sync.stop "Спиране на синхронизирането">
+<!ENTITY trellis.sync.error "Грешка в синхронизирането">
+<!ENTITY trellis.sync.storage.progress "Прогрес:">
+<!ENTITY trellis.sync.storage.downloads "Изтегляния:">
+<!ENTITY trellis.sync.storage.uploads "Качвания:">
+
+<!ENTITY trellis.sync.longTagFixer.followingTagTooLong "Следният маркер във Вашата библиотека е прекалено дълъг за да бъде синхронизиран със сървъра:">
+<!ENTITY trellis.sync.longTagFixer.syncedTagSizeLimit "Синхронизираните маркери трябва да са по-къси от 256 знака.">
+<!ENTITY trellis.sync.longTagFixer.splitEditDelete "Можете да разделите маркера на няколко маркери, да го съкратите или изтриете.">
+<!ENTITY trellis.sync.longTagFixer.split "Разделяне">
+<!ENTITY trellis.sync.longTagFixer.splitAtThe "Разделяне при">
+<!ENTITY trellis.sync.longTagFixer.character "знак">
+<!ENTITY trellis.sync.longTagFixer.characters "знаци">
+<!ENTITY trellis.sync.longTagFixer.uncheckedTagsNotSaved "Неотбелязаните маркери няма да бъдат съхранени.">
+<!ENTITY trellis.sync.longTagFixer.tagWillBeDeleted "Отметката ще бъде изтрита от всички записи.">
+
+<!ENTITY trellis.merge.title "Разрешаване на конфликти">
+<!ENTITY trellis.merge.of "на">
+<!ENTITY trellis.merge.deleted "Изтрито">
+
+<!ENTITY trellis.proxy.recognized.title "Прокси сървърът е разпознат">
+<!ENTITY trellis.proxy.recognized.warning "Добавяйте само прокси сървъри, свързани със страницата на Вашата библиотека, училище или фирма">
+<!ENTITY trellis.proxy.recognized.warning.secondary "Добавянето на други прокси сървъри може да позволи злонамерени интернет страници да се маскират като страници на които се доверявате.">
+<!ENTITY trellis.proxy.recognized.disable.label "Не пренасочвай автоматично пакетите данни / заявките през предишно разпознати прокси сървъри">
+<!ENTITY trellis.proxy.recognized.ignore.label "Ингнориране">
+
+<!ENTITY trellis.feedSettings.title "Настройки на емисиите">
+<!ENTITY trellis.feedSettings.saveButton.label "Запазване">
+<!ENTITY trellis.feedSettings.url.label "URL:">
+<!ENTITY trellis.feedSettings.title.label "Заглавие:">
+<!ENTITY trellis.feedSettings.refresh.label1 "Актуализирай емисията на всеки">
+<!ENTITY trellis.feedSettings.refresh.label2 "час(а)">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label1 "Премахване на непрочетените емисии след">
+<!ENTITY trellis.feedSettings.cleanupUnreadAfter.label2 "ден (дни)">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label1 "Премахване на прочетените емисии след">
+<!ENTITY trellis.feedSettings.cleanupReadAfter.label2 "ден (дни)">
+
+<!ENTITY trellis.rtfScan.title "Сканиране на RTF">
+<!ENTITY trellis.rtfScan.cancel.label "Отказ">
+<!ENTITY trellis.rtfScan.citation.label "Цитат">
+<!ENTITY trellis.rtfScan.itemName.label "Име на запис">
+<!ENTITY trellis.rtfScan.unmappedCitations.label "Неоткрити цитати">
+<!ENTITY trellis.rtfScan.ambiguousCitations.label "Двусмислени цитати">
+<!ENTITY trellis.rtfScan.mappedCitations.label "Открити цитати">
+<!ENTITY trellis.rtfScan.introPage.label "Въведение">
+<!ENTITY trellis.rtfScan.introPage.description "Зотеро може автоматично да извлича и реформатира цитати и да вмъква библиография във RTF файлове. RTF сканирането понастоящем поддържа цитати във вариации на следните формати:">
+<!ENTITY trellis.rtfScan.introPage.description2 "За да започнете процедурата, изберете по-долу входящ RTF файл и изходящ файл:">
+<!ENTITY trellis.rtfScan.scanPage.label "Търсене за цитати">
+<!ENTITY trellis.rtfScan.scanPage.description "Зотеро преглежда вашият документ за цитати. Моля изчакайте.">
+<!ENTITY trellis.rtfScan.citationsPage.label "Проверяване на цитираните записи">
+<!ENTITY trellis.rtfScan.citationsPage.description "Моля прегледайте списъка с разпознатите цитати по-долу за да се убедите, че Зотеро правилно е избрал съотвените записи. Неоткритите и двусмислени цитати трябва да бъдат коригирани преди да продължите към следващата стъпка.">
+<!ENTITY trellis.rtfScan.stylePage.label "Форматиране на документа">
+<!ENTITY trellis.rtfScan.formatPage.label "Форматиране на цитатите">
+<!ENTITY trellis.rtfScan.formatPage.description "Зотеро преработва и форматира Вашият RTF файл. Моля изчакайте.">
+<!ENTITY trellis.rtfScan.completePage.label "Сканирането на RTF файла приключи">
+<!ENTITY trellis.rtfScan.completePage.description "Вашият документ беше прегледан и преработен. Моля, проверете дали е форматиран правилно.">
+<!ENTITY trellis.rtfScan.inputFile.label "Входящ файл">
+<!ENTITY trellis.rtfScan.outputFile.label "Изходящ файл">
+
+<!ENTITY trellis.file.choose.label "Избиране на файл...">
+<!ENTITY trellis.file.noneSelected.label "Няма избран файл">
+
+<!ENTITY trellis.attachLink.title "Прикачване на линк към URI">
+<!ENTITY trellis.attachLink.label.link "Линк:">
+<!ENTITY trellis.attachLink.label.title "Заглавие:">
+
+<!ENTITY trellis.context.addChildNote "Add Item Note">
+<!ENTITY trellis.context.addChildNoteFromAnnotations "Add Item Note from Annotations">
+<!ENTITY trellis.context.addStandaloneNote "Add Standalone Note">
+<!ENTITY trellis.context.addStandaloneNoteFromAnnotations "Add Standalone Note from Annotations">
+<!ENTITY trellis.context.editInWindow "Edit in a Separate Window">
+
+<!ENTITY trellis.pdfReader.firstPage "Първа страница">
+<!ENTITY trellis.pdfReader.lastPage "Last Page">
+<!ENTITY trellis.pdfReader.back "Back">
+<!ENTITY trellis.pdfReader.forward "Forward">
+<!ENTITY trellis.pdfReader.handTool "Hand Tool">
+<!ENTITY trellis.pdfReader.verticalScrolling "Vertical Scrolling">
+<!ENTITY trellis.pdfReader.horizontalScrolling "Horizontal Scrolling">
+<!ENTITY trellis.pdfReader.wrappedScrolling "Wrapped Scrolling">
+<!ENTITY trellis.pdfReader.noSpreads "No Spreads">
+<!ENTITY trellis.pdfReader.oddSpreads "Odd Spreads">
+<!ENTITY trellis.pdfReader.evenSpreads "Even Spreads">
+<!ENTITY trellis.pdfReader.scrolled "Scrolled">
+<!ENTITY trellis.pdfReader.paginated "Paginated">
+<!ENTITY trellis.pdfReader.zoomIn "Zoom In">
+<!ENTITY trellis.pdfReader.zoomOut "Zoom Out">
+<!ENTITY trellis.pdfReader.zoomReset "Reset Zoom">
+<!ENTITY trellis.pdfReader.zoomAuto "Automatically Resize">
+<!ENTITY trellis.pdfReader.zoomPageWidth "Zoom to Page Width">
+<!ENTITY trellis.pdfReader.zoomPageHeight "Zoom to Page Height">
+<!ENTITY trellis.pdfReader.splitVertically "Split Vertically">
+<!ENTITY trellis.pdfReader.splitHorizontally "Split Horizontally">
+<!ENTITY trellis.pdfReader.transferFromPDF "Import Annotations…">
+<!ENTITY trellis.pdfReader.rotatePageLeft "Rotate Page Left">
+<!ENTITY trellis.pdfReader.rotatePageRight "Rotate Page Right">

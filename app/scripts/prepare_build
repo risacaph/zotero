@@ -69,7 +69,7 @@ def main():
             shutil.rmtree(tmp_dir)
         os.mkdir(tmp_dir)
         
-        tmp_src_dir = os.path.join(tmp_dir, 'zotero')
+        tmp_src_dir = os.path.join(tmp_dir, 'trellis')
         
         # Export a clean copy of the source tree
         subprocess.check_call([
@@ -92,7 +92,7 @@ def main():
         # Delete CSL locale support files
         subprocess.check_call([
             'find',
-            os.path.normpath(tmp_src_dir + '/chrome/content/zotero/locale/csl/'),
+            os.path.normpath(tmp_src_dir + '/chrome/content/trellis/locale/csl/'),
             '-mindepth', '1',
             '!', '-name', '*.xml',
             '!', '-name', 'locales.json',

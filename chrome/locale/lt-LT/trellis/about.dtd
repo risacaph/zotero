@@ -1,0 +1,13 @@
+<!ENTITY trellis.version "versija">
+<!ENTITY trellis.whatsNew "Naujovės">
+<!ENTITY trellis.createdby "Sukurė:">
+<!ENTITY trellis.director "Direktorius:">
+<!ENTITY trellis.directors "Direktoriai:">
+<!ENTITY trellis.developers "Programuotojai:">
+<!ENTITY trellis.alumni "Ankstesni talkininkai:">
+<!ENTITY trellis.about.localizations "Vertėjai:">
+<!ENTITY trellis.about.additionalSoftware "Trečiųjų šalių programinė įranga:">
+<!ENTITY trellis.thanks "Ypač dėkojame:">
+<!ENTITY trellis.about.close "Užverti">
+<!ENTITY trellis.moreCreditsAndAcknowledgements "Kitos padėkos">
+<!ENTITY trellis.citationProcessing "Citatų ir bibliografijos apdorojimas">
