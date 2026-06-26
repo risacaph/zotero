@@ -1,6 +1,6 @@
 "use strict";
 
-describe("Zotero.FeedReader", function () {
+describe("Trellis.FeedReader", function () {
 	
 	var htmlUrl = getTestDataUrl("test.html");
 	
@@ -40,7 +40,7 @@ describe("Zotero.FeedReader", function () {
 	
 	before(async function () {
 		// Browser window is needed as parent window to load the feed reader scripts.
-		win = await loadZoteroWindow();
+		win = await loadTrellisWindow();
 	});
 
 	after(async function () {
@@ -52,17 +52,17 @@ describe("Zotero.FeedReader", function () {
 
 	describe('FeedReader()', function () {
 		it('should throw if url not provided', function () {
-			assert.throw(() => new Zotero.FeedReader())
+			assert.throw(() => new Trellis.FeedReader())
 		});
 		
 		it('should throw if url invalid', function () {
-			assert.throw(() => new Zotero.FeedReader('invalid url'))
+			assert.throw(() => new Trellis.FeedReader('invalid url'))
 		});
 	});
 	
 	describe('#process()', function () {
 		it('should reject if the provided url is not a valid feed', async function () {
-			let fr = new Zotero.FeedReader(htmlUrl);
+			let fr = new Trellis.FeedReader(htmlUrl);
 			let e = await getPromiseError(fr.process());
 			assert.ok(e);
 			e = await getPromiseError(fr._feedItems[fr._feedItems.length-1].promise);
@@ -70,7 +70,7 @@ describe("Zotero.FeedReader", function () {
 		});
 		
 		it('should set #feedProperties on FeedReader object', async function () {
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			assert.throw(() => fr.feedProperties);
 			await fr.process();
 			assert.ok(fr.feedProperties);
@@ -79,7 +79,7 @@ describe("Zotero.FeedReader", function () {
 	
 	describe('#terminate()', function () {
 		it('should reject last feed item and feed processing promise if feed not processed yet', async function () {
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			fr.terminate("test");
 			let e = await getPromiseError(fr.process());
 			assert.ok(e);
@@ -90,18 +90,18 @@ describe("Zotero.FeedReader", function () {
 	
 	describe('#feedProperties', function () {
 		it('should throw if accessed before feed is processed', function () {
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			assert.throw(() => fr.feedProperties);
 		});
 		
 		it('should have correct values for a sparse feed', async function () {
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			await fr.process();
 			assert.deepEqual(fr.feedProperties, rssFeedInfo);
 		});
 		
 		it('should have correct values for a detailed feed', async function () {
-			let fr = new Zotero.FeedReader(detailedRSSFeedURL);
+			let fr = new Trellis.FeedReader(detailedRSSFeedURL);
 			await fr.process();
 			assert.deepEqual(fr.feedProperties, detailedRSSFeedInfo);
 		});
@@ -109,7 +109,7 @@ describe("Zotero.FeedReader", function () {
 	
 	describe('#ItemIterator()', function () {
 		it('should throw if called before feed is resolved', function () {
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			assert.throw(() => new fr.ItemIterator);
 		});
 		
@@ -125,7 +125,7 @@ describe("Zotero.FeedReader", function () {
 				enclosedItems: [{ url: 'http://www.example.com/example.pdf', contentType: 'application/pdf' }]
 			};
 		
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			await fr.process();
 			let itemIterator = new fr.ItemIterator();
 			let item = await itemIterator.next().value;
@@ -157,7 +157,7 @@ describe("Zotero.FeedReader", function () {
 				enclosedItems: []
 			};
 		
-			let fr = new Zotero.FeedReader(detailedRSSFeedURL);
+			let fr = new Trellis.FeedReader(detailedRSSFeedURL);
 			await fr.process();
 			let itemIterator = new fr.ItemIterator();
 			let item = await itemIterator.next().value;
@@ -189,7 +189,7 @@ describe("Zotero.FeedReader", function () {
 				enclosedItems: []
 			};
 		
-			let fr = new Zotero.FeedReader(articleMetadataRSSFeedURL);
+			let fr = new Trellis.FeedReader(articleMetadataRSSFeedURL);
 			await fr.process();
 			let itemIterator = new fr.ItemIterator();
 			let item = await itemIterator.next().value;
@@ -213,7 +213,7 @@ describe("Zotero.FeedReader", function () {
 				enclosedItems: []
 			};
 			
-			let fr = new Zotero.FeedReader(atomFeedURL);
+			let fr = new Trellis.FeedReader(atomFeedURL);
 			await fr.process();
 			let itemIterator = new fr.ItemIterator();
 			let item = await itemIterator.next().value;
@@ -222,7 +222,7 @@ describe("Zotero.FeedReader", function () {
 		});
 		
 		it('should resolve last item with null', async function () {
-			let fr = new Zotero.FeedReader(rssFeedURL);
+			let fr = new Trellis.FeedReader(rssFeedURL);
 			await fr.process();
 			let itemIterator = new fr.ItemIterator();
 			let item;
@@ -231,7 +231,7 @@ describe("Zotero.FeedReader", function () {
 		});
 		
 		it('should preserve tags in text fields', async () => {
-			const fr = new Zotero.FeedReader(richTextRSSFeedURL);
+			const fr = new Trellis.FeedReader(richTextRSSFeedURL);
 			await fr.process();
 			const itemIterator = new fr.ItemIterator();
 			let item;
@@ -245,7 +245,7 @@ describe("Zotero.FeedReader", function () {
 		});
 
 		it('should use content as abstractNote when available', async () => {
-			const fr = new Zotero.FeedReader(richTextRSSFeedURL);
+			const fr = new Trellis.FeedReader(richTextRSSFeedURL);
 			await fr.process();
 			const itemIterator = new fr.ItemIterator();
 			let item;
@@ -257,7 +257,7 @@ describe("Zotero.FeedReader", function () {
 		});
 
 		it('should parse HTML fields', async () => {
-			const fr = new Zotero.FeedReader(richTextRSSFeedURL);
+			const fr = new Trellis.FeedReader(richTextRSSFeedURL);
 			await fr.process();
 			const itemIterator = new fr.ItemIterator();
 			let item;
@@ -270,7 +270,7 @@ describe("Zotero.FeedReader", function () {
 		});
 
 		it('should parse CDATA as text', async () => {
-			const fr = new Zotero.FeedReader(cdataRSSFeedURL);
+			const fr = new Trellis.FeedReader(cdataRSSFeedURL);
 			await fr.process();
 			const itemIterator = new fr.ItemIterator();
 			const item = await itemIterator.next().value;
@@ -280,7 +280,7 @@ describe("Zotero.FeedReader", function () {
 		});
 
 		it('should parse enclosed media', async () => {
-			const fr = new Zotero.FeedReader(mediaFeedURL);
+			const fr = new Trellis.FeedReader(mediaFeedURL);
 			await fr.process();
 			const itemIterator = new fr.ItemIterator();
 			const item = await itemIterator.next().value;
@@ -315,7 +315,7 @@ describe("Zotero.FeedReader", function () {
 		});
 		
 		it("should handle an ISO-8859-1 (windows-1252) feed", async function () {
-			let fr = new Zotero.FeedReader(baseURL + "feedWindows1252.rss");
+			let fr = new Trellis.FeedReader(baseURL + "feedWindows1252.rss");
 			await fr.process();
 			let itemIterator = new fr.ItemIterator();
 			let item = await itemIterator.next().value;

@@ -8,11 +8,11 @@ const parseCitavi5Quads = (quadsRaw) => {
 
 const ImportCitaviAnnotatons = async (translation) => {
 	const IDMap = translation._itemSaver._IDMap;
-	const ZU = translation._sandboxZotero.Utilities;
+	const ZU = translation._sandboxTrellis.Utilities;
 	
 	// stream might be closed by now, re-init to make sure getXML() works
 	translation._io.init('xml/dom');
-	const doc = translation._sandboxZotero.getXML();
+	const doc = translation._sandboxTrellis.getXML();
 	const isCitavi5 = ZU.xpathText(doc, '//CitaviExchangeData/@Version').startsWith('5');
 	var annotationNodes = ZU.xpath(doc, '//Annotations/Annotation');
 
@@ -41,7 +41,7 @@ const ImportCitaviAnnotatons = async (translation) => {
 		const location = ZU.xpath(doc, `//Locations/Location[@id='${locationID}']|//Locations/Location[@ID='${locationID}']`)[0];
 
 		if (!location) {
-			Zotero.debug(`Missing <Location> entry for annotation ${id}, skipping...`);
+			Trellis.debug(`Missing <Location> entry for annotation ${id}, skipping...`);
 			continue;
 		}
 
@@ -49,7 +49,7 @@ const ImportCitaviAnnotatons = async (translation) => {
 		const entityLink = ZU.xpath(doc, `//EntityLinks/EntityLink[TargetID='${id}']`)[0];
 
 		if (!entityLink) {
-			Zotero.debug(`Missing <EntityLink> entry for annotation ${id}, skipping...`);
+			Trellis.debug(`Missing <EntityLink> entry for annotation ${id}, skipping...`);
 			continue;
 		}
 
@@ -70,7 +70,7 @@ const ImportCitaviAnnotatons = async (translation) => {
 		const quotationType = xpathTextOrNull(knowledgeItem, './QuotationType');
 		const text = xpathTextOrNull(knowledgeItem, './Text');
 		const itemID = IDMap[referenceID];
-		const item = await Zotero.Items.getAsync(itemID);
+		const item = await Trellis.Items.getAsync(itemID);
 		const quads = isCitavi5 ? parseCitavi5Quads(quadsRaw) : JSON.parse(quadsRaw);
 		
 		const itemAttachmentIDs = item.getAttachments();
@@ -79,7 +79,7 @@ const ImportCitaviAnnotatons = async (translation) => {
 			continue;
 		}
 
-		const itemAttachment = await Zotero.Items.getAsync(itemAttachmentIDs[0]);
+		const itemAttachment = await Trellis.Items.getAsync(itemAttachmentIDs[0]);
 
 		const rectsMappedByPage = quads.reduce((acc, quad) => {
 			const pageIndex = parseInt(quad.PageIndex) - 1;
@@ -104,7 +104,7 @@ const ImportCitaviAnnotatons = async (translation) => {
 			const pageRects = rectsMappedByPage.get(pageIndex);
 			pageRects.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
 			const annotation = {
-				key: Zotero.DataObjectUtilities.generateKey(),
+				key: Trellis.DataObjectUtilities.generateKey(),
 				type: 'highlight',
 				comment: isFirstPage ? coreStatement : '',
 				text: isFirstPage ? text : '',
@@ -153,17 +153,17 @@ const ImportCitaviAnnotatons = async (translation) => {
 
 		try {
 			// eslint-disable-next-line no-await-in-loop
-			annotations = await Zotero.PDFWorker.processCitaviAnnotations(
+			annotations = await Trellis.PDFWorker.processCitaviAnnotations(
 				itemAttachment.getFilePath(), annotations
 			);
 			annotations.forEach((annotation) => {
-				promises.push(Zotero.Annotations.saveFromJSON(
+				promises.push(Trellis.Annotations.saveFromJSON(
 					itemAttachment, annotation, { skipSelect: true }
 				));
 			});
 		}
 		catch (e) {
-			Zotero.debug(`Could not process annotations for attachment item ${itemAttachment.key} (file path: ${itemAttachment.getFilePath()})`);
+			Trellis.debug(`Could not process annotations for attachment item ${itemAttachment.key} (file path: ${itemAttachment.getFilePath()})`);
 		}
 
 		progress = baseProgress + Math.ceil((i / annotationNodes.length) * stageProgress);

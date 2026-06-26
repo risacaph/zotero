@@ -4,8 +4,8 @@ describe("VirtualizedTable", function () {
 	let win, zp, itemsView;
 
 	before(async function () {
-		win = await loadZoteroPane();
-		zp = win.ZoteroPane;
+		win = await loadTrellisPane();
+		zp = win.TrellisPane;
 	});
 
 	beforeEach(async function () {

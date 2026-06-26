@@ -64,7 +64,7 @@ export function decodeHex(charCode, codepage) {
 		return decoder.decode(binary);
 	}
 	catch {
-		Zotero.warn("Invalid ANSI codepage: " + codepage);
+		Trellis.warn("Invalid ANSI codepage: " + codepage);
 		return "?";
 	}
 }
@@ -285,7 +285,7 @@ function matchesItemCreator(creator, itemCreator) {
 
 	// make sure that the first name matches (if it exists)
 	if (creator.length > lowerLast.length) {
-		const firstName = Zotero.Utilities.trim(creator.substr(0, creator.length - lowerLast.length));
+		const firstName = Trellis.Utilities.trim(creator.substr(0, creator.length - lowerLast.length));
 		if (firstName.length) {
 			// check to see whether the first name is all initials
 			const initialRe = /^(?:\p{L}\.? ?)+$/u;
@@ -327,7 +327,7 @@ function matchesItemCreator(creator, itemCreator) {
 function matchesItemCreators(creators, item, etAl) {
 	let itemCreators = item.getCreators();
 	let primaryCreators = [];
-	let primaryCreatorTypeID = Zotero.CreatorTypes.getPrimaryIDForType(item.itemTypeID);
+	let primaryCreatorTypeID = Trellis.CreatorTypes.getPrimaryIDForType(item.itemTypeID);
 
 	// use only primary creators if primary creators exist
 	for (let i = 0; i < itemCreators.length; i++) {
@@ -440,10 +440,10 @@ export async function processCitations(citationObjects) {
 				continue;
 			}
 			citationsSeen.add(citationString);
-			Zotero.debug("Found citation " + citationString);
+			Trellis.debug("Found citation " + citationString);
 
 			// for each individual match, look for an item in the database
-			let search = new Zotero.Search;
+			let search = new Trellis.Search;
 			
 			if (creators) {
 				creators = creators.replace(".", "");
@@ -471,7 +471,7 @@ export async function processCitations(citationObjects) {
 
 			search.addCondition("date", "is", date);
 			let ids = await search.search();
-			Zotero.debug("Mapped to " + ids);
+			Trellis.debug("Mapped to " + ids);
 
 			// no mapping found
 			if (!ids.length) {
@@ -483,7 +483,7 @@ export async function processCitations(citationObjects) {
 			}
 			// some mapping found
 			else {
-				let items = await Zotero.Items.getAsync(ids);
+				let items = await Trellis.Items.getAsync(ids);
 				if (items.length > 1) {
 					// check to see how well the author list matches the citation
 					let matchedItems = [];
@@ -536,7 +536,7 @@ export async function processCitations(citationObjects) {
  */
 export async function replaceCitations(content, citations, citationItemIDs, style, locale, displayAs) {
 	// load style and create ItemSet with all items
-	let zStyle = Zotero.Styles.get(style);
+	let zStyle = Trellis.Styles.get(style);
 	let cslEngine = zStyle.getCiteProc(locale, 'rtf');
 	let isNote = zStyle.class === "note";
 
@@ -569,9 +569,9 @@ export async function replaceCitations(content, citations, citationItemIDs, styl
 		cslCitations.push(cslCitation);
 	}
 
-	Zotero.debug(cslCitations);
+	Trellis.debug(cslCitations);
 	itemIDs = Object.keys(itemIDs);
-	Zotero.debug(itemIDs);
+	Trellis.debug(itemIDs);
 
 	// prepare the list of rendered citations
 	let citationResults = cslEngine.rebuildProcessorState(cslCitations, "rtf");
@@ -613,7 +613,7 @@ export async function replaceCitations(content, citations, citationItemIDs, styl
 
 	// add bibliography
 	if (zStyle.hasBibliography) {
-		let bibliography = Zotero.Cite.makeFormattedBibliography(cslEngine, "rtf");
+		let bibliography = Trellis.Cite.makeFormattedBibliography(cslEngine, "rtf");
 		bibliography = bibliography.substring(5, bibliography.length - 1);
 		// fix line breaks
 		let linebreak = "\r\n";

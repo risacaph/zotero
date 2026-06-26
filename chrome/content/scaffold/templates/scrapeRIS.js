@@ -9,7 +9,7 @@ async function scrape(doc, url = doc.location.href) {
 	// Z.debug("pdfURL: " + pdfURL);
 
 	let risText = await requestText(risURL);
-	let translator = Zotero.loadTranslator('import');
+	let translator = Trellis.loadTranslator('import');
 	translator.setTranslator('32d59d2d-b65a-4da4-b0a3-bdd3cfb979e7'); // RIS
 	translator.setString(risText);
 	translator.setHandler('itemDone', (_obj, item) => {

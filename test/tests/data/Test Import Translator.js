@@ -1,6 +1,6 @@
 {
     "translatorID": "619ed0f3-d8f3-4086-b1e7-f57ef35c3c43",
-    "label": "Import Zotero JSON",
+    "label": "Import Trellis JSON",
     "creator": "Simon Kornblith",
     "target": "json",
     "minVersion": "",
@@ -25,7 +25,7 @@ function parseInput() {
     try {
         parsedData = JSON.parse(json);
     } catch(e) {
-        Zotero.debug(e);
+        Trellis.debug(e);
     }
 }
 

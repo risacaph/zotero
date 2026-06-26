@@ -5,20 +5,20 @@
                      Vienna, Virginia, USA
                      https://digitalscholar.org
 
-    This file is part of Zotero.
+    This file is part of Trellis.
 
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
     ***** END LICENSE BLOCK *****
 */
@@ -26,17 +26,17 @@
 "use strict";
 
 // eslint-disable-next-line camelcase, no-unused-vars
-var Zotero_Dictionary_Manager = new function () {
+var Trellis_Dictionary_Manager = new function () {
 	var installed;
 	var updateMap;
 	
 	this.init = async function () {
-		document.title = Zotero.getString('spellCheck.dictionaryManager.title');
+		document.title = Trellis.getString('spellCheck.dictionaryManager.title');
 		
-		installed = new Set(Zotero.Dictionaries.dictionaries.map(d => d.id));
-		var installedLocales = new Set(Zotero.Dictionaries.dictionaries.map(d => d.locale));
-		var availableDictionaries = await Zotero.Dictionaries.fetchDictionariesList();
-		var availableUpdates = await Zotero.Dictionaries.getAvailableUpdates(availableDictionaries);
+		installed = new Set(Trellis.Dictionaries.dictionaries.map(d => d.id));
+		var installedLocales = new Set(Trellis.Dictionaries.dictionaries.map(d => d.locale));
+		var availableDictionaries = await Trellis.Dictionaries.fetchDictionariesList();
+		var availableUpdates = await Trellis.Dictionaries.getAvailableUpdates(availableDictionaries);
 		updateMap = new Map(availableUpdates.map(x => [x.old.id, { id: x.new.id, version: x.new.version }]));
 		
 		var { InlineSpellChecker } = ChromeUtils.importESModule("resource://gre/modules/InlineSpellChecker.sys.mjs");
@@ -44,8 +44,8 @@ var Zotero_Dictionary_Manager = new function () {
 		
 		// Start with installed dictionaries
 		var list = [];
-		for (let d of Zotero.Dictionaries.dictionaries) {
-			let name = Zotero.Dictionaries.getBestDictionaryName(d.locale, isc);
+		for (let d of Trellis.Dictionaries.dictionaries) {
+			let name = Trellis.Dictionaries.getBestDictionaryName(d.locale, isc);
 			list.push(Object.assign({}, d, { name }));
 		}
 		// Add remote dictionaries not in the list
@@ -63,7 +63,7 @@ var Zotero_Dictionary_Manager = new function () {
 				return posA - posB;
 			}
 			// Otherwise compare the locale codes
-			return Zotero.localeCompare(a.locale, b.locale);
+			return Trellis.localeCompare(a.locale, b.locale);
 		});
 		
 		// Build list
@@ -93,7 +93,7 @@ var Zotero_Dictionary_Manager = new function () {
 			label.setAttribute('for', d.locale);
 			// Add " (update available)"
 			if (updateMap.has(d.id)) {
-				name = Zotero.getString('spellCheck.dictionaryManager.updateAvailable', name);
+				name = Trellis.getString('spellCheck.dictionaryManager.updateAvailable', name);
 			}
 			label.textContent = name;
 			// Don't toggle checkbox for single-click on label
@@ -148,21 +148,21 @@ var Zotero_Dictionary_Manager = new function () {
 		}
 		if (toRemove.length) {
 			for (let id of toRemove) {
-				await Zotero.Dictionaries.remove(id);
+				await Trellis.Dictionaries.remove(id);
 			}
 		}
 		if (toDownload.length) {
 			for (let { id, name, version } of toDownload) {
-				_updateStatus(Zotero.getString('general.downloading.quoted', name));
+				_updateStatus(Trellis.getString('general.downloading.quoted', name));
 				try {
-					await Zotero.Dictionaries.install(id, version);
+					await Trellis.Dictionaries.install(id, version);
 				}
 				catch (e) {
-					Zotero.logError(e);
-					Zotero.alert(
+					Trellis.logError(e);
+					Trellis.alert(
 						null,
-						Zotero.getString('general.error'),
-						Zotero.getString('spellCheck.dictionaryManager.error.unableToInstall', name)
+						Trellis.getString('general.error'),
+						Trellis.getString('spellCheck.dictionaryManager.error.unableToInstall', name)
 							+ "\n\n" + (e.message ? (e.message + "\n\n" + e.stack) : e)
 					);
 					return;

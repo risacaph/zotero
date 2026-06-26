@@ -76,7 +76,7 @@ make_add_instruction() {
     forced=
   fi
 
-  # Changed by Zotero for -e
+  # Changed by Trellis for -e
   is_extension=$(echo "$f" | grep -c 'distribution/extensions/.*/') || true
   if [ $is_extension = "1" ]; then
     # Use the subdirectory of the extensions folder as the file to test
@@ -116,7 +116,7 @@ make_patch_instruction() {
   f="$1"
   filev3="$2"
 
-  # Changed by Zotero for -e
+  # Changed by Trellis for -e
   is_extension=$(echo "$f" | grep -c 'distribution/extensions/.*/') || true
   if [ $is_extension = "1" ]; then
     # Use the subdirectory of the extensions folder as the file to test
@@ -140,7 +140,7 @@ append_remove_instructions() {
     listfile="$dir/Contents/Resources/removed-files"
   fi
   if [ -n "$listfile" ]; then
-    # Changed by Zotero: Use subshell and disable filename globbing to prevent bash from expanding
+    # Changed by Trellis: Use subshell and disable filename globbing to prevent bash from expanding
     # entries in removed-files with paths from the root (e.g., 'xulrunner/*')
     (
     set -f
@@ -188,7 +188,7 @@ list_files() {
     | sort -r > "${temp_filelist}"
   while read file; do
     eval "${1}[$count]=\"$file\""
-    # Changed for Zotero to avoid eval as 1
+    # Changed for Trellis to avoid eval as 1
     #(( count++ ))
     (( ++count ))
   done < "${temp_filelist}"
@@ -206,7 +206,7 @@ list_dirs() {
     | sort -r > "${temp_dirlist}"
   while read dir; do
     eval "${1}[$count]=\"$dir\""
-    # Changed for Zotero
+    # Changed for Trellis
     #(( count++ ))
     (( ++count ))
   done < "${temp_dirlist}"

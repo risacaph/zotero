@@ -3,22 +3,22 @@
     
     Copyright © 2009 Center for History and New Media
                      George Mason University, Fairfax, Virginia, USA
-                     http://zotero.org
+                     http://trellis.org
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
 	
 	Utilities based in part on code taken from Piggy Bank 2.1.1 (BSD-licensed)
@@ -33,7 +33,7 @@ ChromeUtils.defineESModuleGetters(globalThis, {
 /**
  * @class Utility functions not made available to translators
  */
-Zotero.Utilities.Internal = {
+Trellis.Utilities.Internal = {
 	SNAPSHOT_SAVE_TIMEOUT: 30000,
 
 	/**
@@ -141,7 +141,7 @@ Zotero.Utilities.Internal = {
 			return ("0" + charCode.toString(16)).slice(-2);
 		}
 		
-		var file = Zotero.File.pathToFile(file);
+		var file = Trellis.File.pathToFile(file);
 		try {
 			let { size } = await IOUtils.stat(file.path);
 			if (size === 0) {
@@ -164,7 +164,7 @@ Zotero.Utilities.Internal = {
 		var is = Cc["@mozilla.org/network/file-input-stream;1"]
 			.createInstance(Ci.nsIFileInputStream);
 		try {
-			is.init(Zotero.File.pathToFile(file), -1, -1, Ci.nsIFileInputStream.CLOSE_ON_EOF);
+			is.init(Trellis.File.pathToFile(file), -1, -1, Ci.nsIFileInputStream.CLOSE_ON_EOF);
 			ch.updateFromStream(is, -1);
 			// Get binary string and convert to hex string
 			let hash = ch.finish(false);
@@ -179,7 +179,7 @@ Zotero.Utilities.Internal = {
 				ch.finish(false);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			throw e;
 		}
@@ -215,7 +215,7 @@ Zotero.Utilities.Internal = {
 	
 	
 	gzip: async function (data) {
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		
 		// Get input stream from POST data
 		var is = Cc["@mozilla.org/io/string-input-stream;1"]
@@ -278,7 +278,7 @@ Zotero.Utilities.Internal = {
 	
 	
 	gunzip: async function (data) {
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		
 		const { NetUtil } = ChromeUtils.importESModule("resource://gre/modules/NetUtil.sys.mjs");
 		
@@ -365,7 +365,7 @@ Zotero.Utilities.Internal = {
 	 * @return {String} UTF-8 encoded string
 	 */
 	decodeUTF8: function (data) {
-		var bufView = Zotero.Utilities.Internal._decodeToUint8Array(data);
+		var bufView = Trellis.Utilities.Internal._decodeToUint8Array(data);
 		var decoder = new TextDecoder();
 		return decoder.decode(bufView);
 	},
@@ -417,9 +417,9 @@ Zotero.Utilities.Internal = {
 		}
 		
 		if (typeof buttonText == 'undefined') {
-			buttonText = Zotero.getString('errorReport.reportError');
+			buttonText = Trellis.getString('errorReport.reportError');
 			buttonCallback = function () {
-				var zp = Zotero.getActiveZoteroPane();
+				var zp = Trellis.getActiveTrellisPane();
 				// TODO: Open main window if closed
 				if (zp) zp.reportErrors();
 			};
@@ -458,7 +458,7 @@ Zotero.Utilities.Internal = {
 	 * @param {Object} [headers]
 	 */
 	saveURI: function (wbp, uri, target, headers) {
-		Zotero.warn("Zotero.Utilities.Internal.saveURI() is deprecated -- use Zotero.HTTP.download()");
+		Trellis.warn("Trellis.Utilities.Internal.saveURI() is deprecated -- use Trellis.HTTP.download()");
 		
 		// Handle gzip encoding
 		wbp.persistFlags |= wbp.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
@@ -471,7 +471,7 @@ Zotero.Utilities.Internal = {
 			uri = Services.io.newURI(uri, null, null);
 		}
 		
-		target = Zotero.File.pathToFile(target);
+		target = Trellis.File.pathToFile(target);
 		
 		if (headers) {
 			headers = Object.keys(headers).map(x => x + ": " + headers[x]).join("\r\n") + "\r\n";
@@ -538,13 +538,13 @@ Zotero.Utilities.Internal = {
 		const wrapColumn = 80;
 		
 		let savePromise = new Promise((resolve) => {
-			wbp.progressListener = new Zotero.WebProgressFinishListener(() => resolve());
+			wbp.progressListener = new Trellis.WebProgressFinishListener(() => resolve());
 		});
 		
 		wbp.saveDocument(
-			Zotero.Translate.DOMWrapper.unwrap(document),
-			Zotero.File.pathToFile(destFile),
-			Zotero.File.pathToFile(filesFolder),
+			Trellis.Translate.DOMWrapper.unwrap(document),
+			Trellis.File.pathToFile(destFile),
+			Trellis.File.pathToFile(filesFolder),
 			null,
 			encodingFlags,
 			wrapColumn
@@ -556,8 +556,8 @@ Zotero.Utilities.Internal = {
 		let timeoutPromise = new Promise((resolve, reject) => {
 			timeoutID = setTimeout(() => {
 				let url = document.location?.href ?? "document without location";
-				Zotero.debug("Stopping save for " + url, 2);
-				// Zotero.debug(listener.getRequest());
+				Trellis.debug("Stopping save for " + url, 2);
+				// Trellis.debug(listener.getRequest());
 				reject(new Error("Snapshot save timeout on " + url));
 				wbp.cancelSave();
 			}, this.SNAPSHOT_SAVE_TIMEOUT);
@@ -587,9 +587,9 @@ Zotero.Utilities.Internal = {
 				.createInstance(Components.interfaces.nsIProcess);
 		proc.init(cmd);
 		
-		Zotero.debug("Running " + cmd.path + " " + args.map(arg => "'" + arg + "'").join(" "));
+		Trellis.debug("Running " + cmd.path + " " + args.map(arg => "'" + arg + "'").join(" "));
 		
-		var deferred = Zotero.Promise.defer();
+		var deferred = Trellis.Promise.defer();
 		proc.runwAsync(args, args.length, { observe: function (subject, topic) {
 			if (topic !== "process-finished") {
 				deferred.reject(new Error(cmd.path + " failed"));
@@ -616,7 +616,7 @@ Zotero.Utilities.Internal = {
 		 
 		command = PathUtils.isAbsolute(command) ? command : await Subprocess.pathSearch(command);
 		
-		Zotero.debug("Running " + command + " " + args.map(arg => "'" + arg + "'").join(" "));
+		Trellis.debug("Running " + command + " " + args.map(arg => "'" + arg + "'").join(" "));
 		
 		 
 		let proc = await Subprocess.call({
@@ -685,7 +685,7 @@ Zotero.Utilities.Internal = {
 	 *
 	 * @param {HTMLElement} elem - HTML element to modify
 	 * @param {Object} [options] - Properties:
-	 *                                 .linkEvent - An object to pass to ZoteroPane.loadURI() to
+	 *                                 .linkEvent - An object to pass to TrellisPane.loadURI() to
 	 *                                 simulate modifier keys for link clicks. For example, to
 	 *                                 force links to open in new windows, pass with
 	 *                                 .shiftKey = true. If not provided, the actual event will
@@ -700,7 +700,7 @@ Zotero.Utilities.Internal = {
 			let href = a.getAttribute('href');
 			a.setAttribute('tooltiptext', href);
 			a.onclick = function (_event) {
-				Zotero.launchURL(href);
+				Trellis.launchURL(href);
 				if (options.callback) {
 					options.callback();
 				}
@@ -730,19 +730,19 @@ Zotero.Utilities.Internal = {
 			
 			// Be safe
 			if (!delay) {
-				Zotero.logError(`Incorrect delay ${delay} -- stopping`);
+				Trellis.logError(`Incorrect delay ${delay} -- stopping`);
 				yield Promise.resolve(false);
 			}
 			
 			if (maxTime && (totalTime + delay) > maxTime) {
-				Zotero.debug(`Total delay time exceeds ${maxTime} -- stopping`);
+				Trellis.debug(`Total delay time exceeds ${maxTime} -- stopping`);
 				yield Promise.resolve(false);
 			}
 			
 			totalTime += delay;
 			
-			Zotero.debug("Delaying " + delay + " ms");
-			yield Zotero.Promise.delay(delay).then(() => true);
+			Trellis.debug("Delaying " + delay + " ms");
+			yield Trellis.Promise.delay(delay).then(() => true);
 		}
 	},
 	
@@ -777,7 +777,7 @@ Zotero.Utilities.Internal = {
 			}
 			// If more data, tell stream we're ready
 			else if (maybePromise) {
-				aos.asyncWait({ onOutputStreamReady }, 0, 0, Zotero.mainThread);
+				aos.asyncWait({ onOutputStreamReady }, 0, 0, Trellis.mainThread);
 			}
 			// Otherwise close the stream
 			else {
@@ -789,7 +789,7 @@ Zotero.Utilities.Internal = {
 			try {
 				var result = g.next(lastVal);
 				if (result.done) {
-					Zotero.debug("No more data to write");
+					Trellis.debug("No more data to write");
 					return false;
 				}
 				if (result.value.then) {
@@ -802,13 +802,13 @@ Zotero.Utilities.Internal = {
 				return true;
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 				if (onError) {
 					try {
 						os.writeString(onError(e));
 					}
 					catch (e) {
-						Zotero.logError(e);
+						Trellis.logError(e);
 					}
 				}
 				os.close();
@@ -816,19 +816,19 @@ Zotero.Utilities.Internal = {
 			}
 		}
 		
-		pipe.outputStream.asyncWait({ onOutputStreamReady }, 0, 0, Zotero.mainThread);
+		pipe.outputStream.asyncWait({ onOutputStreamReady }, 0, 0, Trellis.mainThread);
 		return pipe.inputStream;
 	},
 	
 	
 	/**
-	 * Parse a Blob (e.g., as received from Zotero.HTTP.request()) into an HTML Document
+	 * Parse a Blob (e.g., as received from Trellis.HTTP.request()) into an HTML Document
 	 */
 	blobToHTMLDocument: async function (blob, url) {
-		var responseText = await Zotero.Utilities.Internal.blobToText(blob);
+		var responseText = await Trellis.Utilities.Internal.blobToText(blob);
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(responseText, 'text/html');
-		return Zotero.HTTP.wrapDocument(doc, url);
+		return Trellis.HTTP.wrapDocument(doc, url);
 	},
 	
 	blobToText: async function (blob, charset = null) {
@@ -849,31 +849,31 @@ Zotero.Utilities.Internal = {
 
 
 	/**
-	 * Converts Zotero.Item to a format expected by translators
-	 * This is mostly the Zotero web API item JSON format, but with an attachments
+	 * Converts Trellis.Item to a format expected by translators
+	 * This is mostly the Trellis web API item JSON format, but with an attachments
 	 * and notes arrays and optional compatibility mappings for older translators.
 	 *
-	 * @param {Zotero.Item} zoteroItem
+	 * @param {Trellis.Item} trellisItem
 	 * @param {Object} [options]
 	 * @param {Boolean} [options.legacy] Add mappings for legacy (pre-4.0.27) translators
 	 * @param {Boolean} [options.skipChildItems] Skip attachments and notes arrays
 	 * @param {Boolean} [options.skipBaseFields] Skip adding base fields to legacy mappings
 	 * @return {Object}
 	 */
-	itemToExportFormat: function (zoteroItem, options) {
+	itemToExportFormat: function (trellisItem, options) {
 		if (typeof options !== 'object') {
-			Zotero.debug("itemToExportFormat() now takes an 'options' object -- update your code");
+			Trellis.debug("itemToExportFormat() now takes an 'options' object -- update your code");
 			let [, legacy, skipChildItems, skipBaseFields] = arguments;
 			options = { legacy, skipChildItems, skipBaseFields };
 		}
 		let { legacy, skipChildItems, skipBaseFields } = options;
 		
-		function addCompatibilityMappings(item, zoteroItem) {
+		function addCompatibilityMappings(item, trellisItem) {
 			item.uniqueFields = {};
 
 			// Meaningless local item ID, but some older export translators depend on it
-			item.itemID = zoteroItem.id;
-			item.key = zoteroItem.key; // CSV translator exports this
+			item.itemID = trellisItem.id;
+			item.key = trellisItem.key; // CSV translator exports this
 
 			// "version" is expected to be a field for "computerProgram", which is now
 			// called "versionNumber"
@@ -884,22 +884,22 @@ Zotero.Utilities.Internal = {
 			}
 
 			// SQL instead of ISO-8601
-			item.dateAdded = zoteroItem.dateAdded;
-			item.dateModified = zoteroItem.dateModified;
+			item.dateAdded = trellisItem.dateAdded;
+			item.dateModified = trellisItem.dateModified;
 			if (item.accessDate) {
-				item.accessDate = zoteroItem.getField('accessDate');
+				item.accessDate = trellisItem.getField('accessDate');
 			}
 
 			// Map base fields
 			for (let field in item) {
-				let id = Zotero.ItemFields.getID(field);
-				if (!id || !Zotero.ItemFields.isValidForType(id, zoteroItem.itemTypeID)) {
+				let id = Trellis.ItemFields.getID(field);
+				if (!id || !Trellis.ItemFields.isValidForType(id, trellisItem.itemTypeID)) {
 					continue;
 				}
 
 				if (!skipBaseFields) {
-					let baseField = Zotero.ItemFields.getName(
-						Zotero.ItemFields.getBaseIDFromTypeAndField(item.itemType, field)
+					let baseField = Trellis.ItemFields.getName(
+						Trellis.ItemFields.getBaseIDFromTypeAndField(item.itemType, field)
 					);
 
 					if (!baseField || baseField == field) {
@@ -913,8 +913,8 @@ Zotero.Utilities.Internal = {
 			}
 
 			// Add various fields for compatibility with translators pre-4.0.27
-			item.itemID = zoteroItem.id;
-			item.libraryID = zoteroItem.libraryID == 1 ? null : zoteroItem.libraryID;
+			item.itemID = trellisItem.id;
+			item.libraryID = trellisItem.libraryID == 1 ? null : trellisItem.libraryID;
 
 			// Creators
 			if (item.creators) {
@@ -932,7 +932,7 @@ Zotero.Utilities.Internal = {
 				}
 			}
 
-			if (!zoteroItem.isRegularItem()) {
+			if (!trellisItem.isRegularItem()) {
 				item.sourceItemKey = item.parentItem;
 			}
 
@@ -949,11 +949,11 @@ Zotero.Utilities.Internal = {
 			// "related" was never used (array of itemIDs)
 
 			// seeAlso was always present, but it was always an empty array.
-			// Zotero RDF translator pretended to use it
+			// Trellis RDF translator pretended to use it
 			item.seeAlso = [];
 
-			if (zoteroItem.isAttachment()) {
-				item.linkMode = item.uniqueFields.linkMode = zoteroItem.attachmentLinkMode;
+			if (trellisItem.isAttachment()) {
+				item.linkMode = item.uniqueFields.linkMode = trellisItem.attachmentLinkMode;
 				item.mimeType = item.uniqueFields.mimeType = item.contentType;
 			}
 
@@ -964,40 +964,40 @@ Zotero.Utilities.Internal = {
 			return item;
 		}
 
-		var item = zoteroItem.toJSON();
+		var item = trellisItem.toJSON();
 
-		if (zoteroItem.libraryID) {
-			item.uri = Zotero.URI.getItemURI(zoteroItem);
+		if (trellisItem.libraryID) {
+			item.uri = Trellis.URI.getItemURI(trellisItem);
 		}
 		delete item.key;
 
-		if (!skipChildItems && !zoteroItem.isAttachment() && !zoteroItem.isNote()) {
+		if (!skipChildItems && !trellisItem.isAttachment() && !trellisItem.isNote()) {
 			// Include attachments
 			item.attachments = [];
-			let attachments = zoteroItem.getAttachments();
+			let attachments = trellisItem.getAttachments();
 			for (let i = 0; i < attachments.length; i++) {
-				let zoteroAttachment = Zotero.Items.get(attachments[i]);
-				let attachment = zoteroAttachment.toJSON();
-				attachment.uri = Zotero.URI.getItemURI(zoteroAttachment);
-				if (legacy) addCompatibilityMappings(attachment, zoteroAttachment);
+				let trellisAttachment = Trellis.Items.get(attachments[i]);
+				let attachment = trellisAttachment.toJSON();
+				attachment.uri = Trellis.URI.getItemURI(trellisAttachment);
+				if (legacy) addCompatibilityMappings(attachment, trellisAttachment);
 
 				item.attachments.push(attachment);
 			}
 
 			// Include notes
 			item.notes = [];
-			let notes = zoteroItem.getNotes();
+			let notes = trellisItem.getNotes();
 			for (let i = 0; i < notes.length; i++) {
-				let zoteroNote = Zotero.Items.get(notes[i]);
-				let note = zoteroNote.toJSON();
-				note.uri = Zotero.URI.getItemURI(zoteroNote);
-				if (legacy) addCompatibilityMappings(note, zoteroNote);
+				let trellisNote = Trellis.Items.get(notes[i]);
+				let note = trellisNote.toJSON();
+				note.uri = Trellis.URI.getItemURI(trellisNote);
+				if (legacy) addCompatibilityMappings(note, trellisNote);
 
 				item.notes.push(note);
 			}
 		}
 
-		if (legacy) addCompatibilityMappings(item, zoteroItem);
+		if (legacy) addCompatibilityMappings(item, trellisItem);
 
 		return item;
 	},
@@ -1007,14 +1007,14 @@ Zotero.Utilities.Internal = {
 	 * Given API JSON for an item, return the best single first creator, regardless of creator order
 	 *
 	 * Note that this is just a single creator, not the firstCreator field return from the
-	 * Zotero.Item::firstCreator property or Zotero.Items.getFirstCreatorFromData()
+	 * Trellis.Item::firstCreator property or Trellis.Items.getFirstCreatorFromData()
 	 *
 	 * @return {Object|false} - Creator in API JSON format, or false
 	 */
 	getFirstCreatorFromItemJSON: function (json) {
-		var primaryCreatorType = Zotero.CreatorTypes.getName(
-			Zotero.CreatorTypes.getPrimaryIDForType(
-				Zotero.ItemTypes.getID(json.itemType)
+		var primaryCreatorType = Trellis.CreatorTypes.getName(
+			Trellis.CreatorTypes.getPrimaryIDForType(
+				Trellis.ItemTypes.getID(json.itemType)
 			)
 		);
 		let firstCreator = json.creators.find((creator) => {
@@ -1039,7 +1039,7 @@ Zotero.Utilities.Internal = {
 	 * 2) For fields, the first occurrence of a valid field is used, not the last.
 	 *
 	 * @param {String} extra
-	 * @param {Zotero.Item} [item = null]
+	 * @param {Trellis.Item} [item = null]
 	 * @param {String[]} [additionalFields] - Additional fields to skip other than those already
 	 *     on the provided item
 	 * @return {Object} - An object with 1) 'itemType', which may be null, 2) 'fields', a Map of
@@ -1061,9 +1061,9 @@ Zotero.Utilities.Internal = {
 		// For fields we use arrays, because there can be multiple possibilities
 		//
 		// Built-in fields
-		var fieldNames = new Map(Zotero.ItemFields.getAll().map(x => [this._normalizeExtraKey(x.name), [x.name]]));
+		var fieldNames = new Map(Trellis.ItemFields.getAll().map(x => [this._normalizeExtraKey(x.name), [x.name]]));
 		// CSL fields
-		for (let map of [Zotero.Schema.CSL_TEXT_MAPPINGS, Zotero.Schema.CSL_DATE_MAPPINGS]) {
+		for (let map of [Trellis.Schema.CSL_TEXT_MAPPINGS, Trellis.Schema.CSL_DATE_MAPPINGS]) {
 			for (let cslVar in map) {
 				let normalized = this._normalizeExtraKey(cslVar);
 				let existing = fieldNames.get(normalized) || [];
@@ -1074,10 +1074,10 @@ Zotero.Utilities.Internal = {
 		}
 		
 		// Built-in creator types
-		var creatorTypes = new Map(Zotero.CreatorTypes.getAll().map(x => [this._normalizeExtraKey(x.name), x.name]));
+		var creatorTypes = new Map(Trellis.CreatorTypes.getAll().map(x => [this._normalizeExtraKey(x.name), x.name]));
 		// CSL types
-		for (let i in Zotero.Schema.CSL_NAME_MAPPINGS) {
-			let cslType = Zotero.Schema.CSL_NAME_MAPPINGS[i];
+		for (let i in Trellis.Schema.CSL_NAME_MAPPINGS) {
+			let cslType = Trellis.Schema.CSL_NAME_MAPPINGS[i];
 			creatorTypes.set(cslType.toLowerCase(), i);
 		}
 		
@@ -1113,32 +1113,32 @@ Zotero.Utilities.Internal = {
 					|| skipKeys.has(key)
 					// 1) Ignore 'type: note', 'type: attachment', 'type: annotation'
 					// 2) Ignore 'article' until we have a Preprint item type
-					//    (https://github.com/zotero/translators/pull/2248#discussion_r546428184)
+					//    (https://github.com/trellis/translators/pull/2248#discussion_r546428184)
 					|| ['note', 'attachment', 'annotation', 'article'].includes(value)
 					// Ignore numeric values
 					|| parseInt(value) == value) {
 				return true;
 			}
 			
-			// See if it's a Zotero type
-			let possibleType = Zotero.ItemTypes.getName(value);
+			// See if it's a Trellis type
+			let possibleType = Trellis.ItemTypes.getName(value);
 			
 			// If not, see if it's a CSL type
-			if (!possibleType && Zotero.Schema.CSL_TYPE_MAPPINGS_REVERSE[value]) {
+			if (!possibleType && Trellis.Schema.CSL_TYPE_MAPPINGS_REVERSE[value]) {
 				if (item) {
-					let currentType = Zotero.ItemTypes.getName(itemTypeID);
+					let currentType = Trellis.ItemTypes.getName(itemTypeID);
 					// If the current item type is valid for the given CSL type, remove the line
-					if (Zotero.Schema.CSL_TYPE_MAPPINGS_REVERSE[value].includes(currentType)) {
+					if (Trellis.Schema.CSL_TYPE_MAPPINGS_REVERSE[value].includes(currentType)) {
 						return false;
 					}
 				}
-				// Use first mapped Zotero type for CSL type
-				possibleType = Zotero.Schema.CSL_TYPE_MAPPINGS_REVERSE[value][0];
+				// Use first mapped Trellis type for CSL type
+				possibleType = Trellis.Schema.CSL_TYPE_MAPPINGS_REVERSE[value][0];
 			}
 			
 			if (possibleType) {
 				itemType = possibleType;
-				itemTypeID = Zotero.ItemTypes.getID(itemType);
+				itemTypeID = Trellis.ItemTypes.getID(itemType);
 				skipKeys.add(key);
 				return false;
 			}
@@ -1163,8 +1163,8 @@ Zotero.Utilities.Internal = {
 					// If we have an item, skip fields that aren't valid for the type or that already
 					// have values
 					if (item) {
-						let fieldID = Zotero.ItemFields.getID(possibleField);
-						if (!Zotero.ItemFields.getFieldIDFromTypeAndBase(itemTypeID, fieldID)
+						let fieldID = Trellis.ItemFields.getID(possibleField);
+						if (!Trellis.ItemFields.getFieldIDFromTypeAndBase(itemTypeID, fieldID)
 								|| item.getField(fieldID)
 								|| additionalFields.has(possibleField)) {
 							return true;
@@ -1198,8 +1198,8 @@ Zotero.Utilities.Internal = {
 					c.name = value;
 				}
 				if (item) {
-					let possibleCreatorTypeID = Zotero.CreatorTypes.getID(possibleCreatorType);
-					if (Zotero.CreatorTypes.isValidForItemType(possibleCreatorTypeID, itemTypeID)
+					let possibleCreatorTypeID = Trellis.CreatorTypes.getID(possibleCreatorType);
+					if (Trellis.CreatorTypes.isValidForItemType(possibleCreatorTypeID, itemTypeID)
 							// Ignore if there are any creators of this type on the item already,
 							// to follow citeproc-js behavior
 							&& !item.getCreators().some(x => x.creatorTypeID == possibleCreatorTypeID)) {
@@ -1286,15 +1286,15 @@ Zotero.Utilities.Internal = {
 	
 	
 	extractIdentifiers: function (_text) {
-		Zotero.debug(`Zotero.Utilities.Internal.extractIdentifiers() is deprecated -- use Zotero.Utilities.extractIdentifiers() instead`);
-		return Zotero.Utilities.extractIdentifiers(...arguments);
+		Trellis.debug(`Trellis.Utilities.Internal.extractIdentifiers() is deprecated -- use Trellis.Utilities.extractIdentifiers() instead`);
+		return Trellis.Utilities.extractIdentifiers(...arguments);
 	},
 	
 	
 	/**
-	 * Look for open-access PDFs for a given DOI using Zotero's Unpaywall mirror
+	 * Look for open-access PDFs for a given DOI using Trellis's Unpaywall mirror
 	 *
-	 * Note: This uses a private API. Please use Unpaywall directly for non-Zotero projects.
+	 * Note: This uses a private API. Please use Unpaywall directly for non-Trellis projects.
 	 *
 	 * @param {String} doi
 	 * @param {Object} [options]
@@ -1303,14 +1303,14 @@ Zotero.Utilities.Internal = {
 	 *     ('submittedVersion', 'acceptedVersion', 'publishedVersion')
 	 */
 	getOpenAccessPDFURLs: async function (doi, options = {}) {
-		doi = Zotero.Utilities.cleanDOI(doi);
+		doi = Trellis.Utilities.cleanDOI(doi);
 		if (!doi) {
 			throw new Error(`Invalid DOI '${doi}'`);
 		}
-		Zotero.debug(`Looking for open-access PDFs for ${doi}`);
+		Trellis.debug(`Looking for open-access PDFs for ${doi}`);
 		
-		var url = ZOTERO_CONFIG.SERVICES_URL + 'oa/search';
-		var req = await Zotero.HTTP.request(
+		var url = TRELLIS_CONFIG.SERVICES_URL + 'oa/search';
+		var req = await Trellis.HTTP.request(
 			'POST',
 			url,
 			Object.assign(
@@ -1327,8 +1327,8 @@ Zotero.Utilities.Internal = {
 			)
 		);
 		var urls = req.response;
-		Zotero.debug(`Found ${urls.length} open-access PDF `
-			+ `${Zotero.Utilities.pluralize(urls.length, ['URL', 'URLs'])}`);
+		Trellis.debug(`Found ${urls.length} open-access PDF `
+			+ `${Trellis.Utilities.pluralize(urls.length, ['URL', 'URLs'])}`);
 		return urls;
 	},
 	
@@ -1340,7 +1340,7 @@ Zotero.Utilities.Internal = {
 	 * @return {{ title: string, url: string } | false} - PDF attachment title and URL, or false if none found
 	 */
 	getFileFromDocument: async function (doc) {
-		let translate = new Zotero.Translate.Web();
+		let translate = new Trellis.Translate.Web();
 		translate.setDocument(doc);
 		var translators = await translate.getTranslators();
 		// TEMP: Until there's a generic webpage translator
@@ -1357,7 +1357,7 @@ Zotero.Utilities.Internal = {
 			return false;
 		}
 		for (let attachment of newItems[0].attachments) {
-			if (Zotero.Attachments.FIND_AVAILABLE_FILE_TYPES.includes(attachment.mimeType)) {
+			if (Trellis.Attachments.FIND_AVAILABLE_FILE_TYPES.includes(attachment.mimeType)) {
 				return {
 					title: attachment.title,
 					mimeType: attachment.mimeType,
@@ -1370,7 +1370,7 @@ Zotero.Utilities.Internal = {
 	
 	
 	getPDFFromDocument(doc) {
-		Zotero.debug('Zotero.Utilities.Internal.getPDFFromDocument() is deprecated -- use getFileFromDocument()');
+		Trellis.debug('Trellis.Utilities.Internal.getPDFFromDocument() is deprecated -- use getFileFromDocument()');
 		return this.getFileFromDocument(doc);
 	},
 	
@@ -1385,10 +1385,10 @@ Zotero.Utilities.Internal = {
 	 * @return {String} Hyphenated ISBN or empty string if invalid ISBN is supplied
 	 */
 	hyphenateISBN: function (isbn, dontValidate) {
-		isbn = Zotero.Utilities.cleanISBN(isbn, dontValidate);
+		isbn = Trellis.Utilities.cleanISBN(isbn, dontValidate);
 		if (!isbn) return '';
 		
-		var ranges = Zotero.ISBN.ranges,
+		var ranges = Trellis.ISBN.ranges,
 			parts = [],
 			uccPref,
 			i = 0;
@@ -1465,7 +1465,7 @@ Zotero.Utilities.Internal = {
 	 * @return {String}
 	 */
 	stringWithColon: function (str) {
-		return Zotero.getString('punctuation.colon.withString', str);
+		return Trellis.getString('punctuation.colon.withString', str);
 	},
 	
 	
@@ -1501,7 +1501,7 @@ Zotero.Utilities.Internal = {
 				if (silent) return null;
 				throw new Error("Locales not available");
 			}
-			if (!silent) Zotero.logError(`Locale ${locale} not found`);
+			if (!silent) Trellis.logError(`Locale ${locale} not found`);
 			return 'en-US';
 		}
 		
@@ -1623,7 +1623,7 @@ Zotero.Utilities.Internal = {
 	 *
 	 * @param {Library|Collection} libraryOrCollection
 	 * @param {Node<menupopup>} elem Parent element
-	 * @param {Zotero.Library|Zotero.Collection} currentTarget Currently selected item (displays as checked)
+	 * @param {Trellis.Library|Trellis.Collection} currentTarget Currently selected item (displays as checked)
 	 * @param {Function} clickAction function to execute on clicking the menuitem.
 	 * 		Receives the event and libraryOrCollection for given item.
 	 * @param {Function} disabledPred If provided, called on each library/collection
@@ -1682,10 +1682,10 @@ Zotero.Utilities.Internal = {
 		
 		var collections;
 		if (libraryOrCollection.objectType == 'collection') {
-			collections = Zotero.Collections.getByParent(libraryOrCollection.id);
+			collections = Trellis.Collections.getByParent(libraryOrCollection.id);
 		}
 		else {
-			collections = Zotero.Collections.getByLibrary(libraryOrCollection.libraryID);
+			collections = Trellis.Collections.getByLibrary(libraryOrCollection.libraryID);
 		}
 		
 		// If no subcollections, place menuitem for target directly in containing men
@@ -1724,12 +1724,12 @@ Zotero.Utilities.Internal = {
 		// If window is already open, focus it
 		var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
 			.getService(Components.interfaces.nsIWindowMediator);
-		var enumerator = wm.getEnumerator("zotero:pref");
+		var enumerator = wm.getEnumerator("trellis:pref");
 		if (enumerator.hasMoreElements()) {
 			let win = enumerator.getNext();
 			win.focus();
 			if (paneID) {
-				win.Zotero_Preferences.navigateToPane(paneID, {
+				win.Trellis_Preferences.navigateToPane(paneID, {
 					scrollTo: options.scrollTo,
 					action: options.action,
 				});
@@ -1743,8 +1743,8 @@ Zotero.Utilities.Internal = {
 			action: options.action,
 		};
 		let args = [
-			'chrome://zotero/content/preferences/preferences.xhtml',
-			'zotero-prefs',
+			'chrome://trellis/content/preferences/preferences.xhtml',
+			'trellis-prefs',
 			'chrome,titlebar,centerscreen,resizable=yes',
 			io
 		];
@@ -1764,23 +1764,23 @@ Zotero.Utilities.Internal = {
 	/**
 	 * Select an object in the library tab of the main window
 	 *
-	 * @param {Zotero.DataObject} - Data object (e.g., Zotero.Item) to select
+	 * @param {Trellis.DataObject} - Data object (e.g., Trellis.Item) to select
 	 */
 	showInLibrary: async function (dataObject) {
-		var pane = Zotero.getActiveZoteroPane();
+		var pane = Trellis.getActiveTrellisPane();
 		// Open main window if it's not open (Mac)
 		if (!pane) {
-			let win = Zotero.openMainWindow();
-			await new Zotero.Promise((resolve) => {
+			let win = Trellis.openMainWindow();
+			await new Trellis.Promise((resolve) => {
 				let onOpen = function () {
 					win.removeEventListener('load', onOpen);
 					resolve();
 				};
 				win.addEventListener('load', onOpen);
 			});
-			pane = win.ZoteroPane;
+			pane = win.TrellisPane;
 		}
-		if (dataObject instanceof Zotero.Item) {
+		if (dataObject instanceof Trellis.Item) {
 			pane.selectItem(dataObject.id);
 		}
 		else {
@@ -1788,14 +1788,14 @@ Zotero.Utilities.Internal = {
 		}
 		
 		// Pull window to foreground
-		Zotero.Utilities.Internal.activate(pane.document.defaultView);
+		Trellis.Utilities.Internal.activate(pane.document.defaultView);
 		pane.document.ownerGlobal.focus();
 	},
 	
 	
 	filterStack: function (stack) {
 		return stack.split(/\n/)
-			.filter(line => !line.includes('resource://zotero/bluebird'))
+			.filter(line => !line.includes('resource://trellis/bluebird'))
 			.filter(line => !line.includes('XPCOMUtils.jsm'))
 			.join('\n');
 	},
@@ -1803,7 +1803,7 @@ Zotero.Utilities.Internal = {
 	/**
 	 * Generate a function that produces a static output
 	 *
-	 * Zotero.lazy(fn) returns a function. The first time this function
+	 * Trellis.lazy(fn) returns a function. The first time this function
 	 * is called, it calls fn() and returns its output. Subsequent
 	 * calls return the same output as the first without calling fn()
 	 * again.
@@ -1820,10 +1820,10 @@ Zotero.Utilities.Internal = {
 	},
 	
 	serial: function (fn) {
-		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://zotero/concurrentCaller.mjs");
+		const { ConcurrentCaller } = ChromeUtils.importESModule("resource://trellis/concurrentCaller.mjs");
 		var caller = new ConcurrentCaller({
 			numConcurrent: 1,
-			onError: e => Zotero.logError(e)
+			onError: e => Trellis.logError(e)
 		});
 		return function () {
 			var args = arguments;
@@ -1909,8 +1909,8 @@ Zotero.Utilities.Internal = {
 	},
 
 	setFontSize: function (rootElement) {
-		Zotero.debug("setFontSize() is deprecated -- use Zotero.UIProperties");
-		Zotero.UIProperties.set(rootElement);
+		Trellis.debug("setFontSize() is deprecated -- use Trellis.UIProperties");
+		Trellis.UIProperties.set(rootElement);
 	},
 
 	getAncestorByTagName: function (elem, tagName) {
@@ -1923,8 +1923,8 @@ Zotero.Utilities.Internal = {
 		return false;
 	},
 	
-	quitZotero: function (restart = false) {
-		Zotero.debug("Zotero.Utilities.Internal.quitZotero() is deprecated -- use quit()");
+	quitTrellis: function (restart = false) {
+		Trellis.debug("Trellis.Utilities.Internal.quitTrellis() is deprecated -- use quit()");
 		this.quit(restart);
 	},
 	
@@ -1936,7 +1936,7 @@ Zotero.Utilities.Internal = {
 	quit: function (restart = false) {
 		var startup = Services.startup;
 		if (restart) {
-			Zotero.restarting = true;
+			Trellis.restarting = true;
 			this.Environment.restoreMozillaVariables();
 		}
 		startup.quit(startup.eAttemptQuit | (restart ? startup.eRestart : 0));
@@ -2003,9 +2003,9 @@ Zotero.Utilities.Internal = {
 	 */
 	determineAttachmentIcon: function (attachment) {
 		if (attachment.linkMode === "linked_url") {
-			return Zotero.ItemTypes.getImageSrc("attachmentWebLink");
+			return Trellis.ItemTypes.getImageSrc("attachmentWebLink");
 		}
-		return Zotero.ItemTypes.getImageSrc(attachment.mimeType === "application/pdf"
+		return Trellis.ItemTypes.getImageSrc(attachment.mimeType === "application/pdf"
 			? "attachmentPDF"
 			: "attachmentSnapshot");
 	},
@@ -2015,7 +2015,7 @@ Zotero.Utilities.Internal = {
 	 * (and running those events).
 	 *
 	 * ```
-	 * var MyClass = Zotero.Utilities.Internal.makeClassEventDispatcher(class {
+	 * var MyClass = Trellis.Utilities.Internal.makeClassEventDispatcher(class {
 	 * 		constructor: () => {
 	 * 			this.onFoo = this.createEventBinding('foo');
 	 * 		}
@@ -2030,7 +2030,7 @@ Zotero.Utilities.Internal = {
 	makeClassEventDispatcher: function (cls) {
 		cls.prototype._events = null;
 		cls.prototype.runListeners = async function (event, ...args) {
-			// Zotero.debug(`Running ${event} listeners on ${cls.toString()}`);
+			// Trellis.debug(`Running ${event} listeners on ${cls.toString()}`);
 			if (!this._events) this._events = {};
 			if (!this._events[event]) {
 				this._events[event] = {
@@ -2092,14 +2092,14 @@ Zotero.Utilities.Internal = {
 		cls.prototype._removeListener = function (event, listener) {
 			let ev = this._events[event];
 			if (!ev || !ev.listeners) {
-				Zotero.debug(`EventListener.removeListener(): attempting to remove an invalid event ${event} listener`);
+				Trellis.debug(`EventListener.removeListener(): attempting to remove an invalid event ${event} listener`);
 				return;
 			}
 			ev.listeners.delete(listener);
 		};
 
 		cls.prototype._waitForEvent = async function (event) {
-			return new Zotero.Promise((resolve) => {
+			return new Trellis.Promise((resolve) => {
 				this._addListener(event, () => resolve(), true);
 			});
 		};
@@ -2343,7 +2343,7 @@ Zotero.Utilities.Internal = {
 			? element.getRootNode().getElementById(element.getAttribute('popup'))
 			: element.querySelector(':scope > menupopup');
 		if (popup) {
-			if (Zotero.isMac) {
+			if (Trellis.isMac) {
 				let rect = element.getBoundingClientRect();
 				let win = element.ownerDocument.defaultView;
 				let dir = win.getComputedStyle(element).direction;
@@ -2373,7 +2373,7 @@ Zotero.Utilities.Internal = {
 	},
 
 	getScrollbarWidth() {
-		let document = Zotero.getMainWindow().document;
+		let document = Trellis.getMainWindow().document;
 		let scrollDiv = document.createElement('div');
 		scrollDiv.style.position = 'absolute';
 		scrollDiv.style.top = '-9999px';
@@ -2426,7 +2426,7 @@ Zotero.Utilities.Internal = {
 			copyMenuitem.addEventListener('command', () => {
 				let targetInput = targetInputWeak.deref();
 				if (!targetInput) return;
-				Zotero.Utilities.Internal.copyTextToClipboard(targetInput.value);
+				Trellis.Utilities.Internal.copyTextToClipboard(targetInput.value);
 			});
 			editMenuItems.push(copyMenuitem);
 
@@ -2439,7 +2439,7 @@ Zotero.Utilities.Internal = {
 				let targetInput = targetInputWeak.deref();
 				if (!targetInput) return;
 				targetInput.focus();
-				targetInput.value = Zotero.Utilities.Internal.getClipboard('text/plain') || '';
+				targetInput.value = Trellis.Utilities.Internal.getClipboard('text/plain') || '';
 				targetInput.dispatchEvent(new Event('input'));
 			});
 			editMenuItems.push(pasteMenuitem);
@@ -2496,7 +2496,7 @@ Zotero.Utilities.Internal = {
 
 	get _titleMarkupRe() {
 		let re = new RegExp(
-			'(' + Object.keys(this._titleMarkup).map(tag => Zotero.Utilities.quotemeta(tag)).join('|') + ')'
+			'(' + Object.keys(this._titleMarkup).map(tag => Trellis.Utilities.quotemeta(tag)).join('|') + ')'
 		);
 		Object.defineProperty(this, '_titleMarkupRe', { value: re });
 		return re;
@@ -2518,7 +2518,7 @@ Zotero.Utilities.Internal = {
 		// Inserting text with ASCII control character as innerHTML (e.g., in tabBar.jsx) can cause
 		// an error, so filter out control characters 0-31 and character 127 DEL
 		//
-		// https://forums.zotero.org/discussion/118779/special-characters-in-item-title-breaks-the-tab-bar
+		// https://forums.trellis.org/discussion/118779/special-characters-in-item-title-breaks-the-tab-bar
 		title = title.replace(/[\x00-\x1F\x7F]/g, '');
 
 		for (let token of title.split(this._titleMarkupRe)) {
@@ -2602,12 +2602,12 @@ Zotero.Utilities.Internal = {
  * @param script {String}
  * @param block {Boolean} Whether the script should block until the process is finished.
  */
-Zotero.Utilities.Internal.executeAppleScript = new function () {
+Trellis.Utilities.Internal.executeAppleScript = new function () {
 	var _osascriptFile;
 	
 	return function (script, block) {
 		if (_osascriptFile === undefined) {
-			_osascriptFile = Zotero.File.pathToFile('/usr/bin/osascript');
+			_osascriptFile = Trellis.File.pathToFile('/usr/bin/osascript');
 			if (!_osascriptFile.exists()) _osascriptFile = false;
 		}
 		if (_osascriptFile) {
@@ -2626,7 +2626,7 @@ Zotero.Utilities.Internal.executeAppleScript = new function () {
 /**
  * Activates Firefox
  */
-Zotero.Utilities.Internal.activate = new function () {
+Trellis.Utilities.Internal.activate = new function () {
 	// For Carbon and X11
 	var _carbon, ProcessSerialNumber, SetFrontProcessWithOptions;
 	 
@@ -2647,8 +2647,8 @@ Zotero.Utilities.Internal.activate = new function () {
 				throw new Error(`Could not find window title for ${win.location.href}`);
 			}
 		} catch (e) {
-			Zotero.debug(`Could not find window title for ${win.location.href}`, 1);
-			Zotero.logError(e);
+			Trellis.debug(`Could not find window title for ${win.location.href}`, 1);
+			Trellis.logError(e);
 			win.clearInterval(intervalID);
 		}
 		
@@ -2672,10 +2672,10 @@ Zotero.Utilities.Internal.activate = new function () {
 		if (XSendEvent(_x11Display, _x11RootWindow, 0, mask, event.address())) {
 			XMapRaised(_x11Display, x11Window);
 			XFlush(_x11Display);
-			Zotero.debug("Integration: Activated successfully");
+			Trellis.debug("Integration: Activated successfully");
 		}
 		else {
-			Zotero.debug("Integration: An error occurred activating the window");
+			Trellis.debug("Integration: An error occurred activating the window");
 		}
 	}
 	
@@ -2731,14 +2731,14 @@ Zotero.Utilities.Internal.activate = new function () {
 	
 	return function (win) {
 		let isWayland = true;
-		if (Zotero.isLinux) {
+		if (Trellis.isLinux) {
 			try {
 				let sessionType = Services.env.get('XDG_SESSION_TYPE');
 				isWayland = sessionType === 'wayland';
 			}
 			catch (e) {}
 		}
-		if (Zotero.isMac) {
+		if (Trellis.isMac) {
 			if (win) {
 				const { ctypes } = ChromeUtils.importESModule("resource://gre/modules/ctypes.sys.mjs");
 				win.focus();
@@ -2778,16 +2778,16 @@ Zotero.Utilities.Internal.activate = new function () {
 				}, false);
 			}
 			else {
-				let pid = Zotero.Utilities.Internal.getProcessID();
+				let pid = Trellis.Utilities.Internal.getProcessID();
 				let script = `
 					tell application "System Events"
 						set frontmost of the first process whose unix id is ${pid} to true
 					end tell
 				`;
-				Zotero.Utilities.Internal.executeAppleScript(script);
+				Trellis.Utilities.Internal.executeAppleScript(script);
 			}
 		}
-		else if (Zotero.isLinux && !isWayland && win) {
+		else if (Trellis.isLinux && !isWayland && win) {
 			const { ctypes } = ChromeUtils.importESModule("resource://gre/modules/ctypes.sys.mjs");
 
 			if (_x11 === false) return;
@@ -2801,8 +2801,8 @@ Zotero.Utilities.Internal.activate = new function () {
 					}
 					catch (e) {
 						_x11 = false;
-						Zotero.debug("Integration: Could not get libX11 name; not activating");
-						Zotero.logError(e);
+						Trellis.debug("Integration: Could not get libX11 name; not activating");
+						Trellis.logError(e);
 						return;
 					}
 					
@@ -2811,8 +2811,8 @@ Zotero.Utilities.Internal.activate = new function () {
 					}
 					catch (e) {
 						_x11 = false;
-						Zotero.debug("Integration: Could not open " + libName + "; not activating");
-						Zotero.logError(e);
+						Trellis.debug("Integration: Could not open " + libName + "; not activating");
+						Trellis.logError(e);
 						return;
 					}
 				}
@@ -2975,18 +2975,18 @@ Zotero.Utilities.Internal.activate = new function () {
 					
 				_x11Display = XOpenDisplay(null);
 				if (!_x11Display) {
-					Zotero.debug("Integration: Could not open display; not activating");
+					Trellis.debug("Integration: Could not open display; not activating");
 					_x11 = false;
 					return;
 				}
 				
-				Zotero.addShutdownListener(function () {
+				Trellis.addShutdownListener(function () {
 					XCloseDisplay(_x11Display);
 				});
 				
 				_x11RootWindow = XDefaultRootWindow(_x11Display);
 				if (!_x11RootWindow) {
-					Zotero.debug("Integration: Could not get root window; not activating");
+					Trellis.debug("Integration: Could not get root window; not activating");
 					_x11 = false;
 					return;
 				}
@@ -2999,7 +2999,7 @@ Zotero.Utilities.Internal.activate = new function () {
 				}, 50);
 			}, false);
 		}
-		else if ((Zotero.isWin || Zotero.isLinux) && win) {
+		else if ((Trellis.isWin || Trellis.isLinux) && win) {
 			// Try to focus the window. This is necessary as focusing a node inside
 			// of the window may not necessarily activate the window.
 			win.focus();
@@ -3009,10 +3009,10 @@ Zotero.Utilities.Internal.activate = new function () {
 	};
 };
 
-Zotero.Utilities.Internal.sendToBack = function () {
-	if (Zotero.isMac) {
-		let pid = Zotero.Utilities.Internal.getProcessID();
-		Zotero.Utilities.Internal.executeAppleScript(`
+Trellis.Utilities.Internal.sendToBack = function () {
+	if (Trellis.isMac) {
+		let pid = Trellis.Utilities.Internal.getProcessID();
+		Trellis.Utilities.Internal.executeAppleScript(`
 			tell application "System Events"
 				set myProcess to first process whose unix id is ${pid}
 				if frontmost of myProcess then
@@ -3024,14 +3024,14 @@ Zotero.Utilities.Internal.sendToBack = function () {
 };
 
 
-Zotero.Utilities.Internal.getProcessID = function () {
+Trellis.Utilities.Internal.getProcessID = function () {
 	return Components.classes["@mozilla.org/xre/app-info;1"]
 		.getService(Components.interfaces.nsIXULRuntime)
 		.processID;
 };
 
 
-Zotero.Utilities.Internal.Environment = {
+Trellis.Utilities.Internal.Environment = {
 	/**
 	 * Unset an environment variable
 	 *
@@ -3045,7 +3045,7 @@ Zotero.Utilities.Internal.Environment = {
 		let success;
 		// Windows
 		// https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-setenvironmentvariablew
-		if (Zotero.isWin) {
+		if (Trellis.isWin) {
 			lib = ctypes.open("kernel32.dll");
 			let SetEnvironmentVariable = lib.declare(
 				"SetEnvironmentVariableW",
@@ -3059,7 +3059,7 @@ Zotero.Utilities.Internal.Environment = {
 		}
 		// macOS or Linux
 		else {
-			lib = ctypes.open(Zotero.isMac ? "/usr/lib/libSystem.dylib" : "libc.so.6");
+			lib = ctypes.open(Trellis.isMac ? "/usr/lib/libSystem.dylib" : "libc.so.6");
 			let unsetenv = lib.declare(
 				"unsetenv",
 				ctypes.default_abi,
@@ -3072,10 +3072,10 @@ Zotero.Utilities.Internal.Environment = {
 		
 		// Check the result
 		if (success) {
-			//Zotero.debug(`Unset environment variable ${varName}`);
+			//Trellis.debug(`Unset environment variable ${varName}`);
 		}
 		else {
-			Zotero.logError(`Failed to unset environment variable ${varName} (${result})`);
+			Trellis.logError(`Failed to unset environment variable ${varName} (${result})`);
 		}
 		
 		lib.close();
@@ -3089,10 +3089,10 @@ Zotero.Utilities.Internal.Environment = {
 	 * to call this when launching URLs, only processes.
 	 *
 	 * The variables are restored a (debounced) second after this is called. Restoring mostly isn't
-	 * necessary, since most new launches of Zotero would use the modified launcher, but a restart
+	 * necessary, since most new launches of Trellis would use the modified launcher, but a restart
 	 * on Linux (e.g., during an upgrade) skips our shell script where we set these variables.
 	 *
-	 * https://github.com/zotero/zotero/issues/4981
+	 * https://github.com/trellis/trellis/issues/4981
 	 */
 	clearMozillaVariables: function () {
 		const RESTORE_DEBOUNCE_DELAY = 1000;
@@ -3137,7 +3137,7 @@ Zotero.Utilities.Internal.Environment = {
  *  Base64 encode / decode
  *  From http://www.webtoolkit.info/
  */
-Zotero.Utilities.Internal.Base64 = {
+Trellis.Utilities.Internal.Base64 = {
 	// private property
 	_keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 	
@@ -3263,18 +3263,18 @@ Zotero.Utilities.Internal.Base64 = {
 	}
 };
 
-Zotero.Utilities.Internal.OpenURL = {
+Trellis.Utilities.Internal.OpenURL = {
 
 	/**
 	 * Returns a URL to look up an item in the OpenURL resolver
 	 */
 	resolve: function (item) {
-		var co = Zotero.OpenURL.createContextObject(
+		var co = Trellis.OpenURL.createContextObject(
 			item.toJSON(),
 			"1.0"
 		);
 		if (co) {
-			let base = Zotero.Prefs.get("openURL.resolver");
+			let base = Trellis.Prefs.get("openURL.resolver");
 			if (!base.endsWith('?')) {
 				if (base.includes('login?url=')) {
 					base += '?';
@@ -3292,14 +3292,14 @@ Zotero.Utilities.Internal.OpenURL = {
 	},
 	
 	/**
-	 * Fetch list of resolvers from the Zotero wiki
+	 * Fetch list of resolvers from the Trellis wiki
 	 *
-	 * https://www.zotero.org/support/locate/openurl_resolvers
+	 * https://www.trellis.org/support/locate/openurl_resolvers
 	 */
 	getResolvers: async function () {
-		var req = await Zotero.HTTP.request(
+		var req = await Trellis.HTTP.request(
 			"GET",
-			"https://www.zotero.org/support/locate/openurl_resolvers?do=export_raw"
+			"https://www.trellis.org/support/locate/openurl_resolvers?do=export_raw"
 		);
 		var text = req.response;
 		var lines = text.split(/\n/);
@@ -3334,11 +3334,11 @@ Zotero.Utilities.Internal.OpenURL = {
 		// Skip global resolver, which is hard-coded locally
 		urls = urls.filter(x => x.continent != 'Global');
 		urls.sort((a, b) => {
-			var cmp = Zotero.localeCompare(a.continent, b.continent);
+			var cmp = Trellis.localeCompare(a.continent, b.continent);
 			if (cmp) return cmp;
-			cmp = Zotero.localeCompare(a.country, b.country);
+			cmp = Trellis.localeCompare(a.country, b.country);
 			if (cmp) return cmp;
-			return Zotero.localeCompare(a.name, b.name);
+			return Trellis.localeCompare(a.name, b.name);
 		});
 		return urls;
 	},
@@ -3349,17 +3349,17 @@ Zotero.Utilities.Internal.OpenURL = {
  * @param {number[]} itemIDs
  * @param {Element} [dragImage]
  */
-Zotero.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = event.currentTarget) {
+Trellis.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = event.currentTarget) {
 	// See note in LibraryTreeView::setDropEffect()
-	if (Zotero.isWin || Zotero.isLinux) {
+	if (Trellis.isWin || Trellis.isLinux) {
 		event.dataTransfer.effectAllowed = 'copyMove';
 	}
 
 	event.dataTransfer.setDragImage(dragImage, 0, 0);
 
-	event.dataTransfer.setData("zotero/item", itemIDs);
+	event.dataTransfer.setData("trellis/item", itemIDs);
 
-	let items = Zotero.Items.get(itemIDs);
+	let items = Trellis.Items.get(itemIDs);
 
 	// If at least one file is a non-web-link attachment and can be found,
 	// enable dragging to file system
@@ -3372,34 +3372,34 @@ Zotero.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = ev
 		// Advanced multi-file drag (with unique filenames, which otherwise happen automatically on
 		// Windows but not Linux) and auxiliary snapshot file copying on macOS
 		let dataProvider;
-		if (Zotero.isMac) {
-			dataProvider = new Zotero.FileDragDataProvider(itemIDs);
+		if (Trellis.isMac) {
+			dataProvider = new Trellis.FileDragDataProvider(itemIDs);
 		}
 
 		for (let i = 0; i < files.length; i++) {
-			let file = Zotero.File.pathToFile(files[i]);
+			let file = Trellis.File.pathToFile(files[i]);
 
 			if (dataProvider) {
-				Zotero.debug("Adding application/x-moz-file-promise");
+				Trellis.debug("Adding application/x-moz-file-promise");
 				event.dataTransfer.mozSetDataAt("application/x-moz-file-promise", dataProvider, i);
 			}
 
 			// Allow dragging to filesystem on Linux and Windows
 			let uri;
-			if (!Zotero.isMac) {
-				Zotero.debug("Adding text/x-moz-url " + i);
-				uri = Zotero.File.pathToFileURI(file);
+			if (!Trellis.isMac) {
+				Trellis.debug("Adding text/x-moz-url " + i);
+				uri = Trellis.File.pathToFileURI(file);
 				event.dataTransfer.mozSetDataAt("text/x-moz-url", uri + '\n' + file.leafName, i);
 			}
 
 			// Allow dragging to web targets (e.g., Gmail)
-			Zotero.debug("Adding application/x-moz-file " + i);
+			Trellis.debug("Adding application/x-moz-file " + i);
 			event.dataTransfer.mozSetDataAt("application/x-moz-file", file, i);
 
-			if (Zotero.isWin) {
+			if (Trellis.isWin) {
 				event.dataTransfer.mozSetDataAt("application/x-moz-file-promise-url", uri, i);
 			}
-			else if (Zotero.isLinux) {
+			else if (Trellis.isLinux) {
 				// Don't create a symlink for an unmodified drag
 				event.dataTransfer.effectAllowed = 'copy';
 			}
@@ -3407,36 +3407,36 @@ Zotero.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = ev
 	}
 
 	// Get Quick Copy format for current URL (set via /ping from connector)
-	let format = Zotero.QuickCopy.getFormatFromURL(Zotero.QuickCopy.lastActiveURL);
+	let format = Trellis.QuickCopy.getFormatFromURL(Trellis.QuickCopy.lastActiveURL);
 
 	// If all items are notes, use one of the note export translators
 	if (items.every(item => item.isNote())) {
-		format = Zotero.QuickCopy.getNoteFormat();
+		format = Trellis.QuickCopy.getNoteFormat();
 	}
 
 	// If all items are annotations, wrap them in a note object for translation
 	if (items.every(item => item.isAnnotation())) {
-		format = Zotero.QuickCopy.getNoteFormat();
-		items = [Zotero.QuickCopy.annotationsToNote(items)];
+		format = Trellis.QuickCopy.getNoteFormat();
+		items = [Trellis.QuickCopy.annotationsToNote(items)];
 	}
 
-	Zotero.debug("Dragging with format " + format);
-	format = Zotero.QuickCopy.unserializeSetting(format);
+	Trellis.debug("Dragging with format " + format);
+	format = Trellis.QuickCopy.unserializeSetting(format);
 	try {
 		if (format.mode == 'export') {
 			// If exporting with virtual "Markdown + Rich Text" translator, call Note Markdown
 			// and Note HTML translators instead
-			if (format.id === Zotero.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
-				let markdownFormat = { mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_MARKDOWN, options: format.markdownOptions };
-				let htmlFormat = { mode: 'export', id: Zotero.Translators.TRANSLATOR_ID_NOTE_HTML, options: format.htmlOptions };
-				Zotero.QuickCopy.getContentFromItems(items, markdownFormat, (obj, worked) => {
+			if (format.id === Trellis.Translators.TRANSLATOR_ID_MARKDOWN_AND_RICH_TEXT) {
+				let markdownFormat = { mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_MARKDOWN, options: format.markdownOptions };
+				let htmlFormat = { mode: 'export', id: Trellis.Translators.TRANSLATOR_ID_NOTE_HTML, options: format.htmlOptions };
+				Trellis.QuickCopy.getContentFromItems(items, markdownFormat, (obj, worked) => {
 					if (!worked) {
-						Zotero.log(Zotero.getString('fileInterface.exportError'), 'warning');
+						Trellis.log(Trellis.getString('fileInterface.exportError'), 'warning');
 						return;
 					}
-					Zotero.QuickCopy.getContentFromItems(items, htmlFormat, (obj2, worked) => {
+					Trellis.QuickCopy.getContentFromItems(items, htmlFormat, (obj2, worked) => {
 						if (!worked) {
-							Zotero.log(Zotero.getString('fileInterface.exportError'), 'warning');
+							Trellis.log(Trellis.getString('fileInterface.exportError'), 'warning');
 							return;
 						}
 						event.dataTransfer.setData('text/plain', obj.string.replace(/\r\n/g, '\n'));
@@ -3445,14 +3445,14 @@ Zotero.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = ev
 				});
 			}
 			else {
-				Zotero.QuickCopy.getContentFromItems(items, format, (obj, worked) => {
+				Trellis.QuickCopy.getContentFromItems(items, format, (obj, worked) => {
 					if (!worked) {
-						Zotero.log(Zotero.getString('fileInterface.exportError'), 'warning');
+						Trellis.log(Trellis.getString('fileInterface.exportError'), 'warning');
 						return;
 					}
 					let text = obj.string.replace(/\r\n/g, '\n');
 					// For Note HTML translator use body content only
-					if (format.id == Zotero.Translators.TRANSLATOR_ID_NOTE_HTML) {
+					if (format.id == Trellis.Translators.TRANSLATOR_ID_NOTE_HTML) {
 						// Use body content only
 						let parser = new DOMParser();
 						let doc = parser.parseFromString(text, 'text/html');
@@ -3463,7 +3463,7 @@ Zotero.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = ev
 			}
 		}
 		else if (format.mode == 'bibliography') {
-			let content = Zotero.QuickCopy.getContentFromItems(items, format, null, event.shiftKey);
+			let content = Trellis.QuickCopy.getContentFromItems(items, format, null, event.shiftKey);
 			if (content) {
 				if (content.html) {
 					event.dataTransfer.setData("text/html", content.html);
@@ -3472,15 +3472,15 @@ Zotero.Utilities.Internal.onDragItems = function (event, itemIDs, dragImage = ev
 			}
 		}
 		else {
-			Zotero.logError("Invalid Quick Copy mode");
+			Trellis.logError("Invalid Quick Copy mode");
 		}
 	}
 	catch (e) {
-		Zotero.debug(e);
-		Zotero.logError(e + " with '" + format.id + "'");
+		Trellis.debug(e);
+		Trellis.logError(e + " with '" + format.id + "'");
 	}
 };
 
 if (typeof process === 'object' && process + '' === '[object process]') {
-	module.exports = Zotero.Utilities.Internal;
+	module.exports = Trellis.Utilities.Internal;
 }

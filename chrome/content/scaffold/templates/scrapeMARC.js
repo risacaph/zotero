@@ -2,12 +2,12 @@ async function scrape(doc, url = doc.location.href) {
 	// TODO adjust the selector for the lines here
 	let lines = doc.querySelectorAll('table#marcData tr');
 
-	let translator = Zotero.loadTranslator('import');
+	let translator = Trellis.loadTranslator('import');
 	translator.setTranslator('a6ee60df-1ddc-4aae-bb25-45e0537be973'); // MARC
 	let MARC = await translator.getTranslatorObject();
 
 	let record = new MARC.record();
-	let item = new Zotero.Item();
+	let item = new Trellis.Item();
 	// ignore the table headings in lines[0]
 	record.leader = text(lines[1], 'td', 4);
 	let fieldTag;

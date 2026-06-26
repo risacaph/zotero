@@ -1,12 +1,12 @@
 "use strict";
 
-describe("Zotero.LibraryTree", function() {
+describe("Trellis.LibraryTree", function() {
 	var win, zp, cv, itemsView;
 	
-	// Load Zotero pane and select library
+	// Load Trellis pane and select library
 	before(function* () {
-		win = yield loadZoteroPane();
-		zp = win.ZoteroPane;
+		win = yield loadTrellisPane();
+		zp = win.TrellisPane;
 		cv = zp.collectionsView;
 	});
 	beforeEach(function* () {

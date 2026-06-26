@@ -8,7 +8,7 @@
 # Author: Darin Fisher
 #
 
-# Added for Zotero
+# Added for Trellis
 set -eo pipefail
 
 . $(dirname "$0")/common.sh
@@ -112,7 +112,7 @@ append_remove_instructions "$targetdir" "$updatemanifestv3"
 
 $XZ $XZ_OPT --compress $BCJ_OPTIONS --lzma2 --format=xz --check=crc64 --force "$updatemanifestv3" && mv -f "$updatemanifestv3.xz" "$updatemanifestv3"
 
-# Changed for Zotero -- -C is unreliable
+# Changed for Trellis -- -C is unreliable
 pushd "$workdir" > /dev/null
 mar_command="$mar_command -c output.mar"
 eval "$mar_command $targetfiles"

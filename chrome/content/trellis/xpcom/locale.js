@@ -1,4 +1,4 @@
-Zotero.Locale = {
+Trellis.Locale = {
 	/**
 	 * Keep this up to date with app/assets/multilocale.txt,
 	 * scripts/dictionaries/build-dictionaries, and possibly chrome.manifest

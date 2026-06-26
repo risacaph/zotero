@@ -40,7 +40,7 @@ function doTranslate(inputFile, root) {
 			rewriteGeneratorToAsync(func);
 		});
 
-	// Rewrite Zotero.Promise.*() -> Promise.*(), for methods directly available
+	// Rewrite Trellis.Promise.*() -> Promise.*(), for methods directly available
 	// on the ES Promise class
 	root.find(j.CallExpression)
 		.filter(path => isStaticPromiseMethodCall(path, [
@@ -55,11 +55,11 @@ function doTranslate(inputFile, root) {
 			callee.object = callee.object.property;
 		});
 
-	// Warn about Zotero.Promise.*() methods that we won't polyfill
+	// Warn about Trellis.Promise.*() methods that we won't polyfill
 	root.find(j.CallExpression)
 		.filter(path => isStaticPromiseMethodCall(path, name => !['delay', 'defer'].includes(name)))
 		.forEach(path => {
-			warnAndAddComment(inputFile, path, `replace call to Zotero.Promise.${path.node.callee.property.name}()`);
+			warnAndAddComment(inputFile, path, `replace call to Trellis.Promise.${path.node.callee.property.name}()`);
 		});
 
 	// Warn about calls to #isResolved() and #cancel()
@@ -69,7 +69,7 @@ function doTranslate(inputFile, root) {
 				|| objectName.toLowerCase().includes('promise') && name === 'cancel';
 		}))
 		.forEach((path) => {
-			warnAndAddComment(inputFile, path, `replace call to Zotero.Promise instance method '${path.node.callee.property.name}()'`);
+			warnAndAddComment(inputFile, path, `replace call to Trellis.Promise instance method '${path.node.callee.property.name}()'`);
 		});
 }
 
@@ -99,7 +99,7 @@ function isStaticPromiseMethodCall(path, methodFilter) {
 
 		&& (
 			callee.object.object.type === 'Identifier'
-			&& callee.object.object.name === 'Zotero'
+			&& callee.object.object.name === 'Trellis'
 		)
 
 		&& (

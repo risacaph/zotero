@@ -1,12 +1,12 @@
 describe("Support Functions for Unit Testing", function () {
 	describe("resetDB", function () {
 		it("should restore the DB to factory settings", async function () {
-			await Zotero.DB.queryAsync("CREATE TABLE testTable (foo INTEGER PRIMARY KEY)");
-			assert.isTrue(await Zotero.DB.tableExists('testTable'));
+			await Trellis.DB.queryAsync("CREATE TABLE testTable (foo INTEGER PRIMARY KEY)");
+			assert.isTrue(await Trellis.DB.tableExists('testTable'));
 			await resetDB({
 				thisArg: this
 			});
-			assert.isFalse(await Zotero.DB.tableExists('testTable'));
+			assert.isFalse(await Trellis.DB.tableExists('testTable'));
 		});
 	});
 	describe("loadSampleData", function () {
@@ -28,11 +28,11 @@ describe("Support Functions for Unit Testing", function () {
 				let item = data[itemName];
 				assert.isAbove(item.id, 0, 'assigned new item ID');
 				
-				let zItem = await Zotero.Items.getAsync(item.id);
+				let zItem = await Trellis.Items.getAsync(item.id);
 				assert.ok(zItem, 'inserted item into database');
 				
 				// Compare item type
-				assert.equal(item.itemType, Zotero.ItemTypes.getName(zItem.itemTypeID), 'inserted item has the same item type');
+				assert.equal(item.itemType, Trellis.ItemTypes.getName(zItem.itemTypeID), 'inserted item has the same item type');
 				
 				// Compare simple properties
 				for (let prop in item) {
@@ -40,7 +40,7 @@ describe("Support Functions for Unit Testing", function () {
 					
 					// Using base-mapped fields
 					let field = zItem.getField(prop, false, true);
-					if (prop === "accessDate") field = Zotero.Date.sqlToISO8601(field);
+					if (prop === "accessDate") field = Trellis.Date.sqlToISO8601(field);
 					assert.equal(field, item[prop], 'inserted item property has the same value as sample data');
 				}
 				
@@ -52,7 +52,7 @@ describe("Support Functions for Unit Testing", function () {
 						assert.ok(zCreator, 'creator was added to item');
 						assert.equal(creator.firstName, zCreator.firstName, 'first names match');
 						assert.equal(creator.lastName, zCreator.lastName, 'last names match');
-						assert.equal(creator.creatorType, Zotero.CreatorTypes.getName(zCreator.creatorTypeID), 'creator types match');
+						assert.equal(creator.creatorType, Trellis.CreatorTypes.getName(zCreator.creatorTypeID), 'creator types match');
 					}
 				}
 			}
@@ -68,13 +68,13 @@ describe("Support Functions for Unit Testing", function () {
 				}
 			});
 			
-			let zItem = await Zotero.Items.getAsync(data.itemWithTags.id);
+			let zItem = await Trellis.Items.getAsync(data.itemWithTags.id);
 			assert.ok(zItem, 'inserted item with tags into database');
 			
 
 			let tags = data.itemWithTags.tags;
 			for (let i=0; i<tags.length; i++) {
-				let tagID = Zotero.Tags.getID(tags[i].tag);
+				let tagID = Trellis.Tags.getID(tags[i].tag);
 				assert.ok(tagID, '"' + tags[i].tag + '" tag was inserted into the database');
 				assert.ok(zItem.hasTag(tags[i].tag), '"' + tags[i].tag + '" tag was assigned to item');
 			}
@@ -120,15 +120,15 @@ describe("Support Functions for Unit Testing", function () {
 		});
 	});
 	// describe("generateCiteProcJSExportData", function() {
-	// 	let citeURL = Zotero.Prefs.get("export.citePaperJournalArticleURL");
+	// 	let citeURL = Trellis.Prefs.get("export.citePaperJournalArticleURL");
 	// 	before(function () {
-	// 		Zotero.Prefs.set("export.citePaperJournalArticleURL", true);
+	// 		Trellis.Prefs.set("export.citePaperJournalArticleURL", true);
 	// 	});
 	// 	after(function() {
-	// 		Zotero.Prefs.set("export.citePaperJournalArticleURL", citeURL);
+	// 		Trellis.Prefs.set("export.citePaperJournalArticleURL", citeURL);
 	// 	});
 		
-	// 	it("all citeproc-js export data should be up to date", Zotero.Promise.coroutine(function* () {
+	// 	it("all citeproc-js export data should be up to date", Trellis.Promise.coroutine(function* () {
 	// 		let oldData = loadSampleData('citeProcJSExport'),
 	// 			newData = yield generateCiteProcJSExportData();
 			

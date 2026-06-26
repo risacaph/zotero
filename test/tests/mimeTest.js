@@ -1,9 +1,9 @@
-describe("Zotero.MIME", function () {
+describe("Trellis.MIME", function () {
 	describe("#sniffForMIMEType()", function () {
 		async function test(filename, expectedType) {
 			var path = OS.Path.join(getTestDataDirectory().path, filename);
-			var sample = await Zotero.File.getSample(path);
-			var type = Zotero.MIME.sniffForMIMEType(sample);
+			var sample = await Trellis.File.getSample(path);
+			var type = Trellis.MIME.sniffForMIMEType(sample);
 			assert.equal(type, expectedType);
 		}
 		

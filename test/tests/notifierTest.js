@@ -1,6 +1,6 @@
 "use strict";
 
-describe("Zotero.Notifier", function () {
+describe("Trellis.Notifier", function () {
 	describe("#trigger()", function () {
 		it("should trigger add events before modify events", async function () {
 			var events = [];
@@ -9,16 +9,16 @@ describe("Zotero.Notifier", function () {
 					events.push(action);
 				}
 			};
-			var id = Zotero.Notifier.registerObserver(observer, null, 'test_trigger');
+			var id = Trellis.Notifier.registerObserver(observer, null, 'test_trigger');
 			
-			await Zotero.DB.executeTransaction(async function () {
-				var item = new Zotero.Item('book');
+			await Trellis.DB.executeTransaction(async function () {
+				var item = new Trellis.Item('book');
 				item.setField('title', 'A');
 				await item.save();
 				item.setField('title', 'B');
 				await item.save();
 				
-				Zotero.Notifier.queue('unknown', 'item', item.id);
+				Trellis.Notifier.queue('unknown', 'item', item.id);
 			});
 			
 			assert.lengthOf(events, 3);
@@ -26,7 +26,7 @@ describe("Zotero.Notifier", function () {
 			assert.equal(events[1], 'modify');
 			assert.equal(events[2], 'unknown');
 			
-			Zotero.Notifier.unregisterObserver(id);
+			Trellis.Notifier.unregisterObserver(id);
 		});
 		
 		it("should add events to passed queue", async function () {
@@ -36,9 +36,9 @@ describe("Zotero.Notifier", function () {
 			var observer = {
 				notify: () => didNotify = true
 			};
-			var id = Zotero.Notifier.registerObserver(observer, null, 'test_trigger');
+			var id = Trellis.Notifier.registerObserver(observer, null, 'test_trigger');
 			
-			var queue = new Zotero.Notifier.Queue;
+			var queue = new Trellis.Notifier.Queue;
 			var item = createUnsavedDataObject('item');
 			item.setCollections([collection.id]);
 			await item.saveTx({
@@ -46,25 +46,25 @@ describe("Zotero.Notifier", function () {
 			});
 			assert.isFalse(didNotify);
 			assert.equal(queue.size, 2);
-			await Zotero.Notifier.commit(queue);
+			await Trellis.Notifier.commit(queue);
 			assert.isTrue(didNotify);
 			
-			Zotero.Notifier.unregisterObserver(id);
+			Trellis.Notifier.unregisterObserver(id);
 		});
 	});
 	
 	describe("#queue", function () {
 		it("should handle notification after DB timeout from another transaction", async function () {
-			var promise1 = Zotero.DB.executeTransaction(async function () {
+			var promise1 = Trellis.DB.executeTransaction(async function () {
 				var item = createUnsavedDataObject('item');
 				await item.save();
 				
-				await Zotero.Promise.delay(2000);
+				await Trellis.Promise.delay(2000);
 				
-				Zotero.Notifier.queue('refresh', 'item', item.id);
+				Trellis.Notifier.queue('refresh', 'item', item.id);
 			}.bind(this));
 			
-			var promise2 = Zotero.DB.executeTransaction(async function () {
+			var promise2 = Trellis.DB.executeTransaction(async function () {
 				var item = createUnsavedDataObject('item');
 				await item.save();
 			}.bind(this), { waitTimeout: 1000 });
@@ -80,14 +80,14 @@ describe("Zotero.Notifier", function () {
 				var called = false;
 				var data;
 				
-				var notifierID = Zotero.Notifier.registerObserver({
+				var notifierID = Trellis.Notifier.registerObserver({
 					notify: (event, type, ids, extraData) => {
 						called = true;
 						data = extraData;
 					}
 				});
 				
-				var notifierQueue = new Zotero.Notifier.Queue({
+				var notifierQueue = new Trellis.Notifier.Queue({
 					skipAutoSync: true
 				});
 				
@@ -98,12 +98,12 @@ describe("Zotero.Notifier", function () {
 				
 				assert.isFalse(called);
 				
-				await Zotero.Notifier.commit(notifierQueue);
+				await Trellis.Notifier.commit(notifierQueue);
 				
 				assert.isTrue(called);
 				assert.propertyVal(data, 'skipAutoSync', true);
 				
-				Zotero.Notifier.unregisterObserver(notifierID);
+				Trellis.Notifier.unregisterObserver(notifierID);
 			});
 		});
 	});

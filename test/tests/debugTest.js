@@ -6,14 +6,14 @@ describe("Debug Output Logging", function () {
 	before(async function () {
 		server = sinon.fakeServer.create();
 		server.autoRespond = true;
-		Zotero.HTTP.mock = sinon.FakeXMLHttpRequest;
+		Trellis.HTTP.mock = sinon.FakeXMLHttpRequest;
 		
-		win = await loadZoteroPane();
+		win = await loadTrellisPane();
 		doc = win.document;
 	});
 
 	after(function () {
-		Zotero.HTTP.mock = null;
+		Trellis.HTTP.mock = null;
 		win.close();
 	});
 

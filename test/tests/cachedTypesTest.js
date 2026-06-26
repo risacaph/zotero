@@ -1,8 +1,8 @@
-describe("Zotero.CachedTypes", function() {
-	describe("Zotero.ItemTypes", function () {
+describe("Trellis.CachedTypes", function() {
+	describe("Trellis.ItemTypes", function () {
 		describe("#getPrimaryTypes()", function () {
 			it("should return an array of objects with 'id' and 'name' properties", function () {
-				var types = Zotero.ItemTypes.getPrimaryTypes();
+				var types = Trellis.ItemTypes.getPrimaryTypes();
 				assert.lengthOf(types, 5);
 				for (let type of types) {
 					assert.property(type, 'id');
@@ -11,17 +11,17 @@ describe("Zotero.CachedTypes", function() {
 			});
 			
 			it("shouldn't include 'webpage'", function () {
-				assert.notInclude(Zotero.ItemTypes.getPrimaryTypes().map(x => x.name), 'webpage');
+				assert.notInclude(Trellis.ItemTypes.getPrimaryTypes().map(x => x.name), 'webpage');
 			});
 			
 			it("shouldn't include 'attachment'", function () {
-				assert.notInclude(Zotero.ItemTypes.getPrimaryTypes().map(x => x.name), 'attachment');
+				assert.notInclude(Trellis.ItemTypes.getPrimaryTypes().map(x => x.name), 'attachment');
 			});
 		});
 		
 		describe("#getSecondaryTypes()", function () {
 			it("should return an array of objects with 'id' and 'name' properties", function () {
-				var types = Zotero.ItemTypes.getSecondaryTypes();
+				var types = Trellis.ItemTypes.getSecondaryTypes();
 				assert.isAbove(types.length, 5);
 				for (let type of types) {
 					assert.property(type, 'id');
@@ -30,18 +30,18 @@ describe("Zotero.CachedTypes", function() {
 			});
 			
 			it("shouldn't include 'webpage'", function () {
-				assert.notInclude(Zotero.ItemTypes.getSecondaryTypes().map(x => x.name), 'webpage');
+				assert.notInclude(Trellis.ItemTypes.getSecondaryTypes().map(x => x.name), 'webpage');
 			});
 			
 			it("shouldn't include 'attachment'", function () {
-				assert.notInclude(Zotero.ItemTypes.getPrimaryTypes().map(x => x.name), 'attachment');
+				assert.notInclude(Trellis.ItemTypes.getPrimaryTypes().map(x => x.name), 'attachment');
 			});
 		});
 	});
 	
-	describe("Zotero.CharacterSets", function() {
+	describe("Trellis.CharacterSets", function() {
 		describe("#toCanonical()", function() {
-			let toCanon = Zotero.CharacterSets.toCanonical.bind(Zotero.CharacterSets);
+			let toCanon = Trellis.CharacterSets.toCanonical.bind(Trellis.CharacterSets);
 			it("should return charset name given a normalized charset name", function() {
 				assert.equal(toCanon('utf-8'), 'utf-8');
 				assert.equal(toCanon('windows-1252'), 'windows-1252');
@@ -61,7 +61,7 @@ describe("Zotero.CachedTypes", function() {
 			});
 		});
 		describe("#toLabel()", function() {
-			let toLabel = Zotero.CharacterSets.toLabel.bind(Zotero.CharacterSets);
+			let toLabel = Trellis.CharacterSets.toLabel.bind(Trellis.CharacterSets);
 			it("should return a compatibility label given a charset name", function() {
 				assert.equal(toLabel('utf-8'), 'UTF-8');
 				assert.equal(toLabel('gbk'), 'GBK', 'returns GBK in non-mozCompat mode');

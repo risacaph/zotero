@@ -1,14 +1,14 @@
-var tmp = Zotero.getTempDirectory();
-tmp.append(Zotero.randomString());
+var tmp = Trellis.getTempDirectory();
+tmp.append(Trellis.randomString());
 tmp.create(Components.interfaces.nsIFile.FILE_TYPE, 0o644);
 
 var date = new Date();
-var nowTS = Zotero.Date.toUnixTimestamp(date) * 1000;
+var nowTS = Trellis.Date.toUnixTimestamp(date) * 1000;
 
 var fileOriginalTS = tmp.lastModifiedTime;
 
 var date = new Date("June 1, 2009 12:34:56");
-var fileSetTS = Zotero.Date.toUnixTimestamp(date) * 1000;
+var fileSetTS = Trellis.Date.toUnixTimestamp(date) * 1000;
 tmp.lastModifiedTime = fileSetTS;
 
 var fileGetTS = tmp.lastModifiedTime;

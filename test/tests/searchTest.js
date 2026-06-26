@@ -1,7 +1,7 @@
-describe("Zotero.Search", function () {
+describe("Trellis.Search", function () {
 	describe("#name", function () {
 		it("should fail if empty", async function () {
-			var s = new Zotero.Search();
+			var s = new Trellis.Search();
 			assert.throws(() => s.name = '');
 		});
 	});
@@ -11,7 +11,7 @@ describe("Zotero.Search", function () {
 			var col = await createDataObject('collection');
 			var item = await createDataObject('item', { collections: [col.id] });
 			
-			var s = new Zotero.Search();
+			var s = new Trellis.Search();
 			s.libraryID = item.libraryID;
 			s.name = "Test";
 			s.addCondition('collection', 'is', '0_' + col.key);
@@ -20,18 +20,18 @@ describe("Zotero.Search", function () {
 		});
 	});
 	
-	// This is for Zotero.Search._loadConditions()
+	// This is for Trellis.Search._loadConditions()
 	describe("Loading", function () {
 		it("should convert old-style 'collection' condition value", async function () {
 			var col = await createDataObject('collection');
 			var item = await createDataObject('item', { collections: [col.id] });
 			
-			var s = new Zotero.Search();
+			var s = new Trellis.Search();
 			s.libraryID = item.libraryID;
 			s.name = "Test";
 			s.addCondition('collection', 'is', col.key);
 			await s.saveTx();
-			await Zotero.DB.queryAsync(
+			await Trellis.DB.queryAsync(
 				"UPDATE savedSearchConditions SET value=? WHERE savedSearchID=? AND condition=?",
 				["0_" + col.key, s.id, 'collection']
 			);
@@ -44,7 +44,7 @@ describe("Zotero.Search", function () {
 	
 	describe("#save()", function () {
 		it("should fail without a name", async function () {
-			var s = new Zotero.Search;
+			var s = new Trellis.Search;
 			s.addCondition('title', 'is', 'test');
 			var e = await getPromiseError(s.saveTx());
 			assert.ok(e);
@@ -54,17 +54,17 @@ describe("Zotero.Search", function () {
 		
 		it("should save a new search", async function () {
 			// Save search
-			var s = new Zotero.Search;
+			var s = new Trellis.Search;
 			s.name = "Test";
 			s.addCondition('title', 'is', 'test');
 			var id = await s.saveTx();
 			assert.typeOf(id, 'number');
 			
 			// Check saved search
-			s = Zotero.Searches.get(id);
+			s = Trellis.Searches.get(id);
 			assert.ok(s);
-			assert.instanceOf(s, Zotero.Search);
-			assert.equal(s.libraryID, Zotero.Libraries.userLibraryID);
+			assert.instanceOf(s, Trellis.Search);
+			assert.equal(s.libraryID, Trellis.Libraries.userLibraryID);
 			assert.equal(s.name, "Test");
 			var conditions = s.getConditions();
 			assert.lengthOf(Object.keys(conditions), 1);
@@ -77,29 +77,29 @@ describe("Zotero.Search", function () {
 		
 		it("should add a condition to an existing search", async function () {
 			// Save search
-			var s = new Zotero.Search;
-			s.libraryID = Zotero.Libraries.userLibraryID;
+			var s = new Trellis.Search;
+			s.libraryID = Trellis.Libraries.userLibraryID;
 			s.name = "Test";
 			s.addCondition('title', 'is', 'test');
 			var id = await s.saveTx();
 			assert.typeOf(id, 'number');
 			
 			// Add condition
-			s = await Zotero.Searches.getAsync(id);
+			s = await Trellis.Searches.getAsync(id);
 			s.addCondition('title', 'contains', 'foo');
 			var saved = await s.saveTx();
 			assert.isTrue(saved);
 			
 			// Check saved search
-			s = await Zotero.Searches.getAsync(id);
+			s = await Trellis.Searches.getAsync(id);
 			var conditions = s.getConditions();
 			assert.lengthOf(Object.keys(conditions), 2);
 		});
 		
 		it("should remove a condition from an existing search", async function () {
 			// Save search
-			var s = new Zotero.Search;
-			s.libraryID = Zotero.Libraries.userLibraryID;
+			var s = new Trellis.Search;
+			s.libraryID = Trellis.Libraries.userLibraryID;
 			s.name = "Test";
 			s.addCondition('title', 'is', 'test');
 			s.addCondition('title', 'contains', 'foo');
@@ -107,13 +107,13 @@ describe("Zotero.Search", function () {
 			assert.typeOf(id, 'number');
 			
 			// Remove condition
-			s = await Zotero.Searches.getAsync(id);
+			s = await Trellis.Searches.getAsync(id);
 			s.removeCondition(0);
 			var saved = await s.saveTx();
 			assert.isTrue(saved);
 			
 			// Check saved search
-			s = await Zotero.Searches.getAsync(id);
+			s = await Trellis.Searches.getAsync(id);
 			var conditions = s.getConditions();
 			assert.lengthOf(Object.keys(conditions), 1);
 			assert.property(conditions, "0");
@@ -127,19 +127,19 @@ describe("Zotero.Search", function () {
 		}
 
 		it("should AND predicates in 'all' mode", function () {
-			var r = Zotero.Search.combineConditions([pred('A'), pred('B')]);
+			var r = Trellis.Search.combineConditions([pred('A'), pred('B')]);
 			assert.equal(r.sql, 'A AND B');
 		});
 
 		it("should OR and parenthesize predicates in 'any' mode", function () {
-			var r = Zotero.Search.combineConditions([
+			var r = Trellis.Search.combineConditions([
 				{ marker: 'joinMode', operator: 'any' }, pred('A'), pred('B')
 			]);
 			assert.equal(r.sql, '(A OR B)');
 		});
 
 		it("should combine a nested group", function () {
-			var r = Zotero.Search.combineConditions([
+			var r = Trellis.Search.combineConditions([
 				pred('A'),
 				{ marker: 'groupStart' },
 				{ marker: 'joinMode', operator: 'any' },
@@ -151,7 +151,7 @@ describe("Zotero.Search", function () {
 		});
 
 		it("should collect params in order", function () {
-			var r = Zotero.Search.combineConditions([pred('A=?', [1]), pred('B=?', [2])]);
+			var r = Trellis.Search.combineConditions([pred('A=?', [1]), pred('B=?', [2])]);
 			assert.equal(r.sql, 'A=? AND B=?');
 			assert.deepEqual(r.params, [1, 2]);
 		});
@@ -159,7 +159,7 @@ describe("Zotero.Search", function () {
 	});
 
 	describe("#mapPredicate()", function () {
-		var c = (sql, from, to, neg) => Zotero.Search.mapPredicate(sql, from, to, neg);
+		var c = (sql, from, to, neg) => Trellis.Search.mapPredicate(sql, from, to, neg);
 
 		it("should leave a predicate unchanged when the result level is 'any'", function () {
 			assert.equal(c('X', 'item', 'any'), 'X');
@@ -227,7 +227,7 @@ describe("Zotero.Search", function () {
 					await createDataObject('item', { title: 'zgrpA' });
 					await createDataObject('item', { tags: [{ tag: 'zgrpB' }] });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'all');
 					s.addCondition('title', 'contains', 'zgrpA');
@@ -244,7 +244,7 @@ describe("Zotero.Search", function () {
 					var bc = await createDataObject('item', { title: 'zg2B', tags: [{ tag: 'zg2C' }] });
 					await createDataObject('item', { title: 'zg2B' });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('title', 'contains', 'zg2A');
@@ -261,7 +261,7 @@ describe("Zotero.Search", function () {
 					var acd = await createDataObject('item', { title: 'zg3A zg3C', tags: [{ tag: 'zg3D' }] });
 					await createDataObject('item', { title: 'zg3A zg3C' });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'all');
 					s.addCondition('title', 'contains', 'zg3A');
@@ -281,7 +281,7 @@ describe("Zotero.Search", function () {
 
 			describe("Cross-level scope", function () {
 				it("should match a top-level item by a condition on a descendant annotation", async function () {
-					var text = 'zscopematch' + Zotero.Utilities.randomString();
+					var text = 'zscopematch' + Trellis.Utilities.randomString();
 
 					// Author Smith, with a matching annotation on a child PDF -- should match
 					var item = await createDataObject('item', {
@@ -307,7 +307,7 @@ describe("Zotero.Search", function () {
 					await otherAnnotation.saveTx();
 
 					// creator is Smith AND (has an annotation whose text matches)
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('creator', 'contains', 'Zscopesmith');
 					s.addCondition('groupStart', 'true', '');
@@ -322,7 +322,7 @@ describe("Zotero.Search", function () {
 				});
 
 				it("should return descendant annotations as results with a top-level condition", async function () {
-					var text = 'zresult' + Zotero.Utilities.randomString();
+					var text = 'zresult' + Trellis.Utilities.randomString();
 
 					// Smith item with two matching and one non-matching annotation
 					var item = await createDataObject('item', {
@@ -347,7 +347,7 @@ describe("Zotero.Search", function () {
 					await otherAnnotation.saveTx();
 
 					// Result level annotations: the matching annotations on Smith's items
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'annotation');
 					s.addCondition('creator', 'contains', 'Zresultsmith');
@@ -361,7 +361,7 @@ describe("Zotero.Search", function () {
 				it("should match annotations for a negated annotation condition at the annotation result level", async function () {
 					// At the annotation result level, a negated annotation condition matches
 					// the annotations that lack the value
-					var text = 'zneg' + Zotero.Utilities.randomString();
+					var text = 'zneg' + Trellis.Utilities.randomString();
 					var item = await createDataObject('item');
 					var attachment = await importPDFAttachment(item);
 					var withText = await createAnnotation('highlight', attachment);
@@ -371,7 +371,7 @@ describe("Zotero.Search", function () {
 					withoutText.annotationText = 'zsomethingelse';
 					await withoutText.saveTx();
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'annotation');
 					s.addCondition('annotationText', 'doesNotContain', text);
@@ -393,7 +393,7 @@ describe("Zotero.Search", function () {
 					var notInCollection = await createDataObject('item');
 					await importFileAttachment("search/foobar.html", { parentID: notInCollection.id });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'item');
 					s.addCondition('collection', 'is', collection.key);
@@ -409,7 +409,7 @@ describe("Zotero.Search", function () {
 					// Collection (item-level) maps down to the annotation result level, so
 					// a matching annotation under a collection item is returned even though the
 					// top-level item doesn't itself match the annotation condition
-					var text = 'zcoll' + Zotero.Utilities.randomString();
+					var text = 'zcoll' + Trellis.Utilities.randomString();
 					var collection = await createDataObject('collection');
 					var item = await createDataObject('item', { collections: [collection.id] });
 					var attachment = await importPDFAttachment(item);
@@ -423,7 +423,7 @@ describe("Zotero.Search", function () {
 					otherAnnotation.annotationText = text;
 					await otherAnnotation.saveTx();
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'annotation');
 					s.addCondition('collection', 'is', collection.key);
@@ -438,15 +438,15 @@ describe("Zotero.Search", function () {
 					// title (like url/accessDate) exists on both top-level items and
 					// attachments, so it matches the right thing at each result level without
 					// rolling an attachment title up to its parent (or a parent title down)
-					var itemTitle = 'zti' + Zotero.Utilities.randomString();
-					var attTitle = 'zta' + Zotero.Utilities.randomString();
+					var itemTitle = 'zti' + Trellis.Utilities.randomString();
+					var attTitle = 'zta' + Trellis.Utilities.randomString();
 					var item = await createDataObject('item', { title: itemTitle });
 					var attachment = await importPDFAttachment(item);
 					attachment.setField('title', attTitle);
 					await attachment.saveTx();
 
 					let search = (level, value) => {
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						s.addCondition('resultLevel', level);
 						s.addCondition('title', 'contains', value);
@@ -465,7 +465,7 @@ describe("Zotero.Search", function () {
 				});
 
 				it("should map a bare descendant condition to the result level (no group)", async function () {
-					var text = 'zbarecorr' + Zotero.Utilities.randomString();
+					var text = 'zbarecorr' + Trellis.Utilities.randomString();
 					var item = await createDataObject('item', { title: 'zbarecorritem' });
 					var attachment = await importPDFAttachment(item);
 					var annotation = await createAnnotation('highlight', attachment);
@@ -473,7 +473,7 @@ describe("Zotero.Search", function () {
 					await annotation.saveTx();
 
 					// Result level item + a plain annotation condition (no group) rolls up
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'item');
 					s.addCondition('annotationText', 'contains', text);
@@ -487,8 +487,8 @@ describe("Zotero.Search", function () {
 					// given tag AND has a descendant annotation whose comment contains a word, returned
 					// at the item result level. The tag (level-agnostic) and the annotation
 					// comment (annotation level) both resolve at the item and intersect there.
-					var tag = 'ztag' + Zotero.Utilities.randomString();
-					var word = 'zword' + Zotero.Utilities.randomString();
+					var tag = 'ztag' + Trellis.Utilities.randomString();
+					var word = 'zword' + Trellis.Utilities.randomString();
 
 					// Tagged, with a descendant annotation whose comment contains the word
 					var item = await createDataObject('item', { tags: [{ tag }] });
@@ -504,7 +504,7 @@ describe("Zotero.Search", function () {
 					var annAttachment = await importPDFAttachment(annotationOnly);
 					await createAnnotation('highlight', annAttachment, { comment: 'foo ' + word + ' bar' });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'item');
 					s.addCondition('tag', 'is', tag);
@@ -522,7 +522,7 @@ describe("Zotero.Search", function () {
 					var item = await createDataObject('item', { title: 'zbareft' });
 					await importFileAttachment("search/foobar.html", { parentID: item.id });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'item');
 					s.addCondition('fulltextContent', 'contains', 'foo bar');
@@ -536,11 +536,11 @@ describe("Zotero.Search", function () {
 				it("should return a standalone attachment whose annotation matches, at the item result level", async function () {
 					// A standalone (top-level) attachment is itself a top-level item, so its annotation
 					// maps up to the attachment's own id and the attachment is returned
-					var word = 'zsa' + Zotero.Utilities.randomString();
+					var word = 'zsa' + Trellis.Utilities.randomString();
 					var standalone = await importPDFAttachment(); // top-level PDF, no parent
 					await createAnnotation('highlight', standalone, { comment: 'x ' + word + ' y' });
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'item');
 					s.addCondition('annotationComment', 'contains', word);
@@ -554,8 +554,8 @@ describe("Zotero.Search", function () {
 					// Result level attachment + a group scoped to annotation: find attachments
 					// that have a single annotation matching all of the group's conditions.
 					// Exercises mapping where the parent level is 'attachment', not 'item'.
-					var text = 'zsame' + Zotero.Utilities.randomString();
-					var comment = 'zsamec' + Zotero.Utilities.randomString();
+					var text = 'zsame' + Trellis.Utilities.randomString();
+					var comment = 'zsamec' + Trellis.Utilities.randomString();
 					var item = await createDataObject('item', { title: 'zsameitem' });
 
 					// One annotation matches both text and comment -> this attachment matches
@@ -571,7 +571,7 @@ describe("Zotero.Search", function () {
 					await hasText.saveTx();
 					await createAnnotation('highlight', attachmentSplit, { comment });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'attachment'); // result level = attachments
 					s.addCondition('groupStart', 'true', '');
@@ -585,7 +585,7 @@ describe("Zotero.Search", function () {
 				});
 
 				it("should roll a tag on a descendant up to the result item", async function () {
-					var tag = 'zroll' + Zotero.Utilities.randomString();
+					var tag = 'zroll' + Trellis.Utilities.randomString();
 					// Tagged child attachment (the item itself is untagged)
 					var viaChild = await createDataObject('item', { title: 'zrollchild' });
 					var attachment = await importPDFAttachment(viaChild);
@@ -596,7 +596,7 @@ describe("Zotero.Search", function () {
 					// Untagged
 					var untagged = await createDataObject('item', { title: 'zrollmiss' });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'item');
 					s.addCondition('tag', 'is', tag);
@@ -609,12 +609,12 @@ describe("Zotero.Search", function () {
 				});
 
 				it("should not propagate a tag down to descendant result items", async function () {
-					var tag = 'zdown' + Zotero.Utilities.randomString();
+					var tag = 'zdown' + Trellis.Utilities.randomString();
 					// The item is tagged, but its attachment is not
 					var item = await createDataObject('item', { title: 'zdownitem', tags: [{ tag }] });
 					await importPDFAttachment(item);
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'attachment');
 					s.addCondition('tag', 'is', tag);
@@ -628,7 +628,7 @@ describe("Zotero.Search", function () {
 					// A note can't be (or be under) an attachment, so this is empty -- but it
 					// must not throw a SQL param error: the dead predicate drops to the constant
 					// '0', and its bound value param must be dropped with it
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'attachment');
 					s.addCondition('joinMode', 'any');
@@ -636,7 +636,7 @@ describe("Zotero.Search", function () {
 					assert.lengthOf(await s.search(), 0);
 
 					// Same in 'all' mode
-					var s2 = new Zotero.Search();
+					var s2 = new Trellis.Search();
 					s2.libraryID = userLibraryID;
 					s2.addCondition('resultLevel', 'attachment');
 					s2.addCondition('note', 'contains', 'zsqltest');
@@ -653,7 +653,7 @@ describe("Zotero.Search", function () {
 					var a1 = await createAnnotation('highlight', attachment);
 					var a2 = await createAnnotation('highlight', attachment);
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('resultLevel', 'annotation');
 					s.addCondition('creator', 'contains', 'Zprojsmith');
@@ -668,7 +668,7 @@ describe("Zotero.Search", function () {
 					var col = await createDataObject('collection');
 					var item = await createDataObject('item', { collections: [col.id] });
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.addCondition('collection', 'is', col.key);
 					var matches = await s.search();
@@ -679,7 +679,7 @@ describe("Zotero.Search", function () {
 					var col = await createDataObject('collection');
 					var item = await createDataObject('item', { collections: [col.id] });
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.addCondition('collection', 'isNot', col.key);
 					var matches = await s.search();
@@ -690,7 +690,7 @@ describe("Zotero.Search", function () {
 					var col = await createDataObject('collection');
 					var item = await createDataObject('item');
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.addCondition('collection', 'is', col.key);
 					var matches = await s.search();
@@ -702,7 +702,7 @@ describe("Zotero.Search", function () {
 					var col2 = await createDataObject('collection', { parentID: col1.id });
 					var item = await createDataObject('item', { collections: [col2.id] });
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.addCondition('collection', 'is', col1.key);
 					s.addCondition('recursive', 'true');
@@ -713,10 +713,10 @@ describe("Zotero.Search", function () {
 				it("should return no results for a collection that doesn't exist in recursive mode", async function () {
 					var item = await createDataObject('item');
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.name = "Test";
-					s.addCondition('collection', 'is', Zotero.DataObjectUtilities.generateKey());
+					s.addCondition('collection', 'is', Trellis.DataObjectUtilities.generateKey());
 					s.addCondition('recursive', 'true');
 					var matches = await s.search();
 					assert.lengthOf(matches, 0);
@@ -726,7 +726,7 @@ describe("Zotero.Search", function () {
 					var itemOne = await createDataObject('item', { title: "One" });
 					var itemTwo = await createDataObject('item', { title: "Two" });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = itemOne.libraryID;
 					s.addCondition("joinMode", "any");
 					// Match both collections
@@ -751,11 +751,11 @@ describe("Zotero.Search", function () {
 				it("should match annotation with tag", async function () {
 					var attachment = await importPDFAttachment();
 					var annotation = await createAnnotation('highlight', attachment);
-					var tag = Zotero.Utilities.randomString();
+					var tag = Trellis.Utilities.randomString();
 					annotation.addTag(tag);
 					await annotation.saveTx();
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('tag', 'is', tag);
 					var matches = await s.search();
@@ -767,7 +767,7 @@ describe("Zotero.Search", function () {
 				it("should handle 'today'", async function () {
 					var item = await createDataObject('item');
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.name = "Test";
 					s.addCondition('dateAdded', 'is', 'today');
@@ -775,7 +775,7 @@ describe("Zotero.Search", function () {
 					assert.includeMembers(matches, [item.id]);
 					
 					// Make sure 'yesterday' doesn't match
-					s = new Zotero.Search();
+					s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.name = "Test";
 					s.addCondition('dateAdded', 'is', 'yesterday');
@@ -786,9 +786,9 @@ describe("Zotero.Search", function () {
 			
 			describe("fileTypeID", function () {
 				it("should search by attachment file type", async function () {
-					let s = new Zotero.Search();
+					let s = new Trellis.Search();
 					s.libraryID = userLibraryID;
-					s.addCondition('fileTypeID', 'is', Zotero.FileTypes.getID('webpage'));
+					s.addCondition('fileTypeID', 'is', Trellis.FileTypes.getID('webpage'));
 					let matches = await s.search();
 					assert.sameMembers(matches, [fooItem.id, foobarItem.id]);
 				});
@@ -796,7 +796,7 @@ describe("Zotero.Search", function () {
 			
 			describe("fulltextContent", function () {
 				it("should find text in HTML files", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('fulltextContent', 'contains', 'foo bar');
 					var matches = await s.search();
@@ -804,11 +804,11 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should work in subsearch", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('fulltextContent', 'contains', 'foo bar');
 					
-					var s2 = new Zotero.Search();
+					var s2 = new Trellis.Search();
 					s2.setScope(s);
 					s2.addCondition('title', 'contains', 'foobar');
 					var matches = await s2.search();
@@ -816,7 +816,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find matching items with joinMode=ANY with no other conditions", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent', 'contains', 'foo');
@@ -826,7 +826,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find matching items with joinMode=ANY and non-matching other condition", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent', 'contains', 'foo');
@@ -837,7 +837,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find matching items in regexp mode with joinMode=ANY with matching other condition", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent/regexp', 'contains', 'foo.+bar');
@@ -847,7 +847,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find matching item in regexp mode with joinMode=ANY and non-matching other condition", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent/regexp', 'contains', 'foo.+bar');
@@ -857,7 +857,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find item matching other condition in regexp mode when joinMode=ANY", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent/regexp', 'contains', 'nomatch');
@@ -867,7 +867,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find matching item in regexp mode with joinMode=ANY and recursive mode flag", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent/regexp', 'contains', 'foo.+bar');
@@ -877,7 +877,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find items that don't contain a single word with joinMode=ANY", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent', 'doesNotContain', 'foo');
@@ -886,7 +886,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find items that don't contain a phrase with joinMode=ANY", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent', 'doesNotContain', 'foo bar');
@@ -895,7 +895,7 @@ describe("Zotero.Search", function () {
 				});
 				
 				it("should find items that don't contain a regexp pattern with joinMode=ANY", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextContent/regexp', 'doesNotContain', 'foo.+bar');
@@ -909,7 +909,7 @@ describe("Zotero.Search", function () {
 				// applied as a global post-filter keyed on the top-level join mode)
 				it("should obey the group join mode for a grouped fulltextContent", async function () {
 					// OR: (title is foo.html OR full-text "foo bar") matches the title item and the text item
-					var orSearch = new Zotero.Search();
+					var orSearch = new Trellis.Search();
 					orSearch.libraryID = userLibraryID;
 					orSearch.addCondition('groupStart', 'true', '');
 					orSearch.addCondition('joinMode', 'any');
@@ -920,7 +920,7 @@ describe("Zotero.Search", function () {
 
 					// AND: title is foo.html OR (title is foobar.html AND full-text "nomatchphrase").
 					// The group's full-text doesn't match, so only fooItem (the OR branch) matches.
-					var andSearch = new Zotero.Search();
+					var andSearch = new Trellis.Search();
 					andSearch.libraryID = userLibraryID;
 					andSearch.addCondition('joinMode', 'any');
 					andSearch.addCondition('title', 'is', fooItem.getField('title'));
@@ -934,7 +934,7 @@ describe("Zotero.Search", function () {
 
 				it("should compose a grouped fulltextContent in doesNotContain and regexp modes", async function () {
 					// doesNotContain: (full-text doesNotContain "foo" AND title is baz.pdf) -> bazItem
-					var neg = new Zotero.Search();
+					var neg = new Trellis.Search();
 					neg.libraryID = userLibraryID;
 					neg.addCondition('groupStart', 'true', '');
 					neg.addCondition('joinMode', 'all');
@@ -944,7 +944,7 @@ describe("Zotero.Search", function () {
 					assert.sameMembers(await neg.search(), [bazItem.id]);
 
 					// regexp: (title is foo.html OR full-text regexp "foo.+bar") -> both
-					var re = new Zotero.Search();
+					var re = new Trellis.Search();
 					re.libraryID = userLibraryID;
 					re.addCondition('groupStart', 'true', '');
 					re.addCondition('joinMode', 'any');
@@ -961,7 +961,7 @@ describe("Zotero.Search", function () {
 					var annotation = await createAnnotation('highlight', attachment);
 					var str = annotation.annotationText.substr(0, 7);
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('annotationText', 'contains', str);
@@ -976,7 +976,7 @@ describe("Zotero.Search", function () {
 					var annotation = await createAnnotation('note', attachment);
 					var str = annotation.annotationComment.substr(0, 7);
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('annotationComment', 'contains', str);
@@ -987,7 +987,7 @@ describe("Zotero.Search", function () {
 			
 			describe("fulltextWord", function () {
 				it("should return matches with full-text conditions", async function () {
-					let s = new Zotero.Search();
+					let s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('fulltextWord', 'contains', 'foo');
 					let matches = await s.search();
@@ -996,7 +996,7 @@ describe("Zotero.Search", function () {
 				});
 		
 				it("should not return non-matches with full-text conditions", async function () {
-					let s = new Zotero.Search();
+					let s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('fulltextWord', 'contains', 'nomatch');
 					let matches = await s.search();
@@ -1004,7 +1004,7 @@ describe("Zotero.Search", function () {
 				});
 		
 				it("should return matches for full-text conditions in ALL mode", async function () {
-					let s = new Zotero.Search();
+					let s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'all');
 					s.addCondition('fulltextWord', 'contains', 'foo');
@@ -1014,7 +1014,7 @@ describe("Zotero.Search", function () {
 				});
 		
 				it("should not return non-matches for full-text conditions in ALL mode", async function () {
-					let s = new Zotero.Search();
+					let s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'all');
 					s.addCondition('fulltextWord', 'contains', 'mjktkiuewf');
@@ -1024,7 +1024,7 @@ describe("Zotero.Search", function () {
 				});
 		
 				it("should return a match that satisfies only one of two full-text condition in ANY mode", async function () {
-					let s = new Zotero.Search();
+					let s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('fulltextWord', 'contains', 'bar');
@@ -1036,38 +1036,38 @@ describe("Zotero.Search", function () {
 			
 			describe("includeParentsAndChildren", function () {
 				it("should handle ANY search with no-op condition", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.name = "Test";
 					s.addCondition('joinMode', 'any');
-					s.addCondition('savedSearch', 'is', Zotero.Utilities.randomString());
+					s.addCondition('savedSearch', 'is', Trellis.Utilities.randomString());
 					s.addCondition('includeParentsAndChildren', 'true');
 					var matches = await s.search();
 					assert.lengthOf(matches, 0);
 				});
 				
 				it("should handle ANY search with two no-op conditions", async function () {
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.name = "Test";
 					s.addCondition('joinMode', 'any');
-					s.addCondition('savedSearch', 'is', Zotero.Utilities.randomString());
-					s.addCondition('savedSearch', 'is', Zotero.Utilities.randomString());
+					s.addCondition('savedSearch', 'is', Trellis.Utilities.randomString());
+					s.addCondition('savedSearch', 'is', Trellis.Utilities.randomString());
 					s.addCondition('includeParentsAndChildren', 'true');
 					var matches = await s.search();
 					assert.lengthOf(matches, 0);
 				});
 
 				it("should include a match's parents and children", async function () {
-					var itemTitle = 'zincp' + Zotero.Utilities.randomString();
-					var attTitle = 'zinca' + Zotero.Utilities.randomString();
+					var itemTitle = 'zincp' + Trellis.Utilities.randomString();
+					var attTitle = 'zinca' + Trellis.Utilities.randomString();
 					var item = await createDataObject('item', { title: itemTitle });
 					var attachment = await importPDFAttachment(item);
 					attachment.setField('title', attTitle);
 					await attachment.saveTx();
 
 					let run = (value) => {
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						s.addCondition('title', 'is', value);
 						s.addCondition('includeParentsAndChildren', 'true');
@@ -1083,13 +1083,13 @@ describe("Zotero.Search", function () {
 
 			describe("noChildren", function () {
 				it("should keep only top-level items", async function () {
-					var title = 'znochild' + Zotero.Utilities.randomString();
+					var title = 'znochild' + Trellis.Utilities.randomString();
 					var item = await createDataObject('item', { title });
 					var attachment = await importPDFAttachment(item);
 					attachment.setField('title', title);
 					await attachment.saveTx();
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('title', 'contains', title);
 					s.addCondition('noChildren', 'true');
@@ -1102,10 +1102,10 @@ describe("Zotero.Search", function () {
 			
 			describe("key", function () {
 				it("should allow more than max bound parameters", async function () {
-					let s = new Zotero.Search();
-					let max = Zotero.DB.MAX_BOUND_PARAMETERS + 100;
+					let s = new Trellis.Search();
+					let max = Trellis.DB.MAX_BOUND_PARAMETERS + 100;
 					for (let i = 0; i < max; i++) {
-						s.addCondition('key', 'is', Zotero.DataObjectUtilities.generateKey());
+						s.addCondition('key', 'is', Trellis.DataObjectUtilities.generateKey());
 					}
 					await s.search();
 				});
@@ -1119,7 +1119,7 @@ describe("Zotero.Search", function () {
 					// non-matching title would exclude it.
 					var item = await createDataObject('item', { title: "znestfoo" });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('groupStart', 'true', '');
 					s.addCondition('joinMode', 'any');
@@ -1135,7 +1135,7 @@ describe("Zotero.Search", function () {
 					var itemOne = await createDataObject('item', { title: "one" });
 					var itemTwo = await createDataObject('item', { title: "two" });
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('anyField', 'contains', "one");
@@ -1147,7 +1147,7 @@ describe("Zotero.Search", function () {
 					var itemOne = await createDataObject('item', { title: "three" });
 					var itemTwo = await createDataObject('item', { title: "four" });
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('joinMode', 'any');
 					s.addCondition('anyField', 'contains', "three");
@@ -1159,7 +1159,7 @@ describe("Zotero.Search", function () {
 					var itemOne = await createDataObject('item', { title: "five" });
 					var itemTwo = await createDataObject('item');
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('anyField', 'contains', itemOne.getDisplayTitle());
 					var matches = await s.search();
@@ -1169,7 +1169,7 @@ describe("Zotero.Search", function () {
 					var itemOne = await createDataObject('item', { title: "six-seven" });
 					var itemTwo = await createDataObject('item', { title: "seven-six" });
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('anyField', 'contains', "six");
 					s.addCondition('anyField', 'contains', "seven");
@@ -1182,7 +1182,7 @@ describe("Zotero.Search", function () {
 					var annotation = await createAnnotation('highlight', attachment);
 					var str = annotation.annotationText.substr(0, 7);
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('anyField', 'contains', str);
 					var matches = await s.search();
@@ -1193,7 +1193,7 @@ describe("Zotero.Search", function () {
 					var annotation = await createAnnotation('note', attachment);
 					var str = annotation.annotationComment.substr(0, 7);
 
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('anyField', 'contains', str);
 					var matches = await s.search();
@@ -1202,7 +1202,7 @@ describe("Zotero.Search", function () {
 			});
 			describe("titleCreatorYear", function () {
 				it("should match title, creator, and year but not other fields", async function () {
-					var word = 'ztcy' + Zotero.Utilities.randomString();
+					var word = 'ztcy' + Trellis.Utilities.randomString();
 					// Matches via title
 					var byTitle = await createDataObject('item', { title: 'a ' + word + ' b' });
 					// Matches via creator
@@ -1214,12 +1214,12 @@ describe("Zotero.Search", function () {
 					byOther.setField('abstractNote', 'a ' + word + ' b');
 					await byOther.saveTx();
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = userLibraryID;
 					s.addCondition('titleCreatorYear', 'contains', word);
 					assert.sameMembers(await s.search(), [byTitle.id, byCreator.id]);
 					
-					await Zotero.Items.erase([byTitle.id, byCreator.id, byOther.id]);
+					await Trellis.Items.erase([byTitle.id, byCreator.id, byOther.id]);
 				});
 			});
 			
@@ -1230,8 +1230,8 @@ describe("Zotero.Search", function () {
 					var itemTitle = search.getConditions()[0].value;
 					var item = await createDataObject('item', { title: itemTitle })
 					
-					var s = new Zotero.Search;
-					s.libraryID = Zotero.Libraries.userLibraryID;
+					var s = new Trellis.Search;
+					s.libraryID = Trellis.Libraries.userLibraryID;
 					s.addCondition('savedSearch', 'is', search.key);
 					var matches = await s.search();
 					assert.deepEqual(matches, [item.id]);
@@ -1242,8 +1242,8 @@ describe("Zotero.Search", function () {
 					var itemTitle = search.getConditions()[0].value;
 					var item = await createDataObject('item', { title: itemTitle })
 					
-					var s = new Zotero.Search;
-					s.libraryID = Zotero.Libraries.userLibraryID;
+					var s = new Trellis.Search;
+					s.libraryID = Trellis.Libraries.userLibraryID;
 					s.addCondition('savedSearch', 'isNot', search.key);
 					var matches = await s.search();
 					assert.notInclude(matches, item.id);
@@ -1252,10 +1252,10 @@ describe("Zotero.Search", function () {
 				it("should return no results for a search that doesn't exist", async function () {
 					var item = await createDataObject('item');
 					
-					var s = new Zotero.Search();
+					var s = new Trellis.Search();
 					s.libraryID = item.libraryID;
 					s.name = "Test";
-					s.addCondition('savedSearch', 'is', Zotero.DataObjectUtilities.generateKey());
+					s.addCondition('savedSearch', 'is', Trellis.DataObjectUtilities.generateKey());
 					var matches = await s.search();
 					assert.lengthOf(matches, 0);
 				});
@@ -1266,8 +1266,8 @@ describe("Zotero.Search", function () {
 					var item1 = await createDataObject('item');
 					var item2 = await createDataObject('item', { inPublications: true });
 					
-					var s = new Zotero.Search;
-					s.libraryID = Zotero.Libraries.userLibraryID;
+					var s = new Trellis.Search;
+					s.libraryID = Trellis.Libraries.userLibraryID;
 					s.addCondition('unfiled', 'true');
 					var matches = await s.search();
 					assert.include(matches, item1.id);
@@ -1277,8 +1277,8 @@ describe("Zotero.Search", function () {
 					var collection = await createDataObject('collection');
 					var item = await createDataObject('item', { collections: [collection.id] });
 					
-					var s = new Zotero.Search;
-					s.libraryID = Zotero.Libraries.userLibraryID;
+					var s = new Trellis.Search;
+					s.libraryID = Trellis.Libraries.userLibraryID;
 					s.addCondition('unfiled', 'true');
 
 					// item belonging to a non-trashed collection is not unfiled
@@ -1299,11 +1299,11 @@ describe("Zotero.Search", function () {
 					it("should match annotation for tag search", async function () {
 						var attachment = await importPDFAttachment();
 						var annotation = await createAnnotation('highlight', attachment);
-						var tag = Zotero.Utilities.randomString();
+						var tag = Trellis.Utilities.randomString();
 						annotation.addTag(tag);
 						await annotation.saveTx();
 						
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						s.addCondition('quicksearch-fields', 'contains', tag);
 						var matches = await s.search();
@@ -1319,17 +1319,17 @@ describe("Zotero.Search", function () {
 
 						// Add annotation with a tag to that attachment
 						var annotation = await createAnnotation('highlight', attachment);
-						var tag = Zotero.Utilities.randomString();
+						var tag = Trellis.Utilities.randomString();
 						annotation.addTag(tag);
 						await annotation.saveTx();
 
 						// Search within the scope of that collection by tag
-						var scope = new Zotero.Search();
+						var scope = new Trellis.Search();
 						scope.libraryID = userLibraryID;
 						scope.addCondition('noChildren', 'true');
 						scope.addCondition('collectionID', 'is', collection.id);
 
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						s.addCondition('quicksearch-fields', 'contains', tag);
 						s.setScope(scope, true);
@@ -1349,17 +1349,17 @@ describe("Zotero.Search", function () {
 
 						// Add annotation with a tag to the attachment
 						var annotation = await createAnnotation('highlight', attachment);
-						var tag = Zotero.Utilities.randomString();
+						var tag = Trellis.Utilities.randomString();
 						annotation.addTag(tag);
 						await annotation.saveTx();
 
 						// Search within the scope of that collection by tag
-						var scope = new Zotero.Search();
+						var scope = new Trellis.Search();
 						scope.libraryID = userLibraryID;
 						scope.addCondition('noChildren', 'true');
 						scope.addCondition('collectionID', 'is', collection.id);
 
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						s.addCondition('quicksearch-fields', 'contains', tag);
 						s.setScope(scope, true);
@@ -1376,7 +1376,7 @@ describe("Zotero.Search", function () {
 						var annotation = await createAnnotation('highlight', attachment);
 						var comment = annotation.annotationComment;
 						
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						s.addCondition('quicksearch-everything', 'contains', comment);
 						var matches = await s.search();
@@ -1389,12 +1389,12 @@ describe("Zotero.Search", function () {
 						await fooItem.saveTx();
 	
 						// Quicksearch from a collection
-						let collectionScope = new Zotero.Search();
+						let collectionScope = new Trellis.Search();
 						collectionScope.libraryID = userLibraryID;
 						collectionScope.addCondition('noChildren', 'true');
 						collectionScope.addCondition('collectionID', 'is', col.id);
 						
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						// Phrase search
 						s.addCondition('quicksearch-everything', 'contains', '"foo"');
@@ -1416,7 +1416,7 @@ describe("Zotero.Search", function () {
 						var attachment = await importPDFAttachment(item);
 						await createAnnotation('highlight', attachment);
 						
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						var matches = await s.search();
 						assert.notInclude(matches, attachment.id);
@@ -1429,7 +1429,7 @@ describe("Zotero.Search", function () {
 						await attachment.saveTx();
 						await createAnnotation('highlight', attachment);
 						
-						var s = new Zotero.Search();
+						var s = new Trellis.Search();
 						s.libraryID = userLibraryID;
 						var matches = await s.search();
 						assert.notInclude(matches, attachment.id);
@@ -1454,14 +1454,14 @@ describe("Zotero.Search", function () {
 			var search = await createDataObject('search');
 			assert.isFalse(search.deleted);
 			await search.eraseTx();
-			search = await Zotero.Searches.getAsync(search.id);
+			search = await Trellis.Searches.getAsync(search.id);
 			assert.isFalse(search);
 		});
 	});
 	
 	describe("#toJSON()", function () {
 		it("should output all data", async function () {
-			let s = new Zotero.Search();
+			let s = new Trellis.Search();
 			s.name = "Test";
 			s.addCondition('joinMode', 'any');
 			s.addCondition('fulltextContent/regexp', 'contains', 's.+');
@@ -1487,7 +1487,7 @@ describe("Zotero.Search", function () {
 	
 	describe("#fromJSON()", function () {
 		it("should update all data", async function () {
-			let s = new Zotero.Search();
+			let s = new Trellis.Search();
 			s.name = "Test";
 			s.addCondition('joinMode', 'any');
 			s.addCondition('title', 'isNot', 'foo');
@@ -1529,7 +1529,7 @@ describe("Zotero.Search", function () {
 				],
 				foo: "Bar"
 			};
-			var s = new Zotero.Search();
+			var s = new Trellis.Search();
 			s.fromJSON(json);
 		});
 		
@@ -1545,7 +1545,7 @@ describe("Zotero.Search", function () {
 				],
 				foo: "Bar"
 			};
-			var s = new Zotero.Search();
+			var s = new Trellis.Search();
 			var f = () => {
 				s.fromJSON(json, { strict: true });
 			};

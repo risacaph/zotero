@@ -5,20 +5,20 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
@@ -33,13 +33,13 @@ import { nextHTMLID, noop } from './utils';
 function getImageByStatus(status) {
 	let statusIconName;
 
-	if (status === Zotero.ProgressQueue.ROW_PROCESSING) {
+	if (status === Trellis.ProgressQueue.ROW_PROCESSING) {
 		statusIconName = 'refresh';
 	}
-	else if (status === Zotero.ProgressQueue.ROW_FAILED) {
+	else if (status === Trellis.ProgressQueue.ROW_FAILED) {
 		statusIconName = 'cross';
 	}
-	else if (status === Zotero.ProgressQueue.ROW_SUCCEEDED) {
+	else if (status === Trellis.ProgressQueue.ROW_SUCCEEDED) {
 		statusIconName = 'tick';
 	} else {
 		return document.createElement('span');
@@ -78,7 +78,7 @@ const ProgressQueueTable = ({ onActivate = noop, progressQueue }) => {
 				if (!span.ownerGlobal) {
 					// If this script was imported from a non-window context, we'll have a global object that looks like
 					// a Window and document.createElement() will succeed, but the returned Element object won't have
-					// an ownerGlobal. Trying to append a child or set its innerHTML will segfault Zotero. For now,
+					// an ownerGlobal. Trying to append a child or set its innerHTML will segfault Trellis. For now,
 					// let's just abort if we get an invalid Element.
 					// TODO: Remove once we're using ES modules
 					return div;
@@ -98,8 +98,8 @@ const ProgressQueueTable = ({ onActivate = noop, progressQueue }) => {
 
 	const tableColumns = [
 		{ dataKey: 'success', fixedWidth: true, width: "26" },
-		{ dataKey: 'fileName', label: Zotero.getString(columns[0]) },
-		{ dataKey: 'message', label: Zotero.getString(columns[1]) },
+		{ dataKey: 'fileName', label: Trellis.getString(columns[0]) },
+		{ dataKey: 'message', label: Trellis.getString(columns[1]) },
 	];
 
 	const refreshTree = useCallback(() => treeRef.current.invalidate(), []);

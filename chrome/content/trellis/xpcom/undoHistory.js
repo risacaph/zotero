@@ -5,20 +5,20 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 
-	This file is part of Zotero.
+	This file is part of Trellis.
 
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
 	***** END LICENSE BLOCK *****
 */
@@ -38,10 +38,10 @@
  * vice versa, with no staged changes) is silently discarded at commit.
  * DataObject.save() calls stageChange unconditionally for non-isNew saves;
  * stageAction is opt-in via save({ undoAction, undoActionArgs }) or by an
- * outer caller invoking Zotero.UndoHistory.stageAction() directly inside
+ * outer caller invoking Trellis.UndoHistory.stageAction() directly inside
  * the transaction.
  */
-Zotero.UndoHistory = {
+Trellis.UndoHistory = {
 	_undoStack: [],
 	_redoStack: [],
 	_pendingEntry: null,
@@ -50,7 +50,7 @@ Zotero.UndoHistory = {
 
 	init() {
 		// default (100) when unset or non-numeric. 0 (or less) disables undo/redo entirely.
-		let steps = Zotero.Prefs.get('undoHistory.steps');
+		let steps = Trellis.Prefs.get('undoHistory.steps');
 		this._maxSteps = Number.isInteger(steps) ? steps : 100;
 		this.clear();
 	},
@@ -241,7 +241,7 @@ Zotero.UndoHistory = {
 		if (!entry) return false;
 		let stale = false;
 		try {
-			await Zotero.DB.executeTransaction(async () => {
+			await Trellis.DB.executeTransaction(async () => {
 				if (this._entryIsStale(entry, staleSide)) {
 					stale = true;
 					return;
@@ -262,7 +262,7 @@ Zotero.UndoHistory = {
 				}
 			});
 			if (stale) {
-				Zotero.debug(`UndoHistory: declining stale ${label} entry`);
+				Trellis.debug(`UndoHistory: declining stale ${label} entry`);
 				this.clear();
 				return false;
 			}
@@ -270,7 +270,7 @@ Zotero.UndoHistory = {
 			return true;
 		}
 		catch (e) {
-			Zotero.debug(`UndoHistory: ${label} failed: ` + e);
+			Trellis.debug(`UndoHistory: ${label} failed: ` + e);
 			// Realign memory with the rolled-back DB before clearing history.
 			await this._reloadEntryObjects(entry);
 			// A failure means the object drifted out from under our snapshots,
@@ -320,7 +320,7 @@ Zotero.UndoHistory = {
 		if (!this.isEnabled()) {
 			return;
 		}
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		if (!this._pendingEntry) {
 			this._pendingEntry = { changes: [], action: null, actionArgs: null };
 		}
@@ -366,7 +366,7 @@ Zotero.UndoHistory = {
 		if (!this.isEnabled()) {
 			return;
 		}
-		Zotero.DB.requireTransaction();
+		Trellis.DB.requireTransaction();
 		if (!this._pendingEntry) {
 			this._pendingEntry = { changes: [], action: null, actionArgs: null };
 		}
@@ -406,7 +406,7 @@ Zotero.UndoHistory = {
 				await obj.reload(null, true);
 			}
 			catch (e) {
-				Zotero.debug('UndoHistory: failed to reload object after apply failure: ' + e);
+				Trellis.debug('UndoHistory: failed to reload object after apply failure: ' + e);
 			}
 		}
 	},
@@ -415,17 +415,17 @@ Zotero.UndoHistory = {
 	 * Resolve a change record to a live DataObject
 	 *
 	 * @param {Object} change
-	 * @return {Zotero.DataObject|null}
+	 * @return {Trellis.DataObject|null}
 	 */
 	_getObject(change) {
-		let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(change.objectType);
+		let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(change.objectType);
 		return objectsClass ? objectsClass.get(change.id) : null;
 	},
 
 	/**
 	 * Apply a value to the appropriate setter on an object
 	 *
-	 * @param {Zotero.DataObject} obj
+	 * @param {Trellis.DataObject} obj
 	 * @param {String} field
 	 * @param {*} value
 	 */
@@ -476,7 +476,7 @@ Zotero.UndoHistory = {
 		else if (field === 'itemTypeID') {
 			obj.setType(value);
 		}
-		else if (obj instanceof Zotero.Item) {
+		else if (obj instanceof Trellis.Item) {
 			obj.setField(field, value);
 		}
 		else {
@@ -507,7 +507,7 @@ Zotero.UndoHistory = {
 			}
 			catch (e) {
 				// Can't verify the snapshot, so we can't rule out an external change
-				Zotero.debug('UndoHistory: could not verify snapshot for staleness; declining entry: ' + e);
+				Trellis.debug('UndoHistory: could not verify snapshot for staleness; declining entry: ' + e);
 				return true;
 			}
 			if (!matches) {

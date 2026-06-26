@@ -1,14 +1,14 @@
 "use strict";
 
-describe("Zotero.Collection", function () {
+describe("Trellis.Collection", function () {
 	describe("#save()", function () {
 		it("should save a new collection", async function () {
 			var name = "Test";
-			var collection = new Zotero.Collection;
+			var collection = new Trellis.Collection;
 			collection.name = name;
 			var id = await collection.saveTx();
 			assert.equal(collection.name, name);
-			collection = await Zotero.Collections.getAsync(id);
+			collection = await Trellis.Collections.getAsync(id);
 			assert.equal(collection.name, name);
 		});
 	})
@@ -21,7 +21,7 @@ describe("Zotero.Collection", function () {
 			
 			await collection.eraseTx();
 			
-			assert.isFalse(((await Zotero.Items.getAsync(item.id))).deleted);
+			assert.isFalse(((await Trellis.Items.getAsync(item.id))).deleted);
 		})
 		
 		it("should delete a collection and trash its descendant items with deleteItems: true", async function () {
@@ -33,8 +33,8 @@ describe("Zotero.Collection", function () {
 			
 			await collection.eraseTx({ deleteItems: true });
 			
-			assert.isTrue(((await Zotero.Items.getAsync(item1.id))).deleted);
-			assert.isTrue(((await Zotero.Items.getAsync(item2.id))).deleted);
+			assert.isTrue(((await Trellis.Items.getAsync(item1.id))).deleted);
+			assert.isTrue(((await Trellis.Items.getAsync(item2.id))).deleted);
 		});
 		
 		it("should clear collection from item cache", async function () {
@@ -69,7 +69,7 @@ describe("Zotero.Collection", function () {
 			
 			await collection1.eraseTx({ skipDeleteLog: true });
 			
-			var deleted = await Zotero.Sync.Data.Local.getDeleted('collection', collection1.libraryID);
+			var deleted = await Trellis.Sync.Data.Local.getDeleted('collection', collection1.libraryID);
 			
 			// No collections should be in the delete log
 			assert.notInclude(deleted, collection1.key);
@@ -85,7 +85,7 @@ describe("Zotero.Collection", function () {
 			collection1.deleted = true;
 			await collection1.saveTx();
 			
-			var deleted = await Zotero.Collections.getDeleted(collection1.libraryID, true);
+			var deleted = await Trellis.Collections.getDeleted(collection1.libraryID, true);
 			
 			assert.include(deleted, collection1.id);
 			assert.include(deleted, collection2.id);
@@ -111,7 +111,7 @@ describe("Zotero.Collection", function () {
 			collection1.deleted = false;
 			await collection1.saveTx();
 
-			var deleted = await Zotero.Collections.getDeleted(collection1.libraryID, true);
+			var deleted = await Trellis.Collections.getDeleted(collection1.libraryID, true);
 			
 			// Collection is restored from trash
 			assert.notInclude(deleted, collection1.id);
@@ -128,9 +128,9 @@ describe("Zotero.Collection", function () {
 			
 			await collection1.eraseTx();
 			
-			assert.equal(await Zotero.Collections.getAsync(collection1.id), false);
-			assert.equal(await Zotero.Collections.getAsync(collection2.id), false);
-			assert.equal(await Zotero.Collections.getAsync(collection3.id), false);
+			assert.equal(await Trellis.Collections.getAsync(collection1.id), false);
+			assert.equal(await Trellis.Collections.getAsync(collection2.id), false);
+			assert.equal(await Trellis.Collections.getAsync(collection3.id), false);
 
 			// Erased collections are fully removed as item's containers
 			assert.equal(item.getCollections().length, 0);
@@ -141,68 +141,68 @@ describe("Zotero.Collection", function () {
 	describe("#version", function () {
 		it("should set object version", async function () {
 			var version = 100;
-			var collection = new Zotero.Collection
+			var collection = new Trellis.Collection
 			collection.version = version;
 			collection.name = "Test";
 			var id = await collection.saveTx();
 			assert.equal(collection.version, version);
-			collection = await Zotero.Collections.getAsync(id);
+			collection = await Trellis.Collections.getAsync(id);
 			assert.equal(collection.version, version);
 		});
 	})
 	
 	describe("#parentKey", function () {
 		it("should set parent collection for new collections", async function () {
-			var parentCol = new Zotero.Collection
+			var parentCol = new Trellis.Collection
 			parentCol.name = "Parent";
 			var parentID = await parentCol.saveTx();
-			var {libraryID, key: parentKey} = Zotero.Collections.getLibraryAndKeyFromID(parentID);
+			var {libraryID, key: parentKey} = Trellis.Collections.getLibraryAndKeyFromID(parentID);
 			
-			var col = new Zotero.Collection
+			var col = new Trellis.Collection
 			col.name = "Child";
 			col.parentKey = parentKey;
 			var id = await col.saveTx();
 			assert.equal(col.parentKey, parentKey);
-			col = await Zotero.Collections.getAsync(id);
+			col = await Trellis.Collections.getAsync(id);
 			assert.equal(col.parentKey, parentKey);
 		});
 		
 		it("should change parent collection for existing collections", async function () {
 			// Create initial parent collection
-			var parentCol = new Zotero.Collection
+			var parentCol = new Trellis.Collection
 			parentCol.name = "Parent";
 			var parentID = await parentCol.saveTx();
-			var {libraryID, key: parentKey} = Zotero.Collections.getLibraryAndKeyFromID(parentID);
+			var {libraryID, key: parentKey} = Trellis.Collections.getLibraryAndKeyFromID(parentID);
 			
 			// Create subcollection
-			var col = new Zotero.Collection
+			var col = new Trellis.Collection
 			col.name = "Child";
 			col.parentKey = parentKey;
 			var id = await col.saveTx();
 			
 			// Create new parent collection
-			var newParentCol = new Zotero.Collection
+			var newParentCol = new Trellis.Collection
 			newParentCol.name = "New Parent";
 			var newParentID = await newParentCol.saveTx();
-			var {libraryID, key: newParentKey} = Zotero.Collections.getLibraryAndKeyFromID(newParentID);
+			var {libraryID, key: newParentKey} = Trellis.Collections.getLibraryAndKeyFromID(newParentID);
 			
 			// Change parent collection
 			col.parentKey = newParentKey;
 			await col.saveTx();
 			assert.equal(col.parentKey, newParentKey);
-			col = await Zotero.Collections.getAsync(id);
+			col = await Trellis.Collections.getAsync(id);
 			assert.equal(col.parentKey, newParentKey);
 		});
 		
 		it("should not mark collection as unchanged if set to existing value", async function () {
 			// Create initial parent collection
-			var parentCol = new Zotero.Collection
+			var parentCol = new Trellis.Collection
 			parentCol.name = "Parent";
 			var parentID = await parentCol.saveTx();
-			var {libraryID, key: parentKey} = Zotero.Collections.getLibraryAndKeyFromID(parentID);
+			var {libraryID, key: parentKey} = Trellis.Collections.getLibraryAndKeyFromID(parentID);
 			
 			// Create subcollection
-			var col = new Zotero.Collection
+			var col = new Trellis.Collection
 			col.name = "Child";
 			col.parentKey = parentKey;
 			var id = await col.saveTx();
@@ -213,7 +213,7 @@ describe("Zotero.Collection", function () {
 		});
 		
 		it("should not resave a collection with no parent if set to false", async function () {
-			var col = new Zotero.Collection
+			var col = new Trellis.Collection
 			col.name = "Test";
 			var id = await col.saveTx();
 			
@@ -357,7 +357,7 @@ describe("Zotero.Collection", function () {
 			assert.lengthOf(col.getChildItems(), 1);
 			item.setCollections([]);
 			await item.saveTx();
-			Zotero.debug(col.getChildItems());
+			Trellis.debug(col.getChildItems());
 			assert.lengthOf(col.getChildItems(), 0);
 		});
 		
@@ -383,7 +383,7 @@ describe("Zotero.Collection", function () {
 				name: "Collection",
 				foo: "Bar"
 			};
-			var s = new Zotero.Collection();
+			var s = new Trellis.Collection();
 			s.fromJSON(json);
 		});
 		
@@ -392,7 +392,7 @@ describe("Zotero.Collection", function () {
 				name: "Collection",
 				foo: "Bar"
 			};
-			var s = new Zotero.Collection();
+			var s = new Trellis.Collection();
 			var f = () => {
 				s.fromJSON(json, { strict: true });
 			};

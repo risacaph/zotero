@@ -1,4 +1,4 @@
 ;!@Install@!UTF-8!
-Title="Zotero"
+Title="Trellis"
 RunProgram="setup.exe"
 ;!@InstallEnd@!

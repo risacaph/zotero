@@ -1,5 +1,5 @@
 "use strict";
 
-Zotero.DataCache = {
+Trellis.DataCache = {
 	
 };

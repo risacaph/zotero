@@ -10,14 +10,14 @@ describe("MacOS Integration Server", function () {
 			skipBundledFiles: true
 		});
 		
-		serverURL = `http://127.0.0.1:${Zotero.Server.port}/integration`;
+		serverURL = `http://127.0.0.1:${Trellis.Server.port}/integration`;
 	});
 	
 	describe('/integration/macWordCommand', function () {
 		it('should call Integration.execCommand with passed parameters', async function () {
-			let stub = sinon.stub(Zotero.Integration, 'execCommand');
+			let stub = sinon.stub(Trellis.Integration, 'execCommand');
 			try {
-				await Zotero.HTTP.request(
+				await Trellis.HTTP.request(
 					'GET',
 					`${serverURL}/macWordCommand?agent=httpTest&command=httpTestCommand&document=docName&templateVersion=-1`,
 					{

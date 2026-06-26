@@ -227,7 +227,7 @@ export let OS = {
 				throw osFileError;
 			}
 			
-			// Copy of Zotero.File.createSymlink
+			// Copy of Trellis.File.createSymlink
 			const { ctypes } = ChromeUtils.importESModule(
 				"resource://gre/modules/ctypes.sys.mjs"
 			);

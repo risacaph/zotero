@@ -5,33 +5,33 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Dictionaries = new function () {
+Trellis.Dictionaries = new function () {
 	let _dictionaries = [];
 	let _spellChecker = Cc['@mozilla.org/spellchecker/engine;1']
 		.getService(Ci.mozISpellCheckingEngine);
 	_spellChecker.QueryInterface(Ci.mozISpellCheckingEngine);
 
-	Zotero.defineProperty(this, 'baseURL', {
+	Trellis.defineProperty(this, 'baseURL', {
 		get: () => {
-			let url = ZOTERO_CONFIG.DICTIONARIES_URL;
+			let url = TRELLIS_CONFIG.DICTIONARIES_URL;
 			if (!url.endsWith('/')) {
 				url += '/';
 			}
@@ -40,7 +40,7 @@ Zotero.Dictionaries = new function () {
 	});
 	
 	// Note: Doesn't include bundled en-US
-	Zotero.defineProperty(this, 'dictionaries', {
+	Trellis.defineProperty(this, 'dictionaries', {
 		get: () => {
 			return _dictionaries;
 		}
@@ -52,7 +52,7 @@ Zotero.Dictionaries = new function () {
 	 * @return {Promise}
 	 */
 	this.init = async function () {
-		let dictionariesDir = OS.Path.join(Zotero.Profile.dir, 'dictionaries');
+		let dictionariesDir = OS.Path.join(Trellis.Profile.dir, 'dictionaries');
 		if (!(await OS.File.exists(dictionariesDir))) {
 			return;
 		}
@@ -66,7 +66,7 @@ Zotero.Dictionaries = new function () {
 				await _loadDirectory(path);
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	};
@@ -78,7 +78,7 @@ Zotero.Dictionaries = new function () {
 	 */
 	this.fetchDictionariesList = async function () {
 		let url = this.baseURL + 'dictionaries.json';
-		let req = await Zotero.HTTP.request('GET', url, { responseType: 'json' });
+		let req = await Trellis.HTTP.request('GET', url, { responseType: 'json' });
 		return req.response;
 	};
 
@@ -98,16 +98,16 @@ Zotero.Dictionaries = new function () {
 			throw new Error("Version not provided");
 		}
 		await this.remove(id);
-		Zotero.debug("Installing dictionaries from " + id);
+		Trellis.debug("Installing dictionaries from " + id);
 		let url = this.baseURL + id + '-' + version + '.xpi';
-		let xpiPath = OS.Path.join(Zotero.getTempDirectory().path, id);
-		let dir = OS.Path.join(Zotero.Profile.dir, 'dictionaries', id);
+		let xpiPath = OS.Path.join(Trellis.getTempDirectory().path, id);
+		let dir = OS.Path.join(Trellis.Profile.dir, 'dictionaries', id);
 		let zipReader = Components.classes['@mozilla.org/libjar/zip-reader;1']
 			.createInstance(Components.interfaces.nsIZipReader);
 		try {
-			await Zotero.File.download(url, xpiPath);
+			await Trellis.File.download(url, xpiPath);
 
-			zipReader.open(Zotero.File.pathToFile(xpiPath));
+			zipReader.open(Trellis.File.pathToFile(xpiPath));
 			zipReader.test(null);
 
 			// Create directories
@@ -115,7 +115,7 @@ Zotero.Dictionaries = new function () {
 			while (entries.hasMore()) {
 				let entry = entries.getNext();
 				let destPath = OS.Path.join(dir, ...entry.split(/\//));
-				await Zotero.File.createDirectoryIfMissingAsync(destPath, { from: Zotero.Profile.dir });
+				await Trellis.File.createDirectoryIfMissingAsync(destPath, { from: Trellis.Profile.dir });
 			}
 
 			// Extract files
@@ -125,9 +125,9 @@ Zotero.Dictionaries = new function () {
 				if (entry.substr(-1) === '/') {
 					continue;
 				}
-				Zotero.debug("Extracting " + entry);
+				Trellis.debug("Extracting " + entry);
 				let destPath = OS.Path.join(dir, ...entry.split(/\//));
-				zipReader.extract(entry, Zotero.File.pathToFile(destPath));
+				zipReader.extract(entry, Trellis.File.pathToFile(destPath));
 			}
 
 			zipReader.close();
@@ -142,7 +142,7 @@ Zotero.Dictionaries = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 			throw e;
 		}
@@ -156,7 +156,7 @@ Zotero.Dictionaries = new function () {
 				}
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 	};
@@ -168,25 +168,25 @@ Zotero.Dictionaries = new function () {
 	 * @return {Promise}
 	 */
 	this.remove = async function (id) {
-		Zotero.debug("Removing dictionaries from " + id);
+		Trellis.debug("Removing dictionaries from " + id);
 		var dictionary = _dictionaries.find(x => x.id === id);
 		if (!dictionary) {
 			return;
 		}
 		try {
 			let manifestPath = OS.Path.join(dictionary.dir, 'manifest.json');
-			let manifest = await Zotero.File.getContentsAsync(manifestPath);
+			let manifest = await Trellis.File.getContentsAsync(manifestPath);
 			manifest = JSON.parse(manifest);
 			for (let locale in manifest.dictionaries) {
 				let dicPath = manifest.dictionaries[locale];
 				let affPath = OS.Path.join(dictionary.dir, ...dicPath.split(/\//)).slice(0, -3) + 'aff';
-				Zotero.debug(`Removing ${locale} dictionary`);
+				Trellis.debug(`Removing ${locale} dictionary`);
 				let file = new FileUtils.File(affPath);
 				_spellChecker.removeDictionary(locale, Services.io.newFileURI(file));
 			}
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 		}
 		await OS.File.removeDir(dictionary.dir);
 		// Technically there can be more than one dictionary provided by the same extension id,
@@ -219,11 +219,11 @@ Zotero.Dictionaries = new function () {
 			}
 		}
 		if (updates.length) {
-			Zotero.debug("Available dictionary updates:");
-			Zotero.debug(updates);
+			Trellis.debug("Available dictionary updates:");
+			Trellis.debug(updates);
 		}
 		else {
-			Zotero.debug("No dictionary updates found");
+			Trellis.debug("No dictionary updates found");
 		}
 		return updates;
 	};
@@ -240,11 +240,11 @@ Zotero.Dictionaries = new function () {
 	 * @return {String} - The best available name, or the locale code if unavailable
 	 */
 	this.getBestDictionaryName = function (locale, inlineSpellChecker) {
-		var name = Zotero.Locale.availableLocales[locale];
+		var name = Trellis.Locale.availableLocales[locale];
 		if (!name) {
-			for (let key in Zotero.Locale.availableLocales) {
+			for (let key in Trellis.Locale.availableLocales) {
 				if (key.split('-')[0] === locale) {
-					name = Zotero.Locale.availableLocales[key];
+					name = Trellis.Locale.availableLocales[key];
 				}
 			}
 		}
@@ -263,7 +263,7 @@ Zotero.Dictionaries = new function () {
 	 * @return {Promise<Integer>} - Number of updated dictionaries
 	 */
 	this.update = async function () {
-		var updates = await Zotero.Dictionaries.getAvailableUpdates();
+		var updates = await Trellis.Dictionaries.getAvailableUpdates();
 		var updated = 0;
 		for (let update of updates) {
 			try {
@@ -272,7 +272,7 @@ Zotero.Dictionaries = new function () {
 				updated++;
 			}
 			catch (e) {
-				Zotero.logError(e);
+				Trellis.logError(e);
 			}
 		}
 		return updated;
@@ -286,7 +286,7 @@ Zotero.Dictionaries = new function () {
 	 */
 	async function _loadDirectory(dir) {
 		let manifestPath = OS.Path.join(dir, 'manifest.json');
-		let manifest = await Zotero.File.getContentsAsync(manifestPath);
+		let manifest = await Trellis.File.getContentsAsync(manifestPath);
 		manifest = JSON.parse(manifest);
 		let id;
 		if (manifest.applications && manifest.applications.gecko) {

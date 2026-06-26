@@ -16,7 +16,7 @@ const ATTACHMENT_STATE_LOAD_DELAY = 150;
  * Base row in an ItemTree.
  *
  * Provides safe defaults for all row types. Subclass for specific reference
- * types (ZoteroItemTreeRow, CollectionItemTreeRow, SearchItemTreeRow, etc.).
+ * types (TrellisItemTreeRow, CollectionItemTreeRow, SearchItemTreeRow, etc.).
  */
 class ItemTreeRow {
 	constructor(ref, level, isOpen, id) {
@@ -75,8 +75,8 @@ class ItemTreeRow {
 	}
 
 	getField(field) {
-		if (Zotero.ItemTreeManager.isCustomColumn(field)) {
-			return Zotero.ItemTreeManager.getCustomCellData(this.ref, field);
+		if (Trellis.ItemTreeManager.isCustomColumn(field)) {
+			return Trellis.ItemTreeManager.getCustomCellData(this.ref, field);
 		}
 		return '';
 	}
@@ -128,7 +128,7 @@ class ItemTreeRow {
 
 		let textSpan = document.createElement('span');
 		textSpan.className = 'cell-text';
-		Zotero.Utilities.Internal.renderItemTitle(data, textSpan);
+		Trellis.Utilities.Internal.renderItemTitle(data, textSpan);
 		span.append(textSpan);
 
 		return span;
@@ -136,12 +136,12 @@ class ItemTreeRow {
 }
 
 /**
- * Row wrapping a Zotero.Item (regular items, notes, and non-file attachments).
+ * Row wrapping a Trellis.Item (regular items, notes, and non-file attachments).
  *
  * Provides field access, container logic for child notes/attachments,
  * and full primary-cell rendering (tags, retraction marks, BIDI handling).
  */
-class ZoteroItemTreeRow extends ItemTreeRow {
+class TrellisItemTreeRow extends ItemTreeRow {
 	get isDraggable() {
 		return true;
 	}
@@ -150,10 +150,10 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 		if (this.ref.hasOwnProperty(field) && this.ref[field] != null) {
 			return this.ref[field];
 		}
-		else if (!Zotero.ItemTreeManager.isCustomColumn(field)) {
+		else if (!Trellis.ItemTreeManager.isCustomColumn(field)) {
 			return this.ref.getField(field, unformatted, true);
 		}
-		return Zotero.ItemTreeManager.getCustomCellData(this.ref, field);
+		return Trellis.ItemTreeManager.getCustomCellData(this.ref, field);
 	}
 
 	numNotes() {
@@ -199,7 +199,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 			return [];
 		}
 
-		let items = Zotero.Items.get(childIDs);
+		let items = Trellis.Items.get(childIDs);
 		// TODO: This is a bad pattern after item tree refactor and needs to be fixed (should not be used as an example)
 		// Skip unwanted child items (e.g. in citation dialog)
 		if (filterChildItems) {
@@ -231,11 +231,11 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 			return '';
 		}
 		try {
-			return Zotero.ItemTypes.getLocalizedString(this.ref.itemTypeID);
+			return Trellis.ItemTypes.getLocalizedString(this.ref.itemTypeID);
 		}
 		catch (e) {
-			Zotero.debug(`Error getting localized item type for ${this.ref.itemTypeID}`, 1);
-			Zotero.debug(e, 1);
+			Trellis.debug(`Error getting localized item type for ${this.ref.itemTypeID}`, 1);
+			Trellis.debug(e, 1);
 			return '';
 		}
 	}
@@ -246,12 +246,12 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 	
 	getAddedBy() {
 		return this.ref.createdByUserID
-			? Zotero.Users.getName(this.ref.createdByUserID) : "";
+			? Trellis.Users.getName(this.ref.createdByUserID) : "";
 	}
 	
 	getLastModifiedBy() {
 		return this.ref.lastModifiedByUserID
-			? Zotero.Users.getName(this.ref.lastModifiedByUserID) : this.getAddedBy();
+			? Trellis.Users.getName(this.ref.lastModifiedByUserID) : this.getAddedBy();
 	}
 	
 	getIcon() {
@@ -273,11 +273,11 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 		const item = this.ref;
 		let retracted = '';
 		let retractedAriaLabel = '';
-		if (Zotero.Retractions.isRetracted(item)) {
+		if (Trellis.Retractions.isRetracted(item)) {
 			retracted = getCSSIcon('cross');
 			retracted.classList.add('icon-16');
 			retracted.classList.add('retracted');
-			retractedAriaLabel = Zotero.getString('retraction.banner');
+			retractedAriaLabel = Trellis.getString('retraction.banner');
 		}
 
 		let tagAriaLabel = '';
@@ -285,7 +285,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 		let coloredTags = item.getItemsListTags();
 		if (coloredTags.length) {
 			let { emoji, colored } = coloredTags.reduce((acc, tag) => {
-				acc[Zotero.Utilities.Internal.containsEmoji(tag.tag) ? 'emoji' : 'colored'].push(tag);
+				acc[Trellis.Utilities.Internal.containsEmoji(tag.tag) ? 'emoji' : 'colored'].push(tag);
 				return acc;
 			}, { emoji: [], colored: [] });
 
@@ -299,7 +299,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 
 			tagSpans.push(...emoji.map(x => this.getTagSwatch(x.tag)));
 
-			tagAriaLabel = coloredTags.length == 1 ? Zotero.getString('search-conditions-tag') : Zotero.getString('itemFields.tags');
+			tagAriaLabel = coloredTags.length == 1 ? Trellis.getString('search-conditions-tag') : Trellis.getString('itemFields.tags');
 			tagAriaLabel += ' ' + coloredTags.map(x => x.tag).join(', ') + '.';
 		}
 
@@ -309,7 +309,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 		}
 
 		let textSpan = document.createElement('span');
-		let textWithFullStop = Zotero.Utilities.Internal.renderItemTitle(data, textSpan);
+		let textWithFullStop = Trellis.Utilities.Internal.renderItemTitle(data, textSpan);
 		if (!textWithFullStop.match(/\.$/)) {
 			textWithFullStop += '.';
 		}
@@ -318,13 +318,13 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 			.join(' ');
 		textSpan.className = 'cell-text';
 		if (item.itemTypeID && lazy.BIDI_BROWSER_UI) {
-			textSpan.dir = Zotero.ItemFields.getDirection(
+			textSpan.dir = Trellis.ItemFields.getDirection(
 				item.itemTypeID, column.dataKey, item.getField('language')
 			);
 		}
 		textSpan.setAttribute('aria-label', textSpanAriaLabel);
 
-		if (Zotero.Prefs.get('ui.tagsAfterTitle')) {
+		if (Trellis.Prefs.get('ui.tagsAfterTitle')) {
 			span.append(retracted, textSpan, ...tagSpans);
 		}
 		else {
@@ -337,7 +337,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 	getTagSwatch(tag, color) {
 		let span = document.createElement('span');
 		span.className = 'tag-swatch';
-		let extractedEmojis = Zotero.Tags.extractEmojiForItemsList(tag);
+		let extractedEmojis = Trellis.Tags.extractEmojiForItemsList(tag);
 		if (extractedEmojis) {
 			span.textContent = extractedEmojis;
 			span.className += ' emoji';
@@ -360,7 +360,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 
 		const item = this.ref;
 		if ((!this.isContainer() || !this.isContainerOpen())) {
-			let progressValue = Zotero.Sync.Storage.getItemDownloadProgress(item);
+			let progressValue = Trellis.Sync.Storage.getItemDownloadProgress(item);
 			if (progressValue) {
 				let progress = document.createElement('progress');
 				progress.value = progressValue;
@@ -382,27 +382,27 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 		if (type !== null && type != 'none') {
 			if (type == 'pdf') {
 				icon = getCSSItemTypeIcon('attachmentPDF', 'attachment-type');
-				ariaLabel = Zotero.getString('pane.item.attachments.hasPDF');
+				ariaLabel = Trellis.getString('pane.item.attachments.hasPDF');
 			}
 			else if (type == 'snapshot') {
 				icon = getCSSItemTypeIcon('attachmentSnapshot', 'attachment-type');
-				ariaLabel = Zotero.getString('pane.item.attachments.hasSnapshot');
+				ariaLabel = Trellis.getString('pane.item.attachments.hasSnapshot');
 			}
 			else if (type == 'epub') {
 				icon = getCSSItemTypeIcon('attachmentEPUB', 'attachment-type');
-				ariaLabel = Zotero.getString('pane.item.attachments.hasEPUB');
+				ariaLabel = Trellis.getString('pane.item.attachments.hasEPUB');
 			}
 			else if (type == 'image') {
 				icon = getCSSItemTypeIcon('attachmentImage', 'attachment-type');
-				ariaLabel = Zotero.getString('pane.item.attachments.hasImage');
+				ariaLabel = Trellis.getString('pane.item.attachments.hasImage');
 			}
 			else if (type == 'video') {
 				icon = getCSSItemTypeIcon('attachmentVideo', 'attachment-type');
-				ariaLabel = Zotero.getString('pane.item.attachments.hasVideo');
+				ariaLabel = Trellis.getString('pane.item.attachments.hasVideo');
 			}
 			else {
 				icon = getCSSItemTypeIcon('attachmentFile', 'attachment-type');
-				ariaLabel = Zotero.getString('pane.item.attachments.has');
+				ariaLabel = Trellis.getString('pane.item.attachments.has');
 			}
 
 			if (!exists) {
@@ -433,7 +433,7 @@ class ZoteroItemTreeRow extends ItemTreeRow {
 						invalidateRow(index);
 					}
 				})
-				.catch((e) => Zotero.logError(e));
+				.catch((e) => Trellis.logError(e));
 		}, ATTACHMENT_STATE_LOAD_DELAY);
 
 		return span;
@@ -446,13 +446,13 @@ class ZoteroItemTreeRow extends ItemTreeRow {
  * Acts as a container for annotation child rows and overrides title display
  * to show attachment filenames when configured.
  */
-class FileItemTreeRow extends ZoteroItemTreeRow {
+class FileItemTreeRow extends TrellisItemTreeRow {
 	isContainer() {
 		return true;
 	}
 
 	isContainerEmpty({ searchMode, searchItemIDs } = {}) {
-		if (Zotero.Prefs.get("hideContextAnnotationRows") && searchMode) {
+		if (Trellis.Prefs.get("hideContextAnnotationRows") && searchMode) {
 			return !this.ref.getAnnotations().some(annotation => searchItemIDs.has(annotation.id));
 		}
 		return this.ref.numAnnotations() == 0;
@@ -460,7 +460,7 @@ class FileItemTreeRow extends ZoteroItemTreeRow {
 
 	getChildItems({ searchMode, searchItemIDs } = {}) {
 		let annotations = this.ref.getAnnotations();
-		if (Zotero.Prefs.get("hideContextAnnotationRows") && searchMode) {
+		if (Trellis.Prefs.get("hideContextAnnotationRows") && searchMode) {
 			annotations = annotations.filter(annotation => searchItemIDs.has(annotation.id));
 		}
 		return annotations;
@@ -473,7 +473,7 @@ class FileItemTreeRow extends ZoteroItemTreeRow {
 	getDisplayTitle() {
 		if (!(this.ref.isSnapshotAttachment()
 				&& /snapshot/i.test(this.ref.getField('title')))
-				&& Zotero.Prefs.get('showAttachmentFilenames')) {
+				&& Trellis.Prefs.get('showAttachmentFilenames')) {
 			try {
 				return this.ref.attachmentFilename;
 			}
@@ -493,7 +493,7 @@ class FileItemTreeRow extends ZoteroItemTreeRow {
  * Never a container. Uses the annotation-specific icon and custom row content
  * layout used in the items tree.
  */
-class AnnotationItemTreeRow extends ZoteroItemTreeRow {
+class AnnotationItemTreeRow extends TrellisItemTreeRow {
 	get type() {
 		return 'annotation';
 	}
@@ -522,8 +522,8 @@ class AnnotationItemTreeRow extends ZoteroItemTreeRow {
 			title = renderCtx.renderCell(index, plainText, titleRowData, true);
 			let titleCell = title.querySelector('.cell-text');
 			titleCell.classList.add('italics');
-			titleCell.setAttribute('q-mark-open', Zotero.getString('punctuation.openingQMark'));
-			title.setAttribute('q-mark-close', Zotero.getString('punctuation.closingQMark'));
+			titleCell.setAttribute('q-mark-open', Trellis.getString('punctuation.openingQMark'));
+			title.setAttribute('q-mark-close', Trellis.getString('punctuation.closingQMark'));
 			if (this.ref.annotationComment) {
 				let comment = baseRenderCell(null, plainComment, { className: 'annotation-comment' });
 				div.appendChild(comment);
@@ -535,7 +535,7 @@ class AnnotationItemTreeRow extends ZoteroItemTreeRow {
 			title = renderCtx.renderCell(index, plainComment, titleRowData, true);
 		}
 		else {
-			let annotationTypeName = Zotero.getString(`reader-${this.ref.annotationType}-annotation`);
+			let annotationTypeName = Trellis.getString(`reader-${this.ref.annotationType}-annotation`);
 			title = renderCtx.renderCell(index, annotationTypeName, titleRowData, true);
 		}
 		div.prepend(title);
@@ -552,7 +552,7 @@ class AnnotationItemTreeRow extends ZoteroItemTreeRow {
 }
 
 /**
- * Row wrapping a Zotero.Collection (shown in trash view).
+ * Row wrapping a Trellis.Collection (shown in trash view).
  */
 class CollectionItemTreeRow extends ItemTreeRow {
 	get type() {
@@ -566,7 +566,7 @@ class CollectionItemTreeRow extends ItemTreeRow {
 	}
 
 	getTypeLabel() {
-		return Zotero.getString('search-conditions-collection');
+		return Trellis.getString('search-conditions-collection');
 	}
 
 	getDisplayTitle() {
@@ -577,8 +577,8 @@ class CollectionItemTreeRow extends ItemTreeRow {
 		if (field == 'title') {
 			return this.ref.name;
 		}
-		if (Zotero.ItemTreeManager.isCustomColumn(field)) {
-			return Zotero.ItemTreeManager.getCustomCellData(this.ref, field);
+		if (Trellis.ItemTreeManager.isCustomColumn(field)) {
+			return Trellis.ItemTreeManager.getCustomCellData(this.ref, field);
 		}
 		return '';
 	}
@@ -589,7 +589,7 @@ class CollectionItemTreeRow extends ItemTreeRow {
 }
 
 /**
- * Row wrapping a Zotero.Search (saved search, shown in trash view).
+ * Row wrapping a Trellis.Search (saved search, shown in trash view).
  */
 class SearchItemTreeRow extends ItemTreeRow {
 	get type() {
@@ -603,7 +603,7 @@ class SearchItemTreeRow extends ItemTreeRow {
 	}
 
 	getTypeLabel() {
-		return Zotero.getString('search-conditions-savedSearch');
+		return Trellis.getString('search-conditions-savedSearch');
 	}
 
 	getDisplayTitle() {
@@ -614,8 +614,8 @@ class SearchItemTreeRow extends ItemTreeRow {
 		if (field == 'title') {
 			return this.ref.name;
 		}
-		if (Zotero.ItemTreeManager.isCustomColumn(field)) {
-			return Zotero.ItemTreeManager.getCustomCellData(this.ref, field);
+		if (Trellis.ItemTreeManager.isCustomColumn(field)) {
+			return Trellis.ItemTreeManager.getCustomCellData(this.ref, field);
 		}
 		return '';
 	}
@@ -629,11 +629,11 @@ class SearchItemTreeRow extends ItemTreeRow {
  * Create the appropriate ItemTreeRow subclass for a reference object.
  *
  * Dispatch order: Collection, Search, annotation item, file attachment item,
- * generic Zotero.Item, and finally the base ItemTreeRow fallback.
+ * generic Trellis.Item, and finally the base ItemTreeRow fallback.
  */
 /**
  * Non-selectable section header row shown above each library's items when the
- * items list displays a multi-library selection. Wraps a Zotero.Library.
+ * items list displays a multi-library selection. Wraps a Trellis.Library.
  */
 class LibraryHeaderItemTreeRow extends ItemTreeRow {
 	constructor(library, label, iconName) {
@@ -650,7 +650,7 @@ class LibraryHeaderItemTreeRow extends ItemTreeRow {
 	}
 
 	getDisplayTitle() {
-		return this._label ?? Zotero.Libraries.getName(this.ref.libraryID);
+		return this._label ?? Trellis.Libraries.getName(this.ref.libraryID);
 	}
 
 	getField(field) {
@@ -718,16 +718,16 @@ class SpacerItemTreeRow extends ItemTreeRow {
 }
 
 ItemTreeRow.create = function (ref, level, isOpen) {
-	if (ref instanceof Zotero.Collection) return new CollectionItemTreeRow(ref, level, isOpen);
-	if (ref instanceof Zotero.Search) return new SearchItemTreeRow(ref, level, isOpen);
+	if (ref instanceof Trellis.Collection) return new CollectionItemTreeRow(ref, level, isOpen);
+	if (ref instanceof Trellis.Search) return new SearchItemTreeRow(ref, level, isOpen);
 	if (ref.isAnnotation?.()) return new AnnotationItemTreeRow(ref, level, isOpen);
 	if (ref.isFileAttachment?.()) return new FileItemTreeRow(ref, level, isOpen);
-	return new ZoteroItemTreeRow(ref, level, isOpen);
+	return new TrellisItemTreeRow(ref, level, isOpen);
 };
 
 module.exports = ItemTreeRow;
 module.exports.ItemTreeRow = ItemTreeRow;
-module.exports.ZoteroItemTreeRow = ZoteroItemTreeRow;
+module.exports.TrellisItemTreeRow = TrellisItemTreeRow;
 module.exports.FileItemTreeRow = FileItemTreeRow;
 module.exports.AnnotationItemTreeRow = AnnotationItemTreeRow;
 module.exports.CollectionItemTreeRow = CollectionItemTreeRow;

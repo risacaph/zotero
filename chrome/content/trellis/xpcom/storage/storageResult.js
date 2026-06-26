@@ -9,7 +9,7 @@
  * @propretty {Boolean} fileSyncRequired - Another file sync is required to handle files left in
  *     conflict
  */
-Zotero.Sync.Storage.Result = function (options = {}) {
+Trellis.Sync.Storage.Result = function (options = {}) {
 	this._props = ['localChanges', 'remoteChanges', 'syncRequired', 'fileSyncRequired'];
 	for (let prop of this._props) {
 		this[prop] = options[prop] || false;
@@ -19,14 +19,14 @@ Zotero.Sync.Storage.Result = function (options = {}) {
 /**
  * Update the properties on this object from multiple Result objects
  *
- * @param {Zotero.Sync.Storage.Result[]} results
+ * @param {Trellis.Sync.Storage.Result[]} results
  */
-Zotero.Sync.Storage.Result.prototype.updateFromResults = function (results) {
+Trellis.Sync.Storage.Result.prototype.updateFromResults = function (results) {
 	for (let prop of this._props) {
 		if (!this[prop]) {
 			for (let result of results) {
-				if (!(result instanceof Zotero.Sync.Storage.Result)) {
-					Zotero.debug(result, 1);
+				if (!(result instanceof Trellis.Sync.Storage.Result)) {
+					Trellis.debug(result, 1);
 					throw new Error("'result' is not a storage result");
 				}
 				if (result[prop]) {
@@ -38,7 +38,7 @@ Zotero.Sync.Storage.Result.prototype.updateFromResults = function (results) {
 }
 
 
-/*Zotero.Sync.Storage.Result.prototype.toString = function () {
+/*Trellis.Sync.Storage.Result.prototype.toString = function () {
 	var obj = {};
 	for (let prop of this._props) {
 		obj[prop] = this[prop] || false;

@@ -559,7 +559,7 @@ export function Loader(options) {
     // The side effect is that all modules will share the same
     // global objects.
     sharedGlobal = Sandbox({
-      name: options.sandboxName || "Zotero",
+      name: options.sandboxName || "Trellis",
       prototype: options.sandboxPrototype || globals,
       freshCompartment: options.freshCompartment,
     });

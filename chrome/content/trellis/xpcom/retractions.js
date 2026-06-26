@@ -5,25 +5,25 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.Retractions = {
+Trellis.Retractions = {
 	TYPE_DOI: 'd',
 	TYPE_PMID: 'p',
 	TYPE_NAMES: ['DOI', 'PMID'],
@@ -40,30 +40,30 @@ Zotero.Retractions = {
 		this._resetState();
 		
 		if (!this._prefObserverRegistered) {
-			Zotero.Prefs.registerObserver('retractions.enabled', this._handlePrefChange.bind(this));
+			Trellis.Prefs.registerObserver('retractions.enabled', this._handlePrefChange.bind(this));
 			this._prefObserverRegistered = true;
 		}
 		
-		if (!Zotero.Prefs.get('retractions.enabled')) {
+		if (!Trellis.Prefs.get('retractions.enabled')) {
 			return;
 		}
 		
 		// Load mappings of keys (DOI hashes and PMIDs) to items and vice versa and register for
 		// item changes so they can be kept up to date in notify().
 		await this._cacheKeyMappings();
-		Zotero.Notifier.registerObserver(this, ['item', 'group', 'sync'], 'retractions', 20);
+		Trellis.Notifier.registerObserver(this, ['item', 'group', 'sync'], 'retractions', 20);
 		
 		// Load in the cached prefix list that we check new items against
 		try {
 			await this._loadCacheFile();
 		}
 		catch (e) {
-			Zotero.logError("Error loading retractions cache file");
-			Zotero.logError(e);
+			Trellis.logError("Error loading retractions cache file");
+			Trellis.logError(e);
 		}
 		
 		// Load existing retracted items
-		var rows = await Zotero.DB.queryAsync(
+		var rows = await Trellis.DB.queryAsync(
 			"SELECT libraryID, itemID, DI.itemID IS NOT NULL AS deleted, RI.flag FROM items "
 				+ "JOIN retractedItems RI USING (itemID) "
 				+ "LEFT JOIN deletedItems DI USING (itemID)"
@@ -82,9 +82,9 @@ Zotero.Retractions = {
 		
 		// If no cache file or it was created with a different version, download list at startup
 		if (!this._cacheETag || this._cacheVersion != this._version) {
-			Zotero.Schema.schemaUpdatePromise.then(() => {
-				if (Zotero.test) {
-					Zotero.debug("Skipping retraction list download in test mode");
+			Trellis.Schema.schemaUpdatePromise.then(() => {
+				if (Trellis.test) {
+					Trellis.debug("Skipping retraction list download in test mode");
 					return;
 				}
 				this.updateFromServer();
@@ -112,7 +112,7 @@ Zotero.Retractions = {
 	/**
 	 * If item was retracted and the retraction hasn't been hidden
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @return {Boolean}
 	 */
 	isRetracted: function (item) {
@@ -123,7 +123,7 @@ Zotero.Retractions = {
 	/**
 	 * If item was retracted and hasn't been marked to not show citation warnings
 	 *
-	 * @param {Zotero.Item}
+	 * @param {Trellis.Item}
 	 * @return {Boolean}
 	 */
 	shouldShowCitationWarning: function (item) {
@@ -133,7 +133,7 @@ Zotero.Retractions = {
 	/**
 	 * Don't show any future retraction warnings for this item
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @return {Promise}
 	 */
 	hideRetraction: async function (item) {
@@ -143,7 +143,7 @@ Zotero.Retractions = {
 	/**
 	 * Don't show future citation warnings for this item
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @return {Promise}
 	 */
 	disableCitationWarningsForItem: async function (item) {
@@ -152,14 +152,14 @@ Zotero.Retractions = {
 	
 	_updateItemFlag: async function (item, flag) {
 		this._retractedItems.set(item.id, flag);
-		await Zotero.DB.queryAsync(
+		await Trellis.DB.queryAsync(
 			"UPDATE retractedItems SET flag=? WHERE itemID=?",
 			[flag, item.id]
 		);
-		await Zotero.Notifier.trigger('modify', 'item', [item.id]);
+		await Trellis.Notifier.trigger('modify', 'item', [item.id]);
 	},
 	
-	getRetractionsFromJSON: Zotero.serial(async function (jsonItems) {
+	getRetractionsFromJSON: Trellis.serial(async function (jsonItems) {
 		// TODO: Save as retractions-cache with etag and cache and use for other checks
 		var keyCache = this._keyCache;
 		if (!keyCache) {
@@ -180,14 +180,14 @@ Zotero.Retractions = {
 				doi = json.DOI;
 			}
 			else if (json.extra) {
-				let { fields } = Zotero.Utilities.Internal.extractExtraFields(json.extra);
+				let { fields } = Trellis.Utilities.Internal.extractExtraFields(json.extra);
 				let extraField = fields.get('DOI');
 				if (extraField) {
 					doi = extraField;
 				}
 			}
 			if (doi) {
-				doi = Zotero.Utilities.cleanDOI(doi);
+				doi = Trellis.Utilities.cleanDOI(doi);
 			}
 			if (doi) {
 				valuesToCheck.push({
@@ -300,13 +300,13 @@ Zotero.Retractions = {
 		var current = this.libraryHasRetractedItems(libraryID);
 		
 		// Update Retracted Items virtual collection
-		if (Zotero.Libraries.exists(libraryID)
+		if (Trellis.Libraries.exists(libraryID)
 				// Changed
 				&& (previous != current
 					// Explicitly hidden
-					|| (current && !Zotero.Prefs.getVirtualCollectionStateForLibrary(libraryID, 'retracted')))) {
+					|| (current && !Trellis.Prefs.getVirtualCollectionStateForLibrary(libraryID, 'retracted')))) {
 			let promises = [];
-			for (let zp of Zotero.getZoteroPanes()) {
+			for (let zp of Trellis.getTrellisPanes()) {
 				if (!zp.loaded) continue;
 				promises.push(zp.setVirtual(libraryID, 'retracted', current));
 				zp.hideRetractionBanner();
@@ -330,11 +330,11 @@ Zotero.Retractions = {
 	/**
 	 * Return retraction data for an item
 	 *
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 * @return {Object|false}
 	 */
 	getData: async function (item) {
-		var data = await Zotero.DB.valueQueryAsync(
+		var data = await Trellis.DB.valueQueryAsync(
 			"SELECT data FROM retractedItems WHERE itemID=?", item.id
 		);
 		if (!data) {
@@ -344,20 +344,20 @@ Zotero.Retractions = {
 			data = JSON.parse(data);
 		}
 		catch (e) {
-			Zotero.logError(e);
+			Trellis.logError(e);
 			return false;
 		}
 		
 		try {
 			if (data.date) {
-				data.date = Zotero.Date.sqlToDate(data.date);
+				data.date = Trellis.Date.sqlToDate(data.date);
 			}
 			else {
 				data.date = null;
 			}
 		}
 		catch (e) {
-			Zotero.logError("Error parsing retraction date: " + data.date);
+			Trellis.logError("Error parsing retraction date: " + data.date);
 			data.date = null;
 		}
 		
@@ -367,7 +367,7 @@ Zotero.Retractions = {
 	getReasonDescription: function (reason) {
 		var description = this._reasonDescriptions[reason];
 		if (!description) {
-			Zotero.warn(`Description not found for retraction reason "${reason}"`);
+			Trellis.warn(`Description not found for retraction reason "${reason}"`);
 			return '';
 		}
 		return description;
@@ -384,7 +384,7 @@ Zotero.Retractions = {
 			// Suppress the retraction banner until the sync completes -- we don't want
 			// to alert on items that were already in the library before we started
 			// checking.
-			if (action == 'start' && !Zotero.Users.getCurrentUserID()) {
+			if (action == 'start' && !Trellis.Users.getCurrentUserID()) {
 				this._suppressAlerts = true;
 			}
 			else if (action == 'finish') {
@@ -406,12 +406,12 @@ Zotero.Retractions = {
 		// Items
 		if (action == 'add') {
 			for (let id of ids) {
-				this._updateItem(Zotero.Items.get(id));
+				this._updateItem(Trellis.Items.get(id));
 			}
 		}
 		else if (action == 'modify') {
 			for (let id of ids) {
-				let item = Zotero.Items.get(id);
+				let item = Trellis.Items.get(id);
 				for (let type of this.TYPE_NAMES) {
 					let typeID = this['TYPE_' + type];
 					let fieldVal = this['_getItem' + type](item);
@@ -458,12 +458,12 @@ Zotero.Retractions = {
 	/**
 	 * Check for possible matches for items in the queue (debounced)
 	 */
-	checkQueuedItems: Zotero.Utilities.debounce(async function () {
+	checkQueuedItems: Trellis.Utilities.debounce(async function () {
 		return this._checkQueuedItemsInternal();
 	}, 1000),
 	
 	_checkQueuedItemsInternal: async function () {
-		Zotero.debug("Checking updated items for retractions");
+		Trellis.debug("Checking updated items for retractions");
 		
 		// If no possible matches, clear retraction flag on any items that changed
 		if (!this._queuedPrefixStrings.size) {
@@ -502,7 +502,7 @@ Zotero.Retractions = {
 		}
 	},
 	
-	updateFromServer: Zotero.serial(async function () {
+	updateFromServer: Trellis.serial(async function () {
 		if (!this._initialized) {
 			return;
 		}
@@ -512,7 +512,7 @@ Zotero.Retractions = {
 		if (this._cacheETag) {
 			headers["If-None-Match"] = this._cacheETag;
 		}
-		var req = await Zotero.HTTP.request(
+		var req = await Trellis.HTTP.request(
 			"GET",
 			this._getURLPrefix() + 'list',
 			{
@@ -522,14 +522,14 @@ Zotero.Retractions = {
 			}
 		);
 		if (req.status == 304) {
-			Zotero.debug("Retraction list is up to date");
+			Trellis.debug("Retraction list is up to date");
 			return;
 		}
 		var etag = req.getResponseHeader('ETag');
 		var list = req.response.split('\n').filter(x => x);
 		
 		if (!list.length) {
-			Zotero.logError("Empty retraction list from server");
+			Trellis.logError("Empty retraction list from server");
 			return;
 		}
 		
@@ -561,7 +561,7 @@ Zotero.Retractions = {
 			let type = prefixStr[0];
 			let prefix = prefixStr.substr(1);
 			if (!type || !prefix) {
-				Zotero.warn("Bad line in retractions data: " + row);
+				Trellis.warn("Bad line in retractions data: " + row);
 				continue;
 			}
 			if (prefixStrings.has(prefixStr)) {
@@ -574,7 +574,7 @@ Zotero.Retractions = {
 			await this._addPossibleMatches(possibleMatches, true);
 		}
 		else {
-			Zotero.debug("No possible retractions");
+			Trellis.debug("No possible retractions");
 			await this._addPossibleMatches([], true);
 		}
 		
@@ -587,7 +587,7 @@ Zotero.Retractions = {
 	 * @return {Object[]} - Results from API search
 	 */
 	_downloadPossibleMatches: async function (prefixStrings) {
-		var req = await Zotero.HTTP.request(
+		var req = await Trellis.HTTP.request(
 			"POST",
 			this._getURLPrefix() + 'search',
 			{
@@ -596,8 +596,8 @@ Zotero.Retractions = {
 			}
 		);
 		var results = req.response;
-		Zotero.debug(`Retrieved ${results.length} possible `
-			+ Zotero.Utilities.pluralize(results.length, ['match', 'matches']));
+		Trellis.debug(`Retrieved ${results.length} possible `
+			+ Trellis.Utilities.pluralize(results.length, ['match', 'matches']));
 		
 		results.push(...this._fixedResults);
 		return results;
@@ -646,7 +646,7 @@ Zotero.Retractions = {
 		if (removeExisting) {
 			for (let itemID of this._retractedItems.keys()) {
 				if (!allItemIDs.has(itemID)) {
-					let item = await Zotero.Items.getAsync(itemID);
+					let item = await Trellis.Items.getAsync(itemID);
 					await this._removeEntry(itemID, item.libraryID);
 					removed++;
 				}
@@ -654,11 +654,11 @@ Zotero.Retractions = {
 		}
 		
 		var msg = `Found ${addedItemIDs.size} retracted `
-			+ Zotero.Utilities.pluralize(addedItemIDs.size, 'item');
+			+ Trellis.Utilities.pluralize(addedItemIDs.size, 'item');
 		if (removed) {
 			msg += " and removed " + removed;
 		}
-		Zotero.debug(msg);
+		Trellis.debug(msg);
 		addedItemIDs = [...addedItemIDs];
 		if (addedItemIDs.length && !this._suppressAlerts) {
 			this._showAlert(addedItemIDs); // async
@@ -668,13 +668,13 @@ Zotero.Retractions = {
 	
 	_showAlert: async function (itemIDs) {
 		// Don't show banner for items in the trash
-		var items = await Zotero.Items.getAsync(itemIDs);
+		var items = await Trellis.Items.getAsync(itemIDs);
 		items = items.filter(item => !item.deleted);
 		if (!items.length) {
 			return;
 		}
-		Zotero.Prefs.set('retractions.recentItems', JSON.stringify(items.map(item => item.id)));
-		var zp = Zotero.getActiveZoteroPane();
+		Trellis.Prefs.set('retractions.recentItems', JSON.stringify(items.map(item => item.id)));
+		var zp = Trellis.getActiveTrellisPane();
 		if (zp) {
 			await zp.showRetractionBanner();
 		}
@@ -683,7 +683,7 @@ Zotero.Retractions = {
 	_getItemDOI: function (item) {
 		var itemDOI = item.getField('DOI') || item.getExtraField('DOI');
 		if (itemDOI) {
-			itemDOI = Zotero.Utilities.cleanDOI(itemDOI);
+			itemDOI = Trellis.Utilities.cleanDOI(itemDOI);
 		}
 		return itemDOI || null;
 	},
@@ -734,7 +734,7 @@ Zotero.Retractions = {
 		if (type == this.TYPE_DOI) {
 			// DOIs are case-insensitive
 			value = value.toLowerCase();
-			return Zotero.Utilities.Internal.sha1(value);
+			return Trellis.Utilities.Internal.sha1(value);
 		}
 		return value;
 	},
@@ -772,12 +772,12 @@ Zotero.Retractions = {
 		this._keyItems[this.TYPE_PMID] = new Map();
 		this._itemKeys[this.TYPE_PMID] = new Map();
 		
-		var doiFieldID = Zotero.ItemFields.getID('DOI');
-		var extraFieldID = Zotero.ItemFields.getID('extra');
+		var doiFieldID = Trellis.ItemFields.getID('DOI');
+		var extraFieldID = Trellis.ItemFields.getID('extra');
 		
 		var sql = "SELECT itemID AS id, fieldID, value FROM itemData "
 			+ "JOIN itemDataValues USING (valueID) WHERE fieldID IN (?, ?)";
-		var rows = await Zotero.DB.queryAsync(
+		var rows = await Trellis.DB.queryAsync(
 			sql,
 			[
 				doiFieldID,
@@ -788,7 +788,7 @@ Zotero.Retractions = {
 		for (let row of rows) {
 			// DOI field
 			if (row.fieldID == doiFieldID) {
-				let value = Zotero.Utilities.cleanDOI(row.value);
+				let value = Trellis.Utilities.cleanDOI(row.value);
 				if (value) {
 					this._addItemKeyMapping(this.TYPE_DOI, value, row.id);
 				}
@@ -797,14 +797,14 @@ Zotero.Retractions = {
 			else {
 				// DOI
 				/*
-				let { fields } = Zotero.Utilities.Internal.extractExtraFields(row.value);
+				let { fields } = Trellis.Utilities.Internal.extractExtraFields(row.value);
 				let doi = fields.get('DOI');
 				if (!doi) continue;
 				*/
 				let { doi, pmid } = this._extractExtraFields(row.value);
 				
 				if (doi) {
-					let value = Zotero.Utilities.cleanDOI(doi);
+					let value = Trellis.Utilities.cleanDOI(doi);
 					if (value) {
 						this._addItemKeyMapping(this.TYPE_DOI, value, row.id);
 					}
@@ -812,7 +812,7 @@ Zotero.Retractions = {
 				
 				// PMID
 				/*
-				let { fields } = Zotero.Utilities.Internal.extractExtraFields(row.value);
+				let { fields } = Trellis.Utilities.Internal.extractExtraFields(row.value);
 				let pmid = fields.get('pmid') || fields.get('pubmedID');
 				if (!pmid) continue;
 				this._addItemKeyMapping(this.TYPE_PMID, pmid, row.id);
@@ -887,9 +887,9 @@ Zotero.Retractions = {
 		delete o.retractionPMID;
 		
 		var sql = "REPLACE INTO retractedItems (itemID, data) VALUES (?, ?)";
-		await Zotero.DB.queryAsync(sql, [itemID, JSON.stringify(o)]);
+		await Trellis.DB.queryAsync(sql, [itemID, JSON.stringify(o)]);
 		
-		var item = await Zotero.Items.getAsync(itemID);
+		var item = await Trellis.Items.getAsync(itemID);
 		var libraryID = item.libraryID;
 		// Check whether the retraction is already hidden by the user
 		var flag = this._retractedItems.get(itemID);
@@ -904,7 +904,7 @@ Zotero.Retractions = {
 			await this._updateLibraryRetractions(libraryID);
 		}
 		
-		await Zotero.Notifier.trigger('refresh', 'item', [itemID]);
+		await Trellis.Notifier.trigger('refresh', 'item', [itemID]);
 	},
 	
 	_removeEntry: async function (itemID, libraryID) {
@@ -914,37 +914,37 @@ Zotero.Retractions = {
 			return;
 		}
 		
-		await Zotero.DB.queryAsync("DELETE FROM retractedItems WHERE itemID=?", itemID);
+		await Trellis.DB.queryAsync("DELETE FROM retractedItems WHERE itemID=?", itemID);
 		this._retractedItems.delete(itemID);
 		this._retractedItemsByLibrary[libraryID].delete(itemID);
 		await this._updateLibraryRetractions(libraryID);
 		
-		await Zotero.Notifier.trigger('refresh', 'item', [itemID]);
+		await Trellis.Notifier.trigger('refresh', 'item', [itemID]);
 	},
 	
 	_removeAllEntries: async function () {
-		var libraryIDs = await Zotero.DB.columnQueryAsync(
+		var libraryIDs = await Trellis.DB.columnQueryAsync(
 			"SELECT libraryID FROM items WHERE itemID IN (SELECT itemID FROM retractedItems)"
 		);
-		var itemIDs = await Zotero.DB.columnQueryAsync("SELECT itemID FROM retractedItems");
+		var itemIDs = await Trellis.DB.columnQueryAsync("SELECT itemID FROM retractedItems");
 		if (!itemIDs.length) {
 			return;
 		}
-		await Zotero.DB.queryAsync("DELETE FROM retractedItems");
+		await Trellis.DB.queryAsync("DELETE FROM retractedItems");
 		this._retractedItems.clear();
 		this._retractedItemsByLibrary = {};
 		for (let libraryID of libraryIDs) {
 			await this._updateLibraryRetractions(libraryID);
 		}
-		await Zotero.Notifier.trigger('refresh', 'item', itemIDs);
+		await Trellis.Notifier.trigger('refresh', 'item', itemIDs);
 	},
 	
 	_loadCacheFile: async function () {
-		var cacheFile = OS.Path.join(Zotero.Profile.dir, 'retractions.json');
+		var cacheFile = OS.Path.join(Trellis.Profile.dir, 'retractions.json');
 		if (!(await OS.File.exists(cacheFile))) {
 			return;
 		}
-		var data = JSON.parse(await Zotero.File.getContentsAsync(cacheFile));
+		var data = JSON.parse(await Trellis.File.getContentsAsync(cacheFile));
 		if (data) {
 			this._processCacheData(data);
 		}
@@ -974,7 +974,7 @@ Zotero.Retractions = {
 	 * Cache prefix list in profile directory
 	 */
 	_saveCacheFile: async function (data, etag, doiPrefixLength, pmidPrefixLength) {
-		var cacheFile = OS.Path.join(Zotero.Profile.dir, 'retractions.json');
+		var cacheFile = OS.Path.join(Trellis.Profile.dir, 'retractions.json');
 		var cacheJSON = {
 			version: this._version,
 			etag,
@@ -983,16 +983,16 @@ Zotero.Retractions = {
 			data
 		};
 		try {
-			await Zotero.File.putContentsAsync(cacheFile, JSON.stringify(cacheJSON));
+			await Trellis.File.putContentsAsync(cacheFile, JSON.stringify(cacheJSON));
 			this._processCacheData(cacheJSON);
 		}
 		catch (e) {
-			Zotero.logError("Error caching retractions data: " + e);
+			Trellis.logError("Error caching retractions data: " + e);
 		}
 	},
 	
 	_getURLPrefix: function () {
-		var url = (Zotero.Prefs.get("api.url") || ZOTERO_CONFIG.API_URL);
+		var url = (Trellis.Prefs.get("api.url") || TRELLIS_CONFIG.API_URL);
 		if (!url.endsWith('/')) {
 			url += '/';
 		}
@@ -1002,18 +1002,18 @@ Zotero.Retractions = {
 	
 	_handlePrefChange: async function () {
 		// Enable
-		if (Zotero.Prefs.get('retractions.enabled')) {
+		if (Trellis.Prefs.get('retractions.enabled')) {
 			await this.init();
 		}
 		// Disable
 		else {
 			if (this._notifierID) {
-				Zotero.Notifier.unregisterObserver(this._notifierID);
+				Trellis.Notifier.unregisterObserver(this._notifierID);
 				delete this._notifierID;
 			}
 			await this._removeAllEntries();
 			this._resetState();
-			let cacheFile = OS.Path.join(Zotero.Profile.dir, 'retractions.json');
+			let cacheFile = OS.Path.join(Trellis.Profile.dir, 'retractions.json');
 			await OS.File.remove(cacheFile);
 		}
 	},

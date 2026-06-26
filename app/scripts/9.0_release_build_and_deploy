@@ -10,7 +10,7 @@ CHANNEL="release"
 BRANCH="9.0"
 BUILD_ONLY=0
 if [ "`uname`" = "Darwin" ]; then
-	export SAFARI_APPEX="$ROOT_DIR/../safari-app-extension-builds/release/ZoteroSafariExtension.appex"
+	export SAFARI_APPEX="$ROOT_DIR/../safari-app-extension-builds/release/TrellisSafariExtension.appex"
 fi
 
 while getopts "b" opt; do

@@ -8,7 +8,7 @@ ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 CHANNEL="beta"
 BRANCH="main"
-export SAFARI_APPEX="$ROOT_DIR/../safari-app-extension-builds/beta/ZoteroSafariExtension.appex"
+export SAFARI_APPEX="$ROOT_DIR/../safari-app-extension-builds/beta/TrellisSafariExtension.appex"
 
 # Set Safari extension LSMinimumSystemVersion to Mojave for betas
 perl -pi -e 's/<string>11\.0<\/string>/<string>10.14<\/string>/' "$SAFARI_APPEX"/Contents/Info.plist

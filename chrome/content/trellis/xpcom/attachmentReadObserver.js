@@ -5,32 +5,32 @@
                      Vienna, Virginia, USA
                      http://digitalscholar.org/
     
-    This file is part of Zotero.
+    This file is part of Trellis.
     
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
     
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
     
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
     
     ***** END LICENSE BLOCK *****
 */
 
-Zotero.AttachmentReadObserver = {
+Trellis.AttachmentReadObserver = {
 	init() {
-		this._observerID = Zotero.Notifier.registerObserver(this, ['file', 'setting'], 'attachmentReadObserver');
+		this._observerID = Trellis.Notifier.registerObserver(this, ['file', 'setting'], 'attachmentReadObserver');
 	},
 	
 	unregister() {
 		if (this._observerID) {
-			Zotero.Notifier.unregisterObserver(this._observerID);
+			Trellis.Notifier.unregisterObserver(this._observerID);
 			this._observerID = null;
 		}
 	},
@@ -44,11 +44,11 @@ Zotero.AttachmentReadObserver = {
 	},
 
 	/**
-	 * @param {Zotero.Item} item
+	 * @param {Trellis.Item} item
 	 */
 	async updateAttachmentLastRead(item) {
 		// Limit to My Library and groups
-		if (item.libraryID != Zotero.Libraries.userLibraryID && !item.library.isGroup) {
+		if (item.libraryID != Trellis.Libraries.userLibraryID && !item.library.isGroup) {
 			return;
 		}
 		
@@ -68,7 +68,7 @@ Zotero.AttachmentReadObserver = {
 			if (!['pageChange', 'open', 'close'].includes(action)) {
 				return;
 			}
-			let items = await Zotero.Items.getAsync(ids);
+			let items = await Trellis.Items.getAsync(ids);
 			switch (action) {
 				case 'open':
 				case 'close':
@@ -93,7 +93,7 @@ Zotero.AttachmentReadObserver = {
 			for (let id of ids) {
 				let [settingLibraryID, settingKey] = id.split('/');
 				settingLibraryID = parseInt(settingLibraryID);
-				if (settingLibraryID != Zotero.Libraries.userLibraryID) {
+				if (settingLibraryID != Trellis.Libraries.userLibraryID) {
 					continue;
 				}
 				if (settingKey.startsWith('lastRead_')) {
@@ -103,15 +103,15 @@ Zotero.AttachmentReadObserver = {
 						continue; // lastRead_ synced settings are only used for group items
 					}
 					else if (librarySlug.startsWith('g')) {
-						libraryID = Zotero.Groups.getLibraryIDFromGroupID(parseInt(librarySlug.substring(1)));
+						libraryID = Trellis.Groups.getLibraryIDFromGroupID(parseInt(librarySlug.substring(1)));
 					}
 					else {
-						Zotero.debug('Invalid library slug in key: ' + settingKey);
+						Trellis.debug('Invalid library slug in key: ' + settingKey);
 						continue;
 					}
-					let item = await Zotero.Items.getByLibraryAndKeyAsync(libraryID, itemKey);
+					let item = await Trellis.Items.getByLibraryAndKeyAsync(libraryID, itemKey);
 					if (item && item.isAttachment()) {
-						item.attachmentLastRead = Zotero.SyncedSettings.get(settingLibraryID, settingKey);
+						item.attachmentLastRead = Trellis.SyncedSettings.get(settingLibraryID, settingKey);
 						await item.saveTx({ skipDateModifiedUpdate: true, skipEditCheck: true, skipSyncedUpdate: true });
 					}
 				}

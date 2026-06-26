@@ -1,6 +1,6 @@
 "use strict";
 
-Zotero.Sync.EventListeners = {
+Trellis.Sync.EventListeners = {
 	/**
 	 * Start all listeners
 	 */
@@ -20,17 +20,17 @@ Zotero.Sync.EventListeners = {
  * Notifier observer to add deleted objects to syncDeleteLog/storageDeleteLog
  * plus related methods
  */
-Zotero.Sync.EventListeners.ChangeListener = new function () {
+Trellis.Sync.EventListeners.ChangeListener = new function () {
 	this.init = function () {
 		// Initialize delete log listener
 		// TODO: Support clearing of full-text for an item?
-		Zotero.Notifier.registerObserver(
+		Trellis.Notifier.registerObserver(
 			this, ['collection', 'item', 'search', 'setting'], 'deleteLog'
 		);
 	}
 	
 	this.notify = function (event, type, ids, extraData) {
-		var syncObjectTypeID = Zotero.Sync.Data.Utilities.getSyncObjectTypeID(type);
+		var syncObjectTypeID = Trellis.Sync.Data.Utilities.getSyncObjectTypeID(type);
 		if (!syncObjectTypeID) {
 			return;
 		}
@@ -44,7 +44,7 @@ Zotero.Sync.EventListeners.ChangeListener = new function () {
 		
 		var storageForLibrary = {};
 		
-		return Zotero.Utilities.Internal.forEachChunkAsync(
+		return Trellis.Utilities.Internal.forEachChunkAsync(
 			ids,
 			100,
 			async function (chunk) {
@@ -67,7 +67,7 @@ Zotero.Sync.EventListeners.ChangeListener = new function () {
 						if (type == 'item') {
 							if (storageForLibrary[libraryID] === undefined) {
 								storageForLibrary[libraryID] =
-									Zotero.Sync.Storage.Local.getModeForLibrary(libraryID) == 'webdav';
+									Trellis.Sync.Storage.Local.getModeForLibrary(libraryID) == 'webdav';
 							}
 							if (storageForLibrary[libraryID] && extraData[id].storageDeleteLog) {
 								storageSets.push(libraryID, key);
@@ -76,19 +76,19 @@ Zotero.Sync.EventListeners.ChangeListener = new function () {
 					});
 				
 				if (storageSets.length) {
-					return Zotero.DB.executeTransaction(async function () {
-						await Zotero.DB.queryAsync(
+					return Trellis.DB.executeTransaction(async function () {
+						await Trellis.DB.queryAsync(
 							syncSQL + Array(syncSets.length / 3).fill('(?, ?, ?)').join(', '),
 							syncSets
 						);
-						await Zotero.DB.queryAsync(
+						await Trellis.DB.queryAsync(
 							storageSQL + Array(storageSets.length / 2).fill('(?, ?)').join(', '),
 							storageSets
 						);
 					});
 				}
 				else if (syncSets.length) {
-					await Zotero.DB.queryAsync(
+					await Trellis.DB.queryAsync(
 						syncSQL + Array(syncSets.length / 3).fill('(?, ?, ?)').join(', '), syncSets
 					);
 				}
@@ -98,19 +98,19 @@ Zotero.Sync.EventListeners.ChangeListener = new function () {
 }
 
 
-Zotero.Sync.EventListeners.AutoSyncListener = {
+Trellis.Sync.EventListeners.AutoSyncListener = {
 	_editTimeout: 3,
 	_observerID: null,
 	
 	init: function () {
 		// If auto-sync is enabled, initialize the save observer
-		if (Zotero.Prefs.get('sync.autoSync')) {
+		if (Trellis.Prefs.get('sync.autoSync')) {
 			this.register();
 		}
 	},
 	
 	register: function () {
-		this._observerID = Zotero.Notifier.registerObserver(this, false, 'autosync');
+		this._observerID = Trellis.Notifier.registerObserver(this, false, 'autosync');
 	},
 	
 	notify: function (event, type, ids, extraData) {
@@ -127,7 +127,7 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 		
 		// Only trigger sync for certain types
 		// TODO: full text
-		if (![...Zotero.DataObjectUtilities.getTypes(), 'setting'].includes(type)) {
+		if (![...Trellis.DataObjectUtilities.getTypes(), 'setting'].includes(type)) {
 			return;
 		}
 		
@@ -153,14 +153,14 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 			for (let id of ids) {
 				// E.g., '1/lastPageIndex_u_ABCD2345'
 				let libraryID = parseInt(id.split('/')[0]);
-				let library = Zotero.Libraries.get(libraryID);
+				let library = Trellis.Libraries.get(libraryID);
 				if (library.syncable) {
 					libraries.push(library);
 				}
 			}
 		}
-		else if (Zotero.DataObjectUtilities.getTypes().includes(type)) {
-			let objectsClass = Zotero.DataObjectUtilities.getObjectsClassForObjectType(type);
+		else if (Trellis.DataObjectUtilities.getTypes().includes(type)) {
+			let objectsClass = Trellis.DataObjectUtilities.getObjectsClassForObjectType(type);
 			ids.forEach(id => {
 				let libraryID;
 				let lk = objectsClass.getLibraryAndKeyFromID(id);
@@ -172,7 +172,7 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 					libraryID = extraData[id].libraryID;
 				}
 				if (libraryID) {
-					let library = Zotero.Libraries.get(libraryID);
+					let library = Trellis.Libraries.get(libraryID);
 					if (library.syncable) {
 						libraries.push(library);
 					}
@@ -183,7 +183,7 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 			return;
 		}
 		
-		libraries = Zotero.Sync.Data.Local.filterSkippedLibraries(libraries);
+		libraries = Trellis.Sync.Data.Local.filterSkippedLibraries(libraries);
 		if (!libraries.length) {
 			return;
 		}
@@ -192,7 +192,7 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 			// Check whether file syncing or full-text syncing are necessary
 			if (event == 'add' || event == 'modify' || event == 'index') {
 				for (let id of ids) {
-					let item = Zotero.Items.get(id);
+					let item = Trellis.Items.get(id);
 					if (!item) continue;
 					if (item.isStoredFileAttachment()) {
 						fileLibraries.add(item.libraryID);
@@ -204,7 +204,7 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 			}
 		}
 		
-		Zotero.Sync.Runner.setSyncTimeout(
+		Trellis.Sync.Runner.setSyncTimeout(
 			autoSyncDelay || this._editTimeout,
 			false,
 			{
@@ -217,34 +217,34 @@ Zotero.Sync.EventListeners.AutoSyncListener = {
 	
 	unregister: function () {
 		if (this._observerID) {
-			Zotero.Notifier.unregisterObserver(this._observerID);
+			Trellis.Notifier.unregisterObserver(this._observerID);
 		}
 	}
 }
 
 
-Zotero.Sync.EventListeners.IdleListener = {
+Trellis.Sync.EventListeners.IdleListener = {
 	_idleTimeout: 3600,
 	_backTimeout: 900,
 	
 	init: function () {
 		// DEBUG: Allow override for testing
-		var idleTimeout = Zotero.Prefs.get("sync.autoSync.idleTimeout");
+		var idleTimeout = Trellis.Prefs.get("sync.autoSync.idleTimeout");
 		if (idleTimeout) {
 			this._idleTimeout = idleTimeout;
 		}
-		var backTimeout = Zotero.Prefs.get("sync.autoSync.backTimeout");
+		var backTimeout = Trellis.Prefs.get("sync.autoSync.backTimeout");
 		if (backTimeout) {
 			this._backTimeout = backTimeout;
 		}
 		
-		if (Zotero.Prefs.get("sync.autoSync")) {
+		if (Trellis.Prefs.get("sync.autoSync")) {
 			this.register();
 		}
 	},
 	
 	register: function () {
-		Zotero.debug("Registering auto-sync idle observer");
+		Trellis.debug("Registering auto-sync idle observer");
 		var idleService = Components.classes["@mozilla.org/widget/useridleservice;1"]
 				.getService(Components.interfaces.nsIUserIdleService);
 		idleService.addIdleObserver(this, this._idleTimeout);
@@ -256,26 +256,26 @@ Zotero.Sync.EventListeners.IdleListener = {
 			return;
 		}
 		
-		if (!Zotero.Sync.Runner.enabled || Zotero.Sync.Runner.syncInProgress) {
+		if (!Trellis.Sync.Runner.enabled || Trellis.Sync.Runner.syncInProgress) {
 			return;
 		}
 		
 		// TODO: move to Runner.sync()?
-		if (Zotero.locked) {
-			Zotero.debug('Zotero is locked -- skipping idle sync', 4);
+		if (Trellis.locked) {
+			Trellis.debug('Trellis is locked -- skipping idle sync', 4);
 			return;
 		}
 		
-		if (Zotero.Sync.Server.manualSyncRequired) {
-			Zotero.debug('Manual sync required -- skipping idle sync', 4);
+		if (Trellis.Sync.Server.manualSyncRequired) {
+			Trellis.debug('Manual sync required -- skipping idle sync', 4);
 			return;
 		}
 		
-		Zotero.debug("Beginning idle sync");
+		Trellis.debug("Beginning idle sync");
 		
-		Zotero.Sync.Runner.setSyncTimeout(this._idleTimeout, true);
+		Trellis.Sync.Runner.setSyncTimeout(this._idleTimeout, true);
 		
-		Zotero.Sync.Runner.sync({
+		Trellis.Sync.Runner.sync({
 			background: true
 		});
 	},
@@ -286,19 +286,19 @@ Zotero.Sync.EventListeners.IdleListener = {
 				return;
 			}
 			
-			Zotero.Sync.Runner.clearSyncTimeout();
-			if (!Zotero.Sync.Runner.enabled || Zotero.Sync.Runner.syncInProgress) {
+			Trellis.Sync.Runner.clearSyncTimeout();
+			if (!Trellis.Sync.Runner.enabled || Trellis.Sync.Runner.syncInProgress) {
 				return;
 			}
-			Zotero.debug("Beginning return-from-idle sync");
-			Zotero.Sync.Runner.sync({
+			Trellis.debug("Beginning return-from-idle sync");
+			Trellis.Sync.Runner.sync({
 				background: true
 			});
 		}
 	},
 	
 	unregister: function () {
-		Zotero.debug("Unregistering auto-sync idle observer");
+		Trellis.debug("Unregistering auto-sync idle observer");
 		var idleService = Components.classes["@mozilla.org/widget/useridleservice;1"]
 				.getService(Components.interfaces.nsIUserIdleService);
 		idleService.removeIdleObserver(this, this._idleTimeout);
@@ -308,7 +308,7 @@ Zotero.Sync.EventListeners.IdleListener = {
 
 
 
-Zotero.Sync.EventListeners.progressListener = {
+Trellis.Sync.EventListeners.progressListener = {
 	onStart: function () {
 		
 	},
@@ -325,9 +325,9 @@ Zotero.Sync.EventListeners.progressListener = {
 };
 
 
-Zotero.Sync.EventListeners.StorageFileOpenListener = {
+Trellis.Sync.EventListeners.StorageFileOpenListener = {
 	init: function () {
-		Zotero.Notifier.registerObserver(this, ['file'], 'storageFileOpen');
+		Trellis.Notifier.registerObserver(this, ['file'], 'storageFileOpen');
 	},
 	
 	notify: function (event, type, ids, extraData) {
@@ -335,7 +335,7 @@ Zotero.Sync.EventListeners.StorageFileOpenListener = {
 			let timestamp = new Date().getTime();
 			
 			for (let i = 0; i < ids.length; i++) {
-				Zotero.Sync.Storage.Local.uploadCheckFiles.push({
+				Trellis.Sync.Storage.Local.uploadCheckFiles.push({
 					itemID: ids[i],
 					timestamp: timestamp
 				});

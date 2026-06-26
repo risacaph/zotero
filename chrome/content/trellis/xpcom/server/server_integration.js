@@ -5,26 +5,26 @@
 					 Vienna, Virginia, USA
 					 https://digitalscholar.org
 	
-	This file is part of Zotero.
+	This file is part of Trellis.
 	
-	Zotero is free software: you can redistribute it and/or modify
+	Trellis is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 	
-	Zotero is distributed in the hope that it will be useful,
+	Trellis is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	
 	You should have received a copy of the GNU Affero General Public License
-	along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+	along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 	
 	***** END LICENSE BLOCK *****
 */
 
-Zotero.Server.Endpoints['/integration/macWordCommand'] = function () {};
-Zotero.Server.Endpoints['/integration/macWordCommand'].prototype = {
+Trellis.Server.Endpoints['/integration/macWordCommand'] = function () {};
+Trellis.Server.Endpoints['/integration/macWordCommand'].prototype = {
 	supportedMethods: ["GET"],
 	supportedDataTypes: ["application/json"],
 	permitBookmarklet: true,
@@ -35,9 +35,9 @@ Zotero.Server.Endpoints['/integration/macWordCommand'].prototype = {
 		
 		// Run this in the next event loop (making sure we first send the 200 response)
 		// otherwise if a blocking command (alert) runs in execCommand before an await call
-		// it makes the Word call to Zotero timeout and display an error
+		// it makes the Word call to Trellis timeout and display an error
 		setTimeout(() => {
-			Zotero.Integration.execCommand(
+			Trellis.Integration.execCommand(
 				data.searchParams.get('agent'),
 				data.searchParams.get('command'),
 				document,

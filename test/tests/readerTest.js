@@ -4,12 +4,12 @@ describe("Reader", function () {
 	var win, zp;
 
 	before(function* () {
-		win = yield loadZoteroPane();
-		zp = win.ZoteroPane;
+		win = yield loadTrellisPane();
+		zp = win.TrellisPane;
 	});
 
 	after(function () {
-		win.Zotero_Tabs.closeAll();
+		win.Trellis_Tabs.closeAll();
 		win.close();
 	});
 
@@ -17,7 +17,7 @@ describe("Reader", function () {
 		it('should create/update annotations', async function () {
 			var attachment = await importFileAttachment('test.pdf');
 
-			var reader = await Zotero.Reader.open(attachment.itemID);
+			var reader = await Trellis.Reader.open(attachment.itemID);
 			await reader._initPromise;
 			reader._internalReader._annotationManager._skipAnnotationSavingDebounce = true;
 
@@ -252,8 +252,8 @@ describe("Reader", function () {
 			it("should import EPUB annotations from KOReader (stored alongside EPUB)", async function () {
 				await IOUtils.copy(bookSdrPath, PathUtils.join(tempPath, 'book.sdr'), { recursive: true });
 				
-				let attachment = await Zotero.Attachments.linkFromFile({ file: tempBookEpubPath });
-				let reader = await Zotero.Reader.open(attachment.id);
+				let attachment = await Trellis.Attachments.linkFromFile({ file: tempBookEpubPath });
+				let reader = await Trellis.Reader.open(attachment.id);
 				await waitForReader(reader);
 				
 				let donePromise = Promise.all([waitForDialog(), waitForAdds(2)]);
@@ -264,8 +264,8 @@ describe("Reader", function () {
 			});
 			
 			it("should import EPUB annotations from KOReader (stored elsewhere)", async function () {
-				let attachment = await Zotero.Attachments.linkFromFile({ file: tempBookEpubPath });
-				let reader = await Zotero.Reader.open(attachment.id);
+				let attachment = await Trellis.Attachments.linkFromFile({ file: tempBookEpubPath });
+				let reader = await Trellis.Reader.open(attachment.id);
 				await waitForReader(reader);
 
 				let donePromise = Promise.all([waitForDialog(), waitForAdds(2)]);
@@ -279,8 +279,8 @@ describe("Reader", function () {
 			it("should import EPUB annotations from Calibre (stored alongside EPUB)", async function () {
 				await IOUtils.copy(metadataOpfPath, PathUtils.join(tempPath, 'metadata.opf'));
 
-				let attachment = await Zotero.Attachments.linkFromFile({ file: tempBookEpubPath });
-				let reader = await Zotero.Reader.open(attachment.id);
+				let attachment = await Trellis.Attachments.linkFromFile({ file: tempBookEpubPath });
+				let reader = await Trellis.Reader.open(attachment.id);
 				await waitForReader(reader);
 
 				let donePromise = Promise.all([waitForDialog(), waitForAdds(2)]);
@@ -292,17 +292,17 @@ describe("Reader", function () {
 
 			it("should import EPUB annotations from Calibre (stored within EPUB)", async function () {
 				let zipWriter = Cc['@mozilla.org/zipwriter;1'].createInstance(Ci.nsIZipWriter);
-				zipWriter.open(Zotero.File.pathToFile(tempBookEpubPath), 0x04 /* RDWR */);
+				zipWriter.open(Trellis.File.pathToFile(tempBookEpubPath), 0x04 /* RDWR */);
 				zipWriter.addEntryFile(
 					'META-INF/calibre_bookmarks.txt',
 					Ci.nsIZipWriter.COMPRESSION_DEFAULT,
-					Zotero.File.pathToFile(calibreBookmarksPath),
+					Trellis.File.pathToFile(calibreBookmarksPath),
 					false,
 				);
 				zipWriter.close();
 				
-				let attachment = await Zotero.Attachments.linkFromFile({ file: tempBookEpubPath });
-				let reader = await Zotero.Reader.open(attachment.id);
+				let attachment = await Trellis.Attachments.linkFromFile({ file: tempBookEpubPath });
+				let reader = await Trellis.Reader.open(attachment.id);
 				await waitForReader(reader);
 
 				let donePromise = Promise.all([waitForDialog(), waitForAdds(2)]);

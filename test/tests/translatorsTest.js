@@ -1,6 +1,6 @@
 "use strict";
 
-describe("Zotero.Translators", function () {
+describe("Trellis.Translators", function () {
 	describe("#init()", function () {
 		async function testUpdateCache({ translatorID, label1, label2, lastUpdated1, lastUpdated2, expect }) {
 			var translator1 = buildDummyTranslator('web', `function doDetect() {}; function doSearch(); {}`, {
@@ -9,16 +9,16 @@ describe("Zotero.Translators", function () {
 				translatorType: 8,
 				lastUpdated: lastUpdated1
 			});
-			await Zotero.Translators.save(translator1.metadata, translator1.code);
-			await Zotero.Translators.reinit();
-			var matched = (await Zotero.Translators.getAllForType('search'))
+			await Trellis.Translators.save(translator1.metadata, translator1.code);
+			await Trellis.Translators.reinit();
+			var matched = (await Trellis.Translators.getAllForType('search'))
 				.filter(x => x.translatorID == translatorID);
 			assert.lengthOf(matched, 1);
 			assert.equal(matched[0].label, label1);
 			var path1 = matched[0].path;
 			assert.isTrue(await OS.File.exists(path1));
 			
-			var rows = await Zotero.DB.valueQueryAsync(
+			var rows = await Trellis.DB.valueQueryAsync(
 				"SELECT COUNT(*) FROM translatorCache WHERE fileName=?",
 				translator1.label + ".js"
 			);
@@ -30,10 +30,10 @@ describe("Zotero.Translators", function () {
 				translatorType: 8,
 				lastUpdated: lastUpdated2
 			});
-			await Zotero.Translators.save(translator2.metadata, translator2.code);
-			await Zotero.Translators.reinit();
+			await Trellis.Translators.save(translator2.metadata, translator2.code);
+			await Trellis.Translators.reinit();
 			
-			matched = (await Zotero.Translators.getAllForType('search'))
+			matched = (await Trellis.Translators.getAllForType('search'))
 				.filter(x => x.translatorID == translatorID);
 			assert.lengthOf(matched, 1);
 			assert.equal(matched[0].label, expect == 1 ? label1 : label2);
@@ -43,13 +43,13 @@ describe("Zotero.Translators", function () {
 			}
 			assert.isTrue(await OS.File.exists(matched[0].path));
 			
-			rows = await Zotero.DB.valueQueryAsync(
+			rows = await Trellis.DB.valueQueryAsync(
 				"SELECT COUNT(*) FROM translatorCache WHERE fileName=?",
 				(expect == 1 ? translator2.label  : translator1.label) + ".js"
 			);
 			assert.equal(rows, 0);
 			
-			rows = await Zotero.DB.valueQueryAsync(
+			rows = await Trellis.DB.valueQueryAsync(
 				"SELECT COUNT(*) FROM translatorCache WHERE fileName=?",
 				(expect == 1 ? translator1.label  : translator2.label) + ".js"
 			);
@@ -99,7 +99,7 @@ describe("Zotero.Translators", function () {
 				targetAll: "https?://iframe.owl\\.com/(citation|owl_page)/.+"
 			});	
 			
-			let getAllForType = sinon.stub(Zotero.Translators, 'getAllForType');
+			let getAllForType = sinon.stub(Trellis.Translators, 'getAllForType');
 			getAllForType.withArgs('web').resolves([genericTranslator, topLevelTranslator, frameTranslator]);
 			getAllForType.withArgs('webWithTargetAll').resolves([frameTranslator]);
 			
@@ -120,25 +120,25 @@ describe("Zotero.Translators", function () {
 		});
 		
 		after(function* (){
-			Zotero.Translators.getAllForType.restore();
+			Trellis.Translators.getAllForType.restore();
 		});
 		
 		describe("when called from a root document", function () {
 			it("should return generic translators when not matching any translator `target`", async function () {
-				var translators = await Zotero.Translators.getWebTranslatorsForLocation(noMatchURL, noMatchURL);
+				var translators = await Trellis.Translators.getWebTranslatorsForLocation(noMatchURL, noMatchURL);
 				assert.equal(translators[0].length, 1);
 				assert.equal(translators[0][0].translatorID, 'generic-translator');
 			});
 			
 			it("should return all matching translators without `targetAll` property", async function () {
-				var translators = await Zotero.Translators.getWebTranslatorsForLocation(topMatchURL, topMatchURL);
+				var translators = await Trellis.Translators.getWebTranslatorsForLocation(topMatchURL, topMatchURL);
 				assert.equal(translators[0].length, 2);
 				assert.equal(translators[0][0].translatorID, 'generic-translator');
 				assert.equal(translators[0][1].translatorID, 'top-level-translator');
 			});
 			
 			it("should return translators that match both `target` and `targetAll` when both properties present", async function () {
-				var translators = await Zotero.Translators.getWebTranslatorsForLocation(frameMatchURL, frameMatchURL);
+				var translators = await Trellis.Translators.getWebTranslatorsForLocation(frameMatchURL, frameMatchURL);
 				assert.equal(translators[0].length, 2);
 				assert.equal(translators[0][0].translatorID, 'generic-translator');
 				assert.equal(translators[0][1].translatorID, 'frame-translator');
@@ -148,17 +148,17 @@ describe("Zotero.Translators", function () {
 		
 		describe("when called from an iframe", function () {
 			it("should not return generic translators or translators without `targetAll` property", async function () {
-				var translators = await Zotero.Translators.getWebTranslatorsForLocation(frameMatchURL, noMatchURL);
+				var translators = await Trellis.Translators.getWebTranslatorsForLocation(frameMatchURL, noMatchURL);
 				assert.equal(translators[0].length, 0);
 			});
 		
 			it("should not return translators that match `target` but not `targetAll", async function () {
-				var translators = await Zotero.Translators.getWebTranslatorsForLocation(noMatchURL, topMatchURL);
+				var translators = await Trellis.Translators.getWebTranslatorsForLocation(noMatchURL, topMatchURL);
 				assert.equal(translators[0].length, 0);
 			});
 			
 			it("should return translators that match both `target` and `targetAll`", async function () {
-				var translators = await Zotero.Translators.getWebTranslatorsForLocation(frameMatchURL, topMatchURL);
+				var translators = await Trellis.Translators.getWebTranslatorsForLocation(frameMatchURL, topMatchURL);
 				assert.equal(translators[0].length, 1);
 				assert.equal(translators[0][0].translatorID, 'frame-translator');
 			});

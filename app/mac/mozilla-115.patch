@@ -10,7 +10,7 @@ diff --git a/browser/app/nsBrowserApp.cpp b/browser/app/nsBrowserApp.cpp
  Bootstrap::UniquePtr gBootstrap;
  
  static int do_main(int argc, char* argv[], char* envp[]) {
-+  // Allow profile downgrade for Zotero
++  // Allow profile downgrade for Trellis
 +  setenv("MOZ_ALLOW_DOWNGRADE", "1", 1);
 +  // Don't create dedicated profile (default-esr)
 +  setenv("MOZ_LEGACY_PROFILES", "1", 1);

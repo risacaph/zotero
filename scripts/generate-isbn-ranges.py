@@ -67,8 +67,8 @@ file = """/** THIS FILE WAS GENERATED AUTOMATICALLY **/
 /**
  * ISBN Registrant ranges from https://www.isbn-international.org/range_file_generation
 **/
-Zotero.ISBN = {};
-Zotero.ISBN.ranges = (function() {
+Trellis.ISBN = {};
+Trellis.ISBN.ranges = (function() {
 	var ranges = """
 
 rangesJSON = json.dumps(uniqueRanges, separators=(',', ': '), indent="\t", sort_keys=True)

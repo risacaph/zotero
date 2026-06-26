@@ -1,7 +1,7 @@
 This is a modified version of the esmify tool from the fx115 tree:
   https://searchfox.org/mozilla-esr115/source/tools/esmify
 
-Zotero modifications:
+Trellis modifications:
   - Make scripts work independently of Mach
   - Add Bluebird-to-async migration
   - Don't run a full ESLint --fix or fail if it can't fix everything, but do still try to fix

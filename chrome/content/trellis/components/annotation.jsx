@@ -5,20 +5,20 @@
                      Vienna, Virginia, USA
                      https://digitalscholar.org
 
-    This file is part of Zotero.
+    This file is part of Trellis.
 
-    Zotero is free software: you can redistribute it and/or modify
+    Trellis is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Zotero is distributed in the hope that it will be useful,
+    Trellis is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with Zotero.  If not, see <http://www.gnu.org/licenses/>.
+    along with Trellis.  If not, see <http://www.gnu.org/licenses/>.
 
     ***** END LICENSE BLOCK *****
 */
@@ -40,10 +40,10 @@ function AnnotationBox({ data }) {
 	
 	return (
 		<div className="AnnotationBox">
-			<div className="title">{Zotero.getString('itemTypes.annotation')}</div>
+			<div className="title">{Trellis.getString('itemTypes.annotation')}</div>
 			<div className="container">
 				<div className="header">
-					<div>{Zotero.Cite.getLocatorString('page')} {data.pageLabel}</div>
+					<div>{Trellis.Cite.getLocatorString('page')} {data.pageLabel}</div>
 				</div>
 				{data.text !== undefined
 					? <div className="text" style={textStyle}>{data.text}</div>
@@ -62,8 +62,8 @@ function AnnotationBox({ data }) {
 	);
 }
 
-Zotero.AnnotationBox = memo(AnnotationBox);
+Trellis.AnnotationBox = memo(AnnotationBox);
 
-Zotero.AnnotationBox.render = (root, props) => {
+Trellis.AnnotationBox.render = (root, props) => {
 	root.render(<AnnotationBox { ...props } />);
 };
