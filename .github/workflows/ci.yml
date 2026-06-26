@@ -1,5 +1,10 @@
 name: CI
-on: [push, pull_request]
+# Temporarily manual-only: the build job checks out submodules recursively,
+# but those repos do not exist yet, so checkout aborts on every push/PR.
+# Re-enable `[push, pull_request]` once the submodules are vendored in-tree
+# (see INDEPENDENCE.md sections 2 and 6). Until then, run on demand via the
+# Actions tab. The fast branding/consistency gate lives in checks.yml.
+on: workflow_dispatch
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
