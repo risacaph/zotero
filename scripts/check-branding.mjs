@@ -27,13 +27,18 @@ const ALLOW = [
 	'@zotero/eslint-config',
 	// shorthand for the same package
 	'compat.extends("@zotero")',
+	// legitimate upstream attribution: Trellis is a fork of Zotero and must
+	// name its origin (license disclaimer, About-box trademark line)
+	'fork of Zotero',
 ];
 
-// Files excluded from the stray-token scan (they describe the rule itself).
+// Files excluded from the stray-token scan: they either describe the rule
+// itself or are attribution/license files that legitimately name the upstream.
 const SELF = [
 	'scripts/check-branding.mjs',
 	'INDEPENDENCE.md',
 	'branding/brand.config.json',
+	'COPYING',
 ];
 
 function gitGrep(pattern, flags = '-nI') {

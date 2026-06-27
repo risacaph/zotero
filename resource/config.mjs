@@ -3,8 +3,8 @@ export var TRELLIS_CONFIG = {
 	ID: 'trellis', // used for db filename, etc.
 	CLIENT_NAME: 'Trellis',
 	DOMAIN_NAME: 'trellis.org',
-	PRODUCER: 'Digital Scholar',
-	PRODUCER_URL: 'https://digitalscholar.org',
+	PRODUCER: 'The Trellis Project',
+	PRODUCER_URL: 'https://trellis.org',
 	REPOSITORY_URL: 'https://repo.trellis.org/repo/',
 	BASE_URI: 'http://trellis.org/',
 	WWW_BASE_URL: 'https://www.trellis.org/',
