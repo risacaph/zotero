@@ -9,7 +9,7 @@
 		"vendorName": "Trellis",
 		"appName": "Trellis",
 		"subscriptionName": "Trellis Storage",
-		"legalEntity": "the Trellis project"
+		"trademarkInfo": "Trellis is an independent fork of Zotero. Zotero is a trademark of the Corporation for Digital Scholarship."
 	},
 
 	"_identityComment": "Reference values for the rest of the app's identity. These are not auto-generated yet (they live in application.ini, resource/config.mjs, app/win/installer/defines.nsi, app/mac/Contents/Info.plist). The brand-consistency check asserts the app ID below matches application.ini and resource/config.mjs.",

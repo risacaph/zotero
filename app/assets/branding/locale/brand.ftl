@@ -5,4 +5,4 @@
 -vendor-short-name = Trellis
 -app-name = Trellis
 -subscription-name = Trellis Storage
-trademarkInfo = Trellis is a trademark of the Trellis project.
+trademarkInfo = Trellis is an independent fork of Zotero. Zotero is a trademark of the Corporation for Digital Scholarship.

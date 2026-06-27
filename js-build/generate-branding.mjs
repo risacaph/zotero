@@ -30,7 +30,7 @@ const outputs = {
 -vendor-short-name = ${d.vendorName}
 -app-name = ${d.appName}
 -subscription-name = ${d.subscriptionName}
-trademarkInfo = ${d.shortName} is a trademark of ${d.legalEntity}.
+trademarkInfo = ${d.trademarkInfo}
 `,
 
 	'app/assets/branding/locale/brand.dtd':
