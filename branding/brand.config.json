@@ -1,0 +1,24 @@
+{
+	"_comment": "Single source of truth for Trellis brand identity. Edit this file, then run `node js-build/generate-branding.mjs` to regenerate the derived locale files. CI runs the generator in --check mode to enforce that the committed files stay in sync. See INDEPENDENCE.md.",
+
+	"display": {
+		"shorterName": "Trellis",
+		"shortName": "Trellis",
+		"fullName": "Trellis",
+		"productName": "Trellis",
+		"vendorName": "Trellis",
+		"appName": "Trellis",
+		"subscriptionName": "Trellis Storage",
+		"legalEntity": "the Trellis project"
+	},
+
+	"_identityComment": "Reference values for the rest of the app's identity. These are not auto-generated yet (they live in application.ini, resource/config.mjs, app/win/installer/defines.nsi, app/mac/Contents/Info.plist). The brand-consistency check asserts the app ID below matches application.ini and resource/config.mjs.",
+	"identity": {
+		"appId": "trellis@trellis.org",
+		"bundleId": "org.trellis.trellis",
+		"scheme": "trellis",
+		"prefBranch": "extensions.trellis.",
+		"dataDir": "Trellis",
+		"executable": "trellis"
+	}
+}
